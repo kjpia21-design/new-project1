@@ -1,0 +1,22 @@
+---
+import Illustration from './Illustration.astro';
+interface Props { caption: string }
+const { caption } = Astro.props;
+---
+<figure class="shot not-content">
+  <Illustration name="media" size={56} />
+  <figcaption>이 자리에 들어갈 화면: {caption}</figcaption>
+</figure>
+
+<style>
+  .shot {
+    margin: 1.5rem 0;
+    padding: 1.5rem 1rem;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    border: 2px dashed var(--sl-color-gray-4);
+    border-radius: 16px;
+    background: var(--ai-card-tint);
+    text-align: center;
+  }
+  figcaption { color: var(--sl-color-gray-2); font-size: var(--sl-text-sm); }
+</style>

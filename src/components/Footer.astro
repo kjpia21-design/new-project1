@@ -1,0 +1,11 @@
+---
+// Starlight 기본 Footer 오버라이드: 튜토리얼 페이지 하단(이전/다음 링크 위)에 출처 상자를 자동으로 붙인다.
+import Default from '@astrojs/starlight/components/Footer.astro';
+import Sources from './Sources.astro';
+import { isTutorial } from '../lib/tutorials';
+
+const entry = Astro.locals.starlightRoute.entry;
+const showSources = isTutorial(entry.id) && entry.data.status === 'published';
+---
+{showSources && <Sources sources={entry.data.sources} lastVerified={entry.data.lastVerified} />}
+<Default {...Astro.props}><slot /></Default>

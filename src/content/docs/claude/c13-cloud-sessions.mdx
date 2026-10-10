@@ -1,0 +1,320 @@
+---
+title: "Claude Code 클라우드 세션: GitHub 연동, 환경, 루틴"
+description: "내 컴퓨터를 켜 두지 않아도 클라우드에서 GitHub 저장소 작업을 맡기고, 환경을 설정하고, 루틴으로 자동 실행하는 방법을 정리한 참고서"
+sidebar:
+  label: "C13. 클라우드 세션"
+level: practical
+category: claude
+tools: ["Claude Code", "GitHub"]
+duration: "40분"
+prerequisites:
+  - "Claude 유료 플랜 (Pro, Max, Team, 또는 Enterprise의 프리미엄·Chat + Claude Code 좌석)"
+  - "GitHub 계정과 작업을 맡길 저장소 하나"
+  - "(터미널 방식을 쓴다면) Claude Code가 설치된 터미널"
+lastVerified: 2026-10-10
+sources:
+  - title: "Use Claude Code in the cloud"
+    url: "https://code.claude.com/docs/en/claude-code-on-the-web"
+  - title: "Configure cloud environments"
+    url: "https://code.claude.com/docs/en/cloud-environments"
+  - title: "Automate work with routines"
+    url: "https://code.claude.com/docs/en/routines"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import CloudFlowDiagram from '../../../components/diagrams/CloudFlowDiagram.astro';
+
+<Summary>
+- 클라우드 세션은 **내 컴퓨터가 아니라 클라우드에서 도는 Claude Code**예요. 노트북을 닫아도 계속 실행되고, 어느 기기에서나 확인하고 조종할 수 있어요.
+- Pro, Max, Team 플랜과 Enterprise의 프리미엄 또는 Chat + Claude Code 좌석에서 쓸 수 있어요.
+- 시작 방법은 다섯 가지예요. 브라우저(claude.ai/code), 모바일 앱의 Code 탭, 데스크톱 앱의 Cloud 선택, 터미널 `claude --cloud "작업"`, 루틴.
+- 클라우드 VM 요금은 따로 없고 **플랜 사용량에 합산**돼요. 병렬로 많이 돌리면 그만큼 한도가 줄어요.
+- 환경(Environment)으로 네트워크·환경변수·설정 스크립트를 정하고, 루틴(Routines)으로 스케줄·API·GitHub 이벤트에 맞춰 자동 실행해요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- GitHub 저장소를 연결하고, 클라우드 세션에 작업을 맡길 수 있어요.
+- 결과(diff)를 검토하고 PR을 만들거나, 세션을 내 터미널로 가져와 이어서 작업할 수 있어요.
+- 네트워크 접근 수준과 설정 스크립트를 포함한 환경을 내 작업에 맞게 설정할 수 있어요.
+- 정해진 시간이나 GitHub 이벤트마다 자동으로 실행되는 루틴을 만들 수 있어요.
+
+## 먼저 알아둘 개념
+
+<CloudFlowDiagram />
+
+| 용어 | 뜻 |
+| --- | --- |
+| **클라우드 세션** | 클라우드 인프라에서 도는 Claude Code 세션이에요. 내 기기를 꺼도 계속 실행돼요. |
+| **Claude GitHub App** | GitHub 연결 방식 중 하나예요. 웹 온보딩으로 승인하고, 비공개 저장소는 앱이 설치된 곳만 쓸 수 있어요. |
+| **`/web-setup`** | 터미널에서 실행하는 또 다른 연결 방식이에요. 내 컴퓨터의 `gh` 토큰을 계정에 전송해요. 앱 설치 여부와 상관없이 동작해요. |
+| **환경(Environment)** | 네트워크 접근, 환경변수, 설정 스크립트를 저장해 둔 구성이에요. 처음 쓰면 **Default** 환경(Trusted 네트워크, 변수·스크립트 없음)이 만들어져요. |
+| **설정 스크립트** | 세션이 시작되기 전에 실행되는 스크립트예요. 패키지 설치 등에 써요. |
+| **teleport** | 클라우드 세션을 내 터미널로 가져와 이어서 작업하는 기능이에요. |
+| **루틴(Routines)** | 프롬프트 + 저장소 + 커넥터를 저장해 두고 클라우드에서 자동 실행하는 기능이에요. 현재 리서치 프리뷰예요. |
+| **Auto-fix** | PR의 CI 실패와 리뷰 코멘트에 자동으로 대응하는 기능이에요. |
+
+### GitHub 연결은 어떻게 안전하게 다뤄지나요?
+
+GitHub 자격 증명은 Anthropic 서버에 암호화되어 보관되고 **VM 안에는 들어가지 않아요.** VM에서 일어나는 GitHub 작업은 프록시를 거쳐요.
+
+### 어떤 저장소를 쓸 수 있나요?
+
+- 클론과 PR 생성은 GitHub가 필요해요. Team과 Enterprise는 GitHub Enterprise Server도 지원해요.
+- GitLab이나 Bitbucket은 `CCR_FORCE_BUNDLE=1`로 로컬 저장소를 번들로 올릴 수 있어요. 다만 결과를 원격에 push할 수는 없어요.
+- 번들 업로드 조건은 git 저장소에 커밋이 1개 이상 있고, 번들이 100MB 미만이어야 해요. 추적되지 않는 파일은 제외돼요. `.env`, `*.tfvars`, `id_rsa`, `*.pem` 같은 파일의 미커밋 변경은 업로드에서 빠져요(macOS/Linux/WSL).
+
+### 비용은 어떻게 되나요?
+
+클라우드 VM에 대한 별도 요금은 없어요. 사용량은 플랜의 한도에 다른 Claude·Claude Code 사용량과 함께 합산돼요. 한도 구조는 [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/)에서 자세히 다뤄요.
+
+계정에 따라 설정(Settings) > 사용량(Usage) 화면에 **"클라우드 세션 크레딧"** 항목이 보일 수 있어요. 공식 문서에는 아직 설명이 없는 항목이라, C2의 ["클라우드 세션 크레딧"이라는 항목을 봤다면](/new-project1/claude/c02-plans-limits/#클라우드-세션-크레딧이라는-항목을-봤다면)에 정리해 두었어요.
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '계정과 플랜이 클라우드 세션 대상인지 확인했어요',
+  'GitHub를 연결했어요 (GitHub App 또는 /web-setup)',
+  '첫 클라우드 세션에 작업을 맡겼어요',
+  '결과 diff를 검토하고 PR을 만들었어요',
+  '(선택) 세션을 터미널로 가져와 이어서 작업했어요',
+  '환경(네트워크, 설정 스크립트)을 내 작업에 맞게 설정했어요',
+  '(선택) Auto-fix를 켜 봤어요',
+  '(선택) 루틴을 하나 만들었어요',
+]} />
+
+<Steps>
+
+1. **GitHub 연결하기**
+
+   브라우저에서 claude.ai/code에 접속해요. 처음이면 GitHub 연결을 안내해 줘요. Claude GitHub App을 승인하면 돼요.
+
+   <ScreenshotPlaceholder caption="claude.ai/code에서 GitHub 연결(Claude GitHub App 승인) 화면" />
+
+   터미널에서 하고 싶다면 `/web-setup`을 실행하세요. 로컬 `gh` 토큰을 계정에 전송하는 방식이라 GitHub App을 설치하지 않아도 돼요.
+
+   <Aside type="note" title="Auto-fix와 Projects는 GitHub App이 필요해요">
+   `/web-setup`만으로도 세션을 쓸 수 있지만, Auto-fix와 Projects는 Claude GitHub App 설치가 필요해요.
+   </Aside>
+
+2. **브라우저에서 첫 세션 시작하기**
+
+   claude.ai/code에서 저장소를 선택하고 작업을 입력해요. 모바일 Claude 앱의 Code 탭이나 데스크톱 앱(Local 대신 Cloud 선택)에서도 시작할 수 있어요. 처음에는 작은 작업으로 시작해 보세요.
+
+   <PromptBox>
+   이 저장소의 README.md를 읽고, 처음 보는 사람을 위해 설치 방법과 실행 방법 섹션을 더 알기 쉽게 고쳐 주세요. 코드는 건드리지 말고, 바꾼 내용을 마지막에 요약해 주세요.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="claude.ai/code에서 저장소를 고르고 작업을 입력하는 화면" />
+
+3. **터미널에서 시작하기 (선택)**
+
+   터미널 방식은 **먼저 push**해야 해요. `claude --cloud`는 현재 디렉터리의 GitHub remote를 **현재 브랜치 기준으로 클론**하기 때문에 로컬에만 있는 커밋은 반영되지 않아요.
+
+   ```sh
+   git push
+   claude --cloud "Fix the authentication bug in src/auth/login.ts"
+   ```
+
+   `--cloud`를 여러 번 실행하면 독립된 세션이 병렬로 돌아요. 이미 있는 세션에 후속 메시지를 보내려면 이렇게 해요.
+
+   ```sh
+   claude -p "메시지" --cloud <session-id>
+   ```
+
+   세션 ID는 `session_...` 형식으로 보여요.
+
+4. **결과 검토하고 PR 만들기**
+
+   작업이 끝나면 변경된 diff를 검토해요. +/- 표시를 눌러 변경 내용을 열고, 필요하면 인라인 코멘트를 남길 수 있어요. 문제가 없으면 claude.ai/code에서 PR을 만들어요.
+
+   <ScreenshotPlaceholder caption="세션 결과의 diff 보기와 PR 만들기 버튼" />
+
+   <Aside type="tip" title="세션 공유">
+   Team/Enterprise는 비공개(Private)와 팀 공개(Team) 중에서, Max/Pro는 비공개(Private)와 공개(Public) 중에서 고를 수 있어요. 공개(Public)로 하면 claude.ai에 로그인한 모든 사용자가 볼 수 있으니, 공유하기 전에 대화에 자격 증명이 들어 있지 않은지 꼭 확인하세요.
+   </Aside>
+
+5. **로컬로 이어받기 (teleport)**
+
+   클라우드에서 시작한 작업을 내 터미널로 가져와 이어서 할 수 있어요.
+
+   ```sh
+   claude --teleport            # 선택기에서 세션 고르기
+   claude --teleport <id>       # 세션 ID를 지정
+   ```
+
+   세션 도중에는 `/teleport` 또는 `/tp`를, `/tasks`에서는 `t`를 쓸 수도 있어요. 조건은 [빠른 참조표](#빠른-참조표)에 정리했어요. 반대로 데스크톱 앱에서는 Open in 메뉴로 로컬 세션을 클라우드로 보낼 수 있어요.
+
+6. **환경 설정하기**
+
+   환경 선택기에서 설정 아이콘을 눌러 네트워크 접근, 환경변수, 설정 스크립트를 편집해요.
+
+   - **네트워크**: 기본은 Trusted예요. 패키지 설치가 필요하거나 외부 API를 불러야 하면 수준을 조정해요. 4가지 수준은 아래 표에 있어요.
+   - **설정 스크립트**: 세션 시작 전에 실행돼요. 약 5분 안에 끝나야 파일시스템 스냅샷이 캐시되어 다음 세션부터 빨라져요.
+   - **환경변수**: 키-값을 저장해요. 단, 환경을 쓰는 사람은 누구나 읽을 수 있어서 **비밀을 저장하면 안 돼요.**
+
+   <ScreenshotPlaceholder caption="환경 설정 화면: 네트워크 접근 수준, 환경변수, 설정 스크립트" />
+
+   <Aside type="caution" title="비밀 값은 어디에 두나요?">
+   환경변수와 설정 스크립트는 환경을 쓰는 누구나 읽을 수 있어요. Pro/Max는 **네트워크 시크릿**을 쓸 수 있어요. 프록시가 요청에 키를 붙여 주기 때문에 세션은 값 자체를 보지 못해요. Team/Enterprise는 아직 쓸 수 없어요.
+   </Aside>
+
+7. **Auto-fix 켜기 (선택)**
+
+   PR을 연 뒤 CI가 실패하거나 리뷰 코멘트가 달리면 자동으로 대응하게 할 수 있어요. 세션의 CI 상태 바에서 Auto-fix를 켜거나, 터미널에서 `/autofix-pr`을 실행하거나, 모바일에서 요청하면 돼요. Claude GitHub App 설치가 필요하고, 머지 충돌은 webhook이 없어서 자동으로 대응하지 못해요.
+
+8. **루틴 만들기 (선택)**
+
+   터미널에서 `/schedule`로 만들거나, claude.ai/code/routines에서 만들 수 있어요. 데스크톱 앱에서도 만들 수 있어요.
+
+   ```sh
+   /schedule daily PR review at 9am
+   ```
+
+   웹에서는 새 루틴(New routine)을 눌러 이름, 프롬프트, 저장소, 환경, 트리거를 정하고 만들기(Create)를 눌러요.
+
+   <ScreenshotPlaceholder caption="claude.ai/code/routines의 새 루틴(New routine) 만들기 화면" />
+
+   <PromptBox>
+   이 저장소에서 열려 있는 PR을 확인해 주세요. 각 PR마다 변경 내용을 두세 줄로 요약하고, 리뷰할 때 특히 봐야 할 부분을 한 가지씩 알려 주세요. 코드는 수정하지 마세요.
+   </PromptBox>
+
+</Steps>
+
+## 빠른 참조표
+
+### 시작 방법별 명령과 위치
+
+| 방법 | 명령 / 위치 |
+| --- | --- |
+| 브라우저 | claude.ai/code |
+| 모바일 | Claude 앱의 Code 탭 |
+| 데스크톱 앱 | Local 대신 Cloud 선택 (로컬 세션은 Open in 메뉴로 클라우드로 보내기) |
+| 터미널 | `claude --cloud "작업"` (먼저 push) |
+| 루틴 | claude.ai/code/routines, 데스크톱 앱, CLI `/schedule` |
+
+### 네트워크 접근 수준 4가지
+
+| 수준 | 의미 |
+| --- | --- |
+| **None** | 외부 접근 없음. Claude Code 자신의 Anthropic API 통신은 가능해요. |
+| **Trusted** | 허용 목록 도메인만 접근해요(패키지 레지스트리, GitHub, 클라우드 SDK 등). **Default 환경의 기본값**이에요. |
+| **Full** | 모든 도메인에 접근해요. |
+| **Custom** | 내가 만든 허용 목록을 써요. 기본 목록을 포함할지 고를 수 있어요. |
+
+Trusted의 허용 도메인 전체 목록은 이 문서에서 다루지 않았어요. 공식 문서의 default allowed domains 항목을 확인하세요.
+
+### 자주 쓰는 명령어
+
+| 명령 | 용도 |
+| --- | --- |
+| `claude --cloud "작업"` | 현재 저장소·브랜치로 클라우드 세션 시작 |
+| `claude -p "메시지" --cloud <session-id>` | 기존 세션에 후속 메시지 전송 |
+| `claude --teleport` / `claude --teleport <id>` | 클라우드 세션을 터미널로 가져오기 |
+| `/teleport`, `/tp` | 세션 중 teleport |
+| `/web-setup` | 로컬 `gh` 토큰으로 GitHub 연결 |
+| `/autofix-pr` | Auto-fix 켜기 |
+| `/schedule ...` | 루틴 만들기 |
+| `/compact`, `/context` | 클라우드 세션 안에서 사용 가능 |
+| `/model sonnet` | 모델 변경 (이렇게 인자와 함께 사용) |
+| `/clear` | **클라우드 세션에서는 사용 불가** |
+
+### teleport 조건
+
+- 깨끗한 git 상태일 것
+- 같은 저장소일 것 (포크 아님)
+- 브랜치가 push되어 있을 것
+- 같은 claude.ai 계정일 것
+
+CLI에서의 이동은 **단방향**(클라우드 → 터미널)이에요. 터미널에서 이어가면 그 작업은 로컬에 남고, 클라우드 세션에는 나타나지 않아요.
+
+### 리소스 상한 (바뀔 수 있어요, 2026-10-10 기준)
+
+| 항목 | 값 |
+| --- | --- |
+| CPU / 메모리 / 디스크 | 4 vCPU, 16GB RAM, 30GB |
+| 명령 기본 타임아웃 | 2분 (최대 10분까지 요청 가능) |
+| 시간 초과 시 | 백그라운드로 이동해 최대 30분 더 실행 |
+| 유휴 시 | VM이 일시정지되고 이후 회수될 수 있어요. 대화 기록은 복원되지만 실행 중이던 백그라운드 작업은 복원되지 않아요. |
+
+### 설정 스크립트와 캐시
+
+| 항목 | 내용 |
+| --- | --- |
+| 실행 시점 | 세션 시작 전 |
+| 캐시 조건 | 약 5분 안에 완료 |
+| 캐시 만료 | 약 7일. 스크립트나 허용 호스트를 바꾸면 재빌드 |
+| 유지되는 것 | 설치한 패키지, 받아 둔 Docker 이미지 |
+| 유지되지 않는 것 | 실행 중인 프로세스 |
+
+### 루틴 요약
+
+| 항목 | 내용 |
+| --- | --- |
+| 트리거 | 스케줄(매시간·매일·평일·주간 또는 1회성), API(HTTP POST + 베어러 토큰), GitHub 이벤트(pull request, release) |
+| 사용 가능 플랜 | Pro, Max, Team, Enterprise |
+| 스케줄 최소 간격 | 1시간 |
+| 시간당 한도 | 스케줄 실행은 계정당 100회, Run now/API는 루틴당 30회 등. 이 한도에는 초과 과금(overage)이 없어요. |
+| 사용량 | 대화형 세션처럼 구독 사용량을 소모해요. 한도에 닿았을 때 usage credits가 켜져 있으면 초과분이 종량제로 계속 실행되고, 꺼져 있으면 리셋까지 거부돼요. |
+| 소유 | 개인 계정 소유. 팀원과 공유되지 않아요. |
+| 실행 방식 | 승인 없이 자율 동작해요. 브랜치는 `claude/` 접두사로 push하고, 커밋·PR은 내 GitHub 사용자로 남아요. |
+| 커넥터 | 전체 커넥터가 기본 포함돼요. 필요 없는 것은 제거하세요. |
+| API 트리거(베타) | 요청 헤더에 `anthropic-beta: experimental-cc-routine-2026-04-01` 사용 |
+
+## 자주 막히는 지점
+
+### 로컬에서 고친 내용이 클라우드 세션에 안 보여요
+
+- **원인**: `claude --cloud`는 GitHub remote의 현재 브랜치를 클론해요. push하지 않은 로컬 커밋은 클라우드에 없어요.
+- **해결**: 먼저 `git push`를 하고 다시 시작하세요.
+
+### `--teleport`가 실패해요
+
+- **원인**: 조건이 맞지 않을 수 있어요.
+- **해결**: git 상태가 깨끗한지(변경 사항을 커밋하거나 정리), 같은 저장소(포크가 아닌지), 브랜치가 push되었는지, 같은 claude.ai 계정으로 로그인했는지 확인하세요.
+
+### 패키지 설치나 외부 사이트 접속이 막혀요
+
+- **원인**: 환경의 네트워크 접근 수준이 허용 범위를 벗어났을 수 있어요(None은 외부 접근 없음, Trusted는 허용 목록 도메인만).
+- **해결**: 환경 설정에서 네트워크 접근 수준을 올리거나 Custom으로 필요한 도메인을 추가하세요. 설치가 반복되면 설정 스크립트에 넣어 캐시를 활용하세요.
+
+### GitLab/Bitbucket 저장소는 push가 안 돼요
+
+- **원인**: 클론과 PR 생성은 GitHub가 필요해요. `CCR_FORCE_BUNDLE=1`로 올리는 방식은 결과를 원격에 push할 수 없어요.
+- **해결**: 결과를 원격에 올려야 한다면 GitHub 저장소를 사용하세요. 번들 방식은 한계가 있다는 점을 기억해 두세요.
+
+### 조직에서 세션이 인증 오류로 실패해요
+
+- **원인**: 조직 IP 허용 목록이 켜져 있으면 Anthropic 호스팅 클라우드 세션은 인증 오류로 실패해요. Zero Data Retention이나 HIPAA 구성 조직은 클라우드 세션 기능을 쓸 수 없어요.
+- **해결**: 조직 관리자에게 설정을 확인해 달라고 요청하세요.
+
+### Auto-fix가 머지 충돌에는 반응하지 않아요
+
+- **원인**: 머지 충돌은 webhook이 없어서 자동으로 대응하지 못해요.
+- **해결**: 충돌은 직접 해결하거나 새 요청으로 해결을 지시하세요.
+
+## 실전 팁
+
+- **작은 작업부터 맡기세요.** 결과 diff를 보며 어떤 식으로 일하는지 파악한 뒤 점점 키우면 좋아요.
+- **병렬 실행은 한도를 더 써요.** 여러 작업을 동시에 맡기면 그만큼 플랜 한도가 빨리 줄어요. [C2](/new-project1/claude/c02-plans-limits/)의 한도 구조를 함께 보세요.
+- **루틴 시각은 정각을 피하세요.** 정각 실행은 몇 분 늦어질 수 있어서 9:07처럼 분을 어긋나게 잡길 권해요.
+- **루틴의 커넥터는 줄이세요.** 기본으로 전체가 들어가므로 필요한 것만 남기세요.
+- **비밀은 환경변수에 두지 마세요.** 네트워크 시크릿(Pro/Max)을 쓰세요.
+- **공유 전에 점검하세요.** 세션을 Public으로 공유하기 전에는 자격 증명이 들어 있는지 확인하세요.
+- **세션 안에서도 모델을 바꿀 수 있어요.** `/model sonnet`처럼 인자와 함께 써요.
+
+<Aside type="note" title="이 사이트도 이렇게 만들었어요">
+이 사이트는 클라우드 세션에서 만들었어요. 기획과 검토는 Opus가, 구현은 Sonnet 하위 에이전트가 나누어 맡았어요. 이 분담 방법은 [C15. 모델 분담 전략](/new-project1/claude/c15-model-division/)에서 자세히 다뤄요.
+</Aside>
+
+## 다음에 볼 튜토리얼
+
+- [C12. Claude Code 개요: 터미널·데스크톱·웹](/new-project1/claude/c12-claude-code-overview/) — Claude Code의 전체 그림
+- [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — CLAUDE.md, 슬래시 명령, 훅, 서브에이전트, MCP
+- [C15. 모델 분담 전략](/new-project1/claude/c15-model-division/) — 기획은 Opus, 구현은 Sonnet
+- [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/) — 클라우드 세션이 쓰는 한도 이해하기

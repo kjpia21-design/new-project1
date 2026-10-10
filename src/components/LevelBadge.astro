@@ -1,0 +1,21 @@
+---
+import { levelLabels, type Level } from '../lib/tutorials';
+interface Props { level: Level }
+const { level } = Astro.props;
+---
+<span class={`level-badge level-${level}`}>{levelLabels[level]}</span>
+
+<style>
+  .level-badge {
+    display: inline-block;
+    padding: 0.1rem 0.65rem;
+    border-radius: 999px;
+    font-size: var(--sl-text-xs);
+    font-weight: 700;
+    line-height: 1.6;
+    white-space: nowrap;
+  }
+  .level-beginner { background: var(--ai-green-bg); color: var(--ai-green-fg); }
+  .level-practical { background: var(--ai-blue-bg); color: var(--ai-blue-fg); }
+  .level-advanced { background: var(--ai-purple-bg); color: var(--ai-purple-fg); }
+</style>

@@ -1,0 +1,108 @@
+---
+# ============================================================
+# 튜토리얼 템플릿 (2단계에서 확정). 새 튜토리얼을 쓸 때 이 파일을 복사해서 쓰세요.
+#   복사 위치: src/content/docs/<분야>/<slug>.mdx  (분야: claude | chat | coding | media | automation)
+#   아래 import 경로는 src/content/docs/<분야>/ 에서 쓰는 기준입니다(../../../components/...).
+# 이 파일은 docs/ 아래에 있어서 사이트에 포함되지 않습니다.
+# ============================================================
+title: "튜토리얼 제목"
+description: "카드와 검색에 보일 한두 문장 설명"
+sidebar:
+  label: "번호. 짧은 이름"            # 사이드바 표시 이름 (선택)
+level: practical                     # beginner(입문) | practical(실무) | advanced(고급)
+category: chat                       # claude | chat | coding | media | automation
+tools: ["Claude"]                    # 사용 도구
+duration: "20분"                     # 실제 따라하는 데 걸리는 시간
+prerequisites:                       # 준비물 (계정, 요금제, 설치물)
+  - "준비물 1"
+lastVerified: 2026-01-01             # 공식 페이지와 대조해 확인한 날짜 (확인 전에는 줄 삭제)
+sources:                             # 본문에 쓴 출처 전부. 페이지 하단 '출처' 상자에 자동 표시됨
+  - title: "공식 페이지 이름"
+    url: "https://example.com/docs"
+status: draft                        # 본문이 완성되고 확인을 마치면 published (published일 때만 출처 상자 표시)
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+{/* 도식이 필요하면 src/components/diagrams/ 에 .astro로 만들어 import (currentColor·CSS 변수 사용) */}
+
+{/* 정보 상자(수준·소요 시간·준비물·마지막 확인일)는 frontmatter에서 자동으로 제목 아래에 나옵니다. */}
+
+{/* 1. 한눈에 요약: 3~5줄. 다시 찾아볼 때 이것만 봐도 되게 */}
+<Summary>
+- 핵심 1
+- 핵심 2
+- 핵심 3
+- 가격·한도처럼 자주 바뀌는 정보는 "YYYY-MM-DD 기준"을 붙여요.
+</Summary>
+
+{/* 2. 이 튜토리얼로 할 수 있게 되는 것: 결과 중심 bullet 3~4개 */}
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 할 수 있게 되는 것 1
+- 할 수 있게 되는 것 2
+- 할 수 있게 되는 것 3
+
+{/* 3. 먼저 알아둘 개념: 용어 표 + (필요하면) 인라인 SVG 도식 1개 */}
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **용어** | 쉬운 설명 |
+
+{/* 연구 파일의 "확인 못 함 / 주의" 항목은 단정하지 말고 Aside로 따로 알려요 */}
+<Aside type="note" title="확인되지 않은 점">
+공식 문서에서 확인되지 않은 내용은 단정하지 않고 이렇게 밝혀요.
+</Aside>
+
+{/* 4. 단계별 따라하기: 시작 직전에 전체 단계 체크리스트 */}
+## 단계별 따라하기
+
+<Checklist items={['첫 번째 단계를 끝냈어요', '두 번째 단계를 끝냈어요']} />
+
+<Steps>
+
+1. **첫 번째 단계**
+
+   설명 문장. 메뉴·버튼 이름은 화면 표기대로 영어 병기: 설정(Settings) > 사용량(Usage).
+
+   <ScreenshotPlaceholder caption="이 단계에서 보여줄 화면" />
+
+2. **두 번째 단계**
+
+   <PromptBox>
+   Claude에게 그대로 붙여넣을 요청 문구
+   </PromptBox>
+
+</Steps>
+
+{/* 5. 빠른 참조표: 다시 찾아볼 정보를 표로 */}
+## 빠른 참조표
+
+| 항목 | 값 |
+| --- | --- |
+| 예시 | 예시 값 |
+
+{/* 6. 자주 막히는 지점: 문제 -> 원인 -> 해결, 3~6개 */}
+## 자주 막히는 지점
+
+### 문제 상황
+
+- **원인**: 왜 생기는지
+- **해결**: 어떻게 푸는지
+
+{/* 7. 실전 팁 */}
+## 실전 팁
+
+- 팁 1
+- 팁 2
+
+{/* 8. 다음에 볼 튜토리얼: 2~3개. 링크는 /new-project1/ 로 시작하고 끝에 / 를 붙여요 */}
+## 다음에 볼 튜토리얼
+
+- [C1. Claude 한눈에 보기](/new-project1/claude/c01-overview/) — 한 줄 설명
+
+{/* 9. 출처: 직접 쓰지 않아도 됩니다. status: published 이면 frontmatter의 sources와 lastVerified로 Sources 컴포넌트가 페이지 맨 아래에 자동 렌더링됩니다. */}

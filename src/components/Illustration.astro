@@ -1,0 +1,70 @@
+---
+// 외부 이미지 없이 쓰는 단순한 인라인 SVG 일러스트 모음
+interface Props { name: 'claude' | 'chat' | 'coding' | 'media' | 'automation' | 'robot' | 'sparkle' | 'beginner' | 'practical' | 'advanced'; size?: number }
+const { name, size = 48 } = Astro.props;
+---
+<svg class="illu" width={size} height={size} viewBox="0 0 48 48" role="img" aria-hidden="true" focusable="false">
+  {name === 'claude' && (<>
+    <circle cx="24" cy="24" r="22" fill="#ffd9cc" />
+    <path d="M24 7l3.6 10.4L38 21l-10.4 3.6L24 41l-3.6-16.4L10 21l10.4-3.6z" fill="#ff7a59" />
+    <circle cx="36" cy="10" r="2.5" fill="#fff" />
+  </>)}
+  {name === 'chat' && (<>
+    <rect x="5" y="8" width="28" height="20" rx="8" fill="#9ad7f5" />
+    <path d="M12 28l-2 9 9-7z" fill="#9ad7f5" />
+    <rect x="17" y="19" width="26" height="18" rx="8" fill="#ffb59f" />
+    <path d="M37 37l3 7-9-6z" fill="#ffb59f" />
+    <circle cx="14" cy="18" r="2" fill="#fff" /><circle cx="20" cy="18" r="2" fill="#fff" /><circle cx="26" cy="18" r="2" fill="#fff" />
+  </>)}
+  {name === 'coding' && (<>
+    <rect x="5" y="9" width="38" height="30" rx="8" fill="#c9b6f2" />
+    <circle cx="12" cy="15" r="1.8" fill="#fff" /><circle cx="18" cy="15" r="1.8" fill="#fff" />
+    <path d="M17 26l-5 4 5 4M31 26l5 4-5 4M26 24l-4 12" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  </>)}
+  {name === 'media' && (<>
+    <rect x="5" y="10" width="38" height="28" rx="8" fill="#ffd36e" />
+    <circle cx="16" cy="20" r="4" fill="#fff" />
+    <path d="M7 36l12-10 8 7 6-5 10 8z" fill="#7cc98a" />
+    <path d="M30 14l7 4-7 4z" fill="#ff7a59" />
+  </>)}
+  {name === 'automation' && (<>
+    <circle cx="24" cy="24" r="10" fill="#9fdcb0" />
+    <circle cx="24" cy="24" r="4.5" fill="#fff" />
+    <g fill="#7cc98a">
+      <rect x="21" y="4" width="6" height="9" rx="3" /><rect x="21" y="35" width="6" height="9" rx="3" />
+      <rect x="4" y="21" width="9" height="6" rx="3" /><rect x="35" y="21" width="9" height="6" rx="3" />
+    </g>
+  </>)}
+  {name === 'robot' && (<>
+    <line x1="24" y1="5" x2="24" y2="11" stroke="#ff7a59" stroke-width="3" stroke-linecap="round" />
+    <circle cx="24" cy="5" r="3" fill="#ff7a59" />
+    <rect x="7" y="11" width="34" height="28" rx="12" fill="#9ad7f5" />
+    <circle cx="17" cy="25" r="4" fill="#fff" /><circle cx="31" cy="25" r="4" fill="#fff" />
+    <circle cx="18" cy="26" r="2" fill="#2b3a55" /><circle cx="32" cy="26" r="2" fill="#2b3a55" />
+    <path d="M18 33q6 4 12 0" stroke="#2b3a55" stroke-width="2.4" fill="none" stroke-linecap="round" />
+    <circle cx="11" cy="31" r="2.5" fill="#ffb59f" /><circle cx="37" cy="31" r="2.5" fill="#ffb59f" />
+  </>)}
+  {name === 'sparkle' && (<>
+    <path d="M24 5l4 12 12 4-12 4-4 12-4-12-12-4 12-4z" fill="#ffd36e" />
+  </>)}
+  {name === 'beginner' && (<>
+    <circle cx="24" cy="24" r="21" fill="#c8f0d2" />
+    <path d="M24 38V22" stroke="#4fae6a" stroke-width="3" stroke-linecap="round" />
+    <path d="M24 26c-8 0-12-5-12-11 8 0 12 4 12 11zM24 22c0-6 4-10 12-10 0 6-4 10-12 10z" fill="#4fae6a" />
+  </>)}
+  {name === 'practical' && (<>
+    <circle cx="24" cy="24" r="21" fill="#cfe6fb" />
+    <rect x="10" y="17" width="28" height="19" rx="5" fill="#5aa6e8" />
+    <path d="M18 17v-3a3 3 0 013-3h6a3 3 0 013 3v3" stroke="#5aa6e8" stroke-width="3" fill="none" />
+    <rect x="21" y="23" width="6" height="5" rx="2" fill="#fff" />
+  </>)}
+  {name === 'advanced' && (<>
+    <circle cx="24" cy="24" r="21" fill="#e3d9fa" />
+    <path d="M24 9c5 5 7 10 7 16l5 7-8-2h-8l-8 2 5-7c0-6 2-11 7-16z" fill="#9a7be0" />
+    <circle cx="24" cy="21" r="3.5" fill="#fff" />
+  </>)}
+</svg>
+
+<style>
+  .illu { display: inline-block; flex: none; }
+</style>

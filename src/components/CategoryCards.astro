@@ -1,0 +1,32 @@
+---
+import Illustration from './Illustration.astro';
+import { url } from '../lib/tutorials';
+const cats = [
+  { key: 'chat', title: '대화형 AI 기본기', desc: '프롬프트, 요약, 데이터 분석, 문서 작성', href: '/chat/' },
+  { key: 'coding', title: '코딩·에이전트', desc: 'Claude Code, Cursor, 웹 도구 만들기, 에이전트', href: '/coding/' },
+  { key: 'media', title: '이미지·영상·음성', desc: '이미지·영상 생성, 녹음 정리, 음성 합성', href: '/media/' },
+  { key: 'automation', title: '업무 자동화·생산성', desc: 'Notion, 메일·캘린더, Zapier/Make, 커넥터', href: '/automation/' },
+] as const;
+---
+<ul class="cats not-content">
+  {cats.map((c) => (
+    <li>
+      <a href={url(c.href)}>
+        <Illustration name={c.key} size={52} />
+        <div><h3>{c.title}</h3><p>{c.desc}</p></div>
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .cats { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); }
+  li { margin: 0; padding: 0; }
+  a {
+    display: flex; align-items: center; gap: 1rem; height: 100%; padding: 1rem 1.2rem; border-radius: 16px; text-decoration: none;
+    background: var(--ai-card); border: 1px solid var(--sl-color-gray-5); box-shadow: var(--ai-shadow); transition: transform 0.15s, border-color 0.15s;
+  }
+  a:hover { transform: translateY(-2px); border-color: var(--ai-coral); }
+  h3 { margin: 0; font-size: var(--sl-text-base); font-weight: 700; color: var(--sl-color-white); }
+  p { margin: 0.15rem 0 0; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); line-height: 1.5; }
+</style>

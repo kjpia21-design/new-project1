@@ -1,0 +1,58 @@
+---
+interface Props { label?: string }
+const { label = '이 프롬프트를 복사해서 붙여넣으세요' } = Astro.props;
+---
+<prompt-box class="not-content">
+  <div class="head">
+    <span class="label">{label}</span>
+    <button type="button" class="copy" aria-label="프롬프트 복사">복사</button>
+  </div>
+  <div class="body"><slot /></div>
+</prompt-box>
+
+<style>
+  prompt-box {
+    display: block;
+    margin: 1.25rem 0;
+    border: 2px solid var(--ai-coral);
+    border-radius: 14px;
+    background: var(--ai-card-tint);
+    overflow: hidden;
+  }
+  .head {
+    display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+    padding: 0.5rem 0.9rem;
+    background: var(--ai-coral-soft);
+    font-size: var(--sl-text-sm); font-weight: 700; color: var(--sl-color-white);
+  }
+  .copy {
+    flex: none;
+    border: 0; border-radius: 999px; cursor: pointer;
+    padding: 0.2rem 0.9rem;
+    background: var(--sl-color-accent); color: var(--sl-color-text-invert);
+    font: inherit; font-weight: 700;
+  }
+  .copy:hover { filter: brightness(1.08); }
+  .body { padding: 0.9rem 1rem; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--sl-color-white); }
+  .body :global(p) { margin: 0; }
+</style>
+
+<script>
+  class PromptBox extends HTMLElement {
+    connectedCallback() {
+      const btn = this.querySelector<HTMLButtonElement>('.copy');
+      const body = this.querySelector<HTMLElement>('.body');
+      btn?.addEventListener('click', async () => {
+        const text = body?.innerText.trim() ?? '';
+        try {
+          await navigator.clipboard.writeText(text);
+          btn.textContent = '복사됨!';
+        } catch {
+          btn.textContent = '직접 복사해 주세요';
+        }
+        setTimeout(() => (btn.textContent = '복사'), 1800);
+      });
+    }
+  }
+  if (!customElements.get('prompt-box')) customElements.define('prompt-box', PromptBox);
+</script>

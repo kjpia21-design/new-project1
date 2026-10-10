@@ -1,0 +1,91 @@
+/* 친근한 일러스트형 테마: 밝고 따뜻한 색, 둥근 모서리, 부드러운 그림자 */
+
+:root {
+  --sl-font: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+
+  /* 다크 모드(기본) */
+  --sl-color-accent-low: #4a2519;
+  --sl-color-accent: #ff7a59;
+  --sl-color-accent-high: #ffb7a3;
+  --sl-color-white: #fff7f2;
+  --sl-color-gray-1: #eadfd9;
+  --sl-color-gray-2: #cdbfb8;
+  --sl-color-gray-3: #a49690;
+  --sl-color-gray-4: #6c5f5a;
+  --sl-color-gray-5: #473d39;
+  --sl-color-gray-6: #322a27;
+  --sl-color-black: #211b19;
+  --sl-color-bg-nav: #2a2321;
+  --sl-color-bg-sidebar: #251f1d;
+
+  --ai-coral: #ff7a59;
+  --ai-coral-soft: #5a2f23;
+  --ai-card: #2e2623;
+  --ai-card-tint: #2b2320;
+  --ai-blob: #4a2f28;
+  --ai-shadow: 0 6px 18px rgb(0 0 0 / 0.28);
+  --ai-radius: 16px;
+
+  --ai-green-bg: #1f4a31; --ai-green-fg: #a6efc0;
+  --ai-blue-bg: #1d3f62; --ai-blue-fg: #b4dcff;
+  --ai-purple-bg: #3d2d68; --ai-purple-fg: #d9ccff;
+  --ai-yellow-bg: #5a4617; --ai-yellow-fg: #ffe29a;
+}
+
+:root[data-theme='light'] {
+  --sl-color-accent-low: #ffe3da;
+  --sl-color-accent: #d4431e;
+  --sl-color-accent-high: #9c2b10;
+  --sl-color-white: #2b211d;
+  --sl-color-gray-1: #3d322d;
+  --sl-color-gray-2: #5c4f49;
+  --sl-color-gray-3: #7b6d66;
+  --sl-color-gray-4: #bfb2ab;
+  --sl-color-gray-5: #e9ddd5;
+  --sl-color-gray-6: #f6ede6;
+  --sl-color-gray-7: #fbf5ef;
+  --sl-color-black: #fffaf5;
+  --sl-color-bg-nav: #fffdfb;
+  --sl-color-bg-sidebar: #fff6ef;
+
+  --ai-coral: #ff7a59;
+  --ai-coral-soft: #ffe3da;
+  --ai-card: #ffffff;
+  --ai-card-tint: #fff4ec;
+  --ai-blob: #ffe3d9;
+  --ai-shadow: 0 6px 18px rgb(120 70 40 / 0.1);
+
+  --ai-green-bg: #d9f4e2; --ai-green-fg: #1d6a3a;
+  --ai-blue-bg: #dcecfc; --ai-blue-fg: #1b5589;
+  --ai-purple-bg: #e8dffa; --ai-purple-fg: #54389b;
+  --ai-yellow-bg: #fff0c2; --ai-yellow-fg: #7a5a00;
+}
+
+html { overflow-x: hidden; }
+body { background: var(--sl-color-black); }
+h1, h2, h3, h4 { font-weight: 700; }
+
+.sl-markdown-content :not(a, strong, em, del, span, input, code, br) + :is(h2, h3, h4) { margin-top: 1.8em; }
+.sl-markdown-content img, .sl-markdown-content table { border-radius: 12px; }
+.content-panel + .content-panel { border-top: 0; }
+
+/* 사이트 제목 */
+.site-title { font-weight: 800; font-size: var(--sl-text-base); }
+
+/* 사이드바 현재 항목 */
+[aria-current='page'], [aria-current='page']:hover, [aria-current='page']:focus {
+  border-radius: 10px;
+}
+
+/* 코드 블록, 카드, 알림 박스를 부드럽게 */
+.expressive-code .frame, .sl-markdown-content .starlight-aside, .sl-markdown-content details, .sl-markdown-content .card {
+  border-radius: 12px;
+}
+.starlight-aside { border-radius: 12px; }
+
+/* 홈 전용 */
+.home-wrap { display: grid; gap: 2.5rem; }
+.home-wrap h2 { margin: 0 0 1rem; font-size: var(--sl-text-h3); border: 0; }
+.home-wrap .section-title { display: flex; align-items: center; gap: 0.5rem; }
+.home-wrap .sl-heading-wrapper { margin-bottom: 1rem; }
+.home-wrap .sl-heading-wrapper h2 { margin: 0; }

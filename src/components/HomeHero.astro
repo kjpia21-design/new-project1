@@ -1,0 +1,36 @@
+---
+import HeroIllustration from './HeroIllustration.astro';
+import { url } from '../lib/tutorials';
+---
+<section class="hero not-content">
+  <div class="text">
+    <p class="kicker">한국어로 쉽게, 단계별로 따라 하는</p>
+    <h1>최신 AI 트렌드<br />따라 잡기</h1>
+    <p class="lead">새로 나온 AI 도구를 쉽게 설명하고, 직접 따라 해 볼 수 있는 튜토리얼로 안내해요. 내 수준에 맞는 곳에서 시작해 보세요.</p>
+    <div class="actions">
+      <a class="btn primary" href={url('/start/practical/')}>실무자로 시작하기</a>
+      <a class="btn" href={url('/tutorials/')}>전체 튜토리얼 보기</a>
+    </div>
+  </div>
+  <div class="art"><HeroIllustration /></div>
+</section>
+
+<style>
+  .hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1.5rem; align-items: center; padding: 1rem 0 0.5rem; }
+  .kicker { margin: 0; font-weight: 700; color: var(--sl-color-accent-high); }
+  h1 { margin: 0.4rem 0 0.8rem; font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1.2; font-weight: 800; color: var(--sl-color-white); }
+  .lead { margin: 0 0 1.25rem; font-size: var(--sl-text-lg); color: var(--sl-color-gray-2); line-height: 1.65; }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+  .btn {
+    display: inline-block; padding: 0.65rem 1.4rem; border-radius: 999px; font-weight: 700; text-decoration: none;
+    border: 2px solid var(--sl-color-accent); color: var(--sl-color-accent-high); background: transparent;
+  }
+  .btn.primary { background: var(--sl-color-accent); color: var(--sl-color-text-invert); }
+  .btn:hover { filter: brightness(1.08); }
+  .art { display: flex; justify-content: center; }
+  @media (max-width: 720px) {
+    .hero { grid-template-columns: 1fr; }
+    .art { order: -1; }
+    .art :global(.hero-art) { max-width: 240px; }
+  }
+</style>
