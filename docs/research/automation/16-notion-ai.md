@@ -1,6 +1,15 @@
 # Notion AI (2026-10-10 조사)
 
-조사 방식 주의: 이 환경에서는 WebFetch가 외부 사이트에 접속하지 못했다. 아래 내용은 WebSearch가 반환한 공식 도메인(notion.com) 검색 결과 요약에 기반한다. 화면 문구는 직접 확인하지 못했으므로 본문에서 "화면 안내에 따르세요"로 처리한다.
+## 5단계 원문 대조 (2026-10-10, 원문 확인)
+notion.com 원문을 직접 열어 대조했다: notion-agent, what-are-notion-credits, autofill, notion-ai-faqs, Q&A 가이드, notion-ai-security-practices, ai-meeting-notes, pricing.
+- 원문 확인: Agent는 화면 아래 "friendly face"로 대화, 앱 연결 경로(All sources > MCP servers > Add MCP server / Settings > Connections > Discover), Business/Enterprise에 사용 허용량 포함, 프리미엄 모델은 크레딧 사용.
+- 원문 확인: 크레딧은 Business/Enterprise 추가 구매 항목, 월 결제 $10/1,000, 연 결제 $13/1,000(연 결제는 연간 플랜만). 
+- 원문 확인: Autofill 설정 경로(속성 이름 클릭 > AI Autofill > Basic 또는 Custom Agent), Basic은 크레딧 안 씀.
+- 원문 확인: Notion AI는 Business/Enterprise, Free/Plus는 체험용 "complimentary AI responses"(횟수 미공개). 요금제 페이지 월 결제: Free $0, Plus $10, Business $20.
+- 원문 확인: 보안 도움말 — 학습 미사용, Enterprise 제로 보존, 비Enterprise LLM 제공자 30일 이하 보존. AI Meeting Notes는 Business/Enterprise, 지원 언어에 Korean 포함.
+- Q&A: 오른쪽 아래 sparkle 또는 검색 메뉴(원문 확인). 구 "AI 블록" 관계, 한국어 전체 지원 범위는 여전히 미확인.
+
+(아래는 4단계 당시 기록)
 
 ## 핵심 사실
 - Notion AI는 Notion 워크스페이스에 내장된 AI 기능 묶음이다. 주요 기능: Notion Agent, Enterprise Search, Research Mode, AI Meeting Notes, AI 블록, Autofill. (출처: https://www.notion.com/help/notion-ai-faqs , https://www.notion.com/product/ai)

@@ -1,5 +1,14 @@
 # Zapier / Make 자동화 (2026-10-10 조사)
 
+## 5단계 원문 대조 (2026-10-10)
+- 원문 확인(zapier.com/pricing): Free $0, 월 100 task, Two-step Zaps, 폴링 15분(Professional 2분, Team/Enterprise 1분), Professional부터 Multi-step. 폴링은 task를 쓰지 않고 동작이 성공할 때만 task 소모. 통화 목록에 KRW 없음(USD 기본).
+- 원문 확인(help.zapier.com): 새 계정 14일 무료 체험 자동 시작, 카드 불필요, 자동 유료 전환 없음. "Zapier is only available in English" 확인.
+- 원문 확인(zapier.com/apps/gmail/...): New Email, New Labeled Email, Create Spreadsheet Row.
+- 원문 확인(help.make.com): 시나리오 기본 15분 실행, 최소 간격은 플랜별, On demand/Run once 존재. 크레딧: 일반 앱 1 operation = 1 credit, 크레딧이 operations를 대체한 청구 단위. 2025-11-06 크레딧 한도·추가 크레딧 가격 조정 공지.
+- 원문 미확인: www.make.com(가격·연동 페이지는 Cloudflare 403), Make 무료 플랜 1,000 크레딧·최소 15분, Make의 Watch emails/Add a Row 모듈명, Make 한국어 UI, Zapier 한도 도달 시 Zap 중단 동작(커뮤니티 답변 근거였음; 본문에서 단정 삭제).
+
+(아래는 4단계 당시 기록)
+
 조사 방식 주의: WebFetch가 외부 사이트에 접속하지 못해, WebSearch가 반환한 공식 도메인(zapier.com, help.zapier.com, help.make.com, make.com) 검색 결과 요약에 기반한다. 메뉴 문구는 직접 확인하지 못했다.
 
 ## 핵심 사실: Zapier

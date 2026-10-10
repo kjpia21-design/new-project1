@@ -11,12 +11,12 @@
 - `/web-setup` 대안, 문제 해결: "No repositories appear" -> 비공개 저장소는 Claude GitHub App 설치 필요. (출처: web-quickstart)
 - 요금: 별도 VM 요금 없이 플랜 사용량에 합산. (출처: 동일)
 ### GitHub 쪽 (GitHub 공식 문서 원본 저장소 raw 파일)
-- Pages 게시 소스: Settings > Pages > Build and deployment > Source에서 "Deploy from a branch" 또는 "GitHub Actions" 선택. (출처: https://raw.githubusercontent.com/github/docs/main/content/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.md)
+- Pages 게시 소스: Settings > Pages > Build and deployment > Source에서 "Deploy from a branch" 또는 "GitHub Actions" 선택. (출처: https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
 - 워크플로 템플릿은 `github-pages` 환경을 쓰며, 환경이 없으면 자동 생성된다. 기본 브랜치만 이 환경에 배포하도록 보호 규칙을 추가하길 권장. (출처: 동일)
-- 기본 브랜치 변경: 저장소 admin 권한 필요, 브랜치가 둘 이상이어야 함. (출처: https://raw.githubusercontent.com/github/docs/main/content/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/changing-the-default-branch.md) 메뉴 경로 자체(Settings > General > Default branch)는 이 원문 reusables에 있어 직접 읽지 못했고, 명세 사실관계에 근거한다.
-- 환경 배포 브랜치 규칙: 저장소 Settings의 Environments에서 환경 선택 -> "Deployment branches" 드롭다운 -> "Selected branches and tags" 선택 시 "Add deployment branch or tag rule" -> Ref type(Branch/Tag) -> 이름 패턴 -> Add rule. (출처: https://raw.githubusercontent.com/github/docs/main/content/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments.md)
+- 기본 브랜치 변경: 저장소 admin 권한 필요, 브랜치가 둘 이상이어야 함. (출처: https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/changing-the-default-branch) 메뉴 경로는 docs.github.com 렌더링 페이지에서 확인: Settings > "Default branch" 항목 옆 전환 아이콘 > 브랜치 선택 > Update > "I understand, update the default branch" (2026-10-10).
+- 환경 배포 브랜치 규칙: 저장소 Settings의 Environments에서 환경 선택 -> "Deployment branches" 드롭다운 -> "Selected branches and tags" 선택 시 "Add deployment branch or tag rule" -> Ref type(Branch/Tag) -> 이름 패턴 -> Add rule. (출처: https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments)
 - 환경 암묵 생성 시 소스 브랜치가 보호 규칙으로 추가된다는 서술이 있다(브랜치/폴더 소스의 암묵 빌드). (출처: 동일)
-- 실패한 실행 재실행: 실행 페이지에서 Re-run jobs 드롭다운 > Re-run all jobs(실패한 작업이 있을 때), 없으면 Re-run all jobs 버튼. (출처: https://raw.githubusercontent.com/github/docs/main/content/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs.md)
+- 실패한 실행 재실행: 실행 페이지에서 Re-run jobs 드롭다운 > Re-run all jobs(실패한 작업이 있을 때), 없으면 Re-run all jobs 버튼. (출처: https://docs.github.com/en/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs)
 - Astro 사이트의 GitHub Pages 배포: `.github/workflows/deploy.yml`(withastro/action + actions/deploy-pages), astro.config의 `site`·`base` 설정, Settings > Pages > Source를 GitHub Actions로. (출처: https://raw.githubusercontent.com/withastro/docs/main/src/content/docs/en/guides/deploy/github.mdx)
 - Pages 게시에 최대 20분 걸릴 수 있다는 reusable(twenty-minutes-to-publish)이 있으나 본문 문구는 읽지 못함.
 ### 실제 겪은 문제 (명세 제공 사실관계, 이 사이트 제작 중 발생)
@@ -40,3 +40,9 @@
 - https://code.claude.com/docs/en/routines — 확인일 2026-10-10
 - GitHub 공식 문서 원본(github/docs) raw 파일 4종 (위 URL) — 확인일 2026-10-10. docs.github.com 직접 접속은 이 환경에서 차단되어 원본 저장소를 읽었다.
 - https://raw.githubusercontent.com/withastro/docs/main/src/content/docs/en/guides/deploy/github.mdx — 확인일 2026-10-10
+
+## 5단계 원문 대조 (2026-10-10, docs.github.com 렌더링 페이지 확인)
+- Pages 게시 소스: Settings > 사이드바 "Code, planning, and automation" > Pages > Build and deployment > Source = Deploy from a branch 또는 GitHub Actions. admin/maintainer 권한 필요. Visit site 링크 존재, 반영까지 최대 10분 안내.
+- 환경: Settings > Environments > Deployment branches 드롭다운 > Selected branches and tags > Add deployment branch or tag rule > Ref type(Branch/Tag) > 이름 패턴 > Add rule.
+- 재실행: Actions > 워크플로 > 실행 > 실패한 작업이 있으면 Re-run jobs 드롭다운 > Re-run all jobs, 없으면 Re-run all jobs 버튼. 재실행은 최초 실행 후 30일 이내, 최대 50회.
+- 기본 브랜치 변경: admin 권한, 브랜치 2개 이상 필요.
