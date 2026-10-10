@@ -1,24 +1,233 @@
 ---
-title: "클라우드 세션으로 GitHub 저장소 작업 맡기기"
-description: "클라우드 세션에서 GitHub 저장소 작업을 맡기는 방법"
+title: "클라우드 세션으로 GitHub 저장소 작업 맡기기: README 개선부터 웹 공개까지"
+description: "클라우드 세션에 README 개선을 맡기고, PR로 검토해 병합한 뒤 GitHub Pages로 공개하는 과정을 처음부터 끝까지 따라 하는 실습"
 sidebar:
   label: "8. 클라우드 세션 작업 맡기기"
 level: practical
 category: coding
 tools: ["Claude Code", "GitHub"]
-duration: "40분"
-prerequisites: ["사용할 도구의 계정"]
-sources: []
-status: draft
+duration: "60분"
+prerequisites:
+  - "Claude 유료 플랜 (Pro, Max, Team, 또는 Enterprise의 해당 좌석)"
+  - "GitHub 계정"
+  - "웹 페이지(index.html)가 들어 있는 GitHub 저장소 하나 (6·7편에서 만든 파일을 올려도 돼요)"
+lastVerified: 2026-10-10
+sources:
+  - title: "Get started with Claude Code in the cloud"
+    url: "https://code.claude.com/docs/en/web-quickstart"
+  - title: "Use Claude Code in the cloud"
+    url: "https://code.claude.com/docs/en/claude-code-on-the-web"
+  - title: "Automate work with routines"
+    url: "https://code.claude.com/docs/en/routines"
+  - title: "Configuring a publishing source for your GitHub Pages site (GitHub 공식 문서 원본)"
+    url: "https://raw.githubusercontent.com/github/docs/main/content/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.md"
+  - title: "Managing environments for deployment (GitHub 공식 문서 원본)"
+    url: "https://raw.githubusercontent.com/github/docs/main/content/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments.md"
+  - title: "Changing the default branch (GitHub 공식 문서 원본)"
+    url: "https://raw.githubusercontent.com/github/docs/main/content/repositories/configuring-branches-and-merges-in-your-repository/managing-branches-in-your-repository/changing-the-default-branch.md"
+  - title: "Re-running workflows and jobs (GitHub 공식 문서 원본)"
+    url: "https://raw.githubusercontent.com/github/docs/main/content/actions/how-tos/manage-workflow-runs/re-run-workflows-and-jobs.md"
+  - title: "Deploy your Astro Site to GitHub Pages (Astro 공식 문서 원본)"
+    url: "https://raw.githubusercontent.com/withastro/docs/main/src/content/docs/en/guides/deploy/github.mdx"
+status: published
 ---
 
-import ComingSoon from '../../../components/ComingSoon.astro';
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import Coding08PagesFlow from '../../../components/diagrams/Coding08PagesFlow.astro';
 
-<ComingSoon />
+<Summary>
+- 이 편은 **과제 하나를 처음부터 끝까지** 해 보는 실습이에요. "README 개선 → 풀 리퀘스트(PR) → 병합 → GitHub Pages 공개"까지 이어져요. 클라우드 세션의 기능 설명은 [C13. 클라우드 세션](/new-project1/claude/c13-cloud-sessions/)에 있어요.
+- 작업은 claude.ai/code에서 저장소를 고르고 요청하면 돼요. Claude가 클라우드에서 작업 브랜치를 만들어 push하고, 나는 diff를 읽고 **Create PR**로 넘겨요.
+- 병합은 GitHub에서 내가 직접 눌러요. 사람이 검토하고 합치는 단계가 안전장치예요.
+- 공개 단계에서 **"Branch "main" is not allowed to deploy to github-pages due to environment protection rules."** 오류가 날 수 있어요. 이 사이트를 만들 때 실제로 겪은 문제이고, 해결법 3가지를 아래에 정리했어요.
+- 클라우드 VM 요금은 따로 없고 플랜 사용량에 합산돼요.
+</Summary>
 
-## 이 튜토리얼에서 배울 것
+## 이 튜토리얼로 할 수 있게 되는 것
 
-- 이 주제가 무엇이고 어떤 업무 상황에서 쓰이는지 이해하기
-- 시작하기 전에 필요한 계정과 준비물 확인하기
-- 예제를 단계별로 직접 따라 해 보기
-- 자주 막히는 지점과 해결 방법 알아 두기
+- 클라우드 세션에서 저장소를 고르고 README 개선을 맡길 수 있어요.
+- 결과 diff를 읽고 인라인 코멘트로 고칠 점을 전달한 뒤 PR을 만들 수 있어요.
+- PR을 GitHub에서 병합하고, 병합한 내용을 GitHub Pages로 공개할 수 있어요.
+- 배포가 환경 보호 규칙 때문에 거부될 때 원인을 찾아 고칠 수 있어요.
+
+## 먼저 알아둘 개념
+
+<Coding08PagesFlow />
+
+클라우드 세션의 구조(내 기기, 클라우드 VM, GitHub), 환경, 네트워크 수준은 [C13](/new-project1/claude/c13-cloud-sessions/)에서 설명해요. 여기서는 이 실습에 필요한 용어만 정리할게요.
+
+| 용어 | 뜻 |
+| --- | --- |
+| **브랜치(branch)** | 저장소의 작업 갈래예요. Claude는 `main`을 직접 고치지 않고 작업용 브랜치에 변경을 올려요. |
+| **풀 리퀘스트(PR)** | "이 브랜치의 변경을 `main`에 합쳐 주세요"라는 요청서예요. 변경점(diff)을 읽고 승인하는 자리예요. |
+| **병합(Merge)** | PR의 변경을 `main`에 합치는 동작이에요. |
+| **기본 브랜치(default branch)** | PR과 커밋의 기준이 되는 브랜치예요. 보통 `main`이에요. |
+| **GitHub Pages** | 저장소의 정적 파일을 웹 주소로 공개해 주는 GitHub 기능이에요. |
+| **환경 보호 규칙** | GitHub Pages 배포가 쓰는 `github-pages` 환경에 걸려 있는, "어떤 브랜치가 배포할 수 있는가" 같은 규칙이에요. |
+
+<Aside type="note" title="이 편의 연습 저장소">
+연습 저장소는 `index.html` 하나와 짧은 README가 있는 작은 저장소면 충분해요. 저장소가 없다면 GitHub에서 새 저장소를 만들고 6편이나 7편에서 만든 `index.html`을 올리세요. 클라우드 세션은 기존 GitHub 저장소에서 동작하므로, 새 프로젝트는 GitHub에서 빈 저장소를 먼저 만들어야 해요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  'claude.ai/code에서 GitHub를 연결했어요 (비공개 저장소라면 Claude GitHub App 설치까지)',
+  '저장소와 브랜치를 고르고 Plan 모드로 README 개선안을 먼저 받았어요',
+  '개선안을 승인하고 실행시킨 뒤 diff를 읽었어요',
+  '고칠 점은 인라인 코멘트로 전달했어요',
+  'Create PR로 PR을 만들었어요',
+  'GitHub에서 PR을 main에 병합했어요',
+  'Settings > Pages에서 게시 소스를 정하고 배포 결과를 확인했어요',
+  '배포가 거부되면 자주 막히는 지점의 해결법을 시도했어요',
+]} />
+
+<Steps>
+
+1. **GitHub 연결하기 (처음 한 번)**
+
+   [claude.ai/code](https://claude.ai/code)에 접속해 claude.ai 계정으로 로그인해요. 안내에 따라 GitHub 연결을 진행하면 GitHub 인증 화면으로 이동하고, 승인하면 돌아와요. 이미 연결했다면 건너뛰세요.
+
+   - 연결만으로는 공개 저장소만 클론할 수 있어요. **비공개 저장소는 Claude GitHub App이 설치된 곳만** 쓸 수 있어요. GitHub 조직 소속이라면 조직 소유자의 승인이 필요할 수 있어요.
+   - Pro와 Max는 온보딩에서 **Default** 환경이 자동으로 만들어져요. 이 실습은 Default 그대로 충분해요.
+   - Team·Enterprise는 조직 Owner가 GitHub 커넥터를 켜 둬야 해요. 로그인 화면에서 "GitHub access is required for Claude Code cloud sessions"가 보이면 Owner에게 문의하세요.
+
+   <ScreenshotPlaceholder caption="claude.ai/code의 GitHub 연결 화면" />
+
+2. **저장소와 브랜치 고르기, Plan 모드로 시작하기**
+
+   입력창 아래의 저장소 선택기에서 연습 저장소를 고르고, 브랜치는 `main`으로 둬요. 입력창 근처의 권한 모드에서 **Plan**을 고르세요. 클라우드 세션은 Auto, Accept edits, Plan 세 가지를 제공하고 Manual은 없어요(Auto는 조직 설정과 선택한 모델에 따라 보이지 않을 수 있어요).
+
+   Plan 모드는 Claude가 접근 방식을 제안하고 내가 승인하기 전에는 파일을 고치지 않는 모드예요. 처음 맡기는 작업은 계획부터 보면 실수가 줄어요.
+
+3. **README 개선 요청하기**
+
+   작업은 구체적으로 적을수록 좋아요. 파일 이름, 원하는 항목, 하지 말아야 할 것을 적으세요.
+
+   <PromptBox>
+   이 저장소의 README.md를 개선해 줘. 지금 README에 부족한 부분을 먼저 알려 주고, 다음 항목을 한국어로 정리하는 계획을 보여 줘. (1) 한 문단짜리 프로젝트 소개 (2) 파일 구성 표 (3) 내 컴퓨터에서 보는 방법 (index.html을 브라우저로 여는 방법) (4) 이 페이지를 수정하는 방법. 코드(index.html)는 바꾸지 말고 README.md만 수정해. 없는 기능을 지어내지 말고 실제 파일 내용을 읽고 써 줘.
+   </PromptBox>
+
+   Claude는 저장소를 클라우드 VM에 클론해 파일을 읽고 계획을 알려 줘요. 계획이 괜찮으면 승인해서 실행하게 하세요. 화면에서 진행을 지켜봐도 되고, 탭을 닫아도 세션은 계속 실행돼요. 끝나면 Claude가 작업 브랜치를 GitHub에 push해요.
+
+   <ScreenshotPlaceholder caption="Plan 모드에서 README 개선 계획이 표시된 화면" />
+
+4. **diff 읽고 코멘트하기**
+
+   작업이 끝나면 `+42 -18`처럼 추가·삭제된 줄 수를 보여 주는 표시가 있어요. 눌러서 diff 뷰를 열면 왼쪽에 파일 목록, 오른쪽에 변경 내용이 나와요. 확인할 것은 세 가지예요.
+
+   - README.md만 바뀌었는지 (`index.html` 등 다른 파일이 바뀌었다면 되돌려 달라고 하세요)
+   - 파일 구성 표에 실제 있는 파일만 있는지
+   - "보는 방법"이 실제로 따라 할 수 있는지
+
+   고칠 곳은 diff에서 줄을 선택하고 의견을 입력한 뒤 Enter를 눌러요. 코멘트는 다음 메시지를 보낼 때 함께 전달돼요. 그다음 채팅으로 "코멘트대로 고쳐 줘"라고 요청해요.
+
+5. **PR 만들기**
+
+   diff가 괜찮으면 diff 뷰 위쪽의 **Create PR**을 눌러요. 전체 PR, 초안(draft), GitHub의 작성 화면으로 이동하는 방식 중에서 고를 수 있어요. 연습에서는 전체 PR이면 충분해요. PR을 만든 뒤에도 세션은 유지되니, 리뷰 코멘트나 오류 메시지를 붙여 넣고 이어서 고치게 할 수 있어요.
+
+6. **GitHub에서 병합하기**
+
+   GitHub의 PR 화면에서 변경 파일(Files changed)을 한 번 더 읽고 병합 버튼으로 `main`에 합쳐요. 버튼 문구는 저장소 설정에 따라 조금 달라요. 화면 안내에 따르세요. 병합은 **내가 직접** 하는 단계로 남겨 두는 걸 권해요.
+
+7. **GitHub Pages로 공개하기**
+
+   GitHub 저장소의 Settings > Pages로 가서 "Build and deployment"의 Source를 정해요.
+
+   - **Deploy from a branch**: 가장 단순한 방법이에요. 브랜치(`main`)와 폴더(`/ (root)`)를 고르고 Save를 눌러요. 저장소 최상위에 `index.html`이 있으면 돼요.
+   - **GitHub Actions**: 빌드가 필요한 사이트(예: 이 사이트처럼 Astro로 만든 사이트)에 써요. 워크플로 파일이 필요하고, Astro의 경우 공식 문서가 `.github/workflows/deploy.yml`과 `astro.config.mjs`의 `site`·`base` 설정을 안내해요.
+
+   게시 소스를 정하면 배포가 실행돼요. 저장소의 Actions 탭에서 실행 결과를 보고, 성공하면 Settings > Pages에서 **Visit site** 링크로 사이트를 열어 봐요. 처음 공개에는 시간이 걸릴 수 있어요. 정확한 소요 시간은 GitHub 공식 문서에서 확인하세요.
+
+   <ScreenshotPlaceholder caption="Settings > Pages의 게시 소스 선택 화면" />
+
+   <Aside type="caution" title="공개하면 누구나 볼 수 있어요">
+   GitHub Pages 사이트는 인터넷에 공개돼요. 비공개 저장소여도 사이트는 공개될 수 있으니(플랜에 따라 다름), 공개 전에 `index.html`과 README에 개인정보와 내부 자료가 없는지 확인하세요. 비공개 저장소의 Pages 제공 조건은 GitHub 공식 문서에서 확인하세요.
+   </Aside>
+
+8. **끝낸 뒤 정리하기**
+
+   세션은 사이드바에서 보관(archive)하거나 삭제(delete)할 수 있어요. 필요한 PR이 이미 병합됐다면 정리해도 돼요.
+
+</Steps>
+
+## 빠른 참조표
+
+### 이 실습의 단계별 위치
+
+| 단계 | 어디서 | 눌러야 하는 것 |
+| --- | --- | --- |
+| 작업 맡기기 | claude.ai/code | 저장소 선택기, 권한 모드(Plan), 입력창 |
+| diff 검토 | claude.ai/code의 세션 | diff 표시기, 줄 선택 후 코멘트 |
+| PR 만들기 | claude.ai/code의 세션 | **Create PR** |
+| 병합 | GitHub의 PR 화면 | 병합 버튼(문구는 설정에 따라 다름) |
+| 공개 | GitHub 저장소의 Settings > Pages | Source 선택, Visit site |
+| 배포 확인 | GitHub 저장소의 Actions 탭 | 실행 결과, Re-run |
+
+### 클라우드 세션의 권한 모드 (2026-10-10 기준)
+
+| 모드 | 동작 |
+| --- | --- |
+| **Auto** | 분류기가 Claude의 동작을 검토해요. 조직 설정과 모델에 따라 보이지 않을 수 있어요 |
+| **Accept edits** | 변경하고 브랜치를 push하기까지 멈추지 않아요 |
+| **Plan** | 접근 방식을 제안하고 승인 전에는 파일을 고치지 않아요 |
+| Manual, Bypass | 클라우드 세션에서는 제공되지 않아요 |
+
+### 배포 오류 시 3가지 해결
+
+| 순서 | 어디서 | 할 일 |
+| --- | --- | --- |
+| 1 | Settings > General > Default branch | 기본 브랜치를 `main`으로 바꿔요 (저장소 admin 권한, 브랜치가 둘 이상 있어야 해요) |
+| 2 | Settings > Environments > github-pages > Deployment branches and tags | `main`을 허용하는 규칙을 추가해요 |
+| 3 | Actions 탭의 실패한 실행 | **Re-run all jobs**로 다시 실행해요 |
+
+## 자주 막히는 지점
+
+### 배포가 거부돼요: `Branch "main" is not allowed to deploy to github-pages due to environment protection rules.`
+
+이 사이트를 만들 때 실제로 겪은 문제예요.
+
+- **상황**: 빈 저장소에 처음 올린 브랜치가 **기본 브랜치(default branch)** 가 되었어요. 나중에 만든 `main`에서 시작한 GitHub Pages 배포가 거부됐어요.
+- **원인**: `github-pages` 환경의 보호 규칙이 허용하는 브랜치(여기서는 처음 올린 기본 브랜치)와 배포를 시도한 `main`이 달랐어요. GitHub 공식 문서에 따르면 워크플로가 참조하는 `github-pages` 환경이 없으면 자동 생성되고, 브랜치·폴더 소스 같은 암묵적 Pages 빌드로 만들어진 환경에는 소스 브랜치가 보호 규칙으로 추가돼요. 어떤 규칙이 만들어졌는지는 Environments 화면에서 직접 확인하세요.
+- **해결 1**: Settings > General > Default branch를 `main`으로 바꿔요.
+- **해결 2**: Settings > Environments > `github-pages` > Deployment branches and tags에 `main` 규칙을 추가해요. "Deployment branches" 드롭다운에서 **Selected branches and tags**를 고르고 **Add deployment branch or tag rule**로 Ref type은 Branch, 이름은 `main`을 넣은 뒤 **Add rule**을 눌러요.
+- **해결 3**: 실패한 실행을 Re-run 해요. Actions 탭에서 실패한 실행을 열고 **Re-run jobs** 드롭다운의 **Re-run all jobs**(또는 실패한 작업이 없을 때는 **Re-run all jobs** 버튼)를 눌러요.
+- 보통 1번이나 2번으로 규칙을 고친 뒤 3번으로 다시 실행하면 돼요. 바로 3번만 하면 같은 규칙에 또 막혀요.
+
+### claude.ai/code에서 저장소가 안 보여요
+
+- **원인**: 비공개 저장소는 Claude GitHub App이 그 계정이나 조직에 설치되어 있고, 설치 범위에 저장소가 포함되어야 보여요.
+- **해결**: Claude GitHub App을 해당 계정에 설치하세요. 조직이라면 조직 소유자에게 설치나 승인을 요청하세요. 터미널의 `/web-setup`으로 연결했다면 `gh` 토큰이 볼 수 있는 저장소가 보여요.
+
+### 로그인 화면에 GitHub 로그인 버튼만 보여요
+
+- **원인**: 클라우드 세션은 GitHub 연결이 필요해요. Team·Enterprise에서는 Owner가 GitHub 커넥터를 켜야 해요.
+- **해결**: 브라우저 연결을 진행하거나, GitHub CLI(`gh`)를 쓴다면 터미널에서 `/web-setup`을 실행하세요. Team·Enterprise에서는 Owner가 Quick setup을 켠 경우에만 `/web-setup`이 보여요.
+
+### 워크플로 파일을 고치는 push가 거부돼요
+
+- **원인**: `/web-setup`으로 연결한 `gh` 토큰에 `workflow` 권한 범위가 없으면, GitHub Actions 워크플로 파일을 바꾸는 push가 거부될 수 있어요.
+- **해결**: 터미널에서 `gh auth refresh -s workflow`를 실행한 뒤 `/web-setup`을 다시 실행하세요.
+
+### Claude가 시킨 것 이상을 바꿨어요
+
+- **원인**: 요청에 범위를 정해 주지 않았을 수 있어요.
+- **해결**: diff에서 불필요한 파일 변경을 확인하고 "README.md 외 변경은 되돌려 줘"라고 요청하세요. 병합 전이므로 `main`에는 영향이 없어요.
+
+## 실전 팁
+
+- **"하지 말 것"도 적으세요.** "코드는 바꾸지 말고 README만"처럼 범위를 막으면 diff가 작아져 검토가 쉬워요.
+- **작업마다 PR 하나.** 여러 작업을 한 번에 맡기면 diff가 커져 읽기 어려워요. 클라우드 세션은 작업마다 별도 세션과 브랜치가 생기므로 독립된 작업은 나눠서 시작할 수 있어요.
+- **병합은 직접.** Claude가 만든 PR이라도 병합은 사람이 하는 게 좋아요. 기본 브랜치 보호 규칙을 쓰고 있다면 그대로 두세요.
+- **사용량을 의식하세요.** 병렬로 여러 작업을 돌리면 그만큼 플랜 사용량이 줄어요. 자세한 한도는 [C2](/new-project1/claude/c02-plans-limits/)를 보세요.
+- **반복되는 점검은 루틴으로.** 예를 들어 매주 README가 최신인지 점검해 PR을 올리게 하는 일은 루틴으로 맡길 수 있어요. [10편](/new-project1/coding/10-delegate-agents/)에서 다뤄요.
+
+## 다음에 볼 튜토리얼
+
+- [10. 반복 업무를 에이전트에게 맡기기](/new-project1/coding/10-delegate-agents/) — 루틴으로 정기 점검 자동화
+- [C13. 클라우드 세션](/new-project1/claude/c13-cloud-sessions/) — 환경, 네트워크, teleport, Auto-fix 등 전체 참고서
+- [7. 업무용 웹 도구 만들기](/new-project1/coding/07-no-code-web-tools/) — 공개할 페이지 만들기

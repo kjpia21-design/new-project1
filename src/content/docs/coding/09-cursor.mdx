@@ -1,24 +1,233 @@
 ---
 title: "Cursor로 기존 코드 이해하고 고치기"
-description: "Cursor로 기존 코드를 읽고 수정하는 방법"
+description: "AI 코드 편집기 Cursor로 물려받은 코드를 이해하고, 작은 수정을 안전하게 맡기는 실습"
 sidebar:
   label: "9. Cursor로 코드 이해하고 고치기"
 level: practical
 category: coding
 tools: ["Cursor"]
-duration: "30분"
-prerequisites: ["사용할 도구의 계정"]
-sources: []
-status: draft
+duration: "40분"
+prerequisites:
+  - "Cursor 계정 (무료 플랜 제공 여부와 한도는 공식 가격 페이지에서 확인)"
+  - "이해하거나 고치고 싶은 기존 코드 폴더 (연습용 복사본 권장)"
+  - "Git 사용 경험이 있으면 좋지만 필수는 아니에요"
+lastVerified: 2026-10-10
+sources:
+  - title: "Cursor Quickstart"
+    url: "https://cursor.com/docs/get-started/quickstart"
+  - title: "Agent mode (Cursor Help)"
+    url: "https://cursor.com/help/ai-features/agent"
+  - title: "Ask mode (Cursor Help)"
+    url: "https://cursor.com/help/ai-features/ask-mode"
+  - title: "First project (Cursor Help)"
+    url: "https://cursor.com/help/getting-started/first-project.md"
+  - title: "Rules (Cursor Docs)"
+    url: "https://cursor.com/docs/rules"
+  - title: "Cursor IDE release notes"
+    url: "https://cursor.com/docs/release-notes/ide"
+  - title: "Data Use & Privacy Overview (Cursor)"
+    url: "https://cursor.com/data-use"
+  - title: "Pricing and plans (Cursor Help)"
+    url: "https://cursor.com/help/account-and-billing/pricing"
+  - title: "Claude Code overview"
+    url: "https://code.claude.com/docs/en/overview"
+status: published
 ---
 
-import ComingSoon from '../../../components/ComingSoon.astro';
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
-<ComingSoon />
+<Summary>
+- Cursor는 AI가 들어간 **코드 편집기**예요. 폴더를 열고 AI에게 코드를 설명받거나, 파일 수정을 맡길 수 있어요.
+- 기존 코드를 다룰 때는 **먼저 읽기 전용 Ask 모드로 이해하고, 그다음 Agent 모드로 작은 수정**을 맡기는 순서가 안전해요.
+- Agent의 수정은 작업 중에 적용되고, diff 뷰에서 검토해 거부할 수 있어요.
+- 프로젝트 지침은 **Rules**(`.cursor/rules`)에 적어 두면 돼요. 민감한 코드는 **Privacy Mode**와 제외 설정을 확인하세요.
+- 요금, 무료 한도, 메뉴 이름은 자주 바뀌어요. 이 글에서는 단정하지 않고 공식 페이지로 안내해요.
+</Summary>
 
-## 이 튜토리얼에서 배울 것
+<Aside type="caution" title="이 편의 조사 범위">
+이 글을 쓰는 동안 Cursor 공식 사이트에 직접 접속할 수 없어서, 공식 도메인(cursor.com) 검색 결과의 요약으로 확인한 내용만 썼어요(2026-10-10 기준). 메뉴 이름, 모드 이름, 가격, 무료 한도는 바뀔 수 있으니 실제 앱 화면과 공식 문서를 우선하세요. 확인하지 못한 부분은 "화면 안내에 따르세요"로 처리했어요.
+</Aside>
 
-- 이 주제가 무엇이고 어떤 업무 상황에서 쓰이는지 이해하기
-- 시작하기 전에 필요한 계정과 준비물 확인하기
-- 예제를 단계별로 직접 따라 해 보기
-- 자주 막히는 지점과 해결 방법 알아 두기
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- Cursor를 설치하고 기존 코드 폴더를 열어 AI에게 구조를 설명받을 수 있어요.
+- Ask 모드와 Agent 모드를 구분해서 쓸 수 있어요.
+- Agent가 한 수정을 diff로 검토하고, 마음에 안 드는 부분을 거부할 수 있어요.
+- 프로젝트 규칙(Rules)을 만들고, 민감한 코드를 다룰 때 확인할 것을 알아요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **Cursor** | AI 기능이 들어간 코드 편집기예요. 데스크톱 앱으로 설치해요. 터미널에서 쓰는 Cursor CLI도 있어요. |
+| **Agent 모드** | 코드를 읽고 여러 파일을 편집하는 모드예요. 코드베이스를 자동으로 검색하고, 편집을 작업 중에 적용해요. |
+| **Ask 모드** | 읽기 전용 모드예요. 코드를 이해하고 구조를 탐색할 때 쓰고, 파일은 바꾸지 않아요. |
+| **diff** | 바뀐 줄을 추가/삭제로 보여 주는 화면이에요. 수정을 받아들일지 거부할지 판단하는 기준이에요. |
+| **Rules** | AI가 따를 프로젝트 지침이에요. `.cursor/rules` 폴더에 두고 버전 관리와 함께 쓸 수 있어요. |
+| **인덱싱** | 코드베이스를 열면 자동으로 색인해서 AI가 컨텍스트로 쓸 수 있게 하는 동작이에요. |
+
+### Cursor와 Claude Code, 어떻게 다른가요?
+
+| | Cursor | Claude Code |
+| --- | --- | --- |
+| **형태** | 코드 편집기(데스크톱 앱), 터미널용 CLI도 있음 | 터미널·IDE 확장·데스크톱 앱·웹 |
+| **편한 점** | 코드를 눈으로 보면서 AI에게 묻고 고치기 | 대화로 작업을 맡기고 클라우드에서도 실행 |
+| **같이 쓰기** | Claude Code의 VS Code 확장은 Cursor에도 설치할 수 있어요 | 위 확장으로 Cursor 안에서 사용 가능 |
+| **고를 때** | 코드를 직접 읽고 편집하며 AI를 곁에 두고 싶을 때 | 작업을 설명해서 맡기고 결과를 검토하고 싶을 때 |
+
+어느 쪽이 더 낫다고 단정하기보다, 업무 방식에 맞는 도구를 고르세요. Claude Code 쪽은 [6편](/new-project1/coding/06-claude-code-start/)과 [C12](/new-project1/claude/c12-claude-code-overview/)를 보세요.
+
+## 단계별 따라하기
+
+<Checklist items={[
+  'Cursor를 설치하고 로그인했어요',
+  '연습용 복사본 폴더를 열었어요',
+  'Ask 모드로 코드베이스 구조를 물어봤어요',
+  '작은 수정을 Agent 모드에 맡기고 diff를 검토했어요',
+  '마음에 안 드는 변경을 거부하거나 되돌렸어요',
+  'Rules 파일을 만들었어요',
+  '민감한 코드 사용 전에 Privacy Mode와 제외 설정을 확인했어요',
+]} />
+
+<Steps>
+
+1. **설치하고 로그인하기**
+
+   Cursor 공식 사이트에서 내 운영체제용 설치 파일을 받아요. 공식 퀵스타트는 macOS는 `.dmg`, Windows는 `.exe`, Linux는 apt·dnf 패키지를 권장한다고 안내해요. 설치 뒤 앱을 열고 로그인하세요. 가격과 무료 한도는 [공식 가격 페이지](https://cursor.com/pricing)에서 확인하세요. 한국어 UI 지원 여부는 확인하지 못했으니 앱 설정을 보세요.
+
+   <ScreenshotPlaceholder caption="Cursor 첫 실행과 로그인 화면" />
+
+2. **연습용 폴더 열기**
+
+   처음에는 회사 저장소 원본이 아니라 **복사본**으로 연습하세요. 폴더를 선택해 열면 Cursor가 코드베이스를 자동으로 색인해요. 파일이 많으면 시간이 걸릴 수 있어요. 열기 메뉴의 이름은 화면 안내에 따르세요.
+
+3. **Ask 모드로 코드 이해하기**
+
+   채팅 입력창의 모드 선택기에서 **Ask**를 골라요(단축키나 모드 전환 방식은 앱 화면 안내에 따르세요. 공식 도움말은 Shift+Tab으로 모드를 순환한다고 안내해요). Ask 모드는 읽기 전용이라 파일이 바뀌지 않아요.
+
+   <PromptBox>
+   이 프로젝트가 무엇을 하는지 코딩을 모르는 사람이 이해할 수 있게 설명해 줘. 주요 폴더 구조, 시작점이 되는 파일, 데이터가 어디서 어디로 흐르는지를 표로 정리해 줘. 확실하지 않은 부분은 추측이라고 표시해 줘.
+   </PromptBox>
+
+   공식 퀵스타트도 폴더를 연 뒤 Agent에게 "코드베이스를 설명하고 어디부터 읽을지 알려 달라"고 묻는 것을 제안해요. Cursor가 저장소를 검색해 관련 파일을 읽고 요약해 줘요.
+
+   이어서 구체적으로 물어보세요.
+
+   <PromptBox>
+   로그인 실패 시 오류 메시지는 어디서 만들어지는지 찾아 줘. 관련 파일과 함수 이름, 그리고 그 파일을 고치면 영향받을 수 있는 다른 곳도 알려 줘. 아직 아무것도 수정하지 마.
+   </PromptBox>
+
+4. **Agent 모드로 작은 수정 맡기기**
+
+   수정은 **작고 확인 가능한 것**부터 시작하세요. 모드를 **Agent**로 바꾸고 요청해요.
+
+   <PromptBox>
+   로그인 실패 시 보이는 오류 메시지를 "아이디 또는 비밀번호를 확인해 주세요"로 바꿔 줘. 이 문구가 들어 있는 다른 파일(테스트 포함)도 찾아서 같이 맞춰 줘. 그 밖의 코드는 건드리지 마. 수정한 파일 목록과 이유를 마지막에 정리해 줘.
+   </PromptBox>
+
+   Agent의 수정은 작업 중에 적용되고, 결과는 diff 뷰에서 확인해요. 잘못된 방향으로 가면 Stop으로 취소하고 방향을 다시 알려 주면 된다고 공식 모범 사례가 안내해요.
+
+   <ScreenshotPlaceholder caption="Agent가 수정한 파일의 diff 화면" />
+
+5. **diff 검토하고 거부하기**
+
+   바뀐 파일을 하나씩 열어 보세요. 확인할 것은 (1) 요청한 곳만 바뀌었는지, (2) 관련 없는 파일이 같이 바뀌지 않았는지, (3) 줄 수가 갑자기 많이 늘지 않았는지예요. 원하지 않는 변경은 diff에서 거부할 수 있어요. 수정을 되돌리는 메뉴 이름은 앱 화면 안내에 따르세요. Git을 쓴다면 변경 사항을 커밋하기 전에 이 검토를 먼저 하고, 되돌릴 일이 생기면 Git으로도 돌아갈 수 있어요.
+
+   참고로 이전 메시지를 수정해 다시 보낼 때 Agent 모드에서는 파일을 그 시점으로 되돌릴지 묻는 동작이 릴리스 노트에 나와 있어요. 되돌리기 동작은 버전마다 다를 수 있으니 화면의 질문을 읽고 선택하세요.
+
+6. **Rules로 프로젝트 지침 만들기**
+
+   반복해서 말해야 하는 규칙은 Rules에 적어 두세요. 프로젝트 규칙은 `.cursor/rules`에 두고, 공식 문서에 따르면 규칙은 프런트매터가 있는 파일이어야 해요(프런트매터 없는 일반 `.md`는 무시돼요). 적용 방식은 Always Apply, Apply Intelligently, Apply to Specific Files, Apply Manually가 있어요.
+
+   <PromptBox>
+   이 프로젝트에 맞는 Cursor 규칙 파일을 .cursor/rules 폴더에 만들어 줘. 항상 적용되는 규칙으로, (1) 설명과 주석은 한국어로 쓴다 (2) 요청하지 않은 파일은 수정하지 않는다 (3) 수정한 파일 목록을 마지막에 정리한다는 내용을 넣어 줘. 프런트매터 형식은 Cursor 공식 문서 기준에 맞춰 줘.
+   </PromptBox>
+
+   생성된 파일의 프런트매터가 공식 문서(Rules)와 맞는지 한 번 확인하세요. 팀 단위 규칙과 사용자 규칙도 있지만 이 실습에서는 프로젝트 규칙만 다뤄요.
+
+7. **민감한 코드를 다루기 전에 확인하기**
+
+   회사 코드나 고객 정보가 들어 있다면 다음을 먼저 확인하세요.
+
+   - **Privacy Mode**: 공식 데이터 사용 페이지는 설정에서 Privacy Mode를 켜면 고객 데이터를 학습에 쓰지 않고, 모델 제공자와 데이터 비보존(ZDR) 계약을 유지한다고 설명해요. 다만 남용 탐지에 걸리면 저장될 수 있고, 일부 모델은 ZDR 범위 밖일 수 있다고도 밝히고 있어요. 현재 조건은 공식 페이지에서 직접 읽으세요.
+   - **제외 설정**: `.cursorignore`는 해당 파일이 채팅에 추가되거나 탭 완성에 전송되는 것을 막고 색인에서도 제외해요. 색인만 제어하는 `.cursorindexingignore`도 있어요.
+   - **회사 방침**: 사내 코드를 외부 AI 서비스에 올려도 되는지는 회사 정책이 먼저예요. 정책이 없으면 보안 담당자에게 확인하세요.
+   - `.env`, 비밀번호, API 키는 채팅에 붙여 넣지 마세요.
+
+</Steps>
+
+## 빠른 참조표
+
+### 모드 선택 가이드 (2026-10-10 기준, 모드 이름은 앱 버전에 따라 달라질 수 있어요)
+
+| 하고 싶은 일 | 모드 | 파일이 바뀌나요? |
+| --- | --- | --- |
+| 코드가 무엇을 하는지 이해 | Ask | 아니요 |
+| 구조 탐색, 영향 범위 파악 | Ask | 아니요 |
+| 작은 수정, 여러 파일 동시 수정 | Agent | 네, 작업 중 적용 |
+| 방향이 틀렸을 때 | Stop 후 재요청 | 이미 적용된 부분은 diff에서 검토 |
+
+### 규칙 종류와 적용 방식 (공식 문서 요약)
+
+| 종류 | 설명 |
+| --- | --- |
+| Project Rules | `.cursor/rules`에 두고 버전 관리와 함께 써요 |
+| User Rules | 내 환경 전체에 적용되는 개인 규칙 |
+| Team Rules | 팀 단위 규칙 |
+| AGENTS.md | 에이전트용 지침 파일 |
+
+적용 방식: Always Apply / Apply Intelligently / Apply to Specific Files / Apply Manually(@-멘션)
+
+### 개인정보·기밀 점검 목록
+
+| 점검 | 확인할 곳 |
+| --- | --- |
+| Privacy Mode가 켜져 있나요 | Cursor 설정, 공식 데이터 사용 페이지 |
+| 제외할 파일이 있나요 | `.cursorignore`, `.cursorindexingignore` |
+| 비밀 값이 코드에 들어 있나요 | `.env`, 설정 파일, 하드코딩된 키 |
+| 회사가 허용하나요 | 사내 보안 정책 |
+
+## 자주 막히는 지점
+
+### AI가 코드와 다른 말을 해요
+
+- **원인**: 관련 파일을 찾지 못했거나, 모르는 부분을 추측했을 수 있어요.
+- **해결**: 질문에 파일 이름이나 함수 이름을 넣어 범위를 좁히고, "확실하지 않으면 추측이라고 표시해 줘"를 덧붙이세요. 답을 코드에서 직접 확인하는 습관이 가장 안전해요.
+
+### Agent가 요청하지 않은 파일까지 수정했어요
+
+- **원인**: 요청 범위를 정해 주지 않았을 수 있어요.
+- **해결**: diff에서 불필요한 변경을 거부하세요. 다음 요청부터 "그 밖의 코드는 건드리지 마"를 쓰고, Rules에 같은 내용을 넣어 두세요.
+
+### Rules 파일이 적용되지 않는 것 같아요
+
+- **원인**: 공식 문서는 프런트매터 없는 일반 `.md` 파일을 `.cursor/rules`에서 무시한다고 설명해요.
+- **해결**: 파일 형식과 프런트매터를 공식 Rules 문서와 맞추고, 적용 방식을 Always Apply 등으로 지정하세요.
+
+### 큰 저장소에서 느리거나 엉뚱한 파일이 참조돼요
+
+- **원인**: 색인이 아직 끝나지 않았거나, 불필요한 파일(빌드 결과 등)이 색인에 포함되었을 수 있어요.
+- **해결**: 잠시 기다린 뒤 다시 시도하고, 필요 없는 폴더는 제외 설정에 추가하세요.
+
+### 요금이나 한도 때문에 막혀요
+
+- **원인**: 플랜별 한도가 있어요.
+- **해결**: 무료와 유료 플랜의 조건은 변동이 잦아서 이 글에서는 수치를 적지 않았어요. [공식 가격 페이지](https://cursor.com/pricing)와 도움말을 확인하세요.
+
+## 실전 팁
+
+- **이해 → 계획 → 수정 순서.** Ask로 이해하고, 수정 계획을 말로 받아 본 뒤 Agent에 맡기세요.
+- **작은 단위로 맡기세요.** 한 번에 한 가지 수정이 diff 검토에도, 되돌리기에도 편해요.
+- **수정 후에는 실제로 실행해 보세요.** AI의 설명을 믿기 전에 프로그램이나 테스트가 동작하는지 눈으로 확인하세요.
+- **Git으로 안전망을 만드세요.** 작업 전에 커밋해 두면 언제든 돌아갈 수 있어요.
+- **도구를 섞어 써도 돼요.** Claude Code 확장을 Cursor에 설치할 수도 있어요. 클라우드에서 돌리고 싶은 작업은 [8편](/new-project1/coding/08-cloud-github/)처럼 맡길 수 있어요.
+
+## 다음에 볼 튜토리얼
+
+- [10. 반복 업무를 에이전트에게 맡기기](/new-project1/coding/10-delegate-agents/) — 스킬·루틴·서브에이전트
+- [8. 클라우드 세션으로 GitHub 저장소 작업 맡기기](/new-project1/coding/08-cloud-github/) — 클라우드에서 PR까지
+- [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — CLAUDE.md, 권한 모드, 훅

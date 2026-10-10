@@ -1,24 +1,196 @@
 ---
 title: "Notion AI로 업무 문서와 데이터베이스 정리하기"
-description: "Notion AI로 업무 문서와 데이터베이스를 정리하는 방법"
+description: "Notion AI(에이전트, Q&A, 데이터베이스 Autofill)로 회의록과 업무 데이터베이스를 정리하는 방법과 플랜·크레딧·개인정보 주의점을 정리한 참고서"
 sidebar:
   label: "16. Notion AI로 문서 정리"
 level: practical
 category: automation
 tools: ["Notion"]
 duration: "30분"
-prerequisites: ["사용할 도구의 계정"]
-sources: []
-status: draft
+prerequisites:
+  - "Notion 계정 (Notion AI가 포함된 플랜이거나 체험 사용량이 남아 있는 워크스페이스)"
+  - "정리해 볼 회의록이나 업무 목록 (민감한 내용은 빼고 연습)"
+lastVerified: 2026-10-10
+sources:
+  - title: "What is Notion AI? FAQs"
+    url: "https://www.notion.com/help/notion-ai-faqs"
+  - title: "Meet your AI team (Notion AI 소개)"
+    url: "https://www.notion.com/product/ai"
+  - title: "Get started with Notion Agent (검색 요약으로 확인)"
+    url: "https://www.notion.com/help/notion-agent"
+  - title: "Notion AI autofill for databases"
+    url: "https://www.notion.com/help/autofill"
+  - title: "Get answers about work content faster with Q&A"
+    url: "https://www.notion.com/help/guides/get-answers-about-content-faster-with-q-and-a"
+  - title: "What are Notion credits? (검색 요약으로 확인)"
+    url: "https://www.notion.com/help/what-are-notion-credits"
+  - title: "Notion AI security & privacy practices"
+    url: "https://www.notion.com/help/notion-ai-security-practices"
+  - title: "Notion 요금제 페이지"
+    url: "https://www.notion.com/pricing"
+status: published
 ---
 
-import ComingSoon from '../../../components/ComingSoon.astro';
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
-<ComingSoon />
+<Summary>
+- Notion AI는 **Notion 안에 들어 있는 AI 기능 묶음**이에요. 에이전트(Agent), Q&A, 데이터베이스 Autofill, AI 회의록(AI Meeting Notes) 등이 있어요.
+- 질문하면 **내가 볼 수 있는 페이지**를 근거로 답하고, 데이터베이스에서는 **행마다 요약·태그를 자동으로 채워** 줘요.
+- 2026-10-10 기준, Notion AI는 Business·Enterprise 플랜에 포함되고 그 밖의 플랜은 체험용 사용량이 제한돼요. 가격·한도는 공식 페이지에서 확인하세요.
+- 기본 설정에서 Notion과 AI 하위 처리자는 고객 데이터로 모델을 학습하지 않는다고 안내돼요. 그래도 민감한 정보는 신중히 다루세요.
+</Summary>
 
-## 이 튜토리얼에서 배울 것
+<Aside type="caution" title="확인 중인 튜토리얼이에요">
+이 튜토리얼은 각 도구의 공식 사이트 검색 결과를 바탕으로 썼고, 공식 도움말 원문 대조를 아직 마치지 못했어요(2026-10-10 기준). 가격, 무료 한도, 메뉴 이름은 꼭 공식 페이지에서 다시 확인하세요. 원문 대조가 끝나면 이 안내를 지울게요.
+</Aside>
 
-- 이 주제가 무엇이고 어떤 업무 상황에서 쓰이는지 이해하기
-- 시작하기 전에 필요한 계정과 준비물 확인하기
-- 예제를 단계별로 직접 따라 해 보기
-- 자주 막히는 지점과 해결 방법 알아 두기
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 긴 회의록 페이지를 요약하고 **할 일(액션 아이템)**을 뽑아 달라고 시킬 수 있어요.
+- 워크스페이스 안의 여러 페이지에서 "그 결정이 어디 있었지?"를 질문으로 찾을 수 있어요.
+- 업무 데이터베이스에 **AI Autofill 속성**을 달아 행마다 요약·분류를 채울 수 있어요.
+- 어떤 기능이 어느 플랜·크레딧을 쓰는지 알고, 개인정보·기밀 주의점을 지킬 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **Notion AI** | Notion 워크스페이스에 통합된 AI 기능 전체를 부르는 이름이에요. |
+| **Notion Agent** | 화면 아래쪽 아이콘에서 대화하는 AI예요. 페이지를 읽고 정리하는 일을 맡길 수 있어요. 공식 도움말에 따르면 앱 연결도 에이전트에게 요청하거나 설정에서 해요. |
+| **Q&A** | 자연어로 질문하면 접근 권한이 있는 페이지에서 답을 찾아 주는 기능이에요. |
+| **Autofill** | 데이터베이스 속성의 한 종류예요. 행마다 AI가 값을 채워 줘요. |
+| **Basic Autofill** | 요약·태그·번역 같은 단순 작업용이에요. 웹을 검색하지 않아요. |
+| **Custom Agent Autofill** | 웹·워크스페이스 검색과 여러 단계 지시를 처리해요. 작업량에 따라 Notion 크레딧을 써요. |
+| **Notion 크레딧(credits)** | Custom Agent처럼 별도 과금되는 AI 작업에 쓰는 사용량 단위예요. 워크스페이스 전체가 공유해요. |
+
+<Aside type="note" title="확인하지 못한 점 (2026-10-10 기준)">
+- 이 튜토리얼의 Notion 정보는 공식 도메인(notion.com) 검색 결과 요약으로 확인했어요. 화면의 버튼·메뉴 이름을 직접 열어 보지는 못했어요. 아래 절차의 메뉴는 **화면 안내에 따르세요.**
+- Notion AI 전체의 한국어 지원 범위는 확인하지 못했어요. AI 회의록(AI Meeting Notes)의 지원 언어 목록에는 한국어가 있다고 확인했어요.
+- 가격과 크레딧 단가는 자주 바뀌어요. [Notion 요금제 페이지](https://www.notion.com/pricing)에서 확인하세요.
+</Aside>
+
+## 단계별 따라하기
+
+연습용 페이지로 시작하세요. 실제 고객 이름이나 연봉처럼 민감한 내용은 빼는 게 안전해요.
+
+<Checklist items={[
+  '연습용 회의록 페이지를 만들었어요',
+  'Notion Agent(또는 Q&A)로 요약과 액션 아이템을 받았어요',
+  '워크스페이스 전체에 질문해 봤어요',
+  '데이터베이스에 AI Autofill 속성을 추가했어요',
+  '결과를 원문과 대조해 틀린 곳을 고쳤어요',
+  '내 플랜에서 어떤 기능이 포함인지 확인했어요',
+]} />
+
+<Steps>
+
+1. **연습용 회의록 페이지 만들기**
+
+   새 페이지에 가상의 회의 내용을 붙여넣어요. 참석자, 논의 내용, 결정 사항이 섞여 있는 글이 좋아요.
+
+2. **페이지 요약과 액션 아이템 받기**
+
+   화면 아래쪽에 있는 Notion Agent(공식 도움말에서는 아래쪽의 캐릭터 아이콘으로 설명해요)를 열어서 요청해요. 메뉴 모양은 버전에 따라 달라질 수 있으니 화면 안내를 따르세요.
+
+   <PromptBox>
+   이 페이지의 회의 내용을 3줄로 요약해 줘. 그리고 "해야 할 일"을 담당자, 마감일, 내용 순서의 표로 뽑아 줘. 페이지에 담당자나 마감일이 없으면 지어내지 말고 "미정"이라고 써 줘.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Notion Agent에 페이지 요약을 요청하는 화면" />
+
+3. **워크스페이스에 질문하기**
+
+   Q&A는 공식 설명 기준으로 내가 접근 권한이 있는 페이지에서만 근거를 찾아요. 질문에 기간이나 프로젝트 이름을 넣으면 정확해져요.
+
+   <PromptBox>
+   지난달 마케팅 회의에서 정해진 예산 결정이 어느 페이지에 있었는지 찾아서 요약해 줘. 근거가 된 페이지 이름도 알려 줘.
+   </PromptBox>
+
+   <Aside type="tip">
+   답에 나온 근거 페이지를 직접 열어 확인하세요. 같은 말을 한 페이지가 여러 개면 AI가 오래된 쪽을 고를 수 있어요.
+   </Aside>
+
+4. **데이터베이스에 AI Autofill 추가하기**
+
+   업무 목록 데이터베이스를 하나 만들고 열(속성)을 추가할 때 AI Autofill 종류를 고르면 돼요. 정확한 메뉴 이름은 [공식 Autofill 도움말](https://www.notion.com/help/autofill)과 화면 안내를 따르세요. 요약, 태그 붙이기, 번역은 Basic Autofill로 충분해요. 웹이나 워크스페이스 검색이 필요하면 Custom Agent Autofill인데, 크레딧을 쓸 수 있으니 먼저 소량으로 시험하세요.
+
+   <PromptBox label="Autofill 속성에 넣을 지시문 예시">
+   이 행의 "내용" 속성을 읽고 한 문장으로 요약해 줘. 분류는 "영업", "개발", "운영", "기타" 중 하나로만 답해.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="데이터베이스에 AI Autofill 속성을 추가하는 화면" />
+
+5. **결과 검수하고 고치기**
+
+   AI가 채운 값을 원문과 비교해요. 틀린 분류는 지시문에 기준을 더 구체적으로 적어 다시 채우세요. "그 외에는 기타로 답해" 같은 기본값을 넣으면 안정적이에요.
+
+6. **내 플랜에서 쓸 수 있는지 확인하기**
+
+   기능이 안 보이거나 사용량 안내가 뜨면 플랜 때문일 수 있어요. 아래 참조표를 보고 요금제 페이지에서 확인하세요.
+
+</Steps>
+
+## 빠른 참조표
+
+### 기능별 정리 (2026-10-10 기준)
+
+| 기능 | 하는 일 | 비용 관련 |
+| --- | --- | --- |
+| Notion Agent | 페이지 읽기·정리, 질문 답변 | Business·Enterprise에 사용 허용량 포함(검색 요약 기준) |
+| Q&A | 접근 가능한 페이지에서 답 찾기 | 현재 플랜 조건은 공식 페이지 확인 |
+| Basic Autofill | 요약·태그·번역 | Business·Enterprise 포함 |
+| Custom Agent Autofill | 웹·워크스페이스 검색, 다단계 지시 | Notion 크레딧 사용 |
+| AI Meeting Notes | 회의 녹음 기반 노트 | Business·Enterprise에 포함, 한국어는 지원 언어 목록에 있음 |
+
+### 개인정보 (공식 보안 도움말 기준)
+
+| 항목 | 내용 |
+| --- | --- |
+| 모델 학습 | 기본적으로 Notion과 AI 하위 처리자는 고객 데이터로 모델을 학습하지 않음 |
+| 데이터 보존 | Enterprise는 LLM 제공자가 처리 후 보존하지 않음, 그 외 워크스페이스는 최대 30일 보존 후 삭제 |
+| 선택 프로그램 | AI LEAP 프로그램은 데이터를 공유하는 대신 신기능 우선 접근을 받는 선택형이에요 |
+
+## 자주 막히는 지점
+
+### AI 메뉴가 안 보이거나 사용량이 모자란대요
+
+- **원인**: 플랜이 Notion AI 포함 플랜이 아니거나 체험 사용량을 다 썼을 수 있어요.
+- **해결**: 워크스페이스 관리자에게 플랜을 확인하세요. 한도 숫자는 공식 요금제 페이지에서 확인하세요.
+
+### Autofill이 엉뚱한 값을 채워요
+
+- **원인**: 지시문이 모호하거나 Basic Autofill로는 외부 정보가 필요한 일을 시켰어요. Basic은 웹을 검색하지 않아요.
+- **해결**: 선택지를 고정하고 "모르면 미정"을 넣으세요. 외부 정보가 필요하면 Custom Agent Autofill을 소량 시험해 보세요.
+
+### 크레딧이 빨리 줄어요
+
+- **원인**: Custom Agent Autofill은 작업량에 따라 크레딧을 써요. 행이 많으면 부담이 커져요.
+- **해결**: 소수의 행으로 먼저 시험하고, 단순 작업은 Basic Autofill로 돌리세요.
+
+### 찾는 내용이 답에 안 나와요
+
+- **원인**: Q&A는 내가 접근 권한이 있는 페이지만 봐요. 권한이 없거나 다른 곳에 있는 내용은 찾지 못해요.
+- **해결**: 권한을 확인하고, 질문에 프로젝트·기간 같은 단서를 넣으세요.
+
+### 회사 기밀이 걱정돼요
+
+- **원인**: 회사마다 AI 사용 규정이 달라요.
+- **해결**: 사내 보안 담당자의 지침을 먼저 확인하세요. 공식 안내는 기본적으로 학습에 쓰지 않는다고 하지만, 규정 준수 여부는 회사가 판단해야 해요.
+
+## 실전 팁
+
+- **지시문에 형식을 정해 주세요.** "표로", "3줄로"처럼 출력 모양을 정하면 다시 손볼 일이 줄어요. 프롬프트 요령은 [Claude 프롬프트 작성법](/new-project1/claude/c04-prompting/)에도 있어요.
+- **근거를 같이 달라고 하세요.** "근거 페이지 이름도 알려 줘"를 습관으로 만드세요.
+- **AI 결과는 초안이에요.** 마감일·금액 같은 숫자는 사람이 확인하세요.
+- **Notion 밖의 도구와 잇고 싶다면** 커넥터(MCP)로 연결하는 방법이 있어요. [커넥터(MCP)로 AI와 업무 도구 연결하기](/new-project1/automation/20-connectors-mcp/)를 보세요.
+
+## 다음에 볼 튜토리얼
+
+- [17. Gmail·캘린더 아침 브리핑 받기](/new-project1/automation/17-morning-briefing/) — 메일과 일정을 AI가 아침마다 정리
+- [18. Zapier/Make로 메일 → 시트 → 알림 자동화](/new-project1/automation/18-zapier-make/) — 규칙으로 도는 자동화
+- [20. 커넥터(MCP)로 AI와 업무 도구 연결하기](/new-project1/automation/20-connectors-mcp/)

@@ -1,0 +1,44 @@
+---
+// coding/08 도식: 클라우드 세션 브랜치 -> PR -> main 병합 -> GitHub Pages 배포
+---
+<figure class="diagram not-content">
+  <svg viewBox="0 0 360 440" role="img" aria-labelledby="c08-title c08-desc">
+    <title id="c08-title">README 개선부터 Pages 배포까지의 흐름</title>
+    <desc id="c08-desc">클라우드 세션이 작업 브랜치에 README 변경을 올리고, 풀 리퀘스트를 만들어 main에 병합하면, main에 대한 push로 GitHub Actions가 실행되어 GitHub Pages에 배포됩니다.</desc>
+    <g class="box coral"><rect x="30" y="10" width="300" height="90" rx="16" />
+      <text x="180" y="42" class="t1">1. 클라우드 세션</text>
+      <text x="180" y="66" class="t2">README를 고치고 작업 브랜치에 push</text>
+      <text x="180" y="86" class="t3">내 컴퓨터는 꺼져 있어도 돼요</text></g>
+    <g class="arrow"><path d="M180 102 V128" /><path d="M171 120 L180 130 L189 120" /></g>
+    <g class="box blue"><rect x="30" y="132" width="300" height="90" rx="16" />
+      <text x="180" y="164" class="t1">2. 풀 리퀘스트(PR)</text>
+      <text x="180" y="188" class="t2">diff를 읽고 Create PR</text>
+      <text x="180" y="208" class="t3">내가 눈으로 확인하는 단계예요</text></g>
+    <g class="arrow"><path d="M180 224 V250" /><path d="M171 242 L180 252 L189 242" /></g>
+    <g class="box green"><rect x="30" y="254" width="300" height="90" rx="16" />
+      <text x="180" y="286" class="t1">3. main에 병합(Merge)</text>
+      <text x="180" y="310" class="t2">main에 push가 일어나요</text>
+      <text x="180" y="330" class="t3">배포 워크플로가 시작돼요</text></g>
+    <g class="arrow"><path d="M180 346 V372" /><path d="M171 364 L180 374 L189 364" /></g>
+    <g class="box blue"><rect x="30" y="376" width="300" height="56" rx="16" />
+      <text x="180" y="400" class="t1">4. GitHub Pages</text>
+      <text x="180" y="420" class="t3">Actions 실행 결과가 사이트로 공개돼요</text></g>
+  </svg>
+</figure>
+
+<style>
+  .diagram { margin: 1.5rem auto; max-width: 400px; }
+  svg { width: 100%; height: auto; display: block; }
+  .box rect { stroke-width: 2; }
+  .blue rect { fill: var(--ai-blue-bg); stroke: var(--ai-blue-fg); }
+  .green rect { fill: var(--ai-green-bg); stroke: var(--ai-green-fg); }
+  .coral rect { fill: var(--ai-coral-soft); stroke: var(--ai-coral); }
+  .blue text { fill: var(--ai-blue-fg); }
+  .green text { fill: var(--ai-green-fg); }
+  .coral text { fill: var(--sl-color-white); }
+  text { text-anchor: middle; font-family: var(--sl-font); }
+  .t1 { font-size: 19px; font-weight: 800; }
+  .t2 { font-size: 14px; font-weight: 600; }
+  .t3 { font-size: 12.5px; }
+  .arrow path { fill: none; stroke: var(--sl-color-gray-2); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+</style>

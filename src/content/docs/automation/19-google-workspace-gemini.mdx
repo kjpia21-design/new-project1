@@ -1,24 +1,209 @@
 ---
 title: "Google Workspace의 AI 기능(Gemini) 실무 활용"
-description: "Google Workspace의 AI 기능을 업무에 활용하는 방법"
+description: "Gmail, Docs, Sheets에서 Gemini로 메일 요약·답장 초안·문서 초안·표 정리를 하는 방법과 에디션·언어·개인정보·관리자 설정 주의점을 정리한 참고서"
 sidebar:
   label: "19. Google Workspace와 Gemini"
 level: practical
 category: automation
-tools: ["Gemini", "Google Workspace"]
+tools: ["Gemini", "Google Workspace", "Gmail", "Google Docs", "Google Sheets"]
 duration: "30분"
-prerequisites: ["사용할 도구의 계정"]
-sources: []
-status: draft
+prerequisites:
+  - "Gemini 기능이 켜진 Google Workspace 계정 (회사·학교 관리자가 허용해야 할 수 있음)"
+  - "연습용 메일 스레드와 문서"
+lastVerified: 2026-10-10
+sources:
+  - title: "Gemini AI features now included in Google Workspace subscriptions"
+    url: "https://knowledge.workspace.google.com/admin/generative-ai/workspace-with-gemini/gemini-ai-features-now-included-in-google-workspace-subscriptions"
+  - title: "Collaborate with Gemini in Gmail"
+    url: "https://support.google.com/mail/answer/14199860"
+  - title: "Summarize content & organize data - Google Workspace Learning Center"
+    url: "https://support.google.com/a/users/answer/14506398"
+  - title: "Start with a great prompt - Google Workspace Learning Center"
+    url: "https://support.google.com/a/users/answer/14590328"
+  - title: "Collaborate with Gemini in Google Sheets"
+    url: "https://support.google.com/docs/answer/14356410"
+  - title: "Supported languages for Google Workspace with Gemini"
+    url: "https://support.google.com/docs/answer/14925782"
+  - title: "Generative AI in Google Workspace Privacy Hub"
+    url: "https://support.google.com/a/answer/15706919"
+  - title: "Turn the Gemini App on or off (관리자)"
+    url: "https://knowledge.workspace.google.com/admin/gemini/turn-the-gemini-app-on-or-off"
+  - title: "Google Workspace 요금제"
+    url: "https://workspace.google.com/pricing"
+status: published
 ---
 
-import ComingSoon from '../../../components/ComingSoon.astro';
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
-<ComingSoon />
+<Summary>
+- Google Workspace의 **Gmail·Docs·Sheets 안에서 바로** Gemini를 쓸 수 있어요. 메일 요약, 답장 초안, 문서 초안, 표 정리가 대표 업무예요.
+- 공식 안내에 따르면 2025년 1월부터 Business·Enterprise 에디션에 Gemini 기능이 **기본 포함**돼요. 다만 에디션·관리자 설정·언어에 따라 보이는 기능이 달라요(2026-10-10 기준).
+- 버튼 이름이 도움말마다 달라요. Gmail·Docs는 **Help me write**, Sheets는 **Ask Gemini**로 안내되고, 스레드 요약은 Gemini 사이드 패널에서 해요.
+- 한국어 지원 범위가 기능마다 달라요. 공식 언어 목록을 확인하세요.
+</Summary>
 
-## 이 튜토리얼에서 배울 것
+<Aside type="caution" title="확인 중인 튜토리얼이에요">
+이 튜토리얼은 각 도구의 공식 사이트 검색 결과를 바탕으로 썼고, 공식 도움말 원문 대조를 아직 마치지 못했어요(2026-10-10 기준). 가격, 무료 한도, 메뉴 이름은 꼭 공식 페이지에서 다시 확인하세요. 원문 대조가 끝나면 이 안내를 지울게요.
+</Aside>
 
-- 이 주제가 무엇이고 어떤 업무 상황에서 쓰이는지 이해하기
-- 시작하기 전에 필요한 계정과 준비물 확인하기
-- 예제를 단계별로 직접 따라 해 보기
-- 자주 막히는 지점과 해결 방법 알아 두기
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- Gmail에서 긴 메일 스레드를 요약하고 **답장 초안**을 받을 수 있어요.
+- Docs에서 보고서 **초안**을 쓰고 다듬을 수 있어요.
+- Sheets에서 Gemini에게 표 정리와 분석을 맡길 수 있어요.
+- 내 계정에서 Gemini가 왜 안 보이는지(에디션·관리자·언어) 점검할 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **Gemini for Google Workspace** | Gmail, Docs, Sheets, Slides, Meet 등 Workspace 앱 안에 들어 있는 Google의 AI 기능이에요. |
+| **Gemini 앱** | gemini.google.com과 모바일 앱의 별도 대화형 서비스예요. 관리자는 이 앱과 Workspace 안의 기능을 따로 제어해요. |
+| **Help me write** | Gmail·Docs에서 초안을 만들고 다듬는 기능의 버튼 이름이에요. |
+| **Ask Gemini** | Sheets의 오른쪽 위 버튼이에요. 사이드 패널이 열려 프롬프트를 입력해요. Gmail 스레드 요약 안내에도 같은 이름이 나와요. |
+| **에디션(Edition)** | Business Starter·Standard·Plus 같은 Workspace 요금제 단계예요. 에디션마다 Gemini 범위가 달라요. |
+
+<Aside type="note" title="계정 종류에 따라 화면이 달라요 (2026-10-10 기준)">
+공식 도움말은 회사·학교용 Workspace 계정과 개인 구독(Google AI Pro·Ultra 등) 계정의 안내를 따로 둬요. 한 도움말에서는 일부 개인 구독자가 Ask Gemini 대신 스레드 요약 개요(AI Overview)를 본다고 안내해요. 내 화면에 버튼이 없으면 이상한 게 아니라 **계정 종류 때문일 수 있으니** 화면 안내를 따르세요.
+</Aside>
+
+## 단계별 따라하기
+
+연습은 가짜 메일과 가상 보고서로 하세요. 실제 고객 정보는 쓰지 마세요.
+
+<Checklist items={[
+  '내 계정에 Gemini 기능이 켜져 있는지 확인했어요',
+  'Gmail에서 긴 스레드를 요약해 봤어요',
+  'Help me write로 답장 초안을 만들고 직접 고쳤어요',
+  'Docs에서 보고서 초안을 만들고 다듬었어요',
+  'Sheets에서 Ask Gemini로 표를 정리했어요',
+  '결과의 사실·숫자를 원문과 대조했어요',
+]} />
+
+<Steps>
+
+1. **내 계정에서 Gemini가 켜져 있는지 확인하기**
+
+   Gmail, Docs, Sheets를 열어 Gemini 관련 버튼이 보이는지 확인해요. 보이지 않으면 회사·학교 관리자가 꺼 놓았거나 에디션에 없는 기능일 수 있어요. 관리자는 관리 콘솔(Admin console)의 생성형 AI(Generative AI) 설정에서 제어해요. 조직 단위(OU)나 그룹별로 다르게 켜질 수 있어서, 문의할 때 어떤 기능이 안 보이는지 알려 주면 빨라요.
+
+2. **Gmail: 긴 스레드 요약하기**
+
+   스레드를 열고 오른쪽 위의 **Ask Gemini**를 눌러 사이드 패널을 열어요. 제안된 프롬프트를 고르거나 직접 입력하세요. 공식 도움말은 "Summarize this email" 같은 프롬프트와 회신이 2개를 넘는 스레드 요약을 안내해요. 패널이 닫혀 있으면 스레드 맨 위의 요약 버튼이 나올 수도 있어요. 버튼 이름은 화면 안내를 따르세요.
+
+   <PromptBox>
+   이 메일 스레드를 요약해 줘. 결정된 것, 아직 정해지지 않은 것, 내가 해야 할 일을 나눠서 불릿으로 알려 줘. 마감일이 있으면 같이 적어 줘.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Gmail 스레드에서 Gemini 사이드 패널로 요약하는 화면" />
+
+3. **Gmail: 답장 초안 만들기**
+
+   새 메일 또는 답장 창에서 **Help me write**를 눌러 요청을 입력하면 초안이 만들어져요. 공식 안내에서 Gmail 초안 작성은 한국어를 포함한 8개 언어를 지원한다고 확인했어요. 만들어진 글은 반드시 읽고 고친 뒤 보내세요.
+
+   <PromptBox>
+   거래처 김 팀장님께 보내는 답장을 써 줘. 요청하신 견적서는 금요일까지 보내겠다는 내용이고, 정중하되 짧게. 존댓말로, 3문장 이내로.
+   </PromptBox>
+
+4. **Docs: 보고서 초안 만들고 다듬기**
+
+   새 문서에서 왼쪽의 **Help me write**를 누르고 프롬프트를 입력한 뒤 **Create**를 눌러요. 결과가 마음에 들면 **Insert**, 고치고 싶으면 **Refine**을 쓰세요(Google 교육 자료의 안내 기준). 한국어 글쓰기 지원 범위는 [공식 언어 목록](https://support.google.com/docs/answer/14925782)에서 확인하세요.
+
+   <PromptBox>
+   "3분기 영업 실적 보고서" 초안을 써 줘. 구성은 요약, 실적 표, 원인 분석, 다음 분기 계획 순서. 숫자는 내가 따로 넣을 거라서 [ ]로 비워 둬.
+   </PromptBox>
+
+   <Aside type="caution" title="숫자는 비워 두게 하세요">
+   AI가 그럴듯한 숫자를 지어낼 수 있어요. 수치는 직접 넣고, AI에게는 구조와 문장을 맡기세요.
+   </Aside>
+
+5. **Sheets: Ask Gemini로 표 정리하기**
+
+   시트 오른쪽 위의 **Ask Gemini**를 눌러 사이드 패널을 열고 요청해요.
+
+   <PromptBox>
+   이 표에서 지역별 매출 합계를 구하고, 전월 대비 감소한 지역을 알려 줘. 어떤 열을 근거로 계산했는지도 설명해 줘.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Sheets 오른쪽 위 Ask Gemini 패널에서 표 분석을 요청하는 화면" />
+
+6. **결과 확인하기**
+
+   AI가 만든 요약·초안·계산은 원문과 대조해요. 특히 이름, 날짜, 금액, 약속 문구를 확인하세요.
+
+</Steps>
+
+## 빠른 참조표
+
+### 앱별 기능과 위치 (2026-10-10 기준, 공식 도움말 안내)
+
+| 앱 | 기능 | 위치 / 버튼 |
+| --- | --- | --- |
+| Gmail | 스레드 요약 | 오른쪽 위 Ask Gemini 사이드 패널 (계정에 따라 다름) |
+| Gmail | 초안 작성·다듬기 | Help me write |
+| Docs | 초안 작성, 다듬기 | 왼쪽 Help me write > Create > Refine / Insert |
+| Sheets | 표 정리·분석 | 오른쪽 위 Ask Gemini |
+| Slides | Gemini 협업 기능 | [공식 도움말](https://support.google.com/docs/answer/14207419) 참고 |
+
+### 가격과 에디션 (미국 USD, 검색 요약 기준)
+
+| 에디션 | 연간/고정 약정 | 유연(월 단위) |
+| --- | --- | --- |
+| Business Starter | $7 | $8.40 |
+| Business Standard | $14 | $16.80 |
+| Business Plus | $22 | $26.40 |
+
+사용자 1명당 월 요금이에요. 한국 원화 가격과 프로모션은 확인하지 못했어요. [Google Workspace 요금제](https://workspace.google.com/pricing)에서 확인하세요. 에디션별 Gemini 범위 차이도 같은 페이지에서 비교하세요.
+
+### 개인정보와 관리
+
+| 항목 | 내용 |
+| --- | --- |
+| 모델 학습 | Workspace는 고객 데이터를 고객 사전 허가 없이 생성형 AI 모델 학습에 쓰지 않는다고 안내 |
+| 주의 | 회사 계정으로 로그인한 사용자가 개인 계정으로 Gemini 앱에 공유한 데이터는 학습에 쓰일 수 있다는 안내가 있음 |
+| 관리자 제어 | Gemini 앱은 관리 콘솔에서 서비스 on/off, 조직 단위·그룹별 설정 가능. Workspace 앱 안의 Gemini는 별도 설정 |
+| 대화 기록 | 관리자가 저장 여부와 보관 기간을 정할 수 있음 |
+
+## 자주 막히는 지점
+
+### Gemini 버튼이 안 보여요
+
+- **원인**: 에디션에 없거나, 관리자가 꺼 놓았거나, 계정 종류(개인/회사)에 따라 화면이 달라요.
+- **해결**: 관리자에게 어떤 앱의 어떤 기능이 안 보이는지 알려 주세요. 개인 계정이라면 구독 상태를 확인하세요.
+
+### 한국어 결과가 어색하거나 기능이 한국어를 지원하지 않아요
+
+- **원인**: 기능마다 지원 언어가 달라요. 공식 안내에 따르면 일부 기능은 영어만 지원해요.
+- **해결**: [공식 언어 목록](https://support.google.com/docs/answer/14925782)을 확인하고, 필요하면 프롬프트에 "한국어 존댓말로"를 명시하세요.
+
+### 요약이 중요한 내용을 놓쳤어요
+
+- **원인**: 긴 스레드의 첨부 파일이나 맥락은 요약에 반영되지 않을 수 있어요.
+- **해결**: "결정된 것/미정/내가 할 일"처럼 항목을 지정하고, 핵심 메일은 원문을 확인하세요.
+
+### 회사 기밀을 써도 될지 모르겠어요
+
+- **원인**: 회사마다 AI 사용 규정이 달라요.
+- **해결**: 공식 개인정보 안내(Privacy Hub)를 읽고 사내 보안 담당자에게 확인하세요. 개인 계정의 Gemini 앱에 업무 자료를 붙여넣지 마세요.
+
+### 화면 문구가 설명과 달라요
+
+- **원인**: 도움말마다 버튼 이름이 다르게 쓰여 있고 자주 바뀌어요.
+- **해결**: 사이드 패널의 제안 프롬프트나 화면 안내를 따르세요.
+
+## 실전 팁
+
+- **구체적으로 시키세요.** 대상, 목적, 길이, 말투를 적으세요. 프롬프트 요령은 [Claude 프롬프트 작성법](/new-project1/claude/c04-prompting/)과 비슷하게 적용돼요.
+- **초안은 초안이에요.** 보내기 전에 꼭 읽으세요.
+- **작업 환경이 Workspace라면 이 방식이 가장 가까워요.** 별도 앱으로 옮겨 붙이지 않아도 돼서 편하지만, Gemini를 다른 도구와 비교하려면 [Claude·ChatGPT·Gemini 비교](/new-project1/chat/05-compare-assistants/)를 참고하세요.
+- **메일을 AI가 정리해 주길 원한다면** Claude 커넥터 방식과 비교해 보세요. [17. 아침 브리핑](/new-project1/automation/17-morning-briefing/)
+
+## 다음에 볼 튜토리얼
+
+- [17. Gmail·캘린더 아침 브리핑 받기](/new-project1/automation/17-morning-briefing/)
+- [20. 커넥터(MCP)로 AI와 업무 도구 연결하기](/new-project1/automation/20-connectors-mcp/)
+- [C4. 프롬프트 작성법](/new-project1/claude/c04-prompting/)

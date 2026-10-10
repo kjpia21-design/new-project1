@@ -1,24 +1,264 @@
 ---
 title: "Claude Code 개요: 터미널·데스크톱·웹"
-description: "터미널, 데스크톱, 웹에서 쓰는 Claude Code를 한눈에 살펴보기"
+description: "Claude Code를 어디서 쓸지 고르고, 설치부터 첫 작업까지 따라 해 보는 참고서"
 sidebar:
   label: "C12. Claude Code 개요"
 level: practical
 category: claude
 tools: ["Claude Code"]
-duration: "25분"
-prerequisites: ["사용할 도구의 계정"]
-sources: []
-status: draft
+duration: "30분"
+prerequisites:
+  - "Claude 유료 플랜 (Pro, Max, Team, Enterprise) 또는 Anthropic Console 계정"
+  - "작업할 코드 프로젝트 폴더 하나"
+  - "터미널 (macOS, Linux, WSL, Windows PowerShell 또는 CMD)"
+lastVerified: 2026-10-10
+sources:
+  - title: "Claude Code overview"
+    url: "https://code.claude.com/docs/en/overview"
+  - title: "Quickstart"
+    url: "https://code.claude.com/docs/en/quickstart"
+  - title: "Commands"
+    url: "https://code.claude.com/docs/en/commands"
+  - title: "Pricing"
+    url: "https://claude.com/pricing"
+status: published
 ---
 
-import ComingSoon from '../../../components/ComingSoon.astro';
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
-<ComingSoon />
+<Summary>
+- Claude Code는 코드베이스를 읽고, 파일을 수정하고, 명령을 실행하고, 개발 도구와 연동하는 **에이전트형 코딩 도구**예요.
+- 터미널(CLI), IDE(VS Code·JetBrains), 데스크톱 앱의 Code 탭, 웹(claude.ai/code)에서 쓸 수 있어요. 모두 같은 엔진이라 CLAUDE.md, 설정, MCP 서버가 공통으로 동작해요.
+- 설치는 한 줄이에요. macOS/Linux/WSL은 `curl -fsSL https://claude.ai/install.sh | bash`, Windows PowerShell은 `irm https://claude.ai/install.ps1 | iex`예요.
+- 설치 후 프로젝트 폴더에서 `claude`를 실행하고 로그인한 다음 자연어로 요청하면 돼요.
+- Pro 이상 유료 플랜에서 쓸 수 있고 Free는 안 돼요(2026-10-10 기준).
+</Summary>
 
-## 이 튜토리얼에서 배울 것
+## 이 튜토리얼로 할 수 있게 되는 것
 
-- 이 주제가 무엇이고 어떤 업무 상황에서 쓰이는지 이해하기
-- 시작하기 전에 필요한 계정과 준비물 확인하기
-- 예제를 단계별로 직접 따라 해 보기
-- 자주 막히는 지점과 해결 방법 알아 두기
+- 터미널, IDE, 데스크톱 앱, 웹 중 내 상황에 맞는 곳을 고를 수 있어요.
+- Claude Code를 설치하고 로그인해서 내 프로젝트에서 첫 대화를 시작할 수 있어요.
+- 질문하기, 작은 코드 수정, Git 작업까지 첫 작업을 해 볼 수 있어요.
+- 표면 사이를 오가는 방법과 반복 작업 자동화 방법을 알고, 다음 단계(C13·C14)로 넘어갈 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **Claude Code** | 코드를 읽고 고치고 실행까지 하는 에이전트형 코딩 도구예요. |
+| **표면(surface)** | Claude Code를 쓰는 환경이에요. 터미널, IDE, 데스크톱, 웹이 있어요. |
+| **CLAUDE.md** | 프로젝트 지침 파일이에요. 모든 표면에서 공통으로 쓰여요. 자세한 내용은 [C14](/new-project1/claude/c14-claude-code-features/)에서 다뤄요. |
+| **세션(session)** | 하나의 대화와 작업 흐름이에요. 이어서 하거나 다른 표면으로 옮길 수 있어요. |
+| **권한 모드** | Claude가 승인 없이 할 수 있는 동작 범위를 정하는 설정이에요. 세션 중 `Shift+Tab`으로 바꿔요. |
+
+### 어디서 쓸까요?
+
+| 표면 | 이런 사람에게 | 특징 |
+| --- | --- | --- |
+| **터미널(CLI)** | 터미널이 편하고 모든 기능을 쓰고 싶을 때 | 가장 기본 형태예요. 서드파티 제공자(Bedrock 등)도 지원해요. |
+| **VS Code (Cursor 포함)** | 편집기 안에서 쓰고 싶을 때 | 확장 `anthropic.claude-code`를 설치해요. |
+| **JetBrains** | JetBrains IDE를 쓸 때 | 플러그인을 쓰며 CLI를 별도로 설치해야 해요. |
+| **데스크톱 앱 (Code 탭)** | 터미널이 낯설고 변경 내용을 시각적으로 검토하고 싶을 때 | CLI를 따로 설치하지 않아도 돼요. 유료 구독이 필요해요. |
+| **웹 (claude.ai/code)** | 설치 없이 바로, 또는 휴대폰에서 쓰고 싶을 때 | 데스크톱 브라우저와 iOS/Android Claude 앱에서 가능해요. 자세한 내용은 [C13](/new-project1/claude/c13-cloud-sessions/)에서 다뤄요. |
+
+대부분의 표면은 Claude 구독 또는 Anthropic Console 계정이 필요해요. 터미널, VS Code, JetBrains는 서드파티 제공자도 지원해요.
+
+<Aside type="note" title="확인되지 않은 점">
+요금제별 Claude Code 사용 한도의 구체적인 수치는 공식적으로 확인되지 않아요. 한도 구조는 [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/)를 보고, 설정(Settings) > 사용량(Usage) 화면에서 확인하세요.
+</Aside>
+
+## 단계별 따라하기
+
+여기서는 가장 기본인 터미널 방식으로 따라가요. 데스크톱 앱을 쓴다면 4번 단계 뒤의 안내를 보세요.
+
+<Checklist items={[
+  '내 OS에 맞는 설치 명령을 실행했어요',
+  '새 터미널에서 claude --version으로 설치를 확인했어요',
+  '프로젝트 폴더에서 claude를 실행하고 로그인했어요',
+  '프로젝트에 대해 첫 질문을 했어요',
+  '작은 코드 수정을 요청하고 승인했어요',
+  '(선택) Git 작업을 요청해 봤어요',
+]} />
+
+<Steps>
+
+1. **설치하기**
+
+   터미널을 열고 내 환경에 맞는 명령을 실행해요(권장 방식인 네이티브 설치).
+
+   macOS, Linux, WSL:
+
+   ```sh
+   curl -fsSL https://claude.ai/install.sh | bash
+   ```
+
+   Windows PowerShell:
+
+   ```powershell
+   irm https://claude.ai/install.ps1 | iex
+   ```
+
+   Windows CMD:
+
+   ```batch
+   curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
+   ```
+
+   설치하는 동안 진행 표시가 나오지 않을 수 있어요. 네이티브 설치는 백그라운드에서 자동으로 업데이트돼요. 네이티브 Windows에서는 Git for Windows 설치를 권장해요. 없으면 PowerShell을 셸 도구로 써요.
+
+   <ScreenshotPlaceholder caption="터미널에서 설치 명령을 실행한 화면" />
+
+2. **설치 확인하기**
+
+   설치가 끝나면 **새 터미널 창**을 열고 확인해요.
+
+   ```sh
+   claude --version
+   ```
+
+   버전 번호가 나오면 성공이에요. `claude`를 찾을 수 없다고 나오면 PATH 문제일 가능성이 커요. 공식 설치 문제 해결 문서의 안내를 따르세요. PowerShell과 CMD를 헷갈린 경우에도 비슷한 오류가 나요.
+
+3. **프로젝트에서 시작하고 로그인하기**
+
+   작업할 프로젝트 폴더로 이동해서 `claude`를 실행해요.
+
+   ```sh
+   cd /path/to/your/project
+   claude
+   ```
+
+   처음에는 로그인 안내가 나와요. 브라우저에서 인증을 마치면 돼요. 한 번 로그인하면 다시 하지 않아도 돼요. 로그인 후에는 버전, 현재 모델, 작업 폴더가 프롬프트 위에 표시돼요. `/help`로 명령어 목록을, `/resume`으로 이전 대화를 이어갈 수 있어요.
+
+   <ScreenshotPlaceholder caption="처음 claude를 실행했을 때의 로그인 안내와 프롬프트 화면" />
+
+4. **첫 질문 하기**
+
+   먼저 코드를 건드리지 않는 질문으로 시작해요. Claude는 필요한 파일을 알아서 읽어요.
+
+   <PromptBox>
+   이 프로젝트가 무엇을 하는지 설명해 줘. 사용한 기술, 폴더 구조, 시작점이 되는 파일도 알려 줘.
+   </PromptBox>
+
+   프로젝트용 지침 파일은 `/init` 명령으로 CLAUDE.md를 만들 수 있어요. 자세한 내용은 [C14](/new-project1/claude/c14-claude-code-features/)에서 다뤄요.
+
+   **데스크톱 앱을 쓴다면**: 앱(macOS Intel/Apple Silicon, Windows x64/ARM64)을 설치하고 로그인한 뒤 **Code** 탭을 눌러 시작해요. 앱에 Claude Code가 포함되어 있어서 CLI를 따로 설치할 필요가 없어요. 터미널 세션을 앱으로 옮기고 싶다면 `/desktop`을 써요.
+
+5. **작은 코드 수정 요청하기**
+
+   <PromptBox>
+   메인 파일에 hello world를 출력하는 함수를 하나 추가해 줘. 바꾸기 전에 어떤 파일을 어떻게 고칠지 먼저 보여 줘.
+   </PromptBox>
+
+   Claude가 변경 내용을 보여 주고 승인을 물으면 내용을 읽은 뒤 **Yes**를 선택해요. 승인 없이 할 수 있는 범위는 권한 모드가 정해요. `Shift+Tab`을 누르면 세션의 권한 모드를 바꿀 수 있어요. 처음에는 기본값으로 쓰면서 무엇을 승인하는지 눈으로 확인하세요.
+
+6. **Git 작업도 대화로 하기**
+
+   <PromptBox>
+   내가 바꾼 파일이 뭐야? 변경 내용을 보고 적절한 커밋 메시지를 붙여서 커밋해 줘.
+   </PromptBox>
+
+   이어서 "최근 커밋 5개 보여 줘", "feature/quickstart 브랜치를 만들어 줘" 같은 요청도 할 수 있어요. 커밋·푸시처럼 되돌리기 번거로운 작업은 승인 화면에서 한 번 더 확인하세요.
+
+</Steps>
+
+## 빠른 참조표
+
+### 설치 방법 (2026-10-10 기준)
+
+| 방법 | 명령 | 자동 업데이트 |
+| --- | --- | --- |
+| 네이티브 (권장) macOS/Linux/WSL | `curl -fsSL https://claude.ai/install.sh \| bash` | 됨 |
+| 네이티브 Windows PowerShell | `irm https://claude.ai/install.ps1 \| iex` | 됨 |
+| Homebrew | `brew install --cask claude-code` (`claude-code@latest`는 latest 채널) | 안 됨 |
+| WinGet | `winget install Anthropic.ClaudeCode` | 안 됨 |
+| 리눅스 패키지 | apt, dnf, apk도 가능 (공식 문서 참고) | 공식 문서 참고 |
+
+### 자주 쓰는 명령
+
+| 명령 | 용도 |
+| --- | --- |
+| `claude` | 대화형 모드 시작 |
+| `claude "작업"` | 첫 요청과 함께 시작 |
+| `claude -p "질문"` | 한 번만 질문하고 종료 |
+| `claude -c` | 현재 폴더의 가장 최근 대화 이어가기 |
+| `claude -r` | 이전 대화 골라서 재개 |
+| `/help` | 명령어 목록 |
+| `/clear` | 대화 기록 지우기 |
+| `/exit` 또는 Ctrl+D 두 번 | 종료 |
+| `/login` | 계정 전환·재인증 |
+| `/init` | CLAUDE.md 생성 |
+| `Shift+Tab` | 권한 모드 순환 |
+
+### 표면 사이 이동
+
+| 방법 | 설명 |
+| --- | --- |
+| Remote Control | 휴대폰·브라우저에서 내 컴퓨터의 로컬 세션을 조작해요. |
+| `claude --teleport` | 웹·모바일 세션을 터미널로 가져와요. |
+| `/desktop` | 터미널 세션을 데스크톱 앱으로 옮겨요. macOS와 x64 Windows, 구독이 필요해요. |
+| `claude --cloud` | 터미널에서 클라우드 세션을 시작해요. |
+
+클라우드 세션의 자세한 사용법은 [C13. Claude Code 클라우드 세션](/new-project1/claude/c13-cloud-sessions/)에 있어요.
+
+### 반복 작업 자동화 3종
+
+| 방법 | 실행 위치 |
+| --- | --- |
+| Routines | 클라우드 |
+| Desktop scheduled tasks | 내 컴퓨터 |
+| `/loop` | CLI 세션 안 |
+
+### 활용 예시 (CLI)
+
+```sh
+claude "write tests for the auth module, run them, and fix any failures"
+claude "commit my changes with a descriptive message"
+tail -200 app.log | claude -p "이 로그에서 오류 원인을 요약해 줘"
+```
+
+## 자주 막히는 지점
+
+### 설치 후 `claude`를 찾을 수 없어요
+
+- **원인**: 설치 폴더가 PATH에 아직 없거나, 설치 전에 열어 둔 터미널을 그대로 쓰고 있을 수 있어요.
+- **해결**: 새 터미널 창을 열고 `claude --version`을 다시 실행하세요. 그래도 안 되면 공식 troubleshoot-install 문서의 PATH 안내를 따르세요.
+
+### 설치 명령에서 문법 오류가 나요
+
+- **원인**: PowerShell과 CMD 명령을 서로 바꿔 입력했을 수 있어요. 예를 들어 PowerShell에서 CMD용 `&&` 명령을 실행하면 오류가 나고, CMD에서 `irm`은 인식되지 않아요. 프롬프트가 `PS C:\`면 PowerShell이에요.
+- **해결**: 지금 쓰는 셸에 맞는 명령을 다시 실행하세요. 그래도 안 되면 공식 설치 문제 해결 문서에서 오류 메시지에 맞는 해결법을 찾으세요.
+
+### 로그인 안내가 안 나오거나 로그인을 건너뛰었어요
+
+- **원인**: `ANTHROPIC_API_KEY` 환경변수가 설정되어 있고 그 키 사용을 승인하면 로그인 단계가 생략돼요.
+- **해결**: 구독 계정으로 쓰고 싶다면 세션 안에서 `/login`을 실행해 계정을 바꾸세요.
+
+### Free 계정으로는 안 돼요
+
+- **원인**: Claude Code는 Pro 이상 유료 플랜에서 쓸 수 있어요(2026-10-10 기준). 공식 가격 페이지에서 확인할 수 있어요.
+- **해결**: 플랜을 확인하세요. Console 계정이나 지원되는 클라우드 제공자 경로도 있어요. 요금은 [C2](/new-project1/claude/c02-plans-limits/)를 참고하세요.
+
+### Windows에서 Bash 도구를 못 써요
+
+- **원인**: 네이티브 Windows에 Git for Windows가 없으면 Claude Code는 PowerShell을 셸 도구로 써요.
+- **해결**: Git for Windows 설치를 권장해요. WSL 환경은 필요 없어요.
+
+## 실전 팁
+
+- **요청은 구체적으로.** "버그 고쳐 줘"보다 "로그인 실패 시 빈 화면이 나오는 버그를 고쳐 줘"가 훨씬 나아요.
+- **먼저 탐색시키세요.** 고치기 전에 "데이터베이스 스키마를 분석해 줘"처럼 구조를 먼저 파악하게 하면 좋아요.
+- **복잡한 일은 단계로 나눠 번호를 붙이세요.** 한 번에 다 맡기는 것보다 결과를 확인하며 진행하기 쉬워요.
+- **`/`를 눌러 보세요.** 쓸 수 있는 명령과 스킬이 보여요. Tab으로 자동 완성하고, ↑로 이전 명령을 불러와요.
+- **변경 내용을 시각적으로 검토하고 싶다면** 데스크톱 앱의 Code 탭이나 `/desktop`을 써 보세요.
+- **작은 작업부터.** 요청 결과를 눈으로 확인하는 습관이 안전해요.
+- **무료로 배우고 싶다면** Claude Academy의 Claude Code 101 같은 강좌가 있어요.
+
+## 다음에 볼 튜토리얼
+
+- [C13. Claude Code 클라우드 세션](/new-project1/claude/c13-cloud-sessions/) — 내 컴퓨터를 켜 두지 않고 GitHub 작업을 맡기기
+- [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — CLAUDE.md, 슬래시 명령, 훅, 서브에이전트, MCP
+- [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/) — Claude Code가 쓰는 한도 이해하기

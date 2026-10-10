@@ -1,24 +1,198 @@
 ---
 title: "프로젝트(Projects)로 자료와 지침 관리하기"
-description: "프로젝트에 자료와 지침을 모아 두고 반복해서 쓰는 방법"
+description: "자료(지식)와 지침을 한곳에 모아 두고 같은 일을 반복해서 맡기는 프로젝트 사용법, 공유와 권한, 메모리 분리까지 정리한 참고서"
 sidebar:
   label: "C5. 프로젝트"
 level: practical
 category: claude
 tools: ["Claude"]
 duration: "25분"
-prerequisites: ["사용할 도구의 계정"]
-sources: []
-status: draft
+prerequisites:
+  - "claude.ai 계정 (무료 플랜도 가능, 무료는 프로젝트 최대 5개)"
+  - "프로젝트에 올려 둘 참고 자료 한두 개 (문서, 텍스트, 코드)"
+  - "(공유하려면) Team 또는 Enterprise 플랜"
+lastVerified: 2026-10-10
+sources:
+  - title: "What are projects?"
+    url: "https://support.claude.com/en/articles/9517075-what-are-projects"
+  - title: "How can I create and manage projects?"
+    url: "https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects"
+  - title: "Use Claude's chat search and memory to build on previous context"
+    url: "https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context"
+  - title: "Use connectors to extend Claude's capabilities"
+    url: "https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities"
+  - title: "Use Claude Code in the cloud"
+    url: "https://code.claude.com/docs/en/claude-code-on-the-web"
+status: published
 ---
 
-import ComingSoon from '../../../components/ComingSoon.astro';
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
-<ComingSoon />
+<Summary>
+- 프로젝트는 **자체 대화 기록과 지식 베이스를 가진 독립 작업 공간**이에요. 모든 사용자(무료 포함)가 쓸 수 있고, 무료는 최대 5개예요(2026-10-10 기준).
+- **지식(knowledge)**에 올린 문서·텍스트·코드는 그 프로젝트의 모든 대화에서 배경으로 쓰여요. **지침(instructions)**은 어조·역할 같은 규칙을 모든 대화에 적용해요.
+- 지식 베이스에 없는 맥락은 대화 사이에 공유되지 않아요. 같은 자료를 매번 붙여넣을 필요가 없어지는 것이 핵심이에요.
+- Team/Enterprise에서는 프로젝트를 공유할 수 있고, 권한은 Can view(보기·대화)와 Can edit(지침·지식 편집, 멤버 관리) 두 가지예요.
+- 프로젝트마다 메모리 공간이 따로 있어서 다른 프로젝트나 일반 대화와 섞이지 않아요.
+</Summary>
 
-## 이 튜토리얼에서 배울 것
+## 이 튜토리얼로 할 수 있게 되는 것
 
-- 이 주제가 무엇이고 어떤 업무 상황에서 쓰이는지 이해하기
-- 시작하기 전에 필요한 계정과 준비물 확인하기
-- 예제를 단계별로 직접 따라 해 보기
-- 자주 막히는 지점과 해결 방법 알아 두기
+- 프로젝트를 만들고 자료(지식)와 지침을 넣어 "우리 팀 전용 Claude 작업실"을 만들 수 있어요.
+- 지식과 지침의 역할 차이를 알고, 무엇을 어디에 넣을지 판단할 수 있어요.
+- (Team/Enterprise) 프로젝트를 동료와 공유하고 권한을 나눌 수 있어요.
+- 쓰지 않는 프로젝트를 아카이브하고, 새 베타 "Projects"와 기존 프로젝트의 차이를 구분할 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **프로젝트(Project)** | 자체 대화 기록과 지식 베이스를 가진 독립 작업 공간이에요. |
+| **프로젝트 지식(Knowledge)** | 프로젝트에 올린 문서·텍스트·코드예요. 그 프로젝트의 모든 대화에서 배경 자료로 쓰여요. |
+| **프로젝트 지침(Instructions)** | 어조, 역할 같은 규칙이에요. 프로젝트의 모든 대화에 적용돼요. |
+| **RAG 모드** | 유료 플랜(Pro/Max/Team/Enterprise)에서 지식이 컨텍스트 한계에 가까워지면 켜져요. 용량이 최대 10배까지 확장돼요. |
+| **Can view / Can edit** | 공유 권한이에요. 보기 권한은 보고 대화만, 편집 권한은 지침·지식 편집과 멤버 관리까지 해요. |
+| **프로젝트 메모리** | 프로젝트마다 따로 있는 메모리 공간과 프로젝트 요약이에요. 다른 프로젝트·일반 대화와 분리돼요. |
+
+### 지식과 지침, 무엇을 어디에 넣나요?
+
+- **바뀌지 않는 참고 자료**(업무 매뉴얼, 용어집, 과거 보고서 샘플)는 지식에 넣어요.
+- **매번 지켜야 할 규칙**("존댓말로", "표는 3열 이내로", "먼저 질문 하나를 하고 시작")은 지침에 넣어요.
+- 지침이 길어지면 Claude가 놓치는 규칙이 생길 수 있어요. 핵심만 남기고 나머지는 지식 문서로 옮기세요. 프롬프트 작성 요령은 [C4. 프롬프트 작성법](/new-project1/claude/c04-prompting/)을 함께 보세요.
+
+<Aside type="note" title="확인되지 않은 점">
+- 파일 크기와 개수의 상한은 공식 문서에 명시되어 있지 않아 이 튜토리얼에서 수치를 말하지 않아요. 올릴 때 화면에 나오는 안내를 따르세요.
+- 새 베타 "Projects"가 일반 사용자에게 언제 공개되는지는 확인하지 못했어요.
+- 프로젝트 메모리의 상세 동작은 프로젝트 문서가 아니라 메모리 문서에서만 확인돼요. 자세한 내용은 [C9. 메모리와 설정](/new-project1/claude/c09-memory-settings/)에서 다뤄요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '새 프로젝트를 만들었어요',
+  '지식에 참고 자료를 올렸어요',
+  '프로젝트 지침을 저장했어요',
+  '프로젝트 안에서 대화를 시작해 지식이 쓰이는지 확인했어요',
+  '(Team/Enterprise) 프로젝트를 공유하고 권한을 정했어요',
+]} />
+
+<Steps>
+
+1. **프로젝트 만들기**
+
+   왼쪽 사이드바의 프로젝트(Projects) 또는 claude.ai/projects로 가서, 오른쪽 위의 **+ New Project**를 눌러요.
+
+   이름과 설명을 입력해요. 이 이름과 설명은 사람이 구분하려고 쓰는 것이고 **Claude는 이를 보지 못해요.** Team/Enterprise라면 비공개 또는 조직 공개도 이때 고를 수 있어요.
+
+   <ScreenshotPlaceholder caption="프로젝트 목록에서 + New Project를 누르고 이름과 설명을 입력하는 화면" />
+
+2. **지식 추가하기**
+
+   프로젝트 페이지 오른쪽의 **+** 를 눌러 파일이나 텍스트를 추가해요. 예를 들어 팀의 보고서 양식, 용어집, 지난 회의록 샘플처럼 매번 필요한 자료가 좋아요.
+
+   <ScreenshotPlaceholder caption="프로젝트 페이지 오른쪽의 + 로 파일·텍스트를 추가하는 화면" />
+
+3. **지침 쓰기**
+
+   **Set project instructions**를 눌러 지침을 입력하고 저장해요. 처음에는 짧게 시작하세요.
+
+   <PromptBox label="지침 예시 (Set project instructions에 붙여넣기)">
+   너는 우리 팀의 주간 보고서 작성을 돕는 어시스턴트야. 항상 존댓말로 쓰고, 보고서는 "한 줄 요약 → 이번 주 한 일 → 다음 주 계획 → 도움이 필요한 점" 순서로 정리해 줘. 지식에 있는 보고서 양식의 말투를 따르고, 자료에 없는 숫자는 지어내지 말고 나에게 물어봐.
+   </PromptBox>
+
+4. **프로젝트 안에서 대화하기**
+
+   프로젝트 페이지에서 새 대화를 시작해요. 지식과 지침이 자동으로 배경이 되니 짧게 요청해도 돼요.
+
+   <PromptBox>
+   이번 주에 한 일은 (1) 신규 거래처 3곳 미팅, (2) 견적서 양식 개편, (3) 재고 실사 준비야. 지식에 있는 양식에 맞춰 주간 보고서 초안을 써 줘.
+   </PromptBox>
+
+   답변이 지식의 양식을 따르는지 확인하고, 어긋나면 지침에 규칙을 한 줄 더하세요.
+
+5. **(Team/Enterprise) 공유하기**
+
+   **Share project**를 눌러 멤버를 추가하고 권한(Can view 또는 Can edit)을 고른 뒤 **Share**를 눌러요. 이메일로 개인을 지정하거나, 일괄 추가하거나, 조직 전체에 공개할 수 있어요. 관리자가 공유 기능을 꺼 둔 조직에서는 이 메뉴를 쓸 수 없어요.
+
+   <ScreenshotPlaceholder caption="Share project 창에서 멤버를 추가하고 권한을 고르는 화면" />
+
+</Steps>
+
+## 빠른 참조표
+
+### 프로젝트에서 할 수 있는 일
+
+| 하고 싶은 일 | 방법 |
+| --- | --- |
+| 새로 만들기 | 사이드바 Projects 또는 claude.ai/projects > + New Project |
+| 자료 추가 | 프로젝트 페이지 오른쪽 + |
+| 규칙 지정 | Set project instructions |
+| 공유(Team/Enterprise) | Share project > 멤버 추가 > 권한 > Share |
+| 아카이브 | 프로젝트의 "..." 메뉴 > 아카이브 (공유·멤버·지식은 유지) |
+| 삭제 | 먼저 아카이브를 해제한 뒤 삭제 |
+
+### 플랜별 차이 (2026-10-10 기준)
+
+| 항목 | 내용 |
+| --- | --- |
+| 사용 가능 | 모든 사용자(무료 포함) |
+| 무료 플랜 | 프로젝트 최대 5개 |
+| RAG 모드 | 유료 플랜(Pro/Max/Team/Enterprise)에서 용량 최대 10배 확장 |
+| 공유 | Team/Enterprise |
+| 커넥터 | Team/Enterprise에서는 비공개 프로젝트에서만 작동. 동기화된 콘텐츠가 있는 채팅은 공유할 수 없음 |
+
+### 두 가지 "프로젝트" 구분하기 (2026-10-10 기준)
+
+| | 기존 프로젝트 | 새 베타 "Projects" |
+| --- | --- | --- |
+| 구조 | 지식 + 지침 + 여러 대화 | 프로젝트가 하나의 대화. Claude가 작업을 병렬 클라우드 스레드로 나눠 실행 |
+| 제공 | 지금 쓸 수 있음 | Claude Code(일부 Pro/Max)부터 단계적 롤아웃, 대기자 명단 있음 |
+| 사용량 | 일반 사용량 | 플랜 한도에서 차감 |
+| 준비물 | 없음 | 저장소마다 Claude GitHub App 설치, 프로젝트 설정의 환경 사용 |
+
+기존 채팅·Cowork 프로젝트는 그대로 유지돼요.
+
+## 자주 막히는 지점
+
+### Claude가 올려 둔 자료를 반영하지 않는 것 같아요
+
+- **원인**: 질문이 자료와 연결되지 않았거나, 지침에 "자료를 따르라"는 규칙이 없을 수 있어요.
+- **해결**: 요청에 "지식에 있는 보고서 양식에 맞춰"처럼 자료를 지목하세요. 지침에도 한 줄 추가하세요.
+
+### 다른 대화에서 한 이야기를 프로젝트가 모르겠대요
+
+- **원인**: 지식 베이스에 없는 맥락은 대화 사이에 공유되지 않아요. 프로젝트 메모리도 다른 프로젝트·일반 대화와 분리돼요.
+- **해결**: 계속 필요한 내용은 지식이나 지침에 직접 넣으세요.
+
+### 공유 메뉴가 안 보여요
+
+- **원인**: 공유는 Team/Enterprise 기능이고, 관리자가 공유 기능을 끌 수 있어요.
+- **해결**: 플랜을 확인하고 조직 관리자에게 문의하세요.
+
+### 프로젝트에서 커넥터 데이터를 팀원과 공유할 수 없어요
+
+- **원인**: Team/Enterprise에서 커넥터는 비공개 프로젝트에서만 작동하고, 동기화된 콘텐츠가 있는 채팅은 공유할 수 없어요.
+- **해결**: 커넥터가 필요한 작업은 비공개 프로젝트에서 하고, 공유할 결과물은 따로 정리해 올리세요. 커넥터는 [C7. 커넥터](/new-project1/claude/c07-connectors/)에서 다뤄요.
+
+### 프로젝트를 삭제할 수 없어요
+
+- **원인**: 삭제하려면 아카이브를 먼저 해제해야 해요.
+- **해결**: 아카이브된 프로젝트에서 아카이브를 해제한 뒤 삭제하세요.
+
+## 실전 팁
+
+- **지식에는 "바뀌지 않는 것"만 넣으세요.** 자주 바뀌는 내용은 대화에서 직접 알려 주는 편이 정확해요.
+- **지침은 짧게 시작해서 대화하며 고쳐 가세요.** 어긋난 답이 나올 때마다 규칙을 한 줄씩 보태면 돼요.
+- **업무별로 프로젝트를 나누세요.** 주간 보고, 고객 응대, 기획서처럼 나누면 지식과 메모리가 섞이지 않아요.
+- **민감한 자료는 공유 범위를 먼저 확인하세요.** 조직 공개로 하면 조직 구성원이 볼 수 있어요.
+- **끝난 프로젝트는 아카이브하세요.** 공유 설정과 지식은 유지되고 목록만 깔끔해져요.
+
+## 다음에 볼 튜토리얼
+
+- [C4. 프롬프트 작성법](/new-project1/claude/c04-prompting/) — 지침과 요청을 잘 쓰는 법
+- [C7. 커넥터](/new-project1/claude/c07-connectors/) — Gmail·Drive 등을 연결해 자료를 직접 가져오기
+- [C9. 메모리와 설정](/new-project1/claude/c09-memory-settings/) — 프로젝트 메모리가 일반 메모리와 어떻게 다른지
