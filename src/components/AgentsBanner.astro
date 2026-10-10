@@ -1,0 +1,30 @@
+---
+import Illustration from './Illustration.astro';
+import { url } from '../lib/tutorials';
+---
+<a class="banner not-content" href={url('/agents/')}>
+  <Illustration name="agents" size={72} />
+  <div>
+    <p class="eyebrow">새로 나온 화제의 AI 에이전트</p>
+    <p class="title">Meta Muse · Grok Bot · ChatGPT Dots</p>
+    <p class="desc">내 일을 알아서 챙겨 주는 개인 AI 에이전트가 무엇이고, 한국에서 쓸 수 있는지, 안전하게 쓰려면 어떻게 해야 하는지 정리했어요.</p>
+  </div>
+  <span class="go">보러 가기 →</span>
+</a>
+
+<style>
+  .banner {
+    display: flex; align-items: center; gap: 1.25rem; padding: 1.4rem 1.6rem; border-radius: 20px; text-decoration: none;
+    margin-top: 1rem;
+    background: linear-gradient(120deg, var(--ai-card-tint), var(--ai-coral-soft));
+    border: 2px dashed var(--ai-coral); box-shadow: var(--ai-shadow);
+  }
+  .banner:hover { filter: brightness(1.03); }
+  .banner > div { flex: 1; min-width: 0; }
+  p { margin: 0; }
+  .eyebrow { font-size: var(--sl-text-xs); font-weight: 800; color: var(--sl-color-accent-high); }
+  .title { font-size: var(--sl-text-h3); font-weight: 800; color: var(--sl-color-white); }
+  .desc { color: var(--sl-color-gray-2); line-height: 1.55; margin-top: 0.2rem; }
+  .go { flex: none; font-weight: 700; color: var(--sl-color-accent-high); }
+  @media (max-width: 600px) { .banner { flex-direction: column; align-items: flex-start; } }
+</style>
