@@ -26,3 +26,12 @@
 ## 5단계 원문 대조 결과 (2026-10-10)
 원문 확인 0건 / 수정 0건 / 삭제 0건 / 미확인: 위 핵심 사실 전부 (Magic Media 메뉴, AI 허용량, 브랜드 키트 색상 팔레트 수, AI Product Terms 소유·상업 이용, 초상·브랜드 허락, 판매용 제품 조건).
 Aside: 남김. 문구를 "Canva 공식 도움말 원문은 아직 확인하지 못했어요"로 구체화. 본문은 단정하지 않는 표현 유지. sources 제목에 "원문 미확인" 표시는 하지 않았고 이 노트와 Aside로 안내한다.
+
+## 6단계 재점검 (2026-10-10)
+- 접근: www.canva.dev, App Store(apps.apple.com), Google Play는 curl로 열림(WebFetch는 호스트 해석 실패). canva.com 도움말은 여전히 막힘.
+- 확인함: 브랜드 키트는 Canva Pro, Business, Enterprise 플랜 사용자에게 제공(https://www.canva.dev/docs/apps/mcp/tools/list-brand-kits/). 브랜드 템플릿 API는 Pro/Teams/Enterprise 필요(https://www.canva.dev/docs/connect/api-reference/brand-templates/). Google Play 등록 정보는 Brand(로고·글꼴·색 저장)를 CANVA PRO 항목에 나열.
+- 확인함(참고): 앱 등록 정보에 Canva AI(텍스트로 디자인·이미지·영상 생성), Magic Edit, Magic Eraser, Veo 3 영상, 무료 5GB 저장 언급.
+- 충돌: 기존 본문의 "무료 계정 색상 팔레트 1개(색 3개)"는 개발자 문서의 "Pro 이상" 안내와 맞지 않아 삭제하고 확인 못 함으로 바꿈.
+- 인앱 구매 가격(Pro 월 $14.99 등)은 한 이름에 여러 가격이 표시돼 요금제와 대응이 불명확해 사용하지 않음.
+- 못 찾음: 무료 AI 허용량 수치, Magic Media/Design 메뉴 이름, AI 약관 원문, 판매용 제품 조건.
+- 본문 조치: caution Aside를 남은 미확인 항목만 적도록 축소.

@@ -30,6 +30,14 @@ sources:
     url: "https://help.make.com/credits"
   - title: "Make Help: Adjustments to plans and pricing"
     url: "https://help.make.com/adjustments-to-plans-and-pricing"
+  - title: "Make Help: Cancel your subscription (Free plan 월 1,000 크레딧 안내)"
+    url: "https://help.make.com/cancel-your-subscription"
+  - title: "Make Apps Documentation: Gmail modules"
+    url: "https://apps.make.com/gmail-modules"
+  - title: "Make Apps Documentation: Google Sheets modules"
+    url: "https://apps.make.com/google-sheets-modules"
+  - title: "Make Apps Documentation: Slack modules"
+    url: "https://apps.make.com/slack-modules"
 status: published
 ---
 
@@ -43,14 +51,9 @@ import AutomationTriggerAction from '../../../components/diagrams/AutomationTrig
 <Summary>
 - 자동화 도구는 **"이런 일이 생기면(트리거) → 이렇게 해라(액션)"** 규칙을 만들어 줘요. 이 편은 **Gmail에 새 메일 → Google 시트에 한 줄 추가 → 알림** 흐름을 만들어요.
 - **Zapier**는 Zap, **Make**는 시나리오(scenario)라고 불러요. 둘 다 무료로 시작할 수 있지만 한도와 기능이 달라요(2026-10-10 기준).
-- Zapier는 도움말에서 **제품이 영어로만 제공된다**고 안내해요. Make의 한국어 지원 여부와 무료 플랜 한도는 공식 원문으로 확인하지 못했어요.
+- Zapier는 도움말에서 **제품이 영어로만 제공된다**고 안내해요. Make는 무료(Free) 플랜이 월 1,000 크레딧이라고 공식 도움말이 안내해요. Make의 한국어 지원 여부는 확인하지 못했어요.
 - 처음에는 **테스트 → 한 건 확인 → 켜기** 순서로, 개인정보가 든 메일은 시트에 통째로 옮기지 마세요.
 </Summary>
-
-<Aside type="caution" title="Make 쪽은 아직 확인 중이에요">
-Zapier 가격 페이지와 도움말은 원문으로 확인했어요. 하지만 Make 가격 페이지(make.com)는 열리지 않아 Make 무료 플랜의 크레딧 한도와 최소 실행 간격, Make의 Gmail·Google Sheets 모듈 이름은 원문으로 확인하지 못했어요(2026-10-10 기준). 이 부분은 Make 화면과 가격 페이지에서 다시 확인하세요.
-</Aside>
-
 
 ## 이 튜토리얼로 할 수 있게 되는 것
 
@@ -79,17 +82,18 @@ Zapier 가격 페이지와 도움말은 원문으로 확인했어요. 하지만 
 | --- | --- | --- |
 | 자동화 이름 | Zap | 시나리오(scenario) |
 | 화면 언어 | 도움말은 "영어로만 제공"이라고 안내 | 한국어 지원 여부는 확인하지 못함 |
-| 무료 플랜 | 월 $0, 월 100 task, 2단계(Two-step) Zap, 확인 주기 15분 | 무료 플랜 한도는 원문 미확인(가격 페이지에서 확인) |
+| 무료 플랜 | 월 $0, 월 100 task, 2단계(Two-step) Zap, 확인 주기 15분 | 월 1,000 크레딧(Make 도움말 기준). 최소 실행 간격은 플랜별이라 화면에서 확인 |
 | 사용량 계산 | 새 데이터 확인(폴링)은 task를 쓰지 않고, 동작이 성공해야 task를 소모 | 일반 앱은 동작(operation) 1번이 1크레딧(AI 기능은 토큰 등으로 더 쓸 수 있음) |
 | 분기·변환 | 단계를 추가해 구성(플랜별 제한은 가격 페이지 확인) | 라우터(Router)로 분기, 모듈 사이 데이터 변환 |
 
 <Aside type="caution" title="가격과 한도는 공식 페이지에서 확인하세요">
-Zapier 무료 플랜 수치(월 100 task, 2단계 Zap, 15분 확인 주기, Professional은 다단계 Zap과 2분 확인 주기)는 2026-10-10 기준 [Zapier 가격 페이지](https://zapier.com/pricing)에서 확인한 값이에요. 이 가격 페이지의 통화 선택에 원화(KRW)는 없었고, 달러 표시가 기본이에요. Make는 operations 대신 크레딧을 청구 단위로 쓰고(공식 도움말), 무료 플랜 한도는 [Make 가격 페이지](https://www.make.com/en/pricing)에서 직접 확인하세요.
+Zapier 무료 플랜 수치(월 100 task, 2단계 Zap, 15분 확인 주기, Professional은 다단계 Zap과 2분 확인 주기)는 2026-10-10 기준 [Zapier 가격 페이지](https://zapier.com/pricing)에서 확인한 값이에요. 이 가격 페이지의 통화 선택에 원화(KRW)는 없었고, 달러 표시가 기본이에요. Make는 operations 대신 크레딧을 청구 단위로 쓰고, 구독을 해지하면 월 1,000 크레딧의 Free 플랜으로 전환된다고 [Make 도움말](https://help.make.com/cancel-your-subscription)이 안내해요(2026-08-31 갱신 문서). 가격 페이지(make.com)는 자동 접근이 막혀 열지 못했으니 현재 요금과 플랜별 기능은 [Make 가격 페이지](https://www.make.com/en/pricing)에서 직접 확인하세요.
 </Aside>
 
 <Aside type="note" title="확인하지 못한 점">
-- 두 도구의 편집기 버튼 이름은 자주 바뀌어요. Zapier의 이름(New Email, New Labeled Email, Create Spreadsheet Row)은 Zapier 공식 연동 페이지에서 확인했어요. Make의 모듈 이름(Watch emails, Add a Row)은 공식 원문으로 확인하지 못했으니 **화면 안내에 따르세요.**
-- Make의 Slack 메시지 모듈의 정확한 이름은 확인하지 못했어요. 모듈 목록에서 검색해 고르세요.
+- 두 도구의 편집기 버튼 이름은 자주 바뀌어요. Zapier의 이름(New Email, New Labeled Email, Create Spreadsheet Row)은 Zapier 공식 연동 페이지에서 확인했어요. Make의 모듈 이름(Gmail > Watch emails, Google Sheets > Add a Row)은 Make 앱 문서(apps.make.com)에서 확인했어요. 그래도 화면의 이름이 다르면 **화면 안내에 따르세요.**
+- Make의 Slack 메시지 모듈은 앱 문서에 Send a Message로 나오지만 같은 문서의 다른 표에는 Create a Message도 보여요. 모듈 목록에서 검색해 고르세요.
+- Make 무료 플랜의 최소 실행 간격과 한국어 화면 지원 여부는 공식 문서에서 확인하지 못했어요.
 - 카카오톡 등 국내 메신저 연동 여부는 확인하지 못했어요. 각 도구의 앱 목록에서 검색해 보세요.
 </Aside>
 
