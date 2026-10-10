@@ -8,13 +8,13 @@ category: media
 tools: ["ElevenLabs", "Canva"]
 duration: "30분"
 prerequisites:
-  - "ElevenLabs 계정 (무료로 시작 가능, 상업 이용은 유료 플랜 확인)"
+  - "ElevenLabs 계정 (무료로 시작 가능, 상업 이용은 유료 구독 필요)"
   - "내레이션 대본"
 lastVerified: 2026-10-10
 sources:
   - title: "ElevenLabs Models"
     url: "https://elevenlabs.io/docs/overview/models"
-  - title: "What languages do you support? (ElevenLabs Help)"
+  - title: "What languages do you support? (ElevenLabs Help) - 원문 미확인, 검색 결과 기준"
     url: "https://help.elevenlabs.io/hc/en-us/articles/13313366263441-What-languages-do-you-support"
   - title: "ElevenLabs Pricing"
     url: "https://elevenlabs.io/pricing"
@@ -22,17 +22,21 @@ sources:
     url: "https://elevenlabs.io/terms-of-use"
   - title: "Instant Voice Cloning (ElevenLabs Docs)"
     url: "https://elevenlabs.io/docs/eleven-creative/voices/voice-cloning/instant-voice-cloning"
-  - title: "Can I create a Professional Voice Clone of someone else's voice? (ElevenLabs Help)"
+  - title: "Can I create a Professional Voice Clone of someone else's voice? (ElevenLabs Help) - 원문 미확인, 검색 결과 기준"
     url: "https://help.elevenlabs.io/hc/en-us/articles/36842751624209-Can-I-create-a-Professional-Voice-Clone-of-someone-else-s-voice"
   - title: "ElevenLabs Prohibited Use Policy"
     url: "https://elevenlabs.io/use-policy"
-  - title: "What are No-Go Voices? (ElevenLabs Help)"
+  - title: "What are No-Go Voices? (ElevenLabs Help) - 원문 미확인, 검색 결과 기준"
     url: "https://help.elevenlabs.io/hc/en-us/articles/22584327690897-What-are-No-Go-Voices"
+  - title: "Professional Voice Cloning (ElevenLabs Docs)"
+    url: "https://elevenlabs.io/docs/eleven-creative/voices/voice-cloning/professional-voice-cloning"
+  - title: "Voice Library (ElevenLabs Docs)"
+    url: "https://elevenlabs.io/docs/eleven-creative/voices/voice-library"
   - title: "AI Voice Cloning (ElevenLabs)"
     url: "https://elevenlabs.io/voice-cloning"
-  - title: "Text to Speech (Canva)"
+  - title: "Text to Speech (Canva) - 원문 미확인, 검색 결과 기준"
     url: "https://www.canva.com/features/text-to-speech/"
-  - title: "OpenAI Usage policies"
+  - title: "OpenAI Usage policies - 원문 미확인, 검색 결과 기준"
     url: "https://openai.com/policies/usage-policies/"
 status: published
 ---
@@ -47,13 +51,9 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - AI 음성 내레이션은 **대본을 글로 쓰고 → 음성 모델이 읽게 하고 → 발음을 고치는** 흐름이에요.
 - 이 편은 ElevenLabs를 중심으로, 간단한 대안으로 Canva의 텍스트 음성 변환을 소개해요. 두 서비스 모두 한국어가 지원 언어 목록에 있다고 안내돼요.
 - **남의 목소리를 동의 없이 복제하면 안 돼요.** 복제는 **본인 목소리를 본인 동의로** 하는 것이 원칙이에요.
-- 무료 플랜은 개인·비상업 용도이고 상업 이용은 유료 플랜이 필요하다고 안내돼요(2026-10-10 기준, 가격은 공식 페이지 확인).
+- ElevenLabs 이용약관은 무료 이용자는 비상업 목적으로만, 유료 구독자는 상업 목적으로도 쓸 수 있다고 정하고 있어요(2026-10-10 기준, 가격은 아래 표).
 - 한국어 발음·억양 품질은 공식 문서로 보증되지 않아요. **반드시 직접 들어 보세요.**
 </Summary>
-
-<Aside type="caution" title="확인 중인 튜토리얼이에요">
-이 튜토리얼은 각 도구의 공식 사이트 검색 결과를 바탕으로 썼고, 공식 도움말 원문 대조를 아직 마치지 못했어요(2026-10-10 기준). 가격, 무료 한도, 메뉴 이름은 꼭 공식 페이지에서 다시 확인하세요. 원문 대조가 끝나면 이 안내를 지울게요.
-</Aside>
 
 
 ## 이 튜토리얼로 할 수 있게 되는 것
@@ -70,28 +70,29 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | **TTS(텍스트 음성 변환)** | 글을 읽어 주는 음성으로 바꾸는 기술이에요. |
 | **사전 제작 음성(premade voice)** | 서비스가 제공하는 기본 목소리예요. 복제와 달리 동의 문제가 적어요. |
 | **음성 복제(Voice cloning)** | 특정 사람의 목소리 샘플로 닮은 목소리를 만드는 기능이에요. **그 사람의 동의가 필수**예요. |
-| **Instant Voice Cloning(IVC)** | 짧은 샘플(공식 문서는 약 1~3분 안내)로 빠르게 만드는 복제 방식이에요. |
+| **Instant Voice Cloning(IVC)** | 짧은 샘플로 빠르게 만드는 복제 방식이에요. 공식 문서는 최소 1분, 깨끗한 오디오 약 1~2분을 권하고, 3분 넘게 녹음해도 개선이 적다고 안내해요. |
 | **Professional Voice Cloning(PVC)** | 본인 음성 검증이 필요한 정밀 복제예요. 본인 목소리만 가능해요. |
 
 <Aside type="caution" title="음성 복제의 원칙: 본인의 동의">
-- 직원, 가족, 성우, 유명인의 목소리를 **본인 동의 없이 복제하지 마세요.** ElevenLabs의 금지 사용 정책은 동의나 법적 권리 없는 음성 복제, 괴롭힘·위해 목적 복제, AI 음성임을 속이려는 복제를 금지한다고 안내돼요.
-- IVC를 만들 때는 복제할 권리와 동의가 있음을 확인하는 단계가 있어요. 본인 목소리를 복제하더라도 확인이 필요해요.
-- PVC는 **동의가 있어도 타인 음성은 복제할 수 없고** 본인 목소리만 가능하다고 도움말이 안내해요. 타인이 만들고 검증한 PVC는 그 사람이 비공개 링크로 공유하는 방식이에요.
-- 정치 후보·선출 공직자 사칭은 동의와 관계없이 금지돼요. 유명인 등 고위험 음성 복제는 차단하는 안전장치(No-Go Voices)가 있다고 안내돼요.
-- 위반하면 경고, 음성 삭제, 계정 정지 등의 조치가 있다고 안내돼요.
-- OpenAI도 사용 정책에서 동의 없이 실존 인물의 음성을 혼동할 수 있는 방식으로 쓰는 것을 금지한다고 안내해요.
+- 직원, 가족, 성우, 유명인의 목소리를 **본인 동의 없이 복제하지 마세요.** ElevenLabs의 금지 사용 정책(Prohibited Use Policy)은 "살아 있는 사람의 음성·신원·초상을 그 사람의 명시적이고 충분한 설명을 거친 동의(또는 다른 유효한 승인) 없이 복제·합성·사칭하는 것"을 금지하고, 고인의 경우에도 해를 끼칠 가능성이 있거나 사후 권리를 침해하는 방식이면 금지한다고 정해요. 단체 사칭이나 속이는 광고, 사기도 금지 대상이에요.
+- IVC를 만들 때는 음성에 이름을 붙이고 **복제할 권리와 동의가 있음을 확인한 뒤** 저장하는 단계가 있어요(공식 문서). 본인 목소리를 복제하더라도 확인이 필요해요.
+- PVC는 **동의가 있어도 타인 음성은 복제할 수 없고** 본인 목소리만 가능하며, 모든 PVC는 목소리가 본인 것임을 확인하는 검증을 거친다고 공식 문서가 안내해요. 다른 사람이 자기 목소리를 공유하고 싶다면 그 사람이 자기 계정에서 PVC를 만들고 검증한 뒤 비공개 공유 링크로 보내는 방식이에요.
+- 정치 후보·선출 공직자를 승인 없이 사칭하는 것과 정치 캠페인(사전 서면 동의 없이)도 금지 항목이에요. 유명인 등 고위험 음성 복제를 차단하는 안전장치(No-Go Voices)가 있다는 설명은 도움말 원문을 열지 못해 확인하지 못했어요.
+- 위반하거나 우회하려 하면 콘텐츠 삭제, 이용 제한·정지·해지 등의 조치가 있을 수 있고, 법적으로 필요하면 수사·규제 기관에 정보를 알릴 수 있다고 정책에 적혀 있어요.
+- 내 목소리가 허락 없이 쓰였다고 생각하면 ElevenLabs의 "Unauthorized Use of Voice" 신고를 쓸 수 있다고 정책이 안내해요.
+- OpenAI도 사용 정책에서 동의 없이 실존 인물의 음성을 혼동할 수 있는 방식으로 쓰는 것을 금지한다고 안내해요(검색 결과 기준, OpenAI 원문은 접속이 막혀 확인하지 못했어요).
 </Aside>
 
 ### 어떤 도구를 쓸까요
 
 | | ElevenLabs | Canva 텍스트 음성 변환 | 그 밖의 선택지 |
 | --- | --- | --- | --- |
-| 한국어 | Multilingual v2 지원 언어 목록에 한국어 포함. 일부 페이지는 더 새로운 모델(90개 이상 언어)을 안내하므로 모델 이름은 화면에서 확인 | 지원 언어 목록에 한국어 포함 | 한국 서비스는 공식 도움말이 확인될 때 후보로 |
+| 한국어 | 공식 모델 문서에서 Multilingual v2·Flash v2.5와 Eleven v4 계열(90개 이상 언어) 지원 언어 목록에 한국어가 있어요. 모델 이름은 바뀔 수 있으니 화면에서 확인 | 지원 언어 목록에 한국어 포함(Canva 공식 원문은 확인하지 못했고 검색 결과 기준) | 한국 서비스는 공식 도움말이 확인될 때 후보로 |
 | 특징 | 음성 선택, 복제, API | 영상 편집 안에서 간단히 음성 추가 | — |
-| 무료 | 월 10,000 크레딧 안내(검색 요약). 개인·비상업, 출처 표기 필요 | Canva 플랜별 AI 허용량 | 서비스별 확인 |
-| 상업 이용 | 유료 플랜(Creator부터라는 제품 페이지 문구). 최신 약관 확인 | Canva AI 약관 확인 | — |
+| 무료 | 월 10,000 크레딧(무료). 이용약관상 비상업 목적만, 비상업 이용 시 개인 이메일 사용. 출처 표기 의무는 약관·가격 페이지에서 확인하지 못했어요 | Canva 플랜별 AI 허용량 | 서비스별 확인 |
+| 상업 이용 | 유료 구독자는 상업 이용 가능(약관). 가격 페이지 비교표에서 상업 라이선스는 Starter부터 표시돼요 | Canva AI 약관 확인 | — |
 
-가격표와 무료 크레딧은 페이지마다 달라 보여요. **공식 가격 페이지를 직접 열어 확인하세요.**
+**ElevenLabs 가격(2026-10-10 기준, 미국 사이트 USD, 세금 별도, 한국 가격·할인은 다를 수 있어요)**: Free $0(월 10,000 크레딧), Starter $6(월 30,000 크레딧, 첫 달 할인 표시가 있음, Instant Voice Cloning 포함), Creator $22(월 121,000 크레딧, 첫 달 $11 표시, Professional Voice Cloning 포함), Pro $99(월 600,000 크레딧). 더 위 요금제(Scale·Business)는 팀용이에요. 가격 페이지 FAQ에 따르면 텍스트 1글자가 크레딧 1을 쓰고(Multilingual v2 기준), 안 쓴 크레딧은 최대 두 달까지 이월돼요. 프로모션은 자주 바뀌니 **공식 가격 페이지를 직접 열어 확인하세요.**
 
 ## 단계별 따라하기
 
@@ -118,13 +119,13 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 2. **음성 고르기**
 
-   ElevenLabs에서 사전 제작 음성이나 라이브러리 음성을 골라 한국어 대본으로 미리 들어 봐요. 라이브러리 음성에는 무료 상업 이용 라이선스가 있다고 안내돼요. 음성별 조건은 상세 화면을 확인하세요. 메뉴 이름은 화면 안내를 따르세요.
+   ElevenLabs에서 사전 제작 음성이나 라이브러리 음성을 골라 한국어 대본으로 미리 들어 봐요. Voice Library의 음성은 공유한 사람이 조건을 정할 수 있고, 일부는 유료 구독자만 쓸 수 있다고 공식 문서가 안내해요. 라이브러리 음성의 상업 이용 조건은 이번에 원문으로 확인하지 못했으니 음성별 상세 화면과 약관을 확인하세요. 메뉴 이름은 화면 안내를 따르세요.
 
    <ScreenshotPlaceholder caption="음성을 고르고 한국어 대본으로 미리 듣는 화면" />
 
 3. **생성하고 들어 보기**
 
-   텍스트를 붙여넣고 생성해요. 한 번에 넣을 수 있는 글자 수에 제한이 있어요(Multilingual v2는 요청당 10,000자라고 안내). 생성한 파일은 **끝까지 들어 보세요.**
+   텍스트를 붙여넣고 생성해요. 한 번에 넣을 수 있는 글자 수에 제한이 있어요(공식 모델 문서 기준 Multilingual v2와 Eleven v4는 요청당 10,000자로 약 10분, Eleven v3는 5,000자, Flash v2.5는 40,000자). 생성한 파일은 **끝까지 들어 보세요.**
 
 4. **발음 고치기**
 
@@ -135,10 +136,10 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 5. **상업 이용·표시 점검**
 
-   - 계정의 플랜이 **상업 이용**을 허용하나요? (무료는 개인·비상업)
-   - 무료 플랜 출처 표기 조건을 지켰나요?
+   - 계정의 플랜이 **상업 이용**을 허용하나요? (무료는 비상업만)
+   - 무료 플랜의 비상업 조건과 화면에 나오는 사용 조건을 지켰나요?
    - 복제 음성을 썼다면 본인 동의 기록이 있나요?
-   - 광고나 안내에서 AI 음성이라는 점을 밝힐지 정했나요? ElevenLabs는 AI 음성임을 속이려는 사용을 금지하고, ElevenLabs 생성 음성 여부를 확인하는 분류 도구를 안내해요.
+   - 광고나 안내에서 AI 음성이라는 점을 밝힐지 정했나요? ElevenLabs 정책은 법으로 요구되거나 알리지 않으면 상대를 오해하게 만들 경우 AI와 상호작용 중임을 분명히 밝히라고 하고, 탐지를 피하려고 ElevenLabs 워터마크·메타데이터 등 출처 신호를 지우거나 숨기는 것을 금지해요.
 
 6. **영상에 합치기**
 
@@ -153,7 +154,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | 단계 | 내용 |
 | --- | --- |
 | 1 | **본인** 목소리로 깨끗한 샘플을 녹음(조용한 곳, 일정한 거리) |
-| 2 | 복제 화면에서 샘플 업로드 (IVC는 약 1~3분이라는 공식 안내) |
+| 2 | 복제 화면에서 샘플 업로드 (대시보드 왼쪽 Voices의 + 아이콘에서 Instant Voice Clone을 고르는 방식. IVC는 최소 1분, 약 1~2분 권장) |
 | 3 | 이름을 붙이고 **복제할 권리와 동의가 있음을 확인**한 뒤 저장 |
 | 4 | 본인이 확인한 용도로만 사용. 타인과 공유할 때는 서비스가 허용하는 방식만 사용 |
 | 금지 | 타인 음성, 공인·정치인 음성, 속이려는 용도 |
@@ -162,7 +163,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 | 항목 | 확인 |
 | --- | --- |
-| 플랜 | 무료는 개인·비상업, 상업 이용은 유료 플랜(공식 가격 페이지에서 확인) |
+| 플랜 | 무료는 비상업만, 상업 이용은 유료 구독자(약관). 플랜별 세부는 공식 가격 페이지에서 확인 |
 | 음성 출처 | 사전 제작·라이브러리·복제 중 무엇인지 기록 |
 | 동의 | 복제 시 목소리 주인의 서면 동의, 사용 범위와 기간 명시 |
 | 약관 | 비EEA/EEA 등 지역별 약관이 다를 수 있어요. 해당 약관을 확인 |
@@ -177,7 +178,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 ### 크레딧이 금방 줄어요
 
-- **원인**: 글자 수만큼 크레딧이 쓰여요(Multilingual v2 기준 글자 1개 = 크레딧 1, 검색 요약).
+- **원인**: 글자 수만큼 크레딧이 쓰여요(가격 페이지 FAQ: Multilingual v2 기준 글자 1개 = 크레딧 1).
 - **해결**: 대본을 확정한 뒤 생성하고, 수정은 해당 문장만 다시 생성하세요.
 
 ### 내 목소리 복제가 안 돼요
@@ -188,7 +189,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 ### 직원 목소리를 복제해 달라는 요청을 받았어요
 
 - **원인**: 편의를 위한 요청이지만 동의가 없으면 정책 위반이 돼요.
-- **해결**: 본인에게 용도와 범위를 설명하고 서면 동의를 받으세요. PVC로는 타인 음성을 만들 수 없고, 본인이 직접 만들어 공유하는 방식만 가능하다고 안내돼요. 동의를 받기 어려우면 사전 제작 음성을 쓰세요.
+- **해결**: 본인에게 용도와 범위를 설명하고 서면 동의를 받으세요. PVC로는 타인 음성을 만들 수 없고, 본인이 직접 만들어 검증한 뒤 공유하는 방식만 가능하다고 안내돼요. 동의를 받기 어려우면 사전 제작 음성을 쓰세요.
 
 ## 실전 팁
 
