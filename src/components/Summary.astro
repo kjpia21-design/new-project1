@@ -1,0 +1,28 @@
+---
+// 한눈에 요약 카드: 튜토리얼 맨 위에서 3~5줄 핵심만 보여준다. 본문은 slot(목록 또는 문단).
+interface Props { title?: string }
+const { title = '한눈에 요약' } = Astro.props;
+---
+<section class="summary not-content" aria-label={title}>
+  <div class="head">
+    <svg width="28" height="28" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
+      <circle cx="24" cy="24" r="22" fill="var(--ai-blob)" />
+      <path d="M24 8l3.4 10L38 21.5l-10.6 3.5L24 40l-3.4-15L10 21.5l10.6-3.5z" fill="var(--ai-coral)" />
+    </svg>
+    <strong>{title}</strong>
+  </div>
+  <div class="body"><slot /></div>
+</section>
+
+<style>
+  .summary {
+    margin: 1.25rem 0 1.75rem; padding: 1rem 1.25rem 1.1rem;
+    border: 2px solid var(--ai-coral); border-radius: 16px;
+    background: var(--ai-card-tint); box-shadow: var(--ai-shadow);
+  }
+  .head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; font-size: var(--sl-text-lg); color: var(--sl-color-white); }
+  .body { color: var(--sl-color-white); line-height: 1.7; overflow-wrap: anywhere; }
+  .body :global(ul), .body :global(ol) { margin: 0; padding-left: 1.2rem; }
+  .body :global(li) { margin: 0.25rem 0; }
+  .body :global(p) { margin: 0.3rem 0; }
+</style>

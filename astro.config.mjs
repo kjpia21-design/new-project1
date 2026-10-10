@@ -28,6 +28,7 @@ export default defineConfig({
       customCss: ['./src/styles/custom.css'],
       components: {
         PageTitle: './src/components/PageTitle.astro',
+        Footer: './src/components/Footer.astro',
       },
       plugins: [starlightLinksValidator()],
       sidebar: [

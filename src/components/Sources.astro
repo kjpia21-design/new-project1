@@ -1,0 +1,33 @@
+---
+// frontmatter의 sources와 마지막 확인일을 페이지 하단에 렌더링한다. Footer 오버라이드에서 자동으로 붙는다.
+import { formatDate } from '../lib/tutorials';
+interface Props { sources?: { title: string; url: string }[]; lastVerified?: Date }
+const { sources = [], lastVerified } = Astro.props;
+---
+<section class="sources not-content" aria-labelledby="sources-title">
+  <h2 id="sources-title">출처</h2>
+  <p class="verified">마지막 확인일: <strong>{lastVerified ? formatDate(lastVerified) : '아직 확인 전'}</strong></p>
+  {sources.length > 0 ? (
+    <ul>
+      {sources.map((s) => (
+        <li><a href={s.url} rel="noopener noreferrer" target="_blank">{s.title}</a> <span class="host">{new URL(s.url).host}</span></li>
+      ))}
+    </ul>
+  ) : (
+    <p class="none">등록된 출처가 아직 없어요.</p>
+  )}
+  <p class="note">가격·한도·메뉴 이름은 자주 바뀌어요. 중요한 결정 전에는 위 공식 페이지에서 최신 내용을 다시 확인하세요.</p>
+</section>
+
+<style>
+  .sources {
+    margin: 2.5rem 0 1rem; padding: 1rem 1.25rem;
+    border: 1px solid var(--sl-color-gray-5); border-radius: 16px; background: var(--sl-color-bg-nav);
+  }
+  h2 { margin: 0 0 0.5rem; font-size: var(--sl-text-h4); border: 0; }
+  .verified, .note, .none { margin: 0.25rem 0; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); }
+  ul { margin: 0.5rem 0; padding-left: 1.2rem; }
+  li { margin: 0.25rem 0; overflow-wrap: anywhere; }
+  a { color: var(--sl-color-text-accent); text-decoration: underline; }
+  .host { margin-left: 0.4rem; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); }
+</style>
