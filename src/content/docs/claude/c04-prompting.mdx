@@ -1,24 +1,204 @@
 ---
 title: "프롬프트 잘 쓰는 법 (공식 가이드 기반)"
-description: "공식 가이드를 바탕으로 프롬프트를 다듬는 방법"
+description: "공식 프롬프트 가이드를 회의록 요약·보고서 초안·데이터 정리 같은 업무 예시로 풀어 쓴 나쁜 예 vs 좋은 예 비교"
 sidebar:
   label: "C4. 프롬프트 잘 쓰는 법"
 level: practical
 category: claude
 tools: ["Claude"]
 duration: "25분"
-prerequisites: ["사용할 도구의 계정"]
-sources: []
-status: draft
+prerequisites: ["Claude 계정 (무료 계정도 가능)"]
+lastVerified: 2026-10-10
+sources:
+  - title: "Prompting best practices"
+    url: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+  - title: "Choosing the right model"
+    url: "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+  - title: "Get started with Claude"
+    url: "https://support.claude.com/en/articles/8114491-get-started-with-claude"
+status: published
 ---
 
-import ComingSoon from '../../../components/ComingSoon.astro';
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
-<ComingSoon />
+<Summary>
+- Claude를 **"뛰어나지만 우리 회사 규범을 모르는 신입 직원"** 처럼 대하세요. 목적, 독자, 형식을 알려 주면 결과가 확 좋아져요.
+- 황금률: 맥락이 거의 없는 동료에게 프롬프트를 보여줬을 때 헷갈려 한다면 Claude도 헷갈려요.
+- 핵심 기법은 **명확하게 · 이유 덧붙이기 · 예시 주기 · XML 태그로 구분 · 긴 자료는 위, 질문은 아래** 다섯 가지예요.
+- 모델 선택과 effort도 프롬프트 못지않은 조절 장치예요.
+- 아래 한국어 예시는 공식 원칙을 적용해 만든 **예시**이고, 공식 문서에 한국어 예문이 있는 것은 아니에요.
+</Summary>
 
-## 이 튜토리얼에서 배울 것
+## 이 튜토리얼로 할 수 있게 되는 것
 
-- 이 주제가 무엇이고 어떤 업무 상황에서 쓰이는지 이해하기
-- 시작하기 전에 필요한 계정과 준비물 확인하기
-- 예제를 단계별로 직접 따라 해 보기
-- 자주 막히는 지점과 해결 방법 알아 두기
+- 막연한 요청을 구체적인 요청으로 고쳐 쓸 수 있어요.
+- 회의록 요약, 보고서 초안, 데이터 정리를 Claude에게 정확히 맡길 수 있어요.
+- 예시와 XML 태그로 형식을 원하는 대로 맞출 수 있어요.
+- 결과가 마음에 안 들 때 어디를 고쳐야 할지 알 수 있어요.
+
+## 먼저 알아둘 개념
+
+공식 "Prompting best practices" 문서는 최신 모델(Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5 등) 전반에 쓰는 프롬프트 레퍼런스예요. 이 튜토리얼은 그중 공통 기법을 업무 예시로 풀었어요.
+
+| 용어 | 뜻 |
+| --- | --- |
+| **프롬프트** | Claude에게 보내는 요청 문구예요. |
+| **맥락(context)** | 왜 이 일을 하는지, 누가 읽는지 같은 배경 정보예요. |
+| **few-shot(예시 주기)** | 원하는 입력과 출력 예시를 보여 주는 방법이에요. 공식 문서는 3~5개를 권장해요. |
+| **XML 태그** | `<context>`처럼 내용 종류를 구분하는 표시예요. 지시·맥락·예시·입력이 섞일 때 오해를 줄여요. |
+| **effort** | 모델이 얼마나 깊이 생각할지 정하는 단계예요. 모델은 [C1](/new-project1/claude/c01-overview/)에서 비교해요. |
+
+<Aside type="note" title="확인되지 않은 점">
+공식 가이드는 약 1,100줄 분량이고, 일부 문장은 이전 세대 모델(Opus 4.5/4.6) 기준으로 쓰여 있어요. 모델별 세부 지침은 공식 문서의 모델별 섹션을 확인하세요. 이 튜토리얼에서는 모델에 관계없이 쓰는 공통 원칙만 다뤄요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '목적·독자·형식을 요청에 넣어 봤어요',
+  '이유를 한 문장 덧붙여 봤어요',
+  '예시를 1~3개 줘 봤어요',
+  '긴 자료를 XML 태그로 묶고 질문을 아래에 뒀어요',
+  '결과를 보고 후속 질문으로 다듬었어요',
+]} />
+
+<Steps>
+
+1. **목적·독자·형식을 명시하기 (회의록 요약)**
+
+   순서가 중요하면 번호 목록으로, 출력 형식과 제약은 구체적으로 써요.
+
+   나쁜 예:
+
+   <PromptBox>
+   회의록 요약해줘.
+   </PromptBox>
+
+   좋은 예:
+
+   <PromptBox>
+   다음 회의록을 팀장에게 보고할 5줄 요약으로 정리해줘. 결정사항, 담당자, 기한을 각각 한 줄씩 포함해.
+
+   [회의록 붙여넣기]
+   </PromptBox>
+
+2. **이유를 덧붙이기 (보고서 초안)**
+
+   이유를 설명하면 Claude가 규칙의 취지를 파악해 일반화해요. 공식 문서도 규칙만 던지는 것보다 이유를 설명하는 쪽이 낫다고 해요.
+
+   나쁜 예:
+
+   <PromptBox>
+   분기 보고서 초안 써줘. 목록은 쓰지 마.
+   </PromptBox>
+
+   좋은 예:
+
+   <PromptBox>
+   임원 회의에서 낭독할 분기 보고서 초안을 써줘. 소리 내어 읽을 글이라서 목록·기호 없이 이어지는 문장으로 써줘. 분량은 A4 한 장, 성과 → 문제점 → 다음 분기 계획 순서로.
+   </PromptBox>
+
+   "하지 마"보다 "무엇을 하라"로 말하는 것도 좋아요. 예를 들어 "마크다운 쓰지 마" 대신 "자연스럽게 이어지는 문단으로 써줘"라고 해 보세요.
+
+3. **예시 주기 (데이터 정리)**
+
+   <PromptBox>
+   아래 고객 문의를 '배송', '환불', '기타' 중 하나로 분류해줘. 이 형식으로 답해줘.
+
+   <examples>
+   <example>입력: 주문한 지 5일이 지났는데 아직 안 왔어요. 출력: 배송</example>
+   <example>입력: 사이즈가 안 맞아서 돈 돌려받고 싶어요. 출력: 환불</example>
+   </examples>
+
+   <input>
+   [분류할 문의 목록]
+   </input>
+   </PromptBox>
+
+   예시는 관련성이 있고, 다양하고, 태그로 구조화돼 있을수록 좋아요. 최상의 결과를 위해 3~5개를 권장해요.
+
+4. **긴 자료는 위에, 질문은 아래에**
+
+   20k 토큰이 넘는 긴 입력이라면 문서를 프롬프트 맨 위에 두고 질문·지시를 맨 아래에 두세요. 공식 문서는 이렇게 하면 복잡한 다문서 입력에서 응답 품질이 최대 30% 향상됐다고 (테스트 기준) 설명해요. 문서가 여러 개면 `<documents>` 안에 `<document index="1">`처럼 구분하고 `<source>`와 `<document_content>`를 쓰는 구조가 안내돼요.
+
+   <PromptBox>
+   <documents>
+   <document index="1">
+   <source>2분기 영업 보고서</source>
+   <document_content>[내용 붙여넣기]</document_content>
+   </document>
+   <document index="2">
+   <source>3분기 영업 보고서</source>
+   <document_content>[내용 붙여넣기]</document_content>
+   </document>
+   </documents>
+
+   두 보고서에서 매출이 가장 많이 늘어난 제품 3개를 비교하고, 원인을 보고서에서 근거가 된 문장과 함께 알려줘.
+   </PromptBox>
+
+5. **역할 주고 다듬기**
+
+   시스템 프롬프트나 첫 문장에 역할을 한 문장만 줘도 효과가 있어요. 그리고 한 번에 완벽하게 쓰려 하지 말고 후속 질문으로 다듬으세요.
+
+   <PromptBox>
+   너는 10년 차 인사팀 매니저야. 방금 쓴 공지문을 신입사원이 읽는다고 생각하고 더 쉬운 말로 고쳐줘.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="후속 질문으로 결과를 다듬는 대화 화면" />
+
+</Steps>
+
+## 빠른 참조표
+
+| 원칙 | 약한 요청 | 강한 요청 |
+| --- | --- | --- |
+| 명확하고 직접적으로 | 회의록 요약해줘 | 팀장 보고용 5줄, 결정사항·담당자·기한 포함 |
+| 이유 덧붙이기 | 목록 쓰지 마 | 소리 내어 읽을 글이라 목록 없이 이어지는 문장으로 |
+| "하지 마" 대신 "하라" | 마크다운 쓰지 마 | 자연스럽게 이어지는 문단으로 써줘 |
+| 예시 주기 | 설명만 | 입력/출력 예시 3~5개 |
+| 구조화 | 자료와 지시가 뒤섞임 | `<context>` `<input>` `<instructions>` 태그 사용 |
+| 긴 자료 | 질문이 맨 위 | 문서 위, 질문 아래 |
+
+## 자주 막히는 지점
+
+### 답이 너무 평범하거나 짧아요
+
+- **원인**: 요청이 기본 수준만 요구하고 있을 수 있어요.
+- **해결**: 더 원하면 명시하세요. 공식 가이드의 예처럼 "가능한 한 많은 기능을 포함하고 기본을 넘어 완성도 있게"처럼 "그 이상"을 직접 요청해요.
+
+### 형식이 매번 달라요
+
+- **원인**: 형식 기준이 말로만 되어 있어서예요.
+- **해결**: 출력 예시를 주거나 XML 형식 지시자를 쓰세요.
+
+### 요청하지 않은 것까지 만들어 와요 (특히 코딩)
+
+- **원인**: 모델이 과잉 구현할 수 있어요.
+- **해결**: "요청한 변경만 해. 불필요한 추상화나 새 파일은 만들지 마."처럼 범위를 한정하세요. 공식 문서의 취지를 옮긴 예시예요.
+
+### 쉬운 일에도 너무 오래 생각해요
+
+- **원인**: "항상 도구를 써라" 같은 일괄 지시나 높은 effort가 원인일 수 있어요.
+- **해결**: 일괄 지시를 "문제 이해에 도움이 될 때 쓰라"처럼 구체화하고, 그래도 부족하면 effort를 낮추세요.
+
+### 긴 문서에서 엉뚱한 답이 나와요
+
+- **원인**: 질문이 문서보다 앞에 있거나, 문서 경계가 모호해서예요.
+- **해결**: 문서를 위에, 질문을 아래에 두고 태그로 구분하세요.
+
+## 실전 팁
+
+- **신입 직원에게 업무 지시하듯 써 보세요.** 내가 동료에게 부탁할 때 필요한 정보를 그대로 적으면 돼요.
+- **간단한 질문으로 시작해서 점점 구체화하세요.** 공식 시작 가이드도 이 흐름을 안내해요.
+- **자주 쓰는 요청은 틀로 저장해 두세요.** 지침과 메모리는 [C9](/new-project1/claude/c09-memory-settings/)에서 다뤄요.
+- **프롬프트로 안 풀리면 모델과 effort를 바꿔 보세요.** 모델 선택은 프롬프트 못지않은 레버예요. [C1](/new-project1/claude/c01-overview/)을 참고하세요.
+
+## 다음에 볼 튜토리얼
+
+- [C1. Claude 한눈에 보기](/new-project1/claude/c01-overview/) — 모델과 effort 고르기
+- [C9. 메모리와 개인 설정](/new-project1/claude/c09-memory-settings/) — 반복 지시를 저장하기
+- [C5. 프로젝트](/new-project1/claude/c05-projects/) — 같은 자료와 지침을 반복해서 쓰기
