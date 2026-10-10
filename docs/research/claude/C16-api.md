@@ -73,3 +73,7 @@
 - [Get your Claude API key](https://platform.claude.com/docs/en/get-api-key) — 확인일 2026-10-10
 - [Models overview](https://platform.claude.com/docs/en/about-claude/models/overview) — 확인일 2026-10-10
 - [What is the Pro plan?](https://support.claude.com/en/articles/8325606-what-is-the-pro-plan) — 확인일 2026-10-10
+
+
+## 6단계 재점검 (2026-10-10)
+- Rate limits 문서: 티어 Start/Build/Scale/Custom, 월 지출 상한 $500/$1,000/$200,000, Start 티어 Sonnet 5.5 RPM 1,000·ITPM 2,000,000·OTPM 400,000. 결제 수단 등록·충전 화면 절차는 여전히 미확인.

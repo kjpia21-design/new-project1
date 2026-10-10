@@ -32,3 +32,7 @@
 - [Model configuration](https://code.claude.com/docs/en/model-config) — 확인일 2026-10-10
 - [Custom subagents](https://code.claude.com/docs/en/sub-agents) — 확인일 2026-10-10
 - [Models overview](https://platform.claude.com/docs/en/about-claude/models/overview) — 확인일 2026-10-10
+
+
+## 6단계 재점검 (2026-10-10)
+- code.claude.com/docs/en/model-config: opusplan = plan 모드 opus, 실행 sonnet. Anthropic API에서 opus=Opus 5.5, sonnet=Sonnet 5.5(Bedrock/Foundry는 다름).

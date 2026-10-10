@@ -12,6 +12,8 @@ prerequisites:
   - "서브에이전트 기본 개념 (C14 참고)"
 lastVerified: 2026-10-10
 sources:
+  - title: "Model configuration (Claude Code)"
+    url: "https://code.claude.com/docs/en/model-config"
   - title: "Choosing the right model"
     url: "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
   - title: "Manage costs effectively (Claude Code)"
@@ -86,7 +88,7 @@ Sonnet은 Opus의 절반, Fable은 Opus의 2.5배예요. 구독 사용량도 대
 Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코딩 작업을 잘 처리하고 Opus보다 저렴하다. Opus는 복잡한 아키텍처 결정이나 다단계 추론에 아껴 써라." 단순한 서브에이전트에는 `model: haiku`를 쓰라고 해요.
 
 <Aside type="note" title="확인되지 않은 점">
-`opusplan`이 구체적으로 어느 Opus·Sonnet 버전으로 풀리는지는 확인하지 못했어요. 별칭이 최신 모델로 풀린다는 설명만 확인했어요. 공식 문서의 "Optimizing for cost and intelligence"에 있는 측정 사례도 읽지 않았으니, 더 알고 싶으면 공식 문서를 확인하세요.
+`opusplan`은 계획 모드에서 `opus`, 실행에서 `sonnet` 별칭을 쓰는 방식이에요. Claude Code 모델 설정 문서(2026-10-10)의 표를 보면 Anthropic API에서는 `opus`가 Opus 5.5, `sonnet`이 Sonnet 5.5로 풀려요. Bedrock이나 Foundry 같은 다른 제공처에서는 버전이 달라질 수 있고 별칭은 시간이 지나면 바뀌어요. 버전을 고정하려면 전체 모델 이름이나 `ANTHROPIC_DEFAULT_OPUS_MODEL`, `ANTHROPIC_DEFAULT_SONNET_MODEL` 환경 변수를 쓰세요. 비용 가이드의 "Optimizing for cost and intelligence" 측정 사례는 읽지 않았어요.
 </Aside>
 
 ## 단계별 따라하기
