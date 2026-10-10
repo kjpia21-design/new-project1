@@ -20,6 +20,10 @@ sources:
     url: "https://claude.com/pricing"
   - title: "Prompting best practices (Claude 공식 프롬프트 가이드)"
     url: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+  - title: "Upload & analyze files in Gemini Apps"
+    url: "https://support.google.com/gemini/answer/14903178"
+  - title: "Gemini Apps Privacy Hub"
+    url: "https://support.google.com/gemini/answer/13594961"
 status: published
 ---
 
@@ -34,7 +38,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - Claude는 **코드 실행·파일 생성** 기능으로 CSV·TSV를 분석하고 .xlsx와 차트(PNG)를 만들어 줘요 (2026-10-10 기준).
 - 결과 숫자는 **엑셀에서 샘플 몇 건을 직접 검산**하세요. AI의 계산 과정(코드)을 보여 달라고 하면 확인이 쉬워져요.
 - **개인정보와 회사 기밀은 올리기 전에 가리세요.** 도구마다 학습·보관 정책이 달라요.
-- ChatGPT의 데이터 분석 기능은 이번 조사에서 공식 문서를 열람하지 못했어요. 공식 도움말에서 확인하세요.
+- Gemini 앱도 업로드한 스프레드시트로 차트를 만들 수 있다고 안내해요(Gemini 도움말). ChatGPT의 데이터 분석 기능은 공식 문서를 열람하지 못해 확인하지 못했어요.
 </Summary>
 
 ## 이 튜토리얼로 할 수 있게 되는 것
@@ -140,7 +144,8 @@ Claude 공식 도움말 기준으로 이 기능은 Free·Pro·Max에서 기본�
 | 만들어 주는 파일 | .xlsx, .pptx, .docx, PDF, PNG 차트, Python 스크립트 |
 | 파일 크기 | 업로드·다운로드 모두 파일당 30MB |
 | 모델 학습 항목(가격 페이지) | Free·Pro·Max "Opt-out", Team·Enterprise "None by default" |
-| ChatGPT·Gemini | 데이터 분석 기능과 한도는 각 공식 도움말에서 확인하세요 |
+| Gemini | 업로드한 스프레드시트로 차트 생성 가능, 프롬프트당 파일 10개·파일당 100MB(Gemini 도움말) |
+| ChatGPT | 데이터 분석 기능과 한도는 공식 도움말에서 확인하세요 |
 
 ## 자주 막히는 지점
 
@@ -169,7 +174,8 @@ Claude 공식 도움말 기준으로 이 기능은 Free·Pro·Max에서 기본�
 - **올리지 않는 것이 기본이에요.** 고객 명단, 급여표, 건강 정보, 계약 원가표는 비식별화하거나 회사가 승인한 도구만 쓰세요.
 - **학습 설정을 확인하세요.** Claude 가격 페이지는 Free·Pro·Max의 모델 학습 항목을 "Opt-out"으로, Team·Enterprise를 "None by default"로 표시해요. 도움말은 허용한 대화만 개선에 쓰이고 설정은 언제든 바꿀 수 있다고 설명해요. 시크릿(incognito) 채팅은 개선에 쓰이지 않아요. 실제 화면의 설정 이름은 안내에 따르세요.
 - **조직 계정을 우선 검토하세요.** 업무 데이터는 개인 무료 계정보다 회사가 계약한 Team·Enterprise 같은 조직용 플랜이 정책 면에서 유리할 수 있어요. 정책은 계약마다 다르니 보안 담당자에게 확인하세요.
-- **ChatGPT·Gemini는 각 서비스의 개인정보·데이터 관리 설정을 확인하세요.** 이번 조사에서는 두 서비스의 공식 정책 문서를 열람하지 못해 내용을 단정하지 않았어요.
+- **Gemini는 Keep Activity 설정을 확인하세요.** Gemini 개인정보 허브는 Keep Activity가 켜져 있으면 일부 대화를 사람이 검토해 서비스 개선에 쓸 수 있다고 밝혀요. 끄거나 임시 채팅을 쓰면 AI 모델 학습에 쓰이지 않는다고 안내하지만, 응답과 보호 목적의 처리는 계속된다고 해요. 기밀 정보는 넣지 마세요.
+- **ChatGPT는 개인정보·데이터 관리 설정을 직접 확인하세요.** 공식 정책 문서를 열람하지 못해 내용을 단정하지 않았어요.
 - **개인정보 보호법 등 법적 의무**는 회사 법무·보안 담당자가 판단할 일이에요. 이 튜토리얼은 법률 자문이 아니에요.
 
 ## 실전 팁

@@ -16,7 +16,8 @@
 ## 확인 못 함
 - 업로드 파일이 컨텍스트/사용량에 어떻게 계산되는지 공식 문서에 설명 없음(U4).
 - 음성 파일 업로드는 지원 형식에 없음(U1); 녹음→텍스트는 media/14에서 다룸.
-- ChatGPT·Gemini 업로드 한도: 열람 불가.
+- ChatGPT 업로드 한도: 열람 불가(openai.com 403).
+- Gemini 업로드 한도(원문 확인 2026-10-10): 프롬프트당 10개, 동영상 외 100MB·동영상 2GB; 컨텍스트 32k/128k/1M(약 1,500쪽) (https://support.google.com/gemini/answer/14903178 , https://support.google.com/gemini/answer/16275805). PDF 쪽수·긴 대화 처리·프로젝트 파일은 미확인.
 
 ## 출처 목록
 - https://support.claude.com/en/articles/8241126-upload-files-to-claude / https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work / https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude / Projects / Prompting best practices — 확인일 2026-10-10
