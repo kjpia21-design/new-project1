@@ -1,0 +1,55 @@
+---
+interface Props { items: string[] }
+const { items } = Astro.props;
+---
+<check-list class="not-content" data-total={items.length}>
+  <div class="progress">
+    <span class="count" aria-live="polite">0/{items.length} 완료</span>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax={items.length} aria-valuenow="0"><div class="fill"></div></div>
+  </div>
+  <ul>
+    {items.map((item, i) => (
+      <li><label><input type="checkbox" data-i={i} /><span>{item}</span></label></li>
+    ))}
+  </ul>
+</check-list>
+
+<style>
+  check-list {
+    display: block; margin: 1.25rem 0; padding: 1rem 1.25rem;
+    border: 1px solid var(--sl-color-gray-5); border-radius: 14px;
+    background: var(--sl-color-bg-nav);
+  }
+  .progress { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+  .count { flex: none; font-weight: 700; font-size: var(--sl-text-sm); color: var(--sl-color-white); }
+  .bar { flex: 1; height: 10px; border-radius: 999px; background: var(--sl-color-gray-5); overflow: hidden; }
+  .fill { height: 100%; width: 0; background: var(--ai-green-fg); border-radius: 999px; transition: width 0.25s; }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { margin: 0; padding: 0.3rem 0; }
+  label { display: flex; gap: 0.6rem; align-items: flex-start; cursor: pointer; }
+  input { width: 1.2rem; height: 1.2rem; margin-top: 0.2rem; accent-color: var(--sl-color-accent); flex: none; }
+  input:checked + span { color: var(--sl-color-gray-3); text-decoration: line-through; }
+</style>
+
+<script>
+  class CheckList extends HTMLElement {
+    connectedCallback() {
+      const boxes = Array.from(this.querySelectorAll<HTMLInputElement>('input[type=checkbox]'));
+      const key = `checklist:${location.pathname}:${Array.from(document.querySelectorAll('check-list')).indexOf(this)}`;
+      let saved: boolean[] = [];
+      try { saved = JSON.parse(localStorage.getItem(key) ?? '[]'); } catch { /* 저장소를 못 써도 동작 */ }
+      boxes.forEach((b, i) => (b.checked = !!saved[i]));
+      const update = () => {
+        const done = boxes.filter((b) => b.checked).length;
+        const total = boxes.length;
+        this.querySelector('.count')!.textContent = `${done}/${total} 완료`;
+        (this.querySelector('.fill') as HTMLElement).style.width = `${total ? (done / total) * 100 : 0}%`;
+        this.querySelector('.bar')!.setAttribute('aria-valuenow', String(done));
+        try { localStorage.setItem(key, JSON.stringify(boxes.map((b) => b.checked))); } catch { /* 무시 */ }
+      };
+      boxes.forEach((b) => b.addEventListener('change', update));
+      update();
+    }
+  }
+  if (!customElements.get('check-list')) customElements.define('check-list', CheckList);
+</script>

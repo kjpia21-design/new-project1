@@ -1,0 +1,47 @@
+---
+title: 최신 AI 트렌드 따라 잡기
+description: 최신 AI 도구를 쉽게 설명하고, 단계별로 따라 할 수 있는 한국어 튜토리얼 사이트입니다.
+template: splash
+---
+
+import HomeHero from '../../components/HomeHero.astro';
+import LevelCards from '../../components/LevelCards.astro';
+import ClaudeBanner from '../../components/ClaudeBanner.astro';
+import CategoryCards from '../../components/CategoryCards.astro';
+import RecentUpdates from '../../components/RecentUpdates.astro';
+
+<div class="home-wrap">
+
+<HomeHero />
+
+<section>
+
+## 나는 어떤 사용자일까요?
+
+<LevelCards />
+
+</section>
+
+<section>
+
+<ClaudeBanner />
+
+</section>
+
+<section>
+
+## 분야별 둘러보기
+
+<CategoryCards />
+
+</section>
+
+<section>
+
+## 최근 업데이트
+
+<RecentUpdates limit={5} />
+
+</section>
+
+</div>

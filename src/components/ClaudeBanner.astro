@@ -1,0 +1,29 @@
+---
+import Illustration from './Illustration.astro';
+import { url } from '../lib/tutorials';
+---
+<a class="banner not-content" href={url('/claude/')}>
+  <Illustration name="claude" size={72} />
+  <div>
+    <p class="eyebrow">특별 섹션</p>
+    <p class="title">Claude 완전 정복</p>
+    <p class="desc">모델 고르기부터 프로젝트, 아티팩트, 커넥터, 스킬, Claude Code, API까지 16편으로 깊이 있게 다뤄요.</p>
+  </div>
+  <span class="go">보러 가기 →</span>
+</a>
+
+<style>
+  .banner {
+    display: flex; align-items: center; gap: 1.25rem; padding: 1.4rem 1.6rem; border-radius: 20px; text-decoration: none;
+    background: linear-gradient(120deg, var(--ai-coral-soft), var(--ai-card-tint));
+    border: 2px solid var(--ai-coral); box-shadow: var(--ai-shadow);
+  }
+  .banner:hover { filter: brightness(1.03); }
+  .banner > div { flex: 1; min-width: 0; }
+  p { margin: 0; }
+  .eyebrow { font-size: var(--sl-text-xs); font-weight: 800; color: var(--sl-color-accent-high); }
+  .title { font-size: var(--sl-text-h3); font-weight: 800; color: var(--sl-color-white); }
+  .desc { color: var(--sl-color-gray-2); line-height: 1.55; margin-top: 0.2rem; }
+  .go { flex: none; font-weight: 700; color: var(--sl-color-accent-high); }
+  @media (max-width: 600px) { .banner { flex-direction: column; align-items: flex-start; } }
+</style>

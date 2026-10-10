@@ -1,0 +1,136 @@
+---
+import LevelBadge from './LevelBadge.astro';
+import Illustration from './Illustration.astro';
+import { getTutorials, entryUrl, categoryLabels, categoryOrder, levelLabels, type Level, type Category } from '../lib/tutorials';
+
+interface Props {
+  level?: Level;
+  category?: Category;
+  /** true면 수준·분야 필터 버튼을 위에 보여준다 */
+  filters?: boolean;
+  emptyText?: string;
+}
+const { level, category, filters = false, emptyText = '아직 이 조건에 맞는 튜토리얼이 없어요.' } = Astro.props;
+const items = await getTutorials({ level, category });
+const levels: Level[] = ['beginner', 'practical', 'advanced'];
+---
+<div class="tutorial-grid not-content" data-filterable={filters ? '' : undefined}>
+  {filters && (
+    <div class="filters">
+      <div class="group" role="group" aria-label="수준 필터" data-group="level">
+        <span class="group-label">수준</span>
+        <button type="button" data-value="" aria-pressed="true">전체</button>
+        {levels.map((l) => <button type="button" data-value={l} aria-pressed="false">{levelLabels[l]}</button>)}
+      </div>
+      <div class="group" role="group" aria-label="분야 필터" data-group="category">
+        <span class="group-label">분야</span>
+        <button type="button" data-value="" aria-pressed="true">전체</button>
+        {categoryOrder.map((c) => <button type="button" data-value={c} aria-pressed="false">{categoryLabels[c]}</button>)}
+      </div>
+      <p class="result" aria-live="polite"></p>
+    </div>
+  )}
+  {items.length === 0 ? (
+    <p class="empty">{emptyText}</p>
+  ) : (
+    <ul class="cards">
+      {items.map((e) => (
+        <li class:list={['card', { soon: e.data.status === 'draft' }]} data-level={e.data.level} data-category={e.data.category}>
+          <a href={entryUrl(e.id)}>
+            <div class="top">
+              <Illustration name={e.data.category!} size={40} />
+              <div class="badges">
+                {e.data.level && <LevelBadge level={e.data.level} />}
+                {e.data.status === 'draft' && <span class="soon-tag">준비 중</span>}
+              </div>
+            </div>
+            <h3>{e.data.title}</h3>
+            {e.data.description && <p class="desc">{e.data.description}</p>}
+            <p class="foot">
+              <span>{categoryLabels[e.data.category!]}</span>
+              {e.data.duration && <span>· {e.data.duration}</span>}
+            </p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+  {filters && <p class="empty none" hidden>조건에 맞는 튜토리얼이 없어요. 필터를 바꿔 보세요.</p>}
+</div>
+
+<style>
+  .filters { display: grid; gap: 0.6rem; margin-bottom: 1.25rem; }
+  .group { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+  .group-label { font-weight: 700; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); min-width: 2.5rem; }
+  .group button {
+    border: 1px solid var(--sl-color-gray-4); background: var(--sl-color-bg); color: var(--sl-color-gray-2);
+    border-radius: 999px; padding: 0.25rem 0.85rem; font: inherit; font-size: var(--sl-text-sm); cursor: pointer;
+  }
+  .group button:hover { border-color: var(--sl-color-accent); }
+  .group button[aria-pressed='true'] {
+    background: var(--sl-color-accent); border-color: var(--sl-color-accent); color: var(--sl-color-text-invert); font-weight: 700;
+  }
+  .result { margin: 0; font-size: var(--sl-text-sm); color: var(--sl-color-gray-3); }
+  .cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
+  .card { margin: 0; padding: 0; }
+  .card[hidden] { display: none; }
+  .card a {
+    display: flex; flex-direction: column; gap: 0.4rem; height: 100%;
+    padding: 1rem 1.1rem; border-radius: 16px; text-decoration: none;
+    border: 1px solid var(--sl-color-gray-5); background: var(--ai-card);
+    box-shadow: var(--ai-shadow); transition: transform 0.15s, border-color 0.15s;
+  }
+  .card a:hover { transform: translateY(-2px); border-color: var(--ai-coral); }
+  .card.soon a { opacity: 0.72; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+  .badges { display: flex; gap: 0.35rem; flex-wrap: wrap; justify-content: flex-end; }
+  .soon-tag {
+    padding: 0.1rem 0.6rem; border-radius: 999px; font-size: var(--sl-text-xs); font-weight: 700; line-height: 1.6;
+    background: var(--ai-yellow-bg); color: var(--ai-yellow-fg);
+  }
+  h3 { margin: 0.2rem 0 0; font-size: var(--sl-text-base); line-height: 1.4; color: var(--sl-color-white); font-weight: 700; }
+  .desc { margin: 0; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); line-height: 1.5; }
+  .foot { margin: auto 0 0; padding-top: 0.4rem; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); display: flex; gap: 0.3rem; flex-wrap: wrap; }
+  .empty { padding: 1rem 1.25rem; border: 2px dashed var(--sl-color-gray-4); border-radius: 14px; color: var(--sl-color-gray-2); margin: 0; }
+  .empty[hidden] { display: none; }
+</style>
+
+<script>
+  class Filterable {
+    constructor(root: HTMLElement) {
+      const cards = Array.from(root.querySelectorAll<HTMLElement>('.card'));
+      const state: Record<string, string> = { level: '', category: '' };
+      const params = new URLSearchParams(location.search);
+      for (const k of Object.keys(state)) state[k] = params.get(k) ?? '';
+
+      const apply = () => {
+        let shown = 0;
+        for (const c of cards) {
+          const ok = (!state.level || c.dataset.level === state.level) && (!state.category || c.dataset.category === state.category);
+          c.hidden = !ok;
+          if (ok) shown++;
+        }
+        root.querySelectorAll<HTMLButtonElement>('.group button').forEach((b) => {
+          const g = (b.closest('.group') as HTMLElement).dataset.group!;
+          b.setAttribute('aria-pressed', String(b.dataset.value === state[g]));
+        });
+        root.querySelector('.none')?.toggleAttribute('hidden', shown !== 0);
+        const r = root.querySelector('.result');
+        if (r) r.textContent = `튜토리얼 ${shown}개`;
+      };
+      root.querySelectorAll<HTMLButtonElement>('.group button').forEach((b) =>
+        b.addEventListener('click', () => {
+          const g = (b.closest('.group') as HTMLElement).dataset.group!;
+          state[g] = b.dataset.value ?? '';
+          const p = new URLSearchParams();
+          for (const [k, v] of Object.entries(state)) if (v) p.set(k, v);
+          const qs = p.toString();
+          history.replaceState(null, '', location.pathname + (qs ? `?${qs}` : ''));
+          apply();
+        }),
+      );
+      apply();
+    }
+  }
+  document.querySelectorAll<HTMLElement>('.tutorial-grid[data-filterable]').forEach((el) => new Filterable(el));
+</script>
