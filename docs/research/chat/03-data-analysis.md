@@ -14,7 +14,8 @@
 
 ## 확인 못 함
 - Claude 엑셀/시트 애드인 기능 세부는 미확인(검색 요약만).
-- ChatGPT·Gemini 데이터 분석 기능·한도·학습 정책: 열람 불가.
+- ChatGPT 데이터 분석 기능·한도·학습 정책: 열람 불가(openai.com 403).
+- Gemini(원문 확인 2026-10-10): 업로드한 스프레드시트로 차트 생성 가능, 프롬프트당 파일 10개·100MB (https://support.google.com/gemini/answer/14903178). 학습 정책은 Keep Activity 기준 (https://support.google.com/gemini/answer/13594961).
 - 행 수 상한 등 공식 수치 없음.
 
 ## 출처 목록

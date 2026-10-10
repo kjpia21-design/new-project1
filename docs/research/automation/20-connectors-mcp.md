@@ -1,5 +1,13 @@
 # 커넥터(MCP) 공통 개념 (2026-10-10 조사)
 
+## 5단계 원문 대조 (2026-10-10)
+- 원문 확인: modelcontextprotocol.io intro(USB-C 비유, 오픈소스 표준, Claude·ChatGPT 예시), 2025-06-18 architecture(host-client-server, 클라이언트-서버 1:1, JSON-RPC 기반), 2025-03-26 스펙 보안 원칙(도구 호출 전 명시적 동의, annotation은 신뢰된 서버가 아니면 신뢰 금지), security_best_practices 페이지 열림.
+- 원문 확인: geminicli.com/docs/tools/mcp-server — mcpServers, url/httpUrl/headers, includeTools/excludeTools(exclude 우선), `gemini mcp add`.
+- 원문 확인: notion.com/help/notion-agent — All sources > MCP servers > Add MCP server, Settings > Connections > Discover.
+- 원문 미확인: help.openai.com (curl 403) — ChatGPT Developer mode/플랜 조건은 검색 요약 유지. Claude 쪽(support.claude.com, code.claude.com)은 이번 담당 범위 밖.
+
+(아래는 4단계 당시 기록)
+
 Claude 쪽 사실은 docs/research/claude/C07-connectors.md 를 재사용. 아래는 Claude 외 도구와 MCP 일반 개념 보강. WebFetch가 외부 접속이 안 되어 WebSearch 검색 요약에 기반.
 
 ## 핵심 사실

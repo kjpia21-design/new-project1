@@ -1,6 +1,6 @@
 # 13. AI 영상 생성으로 짧은 홍보 영상 — 2026-10-10 기준
 
-> 조사 방법 주의: WebFetch 불가. 아래는 WebSearch 결과 요약("검색 요약").
+> 5단계 원문 대조(2026-10-10): Google 페이지는 curl로 원문 확인. Canva·OpenAI·Adobe는 403으로 "(검색 요약)" 유지.
 
 ## 핵심 사실
 - Gemini 앱 영상 생성 도움말: Veo 3.1로 짧은 영상 생성, Gemini 앱에서 생성한 영상은 8초. Veo 3.1 영상 수에 상한이 있고 한도에 가까워지면 알림, AI Pro는 Ultra로 업그레이드하거나 초기화를 기다림, Ultra가 한도 더 높음. 고정 일일 수치는 공식 요약에 없음. (검색 요약) https://support.google.com/gemini/answer/16126339
@@ -21,3 +21,13 @@
 
 ## 출처 목록
 위 URL 전부 (확인일 2026-10-10, 검색 요약).
+
+## 5단계 원문 대조 결과 (2026-10-10)
+원문 확인(Google) 및 이전 검색 요약과 달라진 점:
+- 영상 도움말(16126339): 모델은 "Gemini Omni"(Veo 3.1 언급 없음). 개인 계정은 Google AI 요금제 필요, 18세 미만 불가, Workspace는 해당 라이선스 필요. 컴퓨터에서 gemini.google.com → Open Sidebar → Create video → 템플릿(선택) → 프롬프트 → Submit. 이미지 최대 5장 + 영상 1개 업로드, 몇 분 소요, 생성 중 같은 채팅 사용 불가, 오디오 요청 가능. 공유/다운로드는 영상 아래 Share → Share on YouTube / Download video. 영상 업로드 편집은 EEA·스위스·영국·일부 미국 주에서 불가. 금지 사용 정책, 업로드 이미지 권리 보유, 속이거나 괴롭히거나 해치려는 목적 금지, 위반 시 계정 해지 가능.
+- 소개 페이지(gemini.google/overview/video-generation): "Gemini Omni가 Gemini 앱에서 Veo를 대체", Gemini Omni 1.1 Flash가 Veo 3.1을 대체, 10초 영상, 네이티브 오디오, 사진 최대 5장, Google AI 구독 필요, 18+, 요금제·지역에 따라 기능 다름. 모든 Gemini 앱 영상에 SynthID.
+- 수정: 클립 길이 "8초(Veo 3.1)" → "10초(Omni, 소개 페이지 기준)". 모델 이름 불일치 Aside는 "Omni가 Veo 3.1 대체, 구독 안내에 Veo 3.1 표기 잔존"으로 교체. 한국 제공: 구독 안내(16275805)의 Google AI Plus/Pro/Ultra 제공 국가 목록에 South Korea 있음 → 본문에 반영(영상 기능 자체의 한국 제공 문구는 없음, 요금제 국가 목록 기준).
+- 한도(16275805): 연산량 기반, 5시간마다 갱신, 주간 한도, 배수 Plus 2x / Pro 4x / Ultra 5x 또는 20x(Pro 대비). 구독 페이지 가격(미국 사이트): Plus $4.99, Pro $19.99, Ultra $99.99부터 (2026-10-10 기준, 한국 가격은 미확인).
+- 검증(16722517): 이미지·영상·오디오 확인, 영상 90초 미만, 100MB 이하, 하루 약 10회(이미지/영상/오디오 각각) 한도, Google AI 콘텐츠만 인식.
+미확인(403): Canva Magic Video/이미지→영상/자막 도움말, Canva AI 약관, OpenAI Sora 종료 안내와 안전 글, Adobe. 상업 이용을 직접 허용하는 Google 문장은 찾지 못함.
+Aside: "확인 중인 튜토리얼" 제거 대신 "Canva 공식 도움말 원문은 아직 확인하지 못했어요"로 구체화.

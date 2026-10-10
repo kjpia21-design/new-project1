@@ -1,5 +1,17 @@
 # Google Workspace의 Gemini (2026-10-10 조사)
 
+## 5단계 원문 대조 (2026-10-10)
+- 원문 확인: knowledge.workspace.google.com — 2025-01부터 Business/Enterprise에 AI 기능 포함, Gemini Business-Legacy 등 애드온 판매 종료.
+- 원문 확인(workspace.google.com/pricing 비교표): Gemini in Workspace apps — Starter "Limited"; Gmail 전 에디션 포함; Docs·Sheets는 Starter 미지원, Standard/Plus/Enterprise 포함. Starter/Standard/Plus 최대 300명, Enterprise 문의. 연간 16% 할인 표시. **에디션별 금액은 정적 HTML에 없어 확인 불가 -> 본문에서 가격 표 삭제**(검색 요약의 $7/$14/$22는 원문 미확인).
+- 원문 확인(Gmail 14199860): 오른쪽 위 Ask Gemini 사이드 패널(Summarize/Draft/Organize/Search/Schedule), "eligible Workspace or Google AI plan" 필요, 개인 계정은 Workspace Experiments. 구판(AI Overview/회신 2개 초과) 내용은 현재 페이지에 없음 -> 본문에서 삭제.
+- 원문 확인(학습 센터 14506398): Gmail 요약은 Ask Gemini > "What's this email about?". Docs 요약은 Help me write > Summarize. 14590328: Help me write > Create > Refine/Insert.
+- 원문 확인(Sheets 14356410): 오른쪽 위 Ask Gemini, 제안 프롬프트 선택 또는 직접 입력.
+- **교정**(언어 목록 14925782): Gmail Help me write = en, fr, de, it, ja, ko, pt, es(8개, 개인 계정은 미국만). Docs Help me write = en, fr, de, it, ja, pt, es (한국어 없음). Docs Help me create와 Docs/Gmail 사이드 패널에는 한국어 있음. Gmail Proofread는 en, es만.
+- 원문 확인: Privacy Hub — 도메인 밖 모델 학습에 허가 없이 쓰지 않음, 사람이 검토하지 않음. 개인 계정 Gemini 앱 데이터 학습 사용 문구는 미확인(삭제).
+- 관리자: 관리 콘솔 Generative AI > Gemini App > Turn the Gemini App on or off 메뉴 존재 확인. 조직 단위·그룹 세부 내용은 본문 확인 못 함.
+
+(아래는 4단계 당시 기록)
+
 조사 방식 주의: WebFetch가 외부에 접속하지 못해 WebSearch 검색 요약(support.google.com, workspace.google.com, knowledge.workspace.google.com)에 기반한다.
 
 ## 핵심 사실

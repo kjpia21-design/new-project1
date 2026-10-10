@@ -30,7 +30,7 @@ sources:
     url: "https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt"
   - title: "MCP servers with Gemini CLI"
     url: "https://geminicli.com/docs/tools/mcp-server/"
-  - title: "Get started with Notion Agent (검색 요약으로 확인)"
+  - title: "Get started with Notion Agent"
     url: "https://www.notion.com/help/notion-agent"
 status: published
 ---
@@ -49,8 +49,8 @@ import AutomationMcpMap from '../../../components/diagrams/AutomationMcpMap.astr
 - Claude 커넥터의 클릭 절차는 [C7. 커넥터](/new-project1/claude/c07-connectors/)에 있어요. 이 편은 도구를 가리지 않는 개념과 업무 시나리오에 집중해요.
 </Summary>
 
-<Aside type="caution" title="확인 중인 튜토리얼이에요">
-이 튜토리얼은 각 도구의 공식 사이트 검색 결과를 바탕으로 썼고, 공식 도움말 원문 대조를 아직 마치지 못했어요(2026-10-10 기준). 가격, 무료 한도, 메뉴 이름은 꼭 공식 페이지에서 다시 확인하세요. 원문 대조가 끝나면 이 안내를 지울게요.
+<Aside type="caution" title="ChatGPT 쪽은 아직 확인 중이에요">
+MCP 개념·보안 원칙(modelcontextprotocol.io), Gemini CLI, Notion Agent의 연결 방법은 공식 원문으로 확인했어요(2026-10-10 기준). 하지만 OpenAI 도움말(help.openai.com)은 열리지 않아 ChatGPT의 개발자 모드·플랜 조건은 원문으로 확인하지 못했어요. ChatGPT 행은 검색 요약에 근거하니 OpenAI 공식 도움말에서 다시 확인하세요.
 </Aside>
 
 
@@ -83,14 +83,15 @@ import AutomationMcpMap from '../../../components/diagrams/AutomationMcpMap.astr
 | --- | --- | --- | --- |
 | **Claude** (claude.ai) | 커넥터 | 입력창 + > Connectors, 설정의 Connectors 디렉터리 | 커스텀 커넥터는 원격 MCP 서버. 절차는 [C7](/new-project1/claude/c07-connectors/) |
 | **Claude Code** | MCP 서버 | 명령 `claude mcp add`, 인증은 `/mcp` | claude.ai 커넥터는 로그인하면 `/mcp`에 표시 |
-| **ChatGPT** | 앱 / 개발자 모드(Developer mode) | 워크스페이스 설정의 Permissions & Roles 등 | 전체 MCP(쓰기 포함)는 Business·Enterprise·Edu 베타, 웹 전용. Pro는 읽기/가져오기 권한으로 연결. 도움말이 "기능·UI·권한이 바뀔 수 있다"고 명시 |
-| **Gemini CLI** | MCP 서버 | 설정 파일 `settings.json`의 `mcpServers` 또는 `gemini mcp add` | 원격은 `url`/`httpUrl`, 도구는 `includeTools`/`excludeTools`로 거름 |
-| **Notion Agent** | 연결(Connections) | All sources > MCP servers > Add MCP server, 또는 Settings > Connections > Discover | 검색 요약 기준. 화면 안내를 따르세요 |
+| **ChatGPT** | 앱 / 개발자 모드(Developer mode) | 워크스페이스 설정의 Permissions & Roles 등 | (OpenAI 원문 미확인, 검색 요약 기준) 전체 MCP(쓰기 포함)는 Business·Enterprise·Edu 베타, 웹 전용. Pro는 읽기/가져오기 권한으로 연결. 도움말이 "기능·UI·권한이 바뀔 수 있다"고 명시 |
+| **Gemini CLI** | MCP 서버 | 설정 파일 `settings.json`의 `mcpServers` 또는 `gemini mcp add` | 원격은 `url`/`httpUrl`/`headers`, 도구는 `includeTools`/`excludeTools`로 거르고 `excludeTools`가 우선 |
+| **Notion Agent** | 연결(Connections) | All sources > MCP servers > Add MCP server, 또는 Settings > Connections > Discover | Notion 공식 도움말로 확인. MCP 서버를 연결하면 All sources 목록에 MCP servers로 나타나요 |
 
 <Aside type="note" title="확인하지 못한 점">
 - Gemini 앱이나 Google Workspace 안의 Gemini가 MCP 서버를 직접 연결하는지는 확인하지 못했어요. Workspace 안의 Gemini 사용은 [19편](/new-project1/automation/19-google-workspace-gemini/)을 보세요.
 - MCP 스펙은 날짜별 버전(2025-03-26, 2025-06-18, 2026-07-28 등)이 여럿이에요. 이 편은 개념과 보안 원칙 위주로 썼고, 세부 규격은 최신 공식 문서를 확인하세요.
-- ChatGPT와 Notion의 화면 문구는 직접 열어 보지 못했어요. 지원 여부와 플랜 조건은 각 공식 도움말에서 확인하세요.
+- ChatGPT의 화면 문구와 플랜 조건은 OpenAI 도움말이 열리지 않아 확인하지 못했어요. 공식 도움말에서 확인하세요.
+- Notion은 Business·Enterprise 플랜에서 에이전트 사용 허용량이 포함된다고 안내해요. 연결 자체의 플랜 조건은 Notion 도움말에서 확인하세요.
 </Aside>
 
 ## 단계별 따라하기

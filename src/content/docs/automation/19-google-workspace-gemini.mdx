@@ -41,13 +41,13 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 <Summary>
 - Google Workspace의 **Gmail·Docs·Sheets 안에서 바로** Gemini를 쓸 수 있어요. 메일 요약, 답장 초안, 문서 초안, 표 정리가 대표 업무예요.
-- 공식 안내에 따르면 2025년 1월부터 Business·Enterprise 에디션에 Gemini 기능이 **기본 포함**돼요. 다만 에디션·관리자 설정·언어에 따라 보이는 기능이 달라요(2026-10-10 기준).
-- 버튼 이름이 도움말마다 달라요. Gmail·Docs는 **Help me write**, Sheets는 **Ask Gemini**로 안내되고, 스레드 요약은 Gemini 사이드 패널에서 해요.
+- 공식 관리자 안내에 따르면 2025년 1월부터 Business·Enterprise 에디션에 Gemini 기능이 **기본 포함**돼요. 다만 에디션·관리자 설정·언어에 따라 보이는 기능이 달라요(2026-10-10 기준).
+- 버튼 이름이 도움말마다 달라요. Gmail 초안 작성과 Docs는 **Help me write**, Gmail 요약·Sheets는 오른쪽 위 **Ask Gemini**(사이드 패널)로 안내돼요.
 - 한국어 지원 범위가 기능마다 달라요. 공식 언어 목록을 확인하세요.
 </Summary>
 
-<Aside type="caution" title="확인 중인 튜토리얼이에요">
-이 튜토리얼은 각 도구의 공식 사이트 검색 결과를 바탕으로 썼고, 공식 도움말 원문 대조를 아직 마치지 못했어요(2026-10-10 기준). 가격, 무료 한도, 메뉴 이름은 꼭 공식 페이지에서 다시 확인하세요. 원문 대조가 끝나면 이 안내를 지울게요.
+<Aside type="caution" title="가격은 원문으로 확인하지 못했어요">
+Google 지원 페이지와 Workspace 요금제 페이지로 메뉴 이름, 에디션별 Gemini 범위, 언어 목록은 확인했어요(2026-10-10 기준). 다만 요금제 페이지의 에디션별 금액은 원문에서 읽히지 않아 이 튜토리얼에 적지 않았어요. 금액은 [Google Workspace 요금제](https://workspace.google.com/pricing)에서 직접 확인하세요.
 </Aside>
 
 
@@ -65,11 +65,11 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | **Gemini for Google Workspace** | Gmail, Docs, Sheets, Slides, Meet 등 Workspace 앱 안에 들어 있는 Google의 AI 기능이에요. |
 | **Gemini 앱** | gemini.google.com과 모바일 앱의 별도 대화형 서비스예요. 관리자는 이 앱과 Workspace 안의 기능을 따로 제어해요. |
 | **Help me write** | Gmail·Docs에서 초안을 만들고 다듬는 기능의 버튼 이름이에요. |
-| **Ask Gemini** | Sheets의 오른쪽 위 버튼이에요. 사이드 패널이 열려 프롬프트를 입력해요. Gmail 스레드 요약 안내에도 같은 이름이 나와요. |
+| **Ask Gemini** | Gmail·Sheets의 오른쪽 위 버튼이에요. 사이드 패널이 열려 프롬프트를 입력해요. |
 | **에디션(Edition)** | Business Starter·Standard·Plus 같은 Workspace 요금제 단계예요. 에디션마다 Gemini 범위가 달라요. |
 
 <Aside type="note" title="계정 종류에 따라 화면이 달라요 (2026-10-10 기준)">
-공식 도움말은 회사·학교용 Workspace 계정과 개인 구독(Google AI Pro·Ultra 등) 계정의 안내를 따로 둬요. 한 도움말에서는 일부 개인 구독자가 Ask Gemini 대신 스레드 요약 개요(AI Overview)를 본다고 안내해요. 내 화면에 버튼이 없으면 이상한 게 아니라 **계정 종류 때문일 수 있으니** 화면 안내를 따르세요.
+공식 도움말은 회사·학교용 Workspace 계정과 개인 구독(Google AI Pro·Ultra 등) 계정의 안내를 따로 둬요. Gmail 도움말은 이 기능에 "자격이 되는 Google Workspace 또는 Google AI 요금제"가 필요하다고 안내하고, 개인 계정은 시험 프로그램(Google Workspace Experiments)으로도 써 볼 수 있다고 해요. 내 화면에 버튼이 없으면 이상한 게 아니라 **계정 종류 때문일 수 있으니** 화면 안내를 따르세요.
 </Aside>
 
 ## 단계별 따라하기
@@ -93,7 +93,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 2. **Gmail: 긴 스레드 요약하기**
 
-   스레드를 열고 오른쪽 위의 **Ask Gemini**를 눌러 사이드 패널을 열어요. 제안된 프롬프트를 고르거나 직접 입력하세요. 공식 도움말은 "Summarize this email" 같은 프롬프트와 회신이 2개를 넘는 스레드 요약을 안내해요. 패널이 닫혀 있으면 스레드 맨 위의 요약 버튼이 나올 수도 있어요. 버튼 이름은 화면 안내를 따르세요.
+   스레드를 열고 오른쪽 위의 **Ask Gemini**를 눌러 사이드 패널을 열어요. 사이드바의 **What’s this email about?**를 고르거나 "Summarize this email" 같은 프롬프트를 직접 입력하면 돼요(Google Workspace 학습 센터 안내). 버튼 이름은 화면 안내를 따르세요.
 
    <PromptBox>
    이 메일 스레드를 요약해 줘. 결정된 것, 아직 정해지지 않은 것, 내가 해야 할 일을 나눠서 불릿으로 알려 줘. 마감일이 있으면 같이 적어 줘.
@@ -103,7 +103,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 3. **Gmail: 답장 초안 만들기**
 
-   새 메일 또는 답장 창에서 **Help me write**를 눌러 요청을 입력하면 초안이 만들어져요. 공식 안내에서 Gmail 초안 작성은 한국어를 포함한 8개 언어를 지원한다고 확인했어요. 만들어진 글은 반드시 읽고 고친 뒤 보내세요.
+   새 메일 또는 답장 창에서 **Help me write**를 눌러 요청을 입력하면 초안이 만들어져요. 공식 언어 목록에서 Gmail의 Help me write는 한국어를 포함한 8개 언어(영어·프랑스어·독일어·이탈리아어·일본어·한국어·포르투갈어·스페인어)를 지원해요. 개인 Google 계정은 이 기능이 미국에서만 제공돼요. 만들어진 글은 반드시 읽고 고친 뒤 보내세요.
 
    <PromptBox>
    거래처 김 팀장님께 보내는 답장을 써 줘. 요청하신 견적서는 금요일까지 보내겠다는 내용이고, 정중하되 짧게. 존댓말로, 3문장 이내로.
@@ -111,7 +111,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 4. **Docs: 보고서 초안 만들고 다듬기**
 
-   새 문서에서 왼쪽의 **Help me write**를 누르고 프롬프트를 입력한 뒤 **Create**를 눌러요. 결과가 마음에 들면 **Insert**, 고치고 싶으면 **Refine**을 쓰세요(Google 교육 자료의 안내 기준). 한국어 글쓰기 지원 범위는 [공식 언어 목록](https://support.google.com/docs/answer/14925782)에서 확인하세요.
+   새 문서에서 왼쪽의 **Help me write**를 누르고 프롬프트를 입력한 뒤 **Create**를 눌러요. 결과가 마음에 들면 **Insert**, 고치고 싶으면 **Refine**을 쓰세요(Google 학습 센터의 안내 기준). 공식 언어 목록에서 **Docs의 Help me write(글쓰기)는 영어·프랑스어·독일어·이탈리아어·일본어·포르투갈어·스페인어만 있고 한국어는 없어요.** 같은 목록에서 한국어는 Docs의 **Help me create**(서식 있는 문서 생성)와 Docs 사이드 패널에 있어요. 그래서 한국어 초안은 사이드 패널(Ask Gemini)로 시도해 보고 결과를 꼭 확인하세요. 최신 목록은 [공식 언어 목록](https://support.google.com/docs/answer/14925782)을 보세요.
 
    <PromptBox>
    "3분기 영업 실적 보고서" 초안을 써 줘. 구성은 요약, 실적 표, 원인 분석, 다음 분기 계획 순서. 숫자는 내가 따로 넣을 거라서 [ ]로 비워 둬.
@@ -143,30 +143,31 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 | 앱 | 기능 | 위치 / 버튼 |
 | --- | --- | --- |
-| Gmail | 스레드 요약 | 오른쪽 위 Ask Gemini 사이드 패널 (계정에 따라 다름) |
-| Gmail | 초안 작성·다듬기 | Help me write |
-| Docs | 초안 작성, 다듬기 | 왼쪽 Help me write > Create > Refine / Insert |
+| Gmail | 스레드 요약, 질문, 초안 | 오른쪽 위 Ask Gemini 사이드 패널 (계정에 따라 다름) |
+| Gmail | 초안 작성·다듬기 | Help me write (한국어 지원) |
+| Docs | 초안 작성, 다듬기 | 왼쪽 Help me write > Create > Refine / Insert (Help me write의 언어 목록에 한국어 없음) |
 | Sheets | 표 정리·분석 | 오른쪽 위 Ask Gemini |
 | Slides | Gemini 협업 기능 | [공식 도움말](https://support.google.com/docs/answer/14207419) 참고 |
 
-### 가격과 에디션 (미국 USD, 검색 요약 기준)
+### 에디션별 Gemini 범위 (Google Workspace 요금제 페이지 비교표, 2026-10-10 기준)
 
-| 에디션 | 연간/고정 약정 | 유연(월 단위) |
-| --- | --- | --- |
-| Business Starter | $7 | $8.40 |
-| Business Standard | $14 | $16.80 |
-| Business Plus | $22 | $26.40 |
+| 에디션 | Workspace 앱 안의 Gemini | Gmail | Docs | Sheets |
+| --- | --- | --- | --- | --- |
+| Business Starter | 제한적(Limited) | 포함 | 미포함 | 미포함 |
+| Business Standard | 포함 | 포함 | 포함 | 포함 |
+| Business Plus | 포함 | 포함 | 포함 | 포함 |
+| Enterprise | 포함 | 포함 | 포함 | 포함 |
 
-사용자 1명당 월 요금이에요. 한국 원화 가격과 프로모션은 확인하지 못했어요. [Google Workspace 요금제](https://workspace.google.com/pricing)에서 확인하세요. 에디션별 Gemini 범위 차이도 같은 페이지에서 비교하세요.
+요금제 페이지는 Starter·Standard·Plus가 최대 300명까지 구매 가능하고 Enterprise는 영업팀 문의(Contact sales)라고 안내해요. 연간 약정은 16% 할인이라고 표시돼요. 에디션별 금액은 원문에서 읽히지 않았고 한국 원화 가격은 확인하지 못했으니 [Google Workspace 요금제](https://workspace.google.com/pricing)에서 확인하세요.
 
 ### 개인정보와 관리
 
 | 항목 | 내용 |
 | --- | --- |
-| 모델 학습 | Workspace는 고객 데이터를 고객 사전 허가 없이 생성형 AI 모델 학습에 쓰지 않는다고 안내 |
-| 주의 | 회사 계정으로 로그인한 사용자가 개인 계정으로 Gemini 앱에 공유한 데이터는 학습에 쓰일 수 있다는 안내가 있음 |
-| 관리자 제어 | Gemini 앱은 관리 콘솔에서 서비스 on/off, 조직 단위·그룹별 설정 가능. Workspace 앱 안의 Gemini는 별도 설정 |
-| 대화 기록 | 관리자가 저장 여부와 보관 기간을 정할 수 있음 |
+| 모델 학습 | Privacy Hub는 콘텐츠를 사람이 검토하거나 도메인 밖의 생성형 AI 모델 학습에 허가 없이 쓰지 않는다고 안내 |
+| 주의 | 개인 계정의 Gemini 앱에 붙여넣은 내용에 Workspace와 같은 보호가 적용되는지는 이번에 원문으로 확인하지 못했어요. Privacy Hub에서 확인하세요 |
+| 관리자 제어 | Gemini 앱은 관리 콘솔(Admin console)의 생성형 AI(Generative AI) > Gemini App에서 서비스 on/off를 정해요. Workspace 앱 안의 Gemini는 별도 설정(Gemini in Workspace apps) |
+| 대화 기록 | 관리 콘솔에 "Gemini in Workspace 대화 기록 설정" 메뉴가 있어 관리자가 관리함(세부 항목은 공식 문서 확인) |
 
 ## 자주 막히는 지점
 
@@ -177,7 +178,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 ### 한국어 결과가 어색하거나 기능이 한국어를 지원하지 않아요
 
-- **원인**: 기능마다 지원 언어가 달라요. 공식 안내에 따르면 일부 기능은 영어만 지원해요.
+- **원인**: 기능마다 지원 언어가 달라요. 예를 들어 Docs의 Help me write 언어 목록에는 한국어가 없고, Gmail 교정(Proofread)은 영어와 스페인어만 있어요.
 - **해결**: [공식 언어 목록](https://support.google.com/docs/answer/14925782)을 확인하고, 필요하면 프롬프트에 "한국어 존댓말로"를 명시하세요.
 
 ### 요약이 중요한 내용을 놓쳤어요

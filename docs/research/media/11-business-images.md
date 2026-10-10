@@ -1,6 +1,6 @@
 # 11. 업무용 이미지 생성 (Gemini 앱, ChatGPT) — 2026-10-10 기준
 
-> 조사 방법 주의: 이 세션에서는 WebFetch가 DNS 오류(ENOTFOUND)로 동작하지 않아 공식 페이지 원문을 직접 열지 못했다. 아래 사실은 WebSearch가 반환한 공식 도메인(support.google.com, gemini.google, blog.google, help.openai.com, openai.com) 결과 요약에 근거한다. 모두 "검색 요약"이며 본문에서는 단정을 피하고 공식 페이지 확인을 안내한다.
+> 5단계 원문 대조(2026-10-10): Google 페이지(support.google.com, gemini.google, blog.google)는 curl로 원문을 열어 확인했다. OpenAI·Adobe 페이지는 403/미접속이라 "(검색 요약)" 표시를 유지한다. 아래 핵심 사실 중 Gemini 항목은 "원문 확인"이 우선이다.
 
 ## 핵심 사실
 - Gemini 웹 앱은 70개 이상 언어, 230개 이상 국가·지역에서 쓸 수 있고 한국어와 대한민국이 목록에 있다. 모바일 앱은 150개 이상 국가, 한국어·대한민국 포함. (검색 요약) https://support.google.com/gemini/answer/13575153?hl=en , https://support.google.com/gemini/answer/14579026
@@ -37,3 +37,15 @@
 - https://help.openai.com/en/articles/8912793-c2pa-in-chatgpt-images (검색 요약)
 - https://help.openai.com/en/articles/9275245-chatgpt-free-tier-faq (검색 요약)
 - https://www.adobe.com/products/firefly.html (검색 요약)
+
+## 5단계 원문 대조 결과 (2026-10-10)
+원문 확인(Google):
+- Gemini 웹 앱: 70개 이상 언어, 230개 이상 국가·지역, 목록에 Korean과 South Korea 있음 (13575153). 모바일 앱 수치(150개국)는 이번에 확인하지 않음 → 본문에서 사용 안 함.
+- 이미지 도움말(14286560): 모델은 Nano Banana 2(기본), 유료 구독자는 Nano Banana Pro로 "Redo with Pro"(More 메뉴), Nano Banana 2 Lite도 있음. 컴퓨터에서 gemini.google.com → 왼쪽 위 Open Sidebar → Images. 편집은 Library에서 이미지 선택 → Chat. 다운로드는 "Download full size", 해상도는 Google AI 요금제 2K, 없으면 1K. 일일 한도(quota)가 있으나 수치 없음.
+- 연령: 이미지 생성은 13세(또는 해당 국가 연령) 이상, 이미지 편집은 18세 이상 (개인 계정). 검색 요약의 "상충" 해소.
+- 약관: Google 서비스 약관·금지된 사용 정책 동의, "타인의 저작권·개인정보 권리를 침해하지 말 것, 생성물을 쓰기·게시 전 재량으로 판단" 문구.
+- 소개 페이지(gemini.google/overview/image-generation): Nano Banana 2 무료, Nano Banana 2.1은 Google AI 요금제. 도움말(2 / Pro)과 모델 이름 불일치 → 본문에서 둘 다 언급하되 단정하지 않음. 보이지 않는 SynthID와 보이는 워터마크를 쓴다고 설명. 도구 메뉴 "Create images" 안내.
+- 검증 블로그: 이미지를 Gemini에 올려 Google AI 생성 여부 확인(SynthID), Nano Banana Pro 이미지에 C2PA 메타데이터.
+수정한 사실: 연령 조건 확정, 메뉴 경로(Images, Library, Redo with Pro) 채움, 모델 이름과 무료/유료 구분 서술 교정, 보이는 워터마크 서술을 소개 페이지 문구로 교정(적용 범위는 미확인).
+미확인(403): OpenAI 이용약관, 사용 정책, 서비스 약관, C2PA 도움말, 무료 FAQ, GPT-4o 이미지 소개글 → 본문에 "검색 결과 기준, 원문 미확인"으로 표시. Adobe Firefly 페이지는 미열람.
+Aside: "확인 중인 튜토리얼" 제거, 대신 "ChatGPT·Adobe 부분은 원문 미확인" 안내로 구체화.

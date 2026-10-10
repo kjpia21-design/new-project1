@@ -1,6 +1,6 @@
 # 15. AI 음성 내레이션 — 2026-10-10 기준
 
-> 조사 방법 주의: WebFetch 불가. 아래는 WebSearch 결과 요약("검색 요약").
+> 5단계 원문 대조(2026-10-10): elevenlabs.io(models, pricing, terms, use-policy, voice-cloning, docs)는 curl로 원문 확인. help.elevenlabs.io와 OpenAI, Canva는 403으로 "(검색 요약)" 유지.
 
 ## 핵심 사실
 - ElevenLabs 문서: Multilingual v2 모델의 지원 언어 목록에 한국어(ko) 포함. 한 번에 최대 10,000자(약 10분). 일부 페이지는 Eleven v4(90개 이상 언어) 등 신모델을 현재 모델로 안내 → 모델 이름은 단정하지 않음. (검색 요약) https://elevenlabs.io/docs/overview/models , https://help.elevenlabs.io/hc/en-us/articles/13313366263441-What-languages-do-you-support
@@ -22,3 +22,15 @@
 
 ## 출처 목록
 위 URL 전부 (확인일 2026-10-10, 검색 요약).
+
+## 5단계 원문 대조 결과 (2026-10-10)
+원문 확인 및 이전 검색 요약과 달라진 점:
+- 모델(docs/overview/models): Korean이 Multilingual v2(ko), Flash v2.5, Eleven v4 계열(90+ languages)에 있음. 요청당 글자 한도: v4 10,000(약 10분), v3 5,000, Multilingual v2 10,000, Flash v2.5 40,000.
+- 가격(elevenlabs.io/pricing, 미국 USD, 2026-10-10): Free $0 10k 크레딧, Starter $6(30k, 첫 달 $1 표시, Commercial License와 Instant Voice Cloning 포함), Creator $22(121k, 첫 달 $11, Professional Voice Cloning 포함), Pro $99(600k), Scale $299, Business $990. 1글자=1크레딧(Multilingual v2), 크레딧 최대 2개월 이월. 수정: "상업 이용은 Creator부터"는 틀림 → 비교표상 상업 라이선스는 Starter부터.
+- 약관(terms-of-use 1(c)): 무료 이용자는 비상업 목적만, 유료 구독자는 상업 목적 가능, 비상업은 개인 이메일 사용. 무료 플랜 "ElevenLabs 표기 필요"는 약관·가격 페이지에서 찾지 못함 → 삭제.
+- 금지 사용 정책(use-policy): 살아 있는 개인의 음성·신원·초상을 명시적·충분한 설명을 거친 동의 또는 다른 유효한 승인 없이 복제·합성·사칭 금지, 고인은 해를 끼칠 가능성 또는 사후 권리 침해 시 금지. 수정: 정치 후보·선출 공직자 사칭은 "동의와 무관하게 금지"가 아니라 "승인 없이(without authorization) 사칭 금지"이고 정치 캠페인은 사전 서면 동의 없이 금지. 조치: 콘텐츠 삭제, 제한·정지·해지, 법적 필요 시 수사·규제 기관 통지(경고·음성 삭제는 원문에 없음). 허락 없는 음성 사용 신고 링크 있음. 출처 신호(워터마크·메타데이터)를 지우는 것 금지, 법상 필요하거나 오해를 줄 때 AI 상호작용 고지. "AI Speech Classifier"는 이 정책 페이지에서 찾지 못함 → 삭제.
+- IVC 문서: 대시보드 Voices → + → Instant Voice Clone, 권리와 동의 확인 후 Save voice. 최소 1분, 약 1~2분 권장, 3분 초과는 효과 적음("1~3분" → 교정). 복제 음성은 파일로 내보낼 수 없고 계정에 남음(API로는 사용 가능).
+- PVC 문서(docs): 본인 목소리만 가능, 동의가 있어도 타인 음성 불가, 모든 PVC에 본인 검증. 타인은 자기 계정에서 만들어 공유 링크로 공유 (help 페이지와 같은 내용을 docs에서 확인).
+- Voice Library 문서: 일부 음성은 유료 구독자 전용, 공유자가 무료 사용자 제외 가능. "Voice Library 음성은 무료 상업 이용 라이선스" 문장은 찾지 못함 → 삭제하고 "상업 이용 조건은 확인 못 함"으로 변경.
+미확인(403): help.elevenlabs.io 언어 목록과 No-Go Voices, Canva TTS·AI 더빙, OpenAI 사용 정책·verify.
+Aside("확인 중인 튜토리얼"): 핵심 사실(가격·동의·메뉴 경로)이 원문으로 확인되어 제거. Canva·No-Go·OpenAI 문장은 본문에서 개별적으로 "원문 미확인"을 밝힘.

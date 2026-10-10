@@ -20,6 +20,10 @@ sources:
     url: "https://support.claude.com/en/articles/9517075-what-are-projects"
   - title: "Create and edit files with Claude"
     url: "https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude"
+  - title: "Upload & analyze files in Gemini Apps"
+    url: "https://support.google.com/gemini/answer/14903178"
+  - title: "Gemini Apps limits & upgrades"
+    url: "https://support.google.com/gemini/answer/16275805"
 status: published
 ---
 
@@ -33,7 +37,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - 요약만 시키지 말고 **결정사항 · 할 일(담당자·기한) · 미결 사항**으로 구조를 정해 주세요.
 - 담당자나 기한이 문서에 없으면 **지어내지 말고 "확인 필요"** 라고 적게 하세요.
 - 결과는 **근거 문장 인용**을 함께 받아 원문과 대조하세요.
-- Claude 기준 채팅 업로드는 파일당 500MB, 채팅당 20개, PDF는 1000쪽까지예요 (2026-10-10 기준). ChatGPT·Gemini 한도는 각 공식 도움말에서 확인하세요.
+- Claude 기준 채팅 업로드는 파일당 500MB, 채팅당 20개, PDF는 1000쪽까지예요 (2026-10-10 기준). Gemini 앱은 프롬프트 하나에 파일 최대 10개, 동영상 외 파일은 100MB까지예요(Gemini 도움말 기준). ChatGPT 한도는 공식 도움말을 열람하지 못해 확인하지 못했어요.
 - 긴 대화는 새 대화로 나누면 사용량도 아낄 수 있어요.
 </Summary>
 
@@ -143,13 +147,13 @@ Claude의 컨텍스트 윈도우는 모델마다 달라요. 공식 도움말은 
 
 ## 빠른 참조표
 
-| 항목 | Claude 기준 (2026-10-10) | ChatGPT·Gemini |
+| 항목 | Claude 기준 (2026-10-10) | Gemini (2026-10-10) | ChatGPT |
 | --- | --- | --- |
-| 채팅당 업로드 | 파일 20개, 파일당 500MB | 각 공식 도움말에서 확인하세요 |
-| PDF | 1000쪽까지, 100쪽 초과는 글만 분석 | 각 공식 도움말에서 확인하세요 |
-| 프로젝트 파일 | 파일당 30MB, 개수 제한 없음(내용은 컨텍스트 안에 들어가야 함) | 해당 없음 또는 확인 필요 |
-| 컨텍스트 | 모델별 200K~1M 토큰 | 각 공식 도움말에서 확인하세요 |
-| 긴 대화 | 코드 실행이 켜져 있으면 한계 근처에서 이전 메시지를 자동 요약 | 각 공식 도움말에서 확인하세요 |
+| 채팅당 업로드 | 파일 20개, 파일당 500MB | 프롬프트당 파일 10개, 동영상 외 파일당 100MB, 동영상은 2GB | 공식 도움말에서 확인하세요 |
+| PDF | 1000쪽까지, 100쪽 초과는 글만 분석 | 쪽수 한도는 확인하지 못함 | 공식 도움말에서 확인하세요 |
+| 프로젝트 파일 | 파일당 30MB, 개수 제한 없음(내용은 컨텍스트 안에 들어가야 함) | 확인하지 못함 | 확인하지 못함 |
+| 컨텍스트 | 모델별 200K~1M 토큰 | 플랜 없음 32K, AI Plus 128K, AI Pro·Ultra 1M 토큰(약 1,500쪽) | 공식 도움말에서 확인하세요 |
+| 긴 대화 | 코드 실행이 켜져 있으면 한계 근처에서 이전 메시지를 자동 요약 | 확인하지 못함 | 공식 도움말에서 확인하세요 |
 
 ## 자주 막히는 지점
 
