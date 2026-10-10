@@ -24,3 +24,12 @@
 ## 출처 목록
 - https://gemini.google/subscriptions/ / https://support.google.com/gemini/answer/16275805 / /14903178 / /13594961 / /14579026 — 원문 확인 2026-10-10
 - https://claude.com/pricing / https://support.claude.com/en/articles/8241126-upload-files-to-claude / https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work — 확인일 2026-10-10
+
+## 6단계 재점검 (2026-10-10)
+- 출처: learn.chatgpt.com(OpenAI ChatGPT 문서; developers.openai.com/llms.txt가 안내), OpenAI OpCo, LLC가 등록한 App Store 페이지(미국/한국). help.openai.com·openai.com·chatgpt.com은 403.
+- 가격(https://learn.chatgpt.com/docs/pricing.md): Free $0, Go $8/월, Plus $20/월, Pro $100·$200·$500/월 중 선택(Pro "From $100"), Business 사용자당 월 $20(2명 이상, 연 결제) / 월 결제 $25, Enterprise·Edu 문의. Business는 "No training on your business data by default".
+- App Store 인앱 구매 표시: 미국 Plus $19.99, Go $8.00, Pro 100 $100, Pro 200 $200, Pro 500 $500. 한국 Go ₩13,000, Plus ₩29,000, Pro 100 ₩159,000, Pro 200 ₩299,000, Pro 500 ₩790,000. 목록에 "ChatGPT Plus $200 / ₩299,000" 항목이 한 번 더 있으나 이름이 애매해 사용하지 않음. 앱 스토어 가격은 웹 가격과 다를 수 있음(Plus 미국 $19.99 vs 웹 $20).
+- 한국 App Store 언어 목록에 한국어 포함.
+- 기능: Work 모드(문서·프레젠테이션·스프레드시트·PDF 생성, 파일 분석), 이미지 생성·편집, 프로젝트 파일 공유(use-chatgpt.md, artifacts-viewer.md, image-generation.md, projects.md).
+- 못 찾음: 업로드 한도, 컨텍스트 토큰, 플랜별 사용량 한도, 개인 계정 학습 기본값.
+- 본문 변경: 참조표 ChatGPT 열 8칸 중 5칸 채움(무료, 가격, 파일 생성, 학습(부분), 한국어), 3칸은 "찾지 못함"으로 명시. Aside는 "이 튜토리얼의 한계"를 남은 항목만 적도록 수정. 채워진 빈칸 5, 남은 빈칸 3(업로드, 컨텍스트, 개인 학습 기본값).

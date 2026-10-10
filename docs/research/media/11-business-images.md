@@ -49,3 +49,11 @@
 수정한 사실: 연령 조건 확정, 메뉴 경로(Images, Library, Redo with Pro) 채움, 모델 이름과 무료/유료 구분 서술 교정, 보이는 워터마크 서술을 소개 페이지 문구로 교정(적용 범위는 미확인).
 미확인(403): OpenAI 이용약관, 사용 정책, 서비스 약관, C2PA 도움말, 무료 FAQ, GPT-4o 이미지 소개글 → 본문에 "검색 결과 기준, 원문 미확인"으로 표시. Adobe Firefly 페이지는 미열람.
 Aside: "확인 중인 튜토리얼" 제거, 대신 "ChatGPT·Adobe 부분은 원문 미확인" 안내로 구체화.
+
+## 6단계 재점검 (2026-10-10)
+- 출처: learn.chatgpt.com/docs/image-generation.md, developers.openai.com/api/docs/guides/content-provenance.md, learn.chatgpt.com/docs/pricing.md, 한국 App Store 등록 페이지(OpenAI OpCo, LLC). openai.com/policies/*, help.openai.com, adobe.com은 403.
+- 확인: ChatGPT 웹에서 이미지 생성·편집(참고 이미지 첨부), 웹의 이미지 가용성·한도는 플랜·워크스페이스 설정에 따름. 실존 인물은 허락 확인, 특정 브랜드·작가 모방 대신 원본 느낌 요청, OpenAI 표기(크레딧) 불필요, 조직 지침과 OpenAI 사용 정책 준수.
+- 확인: 출처 신호는 C2PA Content Credentials(이미지)와 SynthID(이미지·오디오). C2PA는 편집·변환·공유로 제거될 수 있고 SynthID는 미디어에 내장. 확인 도구 openai.com/verify 및 Content provenance API. `not_detected`는 OpenAI가 만들지 않았다는 뜻이 아님. 눈에 보이는 워터마크·라벨은 별개.
+- 확인: 가격 Free $0 / Go $8 / Plus $20 (Pricing 문서). 한국 App Store: 언어 목록에 한국어, Go ₩13,000, Plus ₩29,000.
+- 못 찾음: OpenAI 이용약관의 출력물 소유 조항 원문, 사용 정책 문구, 무료 플랜 이미지 생성 한도 숫자, 보이는 워터마크 유무, Adobe Firefly 전반.
+- 본문 변경: Aside를 "OpenAI 약관 원문과 Adobe Firefly는 확인하지 못했어요"로 축소해 유지, 출처에서 help.openai.com 두 건 삭제(원문 미열람, 대체 출처로 교체). 채워진 빈칸 6(한국 이용, 무료 한도 성격, 인물 지침, ChatGPT 비교 단계, C2PA 설명, 확인 도구), 남은 빈칸 4(약관 소유, 사용 정책 원문, 무료 한도 숫자, Firefly). Aside는 지우지 않고 남은 항목만 적음.

@@ -29,3 +29,11 @@ Claude 쪽 사실은 docs/research/claude/C07-connectors.md 를 재사용. 아�
 
 ## 출처 목록
 위 URL 전체.
+
+## 6단계 재점검 (2026-10-10)
+- 출처: learn.chatgpt.com(docs/plugins.md, docs/enterprise/apps-and-connectors.md, docs/migrate-custom-gpts.md), developers.openai.com/plugins/deploy/connect-chatgpt.md, developers.openai.com/plugins/build/mcp-server.md. help.openai.com은 여전히 403.
+- 확인: ChatGPT는 "앱·커넥터"를 플러그인(Plugins)으로 통합. 플러그인은 스킬과 MCP 서버를 포함하고 웹·데스크톱·모바일의 Chat/Work에서 쓰며 IDE 확장은 미지원. 관리자 문서는 "app"과 "MCP server"를 같은 뜻으로 사용.
+- 확인: 커스텀 MCP 서버 연결 절차 = chatgpt.com/plugins > + > Add custom MCP server > 이름·설명 > Connection(공개 HTTPS URL의 /mcp 또는 Secure MCP Tunnel) > 인증 설정 > 위험 경고 "I understand and want to continue" > Create as a plugin. "Account and workspace policies apply to adding and using custom MCP servers." 설치 후 새 대화에서 @로 플러그인 선택.
+- 확인: 관리 권한 Upload plugins / Upload plugins with custom MCP servers, Share plugins, Publish plugins to workspace, Use plugins; Workspace apps의 Action control·App permissions. 도구 주석 readOnlyHint/destructiveHint, "쓰기 작업은 확인을 요구" 권고.
+- 못 찾음: 예전 "Developer mode" 명칭의 현재 존재 여부, 커스텀 MCP 서버 연결이 가능한 요금제 목록(문서에 플랜별 표 없음). 기존 본문의 "Business·Enterprise·Edu 베타, 웹 전용, Pro 읽기 전용" 문장은 검색 요약 기반이라 현재 문서와 맞지 않아 삭제.
+- 본문 변경: "확인 중" caution Aside를 지우고 note Aside(이름 변경 안내)로 교체, 비교표 ChatGPT 행, 용어표, 단계 1, 문제 해결 문장 수정. 채워진 빈칸 4, 남은 빈칸 1(플랜 조건).

@@ -24,6 +24,14 @@ sources:
     url: "https://support.google.com/gemini/answer/14903178"
   - title: "Gemini Apps Privacy Hub"
     url: "https://support.google.com/gemini/answer/13594961"
+  - title: "Use ChatGPT (OpenAI, ChatGPT 문서)"
+    url: "https://learn.chatgpt.com/docs/use-chatgpt"
+  - title: "Work with files (OpenAI, ChatGPT 문서)"
+    url: "https://learn.chatgpt.com/docs/artifacts-viewer"
+  - title: "Visualizations (OpenAI, ChatGPT 문서)"
+    url: "https://learn.chatgpt.com/docs/visualizations"
+  - title: "Pricing (OpenAI, ChatGPT 문서)"
+    url: "https://learn.chatgpt.com/docs/pricing"
 status: published
 ---
 
@@ -38,7 +46,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - Claude는 **코드 실행·파일 생성** 기능으로 CSV·TSV를 분석하고 .xlsx와 차트(PNG)를 만들어 줘요 (2026-10-10 기준).
 - 결과 숫자는 **엑셀에서 샘플 몇 건을 직접 검산**하세요. AI의 계산 과정(코드)을 보여 달라고 하면 확인이 쉬워져요.
 - **개인정보와 회사 기밀은 올리기 전에 가리세요.** 도구마다 학습·보관 정책이 달라요.
-- Gemini 앱도 업로드한 스프레드시트로 차트를 만들 수 있다고 안내해요(Gemini 도움말). ChatGPT의 데이터 분석 기능은 공식 문서를 열람하지 못해 확인하지 못했어요.
+- Gemini 앱도 업로드한 스프레드시트로 차트를 만들 수 있다고 안내해요(Gemini 도움말). ChatGPT는 OpenAI 문서 기준으로 Work 모드에서 파일을 올려 데이터를 분석하고 스프레드시트를 만들 수 있어요(2026-10-10). 파일 크기·행 수 한도는 찾지 못했어요.
 </Summary>
 
 ## 이 튜토리얼로 할 수 있게 되는 것
@@ -145,7 +153,8 @@ Claude 공식 도움말 기준으로 이 기능은 Free·Pro·Max에서 기본�
 | 파일 크기 | 업로드·다운로드 모두 파일당 30MB |
 | 모델 학습 항목(가격 페이지) | Free·Pro·Max "Opt-out", Team·Enterprise "None by default" |
 | Gemini | 업로드한 스프레드시트로 차트 생성 가능, 프롬프트당 파일 10개·파일당 100MB(Gemini 도움말) |
-| ChatGPT | 데이터 분석 기능과 한도는 공식 도움말에서 확인하세요 |
+| ChatGPT (OpenAI 문서 기준) | Chat/Work 전환에서 Work를 고르면 파일 분석, 코드 실행, 문서·프레젠테이션·스프레드시트·PDF 생성을 맡길 수 있다고 안내해요. 차트는 `@Visualize`(Plugins 아래)로 요청하는 방법이 있는데, 계정·플랫폼에 따라 단계적으로 제공 중이라 안 보일 수 있어요 |
+| ChatGPT 한도 | 업로드 크기·행 수 한도는 공개 문서에서 찾지 못했어요 |
 
 ## 자주 막히는 지점
 
@@ -175,7 +184,7 @@ Claude 공식 도움말 기준으로 이 기능은 Free·Pro·Max에서 기본�
 - **학습 설정을 확인하세요.** Claude 가격 페이지는 Free·Pro·Max의 모델 학습 항목을 "Opt-out"으로, Team·Enterprise를 "None by default"로 표시해요. 도움말은 허용한 대화만 개선에 쓰이고 설정은 언제든 바꿀 수 있다고 설명해요. 시크릿(incognito) 채팅은 개선에 쓰이지 않아요. 실제 화면의 설정 이름은 안내에 따르세요.
 - **조직 계정을 우선 검토하세요.** 업무 데이터는 개인 무료 계정보다 회사가 계약한 Team·Enterprise 같은 조직용 플랜이 정책 면에서 유리할 수 있어요. 정책은 계약마다 다르니 보안 담당자에게 확인하세요.
 - **Gemini는 Keep Activity 설정을 확인하세요.** Gemini 개인정보 허브는 Keep Activity가 켜져 있으면 일부 대화를 사람이 검토해 서비스 개선에 쓸 수 있다고 밝혀요. 끄거나 임시 채팅을 쓰면 AI 모델 학습에 쓰이지 않는다고 안내하지만, 응답과 보호 목적의 처리는 계속된다고 해요. 기밀 정보는 넣지 마세요.
-- **ChatGPT는 개인정보·데이터 관리 설정을 직접 확인하세요.** 공식 정책 문서를 열람하지 못해 내용을 단정하지 않았어요.
+- **ChatGPT는 Data controls 설정을 확인하세요.** OpenAI 문서는 작업 중 ChatGPT가 쓰는 정보에 사용자가 고른 데이터 제어 설정이 적용된다고 안내하고, 설정 위치를 Settings > Data controls로 적어요. 개인 계정의 모델 학습 기본값과 보관 기간은 열 수 있는 OpenAI 문서에서 찾지 못해 적지 않았어요. Business 요금제는 "비즈니스 데이터로 기본적으로 학습하지 않는다"고 안내해요(Pricing 문서, 2026-10-10). 임시 채팅(temporary chat) 기능이 있다는 것은 단축키 안내에서 확인했지만, 저장·학습 처리 방식은 공식 도움말에서 확인하세요.
 - **개인정보 보호법 등 법적 의무**는 회사 법무·보안 담당자가 판단할 일이에요. 이 튜토리얼은 법률 자문이 아니에요.
 
 ## 실전 팁
