@@ -1,24 +1,211 @@
 ---
 title: "커넥터로 Gmail·캘린더·Drive·Notion 연결하기"
-description: "커넥터로 Claude와 업무 도구를 연결하는 방법"
+description: "Claude를 Gmail, Google Calendar, Google Drive, Notion 같은 업무 도구에 연결하는 방법과 권한·승인·보안 주의점, MCP와의 관계를 정리한 참고서"
 sidebar:
   label: "C7. 커넥터"
 level: practical
 category: claude
 tools: ["Claude", "Gmail", "Google Calendar", "Google Drive", "Notion"]
 duration: "30분"
-prerequisites: ["사용할 도구의 계정"]
-sources: []
-status: draft
+prerequisites:
+  - "claude.ai 계정"
+  - "연결할 서비스의 계정 (Google 계정, Notion 계정 등)"
+  - "(Team/Enterprise라면) 조직 Owner가 커넥터를 먼저 켜 두었는지 확인"
+lastVerified: 2026-10-10
+sources:
+  - title: "Use connectors to extend Claude's capabilities"
+    url: "https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities"
+  - title: "Use Google Workspace connectors"
+    url: "https://support.claude.com/en/articles/10166901-use-google-workspace-connectors"
+  - title: "Get started with custom connectors using remote MCP"
+    url: "https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp"
+  - title: "Connect Claude Code to tools via MCP"
+    url: "https://code.claude.com/docs/en/mcp"
+  - title: "Automate work with routines"
+    url: "https://code.claude.com/docs/en/routines"
+  - title: "Notion connector (검색 결과로만 확인)"
+    url: "https://claude.com/connectors/notion"
+status: published
 ---
 
-import ComingSoon from '../../../components/ComingSoon.astro';
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
-<ComingSoon />
+<Summary>
+- 커넥터는 **Claude가 내 앱·서비스에 접근해 데이터를 가져오고 작업을 하게 하는 연결**이에요. Claude는 각 서비스에서 **내 권한을 그대로 상속**해서, 내가 볼 수 없는 것은 볼 수 없어요.
+- 채팅의 **+** 또는 **/** 메뉴 > Connectors, 또는 Customize > Connectors의 디렉터리에서 연결하고, 대화마다 켜고 꺼요.
+- Google Workspace는 Gmail, Google Calendar, Google Drive 커넥터가 있어요. 전송·답장·전달·공유·이동·삭제 전에는 기본적으로 **내 승인**을 물어요.
+- 커스텀 커넥터는 **원격 MCP 서버**를 연결하는 기능이에요. Anthropic이 검증하지 않으니 신뢰하는 서버만 연결하세요.
+- Notion은 단계별 공식 도움말을 확인하지 못했어요. 일반 절차를 따르되 화면 안내를 우선하세요.
+</Summary>
 
-## 이 튜토리얼에서 배울 것
+## 이 튜토리얼로 할 수 있게 되는 것
 
-- 이 주제가 무엇이고 어떤 업무 상황에서 쓰이는지 이해하기
-- 시작하기 전에 필요한 계정과 준비물 확인하기
-- 예제를 단계별로 직접 따라 해 보기
-- 자주 막히는 지점과 해결 방법 알아 두기
+- Gmail, Google Calendar, Google Drive를 Claude에 연결해 "비는 시간 찾기", "메일 초안 쓰기" 같은 일을 맡길 수 있어요.
+- 대화마다 커넥터를 켜고 끄고, 쓰기 작업의 승인을 안전하게 처리할 수 있어요.
+- Notion 같은 서비스를 원격 MCP 주소로 연결하는 방법을 이해할 수 있어요.
+- 연결 문제와 보안 위험(프롬프트 인젝션 등)에 대처할 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **커넥터(Connector)** | Claude를 내 앱·서비스에 연결해 데이터를 가져오고 작업을 수행하게 하는 기능이에요. |
+| **권한 상속** | Claude는 각 서비스에서 내 권한 그대로 동작해요. 내가 볼 수 없는 파일·메일은 Claude도 못 봐요. |
+| **커넥터 디렉터리** | 연결 가능한 커넥터 목록이에요. Customize > Connectors에 있어요. |
+| **MCP** | Model Context Protocol. 도구와 AI를 연결하는 규격이에요. 커스텀 커넥터는 원격 MCP 서버를 연결해요. |
+| **커스텀 커넥터** | 디렉터리에 없는 서비스를 서버 URL로 직접 연결하는 방식이에요. Free는 1개까지예요. |
+| **Always allow / Needs approval / Blocked** | Team/Enterprise Owner가 커넥터 도구마다 정하는 권한 수준이에요. |
+
+### Google Workspace 커넥터가 하는 일
+
+| 커넥터 | 할 수 있는 일 |
+| --- | --- |
+| **Gmail** | 검색·읽기, 초안 작성, 전송·답장·전달, 라벨 관리. 첨부 파일 내용은 볼 수 없어요. |
+| **Google Calendar** | 일정 조회·생성·수정·삭제, 공통 가능 시간 찾기, 참석자·RSVP |
+| **Google Drive** | Docs/Sheets/Slides/PDF 등 검색·읽기, 업로드, 폴더 생성, 공유·이동·삭제, 권한 확인 |
+| **Docs/Sheets/Slides (베타)** | 채팅 옆 창에서 파일을 직접 편집해요. Drive 커넥터와는 별개예요. |
+
+기본적으로 전송·답장·전달·공유·이동·삭제 전에 사용자 승인을 요청해요. 공식 문서는 Gmail·Drive·Calendar 커넥터 데이터로 모델을 학습하지 않는다고 설명해요.
+
+<Aside type="note" title="확인되지 않은 점">
+- **Notion**: 클릭 단계별 공식 도움말(support.claude.com)을 찾지 못했어요. Notion 관련 정보는 검색 결과 요약에 기반해서 화면 문구를 직접 확인하지 못했어요. 아래 Notion 절차는 일반 원칙이고, 실제 화면 안내를 따르세요.
+- 커넥터 전체 개수와 디렉터리 목록은 확인하지 못했어요.
+- 메뉴 위치가 최신 문서의 "Customize > Connectors"와 예전의 "Settings > Connectors"로 섞여 보일 수 있어요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '(Team/Enterprise) 조직 Owner가 커넥터를 켜 둔 것을 확인했어요',
+  'Google 커넥터를 연결하고 동의했어요',
+  '대화에서 커넥터를 켜고 읽기 작업을 시켜 봤어요',
+  '쓰기 작업의 승인 창을 확인하고 처리했어요',
+  '(선택) Notion 등 커스텀 커넥터를 연결했어요',
+  '더 이상 안 쓰는 연결을 해제했어요',
+]} />
+
+<Steps>
+
+1. **(Team/Enterprise) 조직에서 먼저 켜기**
+
+   Owner 또는 Primary Owner가 조직 설정(Organization settings) > Connectors > Browse connectors에서 커넥터를 골라 **Add to your team**을 눌러야 해요. 그다음에 각 멤버가 따로 인증해요. 개인 플랜은 이 단계가 없어요.
+
+2. **Google 커넥터 연결하기**
+
+   채팅 입력창의 **+** > Connectors에서 Google Drive, Gmail, Google Calendar 중 고르고 Google 계정으로 로그인해 동의해요. 디렉터리(Customize > Connectors)에서 Connect/Install을 눌러 인증하고 권한을 조정해도 돼요.
+
+   <ScreenshotPlaceholder caption="입력창의 + > Connectors에서 Google 커넥터를 고르는 화면" />
+
+3. **대화에서 켜고 읽기부터 시켜 보기**
+
+   대화마다 **+** > Connectors에서 커넥터를 켜고 꺼요. 처음에는 데이터를 바꾸지 않는 읽기 작업이 안전해요.
+
+   <PromptBox>
+   이번 주 내 캘린더에서 30분 이상 비는 시간을 요일별로 찾아 줘. 일정은 수정하지 말고 보여 주기만 해.
+   </PromptBox>
+
+4. **쓰기 작업의 승인 확인하기**
+
+   메일 전송, 일정 삭제, 파일 공유 같은 작업은 승인 창이 떠요. 받는 사람, 내용, 대상 파일을 읽고 나서 승인하세요.
+
+   <PromptBox>
+   최근 일주일 동안 거래처 김 팀장님과 주고받은 메일을 찾아 요약해 줘. 그리고 일정 조율을 요청하는 답장 초안을 만들어 줘. 보내지는 말고 초안으로만 남겨 줘.
+   </PromptBox>
+
+   <Aside type="caution" title="전송·삭제는 승인 창에서 한 번 더 확인하세요">
+   초안 단계에서 멈추게 요청하면 내용을 읽고 직접 보낼 수 있어요. 승인 창을 습관적으로 누르지 마세요.
+   </Aside>
+
+   <ScreenshotPlaceholder caption="메일 전송 전에 나타나는 승인(approve) 창" />
+
+5. **(선택) Notion 등 원격 MCP 서버 연결하기**
+
+   Notion 커넥터는 claude.com/connectors/notion에 있고, 서버 주소는 `https://mcp.notion.com/mcp`이며 로그인이 필요하다고 확인돼요(검색 결과 요약 기준). 디렉터리에 있으면 그것을 쓰고, 없거나 직접 연결하려면 웹에서 Customize > Connectors > Add > Custom에서 서버 URL을 입력해요. 인증 방식(Sign in now / when needed / No sign in)과 필요 시 요청 헤더를 정하는 것이 일반 절차예요. 실제 화면 문구와 로그인·권한 승인 단계는 **화면 안내에 따르세요.** MCP 도구는 연결한 사용자의 권한으로 동작해요.
+
+   Claude Code에서는 이렇게 추가하고, `/mcp`로 OAuth 인증을 해요.
+
+   ```sh
+   claude mcp add --transport http notion https://mcp.notion.com/mcp
+   ```
+
+   서버는 Anthropic 클라우드에서 접속하므로 공용 인터넷에서 접근 가능해야 해요.
+
+6. **연결이 꼬이면 해제 후 재연결하기**
+
+   Customize > Connectors에서 연결을 해제한 뒤 다시 연결해요. 쓰지 않는 서비스는 연결을 해제해 두는 것이 좋아요.
+
+</Steps>
+
+## 빠른 참조표
+
+### 어디서 무엇을 하나요
+
+| 하고 싶은 일 | 위치 |
+| --- | --- |
+| 대화에서 커넥터 켜고 끄기 | 입력창 + 또는 / 메뉴 > Connectors |
+| 커넥터 찾기·연결·해제 | Customize > Connectors (디렉터리) |
+| 커스텀 커넥터 추가 | Customize > Connectors > Add > Custom (웹) |
+| 조직에 커넥터 켜기 (Team/Enterprise) | Organization settings > Connectors > Browse connectors > Add to your team |
+| 도구 권한 정하기 (Owner) | Always allow / Needs approval / Blocked |
+
+### Claude.ai와 Claude Code의 관계
+
+| 상황 | 동작 |
+| --- | --- |
+| claude.ai에 추가한 커넥터 | Claude Code에 로그인하면 `/mcp`에 자동 표시 |
+| `claude mcp add`로 로컬에 추가한 서버 | claude.ai 계정에 저장되지 않음. 루틴에서 쓰려면 claude.ai에 커넥터로 추가해야 함 |
+| Free 플랜 | 커스텀 커넥터 1개 |
+
+### 보안 체크리스트
+
+| 항목 | 내용 |
+| --- | --- |
+| 커스텀 커넥터 | Anthropic이 검증하지 않음. 신뢰하는 서버만 연결 |
+| 프롬프트 인젝션 | 외부 서비스의 글에 숨은 지시에 주의. 필요 없는 도구는 끄기 |
+| 고급 리서치 | 커넥터 도구를 추가 승인 없이 호출할 수 있으니 쓰기 도구는 미리 끄기 |
+| 데이터 보호 | 전송은 암호화. 서드파티 서비스는 자체 인프라·약관 적용(미국 밖일 수 있음). 안 쓰는 서비스는 연결 해제 |
+
+## 자주 막히는 지점
+
+### 커넥터 목록에 원하는 서비스가 안 보여요
+
+- **원인**: Team/Enterprise라면 조직에서 아직 켜지 않았을 수 있어요. 메뉴 위치도 "Customize > Connectors"와 "Settings > Connectors"로 다르게 보일 수 있어요.
+- **해결**: Owner에게 조직 설정을 요청하고, 두 메뉴 이름을 모두 찾아보세요.
+
+### Google에서 접근이 차단돼요
+
+- **원인**: Google이 접근을 막고 있을 수 있어요.
+- **해결**: Workspace 관리자가 API 컨트롤에서 Claude를 신뢰 앱으로 설정해야 해요. 반영까지 약 15분 걸릴 수 있어요.
+
+### 연결했는데 동작하지 않아요
+
+- **원인**: 인증이 만료되었거나 꼬였을 수 있어요.
+- **해결**: Customize > Connectors에서 연결을 해제한 뒤 다시 연결하세요.
+
+### 커스텀 커넥터가 연결되지 않아요
+
+- **원인**: 연결은 Anthropic 클라우드에서 나가므로 서버가 공용 인터넷에서 접근 가능해야 해요.
+- **해결**: 사내망·로컬 주소는 쓸 수 없으니 서버 주소와 인증 방식을 확인하세요.
+
+### 팀 프로젝트에서 커넥터 데이터를 공유할 수 없어요
+
+- **원인**: Team/Enterprise에서 커넥터는 비공개 프로젝트에서만 작동하고, 동기화된 콘텐츠가 있는 채팅은 공유할 수 없어요.
+- **해결**: 비공개 프로젝트에서 작업하고 결과만 정리해 공유하세요. [C5. 프로젝트](/new-project1/claude/c05-projects/)를 참고하세요.
+
+## 실전 팁
+
+- **읽기 작업부터 시작하세요.** 안전한 사용에 익숙해진 뒤 쓰기 작업을 시키세요.
+- **메일은 "초안으로만"이라고 요청하세요.** 내용을 직접 확인하고 보낼 수 있어요.
+- **필요한 커넥터만 켜세요.** 대화마다 켜고 끌 수 있고, 안 쓰는 연결은 해제하는 것이 좋아요.
+- **커스텀 커넥터는 도구를 줄이세요.** 필요 없는 도구는 끄고, 특히 쓰기 도구는 신중히 다루세요.
+- **아티팩트와 함께 쓸 수 있어요.** 아티팩트가 연결된 앱을 읽고 쓰게 만들 수 있어요(Pro/Max/Team/Enterprise). [C6. 아티팩트](/new-project1/claude/c06-artifacts/)를 보세요.
+
+## 다음에 볼 튜토리얼
+
+- [C6. 아티팩트](/new-project1/claude/c06-artifacts/) — 연결된 앱을 읽고 쓰는 작은 도구 만들기
+- [C8. 스킬](/new-project1/claude/c08-skills/) — 반복 작업을 스킬로 묶기
+- [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — Claude Code에서 MCP 쓰기
