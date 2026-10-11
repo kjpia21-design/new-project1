@@ -32,3 +32,13 @@
 - [Claude Code overview](https://code.claude.com/docs/en/overview) — 확인일 2026-10-10
 - [Commands](https://code.claude.com/docs/en/commands) — 확인일 2026-10-10
 - [Pricing](https://claude.com/pricing) — 확인일 2026-10-10
+
+## 2026-10-11 업데이트 반영
+확인일 2026-10-11. 출처: [CLI reference](https://code.claude.com/docs/en/cli-reference), [Agent view](https://code.claude.com/docs/en/agent-view), [Commands](https://code.claude.com/docs/en/commands), [Model configuration](https://code.claude.com/docs/en/model-config), [CHANGELOG.md](https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md).
+- `claude attach <id|name>`, `claude logs <id|name>`: 이름 일부 사용은 v2.1.290 이상(CLI reference). `attach`는 이름으로는 실행 중인 세션만 열림(Agent view).
+- `claude stop <id>`(= `claude kill`), `claude respawn <id>`(`--all`로 전체), `claude rm <id>`(대화 기록은 로컬에 남아 `claude --resume` 가능): CLI reference, Agent view. 도입은 v2.1.251(CHANGELOG).
+- agent view: `Ctrl+F` 이름 검색, `Alt+↑/↓` 그룹 이동(v2.1.288), `n:<텍스트>` 필터(v2.1.287, 이름 또는 첫 프롬프트). Agent view 문서.
+- `--remote-control`/`/remote-control` 세션을 Claude 앱에서 포크, 포크는 내 컴퓨터의 백그라운드 세션(v2.1.273, CHANGELOG 한 줄).
+- `/rate-limit-options`: 한도 도달 시 대기 후 자동 계속, usage credits 추가, 업그레이드. claude.ai 구독 필요, 대기 행은 v2.1.234 이상(Commands).
+- `/effort` 모델별 저장(v2.1.251), `s`는 세션만(v2.1.257), `max`는 세션 전용(Model configuration).
+- 확인 못 함: 포크 방법의 화면 단계(앱 메뉴 이름)는 공식 문서에서 못 찾았다. Remote Control 문서 본문에서 "fork" 문구를 찾지 못했고 CHANGELOG 한 줄만 근거다.

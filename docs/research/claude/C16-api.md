@@ -77,3 +77,13 @@
 
 ## 6단계 재점검 (2026-10-10)
 - Rate limits 문서: 티어 Start/Build/Scale/Custom, 월 지출 상한 $500/$1,000/$200,000, Start 티어 Sonnet 5.5 RPM 1,000·ITPM 2,000,000·OTPM 400,000. 결제 수단 등록·충전 화면 절차는 여전히 미확인.
+
+## 2026-10-11 업데이트 반영
+Platform 릴리스 노트를 직접 열어 확인한 항목(https://platform.claude.com/docs/en/release-notes/overview):
+- Opus 5.5(09-22): thinking 끄기/enabled 400, `tool_choice` any/tool 400.
+- Fable 5.1·Mythos 5.1(09-01): `tool_choice` any/tool 400, Fable 5처럼 30일 보관 필요, ZDR 불가(Anthropic 명시 허용 시 예외).
+- Haiku 5.5(10-07): `budget_tokens`, temperature/top_p/top_k, prefill이 400 가능. 적응형 사고 기본.
+- Workbench → Playground(08-18). Python SDK v1.0(08-20): Python 3.10+, httpx2, Text Completions·Messages의 샘플링 파라미터 제거.
+- Files API·Agent Skills GA(08-19), 베타 헤더 불필요. 컴퓨터 툴셋 GA·브라우저 툴셋(08-19), SDK 클래스(10-07, 베타). 온디맨드 compaction(09-14, 베타). Managed Agents 동적 워크플로(10-09, 베타). Models API capabilities(10-01~06).
+- 출처 추가: 릴리스 노트, Model deprecations.
+- 미확인: Fable 5.1의 thinking 제약(릴리스 노트에 언급 없어 본문에 쓰지 않음). 각 기능의 상세 문서 본문은 열지 않음.

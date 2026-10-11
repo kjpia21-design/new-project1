@@ -8,7 +8,7 @@ category: claude
 tools: ["Claude", "Claude Code"]
 duration: "15분"
 prerequisites: ["Claude 계정 (무료 계정도 가능)"]
-lastVerified: 2026-10-10
+lastVerified: 2026-10-11
 sources:
   - title: "Models overview"
     url: "https://platform.claude.com/docs/en/about-claude/models/overview"
@@ -16,6 +16,10 @@ sources:
     url: "https://code.claude.com/docs/en/model-config"
   - title: "Get started with Claude"
     url: "https://support.claude.com/en/articles/8114491-get-started-with-claude"
+  - title: "Claude Platform release notes"
+    url: "https://platform.claude.com/docs/en/release-notes/overview"
+  - title: "Model deprecations"
+    url: "https://platform.claude.com/docs/en/about-claude/model-deprecations"
 status: published
 ---
 
@@ -63,7 +67,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - 네 모델 모두 컨텍스트 윈도우는 1M 토큰, 최대 출력은 128K 토큰(동기 Messages API)이고, 신뢰할 수 있는 지식 컷오프는 2026년 6월이에요.
 - 기본 effort는 Fable 5.1 `high`, Opus 5.5 `medium`, Sonnet 5.5 `high`, Haiku 5.5 `medium`이에요.
 - 퇴역(retirement) 약속은 Fable 5.1이 2027-09-01 이전은 아니고, Opus 5.5는 2027-09-22, Sonnet 5.5는 2027-09-28, Haiku 5.5는 2027-10-07 이전은 아니에요. 길게 쓸 서비스를 만든다면 참고하세요.
-- 이전 세대(Fable 5, Opus 5, Opus 4.x, Sonnet 5, Sonnet 4.6, Haiku 4.5)도 아직 쓸 수 있어요. 모델 개요 본문에 Claude Mythos 5.1이라는 이름도 나오지만 현재 모델 표에는 없어서, 이 문서에서는 다루지 않아요.
+- 이전 세대(Fable 5, Opus 5, Opus 4.x, Sonnet 5, Sonnet 4.6, Haiku 4.5)도 아직 쓸 수 있어요. 다만 **Sonnet 4.5(`claude-sonnet-4-5-20250929`)는 2026-09-30에 지원 중단(deprecated)이 예고됐고 Claude API에서 2026-11-30에 퇴역해요.** 쓰고 있다면 Sonnet 5.5로 옮기세요(2026-10-11 기준, 공식 릴리스 노트와 Model deprecations 문서). Opus 4.1은 이미 퇴역했어요. 모델 개요 본문에 Claude Mythos 5.1이라는 이름도 나오지만 현재 모델 표에는 없어서, 이 문서에서는 다루지 않아요.
 
 <Aside type="caution" title="Fable은 기본값이 아니에요">
 Claude Code 문서는 "Fable 모델은 어떤 플랜·제공자에서도 기본값이 아니며 명시적으로 선택해야 한다"고 설명해요. Claude Code의 `default`는 Pro/Max/Team/Enterprise/Anthropic API에서 **Opus 5.5**예요. Fable은 플랜과 좌석에 따라 한도 적용 방식이 달라서, 자세한 내용은 [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/)를 보세요.

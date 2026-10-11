@@ -51,3 +51,8 @@
 - [Extra usage for paid Claude plans](https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans) — 확인일 2026-10-10
 - [Claude Fable models on your plan](https://support.claude.com/en/articles/15424964-claude-fable-models-on-your-plan) — 확인일 2026-10-10
 - [Manage costs effectively](https://code.claude.com/docs/en/costs) — 확인일 2026-10-10
+
+## 2026-10-11 업데이트 반영
+- 월 API 크레딧 수령법: https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers 를 직접 열어 확인. Max 5x $100, Max 20x $200, Team 스탠더드 좌석 $20/프리미엄 $100(월 풀링, 상한 $500). Console 조직 연결로 수령(Max: Settings > Billing, Team: Organization settings > Billing). 신규 구독자 7일 후, 플랜당 조직 1개, 이월 없음, Claude Code·앱 추가 사용량·타 클라우드 미적용. 지원센터 릴리스 노트(2026-10-07)와 일치.
+- "클라우드 세션 크레딧" 항목은 이번 확인에서도 공식 문서에서 찾지 못함(변경 없음).
+- 출처 추가: 위 문서, https://support.claude.com/en/articles/12138966-release-notes (확인일 2026-10-11)

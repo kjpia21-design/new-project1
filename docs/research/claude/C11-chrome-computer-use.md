@@ -35,3 +35,8 @@
 - [Let Claude use your computer in Cowork](https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork) — 확인일 2026-10-10
 - [Install Claude Desktop](https://support.claude.com/en/articles/10065433-install-claude-desktop) — 확인일 2026-10-10
 - [Claude Code overview](https://code.claude.com/docs/en/overview) — 확인일 2026-10-10
+
+
+## 2026-10-11 업데이트 반영
+- Claude Code changelog: 2.1.260 Chrome이 조직 관리자 설정을 따름(관리자가 끄면 `--chrome`, `/chrome`, 브라우저 도구 사용 불가). 2.1.290 프로젝트 설정 파일로 Chrome을 켤 수 없고 `--chrome`, `/chrome`, 사용자 설정을 써야 함. 출처: https://code.claude.com/docs/en/changelog
+- 본문 나머지(지원센터 기반 내용)는 이번 변경과 충돌 없어 유지.

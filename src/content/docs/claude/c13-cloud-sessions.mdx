@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 유료 플랜 (Pro, Max, Team, 또는 Enterprise의 프리미엄·Chat + Claude Code 좌석)"
   - "GitHub 계정과 작업을 맡길 저장소 하나"
   - "(터미널 방식을 쓴다면) Claude Code가 설치된 터미널"
-lastVerified: 2026-10-10
+lastVerified: 2026-10-11
 sources:
   - title: "Use Claude Code in the cloud"
     url: "https://code.claude.com/docs/en/claude-code-on-the-web"
@@ -19,6 +19,10 @@ sources:
     url: "https://code.claude.com/docs/en/cloud-environments"
   - title: "Automate work with routines"
     url: "https://code.claude.com/docs/en/routines"
+  - title: "Speed up responses with fast mode"
+    url: "https://code.claude.com/docs/en/fast-mode"
+  - title: "Claude Code CHANGELOG (v2.1.271, 2.1.275, 2.1.288, 2.1.292)"
+    url: "https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md"
 status: published
 ---
 
@@ -184,6 +188,8 @@ GitHub 자격 증명은 Anthropic 서버에 암호화되어 보관되고 **VM �
    이 저장소에서 열려 있는 PR을 확인해 주세요. 각 PR마다 변경 내용을 두세 줄로 요약하고, 리뷰할 때 특히 봐야 할 부분을 한 가지씩 알려 주세요. 코드는 수정하지 마세요.
    </PromptBox>
 
+   루틴의 일이 "페이지를 최신으로 유지하는 것"이라면, 미리 발행해 둔 **편집 가능한 아티팩트**를 맡기세요. 스케줄이나 Run now로 시작한 실행은 내가 편집할 수 있고 조직 안에 있으며 공개 공유가 아닌 아티팩트를, 그 페이지만 담아 다시 발행할 때는 확인 없이 갱신해요. 커넥터 호출처럼 페이지 밖까지 닿는 권한이 있거나 새로 만드는 경우 등은 공식 문서상 먼저 물어봐요(2026-10-11 기준).
+
 </Steps>
 
 ## 빠른 참조표
@@ -222,6 +228,8 @@ Trusted의 허용 도메인 전체 목록은 이 문서에서 다루지 않았�
 | `/schedule ...` | 루틴 만들기 |
 | `/compact`, `/context` | 클라우드 세션 안에서 사용 가능 |
 | `/model sonnet` | 모델 변경 (이렇게 인자와 함께 사용) |
+| `/fast on` | 이 세션에서만 fast mode 켜기 (v2.1.271 이상, usage credits 필요) |
+| `gh api repos/{owner}/{repo}/...` | GitHub REST API 호출 (GraphQL을 쓰는 `gh pr`, `gh issue`는 막혀요) |
 | `/clear` | **클라우드 세션에서는 사용 불가** |
 
 ### teleport 조건
@@ -307,6 +315,8 @@ CLI에서의 이동은 **단방향**(클라우드 → 터미널)이에요. 터�
 - **비밀은 환경변수에 두지 마세요.** 네트워크 시크릿(Pro/Max)을 쓰세요.
 - **공유 전에 점검하세요.** 세션을 Public으로 공유하기 전에는 자격 증명이 들어 있는지 확인하세요.
 - **세션 안에서도 모델을 바꿀 수 있어요.** `/model sonnet`처럼 인자와 함께 써요.
+- **빠른 응답이 필요하면 fast mode를 써 보세요.** 클라우드 세션에서도 `/fast on`으로 켤 수 있고, 브라우저(claude.ai/code)에서는 메시지 입력창의 모델 메뉴에 스위치가 보여요. 켠 세션에서만 적용되고 기본값으로 저장되지 않아요. Opus 계열에서만 되고, 구독 플랜에서는 usage credits가 켜져 있어야 하며 비용이 더 들어요. Team·Enterprise는 Owner가 먼저 허용해야 해요. 자세한 조건은 [fast mode 문서](https://code.claude.com/docs/en/fast-mode)를 보세요.
+- **GitHub 작업이 막히면 `gh api`를 시켜 보세요.** 클라우드 세션에서는 `gh api`로 GitHub REST API를 부를 수 있어요. 이미지에 GitHub CLI가 없어도 내장 `gh api`가 동작해요(v2.1.288 이상). 토큰은 프록시가 대신 붙여서 따로 로그인하지 않아도 되지만, GraphQL만 있는 기능(예: Projects v2)과 `gh pr`·`gh issue`는 막혀 있어요.
 
 <Aside type="note" title="이 사이트도 이렇게 만들었어요">
 이 사이트는 클라우드 세션에서 만들었어요. 기획과 검토는 Opus가, 구현은 Sonnet 하위 에이전트가 나누어 맡았어요. 이 분담 방법은 [C15. 모델 분담 전략](/new-project1/claude/c15-model-division/)에서 자세히 다뤄요.
