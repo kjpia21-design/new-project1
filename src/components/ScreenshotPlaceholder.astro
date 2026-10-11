@@ -1,7 +1,15 @@
 ---
 import Illustration from './Illustration.astro';
-interface Props { caption: string; src?: string; alt?: string }
-const { caption, src, alt } = Astro.props;
+interface Props {
+  caption: string;
+  src?: string;
+  alt?: string;
+  /** 실제 화면이 나오는 공식 도움말·문서 주소 */
+  officialUrl?: string;
+  /** 링크 문구 (기본: 공식 도움말에서 이 화면 보기) */
+  officialLabel?: string;
+}
+const { caption, src, alt, officialUrl, officialLabel } = Astro.props;
 ---
 <figure class="shot not-content">
   <div class="head">
@@ -10,6 +18,11 @@ const { caption, src, alt } = Astro.props;
   </div>
   {src && <img class="img" src={src} alt={alt ?? caption} loading="lazy" />}
   <figcaption class="cap">{caption}</figcaption>
+  {officialUrl && (
+    <a class="official" href={officialUrl} target="_blank" rel="noopener noreferrer">
+      {officialLabel ?? '공식 도움말에서 이 화면 보기'} ↗
+    </a>
+  )}
   <p class="note">실제 화면은 서비스 업데이트에 따라 다를 수 있어요</p>
 </figure>
 
@@ -29,5 +42,7 @@ const { caption, src, alt } = Astro.props;
   .title { margin: 0; font-size: var(--sl-text-xs); font-weight: 700; color: var(--sl-color-gray-3); letter-spacing: 0.02em; }
   .img { display: block; max-width: 100%; height: auto; margin: 0.25rem 0; border-radius: 10px; border: 1px solid var(--sl-color-gray-5); }
   .cap { margin: 0; color: var(--sl-color-white); font-size: var(--sl-text-base); line-height: 1.6; overflow-wrap: anywhere; }
+  .official { font-size: var(--sl-text-sm); font-weight: 600; color: var(--sl-color-accent-high); text-decoration: none; overflow-wrap: anywhere; }
+  .official:hover { text-decoration: underline; }
   .note { margin: 0; color: var(--sl-color-gray-3); font-size: var(--sl-text-xs); }
 </style>
