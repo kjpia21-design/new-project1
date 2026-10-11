@@ -1,7 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
 export type Level = 'beginner' | 'practical' | 'advanced';
-export type Category = 'claude' | 'chat' | 'coding' | 'media' | 'automation' | 'agents';
+export type Category = 'claude' | 'chat' | 'coding' | 'media' | 'automation' | 'agents' | 'dev';
 
 export const levelLabels: Record<Level, string> = {
   beginner: '입문',
@@ -16,9 +16,10 @@ export const categoryLabels: Record<Category, string> = {
   media: '이미지·영상·음성',
   automation: '업무 자동화·생산성',
   agents: '화제의 AI 에이전트',
+  dev: '개발자 심화',
 };
 
-export const categoryOrder: Category[] = ['claude', 'agents', 'chat', 'coding', 'media', 'automation'];
+export const categoryOrder: Category[] = ['claude', 'agents', 'dev', 'chat', 'coding', 'media', 'automation'];
 
 /** 사이트 base 경로(`/new-project1`)를 붙인 내부 링크를 만든다. */
 export function url(path: string): string {
@@ -35,7 +36,7 @@ export type Tutorial = CollectionEntry<'docs'>;
 
 /** 튜토리얼 = 분야 폴더 안의 index가 아닌 페이지 */
 export function isTutorial(id: string): boolean {
-  return /^(claude|agents|chat|coding|media|automation)\/(?!index$)/.test(id);
+  return /^(claude|agents|dev|chat|coding|media|automation)\/(?!index$)/.test(id);
 }
 
 export async function getTutorials(
