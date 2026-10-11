@@ -8,7 +8,7 @@ category: claude
 tools: ["Claude", "Claude Code"]
 duration: "15분"
 prerequisites: ["Claude 계정 (무료 계정도 가능)", "claude.ai에 로그인할 수 있는 브라우저"]
-lastVerified: 2026-10-10
+lastVerified: 2026-10-11
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -34,6 +34,10 @@ sources:
     url: "https://code.claude.com/docs/en/claude-code-on-the-web"
   - title: "Automate work with routines"
     url: "https://code.claude.com/docs/en/routines"
+  - title: "API credits for Max and Team plans"
+    url: "https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers"
+  - title: "Claude Apps release notes"
+    url: "https://support.claude.com/en/articles/12138966-release-notes"
 status: published
 ---
 
@@ -191,7 +195,29 @@ Fable 모델(모델 소개는 [C1](/new-project1/claude/c01-overview/))의 한�
 | **Enterprise** | 좌석당 연간 결제 월 $20 + 사용량은 API 요율로 청구<br />고정 배수 없음(사용량 기반) | 지출 한도, 역할 기반 접근, SCIM, 감사 로그, Compliance API, 맞춤 데이터 보존, IP 허용 목록, HIPAA 대응 | 좌석 종류에 따라 Claude Code 사용(프리미엄 또는 Chat + Claude Code 좌석)<br />같은 좌석 종류에서 클라우드 세션 가능 |
 
 - Enterprise는 셀프서비스 또는 영업 경유로 시작해요. 사용량 기반 Enterprise(셀프서브 포함)에는 좌석별 사용 한도가 없고 API 요율로 과금돼요. 구형 Enterprise에는 Chat + Claude Code 좌석과 Premium 좌석이 있어요.
-- Max와 Team에 포함된 월 API 크레딧은 usage credits로도, Claude Code나 Claude 앱에서도 **쓸 수 없어요.**
+- Max와 Team에 포함된 월 API 크레딧은 usage credits로도, Claude Code나 Claude 앱에서도 **쓸 수 없어요.** 받는 방법은 아래 "월 API 크레딧 받는 법"을 보세요.
+
+### 월 API 크레딧 받는 법 (Max, Team, 2026-10-11 기준)
+
+2026-10-07부터 Max와 Team 플랜에 월 API 크레딧이 포함돼요. 자동으로 들어오지 않고, **Claude Console 조직을 플랜에 연결**해야 받아요.
+
+1. claude.ai에서 설정(Settings) > 결제(Billing)(Max) 또는 조직 설정(Organization settings) > 결제(Billing)(Team)로 가요.
+2. API 크레딧(API credits) 섹션에서 크레딧을 받을 Console 조직을 고르고 약관에 동의하며 연결해요. Console 조직이 없으면 platform.claude.com에서 먼저 만들거나 연결 과정에서 만들 수 있어요.
+3. 크레딧은 Console의 설정(Settings) > 결제(Billing)의 프로모션 크레딧(Promotional credits)에 금액과 만료일이 표시돼요.
+
+| 플랜 | 월 크레딧 |
+| --- | --- |
+| Max 5x | $100 |
+| Max 20x | $200 |
+| Team 스탠더드 좌석 | 좌석당 $20 |
+| Team 프리미엄 좌석 | 좌석당 $100 |
+
+- Team은 모든 좌석의 크레딧이 한 잔액으로 합쳐지고 월 $500가 상한이에요.
+- 필요한 권한: Max는 구독자 본인, Team은 Primary Owner 또는 Owner이고, Console 조직에서는 Owner, Admin, Billing 중 하나예요.
+- 신규 구독자는 7일 뒤부터 받을 수 있어요. Free, Pro, Enterprise는 대상이 아니에요.
+- 플랜 하나는 Console 조직 하나에만 연결되고 직접 바꿀 수 없어요(지원팀 문의). 연결한 조직에서 쓸 계획인 곳을 고르세요.
+- 이 크레딧은 Claude API, Managed Agents, Agent SDK, Playground에 쓸 수 있고 Claude Code, 앱의 추가 사용량, AWS·Bedrock·Google Cloud·Foundry에는 못 써요. 청구 주기마다 새로 들어오고 남은 크레딧은 이월되지 않아요. 크레딧은 Claude나 Claude Code의 사용량 한도를 바꾸지 않아요.
+- 대상인데 설정에 안 보이면 지원팀에 문의하세요.
 - 가격 페이지는 "프리미엄은 스탠더드의 5배"로 적고 있어요. 스탠더드가 Pro의 1.25배이니 프리미엄은 6.25배로, 두 설명은 일치해요.
 
 ### 한도 종류별 정리

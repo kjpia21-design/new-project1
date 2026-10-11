@@ -29,3 +29,7 @@
 ## 출처 목록
 - [Models overview](https://platform.claude.com/docs/en/about-claude/models/overview) — 확인일 2026-10-10
 - [Claude Code Model configuration](https://code.claude.com/docs/en/model-config) — 확인일 2026-10-10
+
+## 2026-10-11 업데이트 반영
+- Sonnet 4.5(`claude-sonnet-4-5-20250929`): 2026-09-30 deprecated, Claude API 퇴역 2026-11-30. 출처: Model deprecations 표, Platform 릴리스 노트(2026-09-30). 직접 열어 확인함. 본문 이전 세대 목록에 반영.
+- 출처 추가: https://platform.claude.com/docs/en/release-notes/overview, https://platform.claude.com/docs/en/about-claude/model-deprecations (확인일 2026-10-11)
