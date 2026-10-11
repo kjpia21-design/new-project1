@@ -24,11 +24,10 @@ const { title, steps, officialUrl } = Astro.props;
     ))}
   </ol>
   <p class="flow-note">
-    단순화한 흐름도예요. 실제 화면은
+    단순화한 흐름도예요. 실제 화면은{' '}
     {officialUrl
       ? <a href={officialUrl} target="_blank" rel="noopener noreferrer">공식 도움말</a>
-      : '공식 도움말'}
-    을 확인하세요.
+      : '공식 도움말'}에서 확인하세요.
   </p>
 </figure>
 
@@ -71,6 +70,7 @@ const { title, steps, officialUrl } = Astro.props;
   .flow-note { margin: 0.75rem 0 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); }
   @media (max-width: 40rem) {
     .flow-list { flex-direction: column; }
+    .flow-step { flex: none; }
     .flow-step:not(:last-child)::after { content: '↓'; right: auto; left: 1.1rem; top: auto; bottom: -0.95rem; transform: none; }
     .flow-list { gap: 0.9rem; }
   }
