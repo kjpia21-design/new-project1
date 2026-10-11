@@ -1,0 +1,44 @@
+---
+import { url } from '../lib/tutorials';
+interface Props {
+  date: string;
+  channel: 'API' | 'Claude Code' | 'Claude 앱' | '뉴스';
+  href: string;
+  sourceLabel?: string;
+  tutorial?: string;
+  tutorialLabel?: string;
+}
+const { date, channel, href, sourceLabel = '공식 출처', tutorial, tutorialLabel = '관련 튜토리얼' } = Astro.props;
+const tone = { API: 'blue', 'Claude Code': 'purple', 'Claude 앱': 'green', 뉴스: 'yellow' }[channel];
+---
+<article class="news not-content">
+  <header>
+    <time>{date}</time>
+    <span class={`badge ${tone}`}>{channel}</span>
+  </header>
+  <div class="body"><slot /></div>
+  <p class="links">
+    <a href={href} target="_blank" rel="noopener noreferrer">{sourceLabel} ↗</a>
+    {tutorial && <a class="tut" href={url(tutorial)}>{tutorialLabel} →</a>}
+  </p>
+</article>
+
+<style>
+  .news {
+    background: var(--ai-card); border: 1px solid var(--sl-color-gray-5); border-left: 4px solid var(--ai-coral);
+    border-radius: 14px; padding: 0.85rem 1.1rem; margin: 0 0 0.75rem; box-shadow: var(--ai-shadow);
+  }
+  header { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+  time { font-weight: 800; color: var(--sl-color-white); font-size: var(--sl-text-sm); }
+  .badge { font-size: var(--sl-text-xs); font-weight: 700; padding: 0.1rem 0.6rem; border-radius: 999px; }
+  .blue { background: var(--ai-blue-bg); color: var(--ai-blue-fg); }
+  .purple { background: var(--ai-purple-bg); color: var(--ai-purple-fg); }
+  .green { background: var(--ai-green-bg); color: var(--ai-green-fg); }
+  .yellow { background: var(--ai-yellow-bg); color: var(--ai-yellow-fg); }
+  p { margin: 0; }
+  .body :global(p) { margin: 0; }
+  .body { margin-top: 0.4rem; line-height: 1.6; color: var(--sl-color-gray-1); overflow-wrap: anywhere; }
+  .links { margin-top: 0.5rem; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; font-size: var(--sl-text-sm); font-weight: 600; }
+  .links a { color: var(--sl-color-accent-high); text-decoration: none; }
+  .links a:hover { text-decoration: underline; }
+</style>
