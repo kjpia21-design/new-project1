@@ -42,7 +42,13 @@ const step8Shots = [
   ['start-advanced', '/start/advanced/', false],
   ['tutorials-dev', '/tutorials/?category=dev', false],
 ];
-const shots = step === 'step8' ? step8Shots : step === 'step2' ? step2Shots : step === 'step7' ? step7Shots : step1Shots;
+const step10Shots = [
+  ['home', '/', false],
+  ['basics-index', '/basics/', false],
+  ['start-beginner', '/start/beginner/', false],
+  ['tutorials-basics', '/tutorials/?category=basics', false],
+];
+const shots = step === 'step10' ? step10Shots : step === 'step8' ? step8Shots : step === 'step2' ? step2Shots : step === 'step7' ? step7Shots : step1Shots;
 const sizes = { desktop: { width: 1280, height: 800 }, mobile: { width: 375, height: 812 } };
 
 for (const [theme, label] of [['light', ''], ['dark', '-dark']]) {
