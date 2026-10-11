@@ -31,3 +31,9 @@
 - 검증(16722517): 이미지·영상·오디오 확인, 영상 90초 미만, 100MB 이하, 하루 약 10회(이미지/영상/오디오 각각) 한도, Google AI 콘텐츠만 인식.
 미확인(403): Canva Magic Video/이미지→영상/자막 도움말, Canva AI 약관, OpenAI Sora 종료 안내와 안전 글, Adobe. 상업 이용을 직접 허용하는 Google 문장은 찾지 못함.
 Aside: "확인 중인 튜토리얼" 제거 대신 "Canva 공식 도움말 원문은 아직 확인하지 못했어요"로 구체화.
+
+## 6단계 재점검 (2026-10-10)
+- 확인함: OpenAI 개발자 문서 deprecations에 "2026-03-24 공지: Videos API와 Sora 2 모델(sora-2, sora-2-pro, sora-2-2025-10-06 등)을 2026-09-24에 제거" (https://developers.openai.com/api/docs/deprecations). 본문에 반영.
+- 못 확인: 앱·웹 제품 종료일(2026-04-26)과 Sora 안전 글의 동의 확인 내용은 openai.com 접근 불가로 검색 요약 그대로 두고 본문에 미확인으로 표시. Sora 앱의 App Store URL(추정 ID)은 404.
+- 확인함(참고): Canva App Store 등록 정보에 Magic Video(iPhone 한정 표기), Veo 3 영상 생성 언급 (https://apps.apple.com/us/app/canva-ai-photo-video-editor/id897446215).
+- 못 찾음: Canva Magic Video 클립 길이·한도, 자막 기능 도움말, 워터마크 조건. caution Aside는 남은 항목만 적도록 수정.

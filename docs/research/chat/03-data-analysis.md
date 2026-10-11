@@ -20,3 +20,10 @@
 
 ## 출처 목록
 - https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude / https://support.claude.com/en/articles/8241126-upload-files-to-claude / https://support.claude.com/en/articles/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations / https://claude.com/pricing — 확인일 2026-10-10
+
+## 6단계 재점검 (2026-10-10)
+- 출처: learn.chatgpt.com(OpenAI ChatGPT 문서; developers.openai.com/llms.txt가 안내) 및 developers.openai.com. help.openai.com·openai.com은 403.
+- 확인: ChatGPT Work는 "파일 읽기, 데이터 분석, 코드·셸 실행, 문서/프레젠테이션/스프레드시트/PDF 생성"을 한다고 설명 (https://learn.chatgpt.com/docs/use-chatgpt.md , https://learn.chatgpt.com/docs/artifacts-viewer.md). `@Visualize`(Plugins 아래)는 차트·지도·다이어그램 요청용이고 계정에 따라 단계적 제공 (https://learn.chatgpt.com/docs/visualizations.md).
+- 확인: 작업 중 사용 정보에 ChatGPT data controls가 적용됨, 설정 위치 Settings > Data controls (llms-full.txt 해당 절). Business: "No training on your business data by default" (https://learn.chatgpt.com/docs/pricing.md). 임시 채팅 존재(단축키 표).
+- 못 찾음: ChatGPT 업로드 파일 크기·행 수 한도, 개인 계정 학습 기본값·보관 기간, 임시 채팅의 상세 처리 방식.
+- 본문 변경: Summary, 참조표(ChatGPT 2행), 개인정보 절 ChatGPT 항목 교체. 채워진 빈칸 3, 남은 빈칸 3. 이 편에는 "확인 중" Aside가 원래 없음.

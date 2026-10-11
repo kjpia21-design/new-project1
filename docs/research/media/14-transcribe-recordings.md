@@ -27,3 +27,11 @@
 원문 확인(Google): Gemini 파일 업로드(14903178): 오디오 총 10분(Pro/Ultra 3시간), 영상 총 5분(Pro/Ultra 1시간), 파일 최대 10개, 영상 외 100MB, zip에 영상·오디오 불가. 이전 "데스크톱 오디오 불가" 상충은 이번 원문에 없음 → 상충 서술 삭제. Pixel 녹음기(16267698): 재변환 언어 목록에 Korean(South Korea), 재변환은 Google 서버 처리 가능, 실시간 변환 언어에는 한국어 없음. 화자 라벨 미국 영어만은 별도 페이지(16269004)에서 확인("on-device 변환은 오디오가 기기를 떠나지 않는다"는 문장은 이번 원문들에서 찾지 못해 본문에서 삭제).
 미확인: 개인용 클로바노트 한국어 도움말·요금·무료 시간·서비스 상태, ChatGPT Record, Meetings 플러그인(OpenAI 403).
 Aside: 남김. 문구를 "개인용 클로바노트와 ChatGPT 녹음 기능은 공식 원문을 확인하지 못했어요"로 구체화하고, 클로바노트 설명이 NAVER WORKS(회사 계정) 기준임을 명시.
+
+## 6단계 재점검 (2026-10-10)
+- 출처: learn.chatgpt.com(docs/prompting.md의 "Use voice dictation", docs/features/voice.md), developers.openai.com/api/docs/guides/speech-to-text.md, 한국 App Store 등록 페이지. help.openai.com은 403.
+- 확인: 데스크톱 앱 Dictate는 composer에서 말을 글로 바꿔 입력창에 넣고 전송 전 수정 가능. ChatGPT Voice는 데스크톱 앱의 Plus·Pro·Business·Edu·Enterprise에서 실시간 대화용(전사 도구 아님).
+- 확인(API 한정): 파일 전사 25MB 이하, 형식 mp3·mp4·mpeg·mpga·m4a·wav·webm, 권장 모델 gpt-transcribe, 화자 구분은 gpt-4o-transcribe-diarize. 앱 한도와 같다는 근거 없음.
+- 확인: 한국 App Store 언어 목록에 한국어.
+- 못 찾음: ChatGPT Record와 Meetings 플러그인 원문(llms-full.txt 전체에서 "Record"/"Meetings" 전사 기능 설명 없음), 앱의 오디오 업로드 한도, API 전사의 한국어 지원 명시. 개인용 클로바노트는 이 단계 범위 밖(W1 중점은 ChatGPT).
+- 본문 변경: 표 ChatGPT 3칸 보강(한국어, 업로드, 특징), Aside 제목·문장을 남은 항목 중심으로 수정(삭제하지 않음). 채워진 빈칸 3(부분), 남은 빈칸 3(Record 원문, 앱 업로드 한도, 클로바노트 개인용).

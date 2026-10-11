@@ -29,3 +29,7 @@
 - [Get started with custom connectors using remote MCP](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp) — 확인일 2026-10-10
 - [Claude Code MCP](https://code.claude.com/docs/en/mcp) — 확인일 2026-10-10
 - [Notion connector](https://claude.com/connectors/notion) — 확인일 2026-10-10 (검색 결과로만 확인)
+
+
+## 6단계 재점검 (2026-10-10)
+- 커넥터 도움말(11176164): 디렉터리 개수 미기재, Notion 전용 단계 없음, 메뉴는 Customize > Connectors 또는 + > Connectors > Manage connectors.

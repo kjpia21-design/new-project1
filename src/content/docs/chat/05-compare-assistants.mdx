@@ -26,6 +26,16 @@ sources:
     url: "https://support.google.com/gemini/answer/14903178"
   - title: "Gemini Apps Privacy Hub"
     url: "https://support.google.com/gemini/answer/13594961"
+  - title: "Pricing (OpenAI, ChatGPT 문서)"
+    url: "https://learn.chatgpt.com/docs/pricing"
+  - title: "Use ChatGPT (OpenAI, ChatGPT 문서)"
+    url: "https://learn.chatgpt.com/docs/use-chatgpt"
+  - title: "Work with files (OpenAI, ChatGPT 문서)"
+    url: "https://learn.chatgpt.com/docs/artifacts-viewer"
+  - title: "ChatGPT - App Store 미국 등록 페이지 (OpenAI OpCo, LLC)"
+    url: "https://apps.apple.com/us/app/chatgpt/id6448311069"
+  - title: "ChatGPT - App Store 한국 등록 페이지 (OpenAI OpCo, LLC)"
+    url: "https://apps.apple.com/kr/app/chatgpt/id6448311069"
   - title: "Sensitive data in chats with Claude"
     url: "https://support.claude.com/en/articles/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations"
 status: published
@@ -39,7 +49,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 <Summary>
 - 가장 믿을 만한 비교는 **내 업무 샘플을 세 서비스에 똑같이 넣어 보는 것**이에요. 순위표는 금방 낡아요.
-- 이 튜토리얼은 **공식 페이지에서 직접 확인한 사실만** 써요. Claude 쪽은 확인했고, **ChatGPT·Gemini의 가격·한도·기능은 이번 조사에서 공식 페이지에 접속하지 못해 확인하지 못했어요.** 그래서 숫자를 쓰지 않고 확인할 항목과 위치를 안내해요.
+- 이 튜토리얼은 **공식 페이지에서 직접 확인한 사실만** 써요. Claude와 Gemini는 공식 가격·도움말 페이지로, **ChatGPT는 OpenAI의 문서 사이트(learn.chatgpt.com)와 App Store 등록 정보로 가격을 확인했어요.** ChatGPT의 업로드·컨텍스트 한도와 개인 계정 학습 정책은 열 수 있는 공식 문서에서 찾지 못해 숫자를 쓰지 않고 확인할 위치만 안내해요.
 - 고르는 기준은 **업무 적합도 · 보안·학습 정책 · 이미 쓰는 업무 환경 · 가격**이에요.
 - 가격과 한도는 자주 바뀌어요. 결제 전 반드시 공식 가격 페이지를 보세요.
 </Summary>
@@ -61,7 +71,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | **컨텍스트 윈도우** | 한 번에 볼 수 있는 글의 양이에요. |
 
 <Aside type="caution" title="이 튜토리얼의 한계 (2026-10-10 기준)">
-Claude는 공식 가격 페이지와 도움말을 열람해 확인했어요. Gemini(Google)도 공식 요금제 페이지와 Gemini 앱 도움말을 열람해 아래 표를 채웠어요. 다만 ChatGPT(OpenAI)는 공식 사이트(openai.com, help.openai.com, chatgpt.com)가 자동 접근을 막아 가격, 플랜별 기능, 사용 한도, 학습 정책을 확인하지 못했어요. 제3자 블로그나 비교 사이트는 근거로 쓰지 않았고, ChatGPT 칸은 "공식 도움말에서 확인하세요"로 비워 뒀어요.
+Claude는 공식 가격 페이지와 도움말을 열람해 확인했어요. Gemini(Google)도 공식 요금제 페이지와 Gemini 앱 도움말을 열람해 아래 표를 채웠어요. ChatGPT(OpenAI)는 공식 사이트(openai.com, help.openai.com, chatgpt.com)가 자동 접근을 막아, OpenAI의 문서 사이트(learn.chatgpt.com, developers.openai.com)와 OpenAI가 직접 등록한 App Store 페이지로 확인한 내용만 적었어요. 그래서 요금제 가격과 기능 개요는 채웠지만, 업로드·컨텍스트 한도, 플랜별 사용량, 개인 계정의 학습 정책은 찾지 못해 비워 뒀어요. 제3자 블로그나 비교 사이트는 근거로 쓰지 않았어요.
 </Aside>
 
 ## 단계별 따라하기
@@ -136,19 +146,19 @@ Claude는 공식 가격 페이지와 도움말을 열람해 확인했어요. Gem
 
 ### 세 서비스 비교 항목
 
-| 항목 | Claude (확인함) | ChatGPT (미확인) | Gemini (확인함, 미국 기준 2026-10-10) |
+| 항목 | Claude (확인함) | ChatGPT (일부 확인, 2026-10-10) | Gemini (확인함, 미국 기준 2026-10-10) |
 | --- | --- | --- | --- |
-| 무료 이용 | 가능 (Free 플랜) | 공식 가격 페이지에서 확인하세요 | 가능 (월 $0, 구글 계정). Deep Research, Canvas 등 포함 |
-| 개인 유료 가격 | Pro 월 $20 | 공식 가격 페이지에서 확인하세요 | Google AI Plus 월 $4.99, Google AI Pro 월 $19.99, Google AI Ultra 월 $99.99부터 (한국 원화 가격은 공식 페이지에서 확인하세요) |
-| 업로드 한도 | 채팅당 20개, 파일당 500MB, PDF 1000쪽 | 공식 도움말에서 확인하세요 | 프롬프트당 파일 10개, 동영상 외 파일당 100MB, 동영상 2GB |
-| 컨텍스트 | 모델별 200K~1M 토큰 | 공식 도움말에서 확인하세요 | 플랜 없음 32K, AI Plus 128K, AI Pro·Ultra 1M 토큰 |
-| 파일 생성 | .xlsx .docx .pptx PDF (코드 실행·파일 생성) | 공식 도움말에서 확인하세요 | 업로드한 스프레드시트로 차트 생성 확인. 그 밖의 파일 형식은 확인하지 못함 |
-| 학습 정책 | 개인 Opt-out, Team·Enterprise 기본 없음 | 공식 정책 페이지에서 확인하세요 | Keep Activity가 켜져 있으면 일부 대화를 사람이 검토해 서비스 개선에 쓸 수 있음. 임시 채팅은 AI 학습에 쓰이지 않음 |
-| 한국어 UI·지원 | 화면 안내에 따르세요 | 확인하세요 | 한국어 지원 언어 목록에 포함, Google AI Plus·Pro·Ultra 모두 한국 제공 국가에 포함 |
+| 무료 이용 | 가능 (Free 플랜) | 가능 (Free 플랜 월 $0, OpenAI 가격 안내). Free·Go에서는 모델이 Plus 이상과 달라요 | 가능 (월 $0, 구글 계정). Deep Research, Canvas 등 포함 |
+| 개인 유료 가격 | Pro 월 $20 | Go 월 $8, Plus 월 $20, Pro는 월 $100·$200·$500 중 선택(OpenAI 가격 안내). App Store 표시(미국)는 Plus $19.99, Go $8.00. App Store 표시(한국)는 Go ₩13,000, Plus ₩29,000, Pro 100 ₩159,000, Pro 200 ₩299,000, Pro 500 ₩790,000. 사업용 Business는 사용자당 월 $20(2명 이상, 연 결제) 또는 $25(월 결제) | Google AI Plus 월 $4.99, Google AI Pro 월 $19.99, Google AI Ultra 월 $99.99부터 (한국 원화 가격은 공식 페이지에서 확인하세요) |
+| 업로드 한도 | 채팅당 20개, 파일당 500MB, PDF 1000쪽 | 앱 한도는 공개 문서에서 찾지 못함. 프로젝트에 파일을 올려 여러 대화가 공유할 수 있음 | 프롬프트당 파일 10개, 동영상 외 파일당 100MB, 동영상 2GB |
+| 컨텍스트 | 모델별 200K~1M 토큰 | 앱 기준 수치는 찾지 못함 | 플랜 없음 32K, AI Plus 128K, AI Pro·Ultra 1M 토큰 |
+| 파일 생성 | .xlsx .docx .pptx PDF (코드 실행·파일 생성) | Work 모드에서 문서, 프레젠테이션, 스프레드시트, PDF 생성(OpenAI 문서). 이미지 생성·편집도 가능 | 업로드한 스프레드시트로 차트 생성 확인. 그 밖의 파일 형식은 확인하지 못함 |
+| 학습 정책 | 개인 Opt-out, Team·Enterprise 기본 없음 | Business는 기본적으로 학습하지 않는다고 안내(OpenAI 가격 안내). 개인 계정은 Settings > Data controls 설정이 적용되며 기본값은 찾지 못함 | Keep Activity가 켜져 있으면 일부 대화를 사람이 검토해 서비스 개선에 쓸 수 있음. 임시 채팅은 AI 학습에 쓰이지 않음 |
+| 한국어 UI·지원 | 화면 안내에 따르세요 | 한국 App Store 등록 정보의 언어 목록에 한국어가 포함돼 있고 한국 원화 인앱 가격이 표시됨(iOS 앱 기준) | 한국어 지원 언어 목록에 포함, Google AI Plus·Pro·Ultra 모두 한국 제공 국가에 포함 |
 
 ## "이럴 땐 이것" 추천은 어떻게 만드나요
 
-이 사이트는 **공식 문서로 뒷받침되는 추천만** 싣는다는 원칙을 가지고 있어요. ChatGPT의 공식 문서를 열람하지 못해 세 서비스를 같은 기준으로 비교할 수 없기 때문에 서비스 이름을 붙인 업무별 순위는 싣지 않아요. 대신 상황별 판단 규칙을 드려요.
+이 사이트는 **공식 문서로 뒷받침되는 추천만** 싣는다는 원칙을 가지고 있어요. ChatGPT의 업로드·사용량·학습 정책을 같은 기준으로 확인하지 못해 세 서비스를 완전히 같은 조건으로 비교할 수 없기 때문에 서비스 이름을 붙인 업무별 순위는 싣지 않아요. 대신 상황별 판단 규칙을 드려요.
 
 | 상황 | 판단 규칙 |
 | --- | --- |

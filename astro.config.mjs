@@ -41,6 +41,7 @@ export default defineConfig({
           ],
         },
         { label: 'Claude 완전 정복', collapsed: true, items: [{ autogenerate: { directory: 'claude' } }] },
+        { label: '화제의 AI 에이전트', collapsed: true, items: [{ autogenerate: { directory: 'agents' } }] },
         { label: '대화형 AI 기본기', collapsed: true, items: [{ autogenerate: { directory: 'chat' } }] },
         { label: '코딩·에이전트', collapsed: true, items: [{ autogenerate: { directory: 'coding' } }] },
         { label: '이미지·영상·음성', collapsed: true, items: [{ autogenerate: { directory: 'media' } }] },

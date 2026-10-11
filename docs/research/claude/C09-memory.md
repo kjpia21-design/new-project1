@@ -28,3 +28,7 @@
 - [Import and export your memory](https://support.claude.com/en/articles/12123587-import-and-export-your-memory-from-claude) — 확인일 2026-10-10 (검색 요약)
 - [Get started with Claude](https://support.claude.com/en/articles/8114491-get-started-with-claude) — 확인일 2026-10-10
 - [Claude Code memory](https://code.claude.com/docs/en/memory) — 확인일 2026-10-10
+
+
+## 6단계 재점검 (2026-10-10)
+- 메모리 도움말(11817273)에 용량·개수 한도 기재 없음을 확인.

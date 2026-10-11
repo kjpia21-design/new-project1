@@ -34,3 +34,7 @@
 - https://cursor.com/docs/models-and-pricing
 - https://cursor.com/pricing
 - https://code.claude.com/docs/en/overview
+
+
+## 6단계 재점검 (2026-10-10)
+- cursor.com/docs/get-started/quickstart(curl 200)에 UI 언어 언급 없음. 한국어 UI 지원은 미확인 유지.

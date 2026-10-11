@@ -13,6 +13,8 @@ prerequisites:
   - "터미널, Python 3 (Python 예제용)"
 lastVerified: 2026-10-10
 sources:
+  - title: "Rate limits"
+    url: "https://platform.claude.com/docs/en/api/rate-limits"
   - title: "Get started with Claude (API)"
     url: "https://platform.claude.com/docs/en/get-started"
   - title: "Get your Claude API key"
@@ -66,7 +68,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | 워크스페이스 키 | 레거시예요. |
 
 <Aside type="note" title="확인되지 않은 점">
-최초 결제 수단 등록과 크레딧 충전 절차, 속도 제한(rate limit) 티어 수치는 직접 확인하지 못했어요. Console 화면 안내와 공식 문서의 pricing 페이지를 확인하세요.
+속도 제한은 사용 티어(Start, Build, Scale, Custom)로 정해지고 조직이 사용 이력에 따라 자동 배치돼요(공식 Rate limits 문서, 2026-10-10). 월 지출 상한은 Start $500, Build $1,000, Scale $200,000이고, 모델별 분당 요청·토큰 한도는 티어마다 달라요. 예를 들어 Start 티어의 Sonnet 5.5는 분당 요청 1,000, 입력 토큰 2,000,000, 출력 토큰 400,000이에요. 새 조직은 이보다 낮은 Evaluation 티어에서 시작할 수 있어요. 최초 결제 수단 등록과 크레딧 충전의 화면 절차는 직접 확인하지 못했으니 Console 화면 안내를 따르세요.
 </Aside>
 
 ## 단계별 따라하기

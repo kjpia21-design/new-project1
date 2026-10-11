@@ -30,3 +30,7 @@
 - [How to create custom skills](https://support.claude.com/en/articles/12512198-how-to-create-custom-skills) — 확인일 2026-10-10
 - [Use skills in Claude](https://support.claude.com/en/articles/12512180-use-skills-in-claude) — 확인일 2026-10-10
 - [Claude Code Skills](https://code.claude.com/docs/en/skills) — 확인일 2026-10-10
+
+
+## 6단계 재점검 (2026-10-10)
+- 스킬 도움말(12512180): ZIP 크기 초과가 실패 원인이라고만 하고 수치 없음.

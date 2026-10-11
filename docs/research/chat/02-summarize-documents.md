@@ -21,3 +21,10 @@
 
 ## 출처 목록
 - https://support.claude.com/en/articles/8241126-upload-files-to-claude / https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work / https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude / Projects / Prompting best practices — 확인일 2026-10-10
+
+## 6단계 재점검 (2026-10-10)
+- 새 출처: OpenAI 공식 문서 사이트 learn.chatgpt.com(developers.openai.com의 llms.txt가 "ChatGPT product documentation"으로 안내)과 developers.openai.com. help.openai.com은 여전히 403.
+- 확인: 프로젝트는 채팅·파일·지침을 묶고, Sources 절에 올린 파일을 프로젝트 채팅이 공유함 (https://learn.chatgpt.com/docs/projects.md). ChatGPT는 파일 요약·분석 요청을 지원 (https://learn.chatgpt.com/docs/use-chatgpt.md).
+- 확인(API 한정): Responses API 파일 입력은 파일당 50MB, 요청 합계 50MB (https://developers.openai.com/api/docs/guides/file-inputs.md). 앱 한도와 같다는 근거는 없어 참고로만 표기.
+- 여전히 못 찾음: ChatGPT 앱의 업로드 개수·파일 크기·PDF 쪽수·컨텍스트 토큰·긴 대화 처리. 두 문서 사이트에 수치 없음.
+- 본문 변경: 요약 문장과 빠른 참조표의 ChatGPT 열을 "공식 도움말에서 확인하세요"에서 확인한 내용/찾지 못함으로 교체. 표 구분선 열 수 오류도 고침. 채워진 빈칸 1(프로젝트 파일), 부분 보강 1(업로드), 남은 빈칸 4.

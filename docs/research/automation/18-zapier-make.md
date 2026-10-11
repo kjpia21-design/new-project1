@@ -39,3 +39,11 @@
 
 ## 출처 목록
 위 URL 전체 (zapier.com/pricing, zapier.com/apps/gmail/integrations/google-sheets, help.zapier.com 2건, make.com/en/pricing, help.make.com 3건, apps.make.com/google-sheets).
+
+## 6단계 재점검 (2026-10-10)
+- 접근: help.make.com, apps.make.com은 curl로 열림(WebFetch는 호스트 해석 실패). www.make.com 가격 페이지는 여전히 접근 불가.
+- 확인함: Free 플랜 월 1,000 크레딧 (https://help.make.com/cancel-your-subscription, 문서 갱신 2026-08-31). 크레딧 기본 규칙 1 operation = 1 credit (https://help.make.com/credits).
+- 확인함: 모듈 이름 Gmail > Watch emails(트리거), Google Sheets > Add a Row (https://apps.make.com/gmail-modules, https://apps.make.com/google-sheets-modules). Slack은 Send a Message(모듈 설명), 같은 문서의 권한 표에는 Create a Message도 있음.
+- 확인함: 스케줄 최소 간격은 "플랜에 따라 다르다"(https://help.make.com/schedule-a-scenario). Free의 구체적 값은 찾지 못함. 기존 노트의 "Free 최소 15분"은 근거를 못 찾아 본문에 쓰지 않음.
+- 못 찾음: Make 한국어 UI 지원, Free 최소 간격, Free 활성 시나리오 수 제한.
+- 본문 조치: "Make 쪽은 아직 확인 중" caution Aside 삭제, 남은 미확인 항목은 note Aside에 유지.

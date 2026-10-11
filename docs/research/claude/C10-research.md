@@ -28,3 +28,7 @@
 - [Use research on Claude](https://support.claude.com/en/articles/11088861-use-research-on-claude) — 확인일 2026-10-10
 - [Claude Cowork and chat are one Claude](https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude) — 확인일 2026-10-10
 - [Extra usage for paid plans](https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans) — 확인일 2026-10-10
+
+
+## 6단계 재점검 (2026-10-10)
+- Research 도움말(11095361)에 시간/횟수 상한 기재 없음(1~3분, 도구 호출 5회 이상이 전형적 범위라고만 설명).

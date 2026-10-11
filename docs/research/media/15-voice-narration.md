@@ -34,3 +34,10 @@
 - Voice Library 문서: 일부 음성은 유료 구독자 전용, 공유자가 무료 사용자 제외 가능. "Voice Library 음성은 무료 상업 이용 라이선스" 문장은 찾지 못함 → 삭제하고 "상업 이용 조건은 확인 못 함"으로 변경.
 미확인(403): help.elevenlabs.io 언어 목록과 No-Go Voices, Canva TTS·AI 더빙, OpenAI 사용 정책·verify.
 Aside("확인 중인 튜토리얼"): 핵심 사실(가격·동의·메뉴 경로)이 원문으로 확인되어 제거. Canva·No-Go·OpenAI 문장은 본문에서 개별적으로 "원문 미확인"을 밝힘.
+
+## 6단계 재점검 (2026-10-10)
+- 접근: developers.openai.com은 curl로 열림(WebFetch는 호스트 해석 실패). openai.com 사용 정책 원문은 접근 불가.
+- 확인함: 사용자 지정 음성은 동의 녹음(음성 주인이 정해진 문장을 읽음, ko 문장 포함)과 샘플 녹음 2개가 필요, 일부 고객 한정 (https://developers.openai.com/api/docs/guides/custom-voices).
+- 확인함: TTS 가이드가 "사용 정책상 최종 사용자에게 TTS 음성이 AI 생성임을 분명히 알려야 한다"고 명시 (https://developers.openai.com/api/docs/guides/text-to-speech).
+- 기존 "OpenAI 사용 정책이 동의 없는 음성 사용 금지" 문장은 정책 원문을 못 열어 위 두 근거로 대체. sources에서 openai.com 정책 항목 제거.
+- 못 찾음: 사용 정책 원문, Canva 텍스트 음성 변환 도움말(canva.com 접근 불가, 본문 유지).
