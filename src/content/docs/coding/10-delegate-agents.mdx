@@ -31,6 +31,7 @@ import Summary from '../../../components/Summary.astro';
 import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - 반복 업무를 맡기는 순서는 **① 손으로 한 번 해 보기 → ② 스킬로 형식 고정 → ③ 서브에이전트로 조사·검토 분리 → ④ 루틴으로 자동 실행**이에요.
@@ -183,7 +184,13 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
    마지막으로 **Create**를 눌러요.
 
-   <ScreenshotPlaceholder caption="루틴 만들기 양식에서 프롬프트·저장소·트리거를 입력한 화면" />
+   <FlowSteps title="루틴 만들고 시험 실행하기" officialUrl="https://code.claude.com/docs/en/routines#create-from-the-web" steps={[
+     { where: 'claude.ai/code/routines', action: 'New routine 누르기', result: '루틴 만들기 양식이 열려요' },
+     { where: '양식', action: '이름, 프롬프트, 저장소, 환경, 트리거, 커넥터 입력 후 Create 누르기', result: '루틴이 만들어져요' },
+     { where: '루틴 상세 화면', action: 'Run now 누르기', result: '새 세션이 만들어져서 실행 기록을 볼 수 있어요' },
+   ]} />
+
+   <ScreenshotPlaceholder caption="루틴 만들기 양식에서 프롬프트·저장소·트리거를 입력한 화면" officialUrl="https://code.claude.com/docs/en/routines#create-from-the-web" />
 
 7. **Run now로 시험하고 실행 기록 확인하기**
 

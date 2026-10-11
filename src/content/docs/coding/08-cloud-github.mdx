@@ -37,6 +37,7 @@ import Summary from '../../../components/Summary.astro';
 import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
 import Coding08PagesFlow from '../../../components/diagrams/Coding08PagesFlow.astro';
 
 <Summary>
@@ -96,7 +97,7 @@ import Coding08PagesFlow from '../../../components/diagrams/Coding08PagesFlow.as
    - Pro와 Max는 온보딩에서 **Default** 환경이 자동으로 만들어져요. 이 실습은 Default 그대로 충분해요.
    - Team·Enterprise는 조직 Owner가 GitHub 커넥터를 켜 둬야 해요. 로그인 화면에서 "GitHub access is required for Claude Code cloud sessions"가 보이면 Owner에게 문의하세요.
 
-   <ScreenshotPlaceholder caption="claude.ai/code의 GitHub 연결 화면" />
+   <ScreenshotPlaceholder caption="claude.ai/code의 GitHub 연결 화면" officialUrl="https://code.claude.com/docs/en/web-quickstart#connect-github" />
 
 2. **저장소와 브랜치 고르기, 계획(Plan) 모드로 시작하기**
 
@@ -114,7 +115,7 @@ import Coding08PagesFlow from '../../../components/diagrams/Coding08PagesFlow.as
 
    Claude는 저장소를 클라우드 VM에 클론해 파일을 읽고 계획을 알려 줘요. 계획이 괜찮으면 승인해서 실행하게 하세요. 화면에서 진행을 지켜봐도 되고, 탭을 닫아도 세션은 계속 실행돼요. 끝나면 Claude가 작업 브랜치를 GitHub에 push해요.
 
-   <ScreenshotPlaceholder caption="계획 모드에서 README 개선 계획이 표시된 화면" />
+   <ScreenshotPlaceholder caption="계획 모드에서 README 개선 계획이 표시된 화면" officialUrl="https://code.claude.com/docs/en/permission-modes#analyze-before-you-edit-with-plan-mode" />
 
 4. **diff 읽고 코멘트하기**
 
@@ -125,6 +126,12 @@ import Coding08PagesFlow from '../../../components/diagrams/Coding08PagesFlow.as
    - "보는 방법"이 실제로 따라 할 수 있는지
 
    고칠 곳은 diff에서 줄을 선택하고 의견을 입력한 뒤 Enter를 눌러요. 코멘트는 다음 메시지를 보낼 때 함께 전달돼요. 그다음 채팅으로 "코멘트대로 고쳐 줘"라고 요청해요.
+
+   <FlowSteps title="diff 확인에서 PR 만들기까지" officialUrl="https://code.claude.com/docs/en/web-quickstart" steps={[
+     { where: '작업이 끝난 세션', action: '+42 -18처럼 줄 수를 보여 주는 표시 누르기', result: 'diff 뷰가 열려요' },
+     { where: 'diff 뷰', action: '왼쪽 파일 목록과 오른쪽 변경 내용 확인, 고칠 줄은 선택해 의견 입력 후 Enter', result: '코멘트가 다음 메시지와 함께 전달돼요' },
+     { where: 'diff 뷰 위쪽', action: 'Create PR 누르기', result: '전체 PR, 초안(draft), GitHub 작성 화면 중에서 고를 수 있어요' },
+   ]} />
 
 5. **PR 만들기**
 
@@ -143,7 +150,14 @@ import Coding08PagesFlow from '../../../components/diagrams/Coding08PagesFlow.as
 
    게시 소스를 정하면 배포가 실행돼요. 저장소의 Actions 탭에서 실행 결과를 보고, 성공하면 Settings > Pages에서 **Visit site** 링크로 사이트를 열어 봐요. GitHub 공식 문서는 변경 내용이 반영되기까지 최대 10분이 걸릴 수 있다고 안내해요.
 
-   <ScreenshotPlaceholder caption="Settings > Pages의 게시 소스 선택 화면" />
+   <FlowSteps title="GitHub Pages 게시 소스 정하기" officialUrl="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-from-a-branch" steps={[
+     { where: 'GitHub 저장소 이름 아래', action: 'Settings 누르기 (탭이 안 보이면 ... 드롭다운에서 Settings)' },
+     { where: '사이드바 Code, planning, and automation', action: 'Pages 누르기', result: 'Build and deployment 항목이 보여요' },
+     { where: 'Build and deployment', action: 'Source에서 Deploy from a branch 고르고, 브랜치 main과 폴더 / (root) 선택 후 Save', result: '배포가 실행돼요' },
+     { where: '저장소의 Actions 탭', action: '실행 결과 확인. 성공하면 Settings > Pages에서 Visit site 누르기', result: '사이트가 열려요' },
+   ]} />
+
+   <ScreenshotPlaceholder caption="Settings > Pages의 게시 소스 선택 화면" officialUrl="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-from-a-branch" />
 
    <Aside type="caution" title="공개하면 누구나 볼 수 있어요">
    GitHub Pages 사이트는 인터넷에 공개돼요. 비공개 저장소여도 사이트는 공개될 수 있으니(플랜에 따라 다름), 공개 전에 `index.html`과 README에 개인정보와 내부 자료가 없는지 확인하세요. 비공개 저장소의 Pages 제공 조건은 GitHub 공식 문서에서 확인하세요.
