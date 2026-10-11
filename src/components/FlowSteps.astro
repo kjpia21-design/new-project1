@@ -1,0 +1,77 @@
+---
+// 단순화한 절차 흐름도. 실제 화면을 흉내 내지 않고 "어디서 → 무엇을 누르면 → 무엇이 나오는지"만 보여 준다.
+// 사용 예:
+// <FlowSteps title="GitHub 연결하기" steps={[
+//   { where: 'claude.ai/code', action: 'GitHub 연결 누르기' },
+//   { where: 'GitHub 권한 화면', action: '저장소 선택 후 승인' },
+// ]} />
+interface Step { where: string; action: string; result?: string }
+interface Props { title?: string; steps: Step[]; officialUrl?: string }
+const { title, steps, officialUrl } = Astro.props;
+---
+<figure class="flow not-content" aria-label={title ?? '절차 흐름도'}>
+  {title && <figcaption class="flow-title">{title}</figcaption>}
+  <ol class="flow-list">
+    {steps.map((s, i) => (
+      <li class="flow-step">
+        <span class="num" aria-hidden="true">{i + 1}</span>
+        <div class="body">
+          <span class="where">{s.where}</span>
+          <span class="action">{s.action}</span>
+          {s.result && <span class="result">→ {s.result}</span>}
+        </div>
+      </li>
+    ))}
+  </ol>
+  <p class="flow-note">
+    단순화한 흐름도예요. 실제 화면은
+    {officialUrl
+      ? <a href={officialUrl} target="_blank" rel="noopener noreferrer">공식 도움말</a>
+      : '공식 도움말'}
+    을 확인하세요.
+  </p>
+</figure>
+
+<style>
+  .flow {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 14px;
+    background: var(--ai-card-tint);
+  }
+  .flow-title { margin: 0 0 0.75rem; font-weight: 700; color: var(--sl-color-white); }
+  .flow-list {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.5rem;
+  }
+  .flow-step {
+    flex: 1 1 10rem; min-width: 0;
+    display: flex; gap: 0.6rem; align-items: flex-start;
+    margin: 0; padding: 0.7rem 0.8rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-top: 3px solid var(--ai-coral);
+    border-radius: 10px;
+    background: var(--sl-color-bg);
+    position: relative;
+  }
+  .flow-step:not(:last-child)::after {
+    content: '→'; position: absolute; right: -0.55rem; top: 50%;
+    transform: translateY(-50%); color: var(--ai-coral); font-weight: 700;
+  }
+  .num {
+    flex: none; width: 1.5rem; height: 1.5rem; border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ai-coral); color: #fff; font-size: var(--sl-text-xs); font-weight: 700;
+  }
+  .body { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
+  .where { font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); overflow-wrap: anywhere; }
+  .action { font-size: var(--sl-text-sm); font-weight: 600; color: var(--sl-color-white); overflow-wrap: anywhere; }
+  .result { font-size: var(--sl-text-xs); color: var(--sl-color-gray-2); overflow-wrap: anywhere; }
+  .flow-note { margin: 0.75rem 0 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); }
+  @media (max-width: 40rem) {
+    .flow-list { flex-direction: column; }
+    .flow-step:not(:last-child)::after { content: '↓'; right: auto; left: 1.1rem; top: auto; bottom: -0.95rem; transform: none; }
+    .flow-list { gap: 0.9rem; }
+  }
+</style>

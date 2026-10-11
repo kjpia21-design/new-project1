@@ -68,7 +68,7 @@
 
 | 담당 | 범위 |
 | --- | --- |
-| S1 | `claude/` 16편. 먼저 `src/components/FlowSteps.astro`를 만든다. |
+| S1 | `claude/` 16편 |
 | S2 | `agents/`, `dev/` |
 | S3 | `chat/`, `coding/` |
 | S4 | `media/`, `automation/` |
