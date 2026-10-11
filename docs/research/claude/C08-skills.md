@@ -34,3 +34,9 @@
 
 ## 6단계 재점검 (2026-10-10)
 - 스킬 도움말(12512180): ZIP 크기 초과가 실패 원인이라고만 하고 수치 없음.
+
+
+## 2026-10-11 업데이트 반영
+- Claude Code changelog(https://code.claude.com/docs/en/changelog 2.1.293, 원문 CHANGELOG.md 확인): claude.ai 스킬 동기화는 세션 미사용 중 약 40분마다(이전 10분). `syncClaudeAiSkills: false`/`syncClaudeAiPlugins: false`로 해제. 클라우드 세션은 `anthropic-skills:<name>`, `anthropic-skills` 이름공간 로컬 스킬은 로드 안 됨(2.1.282). `/skill-doctor`: 안 쓰는 스킬과 컨텍스트 비용 표시.
+- 2026-09-25 플러그인 제출 포털(릴리스 노트).
+- 이전 본문의 "v2.1.273 이상" 문구는 제거(원문에서 최초 도입 버전은 2.1.275 근처로 보이나 확정 못 함).

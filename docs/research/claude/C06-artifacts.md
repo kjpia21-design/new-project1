@@ -30,3 +30,8 @@
 - [What are artifacts and how do I use them?](https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them) — 확인일 2026-10-10
 - [Publish and share artifacts](https://support.claude.com/en/articles/9547008-publish-and-share-artifacts) — 확인일 2026-10-10
 - [Routines](https://code.claude.com/docs/en/routines) — 확인일 2026-10-10
+
+
+## 2026-10-11 업데이트 반영
+- 2026-09-16 릴리스 노트의 어느 대화에서나 디자인·슬라이드·문서 생성 내용을 Summary에 반영. 출처: https://support.claude.com/en/articles/12138966-release-notes
+- 미반영: 실전 팁의 Claude Code 아티팩트 문장(2.1.275 루틴 갱신)은 changelog 원문 항목을 직접 확인하지 못해 그대로 둠.

@@ -33,3 +33,7 @@
 
 ## 6단계 재점검 (2026-10-10)
 - 커넥터 도움말(11176164): 디렉터리 개수 미기재, Notion 전용 단계 없음, 메뉴는 Customize > Connectors 또는 + > Connectors > Manage connectors.
+
+
+## 2026-10-11 업데이트 반영
+- 2026-09-15: Salesforce in Claude 베타. "available in beta on all paid plans for organizations Salesforce approves through its beta sign-up." 출처: https://support.claude.com/en/articles/12138966-release-notes
