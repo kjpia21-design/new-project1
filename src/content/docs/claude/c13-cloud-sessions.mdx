@@ -228,7 +228,7 @@ Trusted의 허용 도메인 전체 목록은 이 문서에서 다루지 않았�
 | `/schedule ...` | 루틴 만들기 |
 | `/compact`, `/context` | 클라우드 세션 안에서 사용 가능 |
 | `/model sonnet` | 모델 변경 (이렇게 인자와 함께 사용) |
-| `/fast on` | 이 세션에서만 fast mode 켜기 (v2.1.271 이상, usage credits 필요) |
+| `/fast on` | 이 세션에서만 fast mode 켜기 (v2.1.271 이상, 추가 사용량(usage credits) 필요) |
 | `gh api repos/{owner}/{repo}/...` | GitHub REST API 호출 (GraphQL을 쓰는 `gh pr`, `gh issue`는 막혀요) |
 | `/clear` | **클라우드 세션에서는 사용 불가** |
 
@@ -268,7 +268,7 @@ CLI에서의 이동은 **단방향**(클라우드 → 터미널)이에요. 터�
 | 사용 가능 플랜 | Pro, Max, Team, Enterprise |
 | 스케줄 최소 간격 | 1시간 |
 | 시간당 한도 | 스케줄 실행은 계정당 100회, Run now/API는 루틴당 30회 등. 이 한도에는 초과 과금(overage)이 없어요. |
-| 사용량 | 대화형 세션처럼 구독 사용량을 소모해요. 한도에 닿았을 때 usage credits가 켜져 있으면 초과분이 종량제로 계속 실행되고, 꺼져 있으면 리셋까지 거부돼요. |
+| 사용량 | 대화형 세션처럼 구독 사용량을 소모해요. 한도에 닿았을 때 추가 사용량(usage credits)이 켜져 있으면 초과분이 종량제로 계속 실행되고, 꺼져 있으면 리셋까지 거부돼요. |
 | 소유 | 개인 계정 소유. 팀원과 공유되지 않아요. |
 | 실행 방식 | 승인 없이 자율 동작해요. 브랜치는 `claude/` 접두사로 push하고, 커밋·PR은 내 GitHub 사용자로 남아요. |
 | 커넥터 | 전체 커넥터가 기본 포함돼요. 필요 없는 것은 제거하세요. |
@@ -315,11 +315,11 @@ CLI에서의 이동은 **단방향**(클라우드 → 터미널)이에요. 터�
 - **비밀은 환경변수에 두지 마세요.** 네트워크 시크릿(Pro/Max)을 쓰세요.
 - **공유 전에 점검하세요.** 세션을 Public으로 공유하기 전에는 자격 증명이 들어 있는지 확인하세요.
 - **세션 안에서도 모델을 바꿀 수 있어요.** `/model sonnet`처럼 인자와 함께 써요.
-- **빠른 응답이 필요하면 fast mode를 써 보세요.** 클라우드 세션에서도 `/fast on`으로 켤 수 있고, 브라우저(claude.ai/code)에서는 메시지 입력창의 모델 메뉴에 스위치가 보여요. 켠 세션에서만 적용되고 기본값으로 저장되지 않아요. Opus 계열에서만 되고, 구독 플랜에서는 usage credits가 켜져 있어야 하며 비용이 더 들어요. Team·Enterprise는 Owner가 먼저 허용해야 해요. 자세한 조건은 [fast mode 문서](https://code.claude.com/docs/en/fast-mode)를 보세요.
+- **빠른 응답이 필요하면 fast mode를 써 보세요.** 클라우드 세션에서도 `/fast on`으로 켤 수 있고, 브라우저(claude.ai/code)에서는 메시지 입력창의 모델 메뉴에 스위치가 보여요. 켠 세션에서만 적용되고 기본값으로 저장되지 않아요. Opus 계열에서만 되고, 구독 플랜에서는 추가 사용량(usage credits)이 켜져 있어야 하며 비용이 더 들어요. Team·Enterprise는 Owner가 먼저 허용해야 해요. 자세한 조건은 [fast mode 문서](https://code.claude.com/docs/en/fast-mode)를 보세요.
 - **GitHub 작업이 막히면 `gh api`를 시켜 보세요.** 클라우드 세션에서는 `gh api`로 GitHub REST API를 부를 수 있어요. 이미지에 GitHub CLI가 없어도 내장 `gh api`가 동작해요(v2.1.288 이상). 토큰은 프록시가 대신 붙여서 따로 로그인하지 않아도 되지만, GraphQL만 있는 기능(예: Projects v2)과 `gh pr`·`gh issue`는 막혀 있어요.
 
 <Aside type="note" title="이 사이트도 이렇게 만들었어요">
-이 사이트는 클라우드 세션에서 만들었어요. 기획과 검토는 Opus가, 구현은 Sonnet 하위 에이전트가 나누어 맡았어요. 이 분담 방법은 [C15. 모델 분담 전략](/new-project1/claude/c15-model-division/)에서 자세히 다뤄요.
+이 사이트는 클라우드 세션에서 만들었어요. 기획과 검토는 Opus가, 구현은 Sonnet 서브에이전트가 나누어 맡았어요. 이 분담 방법은 [C15. 모델 분담 전략](/new-project1/claude/c15-model-division/)에서 자세히 다뤄요.
 </Aside>
 
 ## 다음에 볼 튜토리얼
@@ -328,3 +328,5 @@ CLI에서의 이동은 **단방향**(클라우드 → 터미널)이에요. 터�
 - [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — CLAUDE.md, 슬래시 명령, 훅, 서브에이전트, MCP
 - [C15. 모델 분담 전략](/new-project1/claude/c15-model-division/) — 기획은 Opus, 구현은 Sonnet
 - [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/) — 클라우드 세션이 쓰는 한도 이해하기
+- [클라우드 세션으로 GitHub 저장소 작업 맡기기](/new-project1/coding/08-cloud-github/) — README 개선부터 웹 공개까지 따라 하기
+- [반복 업무를 에이전트에게 맡기기: 스킬, 루틴, 서브에이전트](/new-project1/coding/10-delegate-agents/) — 루틴으로 반복 업무 자동화하기

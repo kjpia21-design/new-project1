@@ -201,7 +201,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | `/init` | CLAUDE.md 생성 |
 | `Shift+Tab` | 권한 모드 순환 |
 | `/effort` | 생각의 깊이(effort) 조절. 고른 값은 **모델별로 저장**돼요(v2.1.251 이상). 슬라이더에서 `s`를 누르면 이 세션에만 적용돼요. `max`는 세션 전용이에요. |
-| `/rate-limit-options` | 사용 한도에 막혔을 때 이어갈 방법을 보여 줘요. 리셋될 때까지 기다렸다 자동 계속, usage credits 추가, 플랜 업그레이드 중에서 골라요. claude.ai 구독이 필요해요. |
+| `/rate-limit-options` | 사용 한도에 막혔을 때 이어갈 방법을 보여 줘요. 리셋될 때까지 기다렸다 자동 계속, 추가 사용량(usage credits) 켜기, 플랜 업그레이드 중에서 골라요. claude.ai 구독이 필요해요. |
 
 ### 표면 사이 이동
 
@@ -287,3 +287,5 @@ tail -200 app.log | claude -p "이 로그에서 오류 원인을 요약해 줘"
 - [C13. Claude Code 클라우드 세션](/new-project1/claude/c13-cloud-sessions/) — 내 컴퓨터를 켜 두지 않고 GitHub 작업을 맡기기
 - [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — CLAUDE.md, 슬래시 명령, 훅, 서브에이전트, MCP
 - [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/) — Claude Code가 쓰는 한도 이해하기
+- [Claude Code 시작하기: 비개발자의 첫 결과물 만들기](/new-project1/coding/06-claude-code-start/) — 비개발자 눈높이로 첫 결과물 만들기
+- [Claude Code 헤드리스 모드와 GitHub Actions 자동화](/new-project1/dev/07-headless-ci/) — 사람 없이 Claude Code 돌리기

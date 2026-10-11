@@ -18,8 +18,6 @@ sources:
     url: "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
   - title: "Manage costs effectively (Claude Code)"
     url: "https://code.claude.com/docs/en/costs"
-  - title: "Model configuration (Claude Code)"
-    url: "https://code.claude.com/docs/en/model-config"
   - title: "Custom subagents"
     url: "https://code.claude.com/docs/en/sub-agents"
   - title: "Models overview"
@@ -199,18 +197,18 @@ Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코
 
    <ScreenshotPlaceholder caption="/usage 화면에서 사용량이 나가는 곳 확인" />
 
-6. **이 사이트는 어떻게 만들었나: 실제 사례**
+7. **이 사이트는 어떻게 만들었나: 실제 사례**
 
-   아래 사례를 읽고, 7단계의 템플릿으로 내 프로젝트용 명세를 써 보세요. (사례는 이 사이트 제작 과정을 있는 그대로 정리한 거예요.)
+   아래 사례를 읽고, 8단계의 템플릿으로 내 프로젝트용 명세를 써 보세요. (사례는 이 사이트 제작 과정을 있는 그대로 정리한 거예요.)
 
-   **구성.** 클라우드 세션 하나에서 **Opus 5.5가 기획**을 맡고, **구현은 Sonnet 5.5 하위 에이전트**가 했어요. 하위 에이전트의 모델은 Agent 도구의 `model` 파라미터로 지정했어요. 위의 결정 순서 1번에 해당해요.
+   **구성.** 클라우드 세션 하나에서 **Opus 5.5가 기획**을 맡고, **구현은 Sonnet 5.5 서브에이전트**가 했어요. 서브에이전트의 모델은 Agent 도구의 `model` 파라미터로 지정했어요. 위의 결정 순서 1번에 해당해요.
 
    **Opus가 한 일.**
 
    1. 질문으로 요구사항을 정리해요.
    2. `docs/PLAN.md`를 써요.
-   3. 단계별 작업 명세를 써요. (`docs/specs/step1-skeleton.md`, `step2-samples.md`, 그리고 지금 쓰는 3단계 명세)
-   4. 하위 에이전트를 실행해요.
+   3. 단계별 작업 명세를 써요. (`docs/specs/step1-skeleton.md`, `step2-samples.md` 같은 단계별 명세 파일)
+   4. 서브에이전트를 실행해요.
    5. 결과를 검토해요. 스크린샷을 확인하고 사실을 대조해요.
    6. 작은 수정은 직접 해요.
    7. 커밋하고 PR을 만들어요.
@@ -230,13 +228,13 @@ Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코
 
    **교훈.**
 
-   - 명세가 구체적일수록 하위 에이전트의 결과가 좋아요.
+   - 명세가 구체적일수록 서브에이전트의 결과가 좋아요.
    - 사실 확인과 최종 판단은 기획 모델이 맡아요.
-   - 하위 에이전트는 커밋하지 않게 하고 기획 쪽에서 모아 커밋하면 충돌이 없어요.
+   - 서브에이전트는 커밋하지 않게 하고 기획 쪽에서 모아 커밋하면 충돌이 없어요.
 
-7. **내 작업 명세 써 보기**
+8. **내 작업 명세 써 보기**
 
-   위 교훈을 반영한 명세 템플릿이에요. 괄호 안을 내 프로젝트에 맞게 바꿔서, 기획을 맡은 Opus 세션에서 하위 에이전트용 명세 파일을 쓰게 하거나 직접 채워 쓰세요.
+   위 교훈을 반영한 명세 템플릿이에요. 괄호 안을 내 프로젝트에 맞게 바꿔서, 기획을 맡은 Opus 세션에서 서브에이전트용 명세 파일을 쓰게 하거나 직접 채워 쓰세요.
 
    <PromptBox label="작업 명세 템플릿 (복사해서 채워 쓰세요)">
    **작업 명세: (작업 이름)**
@@ -302,7 +300,7 @@ Explore 서브에이전트는 구독·Console·게이트웨이에서 `opus` 별�
 - **원인**: 특정 모델 계열의 한도에 닿은 거예요.
 - **해결**: 다른 계열 모델로 `/model` 전환을 하면 작업을 이어갈 수 있어요. 다만 세션·주간 한도는 전 모델 공통이라 모델을 바꿔도 회복되지 않아요.
 
-### 하위 에이전트들이 같은 파일을 서로 고쳐요
+### 서브에이전트들이 같은 파일을 서로 고쳐요
 
 - **원인**: 담당 범위가 겹치게 명세를 줬거나, 각자 커밋했을 가능성이 있어요.
 - **해결**: 명세에 "수정 가능한 파일"을 에이전트별로 나눠 적고, 커밋은 기획 쪽에서만 하게 하세요.
@@ -322,3 +320,4 @@ Explore 서브에이전트는 구독·Console·게이트웨이에서 `opus` 별�
 - [C13. 클라우드 세션](/new-project1/claude/c13-cloud-sessions/) — 이 사이트를 만든 실행 환경
 - [C16. Claude API 시작하기](/new-project1/claude/c16-api/) — 모델 ID와 가격
 - [C1. Claude 한눈에 보기](/new-project1/claude/c01-overview/) — 모델 4종 비교
+- [프롬프트 캐싱·배치·effort로 API 비용 줄이기](/new-project1/dev/02-cost-optimization/) — API에서 비용을 줄이는 다른 방법
