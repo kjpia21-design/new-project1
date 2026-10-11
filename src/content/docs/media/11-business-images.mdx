@@ -42,6 +42,7 @@ import Summary from '../../../components/Summary.astro';
 import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - 업무용 이미지는 **용도(어디에 쓰나), 비율, 분위기, 넣을 글자**를 먼저 정하고 요청하면 훨씬 잘 나와요.
@@ -114,7 +115,13 @@ Gemini 열은 Google 공식 도움말 원문으로, ChatGPT 열은 OpenAI 문서
    블로그 썸네일용 이미지를 만들어 줘. 16:9 가로형. 주제는 사내 교육 세미나 안내야. 밝은 사무실 책상 위에 노트북과 메모지, 커피잔이 있는 장면이고 사람은 나오지 않게 해 줘. 파란색 계열의 깔끔한 분위기. 이미지 안에 글자는 넣지 마. 위쪽 3분의 1은 제목을 올릴 수 있게 비워 줘.
    </PromptBox>
 
-   <ScreenshotPlaceholder caption="Gemini 앱에서 이미지 생성 요청을 보낸 화면" />
+   <ScreenshotPlaceholder caption="Gemini 앱에서 이미지 생성 요청을 보낸 화면" officialUrl="https://support.google.com/gemini/answer/14286560" />
+
+   <FlowSteps title="Gemini에서 이미지 만들고 고치기" officialUrl="https://support.google.com/gemini/answer/14286560" steps={[
+     { where: 'gemini.google.com 사이드바', action: 'Images 누르기', result: '템플릿 고르기 또는 프롬프트 입력' },
+     { where: '만든 이미지', action: '왼쪽 사이드바의 Library에서 열기', result: '아래 Chat으로 이어서 고치기' },
+     { where: '이미지 위에 마우스 올리기', action: 'Download full size 누르기', result: '이미지 저장' },
+   ]} />
 
 3. **대화로 고치기**
 
