@@ -64,7 +64,7 @@
 - 구현: `src/components/diagrams/Flow<Name>.astro`
   - 기존 도식 컴포넌트의 스타일과 CSS 변수를 따른다.
   - 다크 모드와 375px 화면을 지원해야 한다. 좁은 화면에서는 세로로 쌓는다.
-  - 공통 `FlowSteps.astro` 컴포넌트를 S1이 먼저 만든다(steps 배열 prop). 다른 담당은 이것을 재사용한다. 아직 없으면 S1에게 맞추지 말고, 자기 범위 안에서 같은 이름의 컴포넌트를 만들지 않도록 기다리거나 보고한다.
+  - 공통 컴포넌트 `src/components/FlowSteps.astro`(기획 담당이 만들어 둠, 사용법은 파일 상단 주석)를 재사용한다. 이 파일은 수정하지 않는다. 별도 컴포넌트가 꼭 필요할 때만 `src/components/diagrams/Flow<Name>.astro`를 새로 만든다.
 
 | 담당 | 범위 |
 | --- | --- |
