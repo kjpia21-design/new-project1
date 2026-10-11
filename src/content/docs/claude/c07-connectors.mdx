@@ -35,6 +35,7 @@ import Summary from '../../../components/Summary.astro';
 import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - 커넥터는 **Claude가 내 앱·서비스에 접근해 데이터를 가져오고 작업을 하게 하는 연결**이에요. Claude는 각 서비스에서 **내 권한을 그대로 상속**해서, 내가 볼 수 없는 것은 볼 수 없어요.
@@ -104,7 +105,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
    채팅 입력창의 **+** > Connectors에서 Google Drive, Gmail, Google Calendar 중 고르고 Google 계정으로 로그인해 동의해요. 디렉터리(Customize > Connectors)에서 Connect/Install을 눌러 인증하고 권한을 조정해도 돼요.
 
-   <ScreenshotPlaceholder caption="입력창의 + > Connectors에서 Google 커넥터를 고르는 화면" />
+   <ScreenshotPlaceholder caption="입력창의 + > Connectors에서 Google 커넥터를 고르는 화면" officialUrl="https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities" />
 
 3. **대화에서 켜고 읽기부터 시켜 보기**
 
@@ -126,7 +127,13 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    초안 단계에서 멈추게 요청하면 내용을 읽고 직접 보낼 수 있어요. 승인 창을 습관적으로 누르지 마세요.
    </Aside>
 
-   <ScreenshotPlaceholder caption="메일 전송 전에 나타나는 승인(approve) 창" />
+   <ScreenshotPlaceholder caption="메일 전송 전에 나타나는 승인(approve) 창" officialUrl="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" />
+
+   <FlowSteps title="커스텀 커넥터(원격 MCP 서버) 추가하는 길" officialUrl="https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp" steps={[
+     { where: 'Customize > Connectors', action: '+ Add 누르기' },
+     { where: 'Add 메뉴', action: 'Add custom connector 고르기' },
+     { where: '커넥터 입력', action: '이름과 서버 URL 입력, 인증 방식 정하기', result: '로그인·권한 승인은 화면 안내를 따르세요' },
+   ]} />
 
 5. **(선택) Notion 등 원격 MCP 서버 연결하기**
 

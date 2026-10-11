@@ -102,7 +102,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    /init
    ```
 
-   <ScreenshotPlaceholder caption="/init 실행 후 생성된 CLAUDE.md" />
+   <ScreenshotPlaceholder caption="/init 실행 후 생성된 CLAUDE.md" officialUrl="https://code.claude.com/docs/en/memory" />
 
    파일은 **200줄 미만**으로 유지하는 것을 권장해요. 내용은 이런 식으로 짧고 구체적으로 적어요. (아래는 예시예요.)
 
@@ -182,7 +182,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
    세션에서 `/hooks`를 입력하면 등록된 훅을 볼 수 있어요. 훅이 성공해도 대화창에는 아무것도 표시되지 않아서, 파일이 실제로 포맷됐는지로 확인해요.
 
-   <ScreenshotPlaceholder caption="/hooks로 확인한 PostToolUse 훅" />
+   <ScreenshotPlaceholder caption="/hooks로 확인한 PostToolUse 훅" officialUrl="https://code.claude.com/docs/en/hooks-guide" />
 
    무언가를 **막고** 싶다면 PreToolUse 훅 스크립트가 이유를 stderr로 출력하고 `exit 2`로 끝나게 하면 돼요. exit 2는 동작을 차단하고, 이유는 이벤트에 따라 Claude에게 피드백으로 전달돼요.
 

@@ -31,6 +31,7 @@ import Summary from '../../../components/Summary.astro';
 import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
 import CloudFlowDiagram from '../../../components/diagrams/CloudFlowDiagram.astro';
 
 <Summary>
@@ -98,7 +99,7 @@ GitHub 자격 증명은 Anthropic 서버에 암호화되어 보관되고 **VM �
 
    브라우저에서 claude.ai/code에 접속해요. 처음이면 GitHub 연결을 안내해 줘요. Claude GitHub App을 승인하면 돼요.
 
-   <ScreenshotPlaceholder caption="claude.ai/code에서 GitHub 연결(Claude GitHub App 승인) 화면" />
+   <ScreenshotPlaceholder caption="claude.ai/code에서 GitHub 연결(Claude GitHub App 승인) 화면" officialUrl="https://code.claude.com/docs/en/claude-code-on-the-web" />
 
    터미널에서 하고 싶다면 `/web-setup`을 실행하세요. 로컬 `gh` 토큰을 계정에 전송하는 방식이라 GitHub App을 설치하지 않아도 돼요.
 
@@ -114,7 +115,13 @@ GitHub 자격 증명은 Anthropic 서버에 암호화되어 보관되고 **VM �
    이 저장소의 README.md를 읽고, 처음 보는 사람을 위해 설치 방법과 실행 방법 섹션을 더 알기 쉽게 고쳐 주세요. 코드는 건드리지 말고, 바꾼 내용을 마지막에 요약해 주세요.
    </PromptBox>
 
-   <ScreenshotPlaceholder caption="claude.ai/code에서 저장소를 고르고 작업을 입력하는 화면" />
+   <ScreenshotPlaceholder caption="claude.ai/code에서 저장소를 고르고 작업을 입력하는 화면" officialUrl="https://code.claude.com/docs/en/claude-code-on-the-web" />
+
+   <FlowSteps title="클라우드 세션 처음 시작하는 길" officialUrl="https://code.claude.com/docs/en/claude-code-on-the-web" steps={[
+     { where: 'claude.ai/code', action: 'GitHub 연결 안내 따라가기' },
+     { where: 'Claude GitHub App 화면', action: '승인하기' },
+     { where: 'claude.ai/code', action: '저장소 선택 후 작업 입력', result: '세션이 클라우드에서 실행돼요' },
+   ]} />
 
 3. **터미널에서 시작하기 (선택)**
 
@@ -137,7 +144,7 @@ GitHub 자격 증명은 Anthropic 서버에 암호화되어 보관되고 **VM �
 
    작업이 끝나면 변경된 diff를 검토해요. +/- 표시를 눌러 변경 내용을 열고, 필요하면 인라인 코멘트를 남길 수 있어요. 문제가 없으면 claude.ai/code에서 PR을 만들어요.
 
-   <ScreenshotPlaceholder caption="세션 결과의 diff 보기와 PR 만들기 버튼" />
+   <ScreenshotPlaceholder caption="세션 결과의 diff 보기와 PR 만들기 버튼" officialUrl="https://code.claude.com/docs/en/claude-code-on-the-web" />
 
    <Aside type="tip" title="세션 공유">
    Team/Enterprise는 비공개(Private)와 팀 공개(Team) 중에서, Max/Pro는 비공개(Private)와 공개(Public) 중에서 고를 수 있어요. 공개(Public)로 하면 claude.ai에 로그인한 모든 사용자가 볼 수 있으니, 공유하기 전에 대화에 자격 증명이 들어 있지 않은지 꼭 확인하세요.
@@ -162,7 +169,7 @@ GitHub 자격 증명은 Anthropic 서버에 암호화되어 보관되고 **VM �
    - **설정 스크립트**: 세션 시작 전에 실행돼요. 약 5분 안에 끝나야 파일시스템 스냅샷이 캐시되어 다음 세션부터 빨라져요.
    - **환경변수**: 키-값을 저장해요. 단, 환경을 쓰는 사람은 누구나 읽을 수 있어서 **비밀을 저장하면 안 돼요.**
 
-   <ScreenshotPlaceholder caption="환경 설정 화면: 네트워크 접근 수준, 환경변수, 설정 스크립트" />
+   <ScreenshotPlaceholder caption="환경 설정 화면: 네트워크 접근 수준, 환경변수, 설정 스크립트" officialUrl="https://code.claude.com/docs/en/cloud-environments" />
 
    <Aside type="caution" title="비밀 값은 어디에 두나요?">
    환경변수와 설정 스크립트는 환경을 쓰는 누구나 읽을 수 있어요. Pro/Max는 **네트워크 시크릿**을 쓸 수 있어요. 프록시가 요청에 키를 붙여 주기 때문에 세션은 값 자체를 보지 못해요. Team/Enterprise는 아직 쓸 수 없어요.
@@ -182,7 +189,7 @@ GitHub 자격 증명은 Anthropic 서버에 암호화되어 보관되고 **VM �
 
    웹에서는 새 루틴(New routine)을 눌러 이름, 프롬프트, 저장소, 환경, 트리거를 정하고 만들기(Create)를 눌러요.
 
-   <ScreenshotPlaceholder caption="claude.ai/code/routines의 새 루틴(New routine) 만들기 화면" />
+   <ScreenshotPlaceholder caption="claude.ai/code/routines의 새 루틴(New routine) 만들기 화면" officialUrl="https://code.claude.com/docs/en/routines" />
 
    <PromptBox>
    이 저장소에서 열려 있는 PR을 확인해 주세요. 각 PR마다 변경 내용을 두세 줄로 요약하고, 리뷰할 때 특히 봐야 할 부분을 한 가지씩 알려 주세요. 코드는 수정하지 마세요.
