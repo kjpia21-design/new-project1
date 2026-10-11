@@ -1,0 +1,633 @@
+---
+title: "Claude Agent SDK로 나만의 에이전트 만들기"
+description: "Claude Code와 같은 에이전트 루프를 Python·TypeScript 코드로 불러 쓰는 Agent SDK로, 읽기 전용 에이전트부터 사용자 정의 도구, 권한 잠금, 서브에이전트, 세션 이어가기까지 만들어 보는 실습"
+sidebar:
+  label: "3. Agent SDK로 에이전트 만들기"
+level: advanced
+category: dev
+tools: ["Claude Agent SDK", "Claude API"]
+duration: "60분"
+prerequisites:
+  - "C14. Claude Code 핵심 기능 (서브에이전트, 훅, 권한 모드 개념)"
+  - "C16. Claude API 시작하기 (API 키 발급, ANTHROPIC_API_KEY 설정)"
+  - "Python 3.10 이상 (또는 Node.js 18 이상)과 터미널"
+lastVerified: 2026-10-11
+sources:
+  - title: "Agent SDK overview"
+    url: "https://code.claude.com/docs/en/agent-sdk/overview"
+  - title: "Agent SDK quickstart"
+    url: "https://code.claude.com/docs/en/agent-sdk/quickstart"
+  - title: "Agent SDK reference - Python"
+    url: "https://code.claude.com/docs/en/agent-sdk/python"
+  - title: "Give Claude custom tools"
+    url: "https://code.claude.com/docs/en/agent-sdk/custom-tools"
+  - title: "Configure permissions"
+    url: "https://code.claude.com/docs/en/agent-sdk/permissions"
+  - title: "Intercept and control agent behavior with hooks"
+    url: "https://code.claude.com/docs/en/agent-sdk/hooks"
+  - title: "Subagents in the SDK"
+    url: "https://code.claude.com/docs/en/agent-sdk/subagents"
+  - title: "Work with sessions"
+    url: "https://code.claude.com/docs/en/agent-sdk/sessions"
+  - title: "Use Claude Code features in the SDK"
+    url: "https://code.claude.com/docs/en/agent-sdk/claude-code-features"
+  - title: "Hosting the Agent SDK"
+    url: "https://code.claude.com/docs/en/agent-sdk/hosting"
+  - title: "Models overview (모델 ID와 가격)"
+    url: "https://platform.claude.com/docs/en/about-claude/models/overview"
+  - title: "claude-agent-sdk (PyPI)"
+    url: "https://pypi.org/project/claude-agent-sdk/"
+  - title: "@anthropic-ai/claude-agent-sdk (npm)"
+    url: "https://www.npmjs.com/package/@anthropic-ai/claude-agent-sdk"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- **Agent SDK는 Claude Code를 라이브러리로 쓰는 거예요.** 같은 도구(파일 읽기·수정, Bash, 검색), 에이전트 루프, 권한, 훅, 서브에이전트, 세션을 Python·TypeScript 코드에서 불러요.
+- 패키지는 Python `claude-agent-sdk`, TypeScript `@anthropic-ai/claude-agent-sdk`예요. 둘 다 Claude Code 실행 파일을 함께 들고 있어서 대부분 따로 설치하지 않아도 돼요.
+- 에이전트는 **내 컴퓨터나 서버의 프로세스**에서 돌아요. 호스팅까지 맡기고 싶다면 [Managed Agents](/new-project1/dev/04-managed-agents/)를 보세요.
+- `allowed_tools`는 "묻지 않고 허용할 목록"이지 "이것만 쓰라"는 제한이 아니에요. 진짜로 막으려면 `disallowed_tools`, `permission_mode="dontAsk"`, 훅을 쓰세요.
+- 에이전트 루프는 비용이 쌓여요. 항상 `max_turns`와 `max_budget_usd`를 거세요.
+</Summary>
+
+예제는 공식 문서 기준이에요. 2026-10-11에 문법을 검증했고, 설치한 SDK(Python 0.2.165, TypeScript 0.3.296)에서 import와 옵션 이름, 타입이 맞는지까지 확인했어요. 실제 모델 호출은 하지 않았어요.
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- Agent SDK를 설치하고, 파일을 읽어 버그를 찾는 읽기 전용 에이전트를 만들 수 있어요.
+- 내 업무 함수(예: 재고 조회)를 Claude가 부르는 도구로 붙일 수 있어요.
+- 허용·거부 규칙, 권한 모드, 훅으로 에이전트가 할 수 있는 일을 좁힐 수 있어요.
+- 서브에이전트로 일을 나누고, 세션 ID로 대화를 이어 갈 수 있어요.
+
+## 먼저 알아둘 개념
+
+C14에서 본 서브에이전트, 훅, 권한 모드는 Claude Code 안에서 설정 파일로 썼어요. Agent SDK는 그 기능을 **코드로** 쓰게 해 줘요.
+
+### Claude를 코드에서 부르는 네 가지 방법
+
+공식 개요 문서의 비교를 정리했어요.
+
+| 쓰고 싶은 것 | 고를 것 | 누가 루프를 돌리나요 |
+| --- | --- | --- |
+| 내 앱 안에 Claude Code 같은 에이전트를 넣기 | **Agent SDK** | 내 프로세스(번들된 Claude Code 실행 파일을 하위 프로세스로 띄워요) |
+| 터미널에서 대화하며 개발하기 | Claude Code CLI ([C12](/new-project1/claude/c12-claude-code-overview/), [C14](/new-project1/claude/c14-claude-code-features/)) | 내 컴퓨터 |
+| API를 직접 부르고 도구 루프를 내가 짜기 | Client SDK ([C16](/new-project1/claude/c16-api/), [도구 사용](/new-project1/dev/01-tool-use/)) | 내 코드 (tool runner를 쓰면 SDK가 도와요) |
+| 호스팅된 에이전트를 API로 부리기 | [Managed Agents](/new-project1/dev/04-managed-agents/) | Anthropic 서버 |
+
+다른 언어에서 같은 루프를 쓰고 싶다면 Claude Code를 `-p` 옵션과 `--output-format json`으로 하위 프로세스로 실행하는 방법이 있어요([07편](/new-project1/dev/07-headless-ci/)).
+
+### Claude Code와의 관계
+
+- Agent SDK는 Claude Code 실행 파일을 하위 프로세스로 띄워 표준 입출력으로 대화해요. 세션 하나가 프로세스 하나예요.
+- **설정을 생략하면 Claude Code CLI와 똑같이** 사용자·프로젝트·로컬 설정을 읽어요. `CLAUDE.md`, `.claude/` 폴더의 스킬·서브에이전트·명령, 설정 파일의 훅이 자동으로 적용돼요. 코드만으로 깨끗하게 시작하려면 `setting_sources=[]`를 주세요.
+- 대화 기록(세션)은 디스크의 `~/.claude/projects/` 아래에 JSONL 파일로 저장돼요.
+
+<Aside type="caution" title="내 제품에 claude.ai 로그인을 붙이면 안 돼요">
+공식 문서에 따르면, 사전에 승인받지 않은 제3자 개발자는 Agent SDK로 만든 제품에서 claude.ai 로그인이나 claude.ai 사용량 한도를 제공할 수 없어요. 이 튜토리얼처럼 **API 키**(또는 Bedrock·Vertex 등 클라우드 자격 증명)로 인증하세요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  'SDK를 설치하고 ANTHROPIC_API_KEY를 환경변수로 설정했어요',
+  '읽기 전용 에이전트를 만들고 max_turns, max_budget_usd를 걸어 실행했어요',
+  '재고 조회 같은 사용자 정의 도구를 붙였어요',
+  '허용·거부 규칙과 훅으로 위험한 명령을 막았어요',
+  '서브에이전트를 정의하고 개수·깊이·비용 상한을 걸었어요',
+  'session_id로 이전 대화를 이어 갔어요',
+]} />
+
+<Steps>
+
+1. **SDK 설치와 키 설정**
+
+   Python 3.10 이상이 필요해요(TypeScript는 Node.js 18 이상). 가상환경에서 설치해요.
+
+   ```bash
+   mkdir my-agent && cd my-agent
+   python3 -m venv .venv && source .venv/bin/activate
+   pip install claude-agent-sdk
+   export ANTHROPIC_API_KEY="your-api-key-here"
+   ```
+
+   TypeScript라면 이렇게 해요.
+
+   ```bash
+   npm init -y && npm pkg set type=module
+   npm install @anthropic-ai/claude-agent-sdk zod
+   npm install --save-dev tsx typescript
+   ```
+
+   - 키는 코드에 적지 말고 환경변수로만 넣으세요([C16](/new-project1/claude/c16-api/)). SDK는 `.env` 파일을 자동으로 읽지 않아요. 파일에 보관한다면 직접 불러오세요.
+   - Bedrock, Vertex, Foundry를 쓴다면 `CLAUDE_CODE_USE_BEDROCK=1` 같은 환경변수와 해당 클라우드 자격 증명을 쓰는 방법도 있어요.
+   - Max·Team 플랜에 포함된 월 API 크레딧은 Agent SDK에도 쓸 수 있어요([C2](/new-project1/claude/c02-plans-limits/)).
+
+2. **첫 에이전트: 읽기 전용 코드 검토자**
+
+   파일을 읽고 찾기만 하는 에이전트예요. 파일을 고치거나 명령을 실행하는 도구는 허용하지 않고, 승인이 필요한 호출은 물어보지 않고 거부해요(`dontAsk`). 두 가지 상한을 꼭 걸어요.
+
+   - `max_turns`: 도구를 쓰는 왕복 횟수 상한이에요.
+   - `max_budget_usd`: SDK가 계산한 **예상 비용**이 이 값에 닿으면 멈춰요. 추정치라서 조금 넘을 수 있으니 여유를 두세요.
+
+   `review_agent.py`로 저장해요.
+
+   ```python
+   import asyncio
+
+   from claude_agent_sdk import (
+       AssistantMessage,
+       ClaudeAgentOptions,
+       ResultMessage,
+       TextBlock,
+       ToolUseBlock,
+       query,
+   )
+
+
+   async def main() -> None:
+       options = ClaudeAgentOptions(
+           model="claude-sonnet-5-5",
+           allowed_tools=["Read", "Glob", "Grep"],  # 묻지 않고 자동 승인할 도구
+           permission_mode="dontAsk",  # 그 밖에 승인이 필요한 호출은 모두 거부
+           max_turns=15,  # 도구를 쓰는 왕복 횟수 상한
+           max_budget_usd=1.0,  # 예상 비용이 1달러에 닿으면 중단
+           cwd=".",
+       )
+
+       async for message in query(
+           prompt="이 폴더의 Python 파일을 훑어보고, 충돌(crash)할 수 있는 버그를 3개 이내로 정리해 줘. 파일은 고치지 마.",
+           options=options,
+       ):
+           if isinstance(message, AssistantMessage):
+               for block in message.content:
+                   if isinstance(block, TextBlock):
+                       print(block.text)
+                   elif isinstance(block, ToolUseBlock):
+                       print(f"[도구 호출] {block.name}")
+           elif isinstance(message, ResultMessage):
+               cost = message.total_cost_usd
+               print(f"끝: {message.subtype}, 턴 {message.num_turns}, 예상 비용 {cost}")
+
+
+   asyncio.run(main())
+   ```
+
+   ```bash
+   python review_agent.py
+   ```
+
+   `query()`는 비동기 이터레이터예요. 에이전트가 생각하고, 도구를 부르고, 결과를 보는 동안 메시지가 하나씩 흘러나와요. 마지막 `ResultMessage`에 끝난 이유(`subtype`)와 예상 비용(`total_cost_usd`)이 들어 있어요.
+
+   | `subtype` | 뜻 |
+   | --- | --- |
+   | `success` | 정상 종료. 답은 `message.result`에 있어요. |
+   | `error_max_turns` | `max_turns`에 닿았어요. |
+   | `error_max_budget_usd` | `max_budget_usd`에 닿았어요. |
+   | `error_during_execution` | 실행 중 오류예요. |
+
+   <Aside type="note" title="오류 결과 뒤에 예외가 나요">
+   단발 `query()`는 오류 결과를 내보낸 뒤 예외를 던져요. 상한에 닿은 경우를 정상 흐름으로 다루려면 반복문을 `try/except`로 감싸세요. 공식 예제도 그렇게 해요.
+   </Aside>
+
+   <details>
+   <summary>같은 에이전트의 TypeScript 버전</summary>
+
+   ```typescript
+   import { query } from "@anthropic-ai/claude-agent-sdk";
+
+   for await (const message of query({
+     prompt:
+       "이 폴더의 코드를 훑어보고 충돌할 수 있는 버그를 3개 이내로 정리해 줘. 파일은 고치지 마.",
+     options: {
+       model: "claude-sonnet-5-5",
+       allowedTools: ["Read", "Glob", "Grep"], // 묻지 않고 자동 승인할 도구
+       permissionMode: "dontAsk", // 그 밖에 승인이 필요한 호출은 모두 거부
+       maxTurns: 15, // 도구를 쓰는 왕복 횟수 상한
+       maxBudgetUsd: 1.0, // 예상 비용이 1달러에 닿으면 중단
+     },
+   })) {
+     if (message.type === "assistant") {
+       for (const block of message.message.content) {
+         if (block.type === "text") console.log(block.text);
+         else if (block.type === "tool_use") console.log(`[도구 호출] ${block.name}`);
+       }
+     } else if (message.type === "result") {
+       console.log(`끝: ${message.subtype}, 예상 비용 ${message.total_cost_usd}`);
+     }
+   }
+   ```
+
+   ```bash
+   npx tsx review-agent.ts
+   ```
+
+   </details>
+
+   <PromptBox>
+   Agent SDK(Python)로 읽기 전용 코드 검토 에이전트를 만들어 주세요. 허용 도구는 Read, Glob, Grep만, permission_mode는 dontAsk, max_turns와 max_budget_usd 상한을 꼭 걸고, API 키는 환경변수에서만 읽게 해 주세요.
+   </PromptBox>
+
+3. **내 도구 붙이기: 재고 조회**
+
+   Claude가 부를 수 있는 함수를 직접 만들 수 있어요. 도구를 담은 작은 MCP 서버를 **같은 프로세스 안에** 만드는 방식이라 따로 서버를 띄울 필요가 없어요.
+
+   - `@tool(이름, 설명, 입력 스키마)`로 함수를 도구로 만들어요. 설명은 Claude가 "언제 부를지" 판단하는 근거예요.
+   - 서버 키가 `inventory`, 도구 이름이 `get_stock`이면 Claude가 보는 이름은 `mcp__inventory__get_stock`이에요. 이 이름을 `allowed_tools`에 넣으면 묻지 않고 실행돼요.
+   - `tools=[]`로 내장 도구(Bash, Edit 등)를 모두 빼요. 이 에이전트는 재고 조회만 할 수 있어요.
+   - 실패는 `is_error: True`로 돌려주면 Claude가 내용을 읽고 사용자에게 설명해요.
+
+   `stock_agent.py`로 저장해요. 재고 데이터는 예시용 가짜 값이에요.
+
+   ```python
+   import asyncio
+   from typing import Any
+
+   from claude_agent_sdk import (
+       ClaudeAgentOptions,
+       ResultMessage,
+       create_sdk_mcp_server,
+       query,
+       tool,
+   )
+
+   # 예시용 가짜 재고 데이터예요. 실제로는 사내 DB나 API를 읽게 바꾸세요.
+   STOCK = {"A-100": 12, "B-200": 0, "C-300": 45}
+
+
+   @tool(
+       "get_stock",
+       "상품 코드로 현재 재고 수량을 조회한다. 읽기 전용이다.",
+       {"sku": str},
+   )
+   async def get_stock(args: dict[str, Any]) -> dict[str, Any]:
+       sku = str(args["sku"]).strip().upper()
+       if sku not in STOCK:
+           return {
+               "content": [{"type": "text", "text": f"알 수 없는 상품 코드: {sku}"}],
+               "is_error": True,
+           }
+       return {"content": [{"type": "text", "text": f"{sku} 재고: {STOCK[sku]}개"}]}
+
+
+   inventory = create_sdk_mcp_server(name="inventory", version="1.0.0", tools=[get_stock])
+
+
+   async def main() -> None:
+       options = ClaudeAgentOptions(
+           mcp_servers={"inventory": inventory},
+           tools=[],  # 내장 도구(Bash, Edit 등)를 모두 빼고
+           allowed_tools=["mcp__inventory__get_stock"],  # 이 도구만 자동 승인
+           permission_mode="dontAsk",
+           max_turns=5,
+           max_budget_usd=0.5,
+       )
+       async for message in query(
+           prompt="A-100과 B-200 재고를 알려 주고, 품절인 상품이 있으면 알려 줘.",
+           options=options,
+       ):
+           if isinstance(message, ResultMessage) and message.subtype == "success":
+               print(message.result)
+
+
+   asyncio.run(main())
+   ```
+
+   <details>
+   <summary>TypeScript 버전 (zod로 입력 스키마)</summary>
+
+   ```typescript
+   import { query, tool, createSdkMcpServer } from "@anthropic-ai/claude-agent-sdk";
+   import { z } from "zod";
+
+   // 예시용 가짜 재고 데이터예요. 실제로는 사내 DB나 API를 읽게 바꾸세요.
+   const STOCK: Record<string, number> = { "A-100": 12, "B-200": 0, "C-300": 45 };
+
+   const getStock = tool(
+     "get_stock",
+     "상품 코드로 현재 재고 수량을 조회한다. 읽기 전용이다.",
+     { sku: z.string().describe("상품 코드, 예: A-100") },
+     async (args) => {
+       const sku = args.sku.trim().toUpperCase();
+       if (!(sku in STOCK)) {
+         return {
+           content: [{ type: "text" as const, text: `알 수 없는 상품 코드: ${sku}` }],
+           isError: true,
+         };
+       }
+       return { content: [{ type: "text" as const, text: `${sku} 재고: ${STOCK[sku]}개` }] };
+     },
+     { annotations: { readOnlyHint: true } },
+   );
+
+   const inventory = createSdkMcpServer({ name: "inventory", version: "1.0.0", tools: [getStock] });
+
+   for await (const message of query({
+     prompt: "A-100과 B-200 재고를 알려 주고, 품절인 상품이 있으면 알려 줘.",
+     options: {
+       mcpServers: { inventory },
+       tools: [], // 내장 도구를 모두 빼고
+       allowedTools: ["mcp__inventory__get_stock"], // 이 도구만 자동 승인
+       permissionMode: "dontAsk",
+       maxTurns: 5,
+       maxBudgetUsd: 0.5,
+     },
+   })) {
+     if (message.type === "result" && message.subtype === "success") {
+       console.log(message.result);
+     }
+   }
+   ```
+
+   </details>
+
+   <Aside type="danger" title="도구는 에이전트가 쓰는 '손'이에요">
+   도구가 DB를 지우거나 메일을 보낼 수 있다면, 문서나 웹 페이지에 숨은 지시(프롬프트 인젝션)가 그 동작을 일으킬 수 있어요. 도구는 읽기 전용부터 시작하고, 쓰기 도구는 입력을 직접 검증하고, API 키 같은 비밀 값은 도구 코드 안에서 환경변수로 읽어 결과에 섞이지 않게 하세요. 읽기 전용 도구에 `readOnlyHint`를 달면 Claude가 병렬로 부르기 쉬워지지만, 힌트는 안내일 뿐 강제가 아니에요.
+   </Aside>
+
+4. **권한 잠그기: 규칙과 훅**
+
+   쓰기·실행 도구가 필요하면 네 겹으로 좁혀요. SDK는 호출마다 **훅 → 거부 규칙 → ask 규칙 → 권한 모드 → 허용 규칙 → `canUseTool` 콜백** 순서로 확인해요.
+
+   - `disallowed_tools=["Bash"]`처럼 이름만 쓰면 도구가 Claude의 눈앞에서 사라져요. `"Bash(rm *)"`처럼 범위 규칙을 쓰면 도구는 남고 맞는 호출만 어떤 모드에서도 거부돼요.
+   - `PreToolUse` 훅은 도구 실행 **직전**에 내 코드를 불러요. `permissionDecision: "deny"`를 돌려주면 차단되고, 이유는 Claude에게 전달돼요. `{}`를 돌려주면 그대로 진행해요.
+   - 훅의 `matcher`는 도구 이름만 비교해요. 파일 경로 같은 인자는 콜백 안에서 확인하세요.
+
+   `guard_agent.py`로 저장해요.
+
+   ```python
+   import asyncio
+   from typing import Any
+
+   from claude_agent_sdk import ClaudeAgentOptions, HookMatcher, ResultMessage, query
+
+
+   async def block_risky(
+       input_data: dict[str, Any], tool_use_id: str | None, context: Any
+   ) -> dict[str, Any]:
+       """Bash 명령에 위험한 패턴이 있으면 실행 전에 막는다."""
+       command = input_data.get("tool_input", {}).get("command", "")
+       if any(word in command for word in ("rm -rf", "git push", "curl ")):
+           return {
+               "hookSpecificOutput": {
+                   "hookEventName": "PreToolUse",
+                   "permissionDecision": "deny",
+                   "permissionDecisionReason": "위험하거나 외부로 나가는 명령은 허용되지 않아요.",
+               }
+           }
+       return {}  # 빈 딕셔너리: 그대로 진행
+
+
+   async def main() -> None:
+       options = ClaudeAgentOptions(
+           allowed_tools=["Read", "Edit", "Bash"],
+           disallowed_tools=["Bash(git push *)", "Bash(rm *)"],  # 규칙으로 한 번 더 막기
+           permission_mode="acceptEdits",
+           hooks={"PreToolUse": [HookMatcher(matcher="Bash", hooks=[block_risky])]},
+           max_turns=20,
+           max_budget_usd=2.0,
+       )
+       async for message in query(prompt="테스트를 실행하고 실패하는 것을 고쳐 줘.", options=options):
+           if isinstance(message, ResultMessage):
+               print(message.subtype, message.total_cost_usd)
+
+
+   asyncio.run(main())
+   ```
+
+   <Aside type="danger" title="bypassPermissions는 마지막 수단이에요">
+   `permission_mode="bypassPermissions"`는 대부분의 승인 확인을 건너뛰어요. `allowed_tools`로 도구를 나열해도 이 모드를 제한하지 못해요. 모든 도구가 승인돼요. 막고 싶은 건 `disallowed_tools`나 훅으로 막아야 하고, 쓴다면 컨테이너 같은 격리 환경 안에서만 쓰세요. 서브에이전트는 부모가 이 모드일 때만 같은 모드를 물려받아요.
+   </Aside>
+
+   <Aside type="note" title="모드를 생략하면 auto 모드가 될 수 있어요">
+   공식 문서에 따르면 `permission_mode`를 생략하면 설정 파일의 `permissions.defaultMode`를, 없으면 내장 기본값(auto 모드일 수 있어요)을 써요. 넓은 허용 규칙(예: 도구 이름만 쓴 `Bash`)에 의존하는 앱이라면 `default`나 `dontAsk`를 **명시**하세요.
+   </Aside>
+
+5. **서브에이전트로 일 나누기**
+
+   서브에이전트는 자기 컨텍스트와 도구 권한을 가진 보조 에이전트예요(개념은 [C14](/new-project1/claude/c14-claude-code-features/)). 부모에게는 최종 보고만 돌아와서 부모의 컨텍스트가 덜 쌓여요.
+
+   - `agents={...}`에 `AgentDefinition`을 넣어요. `description`이 "언제 이 서브에이전트를 부를지"를 정해요.
+   - 부모의 `allowed_tools`에 **`"Agent"`가 있어야** 서브에이전트를 부를 수 있어요.
+   - `model`은 `"sonnet"`, `"opus"`, `"haiku"` 같은 별칭이나 전체 모델 ID예요. 가벼운 검토는 싼 모델로 보내면 비용이 줄어요([C15](/new-project1/claude/c15-model-division/)).
+   - `AgentDefinition`의 필드 이름은 일부가 camelCase 그대로예요(`disallowedTools`, `maxTurns`, `permissionMode`). snake_case로 쓰면 `TypeError`가 나요.
+   - 서브에이전트는 부모의 대화와 시스템 프롬프트를 보지 못해요. 필요한 파일 경로나 결정은 Agent 도구에 넘기는 프롬프트에 담겨야 해요.
+
+   `subagent_agent.py`로 저장해요.
+
+   ```python
+   import asyncio
+
+   from claude_agent_sdk import AgentDefinition, ClaudeAgentOptions, ResultMessage, query
+
+
+   async def main() -> None:
+       options = ClaudeAgentOptions(
+           model="claude-opus-5-5",
+           allowed_tools=["Read", "Grep", "Glob", "Agent"],  # "Agent"가 있어야 서브에이전트를 부를 수 있어요
+           permission_mode="dontAsk",
+           agents={
+               "security-reviewer": AgentDefinition(
+                   description="보안 취약점을 찾는 읽기 전용 검토자. 인증·입력 검증 검토에 쓴다.",
+                   prompt="당신은 보안 검토자입니다. 코드를 읽고 취약점만 짧게 보고하세요. 파일은 수정하지 않습니다.",
+                   tools=["Read", "Grep", "Glob"],
+                   model="sonnet",
+               ),
+               "test-gap-finder": AgentDefinition(
+                   description="테스트가 빠진 함수를 찾는 검토자.",
+                   prompt="당신은 테스트 커버리지 검토자입니다. 테스트가 없는 중요한 함수를 목록으로 보고하세요.",
+                   tools=["Read", "Grep", "Glob"],
+                   model="haiku",
+               ),
+           },
+           env={
+               "CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH": "1",  # 서브에이전트가 또 서브에이전트를 못 만들게
+               "CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS": "3",
+           },
+           max_turns=30,
+           max_budget_usd=3.0,
+       )
+       async for message in query(
+           prompt="security-reviewer와 test-gap-finder를 각각 써서 이 저장소를 검토하고 한 페이지로 요약해 줘.",
+           options=options,
+       ):
+           if isinstance(message, ResultMessage) and message.subtype == "success":
+               print(message.result)
+
+
+   asyncio.run(main())
+   ```
+
+   <Aside type="caution" title="서브에이전트는 비용이 곱절로 늘어날 수 있어요">
+   서브에이전트도 각자 API 요청을 보내고, 그 비용은 쿼리의 `total_cost_usd`에 합쳐져요. 서브에이전트가 또 서브에이전트를 만들 수도 있어요. 공식 문서가 안내하는 상한은 환경변수 `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`(깊이, 기본 3), `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`(동시 개수, 기본 20), 그리고 `max_budget_usd`(비용)예요. Opus 5는 위임을 더 자주 하는 모델이라 특히 중요해요. TypeScript의 `env` 옵션은 하위 프로세스 환경을 **통째로 바꾸니** `...process.env`를 펼쳐 넣고, Python은 기존 환경에 병합돼요.
+   </Aside>
+
+6. **세션: 대화 이어 가기**
+
+   세션은 에이전트가 쌓은 대화 기록(프롬프트, 도구 호출과 결과, 응답)이에요. SDK가 디스크에 알아서 저장해요. **파일 변경은 저장하지 않아요**(파일은 별도 체크포인트 기능이 필요해요).
+
+   | 하고 싶은 것 | 방법 |
+   | --- | --- |
+   | 한 프로세스에서 여러 턴 | Python `ClaudeSDKClient` (TypeScript는 `continue: true`) |
+   | 재시작 후 가장 최근 대화 이어가기 | `continue_conversation=True` |
+   | 특정 대화 이어가기 | `resume=session_id` |
+   | 원본은 두고 다른 방향 시도 | `resume=session_id`와 `fork_session=True` |
+
+   `session_id`는 `ResultMessage`에 들어 있어요. `session_agent.py`로 저장해요.
+
+   ```python
+   import asyncio
+
+   from claude_agent_sdk import (
+       AssistantMessage,
+       ClaudeAgentOptions,
+       ClaudeSDKClient,
+       ResultMessage,
+       TextBlock,
+       query,
+   )
+
+
+   def show(message) -> None:
+       if isinstance(message, AssistantMessage):
+           for block in message.content:
+               if isinstance(block, TextBlock):
+                   print(block.text)
+       elif isinstance(message, ResultMessage):
+           print(f"[{message.subtype}] session_id={message.session_id}")
+
+
+   async def main() -> None:
+       options = ClaudeAgentOptions(
+           allowed_tools=["Read", "Glob", "Grep"],
+           permission_mode="dontAsk",
+           max_turns=10,
+           max_budget_usd=1.0,
+       )
+
+       # 1) 한 프로세스 안의 여러 턴: ClaudeSDKClient가 세션을 알아서 이어 줘요.
+       async with ClaudeSDKClient(options=options) as client:
+           await client.query("auth 모듈이 어떻게 생겼는지 분석해 줘.")
+           async for message in client.receive_response():
+               show(message)
+           await client.query("방금 분석에서 가장 위험한 부분 하나만 다시 설명해 줘.")
+           async for message in client.receive_response():
+               show(message)
+
+       # 2) 프로세스를 다시 시작한 뒤: 저장해 둔 session_id로 이어 가기
+       saved_session_id = "여기에-저장해-둔-session_id"
+       async for message in query(
+           prompt="이어서, 그 부분을 고치는 방법을 제안해 줘.",
+           options=ClaudeAgentOptions(
+               resume=saved_session_id,
+               allowed_tools=["Read", "Glob", "Grep"],
+               permission_mode="dontAsk",
+               max_turns=10,
+               max_budget_usd=1.0,
+           ),
+       ):
+           show(message)
+
+
+   asyncio.run(main())
+   ```
+
+   - 위 코드의 `saved_session_id`는 자리표시자예요. 첫 실행에서 출력된 `session_id` 값으로 바꾸세요.
+   - 세션 파일은 만든 컴퓨터에만 있어요. 다른 서버에서 이어가려면 `SessionStore` 어댑터로 대화 기록을 공유 저장소에 복사하거나 세션 파일을 옮겨야 해요.
+   - `ClaudeSDKClient`로 메시지를 읽는 도중 `break`로 빠져나오면 asyncio 정리 문제가 생길 수 있다고 공식 문서가 경고해요. 끝까지 읽으세요.
+
+</Steps>
+
+## 빠른 참조표
+
+### 자주 쓰는 옵션 (`ClaudeAgentOptions`, TypeScript는 camelCase)
+
+| 옵션 | 하는 일 |
+| --- | --- |
+| `allowed_tools` | 묻지 않고 자동 승인할 도구. 나열하지 않은 도구를 막지는 않아요. |
+| `disallowed_tools` | 거부 규칙. 이름만 쓰면 도구가 사라지고, `Bash(rm *)`처럼 쓰면 맞는 호출만 거부해요. |
+| `tools` | 쓸 수 있는 **내장** 도구 집합. `[]`이면 내장 도구가 모두 빠져요. MCP 도구는 영향이 없어요. |
+| `permission_mode` | `default`, `dontAsk`, `acceptEdits`, `plan`, `auto`, `bypassPermissions` |
+| `max_turns` | 도구 왕복 횟수 상한 |
+| `max_budget_usd` | 예상 비용 상한(추정치라 넘을 수 있어요) |
+| `model` | 모델 ID나 별칭. 생략하면 기본 모델이 쓰여요. |
+| `system_prompt` | 시스템 프롬프트 |
+| `mcp_servers` | 사용자 정의 도구 서버나 외부 MCP 서버 |
+| `agents` | 서브에이전트 정의 |
+| `hooks` | 훅 콜백 |
+| `setting_sources` | 읽어 올 설정. 생략하면 사용자·프로젝트·로컬 모두예요. `[]`이면 모두 끄고요. |
+| `resume`, `continue_conversation`, `fork_session` | 세션 이어가기와 분기 |
+| `cwd` | 작업 폴더. 프로젝트 설정과 `CLAUDE.md`를 이 폴더에서 찾아요. |
+| `env` | 하위 프로세스 환경변수 |
+
+### 권한 모드
+
+| 모드 | 동작 |
+| --- | --- |
+| `default` | 자동 승인 없음. 승인이 필요한 호출은 `canUseTool` 콜백으로 가요. |
+| `dontAsk` | 물어보지 않고 거부해요. 허용 목록에 있는 도구와 승인이 필요 없는 호출은 실행돼요. |
+| `acceptEdits` | 파일 편집과 `mkdir`, `rm`, `mv` 같은 파일 명령을 자동 승인해요(작업 폴더 안에서만). |
+| `plan` | 계획만 세우고 파일은 고치지 않아요. |
+| `auto` | 모델 분류기가 각 동작을 검토해 허용·차단해요. |
+| `bypassPermissions` | 대부분의 승인을 건너뛰어요. 격리 환경에서만 쓰세요. |
+
+### 패키지와 요구 사항
+
+| 항목 | 값 |
+| --- | --- |
+| Python 패키지 | `claude-agent-sdk` (Python 3.10 이상) |
+| TypeScript 패키지 | `@anthropic-ai/claude-agent-sdk` (Node.js 18 이상) |
+| 호스팅 시작점 | 에이전트당 RAM 1 GiB, 디스크 5 GiB, CPU 1개 정도에서 시작하라고 안내돼요. 긴 세션일수록 메모리가 늘어요. |
+| 네트워크 | `api.anthropic.com`으로 나가는 HTTPS(Bedrock·Vertex는 해당 엔드포인트) |
+| 모델·가격 | [C16](/new-project1/claude/c16-api/)과 같아요. Opus 5.5 `claude-opus-5-5` $4/$20, Sonnet 5.5 `claude-sonnet-5-5` $2/$10 (100만 토큰당, 2026-10-11 기준) |
+
+## 자주 막히는 지점
+
+### `allowed_tools`에 Read만 넣었는데 Bash도 실행돼요
+
+- **원인**: `allowed_tools`는 "자동 승인 목록"이에요. 나열하지 않은 도구도 있고, 승인이 필요하면 권한 모드로 넘어가요. `bypassPermissions`나 `auto` 같은 모드에서는 그대로 실행될 수 있어요.
+- **해결**: `permission_mode="dontAsk"`를 함께 쓰거나, `disallowed_tools=["Bash"]` 또는 `tools=["Read", "Glob", "Grep"]`로 도구 자체를 빼세요.
+
+### 서브에이전트를 정의했는데 Claude가 부르지 않아요
+
+- **원인**: 부모의 `allowed_tools`에 `"Agent"`가 없거나, `description`이 모호해서 Claude가 언제 쓸지 모르는 경우예요.
+- **해결**: `"Agent"`를 추가하고 `description`에 "언제 쓰는지"를 구체적으로 쓰세요. 프롬프트에서 "security-reviewer를 써서"처럼 이름을 직접 불러도 돼요.
+
+### 훅이 실행되지 않아요
+
+- **원인**: 이벤트 이름이 틀렸거나(`PreToolUse`, 대소문자 구분), 매처가 도구 이름과 안 맞아요. `max_turns`에 닿으면 훅이 돌기 전에 세션이 끝날 수도 있어요. Python SDK 콜백은 `SessionStart`와 `SessionEnd` 이벤트를 지원하지 않아요(TypeScript만 지원해요).
+- **해결**: 이벤트 이름을 확인하고, 매처를 비워 모든 호출에 걸어 보며 좁혀 가세요.
+
+### 인증 오류(`Not logged in`, `Invalid API key`)가 나요
+
+- **원인**: 에이전트를 실행하는 셸에 `ANTHROPIC_API_KEY`가 없어요. SDK는 `.env`를 자동으로 읽지 않아요.
+- **해결**: 같은 셸에서 환경변수를 설정하거나 코드에서 직접 불러오세요.
+
+### 내 컴퓨터의 `CLAUDE.md`와 설정이 에이전트에 섞여 들어와요
+
+- **원인**: `setting_sources`를 생략하면 사용자·프로젝트·로컬 설정을 모두 읽는 것이 기본이에요.
+- **해결**: 서비스용 에이전트는 `setting_sources=[]`로 시작하세요. 여러 사용자를 한 컨테이너에서 처리한다면 사용자마다 작업 폴더를 나누고 `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`도 환경에 넣으라고 공식 문서가 안내해요.
+
+### 세션을 이어 가려는데 새 대화가 돼요
+
+- **원인**: `query()`는 호출마다 새 세션을 만들어요. 세션 파일은 만든 컴퓨터에만 있고, 다른 서버에서는 찾을 수 없어요.
+- **해결**: `resume`에 올바른 `session_id`를 넘기고, 서버가 여러 대라면 `SessionStore`로 기록을 공유하세요.
+
+## 실전 팁
+
+- **상한 먼저, 기능은 나중에.** 새 에이전트는 `max_turns=10`, `max_budget_usd=1.0`처럼 작게 시작해서 결과를 보며 늘리세요. 공식 호스팅 문서도 토큰 비용이 컨테이너 비용보다 대개 훨씬 크고, 긴 세션 하나가 토큰으로 수 달러를 쓸 수 있다고 안내해요.
+- **`ResultMessage`를 로그로.** `total_cost_usd`, `num_turns`, `session_id`를 남기면 비용 추적과 재현이 쉬워요. 서브에이전트까지 정확히 보려면 `model_usage`를 쓰라고 공식 레퍼런스가 안내해요.
+- **서브에이전트에는 싼 모델과 좁은 도구.** 읽기 전용 검토는 `tools=["Read", "Grep", "Glob"]`와 작은 모델이면 충분해요.
+- **쓰기는 사람이 확인하게.** 파일을 고치는 에이전트는 `permission_mode="plan"`으로 계획을 먼저 받아 보거나, 작업 폴더를 Git으로 관리해 변경을 되돌릴 수 있게 하세요.
+- **격리해서 돌리기.** 공식 호스팅 문서는 컨테이너 샌드박스에서 SDK를 실행하는 것을 권장해요. 외부로 나가는 호출은 프록시에서 허용 도메인만 통과시키고, 도구용 자격 증명은 에이전트 환경에 두지 않는 쪽이 안전해요.
+- **서버를 직접 운영하기 싫다면** 에이전트 루프와 샌드박스를 Anthropic이 호스팅하는 [Managed Agents](/new-project1/dev/04-managed-agents/)를 비교해 보세요.
+
+## 다음에 볼 튜토리얼
+
+- [04. Managed Agents로 서버에서 에이전트 돌리기](/new-project1/dev/04-managed-agents/) — 에이전트 루프까지 맡기는 방식
+- [01. 도구 사용으로 업무 봇 만들기](/new-project1/dev/01-tool-use/) — SDK 없이 API로 도구 루프를 직접 짜는 방법
+- [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — 서브에이전트, 훅, 권한 모드를 설정 파일로 쓰는 방법
