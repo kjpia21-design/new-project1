@@ -36,3 +36,9 @@
 
 ## 6단계 재점검 (2026-10-10)
 - code.claude.com/docs/en/model-config: opusplan = plan 모드 opus, 실행 sonnet. Anthropic API에서 opus=Opus 5.5, sonnet=Sonnet 5.5(Bedrock/Foundry는 다름).
+
+## 2026-10-11 업데이트 반영
+확인일 2026-10-11. 출처: [Advisor](https://code.claude.com/docs/en/advisor), [Commands](https://code.claude.com/docs/en/commands), [Workflows](https://code.claude.com/docs/en/workflows), [Model configuration](https://code.claude.com/docs/en/model-config), [Environment variables](https://code.claude.com/docs/en/env-vars), [CHANGELOG.md](https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md).
+- `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`(v2.1.296): "워크플로 에이전트를 한 모델로, 다른 서브에이전트는 각자 모델 유지"(CHANGELOG). 환경변수 문서, workflows 문서에서는 이 변수명을 찾지 못함. 값 형식은 확인 못 함(본문에 그 사실을 밝힘). 참고로 `CLAUDE_CODE_SUBAGENT_MODEL`은 워크플로 에이전트의 기본 모델도 정한다고 env-vars 문서에 적혀 있음.
+- `/advisor [model|off]`, `--advisor <model>`, `advisorModel` 설정. 서버측 advisor 도구, Anthropic API 전용, 실험 기능. 조언 모델은 메인 모델 이상 등급(표는 Advisor 문서). 비용은 조언 모델 요금, 구독은 한도 합산. 텍스트 형태 `/advisor`는 v2.1.260 이상.
+- 미반영: Haiku 5.5의 advisor 조건(v2.1.293), Fable advisor의 usage credits 동의는 본문에 쓰지 않음.

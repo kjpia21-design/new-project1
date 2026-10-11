@@ -10,7 +10,7 @@ duration: "30분"
 prerequisites:
   - "Claude Code 사용 환경 (터미널 또는 클라우드 세션)"
   - "서브에이전트 기본 개념 (C14 참고)"
-lastVerified: 2026-10-10
+lastVerified: 2026-10-11
 sources:
   - title: "Model configuration (Claude Code)"
     url: "https://code.claude.com/docs/en/model-config"
@@ -24,6 +24,14 @@ sources:
     url: "https://code.claude.com/docs/en/sub-agents"
   - title: "Models overview"
     url: "https://platform.claude.com/docs/en/about-claude/models/overview"
+  - title: "Escalate hard decisions with the advisor tool (Claude Code)"
+    url: "https://code.claude.com/docs/en/advisor"
+  - title: "Commands (Claude Code)"
+    url: "https://code.claude.com/docs/en/commands"
+  - title: "Orchestrate subagents at scale with dynamic workflows"
+    url: "https://code.claude.com/docs/en/workflows"
+  - title: "Claude Code CHANGELOG (v2.1.296)"
+    url: "https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md"
   - title: "How do usage and length limits work?"
     url: "https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work"
 status: published
@@ -161,7 +169,31 @@ Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코
 
    `CLAUDE_CODE_SUBAGENT_MODEL`만 설정해서는 내장 Explore·Plan 서브에이전트의 모델이 바뀌지 않아요. 실행 중인 서브에이전트의 모델은 `/tasks`로 볼 수 있어요.
 
-5. **사용량 점검하기**
+   **워크플로 에이전트만 한 모델로**: 동적 워크플로(수십~수백 개 에이전트가 도는 스크립트)는 에이전트가 많아 비용이 크게 늘 수 있어요. `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`을 설정하면 워크플로 에이전트는 모두 그 모델로 돌고, 다른 서브에이전트는 각자 모델을 유지해요(v2.1.296 이상).
+
+   ```json
+   {
+     "env": {
+       "CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL": "sonnet"
+     }
+   }
+   ```
+
+   값 형식(별칭 또는 모델 ID)은 `CLAUDE_CODE_SUBAGENT_MODEL`과 같다고 보고 쓴 예시예요. 공식 환경변수 문서에는 아직 이 변수의 설명이 없어서, 변경 이력(CHANGELOG)의 설명만 확인했어요.
+
+5. **어려운 순간만 상위 모델에게 묻기: `/advisor` (선택)**
+
+   메인 모델은 빠른 모델로 두고, 계획을 세우기 전이나 같은 오류가 반복될 때, 끝났다고 선언하기 전에만 더 강한 모델의 조언을 받는 방법이에요. 조언은 Anthropic 서버에서 도는 advisor 도구가 해 주고, 언제 부를지는 Claude가 정해요.
+
+   ```text
+   /advisor opus
+   ```
+
+   - `/advisor`만 입력하면 선택 창이 열리고, `/advisor off`로 꺼요. 고른 모델은 `advisorModel` 설정에 저장돼요. 이번 세션만 쓰려면 `claude --advisor opus`로 시작해요.
+   - 조언 모델은 메인 모델과 같거나 더 높은 등급이어야 해요. 예를 들어 Sonnet 5.5 메인에는 Fable, Opus 5 이상, Sonnet 5.5를 쓸 수 있어요.
+   - 실험 기능이고 Anthropic API에서만 돼요(Bedrock, Vertex, Foundry 등은 안 돼요). 조언 호출은 조언 모델 요금으로 계산되고 구독 플랜에서는 한도에 합산돼요. 모델을 통째로 바꾸는 `/model`이나 `opusplan`과 달리 결정 순간에만 쓰는 방식이라, 공식 문서는 강한 모델을 계속 쓰는 것보다 보통 비용이 낮다고 안내해요.
+
+6. **사용량 점검하기**
 
    `/usage`에서 스킬·서브에이전트·MCP별로 사용량이 어디에서 나가는지 볼 수 있어요. 에이전트 팀을 쓸 때는 팀원에게 Sonnet을 권하고 팀을 작게 유지하세요. 플랜 모드 팀원은 표준 세션 대비 약 7배의 토큰을 쓴다고 해요.
 
@@ -244,6 +276,8 @@ Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코
 | 계획은 Opus, 실행은 Sonnet | `/model opusplan` 또는 `claude --model opusplan` |
 | 서브에이전트 하나의 모델 고정 | 정의 파일에 `model: sonnet` 등 |
 | 모든 서브에이전트를 한 모델로 | `CLAUDE_CODE_SUBAGENT_MODEL` + `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` |
+| 워크플로 에이전트만 한 모델로 | `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL` (v2.1.296 이상) |
+| 어려운 순간만 강한 모델에게 조언받기 | `/advisor opus`, `claude --advisor opus` |
 | 서브에이전트가 큰 모델을 상속하지 않게 | 위임 전에 모델 전환, 또는 정의에 `model` 명시 |
 | 실행 중인 서브에이전트의 모델 확인 | `/tasks` |
 | 사용량 비중 확인 | `/usage` |

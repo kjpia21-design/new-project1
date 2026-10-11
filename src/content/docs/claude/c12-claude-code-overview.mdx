@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 유료 플랜 (Pro, Max, Team, Enterprise) 또는 Anthropic Console 계정"
   - "작업할 코드 프로젝트 폴더 하나"
   - "터미널 (macOS, Linux, WSL, Windows PowerShell 또는 CMD)"
-lastVerified: 2026-10-10
+lastVerified: 2026-10-11
 sources:
   - title: "Claude Code overview"
     url: "https://code.claude.com/docs/en/overview"
@@ -21,6 +21,14 @@ sources:
     url: "https://code.claude.com/docs/en/commands"
   - title: "Pricing"
     url: "https://claude.com/pricing"
+  - title: "CLI reference"
+    url: "https://code.claude.com/docs/en/cli-reference"
+  - title: "Agent view"
+    url: "https://code.claude.com/docs/en/agent-view"
+  - title: "Model configuration"
+    url: "https://code.claude.com/docs/en/model-config"
+  - title: "Claude Code CHANGELOG (v2.1.251, 2.1.273, 2.1.284, 2.1.288, 2.1.290)"
+    url: "https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md"
 status: published
 ---
 
@@ -192,6 +200,8 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | `/login` | 계정 전환·재인증 |
 | `/init` | CLAUDE.md 생성 |
 | `Shift+Tab` | 권한 모드 순환 |
+| `/effort` | 생각의 깊이(effort) 조절. 고른 값은 **모델별로 저장**돼요(v2.1.251 이상). 슬라이더에서 `s`를 누르면 이 세션에만 적용돼요. `max`는 세션 전용이에요. |
+| `/rate-limit-options` | 사용 한도에 막혔을 때 이어갈 방법을 보여 줘요. 리셋될 때까지 기다렸다 자동 계속, usage credits 추가, 플랜 업그레이드 중에서 골라요. claude.ai 구독이 필요해요. |
 
 ### 표면 사이 이동
 
@@ -201,8 +211,23 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | `claude --teleport` | 웹·모바일 세션을 터미널로 가져와요. |
 | `/desktop` | 터미널 세션을 데스크톱 앱으로 옮겨요. macOS와 x64 Windows, 구독이 필요해요. |
 | `claude --cloud` | 터미널에서 클라우드 세션을 시작해요. |
+| Claude 앱에서 포크 | `claude --remote-control`이나 `/remote-control`로 시작한 세션을 Claude 앱에서 포크할 수 있어요. 포크는 내 컴퓨터의 백그라운드 세션으로 돌아가요(v2.1.273 이상). |
 
 클라우드 세션의 자세한 사용법은 [C13. Claude Code 클라우드 세션](/new-project1/claude/c13-cloud-sessions/)에 있어요.
+
+### 백그라운드 세션 관리
+
+`claude --bg "작업"`으로 시작한 백그라운드 세션이나 `claude agents`(agent view)에 보이는 세션은 셸에서 이 명령으로 다뤄요. 세션 ID 대신 **이름 일부**를 써도 돼요(`attach`, `logs`는 v2.1.290 이상).
+
+| 명령 | 하는 일 |
+| --- | --- |
+| `claude attach <ID 또는 이름>` | 백그라운드 세션을 지금 터미널에서 열어요. 이름으로는 실행 중인 세션만 열려서, 멈춘 세션을 다시 띄우려면 ID를 쓰세요. |
+| `claude logs <ID 또는 이름>` | 세션의 최근 출력을 출력해요. |
+| `claude stop <ID>` | 세션을 멈춰요. `claude kill`도 같아요. |
+| `claude respawn <ID>` | 실행 중이든 멈췄든 대화를 유지한 채 다시 시작해요. `--all`이면 실행 중인 세션을 모두 다시 시작해서 새 버전 바이너리를 적용할 수 있어요. |
+| `claude rm <ID>` | 목록에서 세션을 지워요. 대화 기록은 내 컴퓨터에 남아 `claude --resume`으로 볼 수 있어요. |
+
+agent view에서는 `Ctrl+F`로 이름을 검색하고, `n:로그인`처럼 이름·첫 프롬프트로 거를 수 있고, `Alt+↑`/`Alt+↓`로 그룹 사이를 건너뛰어요(v2.1.287~288 이상).
 
 ### 반복 작업 자동화 3종
 

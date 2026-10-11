@@ -46,3 +46,10 @@
 - [Use Claude Code in the cloud](https://code.claude.com/docs/en/claude-code-on-the-web) — 확인일 2026-10-10
 - [Configure cloud environments](https://code.claude.com/docs/en/cloud-environments) — 확인일 2026-10-10
 - [Automate work with routines](https://code.claude.com/docs/en/routines) — 확인일 2026-10-10
+
+## 2026-10-11 업데이트 반영
+확인일 2026-10-11. 출처: [Routines](https://code.claude.com/docs/en/routines), [Fast mode](https://code.claude.com/docs/en/fast-mode), [Cloud environments](https://code.claude.com/docs/en/cloud-environments), [Use Claude Code in the cloud](https://code.claude.com/docs/en/claude-code-on-the-web), [CHANGELOG.md](https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md).
+- 루틴 + 아티팩트(v2.1.275): 스케줄/Run now 실행은 편집 가능하고 조직 소유, 공개 공유 아님, 새 버전이 보는 사람에게 자동 노출되지 않음, 페이지만 담김, 페이지 밖 권한(커넥터 호출) 없음 조건에서 확인 없이 재발행. 그 외(새 발행 포함)는 문서상 먼저 물음(Routines).
+- 충돌 주의: CHANGELOG v2.1.292는 "스케줄·Run now 실행은 나만 볼 수 있는 새 아티팩트를 승인 없이 발행, 커넥터 등 접근을 요청하면 묻는다"고 적었다. Routines 문서는 새 발행도 묻는다고 적었다. 본문은 문서 기준으로 쓰고 이 불일치는 여기에만 기록.
+- fast mode 클라우드(v2.1.271): `/fast on`, 세션 한정, 브라우저 모델 메뉴 스위치, 구독은 usage credits 필요, Team/Enterprise는 Owner 허용(Fast mode).
+- 내장 `gh api`(v2.1.288): 이미지에 GitHub CLI가 없을 때 제공(CHANGELOG). 문서(Cloud environments)는 `gh`가 사전 설치되어 있고 REST만 되며 GraphQL(`gh pr`, `gh issue`)은 프록시가 403으로 거부한다고 설명. `GH_HOST`/`GH_REPO`로 github.com 외 호스트는 거부(v2.1.290, CHANGELOG)는 본문에 쓰지 않음.

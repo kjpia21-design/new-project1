@@ -50,3 +50,12 @@
 - [MCP](https://code.claude.com/docs/en/mcp) — 확인일 2026-10-10
 - [Permission modes](https://code.claude.com/docs/en/permission-modes) — 확인일 2026-10-10
 - [Skills](https://code.claude.com/docs/en/skills) — 확인일 2026-10-10
+
+## 2026-10-11 업데이트 반영
+확인일 2026-10-11. 출처: [Permission modes](https://code.claude.com/docs/en/permission-modes), [Hooks](https://code.claude.com/docs/en/hooks), [Custom subagents](https://code.claude.com/docs/en/sub-agents), [Plugin commands reference](https://code.claude.com/docs/en/plugins/cli-reference), [Commands](https://code.claude.com/docs/en/commands), [CHANGELOG.md](https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md).
+- auto 모드: v2.1.283 이상에서 터미널·VS Code는 모드 미지정 시 auto 시작(`--permission-mode`, `permissions.defaultMode`가 우선, `disableAutoMode`나 미지원 모델이면 Manual). 서버 측 분류기 검사가 직접 Anthropic API 연결 등에서 기본이고 검사 못 받으면 자체 분류기로 대체, `CLAUDE_CODE_AUTO_MODE_SERVER=0`으로 끔(Permission modes). `/permissions`의 Auto mode 탭(v2.1.246, CHANGELOG).
+- 훅 `onFailure: "block"`: `command`, `http` 훅만, 기본 `"continue"`, v2.1.295 이상. Stop 등 일부 이벤트와 백그라운드 훅엔 효과 없음(Hooks).
+- 서브에이전트: `autoCompactWindow`(v2.1.296, CHANGELOG만 확인. sub-agents 문서 앞 100,000자 안에서는 필드 표에 없었음), Agent 도구 `effort` 매개변수(v2.1.292, sub-agents 문서).
+- 플러그인: `claude plugin install <plugin> --marketplace <source>`(v2.1.292), `/plugin install ... --marketplace`(v2.1.275), `claude plugin eval`/`eval init`(v2.1.269, `--allow-tools` 등)(Plugin commands reference).
+- `/code-review --max-findings <n|all|default>`: v2.1.288, 선택은 `default`를 줄 때까지 유지(CHANGELOG, Commands).
+- 확인 못 함: sub-agents 문서의 `autoCompactWindow` 필드 설명, `/permissions` Auto mode 탭의 화면 문구(CHANGELOG 한 줄 근거).
