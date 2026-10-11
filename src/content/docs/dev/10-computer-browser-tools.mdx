@@ -1,0 +1,608 @@
+---
+title: "컴퓨터·브라우저 도구 API로 화면 작업 자동화"
+description: "컴퓨터 툴셋(computer_toolset_20260801)과 브라우저 툴셋(browser_toolset_20260801)의 구조를 이해하고, 격리된 환경에서만 돌리는 최소 에이전트 루프를 Python으로 만들어요. 안전 수칙과 비용 상한까지 정리했어요"
+sidebar:
+  label: "10. 컴퓨터·브라우저 도구"
+level: advanced
+category: dev
+tools: ["Claude API", "Computer use", "Browser use", "Python", "anthropic SDK"]
+duration: "60분"
+prerequisites:
+  - "C16. Claude API 시작하기를 끝낸 상태"
+  - "C11. Chrome과 컴퓨터 사용 (앱 기능으로 먼저 감을 잡기)"
+  - "Python 3.10 이상, 격리된 VM 또는 컨테이너를 쓸 수 있는 환경"
+lastVerified: 2026-10-11
+sources:
+  - title: "Computer use tool (computer_toolset_20260801)"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool"
+  - title: "Browser use tool (browser_toolset_20260801)"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/browser-use-tool"
+  - title: "Browser and computer use with the SDK toolsets"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/browser-use-sdk"
+  - title: "API and data retention"
+    url: "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention"
+  - title: "Models overview"
+    url: "https://platform.claude.com/docs/en/models/overview"
+  - title: "Claude Platform release notes"
+    url: "https://platform.claude.com/docs/en/release-notes/overview"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+
+<Summary>
+- **컴퓨터 툴셋**(`computer_toolset_20260801`)은 Claude가 스크린샷을 보고 클릭·입력을 요청하는 도구이고, **브라우저 툴셋**(`browser_toolset_20260801`)은 웹페이지 안의 작업에 맞춘 도구예요. 둘 다 2026-08-19에 정식(GA)이 되었고 Claude API와 Google Cloud에서 베타 헤더 없이 써요.
+- 둘 다 **클라이언트 도구**예요. 화면이나 브라우저는 **내 앱이 실행**하고, Claude는 "어디를 클릭해라"를 요청만 해요. 내가 만든 루프가 요청을 실행하고 결과(스크린샷)를 돌려줘요.
+- **반드시 격리된 VM이나 컨테이너에서만** 돌리세요. 로그인된 내 컴퓨터나 업무 계정에 직접 붙이지 마세요. 웹페이지와 화면의 글자가 Claude의 다음 행동을 바꿀 수 있어요(프롬프트 인젝션).
+- 비용이 빠르게 커져요. 툴셋 정의만 약 4,500 입력 토큰이고, 스크린샷 한 장이 약 1,000~1,800 토큰이며 대화가 길수록 매 턴 누적돼요. **반복 횟수 상한과 토큰 상한을 코드에 꼭 넣으세요.**
+- 이 글의 예제는 공식 문서 기준이며 2026-10-11에 문법과 SDK 임포트만 검증했어요. 실제 호출과 실제 화면·브라우저 실행은 하지 못했어요. 기본 예제는 화면을 건드리지 않는 드라이런이에요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 컴퓨터 툴셋과 브라우저 툴셋의 차이를 알고, 작업에 맞는 쪽을 고를 수 있어요.
+- 요청을 보내고, `tool_use` 블록을 실행하고, `tool_result`를 돌려주는 루프를 상한과 승인 절차까지 넣어 만들 수 있어요.
+- SDK의 브라우저 툴셋 클래스(베타)로 URL 정책과 승인 콜백을 붙이는 구조를 이해할 수 있어요.
+- 격리, 도메인 제한, 사람 확인, 비용 상한을 갖춘 안전한 배치를 설계할 수 있어요.
+
+## 먼저 알아둘 개념
+
+[C11. Chrome과 컴퓨터 사용](/new-project1/claude/c11-chrome-computer-use/)에서 다룬 것은 Claude 앱의 기능(Claude in Chrome, Cowork의 컴퓨터 사용)이에요. 이 글은 같은 아이디어를 **API로 직접 만드는** 방법이에요. 앱 기능과 달리 화면을 캡처하고 클릭하는 코드, 그리고 안전장치를 모두 내가 만들어야 해요.
+
+| 용어 | 뜻 |
+| --- | --- |
+| **툴셋(toolset)** | 관련된 도구 묶음이에요. `tools`에 항목 하나(`type`만, `name` 없음)를 넣으면 여러 멤버 도구가 함께 켜져요. |
+| **멤버 도구** | 툴셋 안의 개별 동작이에요. 컴퓨터 툴셋은 17개(`screenshot`, `left_click`, `type`, `key`, `scroll` 등), 브라우저 툴셋은 31개(`navigate`, `read_page`, `find` 등)예요. |
+| **배치(batch)** | Claude가 한 턴에 여러 멤버 호출을 한꺼번에 돌려주는 거예요. 순서대로 실행하고 첫 실패에서 멈춰요. |
+| **`toolset_name`** | 호출이 어느 툴셋 것인지 나타내요(`computer` 또는 `browser`). 결과를 돌려줄 때 그대로 되돌려야 해요. |
+| **샌드박스** | 화면이나 브라우저를 돌리는 격리된 가상 환경이에요(VM, 컨테이너). |
+
+```text
+Claude 모델 (Claude API)
+   │  ▲
+   │  │  tool_use (예: left_click)      tool_result (스크린샷 등)
+   ▼  │
+내 앱 (루프)  ── 검증 · 승인 · 상한 확인 ──▶  실행 요청
+   │  ▲
+   │  │  동작                           스크린샷
+   ▼  │
+격리된 VM · 컨테이너 (화면 / 브라우저)
+```
+
+핵심은 Claude가 화면을 직접 만지지 않는다는 점이에요. Claude는 요청만 하고, **검증하고 실행하고 결과를 돌려주는 일은 모두 내 앱이 해요.** 그래서 내 앱이 안전장치를 걸 수 있는 자리예요.
+
+### 컴퓨터 툴셋과 브라우저 툴셋, 무엇을 고를까요
+
+| 항목 | 컴퓨터 툴셋 | 브라우저 툴셋 |
+| --- | --- | --- |
+| 대상 | 데스크톱 전체(앱 여러 개) | 브라우저 안의 웹페이지 |
+| 보는 방식 | 스크린샷과 좌표 | 접근성 트리(`read_page`, `find`)와 스크린샷·좌표 둘 다 |
+| 멤버 수 | 17개 | 31개 (기본 27개, 선택 4개는 기본 꺼짐) |
+| 상태 | GA (Claude API, Google Cloud). Bedrock 등은 베타 | GA (Claude API, Google Cloud) |
+| 권장 상황 | 웹이 아닌 앱 작업 | 웹 안에서 끝나는 작업, JavaScript로 그려지는 페이지 |
+
+공식 문서는 웹페이지 안에서 끝나는 작업에는 브라우저 툴셋을, 데스크톱 전체가 필요한 작업에는 컴퓨터 툴셋을 권해요. 가벼운 읽기나 출처 찾기는 웹 페치·웹 검색 도구가 낫다고 안내해요. 둘은 한 요청에 함께 쓸 수도 있어요.
+
+<Aside type="note" title="호환성 (2026-10-11 기준)">
+- Opus 5.5, Sonnet 5.5, Haiku 5.5는 Claude API와 Google Cloud에서 **컴퓨터 툴셋만** 받아요. 이전 방식인 `computer_20251124`(베타 헤더 필요)를 보내면 400 오류예요. Amazon Bedrock에서는 이 세 모델도 `computer_20251124`를 받아요.
+- 두 툴셋은 현재 **Claude Managed Agents에서 쓸 수 없어요.**
+- 브라우저 툴셋 지원 모델은 `claude-fable-5-1`, `claude-mythos-5-1`, `claude-fable-5`, `claude-mythos-5`, `claude-opus-5-5`, `claude-opus-5`, `claude-sonnet-5-5`, `claude-sonnet-5`, `claude-opus-4-8`, `claude-haiku-5-5`예요.
+- 데이터 보존: 두 툴셋 모두 ZDR 대상(Covered Models 제외)이에요. 스크린샷과 입력은 내 환경에 저장되고, Anthropic은 호출 중에 실시간으로 처리해요. 단 Fable 5.1은 Covered Model이라 30일 보존이 필요해요([C16](/new-project1/claude/c16-api/) 참고).
+</Aside>
+
+## 안전 수칙 먼저 (필수)
+
+<Aside type="danger" title="이 도구는 내가 직접 클릭하는 것과 같은 힘을 가져요">
+화면이나 웹페이지에 적힌 글이 Claude의 다음 행동을 바꿀 수 있어요(프롬프트 인젝션). 공식 문서의 권고를 그대로 따르세요.
+
+- **전용 VM이나 컨테이너**에서 최소 권한으로 실행하세요. 세션마다 새 환경을 쓰고, 자격 증명과 호스트 폴더 마운트를 넣지 마세요.
+- **민감한 데이터와 로그인된 계정**에 접근시키지 마세요. 로그인이 꼭 필요하면 전용 저권한 계정을 쓰세요.
+- **도메인 허용 목록**을 네트워크 계층에서 강제하세요. 코드의 URL 검사만으로는 부족하고, 리다이렉트 후에도 다시 검사하고 사설·루프백 주소는 막아야 해요.
+- **결과가 큰 행동(결제, 메시지 전송, 약관 동의, 삭제)은 사람이 확인**하세요. 한 턴의 배치가 여러 단계를 한꺼번에 끝낼 수 있으니 호출 하나하나를 실행 전에 검사하세요.
+- 화면과 웹페이지의 모든 내용(창 제목, 탭 제목, URL, 클립보드 포함)은 **신뢰할 수 없는 입력**으로 다루고, 그대로 실행하거나 다른 곳에 넘기지 마세요.
+- API 키를 가진 코드는 **브라우저·데스크톱 컨테이너 밖**에서 실행하세요.
+- 서비스에 넣는다면 최종 사용자에게 위험을 알리고 동의를 받으세요.
+
+Anthropic의 분류기가 스크린샷의 프롬프트 인젝션을 검사해 모델이 지시의 출처를 확인하도록 유도하지만, 공식 문서는 이 장치가 있어도 위 precautions는 그대로 필요하다고 해요. 앱에서의 같은 주의는 [C11](/new-project1/claude/c11-chrome-computer-use/)을 보세요.
+</Aside>
+
+<Aside type="caution" title="비용 주의">
+- 툴셋 정의: 기본 멤버를 모두 켜면 요청마다 입력 토큰이 약 4,500 늘어요(`zoom`을 끄면 약 410 감소).
+- 스크린샷: 한 장 약 1,000~1,800 입력 토큰이고, 대화 기록에 쌓여 **매 턴 다시 청구돼요.**
+- 아래 단계의 루프에는 `MAX_ITERATIONS`, 누적 입력 토큰 상한, 출력 토큰 상한이 들어 있어요. 절대 지우지 마세요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '격리 환경(VM 또는 컨테이너)을 정하고, 로그인된 내 컴퓨터에는 연결하지 않기로 했어요',
+  '작업 폴더와 가상환경을 만들고 anthropic을 설치했어요',
+  '요청 한 번으로 tool_use 응답이 오는 것을 확인했어요',
+  '드라이런 루프를 돌려서 단계와 토큰 상한이 동작하는 것을 봤어요',
+  '브라우저 툴셋 요청과 SDK 뼈대의 구조를 이해했어요',
+  '실제 환경에 연결하기 전에 안전 점검 목록을 모두 채웠어요',
+]} />
+
+<Steps>
+
+1. **준비하기**
+
+   ```bash
+   mkdir computer-use-lab && cd computer-use-lab
+   python3 -m venv .venv && source .venv/bin/activate
+   pip install anthropic
+   ```
+
+   `ANTHROPIC_API_KEY`는 C16처럼 환경변수로 넣고, 코드에는 적지 마세요. 이 단계에서는 **어떤 화면도 연결하지 않아요.** 실제 화면을 연결하는 건 마지막 단계의 점검 목록을 채운 뒤에 해요.
+
+2. **툴셋 요청 확인하기**
+
+   `tools`에 `type`만 쓴 항목 하나를 넣어요. 베타 헤더, `name`, 화면 크기는 보내지 않아요(보내면 거부돼요). 이 글은 C16과 같은 `claude-opus-5-5`를 써요. `thinking`을 끄거나 `tool_choice`를 `any`/`tool`로 강제하는 설정은 Opus 5.5에서 400 오류라서 쓰지 않아요.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   # 컴퓨터 툴셋은 베타 헤더도, name도, 화면 크기도 필요 없어요.
+   response = client.messages.create(
+       model="claude-opus-5-5",
+       max_tokens=2048,
+       tools=[{"type": "computer_toolset_20260801"}],
+       messages=[{"role": "user", "content": "화면을 캡처하고 열려 있는 창을 알려 주세요."}],
+   )
+   print(response.stop_reason)  # 화면이 필요하면 "tool_use"
+   for block in response.content:
+       if block.type == "tool_use":
+           print(block.toolset_name, block.name, block.input)  # 예: computer screenshot {}
+   ```
+
+   화면이 필요하면 `stop_reason`이 `tool_use`이고, `screenshot` 같은 멤버 이름이 `name`으로 와요. 이전 방식과 달리 동작 이름이 `input.action`이 아니라 `name`에 있어요.
+
+3. **상한이 있는 에이전트 루프 만들기 (드라이런)**
+
+   공식 문서의 참조 루프(`max_iterations`로 폭주하는 API 비용을 막는 구조)를 바탕으로, 입력 검증과 사람 승인을 더했어요. `Desktop` 클래스는 **화면을 건드리지 않고 동작을 출력만** 해요.
+
+   - 허용 목록(`ALLOWED`)에 없는 멤버는 거부해요. 구현하지 않은 멤버는 `configs`로 꺼 두세요. 그래도 Claude가 부르면 `is_error` 결과를 돌려줘요.
+   - 좌표가 화면 밖이거나 `wait`가 너무 길면 값을 고쳐 쓰지 않고 오류로 거부해요.
+   - `type`과 `key`는 사람이 승인해야 실행돼요. 입력값은 모델이 만든 값이라 `ascii()`로 이스케이프해서 보여 줘요.
+   - 한 호출이 실패하면 같은 턴의 나머지에는 공식 문구 `Not executed: an earlier computer action in this turn failed.`로 답해요.
+   - 모든 `tool_result`에 `"toolset_name": "computer"`를 되돌려요. 빠뜨리면 요청이 거부돼요.
+
+   ```python
+   """컴퓨터 툴셋 에이전트 루프 (기본은 드라이런: 실제 화면은 건드리지 않아요).
+
+   실제 데스크톱 연결은 Desktop 클래스를 격리된 VM/컨테이너용 구현으로 바꿔서 하세요.
+   """
+   import base64
+   import sys
+
+   import anthropic
+
+   MODEL = "claude-opus-5-5"
+   MAX_ITERATIONS = 15            # 루프 상한: 폭주 방지
+   MAX_OUTPUT_TOKENS = 2048
+   INPUT_TOKEN_BUDGET = 400_000   # 누적 입력 토큰 상한(스크린샷이 쌓이면 빠르게 늘어요)
+   SCREEN_W, SCREEN_H = 1280, 800
+   NEEDS_APPROVAL = {"type", "key"}   # 사람이 승인해야 하는 멤버
+   ALLOWED = {"screenshot", "left_click", "double_click", "scroll", "type", "key", "wait", "mouse_move"}
+   NOT_EXECUTED = "Not executed: an earlier computer action in this turn failed."
+
+   # zoom과 hold_key는 이 예제에서 구현하지 않으므로 꺼 둬요. 요청은 베타 네임스페이스 없이 보내요.
+   TOOLS = [
+       {
+           "type": "computer_toolset_20260801",
+           "configs": {"zoom": {"enabled": False}, "hold_key": {"enabled": False}},
+       }
+   ]
+
+   client = anthropic.Anthropic()
+
+   # 1x1 PNG 자리표시자: 드라이런에서는 이 이미지가 '화면'이에요.
+   BLANK_PNG = base64.b64encode(
+       base64.b64decode(
+           "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
+       )
+   ).decode()
+
+
+   class Desktop:
+       """드라이런 구현. 실제 구현은 격리된 VM 안의 xdotool 등으로 바꾸세요."""
+
+       def screenshot(self, **_):
+           # 실제 구현은 모델 이미지 한도(긴 변 1568~2576px)에 맞게 직접 리사이즈해야 해요.
+           return [{"type": "image", "source": {"type": "base64", "media_type": "image/png", "data": BLANK_PNG}}]
+
+       def _log(self, name, **kw):
+           print(f"  [드라이런] {name} {kw}")
+           return "OK"
+
+       def left_click(self, coordinate=None, text=None, **_):
+           return self._log("left_click", coordinate=coordinate)
+
+       def double_click(self, coordinate=None, text=None, **_):
+           return self._log("double_click", coordinate=coordinate)
+
+       def mouse_move(self, coordinate, **_):
+           return self._log("mouse_move", coordinate=coordinate)
+
+       def scroll(self, scroll_direction, scroll_amount, coordinate=None, **_):
+           return self._log("scroll", direction=scroll_direction, amount=scroll_amount)
+
+       def type(self, text, **_):
+           return self._log("type", chars=len(text))
+
+       def key(self, text, repeat=1, **_):
+           return self._log("key", key=text, repeat=repeat)
+
+       def wait(self, duration, **_):
+           return self._log("wait", duration=duration)
+
+
+   def validate(name: str, tool_input: dict) -> None:
+       """모델 입력을 믿지 말고 직접 검사해요. 틀리면 예외 -> is_error 결과로 돌아가요."""
+       if name not in ALLOWED:
+           raise ValueError(f"허용하지 않는 도구예요: {name}")
+       coord = tool_input.get("coordinate")
+       if coord is not None and not (0 <= coord[0] < SCREEN_W and 0 <= coord[1] < SCREEN_H):
+           raise ValueError("화면 밖 좌표예요")
+       if name == "wait" and tool_input.get("duration", 0) > 10:
+           raise ValueError("wait은 10초까지만 허용해요")
+       if name == "key" and tool_input.get("repeat", 1) > 5:
+           raise ValueError("repeat은 5까지만 허용해요")
+       if name == "scroll" and tool_input.get("scroll_amount", 0) > 10:
+           raise ValueError("scroll_amount는 10까지만 허용해요")
+
+
+   def approved(name: str, tool_input: dict) -> bool:
+       if name not in NEEDS_APPROVAL:
+           return True
+       # 입력값은 모델이 만든 값이라 이스케이프해서 보여 줘요.
+       answer = input(f"  승인할까요? {name} {ascii(tool_input)} [y/N] ")
+       return answer.strip().lower() == "y"
+
+
+   def process_tool_calls(response, desktop) -> list[dict]:
+       results, failed = [], False
+       for block in response.content:
+           if block.type != "tool_use" or getattr(block, "toolset_name", None) != "computer":
+               continue
+           result = {"type": "tool_result", "tool_use_id": block.id, "toolset_name": "computer"}
+           if failed:  # 한 번 실패하면 같은 턴의 나머지는 실행하지 않아요
+               result.update(content=NOT_EXECUTED, is_error=True)
+           else:
+               try:
+                   validate(block.name, block.input)
+                   if not approved(block.name, block.input):
+                       raise PermissionError("사용자가 거부했어요")
+                   result["content"] = getattr(desktop, block.name)(**block.input)
+               except Exception as err:  # noqa: BLE001
+                   result.update(content=f"Error: {err}", is_error=True)
+                   failed = True
+           results.append(result)
+       return results
+
+
+   def run(task: str) -> None:
+       desktop = Desktop()
+       messages = [{"role": "user", "content": task}]
+       spent_input = 0
+       for step in range(1, MAX_ITERATIONS + 1):
+           response = client.messages.create(
+               model=MODEL, max_tokens=MAX_OUTPUT_TOKENS, tools=TOOLS, messages=messages
+           )
+           spent_input += response.usage.input_tokens
+           print(f"단계 {step}: stop_reason={response.stop_reason}, 누적 입력 토큰 {spent_input}")
+           if response.stop_reason == "refusal":
+               print("거절됨: 작업을 멈춰요.")
+               return
+           messages.append({"role": "assistant", "content": response.content})
+           results = process_tool_calls(response, desktop)
+           if not results:  # 더 이상 컴퓨터 호출이 없으면 끝
+               print("".join(b.text for b in response.content if b.type == "text"))
+               return
+           if spent_input > INPUT_TOKEN_BUDGET:
+               print("입력 토큰 상한을 넘어서 멈춰요.")
+               return
+           messages.append({"role": "user", "content": results})
+       print(f"최대 {MAX_ITERATIONS}단계에 도달해서 멈췄어요.")
+
+
+   if __name__ == "__main__":
+       run(sys.argv[1] if len(sys.argv) > 1 else "화면을 보고 열려 있는 창이 무엇인지 알려 주세요.")
+   ```
+
+   ```bash
+   python computer_loop.py "화면을 보고 열려 있는 창이 무엇인지 알려 주세요."
+   ```
+
+   드라이런의 스크린샷은 1픽셀짜리 빈 이미지라서 Claude가 "화면이 비었다"고 답할 거예요. 목적은 **루프의 모양과 상한이 동작하는지** 보는 거예요.
+
+4. **tool_use와 tool_result의 모양 확인하기**
+
+   Claude의 호출 하나는 이런 블록이에요(공식 문서의 이전·이후 예시 기준).
+
+   ```json
+   {
+     "type": "tool_use",
+     "id": "toolu_01A9r5kQm2LxWc7vT3nZ4bJs",
+     "name": "left_click",
+     "toolset_name": "computer",
+     "input": { "coordinate": [500, 300] }
+   }
+   ```
+
+   결과는 한 턴의 모든 호출에 대해 **다음 user 메시지 하나**에 모아서 돌려줘요. `screenshot`과 `zoom`만 이미지가 필요하고 나머지는 `OK`면 충분해요.
+
+   ```json
+   {
+     "role": "user",
+     "content": [
+       {
+         "type": "tool_result",
+         "tool_use_id": "toolu_01A9r5kQm2LxWc7vT3nZ4bJs",
+         "toolset_name": "computer",
+         "content": [{ "type": "text", "text": "OK" }]
+       }
+     ]
+   }
+   ```
+
+   `tool_use`에 대응하는 결과가 하나라도 빠지면 `invalid_request_error`예요. 이 이유로 위 루프는 실패해도 나머지 호출에 반드시 답해요.
+
+5. **브라우저 툴셋 쓰기**
+
+   웹 작업은 브라우저 툴셋이 더 맞아요. 요청은 컴퓨터 툴셋과 같은 모양이고 `type`만 달라요.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   response = client.messages.create(
+       model="claude-opus-5-5",
+       max_tokens=2048,
+       tools=[{"type": "browser_toolset_20260801"}],  # name 없이 type만
+       messages=[{"role": "user", "content": "example.com/docs를 열고 시작하는 방법을 알려 주세요."}],
+   )
+   print(response.stop_reason)
+   ```
+
+   브라우저 툴셋의 특징은 이래요.
+
+   - 기본 켜짐 27개, 기본 꺼짐 4개(`javascript_exec`, `file_upload`, `read_console`, `read_network`)예요. 꺼진 멤버는 `configs`로 켤 수 있지만, 페이지의 쿠키와 저장소에 접근하거나 파일을 올릴 수 있으므로 **꼭 필요할 때만, 자격 증명 없는 세션에서만** 켜세요.
+   - 페이지를 **접근성 트리**(`read_page`)로 읽고 `ref_2` 같은 요소 참조로 클릭할 수 있어서, 스크린샷만 쓸 때보다 입력 토큰이 적게 드는 경우가 많다고 공식 문서가 안내해요.
+   - 탭 상태는 내 앱이 진실의 원천이에요. 탭 관련 결과에는 `browser_state` 블록을 돌려줘야 해요.
+   - `navigate`는 `http`와 `https`만 허용하세요(`javascript:`, `file:`, `data:` 같은 스킴은 거부). 문자열 접두사 검사가 아니라 URL 파서를 쓰세요.
+   - 한 번에 한 호출만 받고 싶으면 `tool_choice`에 `disable_parallel_tool_use: true`를 넣어요(`any`/`tool`로 강제하는 것과 다른 설정이에요).
+
+   Python과 TypeScript SDK에는 이 루프, URL 정책, 승인 콜백을 대신해 주는 **브라우저·컴퓨터 툴셋 클래스(베타)**가 있어요. 서브클래스에서 멤버 도구별 메서드만 구현하면 SDK가 호출 분배, `tool_result` 생성, 정책 검사, 승인 콜백을 맡아요. SDK에는 브라우저나 데스크톱, 드라이버가 들어 있지 않아서 `backend`는 직접 만들어야 해요(Playwright 같은 라이브러리를 감싸면 돼요). 아래는 공식 퀵스타트를 줄인 뼈대예요.
+
+   ```python
+   """SDK 브라우저 툴셋(베타) 뼈대. backend는 직접 만든 브라우저 래퍼(예: Playwright)예요."""
+   import re
+   from urllib.parse import urlsplit
+
+   from anthropic import Anthropic
+   from anthropic.tools import ToolError
+   from anthropic.tools.browser import (
+       BetaAbstractBrowserToolset20260801,
+       BetaBrowserNavigateResult,
+       BetaBrowserState,
+       BetaConfirmContext,
+       BetaScreenshotResult,
+       BetaToolsetCallContext,
+       BetaURLContext,
+   )
+   from anthropic.types.beta import (
+       BetaBrowserLeftClickInput,
+       BetaBrowserNavigateInput,
+       BetaBrowserScreenshotInput,
+       BetaBrowserStateTabEntryParam,
+   )
+
+   ALLOWED_HOSTS = ("example.com", "iana.org")  # 작업에 필요한 호스트만
+   SCHEME_PREFIX = re.compile(r"[a-z][a-z0-9+.-]*:", re.IGNORECASE)
+   MAX_TURNS = 10
+
+
+   def is_allowed(url: str) -> bool:
+       # 예시일 뿐 운영용 정책이 아니에요. 네트워크 계층 허용 목록과 함께 쓰세요.
+       if url.lower() == "about:blank":
+           return True
+       with_scheme = url if SCHEME_PREFIX.match(url) else f"https://{url}"
+       try:
+           parts = urlsplit(with_scheme.replace("\\", "/"))
+       except ValueError:
+           return False
+       host = parts.hostname or ""
+       listed = any(host == h or host.endswith(f".{h}") for h in ALLOWED_HOSTS)
+       return parts.scheme in ("http", "https") and listed
+
+
+   def url_policy(context: BetaURLContext, url: str) -> None:
+       if not is_allowed(url):
+           raise ToolError(f"blocked: {url} is not on an allowed host")
+
+
+   def confirm(context: BetaConfirmContext) -> bool:
+       # 결과가 큰 멤버(JS 실행, 파일 업로드)는 기본이 꺼져 있고, 켜더라도 여기서 사람이 승인해요.
+       if context.member in {"javascript_exec", "file_upload"}:
+           return input(f"승인할까요? {context.member} {ascii(context.input.to_dict())} [y/N] ").lower() == "y"
+       return True
+
+
+   class MyBrowser(BetaAbstractBrowserToolset20260801):
+       def __init__(self, backend, **options):
+           super().__init__(**options)
+           self.backend = backend
+
+       def _browser_state(self, context: BetaToolsetCallContext) -> BetaBrowserState:
+           return BetaBrowserState(
+               tabs=[
+                   BetaBrowserStateTabEntryParam(
+                       tab_id=tab.id, title=tab.title, url=tab.url, active=tab.id == self.backend.active
+                   )
+                   for tab in self.backend.tabs()
+               ],
+               state_changes=self.backend.drain_changes(),
+           )
+
+       def navigate(self, context: BetaToolsetCallContext, input: BetaBrowserNavigateInput) -> BetaBrowserNavigateResult:
+           page = self.backend.goto(input.url, input.tab_id)
+           return BetaBrowserNavigateResult(url=page.url, status=page.status, title=page.title)
+
+       def screenshot(self, context: BetaToolsetCallContext, input: BetaBrowserScreenshotInput) -> BetaScreenshotResult:
+           return BetaScreenshotResult(data=self.backend.png_base64(input.tab_id), media_type="image/png")
+
+       def left_click(self, context: BetaToolsetCallContext, input: BetaBrowserLeftClickInput) -> None:
+           self.backend.click(input.target, input.tab_id)
+
+       def close(self) -> None:
+           super().close()
+           if not self.backend.closed:
+               self.backend.close()
+
+
+   def run(backend, task: str) -> None:
+       client = Anthropic()
+       # 구현하지 않은 멤버는 API에 '꺼진 상태'로 전달돼요.
+       with MyBrowser(backend, url_policy=url_policy, confirm=confirm) as browser:
+           runner = client.beta.messages.tool_runner(
+               model="claude-opus-5-5",
+               max_tokens=2048,
+               tools=[browser],
+               messages=[{"role": "user", "content": task}],
+               max_iterations=MAX_TURNS,
+           )
+           for message in runner:
+               print(message)
+   ```
+
+   - `url_policy`는 허용 호스트가 아니면 `navigate`를 거부해요. 예시의 `is_allowed`는 운영용이 아니니 네트워크 계층의 허용 목록과 함께 쓰세요.
+   - `confirm`은 결과가 큰 멤버를 실행 전에 사람에게 물어요. 컴퓨터 툴셋에서 `type`, `key`, `hold_key`를 구현했다면 `confirm`이 필수예요.
+   - 구현하지 않은 멤버는 API에 꺼진 상태로 전달돼요. 클래스가 베타라서 이름과 시그니처가 바뀔 수 있으니, 업데이트 전에 SDK 저장소의 browser-toolset 문서를 확인하세요.
+   - 공식 저장소(anthropics/claude-quickstarts)에 CDP로 Chromium을 제어하는 최소 예제가 있어요. 공식 문서도 이 예제를 프로덕션 코드가 아니라고 밝혀요. Browser Use, Browserbase, Daytona, E2B 같은 파트너가 SDK 툴셋 연동도 제공해요.
+
+6. **실제 환경에 연결하기 전 점검**
+
+   드라이런을 실제 환경으로 바꿀 때 아래를 모두 채우세요.
+
+   - [ ] 세션마다 새로 만든 격리 VM/컨테이너인가요? (자격 증명, 호스트 마운트, 개인 파일 없음)
+   - [ ] 네트워크 계층에서 도메인 허용 목록과 사설 주소 차단이 적용되어 있나요?
+   - [ ] 터미널, 실행 창, 런처가 화면에 없나요? (`type`/`key` 입력이 곧 명령 실행이 될 수 있어요)
+   - [ ] 결과가 큰 행동에 사람 승인이 걸려 있나요? 승인 대상을 "허용 목록 밖은 모두 승인 필요" 방식으로 잡았나요?
+   - [ ] 스크린샷을 모델 이미지 한도에 맞게 직접 리사이즈하고, 좌표를 원래 화면 크기로 되돌리고 있나요?
+   - [ ] 반복 횟수, 누적 토큰, 출력 토큰 상한이 있고 `stop_reason`이 `refusal`일 때 멈추나요?
+   - [ ] 모든 동작과 결과를 로그로 남기고 있나요?
+   - [ ] API 키가 든 코드가 화면 환경 밖에서 도나요?
+
+   **스크린샷 크기**: 공식 문서에 따르면 새 모델은 긴 변 2576px, 시각 토큰 4784개까지 받고 이전 모델은 긴 변 1568px, 약 1.15MP까지 받아요. API는 큰 이미지를 줄여 주지 않고 오류를 내요. 줄였다면 그 비율을 기억해 두었다가 Claude가 준 좌표를 `x / scale`처럼 되돌려 클릭하세요. macOS Retina 화면은 스크린샷이 논리 해상도의 2배라서 따로 보정해야 해요.
+
+</Steps>
+
+## 빠른 참조표
+
+### 컴퓨터 툴셋 정의 (2026-10-11 기준)
+
+| 항목 | 내용 |
+| --- | --- |
+| `type` | `computer_toolset_20260801` (필수) |
+| `configs` | 멤버별 `enabled`(기본 켜짐, `zoom` 포함)와 `defer_loading` |
+| `cache_control`, `allowed_callers` | 선택 (`allowed_callers`는 `["direct"]`만) |
+| 거부되는 옛 필드 | `name`, `display_width_px`, `display_height_px`, `display_number`, `enable_zoom` |
+| 같이 못 쓰는 것 | `computer_20251124` 항목, 이름이 `computer`인 도구 |
+| 호출 모양 | `tool_use` 블록: `name`=멤버, `toolset_name`=`computer`, `input`에 `action` 필드 없음 |
+| 결과 | `tool_result`마다 `"toolset_name": "computer"` 되돌리기. 이미지는 `screenshot`, `zoom`만 |
+| 안내된 배치 규칙 | 순서대로 실행, 첫 실패에서 멈춤, 나머지는 `is_error: true`와 정해진 문구 |
+
+### 컴퓨터 툴셋 멤버 17개
+
+| 분류 | 멤버 |
+| --- | --- |
+| 보기 | `screenshot`, `zoom` (영역 확대), `cursor_position` |
+| 클릭 | `left_click`, `right_click`, `middle_click`, `double_click`, `triple_click` |
+| 이동·드래그 | `mouse_move`, `left_click_drag`, `left_mouse_down`, `left_mouse_up` |
+| 스크롤 | `scroll` (`up`, `down`, `left`, `right`) |
+| 키보드 | `type`, `key` (`repeat` 1~100), `hold_key` (최대 300초) |
+| 기다리기 | `wait` (최대 300초) |
+
+### 브라우저 툴셋 멤버 요약 (31개 중)
+
+| 분류 | 멤버 |
+| --- | --- |
+| 이동·캡처 | `navigate`, `screenshot`, `zoom` |
+| 페이지 읽기 | `read_page`, `find`, `get_page_text` |
+| 포인터 | `left_click`, `right_click`, `middle_click`, `double_click`, `triple_click`, `hover`, `left_click_drag`, `left_mouse_down`, `left_mouse_up`, `mouse_move`, `scroll`, `scroll_to` |
+| 키보드·시간 | `type`, `key`, `hold_key`, `wait` |
+| 양식 | `form_input`, `file_upload`(기본 꺼짐) |
+| 진단·스크립트 | `read_console`, `read_network`, `javascript_exec` (모두 기본 꺼짐) |
+| 탭 | `new_tab`, `list_tabs`, `switch_tab`, `close_tab` |
+
+### 비용 어림 계산 (2026-10-11 기준, 추정)
+
+가정: 정의 오버헤드 4,500 토큰, 턴마다 스크린샷 1장(약 1,800 토큰)이 쌓임, 캐시와 스크린샷 정리 없음, 텍스트·출력·사고 토큰은 무시. 턴 n의 입력은 약 4,500 + 1,800 × n이에요.
+
+| 반복 횟수 | 누적 입력 토큰 | Opus 5.5 ($4 / 100만) | Sonnet 5.5 ($2 / 100만) |
+| --- | --- | --- | --- |
+| 15턴 | 약 28만 | 약 $1.1 | 약 $0.6 |
+| 30턴 | 약 97만 | 약 $3.9 | 약 $1.9 |
+
+실제 비용은 이보다 크거나 작을 수 있어요. 응답의 `usage`로 확인하고, 토큰 세기 엔드포인트로 미리 가늠할 수 있어요. 줄이는 방법으로는 반복 횟수 상한, 옛 스크린샷 정리, 작은 모델 사용이 있어요. 공식 문서는 옛 스크린샷을 매 턴 지우지 말고 묶어서(예: 최근 세 장을 남기고 25턴마다) 정리하라고 하고, 최신 모델에서는 서버 측 도구 결과 정리를 권해요. 클라이언트가 지우면 사고 블록이 무효가 될 수 있기 때문이에요. 비용 전반은 [02. 비용 최적화](/new-project1/dev/02-cost-optimization/)를 보세요.
+
+## 자주 막히는 지점
+
+### 400 오류: does not support tool types: computer_20251124
+
+- **원인**: Opus 5.5, Sonnet 5.5, Haiku 5.5는 Claude API와 Google Cloud에서 옛 컴퓨터 도구를 받지 않아요.
+- **해결**: `tools`를 `{"type": "computer_toolset_20260801"}`로 바꾸고 베타 헤더와 베타 네임스페이스를 빼세요. 루프도 `input.action` 대신 블록의 `name`과 `toolset_name`으로 분기하도록 고쳐야 해요.
+
+### invalid_request_error: tool_use에 결과가 없거나 toolset_name이 틀려요
+
+- **원인**: 한 턴의 호출 중 일부에 `tool_result`를 안 줬거나, 결과에 `toolset_name`을 빠뜨렸어요. 배치로 여러 호출이 오는데 첫 블록만 처리하는 코드에서 자주 나요.
+- **해결**: 응답의 모든 `tool_use`를 순회하고, 실패 뒤의 호출에도 정해진 문구로 답하세요.
+
+### 이미지 크기 검증 오류가 나요
+
+- **원인**: 스크린샷이나 `zoom` 이미지가 모델의 이미지 한도를 넘었어요. API는 줄여 주지 않아요.
+- **해결**: 보내기 전에 직접 리사이즈하고 비율을 기억하세요. 요청 안에 이미지가 20장을 넘으면 변 길이 한도가 더 엄격해져요.
+
+### 클릭이 엉뚱한 곳에 가요
+
+- **원인**: 좌표는 내가 돌려준 스크린샷의 픽셀 공간 기준이에요. 리사이즈나 Retina 배율을 보정하지 않았을 수 있어요.
+- **해결**: 스크린샷을 줄인 비율로 좌표를 되돌리세요. 작은 글자는 `zoom`으로 확인하게 하고(켜 둔 경우), 작업을 "각 단계 뒤에 스크린샷으로 확인" 식으로 지시하세요.
+
+### 루프가 끝나지 않거나 비용이 갑자기 늘어요
+
+- **원인**: 상한이 없고, 대화 기록에 스크린샷이 쌓여요. Claude가 같은 동작을 반복하기도 해요.
+- **해결**: `MAX_ITERATIONS`, 누적 토큰 상한을 넣고, 같은 동작이 반복되면 멈추게 하세요. 요청마다 `usage`를 로그로 남기세요.
+
+### 구현하지 않은 멤버를 Claude가 불러요
+
+- **원인**: 꺼진 멤버도 Claude가 이름을 말할 수 있어요.
+- **해결**: 쓰지 않을 멤버는 `configs`로 `enabled: false`를 주고, 그래도 오면 `is_error: true` 결과로 답하세요.
+
+### 레거시 베타 헤더 때문에 400이 나요
+
+- **원인**: 툴셋 항목과 함께 `fine-grained-tool-streaming-2025-05-14` 베타 헤더를 보내고 있어요.
+- **해결**: 헤더를 빼고, 필요한 도구 정의에는 `eager_input_streaming: true`를 쓰세요.
+
+## 실전 팁
+
+- **드라이런 → 격리 VM → 확장 순서로.** 처음에는 화면을 건드리지 않고 루프만 확인하고, 다음에 일회용 VM에서 실제 앱 하나로 시험하세요.
+- **구체적으로 짧게 지시하세요.** 공식 문서는 단순하고 명시적인 단계를 주고, 단계마다 스크린샷으로 결과를 확인하라고 안내해요. 드롭다운과 스크롤바는 키보드 단축키가 더 안정적이에요. 지시문은 스크린샷 이미지보다 앞에 두세요.
+- **웹이면 브라우저 툴셋부터.** 접근성 트리로 읽으면 스크린샷보다 입력 토큰이 적게 드는 경우가 많고, URL 정책과 도메인 허용 목록을 쓰기도 쉬워요.
+- **사고 내용을 보고 싶으면.** 이 모델들은 사고 텍스트를 기본으로 생략해요. 디버깅할 때는 `thinking`의 `display`를 `"summarized"`로 정하면 요약을 볼 수 있어요.
+- **모델은 작은 것부터 비교하세요.** 같은 작업을 `claude-sonnet-5-5`로 돌려 성공률과 비용을 비교하세요. 비교 방법은 [08. 평가(evals)](/new-project1/dev/08-evals/)를 보세요.
+- **한계를 알고 쓰세요.** 공식 문서는 지연이 사람 속도보다 느리고, 좌표와 도구 선택에서 실수할 수 있으며, 스크롤과 스프레드시트 조작이 불안정할 수 있고, 정밀도가 완벽해야 하는 일이나 민감한 정보 작업은 사람 감독이 필요하다고 안내해요. 속도가 중요하지 않은 일(배경 정보 수집, 자동 테스트)이 잘 맞아요.
+- **약관을 지키세요.** 불법이거나 이용 정책(AUP)에 어긋나는 용도로 쓰면 안 돼요.
+- **앱 기능으로 충분하면 앱을 쓰세요.** 개인 작업이라면 [C11](/new-project1/claude/c11-chrome-computer-use/)의 Claude in Chrome이나 컴퓨터 사용이 훨씬 간단해요.
+
+## 다음에 볼 튜토리얼
+
+- [C11. Chrome과 컴퓨터 사용](/new-project1/claude/c11-chrome-computer-use/) — 앱 기능으로 쓰는 법과 사용자 쪽 안전 수칙
+- [01. 도구 사용으로 업무 봇 만들기](/new-project1/dev/01-tool-use/) — `tool_use`·`tool_result` 루프의 기본기
+- [02. API 비용 줄이기](/new-project1/dev/02-cost-optimization/) — 캐싱, 배치, effort로 비용 낮추기
+- [08. 평가(evals)로 품질 관리하기](/new-project1/dev/08-evals/) — 에이전트 작업의 성공률을 측정하기

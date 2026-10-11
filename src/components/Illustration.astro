@@ -1,6 +1,6 @@
 ---
 // 외부 이미지 없이 쓰는 단순한 인라인 SVG 일러스트 모음
-interface Props { name: 'claude' | 'chat' | 'coding' | 'media' | 'automation' | 'agents' | 'robot' | 'sparkle' | 'beginner' | 'practical' | 'advanced'; size?: number }
+interface Props { name: 'claude' | 'chat' | 'coding' | 'media' | 'automation' | 'agents' | 'dev' | 'robot' | 'sparkle' | 'beginner' | 'practical' | 'advanced'; size?: number }
 const { name, size = 48 } = Astro.props;
 ---
 <svg class="illu" width={size} height={size} viewBox="0 0 48 48" role="img" aria-hidden="true" focusable="false">
@@ -43,6 +43,12 @@ const { name, size = 48 } = Astro.props;
     <path d="M24 15v-5" stroke="#ff7a59" stroke-width="2.6" stroke-linecap="round" />
     <path d="M24 3l1.8 4.2L30 9l-4.2 1.8L24 15l-1.8-4.2L18 9l4.2-1.8z" fill="#ffd36e" />
     <path d="M7 24a17 17 0 0 1 4-10M41 24a17 17 0 0 1-4 10" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" />
+  </>)}
+  {name === 'dev' && (<>
+    <rect x="4" y="8" width="40" height="32" rx="8" fill="#2b3a55" />
+    <circle cx="11" cy="15" r="1.8" fill="#ff7a59" /><circle cx="17" cy="15" r="1.8" fill="#ffd36e" /><circle cx="23" cy="15" r="1.8" fill="#7cc98a" />
+    <path d="M17 25l-5 4.5 5 4.5M31 25l5 4.5-5 4.5" stroke="#9ad7f5" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M27 24l-6 11" stroke="#ffb59f" stroke-width="3" stroke-linecap="round" />
   </>)}
   {name === 'robot' && (<>
     <line x1="24" y1="5" x2="24" y2="11" stroke="#ff7a59" stroke-width="3" stroke-linecap="round" />

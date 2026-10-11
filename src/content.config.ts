@@ -10,7 +10,7 @@ export const collections = {
     schema: docsSchema({
       extend: z.object({
         level: z.enum(['beginner', 'practical', 'advanced']).optional(),
-        category: z.enum(['claude', 'chat', 'coding', 'media', 'automation', 'agents']).optional(),
+        category: z.enum(['claude', 'chat', 'coding', 'media', 'automation', 'agents', 'dev']).optional(),
         tools: z.array(z.string()).default([]),
         duration: z.string().optional(),
         prerequisites: z.array(z.string()).default([]),

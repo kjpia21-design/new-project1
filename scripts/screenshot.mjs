@@ -36,7 +36,13 @@ const step7Shots = [
   ['tutorials-agents', '/tutorials/?category=agents', false],
   ['agents-index', '/agents/', false],
 ];
-const shots = step === 'step2' ? step2Shots : step === 'step7' ? step7Shots : step1Shots;
+const step8Shots = [
+  ['home', '/', false],
+  ['dev-index', '/dev/', false],
+  ['start-advanced', '/start/advanced/', false],
+  ['tutorials-dev', '/tutorials/?category=dev', false],
+];
+const shots = step === 'step8' ? step8Shots : step === 'step2' ? step2Shots : step === 'step7' ? step7Shots : step1Shots;
 const sizes = { desktop: { width: 1280, height: 800 }, mobile: { width: 375, height: 812 } };
 
 for (const [theme, label] of [['light', ''], ['dark', '-dark']]) {
