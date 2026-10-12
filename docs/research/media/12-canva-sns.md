@@ -35,3 +35,6 @@ Aside: 남김. 문구를 "Canva 공식 도움말 원문은 아직 확인하지 �
 - 인앱 구매 가격(Pro 월 $14.99 등)은 한 이름에 여러 가격이 표시돼 요금제와 대응이 불명확해 사용하지 않음.
 - 못 찾음: 무료 AI 허용량 수치, Magic Media/Design 메뉴 이름, AI 약관 원문, 판매용 제품 조건.
 - 본문 조치: caution Aside를 남은 미확인 항목만 적도록 축소.
+
+## 7단계 재점검 (2026-10-12)
+- 열린 것: canva.dev 브랜드 키트(Pro/Business/Enterprise, 무료 제외 유지), 브랜드 템플릿 API(Pro/Teams/Enterprise), App Store(미국)·Google Play 등록 정보(Brand는 Pro 항목). canva.com 도움말·약관은 여전히 403이라 본문 변경 없음, lastVerified도 갱신하지 않음.

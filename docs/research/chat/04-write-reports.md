@@ -16,3 +16,6 @@
 
 ## 출처 목록
 - C04, Projects, Web search, Research, https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude — 확인일 2026-10-10
+
+## 재점검 (2026-10-12)
+- 출처 페이지를 다시 읽었고 본문과 어긋나는 내용 없음(변경 없음).

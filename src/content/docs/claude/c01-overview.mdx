@@ -8,7 +8,7 @@ category: claude
 tools: ["Claude", "Claude Code"]
 duration: "15분"
 prerequisites: ["Claude 계정 (무료 계정도 가능)"]
-lastVerified: 2026-10-11
+lastVerified: 2026-10-12
 sources:
   - title: "Models overview"
     url: "https://platform.claude.com/docs/en/about-claude/models/overview"
@@ -63,7 +63,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | **Sonnet 5.5** | 속도와 지능의 최고 조합 | 빠름 | $2 / $10 | `claude-sonnet-5-5` |
 | **Haiku 5.5** | 분류·추출·라우팅처럼 대량·저지연 작업 | 가장 빠름 | $0.10부터 / $0.50부터 | `claude-haiku-5-5` |
 
-- 위 가격은 API 기준이에요. Batch API는 50% 할인돼요. Haiku의 "부터"는 100K 토큰을 넘는 프롬프트가 더 비싸다는 점과 관련이 있어 보이지만, 정확한 구간별 요금은 공식 가격 페이지에서 확인하세요.
+- 위 가격은 API 기준이에요. Batch API는 50% 할인돼요. Haiku 5.5는 프롬프트가 100K 토큰을 넘으면 토큰당 요금이 더 비싸요(Claude Code Model configuration 문서, 2026-10-12 기준). 정확한 구간별 요금은 공식 가격 페이지에서 확인하세요.
 - 네 모델 모두 컨텍스트 윈도우는 1M 토큰, 최대 출력은 128K 토큰(동기 Messages API)이고, 신뢰할 수 있는 지식 컷오프는 2026년 6월이에요.
 - 기본 effort는 Fable 5.1 `high`, Opus 5.5 `medium`, Sonnet 5.5 `high`, Haiku 5.5 `medium`이에요.
 - 퇴역(retirement) 약속은 Fable 5.1이 2027-09-01 이전은 아니고, Opus 5.5는 2027-09-22, Sonnet 5.5는 2027-09-28, Haiku 5.5는 2027-10-07 이전은 아니에요. 길게 쓸 서비스를 만든다면 참고하세요.
@@ -158,7 +158,7 @@ Claude 앱의 모델 선택기에 플랜별로 어떤 모델이 보이는지는 
 ### Claude Code에서 Fable 선택이 안 돼요
 
 - **원인**: Claude Code 버전이 낮을 수 있어요.
-- **해결**: Fable 5는 v2.1.170 이상, Fable 5.1은 v2.1.255 이상이 필요해요(C2에서 소개한 공식 안내 기준). Claude Code를 업데이트하세요.
+- **해결**: Fable 5는 v2.1.170 이상, Fable 5.1은 v2.1.255 이상이 필요해요(고객센터 "Claude Fable models on your plan" 기준). 다만 Claude Code Model configuration 문서는 Fable 5.1에 v2.1.257 이상이 필요하다고 적고 있어요(2026-10-12 기준). 두 문서의 숫자가 달라서, 선택이 안 되면 최신 버전으로 업데이트하세요. 같은 문서에는 Opus 5.5 v2.1.280, Sonnet 5.5 v2.1.284, Haiku 5.5 v2.1.293 이상이라는 안내도 있어요.
 
 ### 더 큰 모델이 항상 낫다고 생각했는데 한도가 금방 줄어요
 

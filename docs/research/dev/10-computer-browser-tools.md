@@ -27,7 +27,7 @@
 - 오류는 `is_error: true`. 배치 중단 문구: `Not executed: an earlier action in this turn failed.`
 - 보안 권고 6가지: 전용 컨테이너·빈 프로필, 네트워크 계층 도메인 허용 목록(리다이렉트 후 재확인, 사설·루프백 차단), 페이지 내용은 모두 비신뢰(접근성 트리·보이는 텍스트 기반), `navigate`는 http/https만(URL 파서 사용, `javascript:`·`file:`·`data:` 거부), `javascript_exec`·`file_upload` 기본 끔, 결과가 큰 행동은 사람 확인. 로그인이 불가피하면 전용 저권한 계정.
 - Bedrock에서는 브라우저 툴셋 요청에 프롬프트 인젝션 분류기가 현재 돌지 않는다는 주석(SDK 페이지).
-- 가격 페이지의 브라우저 툴셋 오버헤드 토큰 수는 못 찾음(문서 본문 일부 미확인).
+- (2026-10-12 해소) 브라우저 툴셋 오버헤드: pricing 페이지 "Browser use tool" 절에서 확인 — 기본 멤버 약 6,600 입력 토큰(Sonnet 5 약 6,670, 그 외 약 6,610), 선택 4개 모두 켜면 약 +880. 컴퓨터 툴셋은 약 4,500(Sonnet 5 약 4,590, 그 외 약 4,520) 변동 없음.
 
 ### SDK 툴셋 (https://platform.claude.com/docs/en/agents-and-tools/tool-use/browser-use-sdk)
 - Python·TypeScript SDK에 베타 클래스: `anthropic.tools.browser.BetaAbstractBrowserToolset20260801`, `anthropic.tools.computer.BetaAbstractComputerToolset20260801`(TS는 `@anthropic-ai/sdk/helpers/beta/toolsets`). 서브클래스를 만들어 멤버별 메서드를 구현, `client.beta.messages.tool_runner(tools=[toolset])`로 실행. SDK에는 브라우저·데스크톱·드라이버가 없음(예: claude-quickstarts/browser-toolset의 CDP 예제는 프로덕션 코드가 아님).
@@ -42,6 +42,9 @@
 - 2026-08-19: 컴퓨터 툴셋 GA와 브라우저 툴셋 출시(C16 "다음 단계" 절과 일치).
 
 ## 확인 못 한 것
-- 브라우저 툴셋의 토큰 오버헤드·별도 요금(문서 해당 부분 못 읽음).
+- (해소: 2026-10-12 위 참고. 별도 요금은 없고 표준 도구 사용 요금.)
 - 컴퓨터 툴셋 SDK 클래스는 베타라 시그니처가 바뀔 수 있음.
 - 실제 호출·실제 브라우저/가상 데스크톱 실행은 하지 못함(키·환경 없음). 예제는 문법과 임포트만 검증.
+
+## 2026-10-12 재확인
+- 본문 비용 Aside·요약에 브라우저 툴셋 오버헤드 약 6,600 반영. 나머지(GA 상태, 모델 목록, 멤버 수, 호환성, ZDR) 변동 여부는 아래 확인 결과 참고.

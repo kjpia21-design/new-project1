@@ -37,3 +37,9 @@ Claude 쪽 사실은 docs/research/claude/C07-connectors.md 를 재사용. 아�
 - 확인: 관리 권한 Upload plugins / Upload plugins with custom MCP servers, Share plugins, Publish plugins to workspace, Use plugins; Workspace apps의 Action control·App permissions. 도구 주석 readOnlyHint/destructiveHint, "쓰기 작업은 확인을 요구" 권고.
 - 못 찾음: 예전 "Developer mode" 명칭의 현재 존재 여부, 커스텀 MCP 서버 연결이 가능한 요금제 목록(문서에 플랜별 표 없음). 기존 본문의 "Business·Enterprise·Edu 베타, 웹 전용, Pro 읽기 전용" 문장은 검색 요약 기반이라 현재 문서와 맞지 않아 삭제.
 - 본문 변경: "확인 중" caution Aside를 지우고 note Aside(이름 변경 안내)로 교체, 비교표 ChatGPT 행, 용어표, 단계 1, 문제 해결 문장 수정. 채워진 빈칸 4, 남은 빈칸 1(플랜 조건).
+
+## 2026-10-12 재확인
+- 재확인: modelcontextprotocol.io(intro 2026-07-28, architecture 2025-06-18, spec 2025-03-26, security_best_practices), geminicli.com mcp-server, notion-agent, support.claude.com 2건, code.claude.com/docs/en/mcp, learn.chatgpt.com(plugins, enterprise/apps-and-connectors, migrate-custom-gpts), developers.openai.com(connect-chatgpt, mcp-server). help.openai.com은 사용하지 않음.
+- 변경: (1) "도구 설명은 신뢰된 서버가 아니면 믿지 말라"는 문장은 security_best_practices 페이지가 아니라 2025-03-26 규격의 Tool Safety 원칙에 있음 → 출처 표기 수정. (2) Claude 커넥터 연결 위치를 현재 도움말 표기(Customize > Connectors)로, 승인 대상은 현재 도움말 기준 Gmail 전송·답장·전달로 수정. (3) 관리자 권한 "Upload plugins with custom MCP servers"는 현재 apps-and-connectors 문서에서 확인되지 않음(Permissions & roles, Workspace apps, Action control, App permissions만 언급) → 본문 표현 완화.
+- 변동 없음: ChatGPT 커스텀 MCP 서버 절차(chatgpt.com/plugins > + > Add custom MCP server, /mcp, Secure MCP Tunnel, "I understand and want to continue", Create as a plugin), 플러그인 사용처(웹·데스크톱·모바일 Chat/Work, Codex; IDE 확장 미지원), Gemini CLI 설정, Notion 경로.
+- 새로 알게 됨(미반영): migrate-custom-gpts — 커스텀 GPT가 플러그인으로 전환 중, 커스텀 액션은 이전되지 않음. 최신 MCP 스펙은 2026-07-28(보안 문서는 이 버전 기준: 프로토콜 수준 세션 없음). 플랜별 커스텀 MCP 서버 지원 목록은 여전히 문서에 없음.

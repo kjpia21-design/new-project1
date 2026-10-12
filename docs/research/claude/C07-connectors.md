@@ -37,3 +37,8 @@
 
 ## 2026-10-11 업데이트 반영
 - 2026-09-15: Salesforce in Claude 베타. "available in beta on all paid plans for organizations Salesforce approves through its beta sign-up." 출처: https://support.claude.com/en/articles/12138966-release-notes
+
+## 2026-10-12 점검 반영
+- Notion 커넥터 페이지(https://claude.com/connectors/notion)를 직접 열어 확인: 제작 Notion, Anthropic 검증, 2025년 11월 추가, 로그인 필요, URL `https://mcp.notion.com/mcp`, "Add to Claude" 버튼. 읽기: search, fetch, get-comments, get-users 등. 쓰기: create-pages, update-page, move-pages, duplicate-page, create-database, update-database, create-comment. 플랜 조건은 페이지에 없음.
+- support.claude.com의 Notion 단계별 도움말은 여전히 못 찾음.
+- Google Workspace 커넥터 도움말: 변동 없음(Gmail 전송·답장·전달, Drive 공유·이동·휴지통은 기본적으로 승인 필요).

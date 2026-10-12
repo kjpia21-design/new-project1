@@ -59,3 +59,7 @@
 - 플러그인: `claude plugin install <plugin> --marketplace <source>`(v2.1.292), `/plugin install ... --marketplace`(v2.1.275), `claude plugin eval`/`eval init`(v2.1.269, `--allow-tools` 등)(Plugin commands reference).
 - `/code-review --max-findings <n|all|default>`: v2.1.288, 선택은 `default`를 줄 때까지 유지(CHANGELOG, Commands).
 - 확인 못 함: sub-agents 문서의 `autoCompactWindow` 필드 설명, `/permissions` Auto mode 탭의 화면 문구(CHANGELOG 한 줄 근거).
+
+## 2026-10-12 점검 반영
+- 서브에이전트 문서: 내장 목록에 `claude`(만능 에이전트)가 추가로 보임. 본문 표에 반영.
+- 플러그인: `claude plugin install <plugin> --marketplace <source>`는 v2.1.292 이상, 세션 안 `/plugin install ... --marketplace`는 v2.1.275 이상. 본문 수정.

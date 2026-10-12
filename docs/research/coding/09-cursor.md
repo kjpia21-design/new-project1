@@ -38,3 +38,8 @@
 
 ## 6단계 재점검 (2026-10-10)
 - cursor.com/docs/get-started/quickstart(curl 200)에 UI 언어 언급 없음. 한국어 UI 지원은 미확인 유지.
+
+## 2026-10-12 재점검
+- 모든 출처 재열람 성공(WebFetch, first-project.md는 curl 200). 요금(Hobby 무료, Pro $20, Pro+ $60, Ultra $200, Teams $40/$120, Enterprise 문의, 인도 Start ₹649), 모드 4종, Rules(.mdc, 적용 4종), Privacy Mode, 색인(Instant Grep, 로컬) 모두 기존 서술과 일치.
+- 새로 확인: ignore-files 문서의 기본 제외 목록에 lock 파일 외 `.env*`, `.git/`, `node_modules/`, 바이너리·압축·이미지·미디어가 포함됨 -> 본문 반영. 계층형 .cursorignore(Settings > Indexing > Ignore Files)와 전역 ignore 목록 존재. models-and-pricing: Teams Premium은 Standard 대비 Agent 한도 5배.
+- 릴리스 노트(3.19~3.24)에서 Plan/Debug 모드·한국어 관련 변경 없음. 한국어 UI 지원 여부는 여전히 미확인.

@@ -49,3 +49,7 @@
 - Python SDK의 OAuth 토큰 검증(`auth`/`token_verifier`) 사용법. 생성자 인자로 존재하는 것만 확인.
 - Claude 앱에서 실제 커스텀 커넥터 연결 화면(계정 필요).
 - 공개 HTTPS 배포 방법(호스팅은 사용자 환경에 따라 다름).
+
+## 2026-10-12 재확인
+- modelcontextprotocol.io가 이번에는 `.md` 경로로 읽힘(security_best_practices.md 직접 읽음). 기존 '직접 읽지 못함' 해소. 새로 반영: 토큰은 자기에게 발급된 것만 수락(MUST NOT accept tokens not issued for the server), token passthrough 금지, 스코프 최소화, 로컬 서버는 stdio 또는 인증 토큰/제한된 IPC. 본문 보안 체크리스트에 2행 반영.
+- github.com 저장소 페이지는 curl 403(raw README로 대체 확인): Python SDK README는 `from mcp.server import MCPServer`, `uv add "mcp[cli]"`; TS README main은 v2(`@modelcontextprotocol/server`), first-server.md는 Node 20+, zod/v4, serveStdio — 본문과 일치. PyPI mcp 2.3.0(>=3.10) 일치.

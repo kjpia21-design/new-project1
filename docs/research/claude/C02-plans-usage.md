@@ -56,3 +56,9 @@
 - 월 API 크레딧 수령법: https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers 를 직접 열어 확인. Max 5x $100, Max 20x $200, Team 스탠더드 좌석 $20/프리미엄 $100(월 풀링, 상한 $500). Console 조직 연결로 수령(Max: Settings > Billing, Team: Organization settings > Billing). 신규 구독자 7일 후, 플랜당 조직 1개, 이월 없음, Claude Code·앱 추가 사용량·타 클라우드 미적용. 지원센터 릴리스 노트(2026-10-07)와 일치.
 - "클라우드 세션 크레딧" 항목은 이번 확인에서도 공식 문서에서 찾지 못함(변경 없음).
 - 출처 추가: 위 문서, https://support.claude.com/en/articles/12138966-release-notes (확인일 2026-10-11)
+
+## 2026-10-12 점검 반영
+- 가격 페이지, Pro/Max/Team 도움말, 추가 사용량, Fable 문서, API 크레딧 문서를 다시 읽었고 가격·배수·좌석 수·월 크레딧 금액은 변동 없음.
+- Fable 5.1 최소 Claude Code 버전이 고객센터(v2.1.255)와 model-config 문서(v2.1.257)에서 다름. 본문에 병기.
+- "클라우드 세션 크레딧"은 릴리스 노트, Pro/Max·Team/Enterprise Claude Code 도움말, 사용량 한도 도움말, claude-code-on-the-web 어디에도 아직 설명 없음(2026-10-12 기준).
+- 가격 페이지에 Pro 포함 기능으로 Claude Dashboards(베타), Claude Science가, Team에 Claude Motion이 새로 보임(본문 미반영).

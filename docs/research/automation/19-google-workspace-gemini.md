@@ -38,3 +38,8 @@
 
 ## 6단계 재점검 (2026-10-10)
 - Gemini Apps 도움말(support.google.com/gemini/answer/13594961): 개인 계정 대화 일부를 사람 검토자가 볼 수 있으니 기밀 입력 금지. 한국어 요금제 페이지는 "모든 가격은 $ 기준", 에디션별 금액은 화면 렌더링으로 읽히지 않음.
+
+## 2026-10-12 재확인
+- 14925782(언어), 14199860(Gmail), 14506398, 14590328, 14356410(Sheets), knowledge 포함 안내, workspace.google.com/pricing 비교표, Privacy Hub, Gemini Apps Privacy Hub, turn-the-gemini-app-on-or-off 모두 재확인. 본문 내용 변동 없음(언어 목록·에디션 표·버튼 이름·관리 콘솔 경로 동일).
+- 변경: Privacy Hub URL이 support.google.com/a/answer/15706919 -> knowledge.workspace.google.com/admin/gemini/generative-ai-in-google-workspace-privacy-hub 로 301 이동, sources URL 갱신.
+- 참고: 포함 안내 페이지는 애드온 판매 종료 목록(Gemini Business-Legacy 등)과 교육용 Google AI Pro for Education 애드온 유지를 명시. 에디션별 금액은 여전히 정적 HTML에 없음.

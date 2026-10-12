@@ -41,3 +41,8 @@
 - https://code.claude.com/docs/en/sub-agents — 확인일 2026-10-10 (C14 연구 파일 경유)
 - https://code.claude.com/docs/en/overview — 확인일 2026-10-10
 - https://support.claude.com/en/articles/12512180-use-skills-in-claude (C08 경유)
+
+## 2026-10-12 재확인
+- routines, skills, sub-agents, overview, 지원센터 skills 문서 재열람 성공(skills·sub-agents는 마지막 약 7~8천 자 미열람).
+- 기존 서술과 일치: 리서치 프리뷰, Pro/Max/Team/Enterprise, 트리거 3종, 최소 1시간, 한도(스케줄 계정당 100/h, Run now+API 루틴당 30/h 공유), 72시간, claude/ 접두사, `/schedule`(별칭 `/routines`), SKILL.md 위치, 서브에이전트 필수 필드와 model 값(sonnet/opus/haiku/fable/전체 ID/inherit), `/agents` 안내 문구(v2.1.197 이하 마법사).
+- 새로 확인: 클라우드 세션 문서(https://code.claude.com/docs/en/claude-code-on-the-web)에 "repo의 .claude/agents/에 정의된 서브에이전트는 자동으로 인식된다"는 서술이 있고 루틴은 클라우드 세션으로 실행되므로 본문의 "확인하지 못함" 문구를 갱신. 루틴은 일부 아티팩트 동작을 제외하고 승인 없이 실행(아티팩트 재게시 조건은 routines 문서 참고).
