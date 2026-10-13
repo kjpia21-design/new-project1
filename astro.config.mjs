@@ -39,6 +39,7 @@ export default defineConfig({
             { label: '입문자 시작점', slug: 'start/beginner' },
             { label: '실무자 시작점', slug: 'start/practical' },
             { label: '고급 사용자 시작점', slug: 'start/advanced' },
+            { label: 'AI 용어 사전', slug: 'start/glossary' },
           ],
         },
         { label: 'AI 첫걸음', collapsed: true, items: [{ autogenerate: { directory: 'basics' } }] },
