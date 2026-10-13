@@ -10,6 +10,7 @@ interface Props {
   filters?: boolean;
   emptyText?: string;
 }
+const Heading = Astro.props.filters ? 'h2' : 'h3';
 const { level, category, filters = false, emptyText = '아직 이 조건에 맞는 튜토리얼이 없어요.' } = Astro.props;
 const items = await getTutorials({ level, category });
 const levels: Level[] = ['beginner', 'practical', 'advanced'];
@@ -44,7 +45,7 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
                 {e.data.status === 'draft' && <span class="soon-tag">준비 중</span>}
               </div>
             </div>
-            <h3>{e.data.title}</h3>
+            <Heading>{e.data.title}</Heading>
             {e.data.description && <p class="desc">{e.data.description}</p>}
             <p class="foot">
               <span>{categoryLabels[e.data.category!]}</span>
@@ -88,7 +89,7 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
     padding: 0.1rem 0.6rem; border-radius: 999px; font-size: var(--sl-text-xs); font-weight: 700; line-height: 1.6;
     background: var(--ai-yellow-bg); color: var(--ai-yellow-fg);
   }
-  h3 { margin: 0.2rem 0 0; font-size: var(--sl-text-base); line-height: 1.4; color: var(--sl-color-white); font-weight: 700; }
+  h2, h3 { margin: 0.2rem 0 0; font-size: var(--sl-text-base); line-height: 1.4; color: var(--sl-color-white); font-weight: 700; }
   .desc { margin: 0; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); line-height: 1.5; }
   .foot { margin: auto 0 0; padding-top: 0.4rem; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); display: flex; gap: 0.3rem; flex-wrap: wrap; }
   .empty { padding: 1rem 1.25rem; border: 2px dashed var(--sl-color-gray-4); border-radius: 14px; color: var(--sl-color-gray-2); margin: 0; }

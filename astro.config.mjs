@@ -17,6 +17,8 @@ export default defineConfig({
       },
       favicon: '/favicon.svg',
       head: [
+        // 폰트 CDN에 미리 연결해 글꼴 교체로 인한 화면 밀림(CLS)을 줄인다.
+        { tag: 'link', attrs: { rel: 'preconnect', href: 'https://cdn.jsdelivr.net', crossorigin: '' } },
         {
           tag: 'link',
           attrs: {
