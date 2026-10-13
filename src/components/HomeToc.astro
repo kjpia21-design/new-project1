@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import { entryUrl, url } from '../lib/tutorials';
+
+// astro.config.mjs 사이드바와 같은 순서로 묶음을 보여 준다. 모바일 홈에는 사이드바가 없어서 만든 전체 목차.
+const all = await getCollection('docs');
+const byDir = (dir: string) =>
+  all
+    .filter((e) => e.id.startsWith(dir + '/') && e.id !== `${dir}/index`)
+    .sort((a, b) => (a.data.sidebar?.order ?? 999) - (b.data.sidebar?.order ?? 999) || a.id.localeCompare(b.id));
+const chips = (dir: string) => byDir(dir).map((e) => ({ label: e.data.sidebar?.label ?? e.data.title, href: entryUrl(e.id) }));
+
+const groups = [
+  { title: '시작하기', chips: [
+    { label: '입문자 시작점', href: url('/start/beginner/') },
+    { label: '실무자 시작점', href: url('/start/practical/') },
+    { label: '고급 사용자 시작점', href: url('/start/advanced/') },
+    { label: 'AI 용어 사전', href: url('/start/glossary/') },
+    { label: '바로 쓰는 프롬프트 모음', href: url('/start/prompts/') },
+  ] },
+  { title: '직무별 AI 활용', href: url('/roles/'), chips: chips('roles') },
+  { title: 'AI 첫걸음', href: url('/basics/'), chips: chips('basics') },
+  { title: 'Claude 완전 정복', href: url('/claude/'), chips: chips('claude') },
+  { title: 'Claude 최신 소식', href: url('/claude-news/'), chips: [] },
+  { title: '화제의 AI 에이전트', href: url('/agents/'), chips: chips('agents') },
+  { title: '개발자 심화', href: url('/dev/'), chips: chips('dev') },
+  { title: '대화형 AI 기본기', href: url('/chat/'), chips: chips('chat') },
+  { title: '코딩·에이전트', href: url('/coding/'), chips: chips('coding') },
+  { title: '이미지·영상·음성', href: url('/media/'), chips: chips('media') },
+  { title: '업무 자동화·생산성', href: url('/automation/'), chips: chips('automation') },
+  { title: '전체 튜토리얼', href: url('/tutorials/'), chips: [] },
+];
+---
+<div class="toc not-content">
+  {groups.map((g) => (
+    <section class="grp">
+      <h3>{g.href ? <a href={g.href}>{g.title}</a> : g.title}</h3>
+      {g.chips.length > 0 && (
+        <ul>
+          {g.chips.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+        </ul>
+      )}
+    </section>
+  ))}
+</div>
+
+<style>
+  .toc { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); align-items: start; }
+  .grp { padding: 0.9rem 1rem 1rem; border-radius: 16px; background: var(--ai-card); border: 1px solid var(--sl-color-gray-5); box-shadow: var(--ai-shadow); }
+  h3 { margin: 0 0 0.1rem; font-size: var(--sl-text-base); font-weight: 800; }
+  h3 a { color: var(--sl-color-white); text-decoration: none; }
+  h3 a:hover { color: var(--sl-color-accent-high); }
+  h3 a::after { content: ' →'; color: var(--ai-coral); }
+  ul { list-style: none; margin: 0.55rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  li { margin: 0; padding: 0; }
+  li a {
+    display: inline-block; padding: 0.25rem 0.7rem; border-radius: 999px; font-size: var(--sl-text-sm); line-height: 1.5;
+    text-decoration: none; color: var(--sl-color-gray-1); background: var(--ai-card-tint); border: 1px solid var(--sl-color-gray-5);
+  }
+  li a:hover { border-color: var(--ai-coral); color: var(--sl-color-accent-high); }
+</style>

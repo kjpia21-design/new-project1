@@ -5,7 +5,7 @@
 전체 계획은 [`docs/PLAN.md`](docs/PLAN.md)를 참고하세요.
 
 - 기술: [Astro](https://astro.build) + [Starlight](https://starlight.astro.build)
-- 배포: GitHub Pages (`main`에 푸시하면 GitHub Actions가 자동 배포) — https://kjpia21-design.github.io/new-project1/
+- 배포: GitHub Pages (`main`에 푸시하면 GitHub Actions가 자동 배포) — https://ai-trend-catchup.com
 
 ## 로컬 실행
 
@@ -13,12 +13,12 @@ Node 22 이상이 필요합니다.
 
 ```sh
 npm install
-npm run dev       # 개발 서버 http://localhost:4321/new-project1/
+npm run dev       # 개발 서버 http://localhost:4321/
 npm run build     # dist/ 에 정적 사이트 생성 + 내부 링크 검사
 npm run preview   # 빌드 결과 미리보기
 ```
 
-사이트가 `/new-project1` 하위 경로에 배포되므로 주소는 항상 `/new-project1/`로 시작합니다.
+사이트가 도메인 루트(https://ai-trend-catchup.com)에 배포되므로 내부 링크는 항상 `/`로 시작합니다 (예: `/claude/c01-overview/`).
 컴포넌트에서 링크를 만들 때는 `src/lib/tutorials.ts`의 `url()` / `entryUrl()`을 사용하세요.
 
 ## 새 튜토리얼 추가하기
@@ -70,7 +70,6 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | `PromptBox` | 복사 버튼이 있는 프롬프트 상자 |
 | `ScreenshotPlaceholder` | 스크린샷 자리 표시 (`caption="..."`) |
 | `diagrams/*` | 튜토리얼별 인라인 SVG 도식 (`src/components/diagrams/`, CSS 변수 사용으로 다크 모드 대응) |
-| `ComingSoon` | 준비 중 안내 (본문 작성 전 페이지에만) |
 | `TutorialGrid` | 튜토리얼 카드 그리드 (`level`, `category`, `filters` 속성) |
 | `LevelBadge` | 입문(초록)·실무(파랑)·고급(보라) 배지 |
 
@@ -86,4 +85,4 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 (`/components-preview/`는 개발 서버 주소를 인자로 넘겨야 찍힙니다.)
 
 2단계 샘플 스크린샷은 `node scripts/screenshot.mjs step2`로 찍어 `docs/screenshots/step2/`에 저장합니다.
-인자는 `[세트이름|baseUrl] [baseUrl]` 순서로 받습니다 (예: `node scripts/screenshot.mjs step2 http://localhost:4321/new-project1`).
+인자는 `[세트이름|baseUrl] [baseUrl]` 순서로 받습니다 (예: `node scripts/screenshot.mjs step2 http://localhost:4321`).

@@ -3,7 +3,7 @@
 interface Props { name: 'claude' | 'chat' | 'coding' | 'media' | 'automation' | 'agents' | 'dev' | 'basics' | 'robot' | 'sparkle' | 'beginner' | 'practical' | 'advanced'; size?: number }
 const { name, size = 48 } = Astro.props;
 ---
-<svg class="illu" width={size} height={size} viewBox="0 0 48 48" role="img" aria-hidden="true" focusable="false">
+<svg class="illu" width={size} height={size} viewBox="0 0 48 48" aria-hidden="true" focusable="false">
   {name === 'claude' && (<>
     <circle cx="24" cy="24" r="22" fill="#ffd9cc" />
     <path d="M24 7l3.6 10.4L38 21l-10.4 3.6L24 41l-3.6-16.4L10 21l10.4-3.6z" fill="#ff7a59" />

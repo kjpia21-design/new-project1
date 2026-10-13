@@ -102,7 +102,14 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
       const cards = Array.from(root.querySelectorAll<HTMLElement>('.card'));
       const state: Record<string, string> = { level: '', category: '' };
       const params = new URLSearchParams(location.search);
-      for (const k of Object.keys(state)) state[k] = params.get(k) ?? '';
+      const allowed: Record<string, string[]> = {
+        level: ['beginner', 'practical', 'advanced'],
+        category: ['basics', 'claude', 'agents', 'dev', 'chat', 'coding', 'media', 'automation'],
+      };
+      for (const k of Object.keys(state)) {
+        const v = params.get(k) ?? '';
+        state[k] = allowed[k].includes(v) ? v : '';
+      }
 
       const apply = () => {
         let shown = 0;

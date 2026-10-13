@@ -92,3 +92,34 @@ h1, h2, h3, h4 { font-weight: 700; }
 .home-wrap .section-title { display: flex; align-items: center; gap: 0.5rem; }
 .home-wrap .sl-heading-wrapper { margin-bottom: 1rem; }
 .home-wrap .sl-heading-wrapper h2 { margin: 0; }
+
+/* 표: 좁은 화면에서 한 글자씩 세로로 쪼개지지 않게 가로로 스크롤한다. */
+.sl-markdown-content table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.sl-markdown-content table :is(th, td) { min-width: 6.5rem; overflow-wrap: normal; word-break: keep-all; }
+.sl-markdown-content table :is(th, td):first-child { min-width: 5rem; }
+.sl-markdown-content table :is(th, td):first-child:not(:has(*)) { white-space: nowrap; }
+@media (max-width: 50rem) {
+  .sl-markdown-content table :is(th, td) { min-width: 7rem; }
+}
+.sl-markdown-content table:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 2px; }
+
+/* 헤더 테마 선택: 라벨("밝은 모드" 등)이 잘리지 않게 폭을 확보한다. */
+starlight-theme-select select { min-width: 6.5rem; width: max-content; text-overflow: clip; }
+
+/* 용어 사전: 자음 묶음 제목은 작고 은은하게 */
+.glossary h2 {
+  margin: 2.2rem 0 0.4rem;
+  padding: 0.1rem 0.7rem;
+  display: inline-block;
+  font-size: var(--sl-text-base);
+  font-weight: 800;
+  color: var(--sl-color-accent-high);
+  background: var(--ai-coral-soft);
+  border-radius: 999px;
+}
+.glossary .sl-heading-wrapper:has(h2) { margin-top: 1rem; }
