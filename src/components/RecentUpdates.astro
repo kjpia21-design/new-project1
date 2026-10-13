@@ -11,7 +11,7 @@ const items = await getRecentlyVerified(limit);
   <ul class="updates not-content">
     {items.map((e) => (
       <li>
-        <time datetime={e.data.lastVerified!.toISOString().slice(0, 10)}>{formatDate(e.data.lastVerified)}</time>
+        <time datetime={e.data.lastVerified!.toISOString().slice(0, 10)}>확인 {formatDate(e.data.lastVerified)}</time>
         {e.data.level && <LevelBadge level={e.data.level} />}
         <a href={entryUrl(e.id)}>{e.data.title}</a>
       </li>

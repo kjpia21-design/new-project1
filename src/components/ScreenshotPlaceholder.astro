@@ -11,19 +11,27 @@ interface Props {
 }
 const { caption, src, alt, officialUrl, officialLabel } = Astro.props;
 ---
-<figure class="shot not-content">
-  <div class="head">
+<figure class:list={["shot", "not-content", { compact: !src }]}>
+  {!src && (
+    <p class="line">
+      <span>📷 화면 안내: {caption}</span>
+      {officialUrl && (
+        <a class="official" href={officialUrl} target="_blank" rel="noopener noreferrer">{officialLabel ?? '공식 도움말에서 이 화면 보기'} ↗</a>
+      )}
+    </p>
+  )}
+  {src && <div class="head">
     <Illustration name="media" size={28} />
     <p class="title">이 단계에서 보게 될 화면</p>
-  </div>
+  </div>}
   {src && <img class="img" src={src} alt={alt ?? caption} loading="lazy" />}
-  <figcaption class="cap">{caption}</figcaption>
-  {officialUrl && (
+  {src && <figcaption class="cap">{caption}</figcaption>}
+  {src && officialUrl && (
     <a class="official" href={officialUrl} target="_blank" rel="noopener noreferrer">
       {officialLabel ?? '공식 도움말에서 이 화면 보기'} ↗
     </a>
   )}
-  <p class="note">실제 화면은 서비스 업데이트에 따라 다를 수 있어요</p>
+  {src && <p class="note">실제 화면은 서비스 업데이트에 따라 다를 수 있어요</p>}
 </figure>
 
 <style>
@@ -37,6 +45,9 @@ const { caption, src, alt, officialUrl, officialLabel } = Astro.props;
     background: var(--ai-card-tint);
     text-align: left;
   }
+  .shot.compact { margin: 1rem 0; padding: 0.5rem 0.85rem; gap: 0; border-radius: 4px 10px 10px 4px; }
+  .line { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.1rem 0.75rem; font-size: var(--sl-text-sm); line-height: 1.55; color: var(--sl-color-gray-2); }
+  .line span { overflow-wrap: anywhere; }
   .head { display: flex; align-items: center; gap: 0.5rem; }
   .head :global(svg) { flex: none; }
   .title { margin: 0; font-size: var(--sl-text-xs); font-weight: 700; color: var(--sl-color-gray-3); letter-spacing: 0.02em; }

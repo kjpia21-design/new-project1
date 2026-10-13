@@ -10,6 +10,7 @@ import ClaudeBanner from '../../components/ClaudeBanner.astro';
 import AgentsBanner from '../../components/AgentsBanner.astro';
 import CategoryCards from '../../components/CategoryCards.astro';
 import RecentUpdates from '../../components/RecentUpdates.astro';
+import HomeToc from '../../components/HomeToc.astro';
 
 <div class="home-wrap">
 
@@ -43,9 +44,17 @@ import RecentUpdates from '../../components/RecentUpdates.astro';
 
 <section>
 
-## 최근 업데이트
+## 최근 확인·업데이트한 글
 
 <RecentUpdates limit={5} />
+
+</section>
+
+<section>
+
+## 전체 목차
+
+<HomeToc />
 
 </section>
 

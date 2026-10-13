@@ -5,6 +5,7 @@ const counts = Object.fromEntries(
   await Promise.all(['basics'].map(async (k) => [k, (await getTutorials({ category: k as 'basics' })).length])),
 ) as Record<string, number>;
 const cats = [
+  { key: 'robot', title: '직무별 AI 활용', desc: '마케터, 사무직, 교사, 학생, 개발자, 1인 사업자별 활용법', href: '/roles/' },
   { key: 'basics', title: 'AI 첫걸음', desc: '가입부터 첫 질문, 안전하게 쓰는 법, 휴대폰 활용까지 ' + counts.basics + '편', href: '/basics/' },
   { key: 'agents', title: '화제의 AI 에이전트', desc: 'Meta Muse, Grok Bot, ChatGPT Dots 알아보기', href: '/agents/' },
   { key: 'dev', title: '개발자 심화', desc: '도구 사용, Agent SDK, MCP 서버, CI 자동화, 평가', href: '/dev/' },
@@ -26,7 +27,7 @@ const cats = [
 </ul>
 
 <style>
-  .cats { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); }
+  .cats { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
   li { margin: 0; padding: 0; }
   a {
     display: flex; align-items: center; gap: 1rem; height: 100%; padding: 1rem 1.2rem; border-radius: 16px; text-decoration: none;
