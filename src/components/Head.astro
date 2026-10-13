@@ -1,0 +1,46 @@
+---
+// Starlight 기본 Head 오버라이드: 기본 <head> 태그를 그대로 내보낸 뒤 소셜 미리보기·theme-color를 덧붙인다.
+import Default from '@astrojs/starlight/components/Head.astro';
+
+const SITE_NAME = '최신 AI 트렌드 따라 잡기';
+const FALLBACK_DESCRIPTION =
+  '최신 AI 도구를 쉽게 설명하고, 단계별로 따라 할 수 있는 한국어 튜토리얼 사이트입니다.';
+// public/og/<id>.png 로 만들어지는 섹션 이미지 (scripts/og-images.mjs의 SECTIONS와 같게 유지)
+const SECTION_NAMES: Record<string, string> = {
+  basics: 'AI 첫걸음',
+  claude: 'Claude 완전 정복',
+  'claude-news': 'Claude 최신 소식',
+  agents: '화제의 AI 에이전트',
+  dev: '개발자 심화',
+  chat: '대화형 AI 기본기',
+  coding: '코딩·에이전트',
+  media: '이미지·영상·음성',
+  automation: '업무 자동화·생산성',
+};
+
+const { entry } = Astro.locals.starlightRoute;
+const first = entry.id.split('/')[0];
+// 문서 폴더(id) 우선, 없으면 frontmatter category, 그것도 없으면 사이트 기본 이미지
+const key = first in SECTION_NAMES ? first : entry.data.category && entry.data.category in SECTION_NAMES ? entry.data.category : 'default';
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const imageUrl = new URL(`${base}/og/${key}.png`, Astro.site).href;
+const imageAlt = key === 'default' ? SITE_NAME : `${SITE_NAME} - ${SECTION_NAMES[key]}`;
+const description = (entry.data.description || FALLBACK_DESCRIPTION).trim();
+---
+
+<Default><slot /></Default>
+<meta name="theme-color" content="#ff7a59" />
+{/* 검색 엔진 소유 확인: 소유자 본인의 코드로 아래 주석을 풀어 넣는다. 자세한 방법은 docs/guides/search-registration.md 참고.
+<meta name="google-site-verification" content="여기에-구글-코드" />
+<meta name="naver-site-verification" content="여기에-네이버-코드" />
+*/}
+<meta property="og:image" content={imageUrl} />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={imageAlt} />
+<meta name="twitter:image" content={imageUrl} />
+<meta name="twitter:image:alt" content={imageAlt} />
+{/* description이 비어 있는 페이지 대비: Starlight 기본값이 없을 때만 보강 */}
+{!entry.data.description && <meta name="description" content={description} />}
+{!entry.data.description && <meta property="og:description" content={description} />}
