@@ -70,7 +70,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - 이전 세대(Fable 5, Opus 5, Opus 4.x, Sonnet 5, Sonnet 4.6, Haiku 4.5)도 아직 쓸 수 있어요. 다만 **Sonnet 4.5(`claude-sonnet-4-5-20250929`)는 2026-09-30에 지원 중단(deprecated)이 예고됐고 Claude API에서 2026-11-30에 퇴역해요.** 쓰고 있다면 Sonnet 5.5로 옮기세요(2026-10-11 기준, 공식 릴리스 노트와 Model deprecations 문서). Opus 4.1은 이미 퇴역했어요. 모델 개요 본문에 Claude Mythos 5.1이라는 이름도 나오지만 현재 모델 표에는 없어서, 이 문서에서는 다루지 않아요.
 
 <Aside type="caution" title="Fable은 기본값이 아니에요">
-Claude Code 문서는 "Fable 모델은 어떤 플랜·제공자에서도 기본값이 아니며 명시적으로 선택해야 한다"고 설명해요. Claude Code의 `default`는 Pro/Max/Team/Enterprise/Anthropic API에서 **Opus 5.5**예요. Fable은 플랜과 좌석에 따라 한도 적용 방식이 달라서, 자세한 내용은 [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/)를 보세요.
+Claude Code 문서는 "Fable 모델은 어떤 플랜·제공자에서도 기본값이 아니며 명시적으로 선택해야 한다"고 설명해요. Claude Code의 `default`는 Pro/Max/Team/Enterprise/Anthropic API에서 **Opus 5.5**예요. Fable은 플랜과 좌석에 따라 한도 적용 방식이 달라서, 자세한 내용은 [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/)를 보세요.
 </Aside>
 
 <Aside type="note" title="모델 선택기는 내 화면이 기준이에요">
@@ -141,7 +141,7 @@ Claude 앱의 모델 선택기에 플랜별로 어떤 모델이 보이는지 정
 | --- | --- |
 | `default`, `best`, `fable`, `sonnet`, `opus`, `haiku` | 모델 별칭 |
 | `sonnet[1m]`, `opus[1m]` | 1M 컨텍스트 별칭 |
-| `opusplan` | 별칭 중 하나예요. 자세한 동작은 [C15](/new-project1/claude/c15-model-division/)에서 다뤄요 |
+| `opusplan` | 별칭 중 하나예요. 자세한 동작은 [C15](/claude/c15-model-division/)에서 다뤄요 |
 | `/model` | 세션 중 모델 변경 |
 | `claude --model opus` | 시작할 때 지정 |
 
@@ -153,7 +153,7 @@ Claude 앱의 모델 선택기에 플랜별로 어떤 모델이 보이는지 정
 ### Fable이 선택기에 안 보이거나 크레딧을 요구해요
 
 - **원인**: Fable은 기본값이 아니고, 플랜·좌석에 따라 포함 여부가 달라요.
-- **해결**: [C2](/new-project1/claude/c02-plans-limits/)의 Fable 한도 설명을 보고, 설정(Settings) > 사용량(Usage) 화면에서 실제 표시를 확인하세요.
+- **해결**: [C2](/claude/c02-plans-limits/)의 Fable 한도 설명을 보고, 설정(Settings) > 사용량(Usage) 화면에서 실제 표시를 확인하세요.
 
 ### Claude Code에서 Fable 선택이 안 돼요
 
@@ -168,18 +168,18 @@ Claude 앱의 모델 선택기에 플랜별로 어떤 모델이 보이는지 정
 ### API에서 모델 ID가 안 먹어요
 
 - **원인**: 모델 ID 철자나 제공자별 형식이 달라서예요. Bedrock은 `anthropic.` 접두사를 붙여요(예: `anthropic.claude-opus-5-5`).
-- **해결**: 위 표의 ID를 그대로 쓰세요. API 사용법은 [C16. API](/new-project1/claude/c16-api/)에서 다뤄요.
+- **해결**: 위 표의 ID를 그대로 쓰세요. API 사용법은 [C16. API](/claude/c16-api/)에서 다뤄요.
 
 ## 실전 팁
 
 - **먼저 Opus 5.5로 시작하고, 필요할 때만 내리거나 올리세요.** 공식 권장 순서와 같아요.
-- **모델 선택과 effort는 프롬프트만큼 중요한 조절 장치예요.** 프롬프트 작성은 [C4](/new-project1/claude/c04-prompting/)를 보세요.
-- **계획은 큰 모델, 구현은 작은 모델로 나누는 방법도 있어요.** [C15. 모델 역할 나누기](/new-project1/claude/c15-model-division/)에서 다뤄요.
+- **모델 선택과 effort는 프롬프트만큼 중요한 조절 장치예요.** 프롬프트 작성은 [C4](/claude/c04-prompting/)를 보세요.
+- **계획은 큰 모델, 구현은 작은 모델로 나누는 방법도 있어요.** [C15. 모델 역할 나누기](/claude/c15-model-division/)에서 다뤄요.
 - **가격은 바뀌어요.** 이 표는 2026-10-10 기준이니 쓰기 전에 공식 모델 개요 페이지에서 다시 확인하세요.
 
 ## 다음에 볼 튜토리얼
 
-- [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/) — 모델별 한도와 요금제
-- [C3. Claude 앱 시작하기](/new-project1/claude/c03-getting-started/) — 웹·데스크톱·모바일 앱 설치와 시작
-- [C4. 프롬프트 잘 쓰는 법](/new-project1/claude/c04-prompting/) — 같은 모델로 더 좋은 답 얻기
-- [Claude·ChatGPT·Gemini 업무별 비교와 고르는 법](/new-project1/chat/05-compare-assistants/) — 다른 회사 어시스턴트와 나란히 비교하기
+- [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/) — 모델별 한도와 요금제
+- [C3. Claude 앱 시작하기](/claude/c03-getting-started/) — 웹·데스크톱·모바일 앱 설치와 시작
+- [C4. 프롬프트 잘 쓰는 법](/claude/c04-prompting/) — 같은 모델로 더 좋은 답 얻기
+- [Claude·ChatGPT·Gemini 업무별 비교와 고르는 법](/chat/05-compare-assistants/) — 다른 회사 어시스턴트와 나란히 비교하기

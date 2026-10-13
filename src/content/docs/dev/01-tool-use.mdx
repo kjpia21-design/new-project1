@@ -52,7 +52,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - 같은 봇을 SDK tool runner로 다시 만들고, 직접 루프와 언제 갈라지는지 판단할 수 있어요.
 - 도구 결과를 통한 프롬프트 인젝션과 쓰기 도구의 위험을 알고 권한을 최소화할 수 있어요.
 
-이 튜토리얼은 [C16. Claude API 시작하기](/new-project1/claude/c16-api/)를 끝낸 분을 대상으로 해요. 키 발급과 첫 호출은 반복하지 않아요.
+이 튜토리얼은 [C16. Claude API 시작하기](/claude/c16-api/)를 끝낸 분을 대상으로 해요. 키 발급과 첫 호출은 반복하지 않아요.
 
 <Aside type="note" title="예제 검증 범위">
 예제는 공식 문서 기준이며 2026-10-11에 Python 문법만 검증했어요(`python3 -m py_compile`). 도구 함수(`get_stock`, `get_schedule`)는 로컬에서 직접 호출해 동작을 확인했지만, API 키가 없어 Claude를 실제로 호출해 보지는 못했어요. 실행 결과 예시는 응답 형태를 설명하려는 것이에요.
@@ -81,7 +81,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
   -> 응답 stop_reason == "end_turn"  -> 최종 텍스트
 ```
 
-도구 정의, `tool_use` 블록, `tool_result` 블록, 그리고 도구 사용을 켜면 자동으로 붙는 시스템 프롬프트(Opus 5.5·Sonnet 5.5·Haiku 5.5는 `auto`일 때 286토큰)가 모두 입력 토큰으로 과금돼요. 도구가 많을수록 매 요청의 입력이 커져요. 줄이는 방법은 [2. 프롬프트 캐싱·배치·effort로 API 비용 줄이기](/new-project1/dev/02-cost-optimization/)에서 다뤄요.
+도구 정의, `tool_use` 블록, `tool_result` 블록, 그리고 도구 사용을 켜면 자동으로 붙는 시스템 프롬프트(Opus 5.5·Sonnet 5.5·Haiku 5.5는 `auto`일 때 286토큰)가 모두 입력 토큰으로 과금돼요. 도구가 많을수록 매 요청의 입력이 커져요. 줄이는 방법은 [2. 프롬프트 캐싱·배치·effort로 API 비용 줄이기](/dev/02-cost-optimization/)에서 다뤄요.
 
 ### 모델별 제한: tool_choice
 
@@ -466,14 +466,14 @@ C16의 "모델별 요청 제한" 표에 있듯이 Opus 5.5, Sonnet 5.5, Fable 5.
 
 - 도구는 적고 분명하게 만드세요. 비슷한 도구가 많으면 모델이 헷갈리고 매 요청의 입력 토큰도 늘어요.
 - 도구 결과는 짧게 돌려주세요. 큰 JSON을 통째로 주면 다음 턴마다 그 입력이 다시 과금돼요. 필요한 필드만 추리세요.
-- 고정된 도구 정의와 시스템 프롬프트는 프롬프트 캐싱의 좋은 대상이에요. [02편](/new-project1/dev/02-cost-optimization/)을 보세요.
-- 단순 조회 봇은 Sonnet 5.5나 Haiku 5.5로 바꿔 보세요. 모델을 바꿀 때는 [C16의 모델별 요청 제한](/new-project1/claude/c16-api/)을 먼저 확인하고, 분담 전략은 [C15](/new-project1/claude/c15-model-division/)를 보세요.
+- 고정된 도구 정의와 시스템 프롬프트는 프롬프트 캐싱의 좋은 대상이에요. [02편](/dev/02-cost-optimization/)을 보세요.
+- 단순 조회 봇은 Sonnet 5.5나 Haiku 5.5로 바꿔 보세요. 모델을 바꿀 때는 [C16의 모델별 요청 제한](/claude/c16-api/)을 먼저 확인하고, 분담 전략은 [C15](/claude/c15-model-division/)를 보세요.
 - 도구가 한 번에 수십 개를 넘으면 공식 문서의 tool search(서버 도구)로 필요한 도구만 불러오는 방법이 있어요. 이 튜토리얼에서는 다루지 않았어요.
 - 외부 도구 서버를 표준 방식으로 붙이고 싶다면 MCP를 보세요. 직접 서버를 만드는 방법은 05편(MCP 서버)에서 다뤄요.
 
 ## 다음에 볼 튜토리얼
 
-- [2. 프롬프트 캐싱·배치·effort로 API 비용 줄이기](/new-project1/dev/02-cost-optimization/) — 도구 정의가 긴 봇의 비용 줄이기
-- [C16. Claude API 시작하기](/new-project1/claude/c16-api/) — 모델별 요청 제한 표
-- [C15. 모델 분담 전략](/new-project1/claude/c15-model-division/) — 조회는 작은 모델, 판단은 큰 모델
-- [3. Claude Agent SDK로 나만의 에이전트 만들기](/new-project1/dev/03-agent-sdk/) — 도구 루프를 SDK에 맡기는 방법
+- [2. 프롬프트 캐싱·배치·effort로 API 비용 줄이기](/dev/02-cost-optimization/) — 도구 정의가 긴 봇의 비용 줄이기
+- [C16. Claude API 시작하기](/claude/c16-api/) — 모델별 요청 제한 표
+- [C15. 모델 분담 전략](/claude/c15-model-division/) — 조회는 작은 모델, 판단은 큰 모델
+- [3. Claude Agent SDK로 나만의 에이전트 만들기](/dev/03-agent-sdk/) — 도구 루프를 SDK에 맡기는 방법

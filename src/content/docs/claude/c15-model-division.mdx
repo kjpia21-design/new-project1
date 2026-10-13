@@ -64,7 +64,7 @@ import C15ModelSplit from '../../../components/diagrams/C15ModelSplit.astro';
 | 용어 | 뜻 |
 | --- | --- |
 | **opusplan** | 계획 모드에서는 `opus`, 실행 단계에서는 `sonnet`을 쓰는 특별한 모델 별칭이에요. |
-| **서브에이전트** | 자체 컨텍스트를 가진 보조 에이전트예요. 정의 파일의 `model`로 모델을 정할 수 있어요. ([C14](/new-project1/claude/c14-claude-code-features/)) |
+| **서브에이전트** | 자체 컨텍스트를 가진 보조 에이전트예요. 정의 파일의 `model`로 모델을 정할 수 있어요. ([C14](/claude/c14-claude-code-features/)) |
 | **상속(inherit)** | 서브에이전트가 메인 대화와 같은 모델을 쓰는 것이에요. |
 | **effort** | 모델이 얼마나 깊게 생각할지 정하는 수준이에요 (low, medium, high, xhigh, max). |
 | **orchestrator / worker** | 공식 문서의 모델 조합 패턴이에요. 대량 작업을 저비용 모델(worker)에게 위임하는 구조를 가리켜요. |
@@ -89,7 +89,7 @@ import C15ModelSplit from '../../../components/diagrams/C15ModelSplit.astro';
 | Sonnet 5.5 | $2 / $10 |
 | Haiku 5.5 | $0.10부터 / $0.50부터 |
 
-Sonnet은 Opus의 절반, Fable은 Opus의 2.5배예요. 구독 사용량도 대화 길이, 기능, 모델, effort에 따라 달라져요. 자세한 한도 구조는 [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/), 모델 비교는 [C1](/new-project1/claude/c01-overview/), API 가격은 [C16](/new-project1/claude/c16-api/)에서 다뤄요.
+Sonnet은 Opus의 절반, Fable은 Opus의 2.5배예요. 구독 사용량도 대화 길이, 기능, 모델, effort에 따라 달라져요. 자세한 한도 구조는 [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/), 모델 비교는 [C1](/claude/c01-overview/), API 가격은 [C16](/claude/c16-api/)에서 다뤄요.
 
 Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코딩 작업을 잘 처리하고 Opus보다 저렴하다. Opus는 복잡한 아키텍처 결정이나 다단계 추론에 아껴 써라." 단순한 서브에이전트에는 `model: haiku`를 쓰라고 해요.
 
@@ -229,7 +229,7 @@ Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코
    **검토에서 실제로 잡아낸 것.**
 
    - **홈 제목이 두 번 나오는 버그.** 원인은 홈 페이지 id를 판별하는 조건이었어요.
-   - **조사 결과와 실제 화면의 차이.** 조사 에이전트는 "클라우드 세션 크레딧은 없다"고 결론 냈지만, 실제 설정 화면에는 그 항목이 표시되어 있었어요. 이 차이를 "공식 문서 미반영 항목"으로 정리했어요. ([C2](/new-project1/claude/c02-plans-limits/)에서 볼 수 있어요.)
+   - **조사 결과와 실제 화면의 차이.** 조사 에이전트는 "클라우드 세션 크레딧은 없다"고 결론 냈지만, 실제 설정 화면에는 그 항목이 표시되어 있었어요. 이 차이를 "공식 문서 미반영 항목"으로 정리했어요. ([C2](/claude/c02-plans-limits/)에서 볼 수 있어요.)
    - **검색 요약과 원문의 차이.** 처음에는 공식 사이트에 접속할 수 없어 검색 요약으로 쓴 편이 있었어요. 원문과 대조해 보니 지원 언어, 요금제별 상업 이용 조건 같은 중요한 사실이 틀린 경우가 있었어요. 그래서 원문으로 확인하기 전까지는 "확인 중" 안내를 붙여 두었어요.
    - **서브에이전트끼리 어긋난 사실.** 한 편은 "Sonnet 5.5도 `tool_choice` any/tool이 막힌다"고 썼는데, 기준 편(C16) 표에는 없었어요. 기획 쪽에서 공식 릴리스 노트를 직접 확인해 보니 그 편이 맞았고, 기준 표에 Sonnet 5.5를 추가했어요. 반대로 같은 서브에이전트가 덧붙인 "Sonnet 5.5는 샘플링 파라미터도 막힌다"는 이전 세대 모델의 내용이라 바로잡았어요.
 
@@ -325,8 +325,8 @@ Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코
 
 ## 다음에 볼 튜토리얼
 
-- [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — 서브에이전트 정의와 계획 모드
-- [C13. 클라우드 세션](/new-project1/claude/c13-cloud-sessions/) — 이 사이트를 만든 실행 환경
-- [C16. Claude API 시작하기](/new-project1/claude/c16-api/) — 모델 ID와 가격
-- [C1. Claude 한눈에 보기](/new-project1/claude/c01-overview/) — 모델 4종 비교
-- [프롬프트 캐싱·배치·effort로 API 비용 줄이기](/new-project1/dev/02-cost-optimization/) — API에서 비용을 줄이는 다른 방법
+- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — 서브에이전트 정의와 계획 모드
+- [C13. 클라우드 세션](/claude/c13-cloud-sessions/) — 이 사이트를 만든 실행 환경
+- [C16. Claude API 시작하기](/claude/c16-api/) — 모델 ID와 가격
+- [C1. Claude 한눈에 보기](/claude/c01-overview/) — 모델 4종 비교
+- [프롬프트 캐싱·배치·effort로 API 비용 줄이기](/dev/02-cost-optimization/) — API에서 비용을 줄이는 다른 방법

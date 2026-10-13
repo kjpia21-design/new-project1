@@ -22,7 +22,7 @@ export const categoryLabels: Record<Category, string> = {
 
 export const categoryOrder: Category[] = ['basics', 'claude', 'agents', 'dev', 'chat', 'coding', 'media', 'automation'];
 
-/** 사이트 base 경로(`/new-project1`)를 붙인 내부 링크를 만든다. */
+/** 사이트 base 경로(`/`, 도메인 연결 후)를 붙인 내부 링크를 만든다. */
 export function url(path: string): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   const clean = path.startsWith('/') ? path : `/${path}`;

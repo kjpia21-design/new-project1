@@ -61,7 +61,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | --- | --- |
 | **Claude Code** | 코드를 읽고 고치고 실행까지 하는 에이전트형 코딩 도구예요. |
 | **표면(surface)** | Claude Code를 쓰는 환경이에요. 터미널, IDE, 데스크톱, 웹이 있어요. |
-| **CLAUDE.md** | 프로젝트 지침 파일이에요. 모든 표면에서 공통으로 쓰여요. 자세한 내용은 [C14](/new-project1/claude/c14-claude-code-features/)에서 다뤄요. |
+| **CLAUDE.md** | 프로젝트 지침 파일이에요. 모든 표면에서 공통으로 쓰여요. 자세한 내용은 [C14](/claude/c14-claude-code-features/)에서 다뤄요. |
 | **세션(session)** | 하나의 대화와 작업 흐름이에요. 이어서 하거나 다른 표면으로 옮길 수 있어요. |
 | **권한 모드** | Claude가 승인 없이 할 수 있는 동작 범위를 정하는 설정이에요. 세션 중 `Shift+Tab`으로 바꿔요. |
 
@@ -73,12 +73,12 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | **VS Code (Cursor 포함)** | 편집기 안에서 쓰고 싶을 때 | 확장 `anthropic.claude-code`를 설치해요. |
 | **JetBrains** | JetBrains IDE를 쓸 때 | 플러그인을 쓰며 CLI를 별도로 설치해야 해요. |
 | **데스크톱 앱 (Code 탭)** | 터미널이 낯설고 변경 내용을 시각적으로 검토하고 싶을 때 | CLI를 따로 설치하지 않아도 돼요. 유료 구독이 필요해요. |
-| **웹 (claude.ai/code)** | 설치 없이 바로, 또는 휴대폰에서 쓰고 싶을 때 | 데스크톱 브라우저와 iOS/Android Claude 앱에서 가능해요. 자세한 내용은 [C13](/new-project1/claude/c13-cloud-sessions/)에서 다뤄요. |
+| **웹 (claude.ai/code)** | 설치 없이 바로, 또는 휴대폰에서 쓰고 싶을 때 | 데스크톱 브라우저와 iOS/Android Claude 앱에서 가능해요. 자세한 내용은 [C13](/claude/c13-cloud-sessions/)에서 다뤄요. |
 
 대부분의 표면은 Claude 구독 또는 Anthropic Console 계정이 필요해요. 터미널, VS Code, JetBrains는 서드파티 제공자도 지원해요.
 
 <Aside type="note" title="사용 한도 수치">
-요금제별 Claude Code 사용 한도의 구체적인 수치는 공식적으로 공개하지 않아요(공식 Pro/Max용 Claude Code 도움말, 2026-10-13 확인). 한도 구조는 [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/)를 보고, 설정(Settings) > 사용량(Usage) 화면에서 확인하세요.
+요금제별 Claude Code 사용 한도의 구체적인 수치는 공식적으로 공개하지 않아요(공식 Pro/Max용 Claude Code 도움말, 2026-10-13 확인). 한도 구조는 [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/)를 보고, 설정(Settings) > 사용량(Usage) 화면에서 확인하세요.
 </Aside>
 
 ## 단계별 따라하기
@@ -153,7 +153,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    이 프로젝트가 무엇을 하는지 설명해 줘. 사용한 기술, 폴더 구조, 시작점이 되는 파일도 알려 줘.
    </PromptBox>
 
-   프로젝트용 지침 파일은 `/init` 명령으로 CLAUDE.md를 만들 수 있어요. 자세한 내용은 [C14](/new-project1/claude/c14-claude-code-features/)에서 다뤄요.
+   프로젝트용 지침 파일은 `/init` 명령으로 CLAUDE.md를 만들 수 있어요. 자세한 내용은 [C14](/claude/c14-claude-code-features/)에서 다뤄요.
 
    **데스크톱 앱을 쓴다면**: 앱(macOS Intel/Apple Silicon, Windows x64/ARM64)을 설치하고 로그인한 뒤 **Code** 탭을 눌러 시작해요. 앱에 Claude Code가 포함되어 있어서 CLI를 따로 설치할 필요가 없어요. 터미널 세션을 앱으로 옮기고 싶다면 `/desktop`을 써요.
 
@@ -215,7 +215,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | `claude --cloud` | 터미널에서 클라우드 세션을 시작해요. |
 | Claude 앱에서 포크 | `claude --remote-control`이나 `/remote-control`로 시작한 세션을 Claude 앱에서 포크할 수 있어요. 포크는 내 컴퓨터의 백그라운드 세션으로 돌아가요(v2.1.273 이상). |
 
-클라우드 세션의 자세한 사용법은 [C13. Claude Code 클라우드 세션](/new-project1/claude/c13-cloud-sessions/)에 있어요.
+클라우드 세션의 자세한 사용법은 [C13. Claude Code 클라우드 세션](/claude/c13-cloud-sessions/)에 있어요.
 
 ### 백그라운드 세션 관리
 
@@ -267,7 +267,7 @@ tail -200 app.log | claude -p "이 로그에서 오류 원인을 요약해 줘"
 ### Free 계정으로는 안 돼요
 
 - **원인**: Claude Code는 Pro 이상 유료 플랜에서 쓸 수 있어요(2026-10-10 기준). 공식 가격 페이지에서 확인할 수 있어요.
-- **해결**: 플랜을 확인하세요. Console 계정이나 지원되는 클라우드 제공자 경로도 있어요. 요금은 [C2](/new-project1/claude/c02-plans-limits/)를 참고하세요.
+- **해결**: 플랜을 확인하세요. Console 계정이나 지원되는 클라우드 제공자 경로도 있어요. 요금은 [C2](/claude/c02-plans-limits/)를 참고하세요.
 
 ### Windows에서 Bash 도구를 못 써요
 
@@ -286,8 +286,8 @@ tail -200 app.log | claude -p "이 로그에서 오류 원인을 요약해 줘"
 
 ## 다음에 볼 튜토리얼
 
-- [C13. Claude Code 클라우드 세션](/new-project1/claude/c13-cloud-sessions/) — 내 컴퓨터를 켜 두지 않고 GitHub 작업을 맡기기
-- [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — CLAUDE.md, 슬래시 명령, 훅, 서브에이전트, MCP
-- [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/) — Claude Code가 쓰는 한도 이해하기
-- [Claude Code 시작하기: 비개발자의 첫 결과물 만들기](/new-project1/coding/06-claude-code-start/) — 비개발자 눈높이로 첫 결과물 만들기
-- [Claude Code 헤드리스 모드와 GitHub Actions 자동화](/new-project1/dev/07-headless-ci/) — 사람 없이 Claude Code 돌리기
+- [C13. Claude Code 클라우드 세션](/claude/c13-cloud-sessions/) — 내 컴퓨터를 켜 두지 않고 GitHub 작업을 맡기기
+- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — CLAUDE.md, 슬래시 명령, 훅, 서브에이전트, MCP
+- [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/) — Claude Code가 쓰는 한도 이해하기
+- [Claude Code 시작하기: 비개발자의 첫 결과물 만들기](/coding/06-claude-code-start/) — 비개발자 눈높이로 첫 결과물 만들기
+- [Claude Code 헤드리스 모드와 GitHub Actions 자동화](/dev/07-headless-ci/) — 사람 없이 Claude Code 돌리기

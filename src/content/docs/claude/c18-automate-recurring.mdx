@@ -35,7 +35,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 - 고르는 기준은 **어디서 실행되나, 내 컴퓨터가 켜져 있어야 하나, 내 로컬 파일이 필요한가**예요. 컴퓨터를 꺼도 돌려야 하면 클라우드(루틴 또는 앱 예약 작업)를, 로컬 파일이 필요하면 데스크톱 작업을, 잠깐 상태를 확인하려면 `/loop`를 써요.
 - 자동 실행은 **사람이 보지 않는 동안** 돌아요. 프롬프트는 자기완결적으로, 결과는 되돌릴 수 있는 형태(초안·브랜치·PR)로, 마지막 확정은 사람이 하게 설계하세요.
 - 루틴은 **리서치 프리뷰**라 동작과 한도가 바뀔 수 있어요(2026-10-13 기준).
-- 루틴의 기본(만들기, 트리거, 환경)은 [C13](/new-project1/claude/c13-cloud-sessions/)에 있어요. 이 글은 **무엇을 고를지, 어떻게 안전하게 설계할지, 어떻게 확인할지**에 집중해요.
+- 루틴의 기본(만들기, 트리거, 환경)은 [C13](/claude/c13-cloud-sessions/)에 있어요. 이 글은 **무엇을 고를지, 어떻게 안전하게 설계할지, 어떻게 확인할지**에 집중해요.
 </Summary>
 
 ## 이 튜토리얼로 할 수 있게 되는 것
@@ -88,7 +88,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 1. **업무를 고르고 손으로 한 번 해 봐요**
 
-   자동화에 알맞은 일은 **반복되고, 결과가 분명하고, 사람이 매번 판단하지 않아도 되는 일**이에요. 먼저 대화에서 직접 해 보면서 "성공"이 무엇인지 말로 적어 보세요. 그 글이 그대로 자동 실행의 프롬프트가 돼요. 스킬로 형식을 고정하는 방법은 [C8](/new-project1/claude/c08-skills/)을 참고하세요.
+   자동화에 알맞은 일은 **반복되고, 결과가 분명하고, 사람이 매번 판단하지 않아도 되는 일**이에요. 먼저 대화에서 직접 해 보면서 "성공"이 무엇인지 말로 적어 보세요. 그 글이 그대로 자동 실행의 프롬프트가 돼요. 스킬로 형식을 고정하는 방법은 [C8](/claude/c08-skills/)을 참고하세요.
 
 2. **자기완결적인 프롬프트를 써요**
 
@@ -107,7 +107,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
    **A. Claude 앱 예약 작업.** 공식 도움말 기준으로, 새 Claude 경험(Pro·Max에 순차 적용)에서는 아무 대화에서 "매주 월요일 9시에 지난주 팀 채널 메시지를 요약해 줘"처럼 작업과 주기를 말하면 돼요. Claude가 되묻는 질문에 답한 뒤, 제안된 작업 이름·일정·지침을 확인하고 **Schedule**을 눌러요. Cowork 화면에서는 왼쪽 사이드바의 **Scheduled** > **New task**에서 Create with Claude 또는 Set up manually를 고르고, 이름·프롬프트·승인 방식·주기(매시간·매일·평일·매주·수동)·모델·폴더를 정해요. 예정된 실행과 지난 실행은 사이드바의 Scheduled에서 봐요. 화면 구성은 계정과 앱 버전에 따라 다를 수 있어요.
 
-   **B. 루틴.** 만드는 방법은 [C13의 루틴 만들기](/new-project1/claude/c13-cloud-sessions/)에 있어요. 요점만 말하면, claude.ai/code/routines의 New routine, 데스크톱 앱의 Routines(Cloud 선택), 또는 CLI의 `/schedule`로 만들어요. 세 곳은 같은 계정에 저장돼서 어디서 만들어도 다른 곳에 보여요. 예를 들어 이렇게 말해요.
+   **B. 루틴.** 만드는 방법은 [C13의 루틴 만들기](/claude/c13-cloud-sessions/)에 있어요. 요점만 말하면, claude.ai/code/routines의 New routine, 데스크톱 앱의 Routines(Cloud 선택), 또는 CLI의 `/schedule`로 만들어요. 세 곳은 같은 계정에 저장돼서 어디서 만들어도 다른 곳에 보여요. 예를 들어 이렇게 말해요.
 
    ```sh
    /schedule daily PR review at 9am
@@ -164,11 +164,11 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 | 내용 | 어디서 보나요 |
 | --- | --- |
-| 루틴 만들기 화면, 트리거 3종, API 호출 예시 | [C13](/new-project1/claude/c13-cloud-sessions/) 루틴 요약 |
-| 환경(네트워크, 설정 스크립트, 비밀 값) | [C13](/new-project1/claude/c13-cloud-sessions/) 환경 설정 |
-| 서브에이전트, 훅, MCP | [C14](/new-project1/claude/c14-claude-code-features/) |
-| 스킬·서브에이전트·루틴을 엮는 실습 | [반복 업무를 에이전트에게 맡기기](/new-project1/coding/10-delegate-agents/) |
-| 커넥터 연결 | [C7](/new-project1/claude/c07-connectors/) |
+| 루틴 만들기 화면, 트리거 3종, API 호출 예시 | [C13](/claude/c13-cloud-sessions/) 루틴 요약 |
+| 환경(네트워크, 설정 스크립트, 비밀 값) | [C13](/claude/c13-cloud-sessions/) 환경 설정 |
+| 서브에이전트, 훅, MCP | [C14](/claude/c14-claude-code-features/) |
+| 스킬·서브에이전트·루틴을 엮는 실습 | [반복 업무를 에이전트에게 맡기기](/coding/10-delegate-agents/) |
+| 커넥터 연결 | [C7](/claude/c07-connectors/) |
 
 ## 사례: 매일 아침 공식 소식 확인 → 수정안 PR
 
@@ -208,7 +208,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 ### 루틴이 초록색인데 결과가 없어요
 
 - **원인**: 초록 상태는 세션이 오류 없이 끝났다는 뜻일 뿐 작업 성공이 아니에요.
-- **해결**: 실행 기록을 열어 막힌 네트워크 요청이나 누락된 커넥터 도구를 확인하세요. 허용되지 않은 도메인은 환경의 네트워크 설정을 고쳐야 해요([C13](/new-project1/claude/c13-cloud-sessions/)).
+- **해결**: 실행 기록을 열어 막힌 네트워크 요청이나 누락된 커넥터 도구를 확인하세요. 허용되지 않은 도메인은 환경의 네트워크 설정을 고쳐야 해요([C13](/claude/c13-cloud-sessions/)).
 
 ### 데스크톱 예약 작업이 아침에 안 돌았어요
 
@@ -224,7 +224,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 - **되돌릴 수 있는 결과물을 만들게 하세요.** 초안, 브랜치, PR까지만 자동으로 하고, 발송·병합·삭제 같은 확정은 사람이 하세요.
 - **권한과 연결을 최소로 하세요.** 루틴은 선택한 저장소, 환경의 네트워크와 변수, 포함한 커넥터가 닿는 범위에서 승인 없이 동작해요. 커넥터는 기본으로 전부 포함되니 필요한 것만 남기세요.
-- **개인정보를 넣지 마세요.** 환경변수와 프롬프트는 사람이 보지 않는 곳에서 반복 사용돼요. 비밀 값 처리는 [C13](/new-project1/claude/c13-cloud-sessions/)의 환경 설정을 따르세요.
+- **개인정보를 넣지 마세요.** 환경변수와 프롬프트는 사람이 보지 않는 곳에서 반복 사용돼요. 비밀 값 처리는 [C13](/claude/c13-cloud-sessions/)의 환경 설정을 따르세요.
 - **빈도를 낮게 시작하세요.** 자동 실행은 사용량을 써요. 처음에는 주 1회 정도로 시작해서 결과와 사용량을 본 뒤 늘리세요.
 - **결과를 정기적으로 읽으세요.** 자동화가 조용히 엉뚱한 결과를 내도 알림이 없을 수 있어요. 주기적으로 실행 기록을 훑어보세요.
 - **API 트리거는 신중하게 쓰세요.** 토큰은 한 번만 보이고, 전달한 텍스트는 신뢰할 수 없는 데이터로 감싸져서 프롬프트가 명시적으로 참조해야 반영돼요. 토큰은 비밀로 보관하세요.
@@ -235,8 +235,8 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 ## 다음에 볼 튜토리얼
 
-- [C13. Claude Code 클라우드 세션: GitHub 연동, 환경, 루틴](/new-project1/claude/c13-cloud-sessions/) — 루틴 만들기와 환경 설정
-- [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — 훅, 서브에이전트, MCP로 자동화 확장
-- [C17. Claude로 업무 하루 굴리기](/new-project1/claude/c17-workday-workflow/) — 하루 흐름 안에서 기능 조합하기
-- [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/) — 자동 실행이 쓰는 사용량 이해하기
-- [반복 업무를 에이전트에게 맡기기: 스킬, 루틴, 서브에이전트](/new-project1/coding/10-delegate-agents/) — 실습형 튜토리얼
+- [C13. Claude Code 클라우드 세션: GitHub 연동, 환경, 루틴](/claude/c13-cloud-sessions/) — 루틴 만들기와 환경 설정
+- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — 훅, 서브에이전트, MCP로 자동화 확장
+- [C17. Claude로 업무 하루 굴리기](/claude/c17-workday-workflow/) — 하루 흐름 안에서 기능 조합하기
+- [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/) — 자동 실행이 쓰는 사용량 이해하기
+- [반복 업무를 에이전트에게 맡기기: 스킬, 루틴, 서브에이전트](/coding/10-delegate-agents/) — 실습형 튜토리얼

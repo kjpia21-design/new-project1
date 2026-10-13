@@ -54,19 +54,19 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 - MCP 서버를 만들 때 지켜야 할 보안 원칙(권한 최소화, 프롬프트 인젝션, 비밀 값)을 적용할 수 있어요.
 
 <Aside type="note" title="이 편에서 Claude API 호출은 하지 않아요">
-서버는 모델을 부르지 않고 도구만 제공해요. 그래서 이 편의 예제 코드에는 API 키가 필요 없어요. 모델이 도구를 부르는 쪽(클라이언트)이 비용을 쓰는 곳이에요. 도구를 직접 정의해서 API로 부르는 방법은 [1. 도구 사용으로 업무 봇 만들기](/new-project1/dev/01-tool-use/)를 보세요.
+서버는 모델을 부르지 않고 도구만 제공해요. 그래서 이 편의 예제 코드에는 API 키가 필요 없어요. 모델이 도구를 부르는 쪽(클라이언트)이 비용을 쓰는 곳이에요. 도구를 직접 정의해서 API로 부르는 방법은 [1. 도구 사용으로 업무 봇 만들기](/dev/01-tool-use/)를 보세요.
 </Aside>
 
 ## 먼저 알아둘 개념
 
 | 용어 | 뜻 |
 | --- | --- |
-| **MCP** | Model Context Protocol. AI 앱과 외부 도구·데이터를 잇는 개방형 표준이에요. 쉬운 소개는 [20. 커넥터(MCP)](/new-project1/automation/20-connectors-mcp/)를 보세요. |
+| **MCP** | Model Context Protocol. AI 앱과 외부 도구·데이터를 잇는 개방형 표준이에요. 쉬운 소개는 [20. 커넥터(MCP)](/automation/20-connectors-mcp/)를 보세요. |
 | **MCP 서버** | 도구(tools), 자원(resources), 프롬프트를 내놓는 프로그램이에요. 이 편은 **도구**만 다뤄요. |
 | **호스트와 클라이언트** | Claude Code나 Claude 앱 같은 AI 앱이 호스트이고, 그 안의 클라이언트가 서버와 1:1로 연결해요. |
 | **stdio** | 호스트가 서버를 자기 컴퓨터에서 **자식 프로세스로 실행**하고 표준 입출력으로 대화하는 방식이에요. |
 | **Streamable HTTP** | 서버가 URL(기본 경로 `/mcp`)로 떠 있고 여러 클라이언트가 접속하는 방식이에요. 원격 서버에 쓰는 방식이에요. |
-| **커스텀 커넥터** | Claude 앱에서 원격 MCP 서버의 URL을 직접 넣어 연결하는 기능이에요. [C7](/new-project1/claude/c07-connectors/)에서 개념을 다뤘어요. |
+| **커스텀 커넥터** | Claude 앱에서 원격 MCP 서버의 URL을 직접 넣어 연결하는 기능이에요. [C7](/claude/c07-connectors/)에서 개념을 다뤘어요. |
 
 ### 어디에 연결할 수 있나요?
 
@@ -222,7 +222,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
    <ScreenshotPlaceholder caption="/mcp 화면에서 inventory 서버가 Connected로 보이는 모습" officialUrl="https://code.claude.com/docs/en/mcp" officialLabel="Claude Code 문서에서 보기" />
 
-   범위(scope)는 이렇게 골라요. 자세한 설명은 [C14](/new-project1/claude/c14-claude-code-features/)에 있어요.
+   범위(scope)는 이렇게 골라요. 자세한 설명은 [C14](/claude/c14-claude-code-features/)에 있어요.
 
    | 범위 | 옵션 | 저장 위치 | 쓰임 |
    | --- | --- | --- | --- |
@@ -433,11 +433,11 @@ SSE 전송은 deprecated예요. 새 서버는 HTTP를 쓰세요.
 - **오류 메시지는 모델이 읽어요.** `ToolError`에 "무엇이 잘못됐고 어떻게 다시 시도할지"를 적으세요. 내부 경로나 SQL 같은 서버 내부 정보는 빼세요.
 - **먼저 로컬 stdio로 만들고, 필요할 때 HTTP로 옮기세요.** 같은 도구 코드에서 `mcp.run()`의 전송 방식만 바꾸면 돼요.
 - **직접 만들기 전에 있는 것부터 보세요.** 이미 공식 커넥터나 공개 서버가 있는 서비스라면 새로 만드는 비용이 더 클 수 있어요. 다만 서드파티 서버는 Anthropic이 검증하지 않으니 코드와 권한을 읽어 보고 쓰세요.
-- **팀에 나눠 줄 때는 플러그인에 넣으세요.** 플러그인은 스킬과 MCP 서버(`.mcp.json`)를 한 묶음으로 배포해요. [6. 스킬·플러그인 패키지로 만들어 팀에 배포하기](/new-project1/dev/06-plugins-skills-team/)를 보세요.
+- **팀에 나눠 줄 때는 플러그인에 넣으세요.** 플러그인은 스킬과 MCP 서버(`.mcp.json`)를 한 묶음으로 배포해요. [6. 스킬·플러그인 패키지로 만들어 팀에 배포하기](/dev/06-plugins-skills-team/)를 보세요.
 
 ## 다음에 볼 튜토리얼
 
-- [6. 스킬·플러그인 패키지로 만들어 팀에 배포하기](/new-project1/dev/06-plugins-skills-team/) — 서버와 스킬을 팀 배포용 플러그인으로 묶기
-- [1. 도구 사용(Tool use)으로 업무 봇 만들기](/new-project1/dev/01-tool-use/) — API에서 도구를 직접 정의해 부르는 방법
-- [C7. 커넥터](/new-project1/claude/c07-connectors/) — 만들어진 커넥터를 쓰는 쪽의 사용법과 보안
-- [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — MCP 범위, 권한 모드, 훅
+- [6. 스킬·플러그인 패키지로 만들어 팀에 배포하기](/dev/06-plugins-skills-team/) — 서버와 스킬을 팀 배포용 플러그인으로 묶기
+- [1. 도구 사용(Tool use)으로 업무 봇 만들기](/dev/01-tool-use/) — API에서 도구를 직접 정의해 부르는 방법
+- [C7. 커넥터](/claude/c07-connectors/) — 만들어진 커넥터를 쓰는 쪽의 사용법과 보안
+- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — MCP 범위, 권한 모드, 훅

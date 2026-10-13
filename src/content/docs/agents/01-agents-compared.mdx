@@ -89,7 +89,7 @@ import Checklist from '../../../components/Checklist.astro';
 | 먼저 말 걸기 | 거의 없음 | 결과나 결정이 필요하면 먼저 알림 |
 | 위험 | 틀린 답을 줄 수 있음 | 틀린 **행동**을 할 수 있음 (메일 발송, 구매, 삭제 등) |
 
-마지막 줄이 중요해요. 에이전트는 편리한 만큼 **권한을 줘야** 하고, 권한을 주면 실수의 결과도 커져요. 안전하게 쓰는 방법은 [5편 개인 AI 에이전트 안전하게 쓰는 법](/new-project1/agents/05-agent-safety/)에서 다뤄요.
+마지막 줄이 중요해요. 에이전트는 편리한 만큼 **권한을 줘야** 하고, 권한을 주면 실수의 결과도 커져요. 안전하게 쓰는 방법은 [5편 개인 AI 에이전트 안전하게 쓰는 법](/agents/05-agent-safety/)에서 다뤄요.
 
 ### 이 비교에서 쓰는 용어
 
@@ -151,10 +151,10 @@ Claude는 Muse나 Dots처럼 구매까지 맡기는 방향이 아니라, 커넥�
 
 ## 제품별로 한 줄씩
 
-- **Meta Muse**: 메시지로 목표를 말하면 전용 클라우드 VM에서 브라우저를 조작해 구매·예약까지 하는, 일반 사용자 지향 에이전트예요. 한국에서는 아직 못 써요. 자세한 내용은 [Meta Muse 알아보기](/new-project1/agents/02-meta-muse/)에서 봐요.
-- **Grok Bot**: 이름 붙인 Bot 여러 개에게 메시지로 일을 맡기는 "AI 팀원"이에요. 모든 Bot이 클라우드 컴퓨터 하나를 공유하고, 계정과 청구가 Cursor에 묶여 있어요. [Grok Bot 시작하기](/new-project1/agents/03-grok-bot/)에서 봐요.
-- **ChatGPT Dots**: ChatGPT 안에서 책임을 맡기면 스스로 진행 상황을 추적하고 필요할 때 먼저 연락하는 상시 에이전트예요. [ChatGPT Dots 시작하기](/new-project1/agents/04-openai-dots/)에서 봐요.
-- **Claude**: 위 셋처럼 하나의 "에이전트 제품"이라기보다 **기능 묶음**이에요. 다단계 작업을 맡기는 Cowork, 브라우저를 조작하는 Chrome 확장, 화면을 조작하는 컴퓨터 사용, 클라우드에서 자동 실행하는 루틴을 필요에 따라 골라 써요. 각각 [C3. 시작하기](/new-project1/claude/c03-getting-started/), [C7. 커넥터](/new-project1/claude/c07-connectors/), [C11. Chrome과 컴퓨터 사용](/new-project1/claude/c11-chrome-computer-use/), [C13. 클라우드 세션과 루틴](/new-project1/claude/c13-cloud-sessions/)에서 다뤄요.
+- **Meta Muse**: 메시지로 목표를 말하면 전용 클라우드 VM에서 브라우저를 조작해 구매·예약까지 하는, 일반 사용자 지향 에이전트예요. 한국에서는 아직 못 써요. 자세한 내용은 [Meta Muse 알아보기](/agents/02-meta-muse/)에서 봐요.
+- **Grok Bot**: 이름 붙인 Bot 여러 개에게 메시지로 일을 맡기는 "AI 팀원"이에요. 모든 Bot이 클라우드 컴퓨터 하나를 공유하고, 계정과 청구가 Cursor에 묶여 있어요. [Grok Bot 시작하기](/agents/03-grok-bot/)에서 봐요.
+- **ChatGPT Dots**: ChatGPT 안에서 책임을 맡기면 스스로 진행 상황을 추적하고 필요할 때 먼저 연락하는 상시 에이전트예요. [ChatGPT Dots 시작하기](/agents/04-openai-dots/)에서 봐요.
+- **Claude**: 위 셋처럼 하나의 "에이전트 제품"이라기보다 **기능 묶음**이에요. 다단계 작업을 맡기는 Cowork, 브라우저를 조작하는 Chrome 확장, 화면을 조작하는 컴퓨터 사용, 클라우드에서 자동 실행하는 루틴을 필요에 따라 골라 써요. 각각 [C3. 시작하기](/claude/c03-getting-started/), [C7. 커넥터](/claude/c07-connectors/), [C11. Chrome과 컴퓨터 사용](/claude/c11-chrome-computer-use/), [C13. 클라우드 세션과 루틴](/claude/c13-cloud-sessions/)에서 다뤄요.
 
 ## 나에게 맞는 선택
 
@@ -163,12 +163,12 @@ Claude는 Muse나 Dots처럼 구매까지 맡기는 방향이 아니라, 커넥�
 | 나의 상황 | 추천 | 이유와 주의 |
 | --- | --- | --- |
 | 지금 한국에서 확실히 시작하고 싶다 | **Claude** | 제공 국가 목록에 한국이 있어요. 커넥터로 메일·캘린더를 연결하고 쓰기 작업마다 승인을 받는 구성으로 시작할 수 있어요. 유료 플랜(Pro 월 $20)이 필요한 기능이 많아요. |
-| 코드·GitHub 저장소 작업을 자동화하고 싶다 | **Claude (클라우드 세션, 루틴)** | 컴퓨터를 꺼도 돌아가요. 루틴은 승인 없이 자율 실행하므로 범위를 좁게 설정하세요. [C13](/new-project1/claude/c13-cloud-sessions/) 참고. |
-| 브라우저 일을 맡겨 보고 싶다 | **Claude in Chrome** | 구매·계정 생성은 하지 않고, 민감한 입력 전에 물어요. [C11](/new-project1/claude/c11-chrome-computer-use/) 참고. |
+| 코드·GitHub 저장소 작업을 자동화하고 싶다 | **Claude (클라우드 세션, 루틴)** | 컴퓨터를 꺼도 돌아가요. 루틴은 승인 없이 자율 실행하므로 범위를 좁게 설정하세요. [C13](/claude/c13-cloud-sessions/) 참고. |
+| 브라우저 일을 맡겨 보고 싶다 | **Claude in Chrome** | 구매·계정 생성은 하지 않고, 민감한 입력 전에 물어요. [C11](/claude/c11-chrome-computer-use/) 참고. |
 | 메시지로 여러 일을 맡기는 "AI 팀원"을 써 보고 싶다 | **Grok Bot** | 한국 스토어에 앱이 있어요. 가입 전에 Cursor 또는 SuperGrok 구독을 한국에서 결제할 수 있는지 확인하세요. 사용량이 주간 한도이고 초과분은 종량 청구될 수 있어요. |
 | ChatGPT를 이미 Pro로 쓰고 있다 | **Dots** | 추가 요금 없이 포함돼요. ChatGPT 앱에 보이는지 확인하세요(점진적 롤아웃). Plus·Free는 문서에 언급이 없어요. |
 | 구매·예약까지 맡기는 에이전트가 가장 궁금하다 | **Muse (출시 대기)** | 한국에서는 쓸 수 없어요. 공식 한국 출시 발표를 기다리세요. |
-| 결제 수단을 연결하기가 불안하다 | **Claude 또는 결제 기능 없이 시작** | 먼저 읽기 위주 작업(요약, 정리)부터 시작하세요. 결제·계정 권한은 [5편](/new-project1/agents/05-agent-safety/)의 점검표를 거친 뒤에 주세요. |
+| 결제 수단을 연결하기가 불안하다 | **Claude 또는 결제 기능 없이 시작** | 먼저 읽기 위주 작업(요약, 정리)부터 시작하세요. 결제·계정 권한은 [5편](/agents/05-agent-safety/)의 점검표를 거친 뒤에 주세요. |
 
 <Checklist items={[
   '내가 에이전트에게 맡기고 싶은 일을 한 가지로 정했어요',
@@ -191,12 +191,12 @@ Claude는 Muse나 Dots처럼 구매까지 맡기는 방향이 아니라, 커넥�
 ### Muse에 가입하고 싶어요
 
 - **원인**: 한국은 공식 제공 지역이 아니에요.
-- **해결**: 한국 출시 공식 발표를 기다려 주세요. 그 사이에는 이 비교의 다른 제품이나 [Meta Muse 알아보기](/new-project1/agents/02-meta-muse/)로 개념을 익혀 두는 걸 권해요.
+- **해결**: 한국 출시 공식 발표를 기다려 주세요. 그 사이에는 이 비교의 다른 제품이나 [Meta Muse 알아보기](/agents/02-meta-muse/)로 개념을 익혀 두는 걸 권해요.
 
 ### Grok Bot 사용량이 갑자기 부족해요
 
 - **원인**: Grok Bot 전용 주간 사용량이 있고 매주 초기화돼요. 소진되면 종량제 사용량이 Cursor로 청구될 수 있어요.
-- **해결**: 사용량 설정과 청구 설정을 먼저 확인하세요. 자세한 내용은 [Grok Bot 시작하기](/new-project1/agents/03-grok-bot/)에 있어요.
+- **해결**: 사용량 설정과 청구 설정을 먼저 확인하세요. 자세한 내용은 [Grok Bot 시작하기](/agents/03-grok-bot/)에 있어요.
 
 ## 실전 팁
 
@@ -207,8 +207,8 @@ Claude는 Muse나 Dots처럼 구매까지 맡기는 방향이 아니라, 커넥�
 
 ## 다음에 볼 튜토리얼
 
-- [개인 AI 에이전트 안전하게 쓰는 법](/new-project1/agents/05-agent-safety/) — 결제·이메일·계정 권한을 주기 전 점검표
-- [Meta Muse 알아보기](/new-project1/agents/02-meta-muse/)
-- [Grok Bot 시작하기](/new-project1/agents/03-grok-bot/)
-- [ChatGPT Dots 시작하기](/new-project1/agents/04-openai-dots/)
-- [C3. Claude 시작하기](/new-project1/claude/c03-getting-started/)
+- [개인 AI 에이전트 안전하게 쓰는 법](/agents/05-agent-safety/) — 결제·이메일·계정 권한을 주기 전 점검표
+- [Meta Muse 알아보기](/agents/02-meta-muse/)
+- [Grok Bot 시작하기](/agents/03-grok-bot/)
+- [ChatGPT Dots 시작하기](/agents/04-openai-dots/)
+- [C3. Claude 시작하기](/claude/c03-getting-started/)

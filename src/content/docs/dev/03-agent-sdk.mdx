@@ -50,7 +50,7 @@ import PromptBox from '../../../components/PromptBox.astro';
 <Summary>
 - **Agent SDK는 Claude Code를 라이브러리로 쓰는 거예요.** 같은 도구(파일 읽기·수정, Bash, 검색), 에이전트 루프, 권한, 훅, 서브에이전트, 세션을 Python·TypeScript 코드에서 불러요.
 - 패키지는 Python `claude-agent-sdk`, TypeScript `@anthropic-ai/claude-agent-sdk`예요. 둘 다 Claude Code 실행 파일을 함께 들고 있어서 대부분 따로 설치하지 않아도 돼요.
-- 에이전트는 **내 컴퓨터나 서버의 프로세스**에서 돌아요. 호스팅까지 맡기고 싶다면 [Managed Agents](/new-project1/dev/04-managed-agents/)를 보세요.
+- 에이전트는 **내 컴퓨터나 서버의 프로세스**에서 돌아요. 호스팅까지 맡기고 싶다면 [Managed Agents](/dev/04-managed-agents/)를 보세요.
 - `allowed_tools`는 "묻지 않고 허용할 목록"이지 "이것만 쓰라"는 제한이 아니에요. 진짜로 막으려면 `disallowed_tools`, `permission_mode="dontAsk"`, 훅을 쓰세요.
 - 에이전트 루프는 비용이 쌓여요. 항상 `max_turns`와 `max_budget_usd`를 거세요.
 </Summary>
@@ -75,11 +75,11 @@ C14에서 본 서브에이전트, 훅, 권한 모드는 Claude Code 안에서 �
 | 쓰고 싶은 것 | 고를 것 | 누가 루프를 돌리나요 |
 | --- | --- | --- |
 | 내 앱 안에 Claude Code 같은 에이전트를 넣기 | **Agent SDK** | 내 프로세스(번들된 Claude Code 실행 파일을 하위 프로세스로 띄워요) |
-| 터미널에서 대화하며 개발하기 | Claude Code CLI ([C12](/new-project1/claude/c12-claude-code-overview/), [C14](/new-project1/claude/c14-claude-code-features/)) | 내 컴퓨터 |
-| API를 직접 부르고 도구 루프를 내가 짜기 | Client SDK ([C16](/new-project1/claude/c16-api/), [도구 사용](/new-project1/dev/01-tool-use/)) | 내 코드 (tool runner를 쓰면 SDK가 도와요) |
-| 호스팅된 에이전트를 API로 부리기 | [Managed Agents](/new-project1/dev/04-managed-agents/) | Anthropic 서버 |
+| 터미널에서 대화하며 개발하기 | Claude Code CLI ([C12](/claude/c12-claude-code-overview/), [C14](/claude/c14-claude-code-features/)) | 내 컴퓨터 |
+| API를 직접 부르고 도구 루프를 내가 짜기 | Client SDK ([C16](/claude/c16-api/), [도구 사용](/dev/01-tool-use/)) | 내 코드 (tool runner를 쓰면 SDK가 도와요) |
+| 호스팅된 에이전트를 API로 부리기 | [Managed Agents](/dev/04-managed-agents/) | Anthropic 서버 |
 
-다른 언어에서 같은 루프를 쓰고 싶다면 Claude Code를 `-p` 옵션과 `--output-format json`으로 하위 프로세스로 실행하는 방법이 있어요([07편](/new-project1/dev/07-headless-ci/)).
+다른 언어에서 같은 루프를 쓰고 싶다면 Claude Code를 `-p` 옵션과 `--output-format json`으로 하위 프로세스로 실행하는 방법이 있어요([07편](/dev/07-headless-ci/)).
 
 ### Claude Code와의 관계
 
@@ -123,9 +123,9 @@ C14에서 본 서브에이전트, 훅, 권한 모드는 Claude Code 안에서 �
    npm install --save-dev tsx typescript
    ```
 
-   - 키는 코드에 적지 말고 환경변수로만 넣으세요([C16](/new-project1/claude/c16-api/)). SDK는 `.env` 파일을 자동으로 읽지 않아요. 파일에 보관한다면 직접 불러오세요.
+   - 키는 코드에 적지 말고 환경변수로만 넣으세요([C16](/claude/c16-api/)). SDK는 `.env` 파일을 자동으로 읽지 않아요. 파일에 보관한다면 직접 불러오세요.
    - Bedrock, Vertex, Foundry를 쓴다면 `CLAUDE_CODE_USE_BEDROCK=1` 같은 환경변수와 해당 클라우드 자격 증명을 쓰는 방법도 있어요.
-   - Max·Team 플랜에 포함된 월 API 크레딧은 Agent SDK에도 쓸 수 있어요([C2](/new-project1/claude/c02-plans-limits/)).
+   - Max·Team 플랜에 포함된 월 API 크레딧은 Agent SDK에도 쓸 수 있어요([C2](/claude/c02-plans-limits/)).
 
 2. **첫 에이전트: 읽기 전용 코드 검토자**
 
@@ -409,11 +409,11 @@ C14에서 본 서브에이전트, 훅, 권한 모드는 Claude Code 안에서 �
 
 5. **서브에이전트로 일 나누기**
 
-   서브에이전트는 자기 컨텍스트와 도구 권한을 가진 보조 에이전트예요(개념은 [C14](/new-project1/claude/c14-claude-code-features/)). 부모에게는 최종 보고만 돌아와서 부모의 컨텍스트가 덜 쌓여요.
+   서브에이전트는 자기 컨텍스트와 도구 권한을 가진 보조 에이전트예요(개념은 [C14](/claude/c14-claude-code-features/)). 부모에게는 최종 보고만 돌아와서 부모의 컨텍스트가 덜 쌓여요.
 
    - `agents={...}`에 `AgentDefinition`을 넣어요. `description`이 "언제 이 서브에이전트를 부를지"를 정해요.
    - 부모의 `allowed_tools`에 **`"Agent"`가 있어야** 서브에이전트를 부를 수 있어요.
-   - `model`은 `"sonnet"`, `"opus"`, `"haiku"` 같은 별칭이나 전체 모델 ID예요. 가벼운 검토는 싼 모델로 보내면 비용이 줄어요([C15](/new-project1/claude/c15-model-division/)).
+   - `model`은 `"sonnet"`, `"opus"`, `"haiku"` 같은 별칭이나 전체 모델 ID예요. 가벼운 검토는 싼 모델로 보내면 비용이 줄어요([C15](/claude/c15-model-division/)).
    - `AgentDefinition`의 필드 이름은 일부가 camelCase 그대로예요(`disallowedTools`, `maxTurns`, `permissionMode`). snake_case로 쓰면 `TypeError`가 나요.
    - 서브에이전트는 부모의 대화와 시스템 프롬프트를 보지 못해요. 필요한 파일 경로나 결정은 Agent 도구에 넘기는 프롬프트에 담겨야 해요.
 
@@ -583,7 +583,7 @@ C14에서 본 서브에이전트, 훅, 권한 모드는 Claude Code 안에서 �
 | TypeScript 패키지 | `@anthropic-ai/claude-agent-sdk` (Node.js 18 이상) |
 | 호스팅 시작점 | 에이전트당 RAM 1 GiB, 디스크 5 GiB, CPU 1개 정도에서 시작하라고 안내돼요. 긴 세션일수록 메모리가 늘어요. |
 | 네트워크 | `api.anthropic.com`으로 나가는 HTTPS(Bedrock·Vertex는 해당 엔드포인트) |
-| 모델·가격 | [C16](/new-project1/claude/c16-api/)과 같아요. Opus 5.5 `claude-opus-5-5` $4/$20, Sonnet 5.5 `claude-sonnet-5-5` $2/$10 (100만 토큰당, 2026-10-11 기준) |
+| 모델·가격 | [C16](/claude/c16-api/)과 같아요. Opus 5.5 `claude-opus-5-5` $4/$20, Sonnet 5.5 `claude-sonnet-5-5` $2/$10 (100만 토큰당, 2026-10-11 기준) |
 
 ## 자주 막히는 지점
 
@@ -624,11 +624,11 @@ C14에서 본 서브에이전트, 훅, 권한 모드는 Claude Code 안에서 �
 - **서브에이전트에는 싼 모델과 좁은 도구.** 읽기 전용 검토는 `tools=["Read", "Grep", "Glob"]`와 작은 모델이면 충분해요.
 - **쓰기는 사람이 확인하게.** 파일을 고치는 에이전트는 `permission_mode="plan"`으로 계획을 먼저 받아 보거나, 작업 폴더를 Git으로 관리해 변경을 되돌릴 수 있게 하세요.
 - **격리해서 돌리기.** 공식 호스팅 문서는 컨테이너 샌드박스에서 SDK를 실행하는 것을 권장해요. 외부로 나가는 호출은 프록시에서 허용 도메인만 통과시키고, 도구용 자격 증명은 에이전트 환경에 두지 않는 쪽이 안전해요.
-- **서버를 직접 운영하기 싫다면** 에이전트 루프와 샌드박스를 Anthropic이 호스팅하는 [Managed Agents](/new-project1/dev/04-managed-agents/)를 비교해 보세요.
+- **서버를 직접 운영하기 싫다면** 에이전트 루프와 샌드박스를 Anthropic이 호스팅하는 [Managed Agents](/dev/04-managed-agents/)를 비교해 보세요.
 
 ## 다음에 볼 튜토리얼
 
-- [4. Managed Agents로 서버에서 에이전트 돌리기](/new-project1/dev/04-managed-agents/) — 에이전트 루프까지 맡기는 방식
-- [1. 도구 사용으로 업무 봇 만들기](/new-project1/dev/01-tool-use/) — SDK 없이 API로 도구 루프를 직접 짜는 방법
-- [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — 서브에이전트, 훅, 권한 모드를 설정 파일로 쓰는 방법
-- [7. Claude Code 헤드리스 모드와 GitHub Actions 자동화](/new-project1/dev/07-headless-ci/) — 같은 에이전트를 CI에서 돌리는 방법
+- [4. Managed Agents로 서버에서 에이전트 돌리기](/dev/04-managed-agents/) — 에이전트 루프까지 맡기는 방식
+- [1. 도구 사용으로 업무 봇 만들기](/dev/01-tool-use/) — SDK 없이 API로 도구 루프를 직접 짜는 방법
+- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — 서브에이전트, 훅, 권한 모드를 설정 파일로 쓰는 방법
+- [7. Claude Code 헤드리스 모드와 GitHub Actions 자동화](/dev/07-headless-ci/) — 같은 에이전트를 CI에서 돌리는 방법

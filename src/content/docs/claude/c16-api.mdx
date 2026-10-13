@@ -222,7 +222,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 - **Batch API**는 50% 할인이에요.
 - **프롬프트 캐시 읽기**는 기본 입력가의 10%예요. 단 Fable 5.1은 2.5%, Opus 5.5와 Sonnet 5.5는 5%예요.
-- 모델 선택 기준은 [C1](/new-project1/claude/c01-overview/), 모델을 나눠 써서 비용을 줄이는 방법은 [C15](/new-project1/claude/c15-model-division/)를 보세요.
+- 모델 선택 기준은 [C1](/claude/c01-overview/), 모델을 나눠 써서 비용을 줄이는 방법은 [C15](/claude/c15-model-division/)를 보세요.
 
 ### 요청 필수 요소 (직접 HTTP 호출)
 
@@ -305,7 +305,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 - **공유 용도는 서비스 계정 키.** 개인 키는 팀 서비스에 쓰지 마세요.
 - **키는 정기적으로 점검.** 만료일을 설정하고 쓰지 않는 키는 삭제하세요.
 - **베타 헤더는 이제 필요 없어요.** Files API(`/v1/files`)와 Agent Skills(`/v1/skills`)는 2026-08-19에 Claude API에서 정식(GA)이 되어 `files-api-2025-04-14`, `skills-2025-10-02` 베타 헤더가 필요 없어요. 헤더를 계속 보내도 동작하지만 Files API는 이전 응답 형식으로 돌아와요.
-- **Max·Team이라면 API 크레딧을 확인하세요.** 플랜에 월 API 크레딧이 포함돼요. 수령 방법은 [C2](/new-project1/claude/c02-plans-limits/)를 보세요.
+- **Max·Team이라면 API 크레딧을 확인하세요.** 플랜에 월 API 크레딧이 포함돼요. 수령 방법은 [C2](/claude/c02-plans-limits/)를 보세요.
 
 ## 다음 단계: 더 깊이 가려면
 
@@ -318,10 +318,10 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 ## 다음에 볼 튜토리얼
 
-- [C1. Claude 한눈에 보기](/new-project1/claude/c01-overview/) — 모델 4종 비교와 선택 가이드
-- [C15. 모델 분담 전략](/new-project1/claude/c15-model-division/) — 비용을 줄이는 모델 분담
-- [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — Claude Code로 API 코드를 짜는 법
-- [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/) — 구독 요금제와 API는 어떻게 다른지
-- [도구 사용(Tool use)으로 업무 봇 만들기](/new-project1/dev/01-tool-use/) — API로 도구를 호출하는 봇 만들기
-- [프롬프트 캐싱·배치·effort로 API 비용 줄이기](/new-project1/dev/02-cost-optimization/) — 캐시와 Batch API 자세히
-- [Managed Agents로 서버에서 에이전트 돌리기](/new-project1/dev/04-managed-agents/) — 클라우드에서 에이전트 돌리기
+- [C1. Claude 한눈에 보기](/claude/c01-overview/) — 모델 4종 비교와 선택 가이드
+- [C15. 모델 분담 전략](/claude/c15-model-division/) — 비용을 줄이는 모델 분담
+- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — Claude Code로 API 코드를 짜는 법
+- [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/) — 구독 요금제와 API는 어떻게 다른지
+- [도구 사용(Tool use)으로 업무 봇 만들기](/dev/01-tool-use/) — API로 도구를 호출하는 봇 만들기
+- [프롬프트 캐싱·배치·effort로 API 비용 줄이기](/dev/02-cost-optimization/) — 캐시와 Batch API 자세히
+- [Managed Agents로 서버에서 에이전트 돌리기](/dev/04-managed-agents/) — 클라우드에서 에이전트 돌리기

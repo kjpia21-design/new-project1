@@ -76,9 +76,9 @@ GitHub 자격 증명은 Anthropic 서버에 암호화되어 보관되고 **VM �
 
 ### 비용은 어떻게 되나요?
 
-클라우드 VM에 대한 별도 요금은 없어요. 사용량은 플랜의 한도에 다른 Claude·Claude Code 사용량과 함께 합산돼요. 한도 구조는 [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/)에서 자세히 다뤄요.
+클라우드 VM에 대한 별도 요금은 없어요. 사용량은 플랜의 한도에 다른 Claude·Claude Code 사용량과 함께 합산돼요. 한도 구조는 [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/)에서 자세히 다뤄요.
 
-계정에 따라 설정(Settings) > 사용량(Usage) 화면에 **"클라우드 세션 크레딧"** 항목이 보일 수 있어요. 공식 문서에는 아직 설명이 없는 항목이라, C2의 ["클라우드 세션 크레딧"이라는 항목을 봤다면](/new-project1/claude/c02-plans-limits/#클라우드-세션-크레딧이라는-항목을-봤다면)에 정리해 두었어요.
+계정에 따라 설정(Settings) > 사용량(Usage) 화면에 **"클라우드 세션 크레딧"** 항목이 보일 수 있어요. 공식 문서에는 아직 설명이 없는 항목이라, C2의 ["클라우드 세션 크레딧"이라는 항목을 봤다면](/claude/c02-plans-limits/#클라우드-세션-크레딧이라는-항목을-봤다면)에 정리해 두었어요.
 
 ## 단계별 따라하기
 
@@ -316,7 +316,7 @@ CLI에서의 이동은 **단방향**(클라우드 → 터미널)이에요. 터�
 ## 실전 팁
 
 - **작은 작업부터 맡기세요.** 결과 diff를 보며 어떤 식으로 일하는지 파악한 뒤 점점 키우면 좋아요.
-- **병렬 실행은 한도를 더 써요.** 여러 작업을 동시에 맡기면 그만큼 플랜 한도가 빨리 줄어요. [C2](/new-project1/claude/c02-plans-limits/)의 한도 구조를 함께 보세요.
+- **병렬 실행은 한도를 더 써요.** 여러 작업을 동시에 맡기면 그만큼 플랜 한도가 빨리 줄어요. [C2](/claude/c02-plans-limits/)의 한도 구조를 함께 보세요.
 - **루틴 시각은 정각을 피하세요.** 정각 실행은 몇 분 늦어질 수 있어서 9:07처럼 분을 어긋나게 잡길 권해요.
 - **루틴의 커넥터는 줄이세요.** 기본으로 전체가 들어가므로 필요한 것만 남기세요.
 - **비밀은 환경변수에 두지 마세요.** 네트워크 시크릿(Pro/Max)을 쓰세요.
@@ -326,14 +326,14 @@ CLI에서의 이동은 **단방향**(클라우드 → 터미널)이에요. 터�
 - **GitHub 작업이 막히면 `gh api`를 시켜 보세요.** 클라우드 세션에서는 `gh api`로 GitHub REST API를 부를 수 있어요. 이미지에 GitHub CLI가 없어도 내장 `gh api`가 동작해요(v2.1.288 이상). 토큰은 프록시가 대신 붙여서 따로 로그인하지 않아도 되지만, GraphQL만 있는 기능(예: Projects v2)과 `gh pr`·`gh issue`는 막혀 있어요.
 
 <Aside type="note" title="이 사이트도 이렇게 만들었어요">
-이 사이트는 클라우드 세션에서 만들었어요. 기획과 검토는 Opus가, 구현은 Sonnet 서브에이전트가 나누어 맡았어요. 이 분담 방법은 [C15. 모델 분담 전략](/new-project1/claude/c15-model-division/)에서 자세히 다뤄요.
+이 사이트는 클라우드 세션에서 만들었어요. 기획과 검토는 Opus가, 구현은 Sonnet 서브에이전트가 나누어 맡았어요. 이 분담 방법은 [C15. 모델 분담 전략](/claude/c15-model-division/)에서 자세히 다뤄요.
 </Aside>
 
 ## 다음에 볼 튜토리얼
 
-- [C12. Claude Code 개요: 터미널·데스크톱·웹](/new-project1/claude/c12-claude-code-overview/) — Claude Code의 전체 그림
-- [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — CLAUDE.md, 슬래시 명령, 훅, 서브에이전트, MCP
-- [C15. 모델 분담 전략](/new-project1/claude/c15-model-division/) — 기획은 Opus, 구현은 Sonnet
-- [C2. 요금제와 사용량 한도](/new-project1/claude/c02-plans-limits/) — 클라우드 세션이 쓰는 한도 이해하기
-- [클라우드 세션으로 GitHub 저장소 작업 맡기기](/new-project1/coding/08-cloud-github/) — README 개선부터 웹 공개까지 따라 하기
-- [반복 업무를 에이전트에게 맡기기: 스킬, 루틴, 서브에이전트](/new-project1/coding/10-delegate-agents/) — 루틴으로 반복 업무 자동화하기
+- [C12. Claude Code 개요: 터미널·데스크톱·웹](/claude/c12-claude-code-overview/) — Claude Code의 전체 그림
+- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — CLAUDE.md, 슬래시 명령, 훅, 서브에이전트, MCP
+- [C15. 모델 분담 전략](/claude/c15-model-division/) — 기획은 Opus, 구현은 Sonnet
+- [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/) — 클라우드 세션이 쓰는 한도 이해하기
+- [클라우드 세션으로 GitHub 저장소 작업 맡기기](/coding/08-cloud-github/) — README 개선부터 웹 공개까지 따라 하기
+- [반복 업무를 에이전트에게 맡기기: 스킬, 루틴, 서브에이전트](/coding/10-delegate-agents/) — 루틴으로 반복 업무 자동화하기
