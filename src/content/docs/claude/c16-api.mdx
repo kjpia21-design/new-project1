@@ -11,8 +11,10 @@ prerequisites:
   - "Claude Console 계정 (platform.claude.com)"
   - "API 사용을 위한 결제 설정 (Pro/Max 구독과 별개예요)"
   - "터미널, Python 3.10 이상 (Python 예제용)"
-lastVerified: 2026-10-12
+lastVerified: 2026-10-13
 sources:
+  - title: "How do I pay for my Claude API usage?"
+    url: "https://support.claude.com/en/articles/8977456-how-do-i-pay-for-my-api-usage"
   - title: "Rate limits"
     url: "https://platform.claude.com/docs/en/api/rate-limits"
   - title: "Get started with Claude (API)"
@@ -77,8 +79,8 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 | 서비스 계정 키 | CI·프로덕션·에이전트용이에요. 공유 용도로 권장돼요. |
 | 워크스페이스 키 | 레거시예요. |
 
-<Aside type="note" title="확인되지 않은 점">
-속도 제한은 사용 티어(Start, Build, Scale, Custom)로 정해지고 조직이 사용 이력에 따라 자동 배치돼요(공식 Rate limits 문서, 2026-10-10). 월 지출 상한은 Start $500, Build $1,000, Scale $200,000이고, 모델별 분당 요청·토큰 한도는 티어마다 달라요. 예를 들어 Start 티어의 Sonnet 5.5는 분당 요청 1,000, 입력 토큰 2,000,000, 출력 토큰 400,000이에요. 새 조직은 이보다 낮은 Evaluation 티어에서 시작할 수 있어요. 최초 결제 수단 등록과 크레딧 충전의 화면 절차는 직접 확인하지 못했으니 Console 화면 안내를 따르세요.
+<Aside type="note" title="티어와 결제 참고">
+속도 제한은 사용 티어(Start, Build, Scale, Custom)로 정해지고 조직이 사용 이력에 따라 자동 배치돼요(공식 Rate limits 문서, 2026-10-10). 월 지출 상한은 Start $500, Build $1,000, Scale $200,000이고, 모델별 분당 요청·토큰 한도는 티어마다 달라요. 예를 들어 Start 티어의 Sonnet 5.5는 분당 요청 1,000, 입력 토큰 2,000,000, 출력 토큰 400,000이에요. 새 조직은 이보다 낮은 Evaluation 티어에서 시작할 수 있어요. 크레딧 충전은 공식 결제 도움말에 따라 Admin 또는 Billing 역할로 Console에 로그인해 Settings > Billing에서 "Buy credits"를 누르고 금액을 입력해 확정해요. 구매한 크레딧은 바로 적용돼요(2026-10-13 확인). 청구서(인보이스) 계약 조직은 월 단위로 청구돼요. 결제 수단 등록 화면은 Console 안내를 따르세요.
 </Aside>
 
 ## 단계별 따라하기

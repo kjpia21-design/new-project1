@@ -11,8 +11,10 @@ prerequisites:
   - "C16. Claude API 시작하기 (API 키, 첫 호출)"
   - "C15. 모델 분담 전략 (모델 선택 감각)"
   - "Python 3.10 이상, pip install anthropic"
-lastVerified: 2026-10-12
+lastVerified: 2026-10-13
 sources:
+  - title: "Structured outputs"
+    url: "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
   - title: "Tool use with Claude (overview)"
     url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview"
   - title: "Tool runner (SDK)"
@@ -375,8 +377,8 @@ C16의 "모델별 요청 제한" 표에 있듯이 Opus 5.5, Sonnet 5.5, Fable 5.
    - `runner.until_done()`은 최종 메시지를 돌려줘요. 중간 과정을 보려면 `for message in runner:`로 반복해요.
    - 비동기 클라이언트라면 `@beta_async_tool`을 써요.
 
-   <Aside type="caution" title="확인하지 못한 조합">
-   예제는 `tool_runner(...)`에 `output_config`를 함께 넘겨요. `output_config`는 Messages API의 정식 파라미터지만, 공식 tool runner 문서의 예제에서 같은 조합을 직접 확인하지는 못했어요. 오류가 나면 `output_config` 줄을 빼고 시작하세요.
+   <Aside type="caution" title="공식 예제에 없는 조합">
+   예제는 `tool_runner(...)`에 `output_config`를 함께 넘겨요. `output_config`는 Messages API의 정식 파라미터지만(구조화 출력 문서), 공식 tool runner 문서에는 같은 조합의 예제가 없어요(2026-10-13 확인). 오류가 나면 `output_config` 줄을 빼고 시작하세요.
    </Aside>
 
    **러너와 직접 루프, 무엇을 고를까요?** 공식 문서는 도구 실행 전 사람 승인, 맞춤 로깅, 조건부 실행이 필요하면 직접 루프를 쓰라고 안내해요. 한편 러너도 도구 함수 안에서 승인을 받거나 `generate_tool_call_response()`로 결과를 가로채는 식의 개입을 지원해요. 처음에는 러너로 시작하고, 요청 형태를 직접 통제해야 할 때 직접 루프로 내려가는 것을 권해요.
