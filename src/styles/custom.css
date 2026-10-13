@@ -65,9 +65,12 @@ html { overflow-x: hidden; }
 body { background: var(--sl-color-black); }
 h1, h2, h3, h4 { font-weight: 700; }
 
-.sl-markdown-content :not(a, strong, em, del, span, input, code, br) + :is(h2, h3, h4) { margin-top: 1.8em; }
+.sl-markdown-content :not(a, strong, em, del, span, input, code, br) + :is(h2, h3, h4):not(:where(.not-content *)) { margin-top: 1.8em; }
 .sl-markdown-content img, .sl-markdown-content table { border-radius: 12px; }
 .content-panel + .content-panel { border-top: 0; }
+/* 튜토리얼 정보 상자(제목 패널)와 본문 첫 블록 사이 간격을 줄인다. */
+.content-panel:has(.meta) + .content-panel { padding-top: 0; }
+.sl-markdown-content > .not-content:first-child { margin-top: 0; }
 
 /* 사이트 제목 */
 .site-title { font-weight: 800; font-size: var(--sl-text-base); }
