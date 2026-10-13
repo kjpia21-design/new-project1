@@ -12,7 +12,7 @@ prerequisites:
   - "C14. Claude Code 핵심 기능 (권한 모드, CLAUDE.md, 훅)"
   - "C16. API 시작하기 (API 키, 비용 개념)"
   - "GitHub 저장소 한 개와 그 저장소의 관리자(admin) 권한"
-lastVerified: 2026-10-12
+lastVerified: 2026-10-13
 sources:
   - title: "Run Claude Code programmatically (headless)"
     url: "https://code.claude.com/docs/en/headless"
@@ -341,7 +341,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
    - 이슈 본문은 **외부 사람이 쓴 신뢰할 수 없는 입력**이에요. 도구를 `gh issue view/edit`로만 좁혀 두면 인젝션이 성공해도 피해가 작아요.
    - 분류는 가벼운 작업이라 Haiku 5.5를 골랐어요(가격은 C16 표 참고).
-   - `GH_TOKEN`은 `gh` 명령이 인증하도록 넣었어요. 액션 안에서 `gh`가 자동 인증되는지는 공식 문서에서 확인하지 못해서, 명시적으로 넣었어요.
+   - `GH_TOKEN`은 `gh` 명령이 인증하도록 넣었어요. 공식 GitHub Actions 문서에는 액션 안에서 `gh`가 자동 인증된다는 안내가 없어서(2026-10-13 확인), 명시적으로 넣었어요.
 
 9. **비용 상한 걸기**
 

@@ -11,7 +11,7 @@ prerequisites:
   - "C16. Claude API 시작하기 (API 키, ANTHROPIC_API_KEY, Python SDK 설치)"
   - "3. Claude Agent SDK로 나만의 에이전트 만들기 (에이전트·도구·권한 개념)"
   - "Python 3.10 이상과 터미널 (TypeScript 예제는 Node.js)"
-lastVerified: 2026-10-12
+lastVerified: 2026-10-13
 sources:
   - title: "Claude Managed Agents overview"
     url: "https://platform.claude.com/docs/en/managed-agents/overview"
@@ -346,7 +346,7 @@ Managed Agents는 세션이 길게 이어지고 대화 기록, 샌드박스 상�
    `idle`만으로는 끝이 아니에요. 예산 정지로 run이 멈춘 채 세션이 idle이 될 수 있고, 에이전트가 결과를 읽고 새 run을 또 시작할 수도 있어요. 끝내려면 `user.interrupt`가 아니라 **세션을 보관(archive)**해야 해요. 중단 이벤트는 run을 끝내지 않아요.
 
    <Aside type="note" title="문서에 없어서 단정하지 않는 것">
-   워크플로 안에서 에이전트가 쓰는 프로그램 형식(스크립트 문법)은 공식 문서에서 확인하지 못했어요. 이 튜토리얼은 "에이전트가 워크플로를 작성하고 서버가 실행한다"까지만 다뤄요. 한 run에서 같은 일에 스레드가 둘 이상 생길 수 있다고 하니, 에이전트가 부르는 내 도구는 두 번 불려도 문제없게 만드세요.
+   워크플로 안에서 에이전트가 쓰는 프로그램 형식(스크립트 문법)은 공식 문서가 안내하지 않아요(워크플로 run 문서, 2026-10-13 확인). 이 튜토리얼은 "에이전트가 워크플로를 작성하고 서버가 실행한다"까지만 다뤄요. 한 run에서 같은 일에 스레드가 둘 이상 생길 수 있다고 하니, 에이전트가 부르는 내 도구는 두 번 불려도 문제없게 만드세요.
    </Aside>
 
 6. **끝난 세션 정리하기**
