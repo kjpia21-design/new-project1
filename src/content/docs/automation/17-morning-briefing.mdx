@@ -30,6 +30,7 @@ import Summary from '../../../components/Summary.astro';
 import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - Claude의 **Gmail·Google Calendar 커넥터**를 연결하면 "오늘 일정 + 답장이 필요한 메일"을 한 번에 정리한 **아침 브리핑**을 받을 수 있어요.
@@ -79,7 +80,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
    채팅 입력창의 **+** > Connectors에서 Gmail과 Google Calendar를 골라 Google 계정으로 로그인하고 동의해요. Team/Enterprise라면 조직 Owner가 먼저 커넥터를 켜 둬야 해요. 자세한 절차와 문제 해결은 [C7. 커넥터](/new-project1/claude/c07-connectors/)를 보세요.
 
-   <ScreenshotPlaceholder caption="Connectors에서 Gmail과 Google Calendar를 켠 화면" />
+   <ScreenshotPlaceholder caption="Connectors에서 Gmail과 Google Calendar를 켠 화면" officialUrl="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" />
 
 2. **읽기 전용 브리핑 직접 실행하기**
 
@@ -131,7 +132,13 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    /schedule 평일 아침 브리핑: 오늘 일정과 답장이 필요한 메일을 읽기만 해서 정리해 줘
    ```
 
-   <ScreenshotPlaceholder caption="루틴 만들기 화면에서 이름, 프롬프트, 스케줄을 정하는 모습" />
+   <ScreenshotPlaceholder caption="루틴 만들기 화면에서 이름, 프롬프트, 스케줄을 정하는 모습" officialUrl="https://code.claude.com/docs/en/routines" />
+
+   <FlowSteps title="아침 브리핑을 루틴으로 저장하기" officialUrl="https://code.claude.com/docs/en/routines" steps={[
+     { where: '채팅 입력창', action: '+ > Connectors에서 Gmail, Google Calendar 고르기', result: 'Google 계정 로그인하고 동의' },
+     { where: '새 대화', action: '두 커넥터를 켜고 읽기 전용 브리핑 요청', result: '결과를 눈으로 확인' },
+     { where: 'claude.ai/code/routines', action: '새 루틴(New routine)에서 이름, 프롬프트, 트리거(스케줄) 정하기', result: '평일 아침 자동 실행' },
+   ]} />
 
 6. **첫 자동 실행 확인하고 다듬기**
 
@@ -200,3 +207,4 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - [C7. 커넥터](/new-project1/claude/c07-connectors/) — 연결 절차와 보안 체크리스트
 - [C13. 클라우드 세션과 루틴](/new-project1/claude/c13-cloud-sessions/) — 루틴의 한도와 설정
 - [18. Zapier/Make로 메일 → 시트 → 알림 자동화](/new-project1/automation/18-zapier-make/) — 규칙 기반 자동화
+- [개인 AI 에이전트 안전하게 쓰는 법](/new-project1/agents/05-agent-safety/) — 자동으로 움직이는 에이전트의 권한 관리

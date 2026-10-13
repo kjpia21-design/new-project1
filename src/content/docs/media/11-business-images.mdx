@@ -42,6 +42,7 @@ import Summary from '../../../components/Summary.astro';
 import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - 업무용 이미지는 **용도(어디에 쓰나), 비율, 분위기, 넣을 글자**를 먼저 정하고 요청하면 훨씬 잘 나와요.
@@ -70,7 +71,7 @@ Gemini 앱 내용은 Google 공식 도움말 원문으로, ChatGPT 이미지 생
 | **프롬프트** | 이미지를 만들어 달라는 설명 문장이에요. 프롬프트 일반 원칙은 [C4. 프롬프트 작성법](/new-project1/claude/c04-prompting/)과 같아요. |
 | **이미지 편집(대화형)** | 만든 이미지에 "배경을 밝게", "글자를 빼 줘"처럼 이어서 요청해 고치는 방식이에요. |
 | **SynthID** | Google이 AI 생성 이미지에 넣는 보이지 않는 워터마크예요. Gemini 앱에 이미지를 올려 Google AI로 만들었는지 물어볼 수 있다고 안내돼요. |
-| **C2PA(콘텐츠 자격 증명)** | 이미지 출처 정보를 담는 메타데이터 표준이에요. OpenAI는 C2PA와 SynthID를 지원하는 출처 신호로 안내해요. C2PA는 편집·변환·공유 과정에서 지워질 수 있고, SynthID는 이미지 자체에 들어가는 워터마크라 일부 변형에도 남을 수 있다고 해요. 파일 변환·스크린샷·플랫폼 업로드 과정에서 지워질 수 있어요. |
+| **C2PA(콘텐츠 자격 증명)** | 이미지 출처 정보를 담는 메타데이터 표준이에요. OpenAI는 C2PA와 SynthID를 지원하는 출처 신호로 안내해요. C2PA는 편집·변환·스크린샷·플랫폼 업로드 과정에서 지워질 수 있고, SynthID는 이미지 자체에 들어가는 워터마크라 일부 변형에도 남을 수 있다고 해요. |
 | **초상권·퍼블리시티권** | 사람의 얼굴·모습을 허락 없이 쓰지 못하게 하는 권리예요. 도구 약관도 동의 없는 실존 인물 재현을 제한해요. |
 
 ### 어떤 도구를 쓸까요
@@ -114,7 +115,13 @@ Gemini 열은 Google 공식 도움말 원문으로, ChatGPT 열은 OpenAI 문서
    블로그 썸네일용 이미지를 만들어 줘. 16:9 가로형. 주제는 사내 교육 세미나 안내야. 밝은 사무실 책상 위에 노트북과 메모지, 커피잔이 있는 장면이고 사람은 나오지 않게 해 줘. 파란색 계열의 깔끔한 분위기. 이미지 안에 글자는 넣지 마. 위쪽 3분의 1은 제목을 올릴 수 있게 비워 줘.
    </PromptBox>
 
-   <ScreenshotPlaceholder caption="Gemini 앱에서 이미지 생성 요청을 보낸 화면" />
+   <ScreenshotPlaceholder caption="Gemini 앱에서 이미지 생성 요청을 보낸 화면" officialUrl="https://support.google.com/gemini/answer/14286560" />
+
+   <FlowSteps title="Gemini에서 이미지 만들고 고치기" officialUrl="https://support.google.com/gemini/answer/14286560" steps={[
+     { where: 'gemini.google.com 사이드바', action: 'Images 누르기', result: '템플릿 고르기 또는 프롬프트 입력' },
+     { where: '만든 이미지', action: '왼쪽 사이드바의 Library에서 열기', result: '아래 Chat으로 이어서 고치기' },
+     { where: '이미지 위에 마우스 올리기', action: 'Download full size 누르기', result: '이미지 저장' },
+   ]} />
 
 3. **대화로 고치기**
 

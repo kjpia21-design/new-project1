@@ -109,14 +109,14 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    <PromptBox>
    아래 고객 문의를 '배송', '환불', '기타' 중 하나로 분류해줘. 이 형식으로 답해줘.
 
-   <examples>
-   <example>입력: 주문한 지 5일이 지났는데 아직 안 왔어요. 출력: 배송</example>
-   <example>입력: 사이즈가 안 맞아서 돈 돌려받고 싶어요. 출력: 환불</example>
-   </examples>
+   &lt;examples&gt;
+   &lt;example&gt;입력: 주문한 지 5일이 지났는데 아직 안 왔어요. 출력: 배송&lt;/example&gt;
+   &lt;example&gt;입력: 사이즈가 안 맞아서 돈 돌려받고 싶어요. 출력: 환불&lt;/example&gt;
+   &lt;/examples&gt;
 
-   <input>
+   &lt;input&gt;
    [분류할 문의 목록]
-   </input>
+   &lt;/input&gt;
    </PromptBox>
 
    예시는 관련성이 있고, 다양하고, 태그로 구조화돼 있을수록 좋아요. 최상의 결과를 위해 3~5개를 권장해요.
@@ -126,16 +126,16 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    20k 토큰이 넘는 긴 입력이라면 문서를 프롬프트 맨 위에 두고 질문·지시를 맨 아래에 두세요. 공식 문서는 이렇게 하면 복잡한 다문서 입력에서 응답 품질이 최대 30% 향상됐다고 (테스트 기준) 설명해요. 문서가 여러 개면 `<documents>` 안에 `<document index="1">`처럼 구분하고 `<source>`와 `<document_content>`를 쓰는 구조가 안내돼요.
 
    <PromptBox>
-   <documents>
-   <document index="1">
-   <source>2분기 영업 보고서</source>
-   <document_content>[내용 붙여넣기]</document_content>
-   </document>
-   <document index="2">
-   <source>3분기 영업 보고서</source>
-   <document_content>[내용 붙여넣기]</document_content>
-   </document>
-   </documents>
+   &lt;documents&gt;
+   &lt;document index="1"&gt;
+   &lt;source&gt;2분기 영업 보고서&lt;/source&gt;
+   &lt;document_content&gt;[내용 붙여넣기]&lt;/document_content&gt;
+   &lt;/document&gt;
+   &lt;document index="2"&gt;
+   &lt;source&gt;3분기 영업 보고서&lt;/source&gt;
+   &lt;document_content&gt;[내용 붙여넣기]&lt;/document_content&gt;
+   &lt;/document&gt;
+   &lt;/documents&gt;
 
    두 보고서에서 매출이 가장 많이 늘어난 제품 3개를 비교하고, 원인을 보고서에서 근거가 된 문장과 함께 알려줘.
    </PromptBox>
@@ -148,7 +148,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    너는 10년 차 인사팀 매니저야. 방금 쓴 공지문을 신입사원이 읽는다고 생각하고 더 쉬운 말로 고쳐줘.
    </PromptBox>
 
-   <ScreenshotPlaceholder caption="후속 질문으로 결과를 다듬는 대화 화면" />
+   <ScreenshotPlaceholder caption="후속 질문으로 결과를 다듬는 대화 화면" officialUrl="https://support.claude.com/en/articles/8114491-get-started-with-claude" />
 
 </Steps>
 
@@ -202,3 +202,4 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - [C1. Claude 한눈에 보기](/new-project1/claude/c01-overview/) — 모델과 effort 고르기
 - [C9. 메모리와 개인 설정](/new-project1/claude/c09-memory-settings/) — 반복 지시를 저장하기
 - [C5. 프로젝트](/new-project1/claude/c05-projects/) — 같은 자료와 지침을 반복해서 쓰기
+- [실무 프롬프트 작성법: 역할·맥락·형식 지정하기](/new-project1/chat/01-prompt-basics/) — 업무 예시로 더 연습하기

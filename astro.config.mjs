@@ -40,6 +40,7 @@ export default defineConfig({
             { label: '고급 사용자 시작점', slug: 'start/advanced' },
           ],
         },
+        { label: 'AI 첫걸음', collapsed: true, items: [{ autogenerate: { directory: 'basics' } }] },
         { label: 'Claude 완전 정복', collapsed: true, items: [{ autogenerate: { directory: 'claude' } }] },
         { label: 'Claude 최신 소식', slug: 'claude-news' },
         { label: '화제의 AI 에이전트', collapsed: true, items: [{ autogenerate: { directory: 'agents' } }] },

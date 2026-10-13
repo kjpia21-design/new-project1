@@ -36,6 +36,7 @@ import Summary from '../../../components/Summary.astro';
 import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - MCP 서버는 Claude가 부를 수 있는 **도구(함수)를 내놓는 프로그램**이에요. 공식 Python SDK(`mcp`)로 함수에 `@mcp.tool()`만 붙이면 만들어져요.
@@ -219,7 +220,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
    Claude가 도구를 부르기 전에 승인을 물어요. 서버 도구는 `mcp__inventory__get_stock`처럼 `mcp__서버이름__도구이름` 형태로 권한 규칙과 훅에서 가리켜요.
 
-   <ScreenshotPlaceholder caption="/mcp 화면에서 inventory 서버가 Connected로 보이는 모습" />
+   <ScreenshotPlaceholder caption="/mcp 화면에서 inventory 서버가 Connected로 보이는 모습" officialUrl="https://code.claude.com/docs/en/mcp" officialLabel="Claude Code 문서에서 보기" />
 
    범위(scope)는 이렇게 골라요. 자세한 설명은 [C14](/new-project1/claude/c14-claude-code-features/)에 있어요.
 
@@ -292,7 +293,14 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
    Team/Enterprise는 Owner(또는 Primary Owner)가 조직 설정(Organization settings) > 커넥터(Connectors)에서 Add > Custom > Web으로 추가하고, 구성원은 Customize > Connectors에서 **Connect**를 눌러요. 수정은 제거했다가 다시 추가하는 방식이에요. Free 플랜은 커스텀 커넥터가 1개까지예요.
 
-   <ScreenshotPlaceholder caption="커스텀 커넥터 추가 대화상자(이름, 서버 URL, 인증 선택)" />
+   <ScreenshotPlaceholder caption="커스텀 커넥터 추가 대화상자(이름, 서버 URL, 인증 선택)" officialUrl="https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp" officialLabel="Anthropic 도움말에서 보기" />
+
+   <FlowSteps title="Claude 앱에 커스텀 커넥터 추가하기 (Pro/Max)" officialUrl="https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp" steps={[
+     { where: 'Customize > Connectors', action: '+ Add 누르고 Add custom connector 고르기' },
+     { where: '추가 대화상자', action: '이름과 서버 URL(https://도메인/mcp) 넣고 Continue' },
+     { where: '인증 설정', action: 'Sign in now / Sign in when needed / No sign in 중에서 고르기' },
+     { where: '추가 대화상자', action: 'Add 누르기', result: '대화창의 + > Connectors에서 켤 수 있어요' },
+   ]} />
 
    <Aside type="caution" title="공유 자격 증명이면 모두가 같은 권한을 가져요">
    커넥터에 고정 자격 증명(공유 토큰)을 쓰면 그 커넥터를 쓰는 모든 구성원이 그 자격 증명의 권한을 가져요. 읽기 전용 토큰으로 만들고, 쓰기 도구는 넣지 마세요. 고급 리서치(Research)는 커넥터 도구를 추가 승인 없이 부를 수 있으니, 쓰기가 가능한 도구가 있다면 미리 끄세요.

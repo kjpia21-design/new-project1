@@ -43,6 +43,7 @@ import Summary from '../../../components/Summary.astro';
 import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - **Grok Bot**은 xAI(사이트 표기 SpaceXAI)가 2026-08-11 베타로 낸 **상시 작동 AI 에이전트**예요. 이름 붙인 Bot에게 문자 보내듯 일을 맡기면, Bot이 **자기 클라우드 컴퓨터**에서 내 앱에 로그인해 일하고 앱을 닫아도 계속해요.
@@ -117,7 +118,7 @@ X에서 글에 `@grok`을 달아 묻는 것은 별개 서비스예요. Grok Bot�
 - 주간 사용량을 다 쓰면 **종량제(on-demand)** 사용량이 Cursor로 청구될 수 있어요. 한도를 미리 확인하세요.
 - Cursor 플랜과 SuperGrok 연결은 **합산되지 않아요.** 둘 다 있으면 사용량이 더 많은 쪽이 적용돼요.
 - SuperGrok이나 X Premium+ 연결은 **한 번 하면 해제하거나 다른 Cursor 계정으로 옮길 수 없어요.** 연결하기 전에 올바른 Cursor 계정으로 로그인했는지 꼭 확인하세요.
-- 무료 체험은 일수가 아니라 **사용량 크레딧** 방식이에요(7일 창도 적용). 크게 맡기면 한 번에 다 쓸 수 있어요.
+- 무료 체험은 일수가 아니라 **크레딧** 방식이에요(7일 창도 적용). 크게 맡기면 한 번에 다 쓸 수 있어요.
 - 금액은 공식 가격 페이지 기준으로 Cursor Pro가 월 $20, Cursor Teams가 사용자당 월 $40이에요. Pro+·Ultra·SuperGrok 금액과 구체적인 사용량 수치는 이번에 공식 출처로 확인하지 못해서 싣지 않아요.
 
 ### 한국에서 쓸 수 있나요? 한국어는요?
@@ -163,7 +164,7 @@ X 계정으로 @bot을 부르는 기능은 영국, EU, 호주 등에서는 아�
    - **iPhone/iPad**: App Store에서 "Grok Bot"(제공자 X Corp.)을 설치해요. iOS 18 이상이 필요해요.
    - **Android**: Google Play에서 "Grok Bot"을 설치해요. 공식 문서 기준 Android 9 이상이에요.
 
-   <ScreenshotPlaceholder caption="한국 App Store의 Grok Bot 등록 화면 (제공자 X Corp., 무료·앱 내 구입)" />
+   <ScreenshotPlaceholder caption="한국 App Store의 Grok Bot 등록 화면 (제공자 X Corp., 무료·앱 내 구입)" officialUrl="https://apps.apple.com/kr/app/grok-bot/id6794501026" officialLabel="App Store에서 보기" />
 
    <Aside type="note" title="2026-08-26 공지와 지금 문서가 달라요">
    8월 공지의 다운로드 버튼은 macOS만 보여요. 2026-10-07에 갱신된 공식 문서는 Windows·Linux와 Android도 지원한다고 적어요. 이 글은 더 최근 문서를 따르지만, 설치 화면에서 내 기기용 파일이 안 보이면 공식 페이지를 다시 확인하세요.
@@ -175,7 +176,7 @@ X 계정으로 @bot을 부르는 기능은 영국, EU, 호주 등에서는 아�
 
    처음 실행하면 Bot, 공유 컴퓨터, 루틴을 소개하고 쓰는 도구를 물어봐요. 이 답은 추천을 정하는 데만 쓰이고 도구를 연결하지는 않아요. 컴퓨터 준비는 몇 분 걸릴 수 있어요.
 
-   <ScreenshotPlaceholder caption="처음 실행 후 'Meet a future teammate'에서 첫 Bot을 고르는 화면" />
+   <ScreenshotPlaceholder caption="처음 실행 후 'Meet a future teammate'에서 첫 Bot을 고르는 화면" officialUrl="https://docs.x.ai/grok-bot/get-started" officialLabel="Grok Bot 공식 문서에서 보기" />
 
 4. **첫 Bot 만들기**
 
@@ -203,7 +204,14 @@ X 계정으로 @bot을 부르는 기능은 영국, EU, 호주 등에서는 아�
 
    로그인한 브라우저 세션은 공유 컴퓨터에 남아서 다른 Bot도 쓸 수 있어요. 지원되는 서비스는 사이드바 Marketplace에서 플러그인을 설치하고 브라우저에서 인증하는 방법도 있어요. 채팅에서 `@`로 커넥터를, `/`로 스킬을 불러요.
 
-   <ScreenshotPlaceholder caption="Agent Computer 화면에서 로그인을 직접 처리하는 인수 화면" />
+   <ScreenshotPlaceholder caption="Agent Computer 화면에서 로그인을 직접 처리하는 인수 화면" officialUrl="https://docs.x.ai/grok-bot/get-started" officialLabel="Grok Bot 공식 문서에서 보기" />
+
+   <FlowSteps title="로그인이 필요할 때 직접 넘겨받기" officialUrl="https://docs.x.ai/grok-bot/get-started" steps={[
+     { where: '대화 화면', action: 'Agent Computer 열기' },
+     { where: 'Agent Computer', action: '인수(take control) 버튼 누르기', result: '내가 컴퓨터를 직접 조작해요' },
+     { where: '로그인 화면', action: '비밀번호·패스키·2단계 코드·CAPTCHA를 직접 입력' },
+     { where: '대화 화면', action: '제어권을 돌려주고 Bot에게 계속하라고 말하기' },
+   ]} />
 
 7. **결과 확인하고 다듬기**
 

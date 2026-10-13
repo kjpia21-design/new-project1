@@ -13,7 +13,7 @@
 - 팁: "채점은 생성에 쓴 모델과 다른 모델로 하는 것이 보통 모범 사례"(문서 예제 주석), 보류(held-out) 테스트 세트, 용어를 정의, 정량+정성 지표 병행.
 - 공식 예제의 LLM 채점은 `client.messages.create(model=..., max_tokens=50, messages=[...])`로 숫자/yes-no만 출력하게 함 → 본문도 같은 패턴. 응답에서 `type == "text"` 블록을 골라 읽는 방식 사용(적응형 thinking 모델은 thinking 블록이 앞에 올 수 있음, C16 표).
 - 평가 건강 점검(eval-audit.md): 정답 라벨이 맞는지 표본 재검증, 기준 답안이 채점기를 통과하는지, 모호한 기준 금지, 먼저 소수 케이스로 끝까지 실행해 보기, 케이스 중복·편중을 스크립트로 점검, 변화 감지에 충분한 표본 수.
-- 모델 제약(C16과 일관): Sonnet 5.5는 샘플링 파라미터를 기본값에서 바꾸면 400, `tool_choice` any/tool 400. 본문 코드는 temperature 등을 쓰지 않고 `output_config={"effort": ...}`만 사용. 기본 적응형 thinking이므로 max_tokens를 넉넉히(thinking 토큰도 출력 한도에 포함) 설정하고 effort를 low로 낮춤.
+- 모델 제약(C16과 일관): Sonnet 5.5는 `tool_choice` any/tool이면 400(릴리스 노트 2026-09-28). 샘플링 파라미터 400 제약은 Sonnet 5.5가 아니라 Sonnet 5와 Haiku 5.5의 것(릴리스 노트 2026-06-30, 2026-10-07)으로 2026-10-11 정정. 본문 코드는 temperature 등을 쓰지 않고 `output_config={"effort": ...}`만 사용. 기본 적응형 thinking이므로 max_tokens를 넉넉히(thinking 토큰도 출력 한도에 포함) 설정하고 effort를 low로 낮춤.
 
 ## 확인 못 함 / 주의
 - Console의 평가 도구(Evaluation Tool) 페이지(eval-tool)는 위 URL에서 해당 내용이 확인되지 않아(요약 결과가 develop-tests 내용만 돌려줌) 본문에서 다루지 않음.

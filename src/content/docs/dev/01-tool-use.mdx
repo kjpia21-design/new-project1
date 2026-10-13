@@ -79,7 +79,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
   -> 응답 stop_reason == "end_turn"  -> 최종 텍스트
 ```
 
-도구 정의, `tool_use` 블록, `tool_result` 블록, 그리고 도구 사용을 켜면 자동으로 붙는 시스템 프롬프트(Opus 5.5·Sonnet 5.5·Haiku 5.5는 `auto`일 때 286토큰)가 모두 입력 토큰으로 과금돼요. 도구가 많을수록 매 요청의 입력이 커져요. 줄이는 방법은 [02. 프롬프트 캐싱·배치·effort로 API 비용 줄이기](/new-project1/dev/02-cost-optimization/)에서 다뤄요.
+도구 정의, `tool_use` 블록, `tool_result` 블록, 그리고 도구 사용을 켜면 자동으로 붙는 시스템 프롬프트(Opus 5.5·Sonnet 5.5·Haiku 5.5는 `auto`일 때 286토큰)가 모두 입력 토큰으로 과금돼요. 도구가 많을수록 매 요청의 입력이 커져요. 줄이는 방법은 [2. 프롬프트 캐싱·배치·effort로 API 비용 줄이기](/new-project1/dev/02-cost-optimization/)에서 다뤄요.
 
 ### 모델별 제한: tool_choice
 
@@ -471,6 +471,7 @@ C16의 "모델별 요청 제한" 표에 있듯이 Opus 5.5, Sonnet 5.5, Fable 5.
 
 ## 다음에 볼 튜토리얼
 
-- [02. 프롬프트 캐싱·배치·effort로 API 비용 줄이기](/new-project1/dev/02-cost-optimization/) — 도구 정의가 긴 봇의 비용 줄이기
+- [2. 프롬프트 캐싱·배치·effort로 API 비용 줄이기](/new-project1/dev/02-cost-optimization/) — 도구 정의가 긴 봇의 비용 줄이기
 - [C16. Claude API 시작하기](/new-project1/claude/c16-api/) — 모델별 요청 제한 표
 - [C15. 모델 분담 전략](/new-project1/claude/c15-model-division/) — 조회는 작은 모델, 판단은 큰 모델
+- [3. Claude Agent SDK로 나만의 에이전트 만들기](/new-project1/dev/03-agent-sdk/) — 도구 루프를 SDK에 맡기는 방법

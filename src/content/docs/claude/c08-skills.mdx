@@ -17,8 +17,6 @@ sources:
     url: "https://support.claude.com/en/articles/12512180-use-skills-in-claude"
   - title: "How to create custom skills"
     url: "https://support.claude.com/en/articles/12512198-how-to-create-custom-skills"
-  - title: "Use skills in Claude"
-    url: "https://support.claude.com/en/articles/12512180-use-skills-in-claude"
   - title: "Extend Claude with skills (Claude Code)"
     url: "https://code.claude.com/docs/en/skills"
   - title: "Claude release notes"
@@ -149,7 +147,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
    Customize > Skills에서 **+** > **Create skill** > **Upload a skill**을 고르고 ZIP을 선택한 뒤, 목록에서 토글을 켜요.
 
-   <ScreenshotPlaceholder caption="Customize > Skills에서 ZIP을 업로드하고 토글을 켜는 화면" />
+   <ScreenshotPlaceholder caption="Customize > Skills에서 ZIP을 업로드하고 토글을 켜는 화면" officialUrl="https://support.claude.com/en/articles/12512180-use-skills-in-claude" />
 
 5. **테스트하고 description 다듬기**
 
@@ -223,6 +221,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | 조직 라이브러리에 게시 | 검토가 필요한 조직도 있음 |
 
 플러그인을 만들었다면 2026-09-25부터 새 개발자 포털로 Claude 디렉터리에 제출할 수 있어요(릴리스 노트 기준, 세부 절차는 공식 안내 확인).
+
 ## 자주 막히는 지점
 
 ### 업로드한 ZIP이 인식되지 않아요
@@ -257,10 +256,12 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - **입출력 예시를 넣으세요.** 결과 형식이 안정돼요. agentskills.io 사양을 따르면 호환성이 좋아진다고 안내돼요.
 - **API 키나 비밀번호를 스킬 안에 쓰지 마세요.** 하드코딩 금지예요.
 - **바꿀 때마다 테스트하세요.** 여러 요청으로 불려오는지 확인하세요.
-- **프롬프트와 함께 쓰세요.** 좋은 지침 작성은 [C4. 프롬프트 작성법](/new-project1/claude/c04-prompting/)과 같은 원리예요.
+- **프롬프트와 함께 쓰세요.** 좋은 지침 작성은 [C4. 프롬프트 잘 쓰는 법](/new-project1/claude/c04-prompting/)과 같은 원리예요.
 
 ## 다음에 볼 튜토리얼
 
 - [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — CLAUDE.md, 슬래시 명령, 훅과 스킬
 - [C7. 커넥터](/new-project1/claude/c07-connectors/) — 외부 서비스 연결
 - [C12. Claude Code 개요](/new-project1/claude/c12-claude-code-overview/) — Claude Code 설치와 첫 작업
+- [스킬·플러그인 패키지로 만들어 팀에 배포하기](/new-project1/dev/06-plugins-skills-team/) — 만든 스킬을 팀에 나누는 법
+- [반복 업무를 에이전트에게 맡기기: 스킬, 루틴, 서브에이전트](/new-project1/coding/10-delegate-agents/) — 스킬을 일상 업무에 쓰는 예

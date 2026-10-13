@@ -35,6 +35,7 @@ import Summary from '../../../components/Summary.astro';
 import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - **Claude in Chrome**은 Chrome 안에서 Claude가 페이지를 읽고 클릭·입력·이동을 대신 해 주는 확장 프로그램이에요. 모든 유료 플랜에서 쓰고, Chrome 사이드 패널은 베타예요(2026-10-10 기준).
@@ -97,7 +98,7 @@ Chrome 확장의 사용량 소모량은 공식 문서에서 확인하지 못했�
 
    Google Chrome에서 Chrome 웹 스토어로 가서 Claude 확장 프로그램을 추가해요. 설치 후 Claude 계정으로 로그인하고, 퍼즐 아이콘에서 고정(pin)한 뒤 요청하는 권한을 허용해요.
 
-   <ScreenshotPlaceholder caption="Chrome 웹 스토어의 Claude 확장 설치와 퍼즐 아이콘 고정 화면" />
+   <ScreenshotPlaceholder caption="Chrome 웹 스토어의 Claude 확장 설치와 퍼즐 아이콘 고정 화면" officialUrl="https://support.claude.com/en/articles/12012173-get-started-with-claude-in-chrome" />
 
    Claude Desktop 앱에서 쓰려면 설정(Settings) > 커넥터(Connectors) > Claude in Chrome > 구성(Configure)에서 켜요. 대화마다 기본은 꺼져 있어요.
 
@@ -131,13 +132,19 @@ Chrome 확장의 사용량 소모량은 공식 문서에서 확인하지 못했�
 
    허용한 사이트는 확장 설정(사이드 패널의 점 세 개) > Permissions 페이지의 "Your approved sites"에서 검토하고 취소할 수 있어요.
 
-   <ScreenshotPlaceholder caption="New permissions required 창과 Your approved sites 목록" />
+   <ScreenshotPlaceholder caption="New permissions required 창과 Your approved sites 목록" officialUrl="https://support.claude.com/en/articles/12902446-claude-in-chrome-permissions-guide" />
 
 5. **컴퓨터 사용 켜기 (선택, Pro/Max)**
 
    Claude Desktop을 최신으로 업데이트한 뒤 설정(Settings) > General(Desktop app)에서 "Enable computer use"를 켜요. 그다음 Cowork 또는 Claude Code 세션에서 앱 관련 작업을 요청하면 Claude가 앱마다 접근 승인을 물어요.
 
-   <ScreenshotPlaceholder caption="Settings > General의 Enable computer use 토글" />
+   <ScreenshotPlaceholder caption="Settings > General의 Enable computer use 토글" officialUrl="https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork" />
+
+   <FlowSteps title="컴퓨터 사용 켜는 길" officialUrl="https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork" steps={[
+     { where: 'Claude Desktop 앱', action: '최신 버전으로 업데이트' },
+     { where: '설정(Settings) > General (Desktop app)', action: 'Enable computer use 켜기' },
+     { where: 'Cowork 또는 Claude Code 세션', action: '앱 관련 작업 요청', result: '앱마다 접근 승인을 물어요' },
+   ]} />
 
 6. **작은 작업으로 시험하기**
 
@@ -239,3 +246,4 @@ Chrome 확장의 사용량 소모량은 공식 문서에서 확인하지 못했�
 - [C7. 커넥터로 Gmail·캘린더·Drive·Notion 연결하기](/new-project1/claude/c07-connectors/) — 화면 조작보다 먼저 시도할 직접 연결 방법
 - [C12. Claude Code 개요](/new-project1/claude/c12-claude-code-overview/) — 개발 환경에서 Chrome 연동을 쓰는 Claude Code
 - [C3. Claude 앱 시작하기](/new-project1/claude/c03-getting-started/) — 데스크톱 앱과 모바일 앱의 차이
+- [컴퓨터·브라우저 도구 API로 화면 작업 자동화](/new-project1/dev/10-computer-browser-tools/) — 같은 기능을 코드(API)로 쓰는 법

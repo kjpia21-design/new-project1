@@ -38,6 +38,7 @@ import Summary from '../../../components/Summary.astro';
 import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - Notion AI는 **Notion 안에 들어 있는 AI 기능 묶음**이에요. 에이전트(Agent), Q&A, 데이터베이스 Autofill, AI 회의록(AI Meeting Notes) 등이 있어요.
@@ -99,7 +100,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    이 페이지의 회의 내용을 3줄로 요약해 줘. 그리고 "해야 할 일"을 담당자, 마감일, 내용 순서의 표로 뽑아 줘. 페이지에 담당자나 마감일이 없으면 지어내지 말고 "미정"이라고 써 줘.
    </PromptBox>
 
-   <ScreenshotPlaceholder caption="Notion Agent에 페이지 요약을 요청하는 화면" />
+   <ScreenshotPlaceholder caption="Notion Agent에 페이지 요약을 요청하는 화면" officialUrl="https://www.notion.com/help/notion-agent" />
 
 3. **워크스페이스에 질문하기**
 
@@ -121,7 +122,13 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    이 행의 "내용" 속성을 읽고 한 문장으로 요약해 줘. 분류는 "영업", "개발", "운영", "기타" 중 하나로만 답해.
    </PromptBox>
 
-   <ScreenshotPlaceholder caption="데이터베이스에 AI Autofill 속성을 추가하는 화면" />
+   <ScreenshotPlaceholder caption="데이터베이스에 AI Autofill 속성을 추가하는 화면" officialUrl="https://www.notion.com/help/autofill" />
+
+   <FlowSteps title="데이터베이스에 AI Autofill 넣기" officialUrl="https://www.notion.com/help/autofill" steps={[
+     { where: '데이터베이스의 속성', action: '채우고 싶은 속성 이름 클릭' },
+     { where: '속성 메뉴', action: 'AI Autofill (또는 Set up AI Autofill) 선택' },
+     { where: 'Autofill 설정', action: 'Basic 고르고 Summary·Translate·Key info·Custom autofill 중 선택', result: '실행 시점(수동, 페이지 생성 시, 페이지 수정 시)을 정해 저장' },
+   ]} />
 
 5. **결과 검수하고 고치기**
 

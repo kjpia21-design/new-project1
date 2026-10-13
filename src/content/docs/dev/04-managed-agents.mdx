@@ -9,7 +9,7 @@ tools: ["Claude Managed Agents", "Claude API"]
 duration: "60분"
 prerequisites:
   - "C16. Claude API 시작하기 (API 키, ANTHROPIC_API_KEY, Python SDK 설치)"
-  - "03. Claude Agent SDK로 나만의 에이전트 만들기 (에이전트·도구·권한 개념)"
+  - "3. Claude Agent SDK로 나만의 에이전트 만들기 (에이전트·도구·권한 개념)"
   - "Python 3.10 이상과 터미널 (TypeScript 예제는 Node.js)"
 lastVerified: 2026-10-12
 sources:
@@ -127,7 +127,7 @@ Managed Agents는 세션이 길게 이어지고 대화 기록, 샌드박스 상�
    `ma_setup.py`로 저장해요.
 
    ```python
-   """준비 단계: 환경과 에이전트를 한 번만 만들고 ID를 저장한다. (요청 경로에서 매번 만들지 마세요.)"""
+   """준비 단계: 환경과 에이전트를 한 번만 만들고 ID를 저장한다. (요청 경로에서 매번 만들지 않는다.)"""
    import json
 
    import anthropic
@@ -468,6 +468,6 @@ run의 모델 요청은 조직의 Messages API 속도 제한에도 합산돼요.
 
 ## 다음에 볼 튜토리얼
 
-- [03. Claude Agent SDK로 나만의 에이전트 만들기](/new-project1/dev/03-agent-sdk/) — 내 프로세스에서 돌리는 방식과 비교해 보세요
-- [01. 도구 사용으로 업무 봇 만들기](/new-project1/dev/01-tool-use/) — 에이전트가 부르는 도구를 직접 설계하는 법
+- [3. Claude Agent SDK로 나만의 에이전트 만들기](/new-project1/dev/03-agent-sdk/) — 내 프로세스에서 돌리는 방식과 비교해 보세요
+- [1. 도구 사용으로 업무 봇 만들기](/new-project1/dev/01-tool-use/) — 에이전트가 부르는 도구를 직접 설계하는 법
 - [C16. Claude API 시작하기](/new-project1/claude/c16-api/) — 키, 모델 ID, 가격의 기본

@@ -34,6 +34,7 @@ import Summary from '../../../components/Summary.astro';
 import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - `claude -p "요청"`은 화면 없이 한 번 실행하고 끝나는 **헤드리스(비대화형) 모드**예요. 성공하면 종료 코드 0, 실패하면 0이 아닌 값이라 스크립트에서 분기할 수 있어요.
@@ -192,7 +193,13 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
       - `CLAUDE_CODE_OAUTH_TOKEN`: 구독 인증용 토큰. 로컬에서 `claude setup-token`으로 만들어요.
    3. 워크플로 파일을 `.github/workflows/`에 넣어요.
 
-   <ScreenshotPlaceholder caption="저장소 Settings > Secrets and variables > Actions의 ANTHROPIC_API_KEY 등록 화면" />
+   <ScreenshotPlaceholder caption="저장소 Settings > Secrets and variables > Actions의 ANTHROPIC_API_KEY 등록 화면" officialUrl="https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets#creating-secrets-for-a-repository" officialLabel="GitHub 문서에서 보기" />
+
+   <FlowSteps title="GitHub 저장소에 API 키 시크릿 등록하기" officialUrl="https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets#creating-secrets-for-a-repository" steps={[
+     { where: '저장소 메인 페이지', action: '저장소 이름 아래 Settings 탭 누르기' },
+     { where: 'Settings 왼쪽 메뉴', action: 'Secrets and variables > Actions 고르기' },
+     { where: 'Actions 시크릿 화면', action: '시크릿을 추가하고 이름을 ANTHROPIC_API_KEY로 쓰기' },
+   ]} />
 
    조직 전체에 공유할 시크릿이라면 OAuth 토큰보다 **API 키**를 권장해요. OAuth 토큰은 `setup-token`을 실행한 사람의 구독에 묶이기 때문이에요.
 
@@ -455,3 +462,4 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - [8. 평가(evals)로 LLM 결과 품질 관리하기](/new-project1/dev/08-evals/) — 자동화한 결과가 믿을 만한지 숫자로 확인
 - [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — 권한 모드, 훅, CLAUDE.md
 - [C13. 클라우드 세션](/new-project1/claude/c13-cloud-sessions/) — 내 컴퓨터 없이 Claude Code를 돌리는 또 다른 방법
+- [3. Claude Agent SDK로 나만의 에이전트 만들기](/new-project1/dev/03-agent-sdk/) — 코드로 더 세밀하게 제어하는 방법
