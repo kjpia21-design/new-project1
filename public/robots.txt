@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://kjpia21-design.github.io/new-project1/sitemap-index.xml
