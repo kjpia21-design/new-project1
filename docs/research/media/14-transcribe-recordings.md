@@ -35,3 +35,6 @@ Aside: 남김. 문구를 "개인용 클로바노트와 ChatGPT 녹음 기능은 
 - 확인: 한국 App Store 언어 목록에 한국어.
 - 못 찾음: ChatGPT Record와 Meetings 플러그인 원문(llms-full.txt 전체에서 "Record"/"Meetings" 전사 기능 설명 없음), 앱의 오디오 업로드 한도, API 전사의 한국어 지원 명시. 개인용 클로바노트는 이 단계 범위 밖(W1 중점은 ChatGPT).
 - 본문 변경: 표 ChatGPT 3칸 보강(한국어, 업로드, 특징), Aside 제목·문장을 남은 항목 중심으로 수정(삭제하지 않음). 채워진 빈칸 3(부분), 남은 빈칸 3(Record 원문, 앱 업로드 한도, 클로바노트 개인용).
+
+## 7단계 재점검 (2026-10-12)
+- NAVER WORKS ClovaNote 도움말 4건(본문 HTML 직접 추출), Gemini 업로드·Pixel 도움말, learn.chatgpt.com, OpenAI 전사 API 재열람. 변경 없음. 참고: API 전사 문서에 한국어 명시는 여전히 없음, 권장 모델 gpt-transcribe. help.openai.com(Record/Meetings)은 403.

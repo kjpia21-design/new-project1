@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 계정 (아티팩트 기능 사용 가능)"
   - "(선택) Claude Code 설치 — 6편 참고"
   - "만들고 싶은 업무 도구 하나의 계산 규칙 (예: 단가, 할인 규칙)"
-lastVerified: 2026-10-10
+lastVerified: 2026-10-12
 sources:
   - title: "What are artifacts and how do I use them? (Claude 고객센터)"
     url: "https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them"
@@ -95,7 +95,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 2. **아티팩트로 계산기 만들기**
 
-   Claude 채팅에서 요구사항을 붙여 넣어요. 아티팩트 기능은 설정에서 코드 실행과 파일 생성이 켜져 있어야 하고, 안 보이면 설정(Settings)에서 확인하세요.
+   Claude 채팅에서 요구사항을 붙여 넣어요. 아티팩트 기능은 설정(Settings) > 기능(Capabilities)의 "Cloud code execution and file creation"이 켜져 있어야 해요(Team·Enterprise는 조직 설정의 Capabilities). 안 보이면 여기를 확인하세요.
 
    <PromptBox>
    견적 계산기를 만들어 줘. 입력은 품목 이름, 수량, 단가이고 품목은 최대 5줄이야. 계산 규칙은 다음과 같아. (1) 공급가액은 수량x단가의 합계. (2) 공급가액이 1,000,000원 이상이면 5% 할인. (3) 부가세는 할인 후 금액의 10%. (4) 원 단위 미만은 버림. 화면에는 공급가액, 할인액, 부가세, 합계를 따로 보여 주고 숫자에는 천 단위 쉼표를 넣어 줘. 한국어 화면으로 만들어 줘. 만들기 전에 이해한 규칙을 먼저 정리해서 알려 줘.
@@ -145,7 +145,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 6. **공유하기 전에 확인하기**
 
-   - **아티팩트**: 비공개로 시작해요. 공유(Share) 설정에서 링크 공유나 이메일 초대를 선택할 수 있고, 플랜에 따라 방식이 달라요. Team·Enterprise는 기본적으로 조직 안에서만 공유돼요. 권한은 Can view / Commenter / Can edit로 나뉘어요.
+   - **아티팩트**: 비공개로 시작해요. 공유(Share) 설정에서 링크 공유나 이메일 초대를 선택할 수 있고, 플랜에 따라 방식이 달라요(이메일 초대는 Pro 이상, 베타). Team·Enterprise는 기본적으로 조직 안에서만 공유돼요. 권한은 Can view / Commenter / Can edit로 나뉘어요.
    - **파일**: `quote.html`을 그대로 전달하면 받는 사람은 브라우저로 열어요.
    - **웹 주소로 공개**: GitHub Pages를 쓸 수 있어요. 순서는 [8편](/new-project1/coding/08-cloud-github/)을 보세요. 공개 전에는 단가표 같은 내부 정보가 포함되지 않았는지 확인하세요.
 
@@ -165,19 +165,19 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | 체크리스트 | 항목 목록 | 완료율 | 5개 중 2개 = 40% |
 | 문구 글자 수 세기 | 텍스트 | 글자·바이트 수 | 알려진 문장으로 확인 |
 
-### 아티팩트 공유와 저장 (2026-10-10 기준, 플랜별로 다를 수 있어요)
+### 아티팩트 공유와 저장 (2026-10-12 기준, 플랜별로 다를 수 있어요)
 
 | 항목 | 내용 |
 | --- | --- |
 | 기본 상태 | 비공개 |
-| 공유 | Free·Pro·Max는 링크 공유 또는 이메일 초대(베타), Team·Enterprise는 기본적으로 조직 안에서만 |
-| 권한 | Can view / Commenter / Can edit |
+| 공유 | 링크 공유는 모든 플랜, 이메일 초대(베타)는 Pro·Max·Team·Enterprise, Team·Enterprise는 기본적으로 조직 안에서만(조직·그룹 공유는 Team·Enterprise, 그룹은 Enterprise) |
+| 권한 | Can view(보기) / Commenter(댓글, 아티팩트가 제공하는 파일 내려받기) / Can edit(수정) |
 | Claude나 커넥터를 쓰는 아티팩트 | 링크 공유가 되지 않아요 |
 | 저장소 | 개인 저장과 공유 저장이 있고 아티팩트당 20MB, 텍스트만. 민감한 정보를 넣기 전 어느 저장소인지 확인하세요 |
-| 예전 방식 게시(Publish) | 2026-09-16 이전 아티팩트에만 해당. 게시 취소는 영구적이라 다시 게시할 수 없고 저장 데이터가 삭제돼요 |
+| 예전 방식 게시(Publish) | 2026-09-16 이전 아티팩트에만 해당(게시는 Free·Pro·Max, Team·Enterprise는 Share & copy link). 게시 취소는 영구적이라 다시 게시할 수 없고 저장 데이터가 삭제돼요 |
 
 <Aside type="note" title="확인하지 못한 점">
-아티팩트를 단일 HTML 파일로 내려받는 메뉴 위치는 공식 도움말에서 확인하지 못했어요. 파일로 갖고 싶다면 5단계처럼 Claude Code로 만들거나, 화면 안내에 따르세요. 공유 화면의 문구는 계정마다 다를 수 있어요.
+Docs·Slides·Design 템플릿으로 만든 아티팩트는 Export(내보내기)가 있고(Design은 .zip, PDF, PowerPoint, HTML), 예전 방식 아티팩트는 패널 위쪽에서 코드 보기·복사·다운로드를 할 수 있다고 해요. 다만 직접 만든 계산기를 단일 HTML 파일로 내려받는 정확한 메뉴는 공식 도움말에서 확인하지 못했어요. 파일로 갖고 싶다면 5단계처럼 Claude Code로 만들거나, 화면 안내에 따르세요. 공유 화면의 문구는 계정마다 다를 수 있어요.
 </Aside>
 
 ## 자주 막히는 지점

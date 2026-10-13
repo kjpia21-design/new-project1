@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 유료 플랜 (Pro 이상) 또는 Console 계정"
   - "Claude Code 설치 (설치법은 C12 참고)"
   - "빈 폴더 하나와 웹 브라우저"
-lastVerified: 2026-10-10
+lastVerified: 2026-10-12
 sources:
   - title: "Claude Code overview"
     url: "https://code.claude.com/docs/en/overview"
@@ -53,7 +53,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | --- | --- |
 | **터미널** | 글자로 컴퓨터에 일을 시키는 창이에요. 처음이라면 공식 문서의 터미널 안내(terminal guide)가 여는 법과 명령 붙여넣는 법을 설명해요. |
 | **작업 폴더** | Claude Code가 읽고 쓰는 범위예요. 빈 폴더 하나를 만들어 거기서만 시작하면 안전해요. |
-| **권한 모드** | Claude가 승인 없이 해도 되는 동작 범위예요. 처음에는 기본값(바꾸기 전에 묻기)으로 두세요. `Shift+Tab`으로 바꿔요. |
+| **권한 모드** | Claude가 승인 없이 해도 되는 동작 범위예요. `Shift+Tab`으로 바꿔요. 이 실습에서는 바꾸기 전에 묻는 수동(Manual) 모드로 두는 게 안전해요. 공식 문서에 따르면 Claude Code v2.1.283 이상의 터미널 기본 시작 모드는 자동(auto) 모드이니, 시작 화면의 모드 표시를 확인하세요(2026-10-12 기준). |
 | **계획 모드** | 파일을 바꾸지 않고 읽기만 하면서 계획을 제안하는 모드예요. 승인 전에는 편집이 막혀요. |
 | **CLAUDE.md** | 프로젝트에 대한 안내 메모예요. 다음 세션에서도 Claude가 읽어요. |
 
@@ -92,7 +92,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 2. **계획 모드로 바꾸고 계획부터 받기**
 
-   `Shift+Tab`을 눌러 권한 모드를 계획 모드로 바꿔요. 화면 안내에 현재 모드가 표시돼요. 또는 처음부터 `claude --permission-mode plan`으로 시작할 수 있어요. 계획 모드에서는 Claude가 파일을 바꾸지 않고 계획만 제안해요.
+   `Shift+Tab`을 눌러 권한 모드를 계획 모드로 바꿔요. 자동 모드에서 시작했다면 수동 → 편집 자동 승인 → 계획 모드 순서로 돌아가니 여러 번 눌러야 할 수 있고, 화면 아래 상태 표시줄에 현재 모드가 나와요. 또는 처음부터 `claude --permission-mode plan`으로 시작하거나, 요청 앞에 `/plan`을 붙일 수 있어요. 계획 모드에서는 Claude가 파일을 바꾸지 않고 계획만 제안해요.
 
    <PromptBox>
    회의 안내용 웹페이지 한 장을 만들고 싶어. 코딩은 전혀 몰라. 보여줄 내용은 회의 제목, 날짜와 시간, 장소, 안건 3개, 준비물이야. 어떤 파일을 만들고 화면이 어떻게 보일지 쉬운 말로 계획을 먼저 알려 줘. 파일은 index.html 하나로만 만들어 줘.
@@ -102,7 +102,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 3. **계획을 승인하고 파일 만들기**
 
-   계획이 괜찮으면 승인해서 실행으로 넘어가요. 승인 방식은 화면에 나오는 선택지를 따르세요. 실행에서는 기본 권한 모드로 돌아가 편집 전에 승인을 묻는 편이 안전해요. Claude가 변경 내용을 보여 주며 승인을 물으면 **어떤 파일이 만들어지는지**만 확인하고 Yes를 선택해요.
+   계획이 괜찮으면 승인해서 실행으로 넘어가요. 공식 문서 기준 선택지는 "Yes, and use auto mode", "Yes, manually approve edits", "No, keep planning"이에요(표기는 상황에 따라 다를 수 있어요). 처음에는 편집마다 확인할 수 있는 "Yes, manually approve edits"가 안전해요. Claude가 변경 내용을 보여 주며 승인을 물으면 **어떤 파일이 만들어지는지**만 확인하고 Yes를 선택해요.
 
    <Aside type="tip" title="승인 화면에서 볼 것">
    처음에는 코드를 읽을 필요가 없어요. (1) 작업 폴더 안의 파일인지, (2) 처음 말한 파일(`index.html`)이 맞는지, (3) 내가 시키지 않은 파일 삭제나 폴더 밖 접근이 없는지만 보세요.
@@ -193,8 +193,8 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 ### 승인을 계속 눌러야 해서 번거로워요
 
-- **원인**: 기본 권한 모드는 변경마다 승인을 묻는 방식이에요.
-- **해결**: 익숙해지면 `Shift+Tab`으로 파일 편집을 자동 승인하는 모드(`acceptEdits`)를 쓸 수 있어요. 대신 되돌릴 수 있는 폴더(빈 폴더나 Git 저장소)에서만 쓰세요. 모드별 의미는 [C14](/new-project1/claude/c14-claude-code-features/)를 보세요.
+- **원인**: 수동(Manual) 모드는 변경마다 승인을 묻는 방식이에요.
+- **해결**: 익숙해지면 `Shift+Tab`으로 파일 편집을 자동 승인하는 모드(`acceptEdits`, 화면 표기 "accept edits")를 쓸 수 있어요. 대신 되돌릴 수 있는 폴더(빈 폴더나 Git 저장소)에서만 쓰세요. 모드별 의미는 [C14](/new-project1/claude/c14-claude-code-features/)를 보세요.
 
 ### `claude`를 찾을 수 없다고 나와요 / 로그인이 안 돼요
 

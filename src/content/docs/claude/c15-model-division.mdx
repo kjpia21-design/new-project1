@@ -10,7 +10,7 @@ duration: "30분"
 prerequisites:
   - "Claude Code 사용 환경 (터미널 또는 클라우드 세션)"
   - "서브에이전트 기본 개념 (C14 참고)"
-lastVerified: 2026-10-11
+lastVerified: 2026-10-12
 sources:
   - title: "Model configuration (Claude Code)"
     url: "https://code.claude.com/docs/en/model-config"
@@ -193,7 +193,7 @@ Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코
 
 6. **사용량 점검하기**
 
-   `/usage`에서 스킬·서브에이전트·MCP별로 사용량이 어디에서 나가는지 볼 수 있어요. 에이전트 팀을 쓸 때는 팀원에게 Sonnet을 권하고 팀을 작게 유지하세요. 플랜 모드 팀원은 표준 세션 대비 약 7배의 토큰을 쓴다고 해요.
+   `/usage`에서 스킬·서브에이전트·MCP별로 사용량이 어디에서 나가는지 볼 수 있어요. 에이전트 팀을 쓸 때는 팀원에게 Sonnet을 권하고 팀을 작게 유지하세요. 계획 모드 팀원은 표준 세션 대비 약 7배의 토큰을 쓴다고 해요.
 
    <ScreenshotPlaceholder caption="/usage 화면에서 사용량이 나가는 곳 확인" officialUrl="https://code.claude.com/docs/en/costs" />
 
@@ -290,7 +290,7 @@ Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코
 | 사용량 비중 확인 | `/usage` |
 | Explore 서브에이전트를 가볍게 | `Explore`라는 이름의 사용자 서브에이전트를 `model: haiku`로 정의해 덮어쓰기 |
 
-Explore 서브에이전트는 구독·Console·게이트웨이에서 `opus` 별칭 모델로 돌아가요 (2026-10-10 기준).
+내장 Explore 서브에이전트는 기본적으로 메인 대화의 모델로 돌아가요. 메인 대화가 Fable일 때만 연결 방식에 따라 달라져서, 구독·Console·`ANTHROPIC_BASE_URL` 게이트웨이에서는 `opus` 별칭 모델로, Bedrock·Google Cloud·Foundry 등에서는 메인 모델 그대로 돌아가요 (2026-10-12 기준).
 
 ## 자주 막히는 지점
 

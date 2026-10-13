@@ -16,6 +16,11 @@
 3. (Claude Code) 같은 계산기를 `quote.html` 단일 파일로 만들도록 요청 -> 브라우저에서 파일을 연다 -> 필요 시 폴더로 CLAUDE.md 작성.
 4. 공유: 아티팩트 공유 설정 확인 또는 파일 전달/GitHub Pages 배포(08편).
 
+## 2026-10-12 재확인 변경
+- 공유 표(9547008): 링크 공유는 전 플랜, 이메일 초대(베타)는 Pro/Max/Team/Enterprise(Free 제외 - 기존 서술 정정), 조직 공유 Team/Ent, 그룹 공유 Ent. Commenter는 아티팩트가 제공하는 파일 다운로드 가능. 링크 공유엔 Claude 로그인 필요(레거시 Free/Pro/Max 게시본 예외). 이메일 초대 외부인 50명 한도, 초대 30일 만료.
+- 설정 경로(17153992): Settings > Capabilities의 "Cloud code execution and file creation"(Team/Ent는 Organization settings > Capabilities).
+- 내보내기(17153992): 템플릿(Docs/Slides/Design)은 Export, 레거시는 패널 상단에서 코드 보기·복사·다운로드. 직접 만든 계산기의 단일 HTML 내려받기 위치는 여전히 명시 없음.
+
 ## 확인 못 함
 - 아티팩트를 단일 HTML 파일로 내려받는 정확한 메뉴는 확인하지 못했다 -> "화면 안내에 따르세요".
 - 공유받는 사람이 Claude 로그인이 필요한지는 "대개 필요"까지만 공식 문서에서 확인.

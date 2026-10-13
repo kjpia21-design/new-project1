@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 유료 플랜 (Pro, Max, Team, 또는 Enterprise의 해당 좌석)"
   - "GitHub 계정"
   - "웹 페이지(index.html)가 들어 있는 GitHub 저장소 하나 (6·7편에서 만든 파일을 올려도 돼요)"
-lastVerified: 2026-10-10
+lastVerified: 2026-10-12
 sources:
   - title: "Get started with Claude Code in the cloud"
     url: "https://code.claude.com/docs/en/web-quickstart"
@@ -148,7 +148,7 @@ import Coding08PagesFlow from '../../../components/diagrams/Coding08PagesFlow.as
    - **Deploy from a branch**: 가장 단순한 방법이에요. 브랜치(`main`)와 폴더(`/ (root)`)를 고르고 Save를 눌러요. 저장소 최상위에 `index.html`이 있으면 돼요.
    - **GitHub Actions**: 빌드가 필요한 사이트(예: 이 사이트처럼 Astro로 만든 사이트)에 써요. 워크플로 파일이 필요하고, Astro의 경우 공식 문서가 `.github/workflows/deploy.yml`과 `astro.config.mjs`의 `site`·`base` 설정을 안내해요.
 
-   게시 소스를 정하면 배포가 실행돼요. 저장소의 Actions 탭에서 실행 결과를 보고, 성공하면 Settings > Pages에서 **Visit site** 링크로 사이트를 열어 봐요. GitHub 공식 문서는 변경 내용이 반영되기까지 최대 10분이 걸릴 수 있다고 안내해요.
+   게시 소스를 정하면 배포가 실행돼요. GitHub Pages는 항상 GitHub Actions 워크플로 실행으로 배포되니, 저장소의 Actions 탭에서 실행 결과를 보고 성공하면 사이트 주소를 열어 봐요. 반영에 걸리는 시간은 공식 문서에 안내가 없어서, 바로 안 보이면 Actions 실행 결과부터 확인하세요(2026-10-12 기준).
 
    <FlowSteps title="GitHub Pages 게시 소스 정하기" officialUrl="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-from-a-branch" steps={[
      { where: 'GitHub 저장소 이름 아래', action: 'Settings 누르기 (탭이 안 보이면 ... 드롭다운에서 Settings)' },
@@ -160,7 +160,7 @@ import Coding08PagesFlow from '../../../components/diagrams/Coding08PagesFlow.as
    <ScreenshotPlaceholder caption="Settings > Pages의 게시 소스 선택 화면" officialUrl="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-from-a-branch" />
 
    <Aside type="caution" title="공개하면 누구나 볼 수 있어요">
-   GitHub Pages 사이트는 인터넷에 공개돼요. 비공개 저장소여도 사이트는 공개될 수 있으니(플랜에 따라 다름), 공개 전에 `index.html`과 README에 개인정보와 내부 자료가 없는지 확인하세요. 비공개 저장소의 Pages 제공 조건은 GitHub 공식 문서에서 확인하세요.
+   GitHub Pages 사이트는 인터넷에 공개돼요. 비공개 저장소여도 사이트는 공개될 수 있으니(플랜이나 조직 설정에 따라 다름), 공개 전에 `index.html`과 README에 개인정보와 내부 자료가 없는지 확인하세요. GitHub 공식 문서에 따르면 GitHub Free는 공개 저장소에서만 Pages를 쓸 수 있고, 비공개 저장소는 GitHub Pro·Team·Enterprise에서 쓸 수 있어요(2026-10-12 기준).
    </Aside>
 
 8. **끝낸 뒤 정리하기**
@@ -179,10 +179,10 @@ import Coding08PagesFlow from '../../../components/diagrams/Coding08PagesFlow.as
 | diff 검토 | claude.ai/code의 세션 | diff 표시기, 줄 선택 후 코멘트 |
 | PR 만들기 | claude.ai/code의 세션 | **Create PR** |
 | 병합 | GitHub의 PR 화면 | 병합 버튼(문구는 설정에 따라 다름) |
-| 공개 | GitHub 저장소의 Settings > Pages | Source 선택, Visit site |
+| 공개 | GitHub 저장소의 Settings > Pages | Source 선택 |
 | 배포 확인 | GitHub 저장소의 Actions 탭 | 실행 결과, Re-run |
 
-### 클라우드 세션의 권한 모드 (2026-10-10 기준)
+### 클라우드 세션의 권한 모드 (2026-10-12 기준)
 
 | 모드 | 동작 |
 | --- | --- |

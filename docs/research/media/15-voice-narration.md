@@ -41,3 +41,6 @@ Aside("확인 중인 튜토리얼"): 핵심 사실(가격·동의·메뉴 경로
 - 확인함: TTS 가이드가 "사용 정책상 최종 사용자에게 TTS 음성이 AI 생성임을 분명히 알려야 한다"고 명시 (https://developers.openai.com/api/docs/guides/text-to-speech).
 - 기존 "OpenAI 사용 정책이 동의 없는 음성 사용 금지" 문장은 정책 원문을 못 열어 위 두 근거로 대체. sources에서 openai.com 정책 항목 제거.
 - 못 찾음: 사용 정책 원문, Canva 텍스트 음성 변환 도움말(canva.com 접근 불가, 본문 유지).
+
+## 7단계 재점검 (2026-10-12)
+- ElevenLabs 모델·가격·약관·정책·클로닝·라이브러리 문서, OpenAI custom-voices·TTS 재열람. 변경 없음(Starter $6/Creator $22/Pro $99, 글자 한도, 동의 규칙 동일). help.elevenlabs.io·canva.com은 미열람.

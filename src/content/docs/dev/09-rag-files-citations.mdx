@@ -11,7 +11,7 @@ prerequisites:
   - "C16. Claude API 시작하기를 끝낸 상태 (API 키, 환경변수 설정)"
   - "Python 3.10 이상, pip, 터미널"
   - "질문에 써도 되는 연습용 문서 몇 개 (PDF 또는 .txt, .md)"
-lastVerified: 2026-10-11
+lastVerified: 2026-10-12
 sources:
   - title: "Files API"
     url: "https://platform.claude.com/docs/en/build-with-claude/files"
@@ -414,7 +414,7 @@ C16에서 API 키와 첫 호출을 끝냈다고 가정해요. 키 발급과 환�
    registry_path.write_text(json.dumps(registry, ensure_ascii=False, indent=2))
    ```
 
-   자동 만료를 걸고 싶으면 업로드할 때 `expires_in_seconds` 폼 필드를 줘요. 3,600초(1시간)에서 7,776,000초(90일) 사이이고, 업로드할 때만 정할 수 있어요. 아래는 공식 문서가 설명한 폼 필드를 curl로 보낸 예시예요. SDK에서 이 값을 어떤 인자로 받는지는 확인하지 못했어요.
+   자동 만료를 걸고 싶으면 업로드할 때 `expires_in_seconds` 폼 필드를 줘요. 3,600초(1시간)에서 7,776,000초(90일) 사이이고, 업로드할 때만 정할 수 있어요. 만료되면 내용 다운로드는 404가 되고 그 파일을 참조한 메시지 요청은 추론 전에 실패해요. 메타데이터는 만료 뒤 최대 30일 동안 조회돼요(2026-10-12 기준). 만료는 삭제 보장 수단이 아니니, 바로 지우려면 `DELETE`를 쓰세요. 아래는 공식 문서가 설명한 폼 필드를 curl로 보낸 예시예요. SDK에서 이 값을 어떤 인자로 받는지는 확인하지 못했어요.
 
    ```bash
    curl -X POST https://api.anthropic.com/v1/files \

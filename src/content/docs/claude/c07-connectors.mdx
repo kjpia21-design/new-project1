@@ -11,7 +11,7 @@ prerequisites:
   - "claude.ai 계정"
   - "연결할 서비스의 계정 (Google 계정, Notion 계정 등)"
   - "(Team/Enterprise라면) 조직 Owner가 커넥터를 먼저 켜 두었는지 확인"
-lastVerified: 2026-10-11
+lastVerified: 2026-10-12
 sources:
   - title: "Use connectors to extend Claude's capabilities"
     url: "https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities"
@@ -23,7 +23,7 @@ sources:
     url: "https://code.claude.com/docs/en/mcp"
   - title: "Automate work with routines"
     url: "https://code.claude.com/docs/en/routines"
-  - title: "Notion connector (검색 결과로만 확인)"
+  - title: "Notion connector"
     url: "https://claude.com/connectors/notion"
   - title: "Claude release notes"
     url: "https://support.claude.com/en/articles/12138966-release-notes"
@@ -42,7 +42,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 - 채팅의 **+** 또는 **/** 메뉴 > Connectors, 또는 Customize > Connectors의 디렉터리에서 연결하고, 대화마다 켜고 꺼요.
 - Google Workspace는 Gmail, Google Calendar, Google Drive 커넥터가 있어요. 전송·답장·전달·공유·이동·삭제 전에는 기본적으로 **내 승인**을 물어요.
 - 커스텀 커넥터는 **원격 MCP 서버**를 연결하는 기능이에요. Anthropic이 검증하지 않으니 신뢰하는 서버만 연결하세요.
-- Notion은 단계별 공식 도움말을 확인하지 못했어요. 일반 절차를 따르되 화면 안내를 우선하세요.
+- Notion은 커넥터 소개 페이지는 확인했지만 단계별 공식 도움말은 확인하지 못했어요. 일반 절차를 따르되 화면 안내를 우선하세요.
 </Summary>
 
 ## 이 튜토리얼로 할 수 있게 되는 것
@@ -79,7 +79,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 2026-09-15 릴리스 노트에 Salesforce in Claude가 베타로 올라왔어요. 모든 유료 플랜에서 쓸 수 있지만, Salesforce가 베타 신청으로 승인한 조직에 한해요. 승인 여부와 구체적인 사용법은 공식 안내에서 확인하세요.
 
 <Aside type="note" title="확인되지 않은 점">
-- **Notion**: 클릭 단계별 공식 도움말(support.claude.com)을 찾지 못했어요. Notion 관련 정보는 검색 결과 요약에 기반해서 화면 문구를 직접 확인하지 못했어요. 아래 Notion 절차는 일반 원칙이고, 실제 화면 안내를 따르세요.
+- **Notion**: 클릭 단계별 공식 도움말(support.claude.com)은 찾지 못했어요. 공식 커넥터 페이지(claude.com/connectors/notion)에서는 Notion이 만든 커넥터이고 Anthropic이 검증했으며(2025년 11월 추가), 로그인이 필요하고 서버 주소가 `https://mcp.notion.com/mcp`라는 점을 확인했어요(2026-10-12 기준). 같은 페이지에는 검색·가져오기·페이지 생성·수정·이동·데이터베이스 생성·댓글 작성 같은 읽기·쓰기 기능이 적혀 있지만 어떤 플랜에서 쓸 수 있는지는 적혀 있지 않아요. 아래 Notion 연결 절차는 일반 원칙이고, 실제 화면 안내를 따르세요.
 - 커넥터 전체 개수와 디렉터리 목록은 확인하지 못했어요.
 - 메뉴 위치가 최신 문서의 "Customize > Connectors"와 예전의 "Settings > Connectors"로 섞여 보일 수 있어요.
 </Aside>
@@ -137,7 +137,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 5. **(선택) Notion 등 원격 MCP 서버 연결하기**
 
-   Notion 커넥터는 claude.com/connectors/notion에 있고, 서버 주소는 `https://mcp.notion.com/mcp`이며 로그인이 필요하다고 확인돼요(검색 결과 요약 기준). 디렉터리에 있으면 그것을 쓰고, 없거나 직접 연결하려면 웹에서 Customize > Connectors > Add > Custom에서 서버 URL을 입력해요. 인증 방식(Sign in now / when needed / No sign in)과 필요 시 요청 헤더를 정하는 것이 일반 절차예요. 실제 화면 문구와 로그인·권한 승인 단계는 **화면 안내에 따르세요.** MCP 도구는 연결한 사용자의 권한으로 동작해요.
+   Notion 커넥터는 claude.com/connectors/notion에 있고, 서버 주소는 `https://mcp.notion.com/mcp`이며 로그인이 필요해요(커넥터 페이지 기준). 이 페이지의 "Add to Claude" 버튼으로 추가할 수도 있어요. 디렉터리에 있으면 그것을 쓰고, 없거나 직접 연결하려면 웹에서 Customize > Connectors > Add > Custom에서 서버 URL을 입력해요. 인증 방식(Sign in now / when needed / No sign in)과 필요 시 요청 헤더를 정하는 것이 일반 절차예요. 실제 화면 문구와 로그인·권한 승인 단계는 **화면 안내에 따르세요.** MCP 도구는 연결한 사용자의 권한으로 동작해요.
 
    Claude Code에서는 이렇게 추가하고, `/mcp`로 OAuth 인증을 해요.
 

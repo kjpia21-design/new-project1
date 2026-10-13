@@ -11,7 +11,7 @@ prerequisites:
   - "Claude Code가 설치된 터미널 (설치는 C12 참고)"
   - "작업할 프로젝트 폴더 하나"
   - "(훅 예제를 따라 한다면) jq와 Node.js(npx)"
-lastVerified: 2026-10-11
+lastVerified: 2026-10-12
 sources:
   - title: "How Claude remembers your project (CLAUDE.md, auto memory)"
     url: "https://code.claude.com/docs/en/memory"
@@ -299,13 +299,13 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | 그 밖의 필드 | `effort`, `tools`, `permissionMode`, `memory`, `isolation: worktree` 등 |
 | 자동 압축 | frontmatter와 `--agents`의 `autoCompactWindow`로 서브에이전트가 메인 대화보다 일찍 자동 압축하게 할 수 있어요(v2.1.296 이상) |
 | 호출 때 effort | 정의의 `effort`와 별개로 Claude가 Agent 도구의 `effort` 매개변수로 이번 호출만 effort를 정할 수 있어요(v2.1.292 이상). `CLAUDE_CODE_EFFORT_LEVEL` 환경변수가 둘보다 우선해요. |
-| 내장 | Explore(읽기 전용 탐색), Plan, General-purpose, statusline-setup, claude-code-guide |
+| 내장 | Explore(읽기 전용 탐색), Plan, General-purpose, claude(만능 에이전트), statusline-setup, claude-code-guide |
 
 ### 플러그인 설치와 평가
 
 | 명령 | 용도 |
 | --- | --- |
-| `claude plugin install <플러그인> --marketplace <소스>` | 마켓플레이스를 아직 추가하지 않았다면 먼저 추가한 뒤 설치해요(v2.1.292 이상). 세션 안에서는 `/plugin install <플러그인> --marketplace <소스>`이고, 추가 전에 확인을 물어요. |
+| `claude plugin install <플러그인> --marketplace <소스>` | 마켓플레이스를 아직 추가하지 않았다면 먼저 추가한 뒤 설치해요(v2.1.292 이상). 세션 안에서는 `/plugin install <플러그인> --marketplace <소스>`(v2.1.275 이상)이고, 추가 전에 확인을 물어요. |
 | `claude plugin eval` | 플러그인의 eval 케이스를 돌려 점수가 매겨진 결과를 줘요(v2.1.269 이상). 기본은 읽기 전용 도구만 허용하고, `--allow-tools`로 늘려요. `claude plugin eval init`으로 eval 묶음을 만들어요. |
 
 ### MCP 범위

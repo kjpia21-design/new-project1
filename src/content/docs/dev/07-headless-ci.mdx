@@ -12,7 +12,7 @@ prerequisites:
   - "C14. Claude Code 핵심 기능 (권한 모드, CLAUDE.md, 훅)"
   - "C16. API 시작하기 (API 키, 비용 개념)"
   - "GitHub 저장소 한 개와 그 저장소의 관리자(admin) 권한"
-lastVerified: 2026-10-11
+lastVerified: 2026-10-12
 sources:
   - title: "Run Claude Code programmatically (headless)"
     url: "https://code.claude.com/docs/en/headless"
@@ -356,7 +356,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
    | 간결한 CLAUDE.md | 저장소 | Claude는 매 실행마다 읽어서 길수록 토큰이 늘어요 |
    | `if:` 조건 | job | 필요한 이벤트에서만 러너를 시작해요 |
 
-   로컬 스크립트에서는 `--max-budget-usd`로 금액 상한을 걸 수 있어요(공식 문서에서 상한에 도달하면 남은 백그라운드 작업을 멈춘다고 설명해요). 정확한 적용 범위는 CLI 레퍼런스에서 확인하고, 이 글에서는 단정하지 않을게요. 조직 전체 사용량은 Anthropic Console의 사용량 화면에서 따로 확인하세요.
+   로컬 스크립트에서는 `--max-budget-usd`로 금액 상한을 걸 수 있어요. 공식 CLI 레퍼런스(2026-10-12 기준)에 따르면 출력 모드(`-p`)에서만 쓰고, Claude Code의 클라이언트 쪽 비용 추정치로 비교하기 때문에 실제 청구액과 다를 수 있고 상한을 조금 넘을 수도 있어요. 서브에이전트 비용도 합산되고, `--continue`나 `--resume`으로 이어 가면 이전 실행의 누적 비용은 상한에 포함되지 않아요. 상한에 닿으면 새 서브에이전트 생성은 실패하고 남은 백그라운드 서브에이전트는 멈춰요(v2.1.217 이상). 조직 전체 사용량은 Anthropic Console의 사용량 화면에서 따로 확인하세요.
 
    <Aside type="caution" title="비용 주의">
    PR마다, 커밋마다 도는 워크플로는 저장소 활동이 많을수록 빠르게 쌓여요. 처음에는 `--max-turns`를 작게 시작해서 실행 로그의 비용을 보고 조절하세요. 코드 규모가 큰 모노레포에서는 하루 총량도 예상해 보세요.
@@ -380,7 +380,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 | `--append-system-prompt` | 기본 동작을 유지하며 지침 추가 |
 | `--continue`, `--resume <세션ID>` | 대화 이어가기 |
 | `--verbose --include-partial-messages` | `stream-json`에서 토큰 단위 스트리밍 |
-| `--max-budget-usd` | 금액 상한(자세한 동작은 CLI 레퍼런스 확인) |
+| `--max-budget-usd` | 금액 상한(`-p` 전용, 추정치라 넘을 수 있음) |
 
 ### 공식 액션 주요 입력
 

@@ -10,7 +10,7 @@ duration: "30분"
 prerequisites:
   - "claude.ai 계정과 Google 계정 (Gmail, Google Calendar 사용)"
   - "(자동 실행까지 하려면) 루틴을 쓸 수 있는 플랜: Pro, Max, Team, Enterprise"
-lastVerified: 2026-10-10
+lastVerified: 2026-10-12
 sources:
   - title: "Use Google Workspace connectors"
     url: "https://support.claude.com/en/articles/10166901-use-google-workspace-connectors"
@@ -113,12 +113,12 @@ import FlowSteps from '../../../components/FlowSteps.astro';
    </PromptBox>
 
    <Aside type="caution" title="쓰기 작업은 승인 창에서 한 번 더 확인하세요">
-   Claude는 전송·답장·전달·삭제 같은 작업 전에 기본적으로 승인을 물어요. 받는 사람과 내용을 읽고 승인하세요. 습관적으로 누르지 마세요.
+   Claude는 메일 전송·답장·전달 전에 기본적으로 승인을 물어요(조직 Owner가 이 설정을 바꿀 수 있어요). 받는 사람과 내용을 읽고 승인하세요. 습관적으로 누르지 마세요.
    </Aside>
 
 5. **루틴으로 저장해 평일 아침 자동 실행하기 (선택)**
 
-   프롬프트가 안정되면 루틴으로 저장해요. 루틴은 claude.ai/code/routines, 데스크톱 앱, 또는 터미널의 `/schedule`로 만들 수 있어요. 웹에서는 새 루틴(New routine)에서 이름, 프롬프트, 트리거(스케줄)를 정해요. 스케줄은 매시간·매일·평일·주간 중에서 고르는 방식이고, 화면의 정확한 입력 항목은 **화면 안내에 따르세요.** 공식 문서 기준으로 루틴은 프롬프트에 저장소(repository)와 환경도 함께 고르게 되어 있어요. 메일 브리핑에는 저장소가 필요 없지만 선택 항목이 나오면 화면 안내를 따르세요. 루틴 자체에 대한 설명은 [C13. 클라우드 세션](/new-project1/claude/c13-cloud-sessions/)에 있어요.
+   프롬프트가 안정되면 루틴으로 저장해요. 루틴은 claude.ai/code/routines, 데스크톱 앱, 또는 터미널의 `/schedule`로 만들 수 있어요. 웹에서는 새 루틴(New routine)에서 이름, 프롬프트, 트리거(스케줄)를 정해요. 스케줄은 매시간·매일·평일·주간 중에서 고르거나 특정 시각에 1회만 실행하도록 정할 수 있고, 화면의 정확한 입력 항목은 **화면 안내에 따르세요.** 공식 문서 기준으로 루틴은 프롬프트에 저장소(repository)와 환경도 함께 고르게 되어 있어요. 메일 브리핑에는 저장소가 필요 없지만 선택 항목이 나오면 화면 안내를 따르세요. 루틴 자체에 대한 설명은 [C13. 클라우드 세션](/new-project1/claude/c13-cloud-sessions/)에 있어요.
 
    루틴에 쓸 때 지킬 점이에요.
 
@@ -142,7 +142,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 6. **첫 자동 실행 확인하고 다듬기**
 
-   예약한 시간이 지나면 실행 기록에서 결과를 확인해요. 결과가 어디에 어떻게 표시되는지는 화면 안내를 따르세요. 틀린 요약이나 빠진 일정이 있으면 프롬프트를 고쳐서 루틴을 업데이트하세요.
+   예약한 시간이 지나면 루틴 상세 페이지의 지난 실행 목록에서 확인해요. 실행마다 새 세션이 만들어지고, 열어 보면 Claude가 한 일의 기록을 볼 수 있어요. 목록의 초록색 상태는 실행이 오류 없이 끝났다는 뜻일 뿐 작업이 성공했다는 뜻은 아니니, 꼭 열어서 내용을 확인하세요. 틀린 요약이나 빠진 일정이 있으면 프롬프트를 고쳐서 루틴을 업데이트하세요.
 
 </Steps>
 
