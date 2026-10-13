@@ -17,6 +17,8 @@ export default defineConfig({
       },
       favicon: '/favicon.svg',
       head: [
+        // 폰트 CDN에 미리 연결해 글꼴 교체로 인한 화면 밀림(CLS)을 줄인다.
+        { tag: 'link', attrs: { rel: 'preconnect', href: 'https://cdn.jsdelivr.net', crossorigin: '' } },
         {
           tag: 'link',
           attrs: {
@@ -40,6 +42,20 @@ export default defineConfig({
             { label: '실무자 시작점', slug: 'start/practical' },
             { label: '고급 사용자 시작점', slug: 'start/advanced' },
             { label: 'AI 용어 사전', slug: 'start/glossary' },
+            { label: '바로 쓰는 프롬프트 모음', slug: 'start/prompts' },
+          ],
+        },
+        {
+          label: '직무별 AI 활용',
+          collapsed: true,
+          items: [
+            { label: '직무별 가이드 소개', slug: 'roles' },
+            { label: '마케터·콘텐츠', slug: 'roles/marketer' },
+            { label: '사무·기획·관리직', slug: 'roles/office' },
+            { label: '교사·강사', slug: 'roles/teacher' },
+            { label: '학생·취업 준비생', slug: 'roles/student' },
+            { label: '개발자', slug: 'roles/developer' },
+            { label: '1인 사업자·소상공인', slug: 'roles/solo-business' },
           ],
         },
         { label: 'AI 첫걸음', collapsed: true, items: [{ autogenerate: { directory: 'basics' } }] },
