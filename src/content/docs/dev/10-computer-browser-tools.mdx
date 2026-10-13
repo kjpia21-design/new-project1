@@ -49,7 +49,7 @@ import Checklist from '../../../components/Checklist.astro';
 
 ## 먼저 알아둘 개념
 
-[C11. Chrome과 컴퓨터 사용](/new-project1/claude/c11-chrome-computer-use/)에서 다룬 것은 Claude 앱의 기능(Claude in Chrome, Cowork의 컴퓨터 사용)이에요. 이 글은 같은 아이디어를 **API로 직접 만드는** 방법이에요. 앱 기능과 달리 화면을 캡처하고 클릭하는 코드, 그리고 안전장치를 모두 내가 만들어야 해요.
+[C11. Chrome과 컴퓨터 사용](/claude/c11-chrome-computer-use/)에서 다룬 것은 Claude 앱의 기능(Claude in Chrome, Cowork의 컴퓨터 사용)이에요. 이 글은 같은 아이디어를 **API로 직접 만드는** 방법이에요. 앱 기능과 달리 화면을 캡처하고 클릭하는 코드, 그리고 안전장치를 모두 내가 만들어야 해요.
 
 | 용어 | 뜻 |
 | --- | --- |
@@ -89,7 +89,7 @@ Claude 모델 (Claude API)
 - Opus 5.5, Sonnet 5.5, Haiku 5.5는 Claude API와 Google Cloud에서 **컴퓨터 툴셋만** 받아요. 이전 방식인 `computer_20251124`(베타 헤더 필요)를 보내면 400 오류예요. Amazon Bedrock에서는 이 세 모델도 `computer_20251124`를 받아요.
 - 두 툴셋은 현재 **Claude Managed Agents에서 쓸 수 없어요.**
 - 브라우저 툴셋 지원 모델은 `claude-fable-5-1`, `claude-mythos-5-1`, `claude-fable-5`, `claude-mythos-5`, `claude-opus-5-5`, `claude-opus-5`, `claude-sonnet-5-5`, `claude-sonnet-5`, `claude-opus-4-8`, `claude-haiku-5-5`예요.
-- 데이터 보존: 두 툴셋 모두 ZDR 대상(Covered Models 제외)이에요. 스크린샷과 입력은 내 환경에 저장되고, Anthropic은 호출 중에 실시간으로 처리해요. 단 Fable 5.1은 Covered Model이라 30일 보존이 필요해요([C16](/new-project1/claude/c16-api/) 참고).
+- 데이터 보존: 두 툴셋 모두 ZDR 대상(Covered Models 제외)이에요. 스크린샷과 입력은 내 환경에 저장되고, Anthropic은 호출 중에 실시간으로 처리해요. 단 Fable 5.1은 Covered Model이라 30일 보존이 필요해요([C16](/claude/c16-api/) 참고).
 </Aside>
 
 ## 안전 수칙 먼저 (필수)
@@ -105,7 +105,7 @@ Claude 모델 (Claude API)
 - API 키를 가진 코드는 **브라우저·데스크톱 컨테이너 밖**에서 실행하세요.
 - 서비스에 넣는다면 최종 사용자에게 위험을 알리고 동의를 받으세요.
 
-Anthropic의 분류기가 스크린샷의 프롬프트 인젝션을 검사해 모델이 지시의 출처를 확인하도록 유도하지만, 공식 문서는 이 장치가 있어도 위 precautions는 그대로 필요하다고 해요. 앱에서의 같은 주의는 [C11](/new-project1/claude/c11-chrome-computer-use/)을 보세요.
+Anthropic의 분류기가 스크린샷의 프롬프트 인젝션을 검사해 모델이 지시의 출처를 확인하도록 유도하지만, 공식 문서는 이 장치가 있어도 위 precautions는 그대로 필요하다고 해요. 앱에서의 같은 주의는 [C11](/claude/c11-chrome-computer-use/)을 보세요.
 </Aside>
 
 <Aside type="caution" title="비용 주의">
@@ -550,7 +550,7 @@ Anthropic의 분류기가 스크린샷의 프롬프트 인젝션을 검사해 �
 | 15턴 | 약 28만 | 약 $1.1 | 약 $0.6 |
 | 30턴 | 약 97만 | 약 $3.9 | 약 $1.9 |
 
-실제 비용은 이보다 크거나 작을 수 있어요. 응답의 `usage`로 확인하고, 토큰 세기 엔드포인트로 미리 가늠할 수 있어요. 줄이는 방법으로는 반복 횟수 상한, 옛 스크린샷 정리, 작은 모델 사용이 있어요. 공식 문서는 옛 스크린샷을 매 턴 지우지 말고 묶어서(예: 최근 세 장을 남기고 25턴마다) 정리하라고 하고, 최신 모델에서는 서버 측 도구 결과 정리를 권해요. 클라이언트가 지우면 사고 블록이 무효가 될 수 있기 때문이에요. 비용 전반은 [2. 비용 최적화](/new-project1/dev/02-cost-optimization/)를 보세요.
+실제 비용은 이보다 크거나 작을 수 있어요. 응답의 `usage`로 확인하고, 토큰 세기 엔드포인트로 미리 가늠할 수 있어요. 줄이는 방법으로는 반복 횟수 상한, 옛 스크린샷 정리, 작은 모델 사용이 있어요. 공식 문서는 옛 스크린샷을 매 턴 지우지 말고 묶어서(예: 최근 세 장을 남기고 25턴마다) 정리하라고 하고, 최신 모델에서는 서버 측 도구 결과 정리를 권해요. 클라이언트가 지우면 사고 블록이 무효가 될 수 있기 때문이에요. 비용 전반은 [2. 비용 최적화](/dev/02-cost-optimization/)를 보세요.
 
 ## 자주 막히는 지점
 
@@ -595,14 +595,14 @@ Anthropic의 분류기가 스크린샷의 프롬프트 인젝션을 검사해 �
 - **구체적으로 짧게 지시하세요.** 공식 문서는 단순하고 명시적인 단계를 주고, 단계마다 스크린샷으로 결과를 확인하라고 안내해요. 드롭다운과 스크롤바는 키보드 단축키가 더 안정적이에요. 지시문은 스크린샷 이미지보다 앞에 두세요.
 - **웹이면 브라우저 툴셋부터.** 접근성 트리로 읽으면 스크린샷보다 입력 토큰이 적게 드는 경우가 많고, URL 정책과 도메인 허용 목록을 쓰기도 쉬워요.
 - **사고 내용을 보고 싶으면.** 이 모델들은 사고 텍스트를 기본으로 생략해요. 디버깅할 때는 `thinking`의 `display`를 `"summarized"`로 정하면 요약을 볼 수 있어요.
-- **모델은 작은 것부터 비교하세요.** 같은 작업을 `claude-sonnet-5-5`로 돌려 성공률과 비용을 비교하세요. 비교 방법은 [8. 평가(evals)](/new-project1/dev/08-evals/)를 보세요.
+- **모델은 작은 것부터 비교하세요.** 같은 작업을 `claude-sonnet-5-5`로 돌려 성공률과 비용을 비교하세요. 비교 방법은 [8. 평가(evals)](/dev/08-evals/)를 보세요.
 - **한계를 알고 쓰세요.** 공식 문서는 지연이 사람 속도보다 느리고, 좌표와 도구 선택에서 실수할 수 있으며, 스크롤과 스프레드시트 조작이 불안정할 수 있고, 정밀도가 완벽해야 하는 일이나 민감한 정보 작업은 사람 감독이 필요하다고 안내해요. 속도가 중요하지 않은 일(배경 정보 수집, 자동 테스트)이 잘 맞아요.
 - **약관을 지키세요.** 불법이거나 이용 정책(AUP)에 어긋나는 용도로 쓰면 안 돼요.
-- **앱 기능으로 충분하면 앱을 쓰세요.** 개인 작업이라면 [C11](/new-project1/claude/c11-chrome-computer-use/)의 Claude in Chrome이나 컴퓨터 사용이 훨씬 간단해요.
+- **앱 기능으로 충분하면 앱을 쓰세요.** 개인 작업이라면 [C11](/claude/c11-chrome-computer-use/)의 Claude in Chrome이나 컴퓨터 사용이 훨씬 간단해요.
 
 ## 다음에 볼 튜토리얼
 
-- [C11. Chrome과 컴퓨터 사용](/new-project1/claude/c11-chrome-computer-use/) — 앱 기능으로 쓰는 법과 사용자 쪽 안전 수칙
-- [1. 도구 사용으로 업무 봇 만들기](/new-project1/dev/01-tool-use/) — `tool_use`·`tool_result` 루프의 기본기
-- [2. API 비용 줄이기](/new-project1/dev/02-cost-optimization/) — 캐싱, 배치, effort로 비용 낮추기
-- [8. 평가(evals)로 품질 관리하기](/new-project1/dev/08-evals/) — 에이전트 작업의 성공률을 측정하기
+- [C11. Chrome과 컴퓨터 사용](/claude/c11-chrome-computer-use/) — 앱 기능으로 쓰는 법과 사용자 쪽 안전 수칙
+- [1. 도구 사용으로 업무 봇 만들기](/dev/01-tool-use/) — `tool_use`·`tool_result` 루프의 기본기
+- [2. API 비용 줄이기](/dev/02-cost-optimization/) — 캐싱, 배치, effort로 비용 낮추기
+- [8. 평가(evals)로 품질 관리하기](/dev/08-evals/) — 에이전트 작업의 성공률을 측정하기

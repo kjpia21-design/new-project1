@@ -63,7 +63,7 @@ h1{font-size:${s.name.length > 9 ? 58 : 78}px;line-height:1.2;margin-top:18px;fo
 .url{position:absolute;left:84px;bottom:42px;font-size:24px;color:${s.accent};font-weight:700}
 </style><body><div class="blob"></div><div class="blob2"></div><div class="bar"></div>
 <div class="txt"><span class="site">${SITE}</span><div class="icon">${s.icon}</div><h1>${s.name}</h1><p class="sub">${s.sub}</p></div>
-<div class="art">${robot(s.accent)}</div><div class="url">kjpia21-design.github.io/new-project1</div></body></html>`;
+<div class="art">${robot(s.accent)}</div><div class="url">ai-trend-catchup.com</div></body></html>`;
 
 fs.mkdirSync('public/og', { recursive: true });
 const exe = fs.existsSync('/opt/pw-browsers/chromium-1194/chrome-linux/chrome') ? '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' : undefined;

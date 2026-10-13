@@ -55,12 +55,12 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 | 기능 | 하루 중 맡는 역할 | 자세한 내용 |
 | --- | --- | --- |
-| **프로젝트** | 제안서 자료와 말투·형식 규칙을 한곳에 두고, 업무별로 대화를 분리 | [C5](/new-project1/claude/c05-projects/) |
-| **커넥터** | Gmail·Google Calendar·Drive의 내 자료를 Claude가 읽게 함 | [C7](/new-project1/claude/c07-connectors/) |
-| **스킬** | "보고서는 이 형식으로"처럼 작업 방식을 폴더로 고정 | [C8](/new-project1/claude/c08-skills/) |
-| **Research** | 여러 출처를 단계적으로 조사해 인용 달린 보고서 작성 | [C10](/new-project1/claude/c10-research/) |
-| **아티팩트** | 결과물(문서·슬라이드·작은 도구)을 대화 옆에서 만들고 공유 | [C6](/new-project1/claude/c06-artifacts/) |
-| **메모리** | 대화에서 나온 선호와 맥락을 다음 대화로 이어감 | [C9](/new-project1/claude/c09-memory-settings/) |
+| **프로젝트** | 제안서 자료와 말투·형식 규칙을 한곳에 두고, 업무별로 대화를 분리 | [C5](/claude/c05-projects/) |
+| **커넥터** | Gmail·Google Calendar·Drive의 내 자료를 Claude가 읽게 함 | [C7](/claude/c07-connectors/) |
+| **스킬** | "보고서는 이 형식으로"처럼 작업 방식을 폴더로 고정 | [C8](/claude/c08-skills/) |
+| **Research** | 여러 출처를 단계적으로 조사해 인용 달린 보고서 작성 | [C10](/claude/c10-research/) |
+| **아티팩트** | 결과물(문서·슬라이드·작은 도구)을 대화 옆에서 만들고 공유 | [C6](/claude/c06-artifacts/) |
+| **메모리** | 대화에서 나온 선호와 맥락을 다음 대화로 이어감 | [C9](/claude/c09-memory-settings/) |
 
 <FlowSteps title="민지의 하루 흐름" officialUrl="https://support.claude.com/en/articles/9517075-what-are-projects" steps={[
   { where: '아침', action: '프로젝트를 열고 커넥터로 오늘 일정과 메일 확인', result: '오늘 할 일 목록' },
@@ -89,9 +89,9 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 1. **아침: 프로젝트를 열고 하루를 정리해요**
 
-   업무마다 프로젝트를 나눠 두면 자료와 규칙이 섞이지 않아요([C5](/new-project1/claude/c05-projects/)). 민지는 "고객사 제안" 프로젝트의 **지식**에 제안서 양식과 지난 제안서를, **지침**에 "존댓말로, 결론부터, 표는 3열 이하로" 같은 규칙을 넣어 뒀어요. 변하지 않는 자료는 지식에, 매번 달라지는 내용은 대화에서 알려 주는 편이 정확해요.
+   업무마다 프로젝트를 나눠 두면 자료와 규칙이 섞이지 않아요([C5](/claude/c05-projects/)). 민지는 "고객사 제안" 프로젝트의 **지식**에 제안서 양식과 지난 제안서를, **지침**에 "존댓말로, 결론부터, 표는 3열 이하로" 같은 규칙을 넣어 뒀어요. 변하지 않는 자료는 지식에, 매번 달라지는 내용은 대화에서 알려 주는 편이 정확해요.
 
-   Gmail·Google Calendar 커넥터를 연결해 두었다면([C7](/new-project1/claude/c07-connectors/)) 오늘 일정과 읽을 메일을 한 번에 정리시킬 수 있어요. 커넥터는 내 권한 범위에서만 읽고, 메일 전송 같은 쓰기 작업은 기본적으로 승인을 물어요.
+   Gmail·Google Calendar 커넥터를 연결해 두었다면([C7](/claude/c07-connectors/)) 오늘 일정과 읽을 메일을 한 번에 정리시킬 수 있어요. 커넥터는 내 권한 범위에서만 읽고, 메일 전송 같은 쓰기 작업은 기본적으로 승인을 물어요.
 
    <PromptBox>
    오늘 내 캘린더의 일정과, 어제 이후 받은 메일 중 답장이 필요해 보이는 것을 골라서 정리해 주세요. 일정은 시간순 표로, 메일은 보낸 사람·요지·권장 답장 시점으로 정리하고, 메일은 보내지 말고 초안 작성이 필요한 것만 표시해 주세요.
@@ -103,7 +103,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 2. **오전: 반복 문서는 형식을 고정해요**
 
-   주간 진행 보고처럼 매주 같은 구조의 문서는 **스킬**로 만들어 두면 좋아요([C8](/new-project1/claude/c08-skills/)). 스킬은 Claude가 필요할 때 불러오는 지침 폴더예요. 스킬을 쓰려면 코드 실행(code execution)이 켜져 있어야 하고, Customize > Skills에서 토글로 켜고 꺼요.
+   주간 진행 보고처럼 매주 같은 구조의 문서는 **스킬**로 만들어 두면 좋아요([C8](/claude/c08-skills/)). 스킬은 Claude가 필요할 때 불러오는 지침 폴더예요. 스킬을 쓰려면 코드 실행(code execution)이 켜져 있어야 하고, Customize > Skills에서 토글로 켜고 꺼요.
 
    스킬까지 만들기 부담스럽다면 프로젝트 지침에 형식을 적는 것으로 시작해도 충분해요. 어디에 둘지는 이렇게 가르면 쉬워요.
 
@@ -122,7 +122,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 3. **점심 전후: 조사가 필요하면 Research를 써요**
 
-   고객사의 업계 동향처럼 여러 출처를 모아 비교해야 하는 조사는 한두 번의 검색보다 **Research**가 알맞아요([C10](/new-project1/claude/c10-research/)). 공식 도움말은 Research를 5회 이상의 도구 호출과 1~3분이 걸리는 포괄적 조사에 쓰라고 안내해요. 일반 대화와 같은 한도를 쓰고, 더 빨리 소진될 수 있어요. 그래서 점심 전에 질문을 구체적으로 적어 한 번에 돌리는 편이 좋아요.
+   고객사의 업계 동향처럼 여러 출처를 모아 비교해야 하는 조사는 한두 번의 검색보다 **Research**가 알맞아요([C10](/claude/c10-research/)). 공식 도움말은 Research를 5회 이상의 도구 호출과 1~3분이 걸리는 포괄적 조사에 쓰라고 안내해요. 일반 대화와 같은 한도를 쓰고, 더 빨리 소진될 수 있어요. 그래서 점심 전에 질문을 구체적으로 적어 한 번에 돌리는 편이 좋아요.
 
    <PromptBox>
    [업계/분야]의 최근 1년 동향을 조사해 주세요. 우리 고객사([고객사 규모와 상황 한 줄])가 제안서에서 다뤄야 할 주요 변화 3~5가지를 뽑고, 각각 근거 출처를 달아 주세요. 출처가 약하거나 서로 엇갈리는 내용은 따로 표시해 주세요.
@@ -134,7 +134,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 4. **오후: 결과물은 아티팩트로 만들어요**
 
-   조사와 초안이 모이면 보여 줄 수 있는 결과물로 만들어요. 아티팩트는 대화 옆에 열리는 문서·슬라이드·작은 도구예요([C6](/new-project1/claude/c06-artifacts/)). 새 아티팩트는 비공개로 시작하고, 공유(Share) 메뉴에서 범위를 정해요. 요금제에 따라 공유 방식이 다르니 먼저 C6의 표를 확인하세요.
+   조사와 초안이 모이면 보여 줄 수 있는 결과물로 만들어요. 아티팩트는 대화 옆에 열리는 문서·슬라이드·작은 도구예요([C6](/claude/c06-artifacts/)). 새 아티팩트는 비공개로 시작하고, 공유(Share) 메뉴에서 범위를 정해요. 요금제에 따라 공유 방식이 다르니 먼저 C6의 표를 확인하세요.
 
    <PromptBox>
    위 조사 결과와 제안서 양식(프로젝트 자료)을 바탕으로 고객사 제안서 요약 문서를 만들어 주세요. 1쪽 분량으로, 제목 / 핵심 제안 3가지 / 근거 / 다음 단계 순서로 구성해 주세요. 근거에는 출처를 달고, 확인되지 않은 수치는 넣지 마세요.
@@ -146,7 +146,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 5. **퇴근 전: 다음 날을 위해 정리해요**
 
-   오늘 대화에서 반복해서 고친 지시가 있다면 그것이 프로젝트 지침에 추가할 후보예요. 예를 들어 "표는 3열 이하로 줄여 줘"를 세 번 말했다면 지침에 한 줄 넣으세요. 메모리는 대화 중 주제 단위로 자동 저장되고, 설정(Settings) > 메모리(Memory)에서 무엇이 저장됐는지 보고 고치거나 지울 수 있어요([C9](/new-project1/claude/c09-memory-settings/)). 프로젝트마다 메모리 공간이 따로 있어서 다른 업무와 섞이지 않아요.
+   오늘 대화에서 반복해서 고친 지시가 있다면 그것이 프로젝트 지침에 추가할 후보예요. 예를 들어 "표는 3열 이하로 줄여 줘"를 세 번 말했다면 지침에 한 줄 넣으세요. 메모리는 대화 중 주제 단위로 자동 저장되고, 설정(Settings) > 메모리(Memory)에서 무엇이 저장됐는지 보고 고치거나 지울 수 있어요([C9](/claude/c09-memory-settings/)). 프로젝트마다 메모리 공간이 따로 있어서 다른 업무와 섞이지 않아요.
 
    <PromptBox>
    오늘 우리 대화에서 내가 반복해서 정정하거나 요청한 형식·말투 규칙이 있으면 정리해 주세요. 프로젝트 지침에 한 줄씩 추가할 수 있도록 짧은 문장으로 제안해 주세요.
@@ -160,18 +160,18 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 | 이런 일이라면 | 먼저 쓸 기능 | 참고 |
 | --- | --- | --- |
-| 같은 자료를 매번 붙여넣고 있어요 | 프로젝트 지식 | [C5](/new-project1/claude/c05-projects/) |
-| 내 메일·일정·문서를 보고 정리해야 해요 | 커넥터 | [C7](/new-project1/claude/c07-connectors/) |
-| 매주 같은 형식의 문서를 써요 | 프로젝트 지침 또는 스킬 | [C8](/new-project1/claude/c08-skills/) |
-| 여러 출처를 비교하는 조사예요 | Research | [C10](/new-project1/claude/c10-research/) |
-| 남에게 보여 줄 문서·슬라이드·도구가 필요해요 | 아티팩트 | [C6](/new-project1/claude/c06-artifacts/) |
-| 내 선호를 다음 대화에서도 기억해야 해요 | 메모리 | [C9](/new-project1/claude/c09-memory-settings/) |
-| 같은 일이 정해진 시간에 자동으로 돌아야 해요 | 예약 작업·루틴 | [C18](/new-project1/claude/c18-automate-recurring/) |
+| 같은 자료를 매번 붙여넣고 있어요 | 프로젝트 지식 | [C5](/claude/c05-projects/) |
+| 내 메일·일정·문서를 보고 정리해야 해요 | 커넥터 | [C7](/claude/c07-connectors/) |
+| 매주 같은 형식의 문서를 써요 | 프로젝트 지침 또는 스킬 | [C8](/claude/c08-skills/) |
+| 여러 출처를 비교하는 조사예요 | Research | [C10](/claude/c10-research/) |
+| 남에게 보여 줄 문서·슬라이드·도구가 필요해요 | 아티팩트 | [C6](/claude/c06-artifacts/) |
+| 내 선호를 다음 대화에서도 기억해야 해요 | 메모리 | [C9](/claude/c09-memory-settings/) |
+| 같은 일이 정해진 시간에 자동으로 돌아야 해요 | 예약 작업·루틴 | [C18](/claude/c18-automate-recurring/) |
 
 ### 조합할 때 기억할 제약
 
-- 지식에 없는 맥락은 **대화 사이에 공유되지 않아요.** 다른 대화의 내용을 프로젝트가 자동으로 아는 것은 아니에요([C5](/new-project1/claude/c05-projects/)).
-- 커넥터는 **내 권한을 그대로 상속**해요. 팀 프로젝트에서 커넥터 데이터를 팀원과 공유할 수 없는 경우가 있어요([C7](/new-project1/claude/c07-connectors/)).
+- 지식에 없는 맥락은 **대화 사이에 공유되지 않아요.** 다른 대화의 내용을 프로젝트가 자동으로 아는 것은 아니에요([C5](/claude/c05-projects/)).
+- 커넥터는 **내 권한을 그대로 상속**해요. 팀 프로젝트에서 커넥터 데이터를 팀원과 공유할 수 없는 경우가 있어요([C7](/claude/c07-connectors/)).
 - Research와 스킬, 아티팩트는 플랜과 조직 설정에 따라 보이지 않을 수 있어요. 메뉴가 없으면 Team/Enterprise는 Owner 설정을 확인하세요.
 - 가격·한도는 바뀌어요. 내 사용량은 설정(Settings) > 사용량(Usage)에서 확인하세요.
 
@@ -195,7 +195,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 ### 공유한 아티팩트를 상대가 못 열어요
 
 - **원인**: 플랜별 공유 방식과 권한이 달라요.
-- **해결**: [C6](/new-project1/claude/c06-artifacts/)의 공유 방식 표와 "공유하려 했는데 상대가 못 열어요" 항목을 확인하세요.
+- **해결**: [C6](/claude/c06-artifacts/)의 공유 방식 표와 "공유하려 했는데 상대가 못 열어요" 항목을 확인하세요.
 
 ## 실전 팁
 
@@ -203,13 +203,13 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 - **지침은 대화하며 키우세요.** 어긋난 답이 나올 때마다 한 줄씩 보태면 돼요.
 - **조사는 질문을 모아서 한 번에 돌리세요.** Research는 한도를 더 쓸 수 있어요.
 - **쓰기 작업은 사람이 확인하세요.** 메일 전송이나 공유는 초안 → 내가 확인 → 실행 순서를 지키세요.
-- **민감한 자료는 프롬프트와 지식에 넣기 전에 한 번 더 생각하세요.** 개인정보와 거래처 정보는 [개인정보와 보안](/new-project1/basics/05-privacy-safety/) 기준으로 다루세요.
+- **민감한 자료는 프롬프트와 지식에 넣기 전에 한 번 더 생각하세요.** 개인정보와 거래처 정보는 [개인정보와 보안](/basics/05-privacy-safety/) 기준으로 다루세요.
 - **매일 같은 시간에 하는 일은 자동화를 검토하세요.** 단, 자동 실행은 사람이 보지 않는 동안 돌아요. 안전한 설계는 C18에서 다뤄요.
 
 ## 다음에 볼 튜토리얼
 
-- [C18. 반복 업무 자동 실행하기](/new-project1/claude/c18-automate-recurring/) — 아침 정리 같은 일을 정해진 시간에 자동으로 돌리기
-- [C5. 프로젝트](/new-project1/claude/c05-projects/) — 지식과 지침 설계
-- [C7. 커넥터](/new-project1/claude/c07-connectors/) — 메일·일정·문서 연결
-- [C8. 스킬](/new-project1/claude/c08-skills/) — 반복 작업 방식 고정하기
-- [C9. 메모리와 개인 설정](/new-project1/claude/c09-memory-settings/) — 기억 관리
+- [C18. 반복 업무 자동 실행하기](/claude/c18-automate-recurring/) — 아침 정리 같은 일을 정해진 시간에 자동으로 돌리기
+- [C5. 프로젝트](/claude/c05-projects/) — 지식과 지침 설계
+- [C7. 커넥터](/claude/c07-connectors/) — 메일·일정·문서 연결
+- [C8. 스킬](/claude/c08-skills/) — 반복 작업 방식 고정하기
+- [C9. 메모리와 개인 설정](/claude/c09-memory-settings/) — 기억 관리

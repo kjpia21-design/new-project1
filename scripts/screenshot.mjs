@@ -11,7 +11,7 @@ try { pw = require('playwright'); } catch { pw = require(execSync('npm root -g')
 const args = process.argv.slice(2);
 const baseArg = args.find((a) => a.startsWith('http'));
 const step = args.find((a) => !a.startsWith('http')) ?? 'step1';
-const base = (baseArg ?? 'http://localhost:4321/new-project1').replace(/\/$/, '');
+const base = (baseArg ?? 'http://localhost:4321').replace(/\/$/, '');
 const out = `docs/screenshots/${step}`;
 fs.mkdirSync(out, { recursive: true });
 

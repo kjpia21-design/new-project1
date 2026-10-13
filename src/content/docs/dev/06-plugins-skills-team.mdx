@@ -57,7 +57,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - Anthropic 디렉터리에 제출하는 경로와 준비물을 알 수 있어요.
 
 <Aside type="note" title="이 편이 다루는 범위">
-Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai와 Cowork에서도 설치되지만, 그쪽에서는 일부 구성요소만 로드돼요(어떤 것이 되는지는 공식 "component support table" 참고). claude.ai에 ZIP으로 스킬 하나를 올리는 방법은 [C8. 스킬](/new-project1/claude/c08-skills/)에 있어요.
+Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai와 Cowork에서도 설치되지만, 그쪽에서는 일부 구성요소만 로드돼요(어떤 것이 되는지는 공식 "component support table" 참고). claude.ai에 ZIP으로 스킬 하나를 올리는 방법은 [C8. 스킬](/claude/c08-skills/)에 있어요.
 </Aside>
 
 ## 먼저 알아둘 개념
@@ -152,7 +152,7 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
    ```
 
    <Aside type="note">
-   스킬 이름 표기는 문서마다 달라요. claude.ai 업로드는 지원센터 문서 기준 `skill.md`, Claude Code 플러그인은 `SKILL.md`예요. 플러그인에서는 `SKILL.md`를 쓰세요. 자세한 차이는 [C8](/new-project1/claude/c08-skills/)에 있어요. 또 claude.ai용 frontmatter에는 name 64자, description 200자 제한이 있고, Claude Code 쪽 목록 제한은 위의 1,536자예요. 두 곳에 같이 올릴 스킬이면 description을 짧게 쓰세요.
+   스킬 이름 표기는 문서마다 달라요. claude.ai 업로드는 지원센터 문서 기준 `skill.md`, Claude Code 플러그인은 `SKILL.md`예요. 플러그인에서는 `SKILL.md`를 쓰세요. 자세한 차이는 [C8](/claude/c08-skills/)에 있어요. 또 claude.ai용 frontmatter에는 name 64자, description 200자 제한이 있고, Claude Code 쪽 목록 제한은 위의 1,536자예요. 두 곳에 같이 올릴 스킬이면 description을 짧게 쓰세요.
    </Aside>
 
 2. **플러그인 폴더 만들기**
@@ -196,7 +196,7 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
    - `version`을 적으면 **올리기 전까지 사용자가 업데이트를 못 받아요.** 푸시해도 `claude plugin update`가 "already at the latest version"이라고 답해요. 릴리스마다 올리거나, git 마켓플레이스에서는 `version`을 생략해 커밋 SHA를 버전으로 쓰는 방법이 있어요.
    - 스킬은 `/team-kit:pr-description`처럼 플러그인 이름이 접두사로 붙어요.
 
-   **MCP 서버 번들하기(선택).** [5. MCP 서버 직접 만들기](/new-project1/dev/05-mcp-server/)에서 만든 서버를 같이 배포하려면 플러그인 루트의 `.mcp.json`에 넣어요. 파일 경로는 `${CLAUDE_PLUGIN_ROOT}`로 쓰라고 공식 문서가 안내해요. 서버 실행에 필요한 `mcp` 패키지는 사용자 컴퓨터에 이미 있어야 하니 README에 적어 두세요.
+   **MCP 서버 번들하기(선택).** [5. MCP 서버 직접 만들기](/dev/05-mcp-server/)에서 만든 서버를 같이 배포하려면 플러그인 루트의 `.mcp.json`에 넣어요. 파일 경로는 `${CLAUDE_PLUGIN_ROOT}`로 쓰라고 공식 문서가 안내해요. 서버 실행에 필요한 `mcp` 패키지는 사용자 컴퓨터에 이미 있어야 하니 README에 적어 두세요.
 
    ```json
    {
@@ -296,7 +296,7 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
      --max-cost-usd 20
    ```
 
-   종료 코드는 0이 통과, 1이 점수 미달·로드 실패 등, 2가 비용 상한 도달이나 인증 거부로 인한 부분 실행이에요. 매 변경마다 도는 가벼운 검사에는 judge 없이 도는 `regex`·`tool_used` 채점기만 두면 비용이 안 늘어요. 일반 평가 방법은 [8. 평가(evals)로 LLM 결과 품질 관리하기](/new-project1/dev/08-evals/)를 보세요.
+   종료 코드는 0이 통과, 1이 점수 미달·로드 실패 등, 2가 비용 상한 도달이나 인증 거부로 인한 부분 실행이에요. 매 변경마다 도는 가벼운 검사에는 judge 없이 도는 `regex`·`tool_used` 채점기만 두면 비용이 안 늘어요. 일반 평가 방법은 [8. 평가(evals)로 LLM 결과 품질 관리하기](/dev/08-evals/)를 보세요.
 
    <Aside type="note">
    위 eval 케이스의 파일 구조와 채점기 옵션은 공식 문서(plugin-evals)를 따랐어요. 이 편을 쓰며 `claude plugin validate`는 실제로 돌려 통과를 확인했지만, `claude plugin eval`은 비용 때문에 실행하지 않았어요. 점수 예시는 싣지 않았어요.
@@ -423,7 +423,7 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
    - 부서별로 다른 정책은 서버 관리 설정으로는 안 돼요(조직 전체에 하나). 부서별 MDM 파일이나 게이트웨이 정책을 써요.
    - 설치·로드 현황은 OpenTelemetry 이벤트(`claude_code.plugin_installed`, `claude_code.plugin_loaded`)와 Enterprise의 Analytics API로 볼 수 있어요.
 
-   claude.ai 조직 설정의 **Plugins & skills**에서 구성원 계정에 플러그인을 켜면, 그 플러그인이 Claude Code에는 `<이름>@synced`로 전달돼요. 이것은 위의 관리 설정 키와는 별개의 경로예요. 스킬 단위 공유는 [C8](/new-project1/claude/c08-skills/)의 공유 방법도 보세요.
+   claude.ai 조직 설정의 **Plugins & skills**에서 구성원 계정에 플러그인을 켜면, 그 플러그인이 Claude Code에는 `<이름>@synced`로 전달돼요. 이것은 위의 관리 설정 키와는 별개의 경로예요. 스킬 단위 공유는 [C8](/claude/c08-skills/)의 공유 방법도 보세요.
 
 8. **(선택) Anthropic 디렉터리에 제출하기**
 
@@ -539,7 +539,7 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
 
 ## 다음에 볼 튜토리얼
 
-- [C8. 스킬](/new-project1/claude/c08-skills/) — 스킬의 기본과 claude.ai 업로드, 공유 방법
-- [5. MCP 서버 직접 만들어 Claude에 연결하기](/new-project1/dev/05-mcp-server/) — 플러그인에 번들할 MCP 서버 만들기
-- [8. 평가(evals)로 LLM 결과 품질 관리하기](/new-project1/dev/08-evals/) — 플러그인 eval을 넘어 일반적인 품질 관리
-- [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — 훅, 서브에이전트, 플러그인 설치 명령
+- [C8. 스킬](/claude/c08-skills/) — 스킬의 기본과 claude.ai 업로드, 공유 방법
+- [5. MCP 서버 직접 만들어 Claude에 연결하기](/dev/05-mcp-server/) — 플러그인에 번들할 MCP 서버 만들기
+- [8. 평가(evals)로 LLM 결과 품질 관리하기](/dev/08-evals/) — 플러그인 eval을 넘어 일반적인 품질 관리
+- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — 훅, 서브에이전트, 플러그인 설치 명령

@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://kjpia21-design.github.io/new-project1/sitemap-index.xml
+Sitemap: https://ai-trend-catchup.com/sitemap-index.xml

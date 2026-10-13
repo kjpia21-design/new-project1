@@ -61,7 +61,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 ### 모델별 가격 (100만 토큰당 USD, 2026-10-11 기준)
 
-가격은 미국 달러 기준이고 바뀔 수 있어요. 항상 [공식 pricing 페이지](https://platform.claude.com/docs/en/about-claude/pricing)로 확인하세요. 모델 ID와 입력/출력 가격은 [C16](/new-project1/claude/c16-api/)과 같아요.
+가격은 미국 달러 기준이고 바뀔 수 있어요. 항상 [공식 pricing 페이지](https://platform.claude.com/docs/en/about-claude/pricing)로 확인하세요. 모델 ID와 입력/출력 가격은 [C16](/claude/c16-api/)과 같아요.
 
 | 모델 | 입력 | 5분 캐시 쓰기 | 1시간 캐시 쓰기 | 캐시 읽기 | 출력 |
 | --- | --- | --- | --- | --- | --- |
@@ -267,10 +267,10 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    - 분류, 추출, 요약 같은 대량 작업은 Haiku 5.5나 Sonnet 5.5로 시작하세요.
    - 어려운 판단만 Opus 5.5로 올리고, 필요하면 Fable 5.1은 가장 어려운 일에만 쓰세요.
    - 가격이 아니라 **작업당 비용**으로 비교하세요. 싼 모델이 더 자주 실패해 재시도하면 오히려 비싸요. 공식 가이드는 "가장 어려운 10%의 작업 비용"도 따로 보라고 해요.
-   - 모델을 바꿀 때는 [C16의 모델별 요청 제한](/new-project1/claude/c16-api/)을 먼저 확인하세요(예: Haiku 5.5는 `budget_tokens`와 샘플링 파라미터가 400 오류).
+   - 모델을 바꿀 때는 [C16의 모델별 요청 제한](/claude/c16-api/)을 먼저 확인하세요(예: Haiku 5.5는 `budget_tokens`와 샘플링 파라미터가 400 오류).
    - 모델이 달라지면 캐시도 따로예요. 캐시는 모델별로 분리돼요.
 
-   Claude Code에서 모델을 나누는 방법은 [C15. 모델 분담 전략](/new-project1/claude/c15-model-division/)에서 다뤘어요.
+   Claude Code에서 모델을 나누는 방법은 [C15. 모델 분담 전략](/claude/c15-model-division/)에서 다뤘어요.
 
 5. **토큰 미리 세기**
 
@@ -335,7 +335,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    <ScreenshotPlaceholder caption="Console의 Usage와 Cost 화면" officialUrl="https://platform.claude.com/docs/en/build-with-claude/usage-cost-api" officialLabel="Anthropic 문서에서 보기" />
 
    <Aside type="note" title="지출 한도 설정">
-   조직 지출 상한은 사용 티어에 따라 정해져요(Start $500, Build $1,000, Scale $200,000, 월 기준, 2026-10-12 기준). 공식 rate limits 문서에 따르면 Console의 설정(Settings) > 결제(Billing)에서 **Spend limits** 섹션의 **Adjust limit**(없으면 **Set limit**)을 눌러 티어 상한 이하로 내 지출 한도를 정할 수 있어요. 내가 정한 한도에 닿으면 요청이 HTTP 400(`invalid_request_error`)으로 거절돼요. 지출 알림 설정 절차는 공식 rate limits 문서에 없어요(2026-10-13 확인). 티어 설명은 [C16](/new-project1/claude/c16-api/)에서도 소개했어요.
+   조직 지출 상한은 사용 티어에 따라 정해져요(Start $500, Build $1,000, Scale $200,000, 월 기준, 2026-10-12 기준). 공식 rate limits 문서에 따르면 Console의 설정(Settings) > 결제(Billing)에서 **Spend limits** 섹션의 **Adjust limit**(없으면 **Set limit**)을 눌러 티어 상한 이하로 내 지출 한도를 정할 수 있어요. 내가 정한 한도에 닿으면 요청이 HTTP 400(`invalid_request_error`)으로 거절돼요. 지출 알림 설정 절차는 공식 rate limits 문서에 없어요(2026-10-13 확인). 티어 설명은 [C16](/claude/c16-api/)에서도 소개했어요.
    </Aside>
 
 7. **가격 비교 계산하기**
@@ -442,7 +442,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 ### Haiku 5.5로 바꿨더니 400 오류나 응답이 비어요
 
 - **원인**: Haiku 5.5는 `budget_tokens`, 샘플링 파라미터, prefill이 400 오류예요. 기본으로 생각해서 `max_tokens`가 작으면 생각만 하다 끝날 수 있어요.
-- **해결**: [C16의 모델별 요청 제한](/new-project1/claude/c16-api/)을 보고 파라미터를 빼고, `max_tokens`를 넉넉히 두거나 `effort`를 `low`로 낮추세요.
+- **해결**: [C16의 모델별 요청 제한](/claude/c16-api/)을 보고 파라미터를 빼고, `max_tokens`를 넉넉히 두거나 `effort`를 `low`로 낮추세요.
 
 ### 추정한 비용과 청구서가 달라요
 
@@ -456,11 +456,11 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - **사용자가 기다리는 요청과 아닌 요청을 나누세요.** 같은 서비스라도 실시간 응답은 일반 호출, 야간 리포트는 배치로 보내요.
 - **큰 변경은 한 번에 하나씩.** 캐싱, effort, 모델을 한꺼번에 바꾸면 무엇이 효과였는지 알 수 없어요. 대표 샘플로 품질을 같이 재세요(품질 측정은 08편 평가를 보세요).
 - **상한을 두세요.** 에이전트 루프나 반복 호출은 반복 횟수, `max_tokens`, 일일 호출 수 상한을 코드에 넣으세요. 배치와 에이전트는 한 번 실행에 큰 비용이 나갈 수 있어요.
-- 이 사이트 자체도 기획은 큰 모델, 구현은 작은 모델로 나눠서 만들었어요. 그 사례는 [C15](/new-project1/claude/c15-model-division/)에 있어요.
+- 이 사이트 자체도 기획은 큰 모델, 구현은 작은 모델로 나눠서 만들었어요. 그 사례는 [C15](/claude/c15-model-division/)에 있어요.
 
 ## 다음에 볼 튜토리얼
 
-- [1. 도구 사용으로 업무 봇 만들기](/new-project1/dev/01-tool-use/) — 도구 정의가 긴 봇에 캐싱을 적용해 보세요
-- [C15. 모델 분담 전략](/new-project1/claude/c15-model-division/) — Claude Code에서의 모델 분담
-- [C16. Claude API 시작하기](/new-project1/claude/c16-api/) — 가격표와 모델별 요청 제한
-- [9. 사내 문서 Q&A 만들기: Files API와 인용(citations)](/new-project1/dev/09-rag-files-citations/) — 긴 문서에 프롬프트 캐싱을 적용하는 실례
+- [1. 도구 사용으로 업무 봇 만들기](/dev/01-tool-use/) — 도구 정의가 긴 봇에 캐싱을 적용해 보세요
+- [C15. 모델 분담 전략](/claude/c15-model-division/) — Claude Code에서의 모델 분담
+- [C16. Claude API 시작하기](/claude/c16-api/) — 가격표와 모델별 요청 제한
+- [9. 사내 문서 Q&A 만들기: Files API와 인용(citations)](/dev/09-rag-files-citations/) — 긴 문서에 프롬프트 캐싱을 적용하는 실례

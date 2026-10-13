@@ -52,9 +52,9 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 | 도구 | 한 줄 설명 | 비유 |
 | --- | --- | --- |
-| **스킬(Skill)** | 지침과 예시를 담은 폴더. `SKILL.md`에 쓰고 `/스킬이름`으로 부르거나 설명에 맞으면 Claude가 자동으로 불러와요. 자세한 내용은 [C8](/new-project1/claude/c08-skills/) | 업무 매뉴얼 |
-| **서브에이전트(Subagent)** | 자체 컨텍스트, 시스템 프롬프트, 도구 권한을 가진 보조 에이전트. 긴 출력은 자기 안에 두고 요약만 돌려줘요. 자세한 내용은 [C14](/new-project1/claude/c14-claude-code-features/) | 전담 담당자 |
-| **루틴(Routine)** | 프롬프트 + 저장소 + 커넥터를 저장해 클라우드에서 자동 실행해요. 스케줄·API·GitHub 이벤트 트리거가 있어요. 자세한 내용은 [C13](/new-project1/claude/c13-cloud-sessions/) | 정기 업무 알람 |
+| **스킬(Skill)** | 지침과 예시를 담은 폴더. `SKILL.md`에 쓰고 `/스킬이름`으로 부르거나 설명에 맞으면 Claude가 자동으로 불러와요. 자세한 내용은 [C8](/claude/c08-skills/) | 업무 매뉴얼 |
+| **서브에이전트(Subagent)** | 자체 컨텍스트, 시스템 프롬프트, 도구 권한을 가진 보조 에이전트. 긴 출력은 자기 안에 두고 요약만 돌려줘요. 자세한 내용은 [C14](/claude/c14-claude-code-features/) | 전담 담당자 |
+| **루틴(Routine)** | 프롬프트 + 저장소 + 커넥터를 저장해 클라우드에서 자동 실행해요. 스케줄·API·GitHub 이벤트 트리거가 있어요. 자세한 내용은 [C13](/claude/c13-cloud-sessions/) | 정기 업무 알람 |
 
 세 도구는 서로 보완해요. 스킬은 **어떻게**, 서브에이전트는 **누가**, 루틴은 **언제**를 맡아요.
 
@@ -277,7 +277,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 ### 사용량이 빨리 줄어요
 
 - **원인**: 루틴은 대화형 세션과 같은 구독 사용량을 써요.
-- **해결**: 실행 빈도를 줄이고(주 1회 등), 프롬프트 범위를 좁히고, 사용량(Settings > Usage)을 확인하세요. 한도 구조는 [C2](/new-project1/claude/c02-plans-limits/)를 보세요.
+- **해결**: 실행 빈도를 줄이고(주 1회 등), 프롬프트 범위를 좁히고, 사용량(Settings > Usage)을 확인하세요. 한도 구조는 [C2](/claude/c02-plans-limits/)를 보세요.
 
 ## 실전 팁
 
@@ -290,8 +290,8 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 ## 다음에 볼 튜토리얼
 
-- [C8. 스킬](/new-project1/claude/c08-skills/) — 스킬 만들기와 공유
-- [C13. 클라우드 세션](/new-project1/claude/c13-cloud-sessions/) — 환경과 루틴 참고서
-- [C14. Claude Code 핵심 기능](/new-project1/claude/c14-claude-code-features/) — 서브에이전트, 훅, MCP
-- [스킬·플러그인 패키지로 만들어 팀에 배포하기](/new-project1/dev/06-plugins-skills-team/) — 만든 스킬을 팀과 공유하기
-- [개인 AI 에이전트 안전하게 쓰는 법](/new-project1/agents/05-agent-safety/) — 자율 실행 에이전트의 권한과 위험
+- [C8. 스킬](/claude/c08-skills/) — 스킬 만들기와 공유
+- [C13. 클라우드 세션](/claude/c13-cloud-sessions/) — 환경과 루틴 참고서
+- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — 서브에이전트, 훅, MCP
+- [스킬·플러그인 패키지로 만들어 팀에 배포하기](/dev/06-plugins-skills-team/) — 만든 스킬을 팀과 공유하기
+- [개인 AI 에이전트 안전하게 쓰는 법](/agents/05-agent-safety/) — 자율 실행 에이전트의 권한과 위험

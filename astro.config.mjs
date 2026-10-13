@@ -4,8 +4,7 @@ import starlight from '@astrojs/starlight';
 import starlightLinksValidator from 'starlight-links-validator';
 
 export default defineConfig({
-  site: 'https://kjpia21-design.github.io',
-  base: '/new-project1',
+  site: 'https://ai-trend-catchup.com',
   integrations: [
     starlight({
       title: '최신 AI 트렌드 따라 잡기',
