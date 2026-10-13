@@ -37,3 +37,6 @@ Aside: "확인 중인 튜토리얼" 제거 대신 "Canva 공식 도움말 원문
 - 못 확인: 앱·웹 제품 종료일(2026-04-26)과 Sora 안전 글의 동의 확인 내용은 openai.com 접근 불가로 검색 요약 그대로 두고 본문에 미확인으로 표시. Sora 앱의 App Store URL(추정 ID)은 404.
 - 확인함(참고): Canva App Store 등록 정보에 Magic Video(iPhone 한정 표기), Veo 3 영상 생성 언급 (https://apps.apple.com/us/app/canva-ai-photo-video-editor/id897446215).
 - 못 찾음: Canva Magic Video 클립 길이·한도, 자막 기능 도움말, 워터마크 조건. caution Aside는 남은 항목만 적도록 수정.
+
+## 7단계 재점검 (2026-10-12)
+- Google 도움말 4건·소개 페이지·구독 페이지·OpenAI deprecations 재열람. 변경 없음(Gemini Omni 1.1 Flash 10초, 18세 이상, 한도 5시간/주간, 가격 Plus $4.99/Pro $19.99/Ultra $99.99부터(+$199.99 티어), Sora 2 API 2026-09-24 제거). Canva·openai.com은 403.

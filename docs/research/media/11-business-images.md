@@ -57,3 +57,6 @@ Aside: "확인 중인 튜토리얼" 제거, 대신 "ChatGPT·Adobe 부분은 원
 - 확인: 가격 Free $0 / Go $8 / Plus $20 (Pricing 문서). 한국 App Store: 언어 목록에 한국어, Go ₩13,000, Plus ₩29,000.
 - 못 찾음: OpenAI 이용약관의 출력물 소유 조항 원문, 사용 정책 문구, 무료 플랜 이미지 생성 한도 숫자, 보이는 워터마크 유무, Adobe Firefly 전반.
 - 본문 변경: Aside를 "OpenAI 약관 원문과 Adobe Firefly는 확인하지 못했어요"로 축소해 유지, 출처에서 help.openai.com 두 건 삭제(원문 미열람, 대체 출처로 교체). 채워진 빈칸 6(한국 이용, 무료 한도 성격, 인물 지침, ChatGPT 비교 단계, C2PA 설명, 확인 도구), 남은 빈칸 4(약관 소유, 사용 정책 원문, 무료 한도 숫자, Firefly). Aside는 지우지 않고 남은 항목만 적음.
+
+## 7단계 재점검 (2026-10-12)
+- Google·OpenAI(learn.chatgpt.com, developers.openai.com)·App Store 재열람. 본문과 충돌하는 변경 없음(모델명 Nano Banana 2/Pro/2.1, 연령, 한도 체계, 가격 Free/Go/Plus, 한국 인앱 가격 동일). 도움말에 Nano Banana 2 Lite 추가 언급. 미확인 항목(openai.com 정책·약관, Adobe)은 그대로.

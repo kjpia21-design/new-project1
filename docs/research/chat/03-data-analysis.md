@@ -27,3 +27,6 @@
 - 확인: 작업 중 사용 정보에 ChatGPT data controls가 적용됨, 설정 위치 Settings > Data controls (llms-full.txt 해당 절). Business: "No training on your business data by default" (https://learn.chatgpt.com/docs/pricing.md). 임시 채팅 존재(단축키 표).
 - 못 찾음: ChatGPT 업로드 파일 크기·행 수 한도, 개인 계정 학습 기본값·보관 기간, 임시 채팅의 상세 처리 방식.
 - 본문 변경: Summary, 참조표(ChatGPT 2행), 개인정보 절 ChatGPT 항목 교체. 채워진 빈칸 3, 남은 빈칸 3. 이 편에는 "확인 중" Aside가 원래 없음.
+
+## 재점검 (2026-10-12)
+- 출처 페이지를 다시 읽었고 본문과 어긋나는 내용 없음(변경 없음).

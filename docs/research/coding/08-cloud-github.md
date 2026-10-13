@@ -46,3 +46,9 @@
 - 환경: Settings > Environments > Deployment branches 드롭다운 > Selected branches and tags > Add deployment branch or tag rule > Ref type(Branch/Tag) > 이름 패턴 > Add rule.
 - 재실행: Actions > 워크플로 > 실행 > 실패한 작업이 있으면 Re-run jobs 드롭다운 > Re-run all jobs, 없으면 Re-run all jobs 버튼. 재실행은 최초 실행 후 30일 이내, 최대 50회.
 - 기본 브랜치 변경: admin 권한, 브랜치 2개 이상 필요.
+
+## 2026-10-12 재확인 변경
+- Claude 쪽(web-quickstart, claude-code-on-the-web, routines)은 기존 서술과 일치함을 재확인: 클라우드 세션은 Pro/Max/Team, Enterprise는 premium 또는 Chat + Claude Code 좌석. 권한 모드 Accept edits/Plan/Auto, Manual·Bypass 없음. Default 환경은 Trusted. 별도 VM 요금 없음.
+- 새로 확인: diff 뷰에 "Compare against"로 비교 브랜치 선택 가능. Team/Enterprise는 Quick setup이 꺼져 있으면 온보딩에서 환경 생성 폼이 나옴.
+- GitHub Pages 문서(docs.github.com 렌더링 페이지 접속 성공): "Visit site" 링크와 "최대 10분" 문구는 현재 페이지에서 찾을 수 없어 본문에서 제거. Pages는 GitHub Free는 공개 저장소만, Pro/Team/Enterprise는 공개·비공개 저장소 가능. admin 또는 maintainer 권한 필요. 항상 Actions 워크플로 실행으로 배포됨. github-pages 환경에는 기본 브랜치만 배포하도록 보호 규칙 추가를 권장.
+- manage-environments, changing-the-default-branch, re-run-workflows: 기존 서술과 일치(재실행 30일/50회, Re-run failed jobs 옵션도 있음).

@@ -42,3 +42,7 @@
 - `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`(v2.1.296): "워크플로 에이전트를 한 모델로, 다른 서브에이전트는 각자 모델 유지"(CHANGELOG). 환경변수 문서, workflows 문서에서는 이 변수명을 찾지 못함. 값 형식은 확인 못 함(본문에 그 사실을 밝힘). 참고로 `CLAUDE_CODE_SUBAGENT_MODEL`은 워크플로 에이전트의 기본 모델도 정한다고 env-vars 문서에 적혀 있음.
 - `/advisor [model|off]`, `--advisor <model>`, `advisorModel` 설정. 서버측 advisor 도구, Anthropic API 전용, 실험 기능. 조언 모델은 메인 모델 이상 등급(표는 Advisor 문서). 비용은 조언 모델 요금, 구독은 한도 합산. 텍스트 형태 `/advisor`는 v2.1.260 이상.
 - 미반영: Haiku 5.5의 advisor 조건(v2.1.293), Fable advisor의 usage credits 동의는 본문에 쓰지 않음.
+
+## 2026-10-12 점검 반영
+- Explore 서브에이전트 모델: 기본은 메인 대화의 모델. 메인이 Fable일 때만 구독·Console·`ANTHROPIC_BASE_URL` 게이트웨이에서 `opus` 별칭, Bedrock·Google Cloud·Foundry·Claude Platform on AWS·Claude apps gateway에서는 메인 모델 그대로. 이전 본문("구독·Console·게이트웨이에서 opus")을 수정. 출처: https://code.claude.com/docs/en/sub-agents
+- `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`은 workflows·sub-agents 문서에 여전히 설명 없음(CHANGELOG 2.1.296에만 있음). sub-agents 문서는 `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`가 워크플로 에이전트에도 적용된다고 적음.

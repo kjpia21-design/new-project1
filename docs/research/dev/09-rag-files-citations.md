@@ -62,3 +62,8 @@
 - 캐시 쓰기 가격 배율, 인용 사용 시 정확한 추가 토큰 수는 공식 수치를 못 찾음.
 - 한도 숫자(1 TB 등)는 스킬 문서와 공식 문서가 다름 -> 공식 문서 따름.
 - Cowork/Claude 앱 프로젝트(지식 기능)는 이 편 범위 밖.
+
+## 2026-10-12 재확인
+- Files 페이지: 만료 시 content GET 404, 만료 파일 참조 Messages 요청은 추론 전 실패, 메타데이터 최대 30일 조회, 만료는 삭제 보장 아님 -> 본문 만료 문단에 반영. `expires_in_seconds`의 SDK 인자는 여전히 공식 페이지에 없음(폼 필드만).
+- token-counting 페이지: count_tokens는 url·file 문서 소스를 지원하지 않음("doesn't support url or file document sources") -> '확인 못 함' 해소: file_id 문서는 세지 못하므로 usage로 사후 확인. 본문에는 언급 없어 변경 없음.
+- 500MB/파일, 1TB/조직, 분당 약 500회, 600쪽(컨텍스트 1M 미만이면 100쪽), 인용-구조화 출력 비호환, Files API ZDR/HIPAA No, Covered Models(Fable 5.1 등) 변동 없음.

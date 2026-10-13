@@ -52,7 +52,7 @@
 
 ## 사용량 모니터링
 - 응답 `usage`를 호출마다 로그. 조직 전체는 Usage and Cost Admin API(`/v1/organizations/usage_report/messages`, `/v1/organizations/cost_report`)이며 Admin API 키(`sk-ant-admin...`) 필요, 개인 계정은 불가(스킬 문구). Console의 Usage/Cost 페이지에서도 확인. Bedrock/Vertex/Foundry 트래픽은 해당 보고서에 안 나올 수 있음(스킬).
-- 지출 한도·알림 등 Console 설정 화면 절차는 직접 확인하지 못함. (C16: 티어별 월 지출 상한 Start $500, Build $1,000, Scale $200,000.)
+- (2026-10-12 갱신: 지출 한도 절차는 rate-limits 페이지에서 확인됨, 알림 절차는 미확인) 지출 한도·알림 등 Console 설정 화면 절차는 직접 확인하지 못함. (C16: 티어별 월 지출 상한 Start $500, Build $1,000, Scale $200,000.)
 
 ## 본문 예시 계산 (cost_calc.py 실행값)
 가정: 요청 1,000건, 고정 접두사 20,000토큰, 새 입력 500토큰, 출력 300토큰, 캐시는 계속 살아 있고(5분 안 간격) 첫 요청만 쓰기.
@@ -65,3 +65,9 @@
 - API 키가 없어 실제 호출·usage 값 미확인. 문법만 `py_compile`.
 - 1시간 캐시 쓰기의 Haiku 배치 조합 가격, 캐시된 배치의 정확한 요금 합산 방식은 pricing 페이지 설명("multipliers stack")에 의존.
 - 공식 비용 가이드의 뒷부분(10만자 이후, 측정 코드 샘플)은 읽지 못함.
+
+## 2026-10-12 재확인
+- 배치 `expired` 요청은 비용이 청구되지 않는다고 batch-processing 페이지가 명시함("You will not be billed for these requests") -> 본문 '확인하지 못했어요' 문구 교체.
+- pricing(모델별 단가, 캐시 배수, Haiku 5.5 10만 토큰 구간, inference_geo 1.1x), 캐시 최소 512토큰, 브레이크포인트 4개·20블록, 배치 10만건/256MB/29일 모두 변동 없음.
+- effort 페이지에 메시지별 effort 변경(베타, `mid-conversation-output-config-2026-07-01`, 캐시 유지; Fable 5.1·Mythos 5.1·Opus 5.5·Opus 5·Sonnet 5.5·Haiku 5.5, Bedrock은 일부) 설명이 있음 -> 02편 Aside에 한 문장 추가. 최상위 effort 변경은 여전히 캐시 무효화.
+- rate-limits 페이지에 지출 한도 설정 절차 추가 확인: Settings > Billing > Spend limits > Adjust limit/Set limit, 한도 도달 시 HTTP 400 invalid_request_error. 알림(alerts) 절차는 여전히 미확인. 본문 Aside 갱신.

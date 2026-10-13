@@ -115,3 +115,9 @@
 | 외부 서비스 연동 | 플러그인(Gmail, Google Drive, GitHub 등), Slack, Teams, 내 컴퓨터(선택, 한 대), Work/Codex 위임 | 공식 |
 | 결제 기능 | 공식 문서에서 결제·구매 기능 확인 못 함(웹 로그인과 비밀번호 저장만 언급) | 공식(미확인) |
 | 확인 수준 | 기능·접근·안전: developers.openai.com 공식 문서 열람. 한국 제공·한국어·출시일: 보도 의존 | - |
+
+
+## 2026-10-12 재확인
+- 공식 문서가 developers.openai.com/codex/dots/* 에서 learn.chatgpt.com/docs/dots/* 로 308 이전됨. 내용(Pro 100/200/500, 18세 이상, EEA·영국·스위스 제외, Business Premium·Enterprise 순차, 점진적 롤아웃, GPT-6 Astra, 문자 "coming soon", Custom rules 4종)은 기존과 일치. 한국은 여전히 어느 공식 페이지에도 언급 없음.
+- dots 본문과 channels에는 "beta" 표기 없음. "Use dots (Beta)"는 관리자 가이드에만 있음.
+- 한국 App Store ChatGPT 앱 내 구입: Go ₩13,000, Plus ₩29,000, Pro 100 ₩159,000, Pro 200 ₩299,000, Pro 500 ₩790,000 [스토어-열람]. 앱 버전 1.2026.272, 노트는 "버그 수정 및 소폭 개선"뿐(닷츠 언급 없음).

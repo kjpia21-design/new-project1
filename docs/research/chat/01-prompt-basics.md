@@ -17,3 +17,6 @@
 - Prompting best practices — 확인일 2026-10-10 (C04 노트 재사용)
 - Get started with Claude — 확인일 2026-10-10
 - https://support.claude.com/en/articles/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations — 확인일 2026-10-10
+
+## 재점검 (2026-10-12)
+- 출처 페이지를 다시 읽었고 본문과 어긋나는 내용 없음(변경 없음).

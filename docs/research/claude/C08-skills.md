@@ -40,3 +40,7 @@
 - Claude Code changelog(https://code.claude.com/docs/en/changelog 2.1.293, 원문 CHANGELOG.md 확인): claude.ai 스킬 동기화는 세션 미사용 중 약 40분마다(이전 10분). `syncClaudeAiSkills: false`/`syncClaudeAiPlugins: false`로 해제. 클라우드 세션은 `anthropic-skills:<name>`, `anthropic-skills` 이름공간 로컬 스킬은 로드 안 됨(2.1.282). `/skill-doctor`: 안 쓰는 스킬과 컨텍스트 비용 표시.
 - 2026-09-25 플러그인 제출 포털(릴리스 노트).
 - 이전 본문의 "v2.1.273 이상" 문구는 제거(원문에서 최초 도입 버전은 2.1.275 근처로 보이나 확정 못 함).
+
+## 2026-10-12 점검 반영
+- 스킬 만들기 도움말(12512198, 2026-07-22): 화면 녹화로 스킬 만들기는 Mac용 Claude의 Cowork에서만, Pro/Max/Team. 채팅·Windows·Free·Enterprise 불가. macOS 손쉬운 사용·화면 기록 권한 필요, 녹화 약 10분. 업로드 ZIP 크기 제한은 여전히 미기재. skill-creator는 이 문서에 언급 없음.
+- claude.ai 스킬 동기화: 고객센터는 "약 10분마다 확인"(v2.1.273 이상), CHANGELOG 2.1.293은 "세션이 쓰이지 않는 동안 약 40분마다"로 변경. 본문은 40분(2.1.293) 유지.

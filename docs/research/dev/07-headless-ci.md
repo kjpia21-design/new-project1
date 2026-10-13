@@ -41,3 +41,8 @@
 - 이슈 분류 예제에서 `gh` CLI가 액션 안에서 자동 인증되는지는 문서에서 확인 못 함. 본문 예제는 `GH_TOKEN`을 env로 명시.
 - 본문의 워크플로는 YAML 문법만 검증(pyyaml). 실제 GitHub에서 돌려보지 않음.
 - claude-code-action의 `v1` 태그가 가리키는 세부 버전은 확인 안 함.
+
+## 2026-10-12 재확인
+- CLI reference 직접 읽음: `--max-budget-usd`는 print 모드 전용, 클라이언트 쪽 비용 추정 기준(청구액과 다를 수 있고 초과 가능), 서브에이전트 비용 합산, `--continue/--resume` 시 이전 누적은 상한에 미포함, 상한 도달 시 새 서브에이전트 생성 실패·백그라운드 서브에이전트 중단(v2.1.217+). 위 '정확한 의미 미확인' 해소, 본문 반영.
+- `gh` 자동 인증 여부는 여전히 문서에 명시 없음(공식 예제는 gh를 쓰면서 GH_TOKEN 설정을 따로 보이지 않음). 본문은 명시적 GH_TOKEN 유지.
+- 나머지(--bare, 출력 형식, --permission-prompts none, claude-code-action@v1, checkout@v6, id-token: write, 보안 문서 항목) 변동 없음.

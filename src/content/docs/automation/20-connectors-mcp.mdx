@@ -10,7 +10,7 @@ duration: "35분"
 prerequisites:
   - "사용 중인 AI 도구의 계정 (Claude, ChatGPT 등)"
   - "연결해 볼 업무 서비스 계정 (Gmail, Notion 등)"
-lastVerified: 2026-10-10
+lastVerified: 2026-10-12
 sources:
   - title: "What is the Model Context Protocol (MCP)?"
     url: "https://modelcontextprotocol.io/docs/2026-07-28/getting-started/intro"
@@ -89,7 +89,7 @@ OpenAI의 현재 문서(learn.chatgpt.com, developers.openai.com, 2026-10-10 확
 
 | 도구 | 부르는 이름 | 연결하는 곳 | 확인한 사실 |
 | --- | --- | --- | --- |
-| **Claude** (claude.ai) | 커넥터 | 입력창 + > Connectors, 설정의 Connectors 디렉터리 | 커스텀 커넥터는 원격 MCP 서버. 절차는 [C7](/new-project1/claude/c07-connectors/) |
+| **Claude** (claude.ai) | 커넥터 | 입력창 + > Connectors, 설정(Customize) > Connectors | 커스텀 커넥터는 원격 MCP 서버. 절차는 [C7](/new-project1/claude/c07-connectors/) |
 | **Claude Code** | MCP 서버 | 명령 `claude mcp add`, 인증은 `/mcp` | claude.ai 커넥터는 로그인하면 `/mcp`에 표시 |
 | **ChatGPT** | 플러그인(Plugins), 직접 만든 MCP 서버는 Add custom MCP server | chatgpt.com의 Plugins 화면에서 플러그인을 설치하거나, 더하기(+) 버튼 > Add custom MCP server | OpenAI 문서 기준: 플러그인은 웹·데스크톱·모바일의 Chat과 Work에서 쓰고, 설치 후 새 채팅에서 `@`로 선택해요. 커스텀 MCP 서버는 공개 HTTPS 주소(보통 `/mcp` 경로) 또는 Secure MCP Tunnel로 연결하고, 인증을 설정한 뒤 위험 경고에서 "I understand and want to continue"를 눌러야 해요. 계정·워크스페이스 정책이 적용돼요. 관리자는 Workspace apps에서 사용 가능 여부와 Action control·App permissions를 정해요 |
 | **Gemini CLI** | MCP 서버 | 설정 파일 `settings.json`의 `mcpServers` 또는 `gemini mcp add` | 원격은 `url`/`httpUrl`/`headers`, 도구는 `includeTools`/`excludeTools`로 거르고 `excludeTools`가 우선 |
@@ -98,7 +98,7 @@ OpenAI의 현재 문서(learn.chatgpt.com, developers.openai.com, 2026-10-10 확
 <Aside type="note" title="확인하지 못한 점">
 - Gemini 앱이나 Google Workspace 안의 Gemini가 MCP 서버를 직접 연결하는지는 확인하지 못했어요. Workspace 안의 Gemini 사용은 [19편](/new-project1/automation/19-google-workspace-gemini/)을 보세요.
 - MCP 스펙은 날짜별 버전(2025-03-26, 2025-06-18, 2026-07-28 등)이 여럿이에요. 이 편은 개념과 보안 원칙 위주로 썼고, 세부 규격은 최신 공식 문서를 확인하세요.
-- ChatGPT에서 커스텀 MCP 서버를 연결할 수 있는 요금제 목록은 OpenAI 문서에서 찾지 못했어요. 문서는 계정과 워크스페이스 정책이 적용되고, 관리자 권한에 "Upload plugins with custom MCP servers"가 따로 있다고만 안내해요. 내 플랜의 조건은 OpenAI 도움말(help.openai.com)에서 확인하세요.
+- ChatGPT에서 커스텀 MCP 서버를 연결할 수 있는 요금제 목록은 OpenAI 문서에서 찾지 못했어요. 문서는 계정과 워크스페이스 정책이 적용된다고 안내하고, 관리자 문서는 MCP 서버 연결을 Workspace apps와 Permissions & roles에서 역할별로 정한다고만 설명해요. 내 플랜의 조건은 OpenAI 도움말(help.openai.com)에서 확인하세요.
 - Notion은 Business·Enterprise 플랜에서 에이전트 사용 허용량이 포함된다고 안내해요. 연결 자체의 플랜 조건은 Notion 도움말에서 확인하세요.
 </Aside>
 
@@ -123,7 +123,7 @@ OpenAI의 현재 문서(learn.chatgpt.com, developers.openai.com, 2026-10-10 확
 
 2. **서버를 믿을 수 있는지 판단하기**
 
-   공식 서비스가 제공하는 서버(예: Notion이 운영하는 주소)를 우선 쓰세요. Claude 공식 도움말은 커스텀 커넥터를 Anthropic이 검증하지 않는다고 안내해요. MCP 공식 보안 안내도 도구의 설명 같은 정보는 **신뢰된 서버가 아니면 믿지 말라**고 말해요. 출처가 불분명한 서버는 연결하지 마세요.
+   공식 서비스가 제공하는 서버(예: Notion이 운영하는 주소)를 우선 쓰세요. Claude 공식 도움말은 커스텀 커넥터를 Anthropic이 검증하지 않는다고 안내해요. MCP 공식 규격(2025-03-26)도 도구의 설명 같은 정보는 **신뢰된 서버가 아니면 믿지 말라**고 말해요. 출처가 불분명한 서버는 연결하지 마세요.
 
 3. **읽기 전용으로 연결 시험하기**
 
@@ -135,7 +135,7 @@ OpenAI의 현재 문서(learn.chatgpt.com, developers.openai.com, 2026-10-10 확
 
 4. **쓰기는 승인 앞에서 멈추기**
 
-   MCP 규격은 호스트가 도구 호출 전에 사용자의 명시적 동의를 받아야 한다고 정해요. Claude는 전송·삭제 전에 기본적으로 승인을 물어요. 승인 창을 습관으로 누르지 말고 받는 사람, 내용, 대상 파일을 읽으세요. 필요 없는 쓰기 도구는 아예 끄는 게 더 안전해요.
+   MCP 규격은 호스트가 도구 호출 전에 사용자의 명시적 동의를 받아야 한다고 정해요. Claude의 Gmail 커넥터는 메일 전송·답장·전달 전에 기본적으로 승인을 물어요. 승인 창을 습관으로 누르지 말고 받는 사람, 내용, 대상 파일을 읽으세요. 필요 없는 쓰기 도구는 아예 끄는 게 더 안전해요.
 
    <ScreenshotPlaceholder caption="AI 앱이 쓰기 도구를 호출하기 전에 승인을 묻는 화면" />
 

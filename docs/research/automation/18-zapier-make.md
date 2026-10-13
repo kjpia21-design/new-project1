@@ -47,3 +47,9 @@
 - 확인함: 스케줄 최소 간격은 "플랜에 따라 다르다"(https://help.make.com/schedule-a-scenario). Free의 구체적 값은 찾지 못함. 기존 노트의 "Free 최소 15분"은 근거를 못 찾아 본문에 쓰지 않음.
 - 못 찾음: Make 한국어 UI 지원, Free 최소 간격, Free 활성 시나리오 수 제한.
 - 본문 조치: "Make 쪽은 아직 확인 중" caution Aside 삭제, 남은 미확인 항목은 note Aside에 유지.
+
+## 2026-10-12 재확인
+- 재확인(WebFetch): zapier.com/pricing(Free 100 task, Two-step, 15분; Professional 2분 Multi-step; Team 1분; 19개 통화에 KRW 없음), Gmail+Sheets 연동 페이지(New Email, New Labeled Email, Create Spreadsheet Row), help.zapier.com 2건(영어만).
+- 재확인(curl, help.make.com / apps.make.com): credits(1 operation = 1 credit), schedule-a-scenario(기본 15분, 최소 간격은 플랜별), cancel-your-subscription(Free 월 1,000 크레딧), adjustments-to-plans-and-pricing(2025-11-06), step-1-plan-your-scenario, gmail/google-sheets/slack-modules(Watch emails, Add a Row, Send a Message + 권한표의 Create a Message). 변동 없음.
+- 변경: Zapier 체험 도움말이 세분화됨 → 신규 계정 Pro 체험은 Free로 복귀, Free에서 직접 시작한 체험/Team 체험은 자동 유료 전환 가능으로 본문 보강.
+- 여전히 미확인: www.make.com 가격 페이지(봇 차단), Make 한국어 UI, Make Free 최소 간격, 국내 메신저 연동, Zapier 한도 도달 시 동작.

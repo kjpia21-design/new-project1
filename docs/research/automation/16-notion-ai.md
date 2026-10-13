@@ -42,3 +42,8 @@ notion.com 원문을 직접 열어 대조했다: notion-agent, what-are-notion-c
 - https://www.notion.com/help/what-are-notion-credits
 - https://www.notion.com/help/notion-ai-security-practices
 - https://www.notion.com/pricing
+
+## 2026-10-12 재확인
+- notion-ai-faqs, credits, autofill, notion-agent, pricing, ai-meeting-notes, security-practices, Q&A 가이드, product/ai 모두 재확인. 플랜 범위·가격($10/$13 per 1,000, Plus $10, Business $20)·메뉴 경로 변동 없음.
+- 변경: credits 페이지가 크레딧 사용처에 Workers를 추가 명시 → 본문 반영.
+- FAQ는 AI Meeting Notes를 (beta)로 표기하나 meeting-notes 도움말은 beta 표기 없음(미반영). Notion AI 전체 한국어 지원 범위는 여전히 미확인.

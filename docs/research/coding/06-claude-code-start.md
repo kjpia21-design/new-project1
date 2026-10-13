@@ -17,6 +17,10 @@
 5. `/init` 또는 직접 요청으로 CLAUDE.md 작성, `/rewind`로 되돌리는 법 확인.
 (절차의 모든 요소는 위 공식 문서에 있는 기능이며, "회의 일정 안내 페이지"는 이 사이트가 만든 예시 과제다.)
 
+## 2026-10-12 재확인 변경
+- permission-modes: 터미널·VS Code 기본 시작 모드는 v2.1.283 이상에서 auto. 기본 확인형 모드의 표기는 Manual(설정값 `default`, `manual` 별칭). Shift+Tab 순환은 auto → manual → acceptEdits → plan. 플랜 승인 선택지: "Yes, and use auto mode" / "Yes, manually approve edits" / "No, keep planning"; `/plan` 접두어로도 진입. (출처: https://code.claude.com/docs/en/permission-modes)
+- terminal guide는 overview에서 재확인(링크 존재). 가격표 재확인: Free는 Claude Code 미포함, Pro $20/월(연간 결제 시 월 $17), Max $100~. (출처: https://claude.com/pricing)
+
 ## 확인 못 함
 - quickstart 본문(https://code.claude.com/docs/en/quickstart)은 직접 읽지 않았다.
 - terminal guide 본문은 읽지 않았다.
