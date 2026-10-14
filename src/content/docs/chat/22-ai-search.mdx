@@ -1,0 +1,171 @@
+---
+title: "AI 검색 제대로 쓰기: Perplexity·ChatGPT 검색·Claude 웹 검색 비교"
+description: "AI 검색이 일반 검색과 어떻게 다른지, 세 서비스의 검색·심층 조사 기능을 공식 문서 기준으로 비교하고 출처를 직접 검증하는 방법"
+sidebar:
+  label: "22. AI 검색 제대로 쓰기"
+level: practical
+category: chat
+tools: ["Perplexity", "ChatGPT", "Claude"]
+duration: "20분"
+prerequisites:
+  - "Perplexity, ChatGPT, Claude 중 하나 이상의 계정 (무료 계정도 가능)"
+  - "최신 정보가 필요한 질문 2~3개"
+lastVerified: 2026-10-14
+sources:
+  - title: "How does Perplexity work? (Perplexity 도움말)"
+    url: "https://www.perplexity.ai/help-center/en/articles/10352895-how-does-perplexity-work"
+  - title: "Tips for Getting Better Answers from Perplexity"
+    url: "https://www.perplexity.ai/help-center/en/articles/13645819-tips-for-getting-better-answers-from-perplexity"
+  - title: "Which Perplexity Subscription Plan is right for you?"
+    url: "https://www.perplexity.ai/help-center/en/articles/11187416-which-perplexity-subscription-plan-is-right-for-you"
+  - title: "What is Perplexity Pro?"
+    url: "https://www.perplexity.ai/help-center/en/articles/10352901-what-is-perplexity-pro"
+  - title: "Web search (ChatGPT 문서, OpenAI)"
+    url: "https://learn.chatgpt.com/docs/web-search.md"
+  - title: "Use ChatGPT (ChatGPT 문서, OpenAI)"
+    url: "https://learn.chatgpt.com/docs/use-chatgpt"
+  - title: "Enable and use web search (Claude 도움말)"
+    url: "https://support.claude.com/en/articles/10684626-enable-and-use-web-search"
+  - title: "Use research on Claude"
+    url: "https://support.claude.com/en/articles/11088861-use-research-on-claude"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- AI 검색은 **웹을 검색한 결과를 요약해서 출처와 함께** 보여 줘요. 셋 다 인용(출처 링크)이 붙는다고 공식 문서가 안내해요.
+- 빠른 사실 확인은 일반 웹 검색, 여러 자료를 모은 정리는 심층 조사(Perplexity Research, ChatGPT deep research, Claude Research)가 맞아요.
+- **인용이 있어도 틀릴 수 있어요.** 중요한 숫자와 날짜는 인용 링크를 열어 원문과 대조하세요.
+- 서비스 간 정확도 순위는 공식 근거가 없어 쓰지 않았어요. 내 질문으로 직접 비교해 보세요.
+- 가격과 한도는 자주 바뀌어요. 이 글의 날짜 표기는 2026-10-14 기준이에요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 일반 검색, AI 검색, 심층 조사 중 상황에 맞는 것을 고를 수 있어요.
+- 검색이 잘 되는 질문을 쓸 수 있어요.
+- 세 서비스에서 검색과 심층 조사를 켜는 위치를 알 수 있어요.
+- 인용 링크로 답을 검증하는 순서를 익힐 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **AI 검색(답변 엔진)** | 질문을 해석하고, 웹을 검색하고, 찾은 내용을 요약해 답하는 방식이에요. 링크 목록 대신 답이 나와요. |
+| **인용(citation)** | 답의 근거 출처 링크예요. Perplexity는 번호 인용, Claude는 모든 응답에 인용이 포함된다고 안내해요. |
+| **심층 조사** | 여러 번 검색하고 많은 자료를 읽어 보고서를 만드는 기능이에요. 시간이 더 걸려요. |
+
+<Aside type="note" title="확인하지 못한 점 (2026-10-14 기준)">
+Perplexity Pro의 월 가격, Perplexity의 한국 제공 여부와 한국어 품질, ChatGPT 무료 플랜의 검색 횟수 한도와 화면 메뉴 이름 세부는 열어 본 공식 문서에서 확인하지 못했어요. ChatGPT 검색 문서(learn.chatgpt.com)는 개발자 도구인 Codex 설명이 많고, 일반 채팅 화면 설명은 짧아요. 막힌 사이트(openai.com, help.openai.com)는 쓰지 않았어요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '질문이 일반 검색용인지 심층 조사용인지 정했어요',
+  '세 서비스 중 쓸 서비스에서 검색을 켰어요',
+  '구체적인 질문으로 요청했어요',
+  '인용 링크를 열어 핵심 숫자를 대조했어요',
+  '필요하면 후속 질문으로 범위를 좁혔어요',
+]} />
+
+<Steps>
+
+1. **질문 종류 고르기**
+
+   - 한 가지 사실이나 최신 소식이면 일반 AI 검색으로 충분해요.
+   - 여러 관점이나 자료를 비교한 정리가 필요하면 심층 조사를 쓰세요.
+   - 내 파일 속 내용이면 검색이 아니라 [NotebookLM](/chat/21-notebooklm/)이나 파일 업로드가 맞아요.
+
+2. **서비스별로 검색 켜기**
+
+   - **Perplexity**: 질문하면 실시간으로 웹을 검색하고 번호 인용을 붙인다고 안내해요. 무료 계정은 Pro Search 횟수가 매우 제한적이고, Pro는 확장돼요. 이 글에서 확인한 Perplexity 기능 이름은 Pro Search와 Research예요.
+   - **ChatGPT**: 웹에서 최신 정보나 출처를 물으면 검색 결과와 인용이 채팅에 보여요. 워크스페이스 설정에 따라 검색이 제한될 수 있어요.
+   - **Claude**: 채팅 입력창의 `+` 버튼에서 웹 검색(Web search)을 켜요. 새 통합 Claude 경험에서는 토글이 없고 도움이 될 때 Claude가 알아서 검색해요. 팀·기업 계정은 관리자가 먼저 켜야 해요.
+
+   <ScreenshotPlaceholder caption="Claude 입력창 + 버튼의 웹 검색 항목" officialUrl="https://support.claude.com/en/articles/10684626-enable-and-use-web-search" />
+
+3. **구체적으로 질문하기**
+
+   Perplexity 도움말은 "한 단어보다 구체적인 질문, 배경 설명, 핵심 키워드, 원하는 답 형식(요약·표·단계)"을 권해요.
+
+   <PromptBox label="검색이 잘 되는 질문 틀 (세 서비스 공통)">
+   최근 6개월 안의 자료만 근거로, 국내 중소기업이 받을 수 있는 AI 도입 지원 사업을 정리해 줘. 사업명, 주관 기관, 신청 마감일을 표로 만들고, 각 항목에 출처 링크를 붙여 줘. 확인되지 않은 항목은 "확인 못 함"이라고 적어 줘.
+   </PromptBox>
+
+4. **심층 조사 쓰기**
+
+   <FlowSteps title="Claude에서 Research 켜기" officialUrl="https://support.claude.com/en/articles/11088861-use-research-on-claude" steps={[
+     { where: '채팅 입력창', action: '+ 버튼에서 Research 선택', result: '아래쪽에 파란 표시가 나타나요' },
+     { where: '채팅창', action: '구체적인 조사 질문 입력', result: '여러 번 검색하며 인용이 포함된 답을 만들어요' },
+     { where: '파란 표시', action: '다시 누르면 Research 끄기' },
+   ]} />
+
+   Claude Research는 유료 플랜(Pro, Max, Team, Enterprise)에서 쓰고, 웹 검색이 켜져 있어야 해요. 같은 한도를 쓰지만 자료를 많이 가져와 한도가 더 빨리 줄어요. Perplexity Research는 수십 번 검색해 2~4분 안에 보고서를 만든다고 안내해요. ChatGPT는 Work에서 + 메뉴의 Deep research를 쓸 수 있어요. 단 계정·워크스페이스에 따라 제공 여부가 달라요.
+
+5. **인용으로 검증하기**
+
+   - 핵심 숫자, 날짜, 인용문은 인용 링크를 열어 원문에서 직접 확인해요.
+   - 출처가 공식 기관인지, 오래된 글은 아닌지 보세요.
+   - ChatGPT 문서는 웹 결과를 신뢰할 수 없는 입력으로 취급하라고 안내해요.
+   - 자세한 검증 순서는 [팩트 체크 방법](/basics/04-fact-checking/)을 따르세요.
+
+6. **후속 질문으로 좁히기**
+
+   "두 번째 항목만 더 자세히", "공식 사이트 자료만으로 다시"처럼 이어서 물어요. Perplexity는 Research도 대화로 이어 갈 수 있다고 안내해요.
+
+</Steps>
+
+## 빠른 참조표
+
+| 항목 | Perplexity | ChatGPT | Claude |
+| --- | --- | --- | --- |
+| 검색 방식 | 질문마다 실시간 웹 검색 후 요약 | 최신 정보나 출처를 물으면 검색, 인용 표시 | 필요할 때 검색, 모든 응답에 인용 |
+| 심층 조사 | Research (수십 번 검색, 2~4분) | Work의 Deep research (계정에 따라) | Research (유료 플랜) |
+| 무료 이용 | 가능, Pro Search는 매우 제한 | 이 글에서 확인하지 못함 | Free 계정의 검색 가능 여부와 한도는 [C2](/claude/c02-plans-limits/)와 Claude 가격 페이지에서 확인하세요 |
+| 모델 선택 | Pro Search에서 Best 또는 다른 모델 선택 | 이 글에서 확인하지 못함 | Research는 선택 모델과 무관하게 정해진 모델 사용 |
+| 가격 | Pro 월 가격은 확인하지 못함. Education Pro는 검증 시 월 $10 | [5편](/chat/05-compare-assistants/) 참고 | [C2](/claude/c02-plans-limits/) 참고 |
+
+## 자주 막히는 지점
+
+### 인용 링크를 열어 보니 답과 내용이 달라요
+
+- **원인**: 요약 과정에서 의미가 틀어지거나 링크의 글이 바뀌었을 수 있어요.
+- **해결**: 원문 문장을 그대로 찾아 비교하고, 맞지 않으면 "이 링크의 어느 문장이 근거인지 인용해 줘"라고 다시 요청하세요.
+
+### 검색이 안 되고 오래된 답이 나와요
+
+- **원인**: 검색이 꺼져 있거나 워크스페이스에서 막혀 있을 수 있어요.
+- **해결**: Claude는 `+` 버튼 설정을, 팀 계정은 관리자 설정(Organization settings > Capabilities)을 확인하세요. ChatGPT도 워크스페이스 설정이 검색을 제한할 수 있어요.
+
+### Research를 켰는데 조사를 안 해요
+
+- **원인**: Claude 도움말은 Research를 켜도 작동하지 않는 경우가 있다고 안내해요.
+- **해결**: "연구 도구를 사용해서 조사해 줘"처럼 명시하세요. 구글 연동 자료까지 보고 싶으면 "내 Drive/Gmail 자료도 찾아 줘"라고 지시하세요.
+
+### 한도가 금방 줄어요
+
+- **원인**: 웹 검색과 Research는 자료를 많이 가져와서 사용량을 더 쓰기 때문이에요.
+- **해결**: 필요 없는 대화에서는 검색을 끄고, 사실 확인은 일반 검색과 나눠 쓰세요.
+
+## 실전 팁
+
+- 질문에 **기간, 지역, 원하는 출처 종류**(공식 기관, 보도자료 등)를 넣으세요.
+- 같은 질문을 두 서비스에 넣고 **인용 출처가 겹치는지** 보면 신뢰도 가늠에 도움이 돼요.
+- 의료, 법률, 세금 같은 판단은 AI 요약이 아니라 해당 기관 원문에서 확인하세요.
+- 회사 정보는 질문에 그대로 넣지 마세요. [개인정보 지키기](/basics/05-privacy-safety/)를 먼저 읽어 보세요.
+
+## 다음에 볼 튜토리얼
+
+- [5. Claude·ChatGPT·Gemini 비교](/chat/05-compare-assistants/) — 가격과 정책까지 비교
+- [C10. 리서치](/claude/c10-research/) — Claude 웹 검색과 Research 자세히
+- [AI 답변 믿어도 될까: 사실 확인하는 법](/basics/04-fact-checking/) — 출처 검증 순서
+- [21. NotebookLM으로 공부·정리](/chat/21-notebooklm/) — 내 자료만 근거로 답하기
+- [사무직 가이드](/roles/office/) — 업무에서 조사에 AI 쓰기
+- [마케터 가이드](/roles/marketer/) — 시장·경쟁 조사에 AI 쓰기
