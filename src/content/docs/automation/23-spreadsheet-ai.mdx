@@ -1,0 +1,240 @@
+---
+title: "엑셀·구글 시트에 AI 붙이기: Copilot·Gemini·Claude"
+description: "Excel의 Copilot, Google Sheets의 Gemini, Excel용 Claude 애드인으로 표 정리·수식·요약·오류 추적을 맡기는 방법과 도구별 차이, 한국어 지원, 주의점을 정리한 참고서"
+sidebar:
+  label: "23. 엑셀·시트에 AI 붙이기"
+level: practical
+category: automation
+tools: ["Microsoft Copilot", "Excel", "Google Sheets", "Gemini", "Claude"]
+duration: "30분"
+prerequisites:
+  - "Excel 또는 Google Sheets 계정 (AI 기능이 포함된 구독 또는 관리자 허용 필요)"
+  - "연습용 가상 데이터가 든 표 (실제 고객·급여 정보는 쓰지 마세요)"
+lastVerified: 2026-10-14
+sources:
+  - title: "Get started with Copilot in Excel (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/excel/copilot/get-started-with-copilot-in-excel"
+  - title: "Get data insights with Copilot in Excel (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/office/identify-insights-with-copilot-in-excel-52d97339-86c0-431c-b46c-e7b07b2898dd"
+  - title: "Frequently asked questions about Copilot in Excel (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/excel/copilot/frequently-asked-questions-about-copilot-in-excel"
+  - title: "COPILOT Function (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/excel/functions/copilot-function"
+  - title: "Frequently asked questions about Copilot in Microsoft 365 subscriptions (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/microsoft-365-copilot/frequently-asked-questions-about-copilot-in-microsoft-365-subscriptions"
+  - title: "Collaborate with Gemini in Google Sheets (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/14356410?hl=en"
+  - title: "Use the AI function in Google Sheets (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/15877199?hl=en"
+  - title: "Supported languages for Google Workspace with Gemini (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/14925782?hl=en"
+  - title: "Use Claude for Excel (Claude 도움말)"
+    url: "https://support.claude.com/en/articles/12650343-use-claude-for-excel"
+  - title: "Create and edit files with Claude (Claude 도움말)"
+    url: "https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- **Excel**에서는 오른쪽 아래 **Copilot** 아이콘으로 사이드 창을 열어요. 편집(Edit)·계획(Plan)·채팅(Chat) 세 모드가 있고, 기본은 편집 모드예요(2026-10-14 기준).
+- **Google Sheets**에서는 오른쪽 위 **Ask Gemini** 사이드 패널과, 셀 안에서 쓰는 **`=AI()`** 함수가 있어요. 둘 다 자격 있는 Workspace 또는 Google AI 요금제가 필요하다고 안내돼요.
+- **Claude**는 Excel용 애드인(Pro·Max·Team·Enterprise 요금제)이 있어요. 별도로, 대화 속에서 Excel 파일을 만드는 기능은 Free를 포함한 모든 사용자에게 제공된다고 안내돼요.
+- Excel의 `=COPILOT()` 함수는 2026-09-14부터 더 이상 쓸 수 없어요. 옛 블로그의 설명을 그대로 따라 하지 마세요.
+- 어느 도구든 **숫자와 수식은 직접 검산**하세요. 세 도구 모두 공식 문서에서 오류 가능성을 안내해요.
+</Summary>
+
+<Aside type="caution" title="가격은 이 튜토리얼에서 다루지 않아요">
+Microsoft 365 Copilot과 Google Workspace의 요금은 자주 바뀌고, 공식 요금제 페이지(microsoft.com)는 이번 확인에서 접근이 막혀 읽지 못했어요. 한국 원화 가격도 확인하지 못했어요. 구독 전에 각 공식 요금제 페이지에서 직접 확인하세요. Claude 요금은 [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/)에 정리돼 있어요.
+</Aside>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 내가 쓰는 스프레드시트(Excel 또는 Google Sheets)에서 **어떤 AI 기능을 어디서 여는지** 알 수 있어요.
+- 표에 대해 질문하고, **합계·비율 같은 수식 열**을 AI로 추가할 수 있어요.
+- 후기·설문 같은 **긴 텍스트를 분류·요약**해서 열로 받을 수 있어요.
+- 복잡한 수식을 **설명**받고, 오류의 원인을 **추적**할 수 있어요.
+- 상황에 맞는 도구를 고르고, 결과를 검증하는 습관을 가질 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **Copilot in Excel** | Excel 안에 들어 있는 Microsoft의 AI예요. 표·차트·피벗테이블·수식 같은 Excel 기능으로 요청을 처리하고, 결과를 편집 가능한 상태로 남겨요. |
+| **편집 / 계획 / 채팅 모드** | 편집은 워크북을 직접 고쳐요. 계획은 먼저 계획을 보여 주고 승인을 받아요. 채팅은 답변만 하고 워크북은 바꾸지 않아요. |
+| **Gemini in Sheets** | Google Sheets 사이드 패널(Ask Gemini)에서 표 만들기, 수식, 분석, 차트 등을 요청하는 기능이에요. |
+| **AI 함수(`=AI()`)** | Sheets 셀에 직접 쓰는 함수예요. `=Gemini()`로도 쓸 수 있어요. 프롬프트와 선택적 범위를 받아 텍스트 결과를 돌려줘요. |
+| **Claude for Excel** | Excel에 설치하는 Claude 애드인이에요. 셀 단위 근거를 달아 답하고, 수식 관계를 유지하며 값을 바꿔요. |
+| **프롬프트 주입(prompt injection)** | 외부에서 받은 파일에 숨은 지시문이 AI를 속이는 공격이에요. Claude for Excel 문서가 직접 경고해요. |
+
+<Aside type="note" title="확인되지 않은 점 (2026-10-14 기준)">
+Claude의 Google Sheets 전용 애드온은 검색에서 이름이 보였지만, 해당 공식 도움말 페이지를 열어 보니 페이지가 없다고 나와 내용을 확인하지 못했어요. 그래서 이 튜토리얼에서는 Sheets에서 Claude를 쓰는 방법으로 **대화에서 파일을 만들고 고치는 방식**만 다뤄요. Claude의 Sheets 연동은 공식 문서에서 확인하지 못했어요.
+</Aside>
+
+## 단계별 따라하기
+
+연습용 데이터로 시작하세요. 월·지역·제품·매출·비고 열이 있는 20~30행 정도의 가상 매출표면 충분해요.
+
+<Checklist items={[
+  '내 계정에서 AI 기능(Copilot/Gemini/Claude)이 보이는지 확인했어요',
+  '표에 대해 질문해서 요약과 이상값을 받아 봤어요',
+  '수식 열 하나를 AI로 추가하고 직접 검산했어요',
+  '후기 같은 긴 텍스트를 분류 열로 만들어 봤어요',
+  '복잡한 수식을 AI에게 설명받았어요',
+  '변경 내용을 원본과 대조하고 저장했어요',
+]} />
+
+<Steps>
+
+1. **내 환경에서 AI가 켜져 있는지 확인하기**
+
+   - **Excel**: 오른쪽 아래의 Copilot 아이콘을 찾아요. 안 보이면 구독에 포함되지 않았거나 조직 설정으로 제한됐을 수 있다고 공식 문서가 안내해요. 개인 구독(Personal·Family·Premium)에서는 Copilot in Excel이 AutoSave가 켜진, 즉 OneDrive에 저장된 파일에서만 동작한다고 공식 FAQ에 적혀 있어요.
+   - **Google Sheets**: 오른쪽 위에 **Ask Gemini**가 보이는지 확인해요. 자격 있는 Google Workspace 또는 Google AI 요금제가 필요하고, 일부 기능은 시범 프로그램(Workspace Experiments)으로도 제공된다고 안내돼요.
+   - **Claude**: Excel 애드인은 Pro·Max·Team·Enterprise 요금제 대상이에요. 설치 절차는 아래 단계 6에서 다뤄요.
+
+   <ScreenshotPlaceholder caption="Excel 오른쪽 아래의 Copilot 아이콘과 열린 사이드 창" officialUrl="https://support.microsoft.com/en-us/excel/copilot/get-started-with-copilot-in-excel" />
+
+2. **표에 대해 질문하기: 요약과 이상값**
+
+   Excel은 Copilot 창에, Sheets는 Ask Gemini 패널에 질문해요. 열 이름을 직접 적을수록 정확하다고 Microsoft 문서가 팁으로 안내해요. 결과를 피벗테이블처럼 특정 형식으로 받고 싶으면 프롬프트에 그렇게 적으세요.
+
+   <PromptBox>
+   이 시트의 데이터를 분석해 줘. 지역별 매출 합계를 구하고, 매출이 가장 높은 지역과 가장 낮은 지역을 알려 줘. 이상값이 있으면 어느 행인지도 알려 줘. 어떤 열을 근거로 계산했는지도 설명해 줘.
+   </PromptBox>
+
+3. **수식 열 추가하기**
+
+   Copilot in Excel은 기존 데이터로 새 열이나 행을 만들고 각 수식이 어떻게 동작하는지 설명해 줘요. 합계, 이익률, 기간, 요약 행에 잘 맞아요. 공식 문서에는 "각 제품의 이익률을 계산하는 열 추가" 같은 예시가 있어요.
+
+   <PromptBox>
+   매출 열과 원가 열을 이용해서 제품별 이익률(%)을 계산하는 열을 새로 추가해 줘. 사용한 수식도 설명해 줘.
+   </PromptBox>
+
+4. **긴 텍스트 분류·요약하기**
+
+   Copilot in Excel은 설문·후기 같은 큰 텍스트를 요약하고 주제와 감정을 찾아 새 열로 넣을 수 있어요. 결과의 위 첨자 숫자에 마우스를 올리면 근거가 된 원본 데이터를 확인할 수 있다고 안내돼요.
+
+   Sheets에서는 `=AI()` 함수로 셀마다 분류를 할 수 있어요. 공식 예시는 `=AI("Categorize the customer inquiry as a compliment, exchange request, or return request.",C2)`처럼 프롬프트와 범위를 함께 쓰는 형식이에요. 셀에 함수를 입력한 뒤 **Generate and Insert**를 눌러요.
+
+   <PromptBox>
+   C열의 고객 후기를 읽고 "칭찬 / 불만 / 문의" 중 하나로 분류해서 D열에 넣어 줘. 가장 많이 나온 불만 주제 3가지도 요약해 줘.
+   </PromptBox>
+
+   <Aside type="caution" title="AI 함수는 계정에 따라 안 보일 수 있어요">
+   Google의 AI 함수 도움말에는 상단에 "자격 있는 Workspace 또는 Google AI 요금제가 필요하다"는 안내와, 본문에 "Workspace Experiments 및 베타 프로그램 사용자에게만 제공된다"는 안내가 함께 있어요(2026-10-14 기준). 두 문구가 같은 페이지에서 다르게 읽히니, 내 계정에서 되는지는 직접 확인하세요. "AI function not available"이 뜨면 프로그램 참여 여부, 관리자 설정, 언어 설정이 원인일 수 있다고 안내돼요.
+   </Aside>
+
+5. **복잡한 수식 설명받기**
+
+   물려받은 파일의 긴 수식은 AI가 잘 풀어 줘요. 셀을 선택하고 요청하거나 셀 주소를 적어 보세요. 공식 예시는 "Explain the formula in cell D3"예요.
+
+   <PromptBox>
+   D3 셀의 수식이 무슨 일을 하는지 단계별로 설명해 줘. 그리고 오류가 날 수 있는 경우가 있으면 알려 줘.
+   </PromptBox>
+
+6. **Claude: Excel 애드인 설치하고 쓰기**
+
+   Claude for Excel은 Microsoft AppSource의 Claude for Microsoft 365 목록에서 **Get it now**로 설치하고, Excel에서 애드인을 활성화한 뒤 Claude 계정으로 로그인해요. 지원 환경은 Excel 웹, Microsoft 365 구독 Windows(빌드 16.0.13127.20296 이상), Mac(16.46 이상, 빌드 21011600 이상)이에요. Excel 2016·2019 영구 라이선스, iPad, Android는 지원하지 않아요(2026-10-14 기준).
+
+   <FlowSteps title="Claude for Excel 설치하기" officialUrl="https://support.claude.com/en/articles/12650343-use-claude-for-excel" steps={[
+     { where: 'Microsoft AppSource', action: 'Claude for Microsoft 365 목록에서 Get it now 누르기', result: '애드인 설치' },
+     { where: 'Excel', action: '애드인 활성화 (Mac: Tools > Add-ins, Windows: Home > Add-ins)', result: '사이드 창 열림' },
+     { where: '사이드 창', action: 'Claude 계정으로 로그인', result: '대화 시작 가능' },
+   ]} />
+
+   회사 관리자가 Microsoft 365 관리 센터(Admin Center)에서 배포할 수도 있어요. 이 경우 관리 센터의 설정(Settings) > 조직 설정(Org Settings)에서 Office Store 접근을 허용해야 한다고 안내돼요.
+
+   <PromptBox>
+   C42 셀의 매출 숫자가 어떻게 계산되는지 단계별로 알려 줘. 어떤 가정이 총이익률 예측을 좌우하는지도 알려 줘.
+   </PromptBox>
+
+   Claude for Excel은 답변에 셀 단위 근거(클릭하면 해당 셀로 이동)를 달고, 값을 바꿀 때 수식 관계를 유지해요. 덮어쓰기 전에 경고하고, 위험한 작업은 실행 전에 확인을 물어요.
+
+7. **파일 자체를 Claude에게 만들게 하기 (Excel 애드인 없이)**
+
+   Claude 대화에서 "월별 지출 추적용 엑셀 파일 만들어 줘"처럼 요청하면 .xlsx 파일을 만들어 내려받게 해 줘요. 이 기능은 Free·Pro·Max·Team·Enterprise 모든 사용자가 웹, 데스크톱, 모바일에서 쓸 수 있다고 공식 문서(2026-08-06 갱신본)에 적혀 있어요. Free·Pro·Max에서는 설정(Settings) > 기능(Capabilities)에서 **Code execution and file creation**을 켜요. 파일당 최대 크기는 업로드·다운로드 모두 30MB예요. CSV·TSV 업로드 분석도 가능하고, 만든 파일은 Google Drive에 바로 저장할 수도 있다고 안내돼요. Google Sheets에서 쓰려면 Drive에 저장한 .xlsx를 시트로 열어 쓰는 방식이 되겠지만, 이 변환 절차 자체는 Claude 문서에서 확인하지 못했어요.
+
+8. **결과 검증하고 저장하기**
+
+   AI가 바꾼 셀을 하나씩 훑고, 합계는 `SUM`처럼 단순 수식으로 다시 계산해서 비교하세요. Copilot은 변경을 저장하면 파일에 접근할 수 있는 모든 사람(공동 편집자 포함)에게 보인다고 하니, 공유 파일에서는 복사본으로 먼저 연습하세요. 되돌리려면 실행 취소나 이전 버전 보기를 쓰면 돼요.
+
+</Steps>
+
+## 빠른 참조표
+
+### 도구별 한눈에 비교 (2026-10-14 기준, 공식 도움말)
+
+| 항목 | Copilot in Excel | Gemini in Sheets | Claude for Excel |
+| --- | --- | --- | --- |
+| 여는 곳 | 오른쪽 아래 Copilot 아이콘 | 오른쪽 위 Ask Gemini | Excel의 애드인 사이드 창 |
+| 대표 기능 | 시트 편집, 수식·차트·피벗 생성, 인사이트, 웹 검색 | 표·수식·분석·차트 요청, 피벗·서식 같은 작업 | 셀 근거가 있는 답변, 가정 변경, 오류 추적, 모델 생성 |
+| 셀 안 함수 | `=COPILOT()`는 2026-09-14부터 종료 | `=AI()` / `=Gemini()` (텍스트만 반환) | 없음 |
+| 필요 조건 | Copilot이 포함된 구독 또는 라이선스 | 자격 있는 Workspace 또는 Google AI 요금제 | Pro·Max·Team·Enterprise 요금제 |
+| 한국어 | 프롬프트 지원 언어 목록에 한국어 포함 | 사이드 패널과 AI 함수의 지원 언어에 한국어 포함 | 한국어 지원 여부를 이 문서에서 확인하지 못함 |
+| 주요 제한 | 영어 중심 학습, 자동 계산 모드에서만 편집 | `.xlsx`는 Sheets로 변환해야 가장 잘 동작 | 데이터 테이블, 매크로·VBA 미지원 |
+
+### 플랫폼별 Copilot in Excel 모드
+
+| 플랫폼 | 지원 모드 |
+| --- | --- |
+| Windows·Mac·웹 | 편집, 채팅, 계획 |
+| iPad | 채팅, 계획 (편집은 순차 제공 중) |
+| iPhone | 채팅 (편집은 순차 제공 중) |
+| Android | 채팅 |
+
+### 알아둘 제한
+
+| 항목 | 내용 |
+| --- | --- |
+| Copilot 편집 조건 | 계산 옵션이 자동(Automatic)이어야 해요. SharePoint에서 체크아웃된 파일은 Windows·Mac에서 안 돼요. |
+| Copilot 개인 구독 | AutoSave가 켜진 OneDrive 저장 파일에서만 동작. Family·Premium의 AI 기능은 구독 소유자만 쓸 수 있어요. |
+| AI 함수 | 전체 시트나 Drive 파일을 보지 못해요. 필요한 데이터는 범위로 넘겨야 해요. 실행 취소가 안 돼 다시 생성해야 해요. 다른 함수 안에 넣어 쓸 수 없어요. 한 번에 선택된 셀 350개까지만 생성돼요. |
+| Claude for Excel | 최종 고객 납품물을 사람 검토 없이 쓰거나, 감사용 계산을 검증 없이 쓰는 것을 권장하지 않아요. |
+
+## 자주 막히는 지점
+
+### Copilot 아이콘이 안 보여요
+
+- **원인**: 구독에 Copilot이 없거나, 조직 설정으로 제한됐거나, 앱 버전·계정 종류 때문일 수 있어요.
+- **해결**: 관리자에게 문의하거나 Microsoft 365 계정 설정에서 라이선스를 확인하세요. 개인 구독이라면 파일이 OneDrive에 자동 저장 중인지도 보세요. 공식 문서는 화면에서 "M365 Copilot (Premium)"이나 "(Basic)" 표시로 내 경험을 알아볼 수 있다고 안내해요.
+
+### 예전 글에서 본 `=COPILOT()`이 `#NAME?`이에요
+
+- **원인**: 이 함수는 2026-09-14부터 Excel에서 제공되지 않아요. 이미 계산된 값은 캐시로 남지만, 다시 계산되면 `#NAME?` 오류가 나요.
+- **해결**: Copilot 창에서 같은 일을 문장으로 요청하세요. 공식 문서는 "A2:A20의 의견을 요약해 줘"처럼 쓰는 예를 보여 줘요.
+
+### Sheets에서 "AI function not available"이 떠요
+
+- **원인**: 프로그램 미참여, 요금제 미포함, 관리자 설정 또는 언어 설정일 수 있다고 공식 도움말에 안내돼요.
+- **해결**: 관리자에게 문의하고, 대신 Ask Gemini 사이드 패널을 써 보세요. 한국어는 두 기능 모두 공식 언어 목록에 있어요.
+
+### AI가 바꾼 표가 엉뚱해요
+
+- **원인**: 질문이 모호하거나, 한국어 프롬프트에서 정확도가 떨어졌을 수 있어요. Microsoft는 Copilot이 주로 영어 자료로 학습돼 다른 언어에서는 성능이 낮을 수 있다고 밝혀요.
+- **해결**: 열 이름과 범위를 구체적으로 적고, "먼저 계획만 보여 줘"(Excel 계획 모드)로 시작하세요. 마음에 안 들면 실행 취소하세요.
+
+### 외부에서 받은 엑셀 파일을 AI에게 열어도 되는지 모르겠어요
+
+- **원인**: 외부 파일에 숨은 지시문이 AI를 속일 수 있어요(프롬프트 주입). Claude for Excel 문서가 직접 경고해요.
+- **해결**: 신뢰할 수 있는 파일에만 쓰고, 복사본으로 시작하고, AI가 위험한 작업의 확인을 물으면 꼼꼼히 읽으세요.
+
+## 실전 팁
+
+- **먼저 복사본에서 하세요.** 특히 공유 파일은 AI의 변경이 다른 사람에게 바로 보일 수 있어요.
+- **계산은 AI에게, 검산은 사람이.** AI가 만든 수식을 `SUM`·`AVERAGE`로 직접 확인하세요. 공식 문서도 금융·법률·의료 같은 민감한 판단에는 쓰지 말라고 안내해요.
+- **프롬프트에 열 이름을 쓰세요.** 어느 열을 어떻게 계산할지 적을수록 정확해요. 요령은 [프롬프트 작성법](/claude/c04-prompting/)과 같아요.
+- **회사 데이터는 승인된 도구로만 쓰세요.** 개인 계정에 업무 파일을 올리기 전에 [개인정보·회사 정보 안전하게 지키며 쓰기](/basics/05-privacy-safety/)를 읽어 보세요.
+- **반복 작업은 스킬로.** Claude는 반복 작업을 스킬로 묶을 수 있어요. [C8. 스킬](/claude/c08-skills/) 참고.
+
+## 다음에 볼 튜토리얼
+
+- [24. Microsoft 365 Copilot으로 Word·PowerPoint·Outlook 업무하기](/automation/24-m365-copilot/) — 같은 Copilot을 문서·발표·메일에서 쓰는 법
+- [19. Google Workspace의 Gemini](/automation/19-google-workspace-gemini/) — Gmail·Docs·Sheets의 Gemini 전반
+- [3. 데이터 분석 맡기기](/chat/03-data-analysis/) — 파일을 대화형 AI에 올려 분석하는 방법
+- [사무·기획·관리직을 위한 AI 활용 가이드](/roles/office/) — 엑셀 정리 같은 반복 업무를 직무 관점에서 보기
