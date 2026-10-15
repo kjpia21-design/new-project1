@@ -7,7 +7,7 @@ import NewsItem from '../../components/NewsItem.astro';
 
 Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 모았어요. 모델 출시, 가격, Claude Code와 앱의 새 기능처럼 실제로 쓰는 분에게 의미 있는 것만 골랐고, 사소한 버그 수정은 뺐어요. 공식 채널을 점검해 계속 갱신해요.
 
-**마지막 업데이트: 2026-10-11**
+**마지막 업데이트: 2026-10-15**
 
 ## 모니터링하는 공식 채널
 
@@ -18,6 +18,18 @@ Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 �
 - [Anthropic 뉴스](https://www.anthropic.com/news): 정책, 파트너십, 모델 발표
 
 ## 2026년 10월
+
+<NewsItem date="10월 14일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
+Claude Code 2.1.299에서 대화가 200K 토큰을 넘은 채 약 54분 동안 쉬면, 프롬프트 캐시가 만료되기 전에 자동으로 압축해요. `"idleCompaction": false`로 끌 수 있어요. 또 MCP 허용 규칙은 이름이 정확히 같은 서버에만 적용돼서, 서버 전체를 허용하려면 `mcp__<서버>__*` 형태로 써야 해요.
+</NewsItem>
+
+<NewsItem date="10월 14일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c12-claude-code-overview/" tutorialLabel="C12 Claude Code 개요">
+2.1.300부터 `claude remote-control`에 `--sandbox`, `--no-sandbox` 옵션을 쓰면 오류로 종료돼요. 샌드박스는 설정의 `sandbox.enabled`로 정해요. 큰 요청은 gzip으로 보내고, `CLAUDE_CODE_GZIP_REQUEST_BODIES=0`으로 끌 수 있어요.
+</NewsItem>
+
+<NewsItem date="10월 14일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="개발자 심화 Managed Agents">
+OpenTelemetry 내보내기(베타)가 생겼어요. Messages API 요청과 Managed Agents 세션을 쓰던 모니터링 도구에서 추적할 수 있어요. 또 Managed Agents 예약 배포(scheduled deployments)를 AWS의 Claude Platform에서도 쓸 수 있어요.
+</NewsItem>
 
 <NewsItem date="10월 9일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="개발자 심화 Managed Agents">
 Managed Agents에 동적 워크플로(베타)가 생겼어요. 에이전트가 직접 여러 에이전트로 이뤄진 워크플로를 작성하고 실행해서, 복잡한 작업을 나눠 맡기기 쉬워져요.
