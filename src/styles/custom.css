@@ -123,3 +123,8 @@ starlight-theme-select select { min-width: 6.5rem; width: max-content; text-over
   border-radius: 999px;
 }
 .glossary .sl-heading-wrapper:has(h2) { margin-top: 1rem; }
+
+/* 전체 목차·튜토리얼 검색: 모바일 보정 */
+@media (max-width: 30rem) {
+  .tutorial-grid .search input { max-width: none; }
+}
