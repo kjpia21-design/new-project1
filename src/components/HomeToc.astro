@@ -10,35 +10,58 @@ const byDir = (dir: string) =>
     .sort((a, b) => (a.data.sidebar?.order ?? 999) - (b.data.sidebar?.order ?? 999) || a.id.localeCompare(b.id));
 const chips = (dir: string) => byDir(dir).map((e) => ({ label: e.data.sidebar?.label ?? e.data.title, href: entryUrl(e.id) }));
 
-const groups = [
+const L = (label: string, path: string) => ({ label, href: url(path) });
+
+// 사이드바 6개 묶음과 같은 구성. 칩은 콘텐츠 컬렉션에서 가져와 항상 최신 상태를 유지한다.
+const sections = (items: { title: string; dir: string }[]) =>
+  items.map((s) => ({ title: s.title, href: url(`/${s.dir}/`), chips: chips(s.dir) }));
+
+const groups: { title: string; href?: string; chips?: { label: string; href: string }[]; subs?: { title: string; href: string; chips: { label: string; href: string }[] }[] }[] = [
   { title: '시작하기', chips: [
-    { label: '입문자 시작점', href: url('/start/beginner/') },
-    { label: '실무자 시작점', href: url('/start/practical/') },
-    { label: '고급 사용자 시작점', href: url('/start/advanced/') },
-    { label: 'AI 용어 사전', href: url('/start/glossary/') },
-    { label: '바로 쓰는 프롬프트 모음', href: url('/start/prompts/') },
+    L('입문자 시작점', '/start/beginner/'), L('실무자 시작점', '/start/practical/'),
+    L('고급 사용자 시작점', '/start/advanced/'), L('직무별 가이드', '/roles/'),
   ] },
-  { title: '직무별 AI 활용', href: url('/roles/'), chips: chips('roles') },
   { title: 'AI 첫걸음', href: url('/basics/'), chips: chips('basics') },
-  { title: 'Claude 완전 정복', href: url('/claude/'), chips: chips('claude') },
-  { title: 'Claude 최신 소식', href: url('/claude-news/'), chips: [] },
-  { title: '화제의 AI 에이전트', href: url('/agents/'), chips: chips('agents') },
-  { title: '개발자 심화', href: url('/dev/'), chips: chips('dev') },
-  { title: '대화형 AI 기본기', href: url('/chat/'), chips: chips('chat') },
-  { title: '코딩·에이전트', href: url('/coding/'), chips: chips('coding') },
-  { title: '이미지·영상·음성', href: url('/media/'), chips: chips('media') },
-  { title: '업무 자동화·생산성', href: url('/automation/'), chips: chips('automation') },
-  { title: '전체 튜토리얼', href: url('/tutorials/'), chips: [] },
+  { title: 'Claude 완전 정복', href: url('/claude/'), chips: [L('Claude 최신 소식', '/claude-news/'), ...chips('claude')] },
+  { title: '분야별 튜토리얼', subs: sections([
+    { title: '대화형 AI 기본기', dir: 'chat' },
+    { title: '코딩·에이전트', dir: 'coding' },
+    { title: '이미지·영상·음성', dir: 'media' },
+    { title: '업무 자동화·생산성', dir: 'automation' },
+    { title: '화제의 AI 에이전트', dir: 'agents' },
+    { title: '개발자 심화', dir: 'dev' },
+  ]) },
+  { title: '직무별 AI 활용', href: url('/roles/'), chips: chips('roles') },
+  { title: '참고 자료', chips: [
+    L('바로 쓰는 프롬프트 모음', '/start/prompts/'), L('AI 용어 사전', '/start/glossary/'),
+    L('전체 튜토리얼', '/tutorials/'), L('최근 업데이트', '/updates/'), L('소개', '/about/'),
+  ] },
 ];
 ---
 <div class="toc not-content">
   {groups.map((g) => (
-    <section class="grp">
+    <section class:list={['grp', { wide: g.subs }]}>
       <h3>{g.href ? <a href={g.href}>{g.title}</a> : g.title}</h3>
-      {g.chips.length > 0 && (
-        <ul>
-          {g.chips.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
-        </ul>
+      {g.chips && (g.chips.length > 6 ? (
+        <details class="fold" open>
+          <summary>{g.chips.length}개 보기</summary>
+          <ul>{g.chips.map((c) => <li><a href={c.href}>{c.label}</a></li>)}</ul>
+        </details>
+      ) : (
+        <ul>{g.chips.map((c) => <li><a href={c.href}>{c.label}</a></li>)}</ul>
+      ))}
+      {g.subs && (
+        <div class="subs">
+          {g.subs.map((s) => (
+            <div class="sub">
+              <h4><a href={s.href}>{s.title}</a></h4>
+              <details class="fold" open>
+                <summary>{s.chips.length}개 보기</summary>
+                <ul>{s.chips.map((c) => <li><a href={c.href}>{c.label}</a></li>)}</ul>
+              </details>
+            </div>
+          ))}
+        </div>
       )}
     </section>
   ))}
@@ -47,10 +70,16 @@ const groups = [
 <style>
   .toc { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); align-items: start; }
   .grp { padding: 0.9rem 1rem 1rem; border-radius: 16px; background: var(--ai-card); border: 1px solid var(--sl-color-gray-5); box-shadow: var(--ai-shadow); }
+  .grp.wide { grid-column: 1 / -1; }
   h3 { margin: 0 0 0.1rem; font-size: var(--sl-text-base); font-weight: 800; }
-  h3 a { color: var(--sl-color-white); text-decoration: none; }
-  h3 a:hover { color: var(--sl-color-accent-high); }
-  h3 a::after { content: ' →'; color: var(--ai-coral); }
+  h4 { margin: 0; font-size: var(--sl-text-sm); font-weight: 700; }
+  h3 a, h4 a { color: var(--sl-color-white); text-decoration: none; }
+  h3 a:hover, h4 a:hover { color: var(--sl-color-accent-high); }
+  h3 a::after, h4 a::after { content: ' →'; color: var(--ai-coral); }
+  .subs { display: grid; gap: 0.9rem 1.2rem; margin-top: 0.6rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); align-items: start; }
+  .sub { padding-top: 0.6rem; border-top: 1px dashed var(--sl-color-gray-5); }
+  summary { cursor: pointer; margin-top: 0.35rem; padding: 0.2rem 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); }
+  summary:hover { color: var(--sl-color-accent-high); }
   ul { list-style: none; margin: 0.55rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
   li { margin: 0; padding: 0; }
   li a {
@@ -59,3 +88,10 @@ const groups = [
   }
   li a:hover { border-color: var(--ai-coral); color: var(--sl-color-accent-high); }
 </style>
+
+<script>
+  // JS가 없으면 모두 펼쳐진 채로 보이고, 좁은 화면에서는 접어서 시작한다.
+  if (matchMedia('(max-width: 63.99rem)').matches) {
+    document.querySelectorAll<HTMLDetailsElement>('.toc details.fold').forEach((d) => (d.open = false));
+  }
+</script>

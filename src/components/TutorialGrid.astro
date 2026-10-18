@@ -18,6 +18,10 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
 <div class="tutorial-grid not-content" data-filterable={filters ? '' : undefined}>
   {filters && (
     <div class="filters">
+      <div class="search">
+        <label for="tg-q">제목·도구로 찾기</label>
+        <input id="tg-q" type="search" placeholder="예: 클로드, 엑셀, MCP" autocomplete="off" />
+      </div>
       <div class="group" role="group" aria-label="수준 필터" data-group="level">
         <span class="group-label">수준</span>
         <button type="button" data-value="" aria-pressed="true">전체</button>
@@ -36,7 +40,7 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
   ) : (
     <ul class="cards">
       {items.map((e) => (
-        <li class:list={['card', { soon: e.data.status === 'draft' }]} data-level={e.data.level} data-category={e.data.category}>
+        <li class:list={['card', { soon: e.data.status === 'draft' }]} data-level={e.data.level} data-category={e.data.category} data-search={[e.data.title, e.data.description, ...(e.data.tools ?? [])].filter(Boolean).join(' ').toLowerCase()}>
           <a href={entryUrl(e.id)}>
             <div class="top">
               <Illustration name={e.data.category!} size={40} />
@@ -61,6 +65,13 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
 
 <style>
   .filters { display: grid; gap: 0.6rem; margin-bottom: 1.25rem; }
+  .search { display: grid; gap: 0.25rem; }
+  .search label { font-weight: 700; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); }
+  .search input {
+    width: 100%; max-width: 28rem; box-sizing: border-box; padding: 0.5rem 0.9rem; font: inherit; font-size: var(--sl-text-sm);
+    border: 1px solid var(--sl-color-gray-4); border-radius: 999px; background: var(--sl-color-bg); color: var(--sl-color-white);
+  }
+  .search input:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 2px; }
   .group { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
   .group-label { font-weight: 700; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); min-width: 2.5rem; }
   .group button {
@@ -100,6 +111,7 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
   class Filterable {
     constructor(root: HTMLElement) {
       const cards = Array.from(root.querySelectorAll<HTMLElement>('.card'));
+      const input = root.querySelector<HTMLInputElement>('.search input');
       const state: Record<string, string> = { level: '', category: '' };
       const params = new URLSearchParams(location.search);
       const allowed: Record<string, string[]> = {
@@ -112,9 +124,10 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
       }
 
       const apply = () => {
+        const q = (input?.value ?? '').trim().toLowerCase();
         let shown = 0;
         for (const c of cards) {
-          const ok = (!state.level || c.dataset.level === state.level) && (!state.category || c.dataset.category === state.category);
+          const ok = (!state.level || c.dataset.level === state.level) && (!state.category || c.dataset.category === state.category) && (!q || (c.dataset.search ?? '').includes(q));
           c.hidden = !ok;
           if (ok) shown++;
         }
@@ -137,6 +150,10 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
           apply();
         }),
       );
+      input?.addEventListener('input', apply);
+      input?.addEventListener('keydown', (ev) => {
+        if (ev.key === 'Escape' && input.value) { input.value = ''; apply(); }
+      });
       apply();
     }
   }
