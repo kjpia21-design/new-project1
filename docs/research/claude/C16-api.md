@@ -87,3 +87,6 @@ Platform 릴리스 노트를 직접 열어 확인한 항목(https://platform.cla
 - Files API·Agent Skills GA(08-19), 베타 헤더 불필요. 컴퓨터 툴셋 GA·브라우저 툴셋(08-19), SDK 클래스(10-07, 베타). 온디맨드 compaction(09-14, 베타). Managed Agents 동적 워크플로(10-09, 베타). Models API capabilities(10-01~06).
 - 출처 추가: 릴리스 노트, Model deprecations.
 - 미확인: Fable 5.1의 thinking 제약(릴리스 노트에 언급 없어 본문에 쓰지 않음). 각 기능의 상세 문서 본문은 열지 않음.
+
+## 2026-10-19 점검 반영
+- 모델 개요, rate limits, get-started, get-api-key, API 결제 도움말을 다시 읽음. 티어별 월 지출 상한(Start 500/Build 1,000/Scale 200,000 USD), Start 티어 Sonnet 5.5 한도, Create key 절차 변동 없음. 결제 도움말: 크레딧은 구매일로부터 1년 뒤 만료(연장 불가), 환불 불가, 최소/최대 구매 금액은 문서에 없음 -> 본문 반영.

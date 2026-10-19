@@ -40,3 +40,6 @@ Aside: "확인 중인 튜토리얼" 제거 대신 "Canva 공식 도움말 원문
 
 ## 7단계 재점검 (2026-10-12)
 - Google 도움말 4건·소개 페이지·구독 페이지·OpenAI deprecations 재열람. 변경 없음(Gemini Omni 1.1 Flash 10초, 18세 이상, 한도 5시간/주간, 가격 Plus $4.99/Pro $19.99/Ultra $99.99부터(+$199.99 티어), Sora 2 API 2026-09-24 제거). Canva·openai.com은 403.
+
+## 재점검 (2026-10-19)
+- support.google.com/gemini 16126339(영상 생성), 16722517(검증), 16275805(한도·제공 국가), gemini.google/overview/video-generation, gemini.google/subscriptions를 다시 열었다. 변경: 소개 페이지가 모델명을 'Gemini Omni 1.1 Flash'(Veo 3.1을 대체, 10초 영상, 이미지 최대 5장)로 표기 → Aside에 모델명 추가. 그 밖에 한도(5시간 갱신·Plus 2배/Pro 4배/Ultra 5배 또는 20배), South Korea 제공 국가 목록, 가격($4.99/$19.99/$99.99부터), 검증 한도(영상 90초 미만·100MB, 하루 약 10회)는 동일. 구독 안내에 Google Flow Credits 항목이 새로 보이나 본문 범위 밖. Canva 도움말·openai.com·adobe.com은 계속 403이라 해당 부분은 미확인 유지.

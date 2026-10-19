@@ -38,3 +38,6 @@
 - Haiku 5.5: 100K 토큰 초과 프롬프트는 토큰당 요금이 더 비싸다고 model-config 문서에서 확인(본문 "부터" 설명 확정). 출처: https://code.claude.com/docs/en/model-config
 - Claude Code 최소 버전: model-config 문서는 Fable 5.1 v2.1.257, Opus 5.5 v2.1.280, Sonnet 5.5 v2.1.284, Haiku 5.5 v2.1.293. 고객센터 "Fable models on your plan"은 Fable 5.1 v2.1.255(Fable 5는 v2.1.170). 두 공식 문서의 숫자가 달라 본문에 둘 다 병기.
 - 모델 표(가격, ID, 퇴역일), Sonnet 4.5 퇴역(2026-11-30) 변동 없음. Haiku 4.5(`claude-haiku-4-5-20251001`)는 Active, "Not sooner than October 15, 2026".
+
+## 2026-10-19 점검 반영
+- 모델 개요·Model deprecations·Claude Code model-config를 다시 읽음. 모델 ID, 가격, 기본 effort, 퇴역 약속, Sonnet 4.5 퇴역(2026-11-30) 변동 없음. Haiku 4.5는 퇴역 'not sooner than 2026-10-15'로 표기됨(본문 미반영). 플랫폼 릴리스 노트 2026-10-15: Opus 5.5 fast mode가 research preview에서 벗어남(본문 미반영).

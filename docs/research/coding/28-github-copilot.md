@@ -32,3 +32,7 @@
 - https://docs.github.com/en/copilot/concepts/billing-and-usage/individuals/billing
 - https://docs.github.com/en/copilot/how-tos/copilot-in-your-ide/customize-copilot/configure-custom-instructions/add-repository-instructions-in-your-ide
 - (참고로 연 페이지) https://docs.github.com/en/copilot/get-started/quickstart — GitHub.com용 퀵스타트, 본문에는 인용하지 않음
+
+## 2026-10-19 재점검
+- docs.github.com 플랜 페이지의 원본(github/docs 저장소의 plans.md, model-supported-plans.yml)에서 체크 표시를 읽음: 에이전트 모드는 Free(제한적)·Student(서드파티 에이전트 제외)·Pro·Pro+·Max·Business·Enterprise 모두 포함. 콘텐츠 제외(content exclusion)는 개인 플랜(Free~Max)에는 없고 Business·Enterprise에 있음. Claude 모델: Pro는 Haiku 4.5/5.5, Sonnet 4.6/5/5.5. Pro+·Max·Business·Enterprise는 Opus 4.8/5/5.5와 Fable 5/5.1 포함(Max·Business·Enterprise는 Sonnet 4.6 제외). 본문의 "확인하지 못했어요" 문구를 이에 맞게 수정.
+- 가격·크레딧(Pro $10 1,000+500, Pro+ $39 3,900+3,100, Max $100 10,000+10,000, Business $19, Enterprise $39), 코드 완성 무료/Free 월 2,000회, 크레딧 소진 시 선택지, 매월 1일 00:00 UTC 초기화는 변경 없음. 한국 제공 여부는 여전히 문서에 없음.

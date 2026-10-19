@@ -11,7 +11,7 @@ prerequisites:
   - "C16. Claude API 시작하기 (API 키, ANTHROPIC_API_KEY, Python SDK 설치)"
   - "3. Claude Agent SDK로 나만의 에이전트 만들기 (에이전트·도구·권한 개념)"
   - "Python 3.10 이상과 터미널 (TypeScript 예제는 Node.js)"
-lastVerified: 2026-10-13
+lastVerified: 2026-10-19
 sources:
   - title: "Claude Managed Agents overview"
     url: "https://platform.claude.com/docs/en/managed-agents/overview"
@@ -33,6 +33,8 @@ sources:
     url: "https://code.claude.com/docs/en/agent-sdk/hosting"
   - title: "Models overview (모델 ID와 가격)"
     url: "https://platform.claude.com/docs/en/about-claude/models/overview"
+  - title: "Claude Platform release notes (web_fetch 제한)"
+    url: "https://platform.claude.com/docs/en/release-notes/overview"
 status: published
 ---
 
@@ -314,6 +316,7 @@ Managed Agents는 세션이 길게 이어지고 대화 기록, 샌드박스 상�
    - run의 에이전트는 모두 토큰을 써요. 작은 일에까지 run을 쓰게 하지 마세요.
    - 인라인 에이전트는 세션 에이전트와 같은 모델을 써요. 일부만 다른 모델로 돌리려면 에이전트를 따로 만들어 `workflows.predefined_agents`에 나열하세요(최대 20개).
    - `multiagent`가 설정된 에이전트는 다른 에이전트의 목록에 넣을 수 없어요(자기 자신 `{"type": "self"}`은 가능해요).
+   - `multiagent_20261001` 타입을 쓰면 `subagents`와 `workflows`가 **기본으로 켜져요**(2026-10-19 기준). 동적 워크플로가 필요 없다면 `{"workflows": {"type": "disabled"}}`로 꺼 두세요.
 
    `ma_workflow.py`로 저장해요.
 
@@ -445,6 +448,7 @@ run의 모델 요청은 조직의 Messages API 속도 제한에도 합산돼요.
 ### 웹 검색·가져오기가 아무 결과도 못 가져와요
 
 - **원인**: 환경이 `limited` 네트워킹인데 `allowed_hosts`에 호스트를 나열하지 않았어요. 이 목록은 웹 도구에도 적용돼요.
+- **원인 2**: 웹 가져오기(`web_fetch`)는 세션 대화에 이미 나온 URL만 가져와요(공식 릴리스 노트, 2026-10-19 기준). 그 밖의 URL은 `url_not_in_prior_context` 오류가 나요. 가져올 주소를 `user.message`에 적어 보내면 돼요.
 - **해결**: 필요한 사이트만 `allowed_hosts`에 넣거나, 웹 도구를 쓰지 않는 작업이라면 도구를 꺼 두세요. `unrestricted`는 샌드박스 전체의 외부 통신을 열기 때문에 비밀 값과 민감한 파일을 샌드박스에 두지 마세요.
 
 ### 에이전트 생성이나 `ant__` 이름 오류가 나요

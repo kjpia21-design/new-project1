@@ -40,3 +40,6 @@
 ## 2026-10-11 업데이트 반영
 - Claude Code changelog: 2.1.260 Chrome이 조직 관리자 설정을 따름(관리자가 끄면 `--chrome`, `/chrome`, 브라우저 도구 사용 불가). 2.1.290 프로젝트 설정 파일로 Chrome을 켤 수 없고 `--chrome`, `/chrome`, 사용자 설정을 써야 함. 출처: https://code.claude.com/docs/en/changelog
 - 본문 나머지(지원센터 기반 내용)는 이번 변경과 충돌 없어 유지.
+
+## 2026-10-19 점검 반영
+- Chrome 도움말, Claude Code Chrome 문서, 컴퓨터 사용 도움말을 다시 읽음. Chrome 전용 vs Chrome/Edge(+기타 Chromium) 차이, 사이드 패널 베타, 컴퓨터 사용 Pro/Max 베타(Team/Enterprise 불가), macOS 15 백그라운드, Settings > General > Enable computer use 변동 없음. Claude Code 쪽 확장 최소 버전 1.0.36 (본문 미반영).

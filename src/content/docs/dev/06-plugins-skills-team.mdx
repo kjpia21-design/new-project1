@@ -12,7 +12,7 @@ prerequisites:
   - "C14. Claude Code 핵심 기능 (슬래시 명령, 훅, MCP, 플러그인 설치 명령)"
   - "Claude Code 2.1.269 이상 (claude plugin eval 사용 시), git, GitHub 저장소 하나"
   - "(조직 설정을 한다면) 조직 관리자 권한"
-lastVerified: 2026-10-13
+lastVerified: 2026-10-19
 sources:
   - title: "Extend Claude with skills (Claude Code)"
     url: "https://code.claude.com/docs/en/skills"
@@ -236,7 +236,7 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
 
 4. **`claude plugin eval`로 품질 확인하기**
 
-   형식이 맞아도 Claude가 스킬을 안 고르거나 결과가 어긋날 수 있어요. `claude plugin eval`은 플러그인의 테스트 케이스를 실제로 돌려 점수를 매기고, **플러그인 없는 기준선과 비교**해 줘요. Claude Code 2.1.269 이상이 필요해요.
+   형식이 맞아도 Claude가 스킬을 안 고르거나 결과가 어긋날 수 있어요. `claude plugin eval`은 플러그인의 테스트 케이스를 실제로 돌려 점수를 매기고, **플러그인 없는 기준선과 비교**해 줘요. Claude Code 2.1.269 이상이 필요하고, git이 설치돼 있다면 2.31 이상이어야 해요(2026-10-19 기준). 더 오래된 git이면 케이스를 돌리기 전에 멈춰요.
 
    <Aside type="caution" title="eval은 모델을 호출해서 비용이 들어요">
    실행마다 에이전트 호출과 채점 호출이 계정 사용량(또는 API 요금)으로 잡혀요. 기본값은 케이스마다 3번, 그리고 같은 횟수의 플러그인 없는 기준선이라서 케이스 하나가 6번 실행이에요. 처음에는 `--ablation none`(기준선 생략, 절반 비용)과 `--runs 1`로 돌리고, 항상 `--max-cost-usd`로 상한을 거세요. 플러그인을 믿을 수 있는 경우에만 실행하세요. eval은 내 권한으로 플러그인을 로드해 실행해요.
@@ -350,7 +350,7 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
    claude plugin install team-kit@team-marketplace
    ```
 
-   Claude Code 2.1.292 이상에서는 한 줄로도 돼요: `claude plugin install team-kit --marketplace your-org/team-marketplace`. 업데이트는 `claude plugin update team-kit@team-marketplace`예요.
+   Claude Code 2.1.292 이상에서는 한 줄로도 돼요: `claude plugin install team-kit --marketplace your-org/team-marketplace`. 세션 안에서는 `/plugin install team-kit --marketplace your-org/team-marketplace`로 마켓플레이스 등록과 설치를 한 번에 할 수 있어요(2.1.275 이상). 업데이트는 `claude plugin update team-kit@team-marketplace`예요.
 
    **팀 코드 저장소에서 자동으로 권하기.** 팀이 쓰는 코드 저장소의 `.claude/settings.json`에 아래를 커밋하면 마켓플레이스 등록과 플러그인 활성화를 저장소 안에서 선언할 수 있어요.
 

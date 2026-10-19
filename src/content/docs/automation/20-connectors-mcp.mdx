@@ -10,7 +10,7 @@ duration: "35분"
 prerequisites:
   - "사용 중인 AI 도구의 계정 (Claude, ChatGPT 등)"
   - "연결해 볼 업무 서비스 계정 (Gmail, Notion 등)"
-lastVerified: 2026-10-13
+lastVerified: 2026-10-19
 sources:
   - title: "What is the Model Context Protocol (MCP)?"
     url: "https://modelcontextprotocol.io/docs/2026-07-28/getting-started/intro"
@@ -58,7 +58,7 @@ import AutomationMcpMap from '../../../components/diagrams/AutomationMcpMap.astr
 </Summary>
 
 <Aside type="note" title="ChatGPT 화면 이름은 바뀌었어요">
-OpenAI의 현재 문서(learn.chatgpt.com, developers.openai.com, 2026-10-10 확인)는 예전의 "앱·커넥터"를 **플러그인(Plugins)**으로 안내해요. 플러그인에는 스킬과 MCP 서버를 담을 수 있어요. 이 편에서 예전 이름인 "개발자 모드"는 현재 문서에서 찾지 못했어요. 화면 문구와 플랜 조건은 바뀔 수 있으니 실제 화면과 OpenAI 도움말을 함께 확인하세요.
+OpenAI의 현재 문서(learn.chatgpt.com, developers.openai.com, 2026-10-19 확인)는 예전의 "앱·커넥터"를 **플러그인(Plugins)**으로 안내해요. 플러그인에는 스킬과 MCP 서버를 담을 수 있어요. 이 편에서 예전 이름인 "개발자 모드"는 현재 문서에서 찾지 못했어요. 화면 문구와 플랜 조건은 바뀔 수 있으니 실제 화면과 OpenAI 도움말을 함께 확인하세요.
 </Aside>
 
 
@@ -85,7 +85,7 @@ OpenAI의 현재 문서(learn.chatgpt.com, developers.openai.com, 2026-10-10 확
 
 **자동화 서비스와의 차이**: [18편의 Zapier/Make](/automation/18-zapier-make/)는 사람이 미리 정한 규칙을 실행해요. MCP는 AI가 상황을 보고 어떤 도구를 부를지 **스스로 고른다**는 점이 달라요. 그만큼 승인과 권한 관리가 중요해요.
 
-### 도구별 연결 방식 비교 (2026-10-10 기준)
+### 도구별 연결 방식 비교 (2026-10-19 기준)
 
 | 도구 | 부르는 이름 | 연결하는 곳 | 확인한 사실 |
 | --- | --- | --- | --- |
@@ -96,6 +96,7 @@ OpenAI의 현재 문서(learn.chatgpt.com, developers.openai.com, 2026-10-10 확
 | **Notion Agent** | 연결(Connections) | All sources > MCP servers > Add MCP server, 또는 Settings > Connections > Discover | Notion 공식 도움말로 확인. MCP 서버를 연결하면 All sources 목록에 MCP servers로 나타나요 |
 
 <Aside type="note" title="확인하지 못한 점">
+- Gemini CLI 공식 문서 페이지에는 "무료(unpaid) 등급과 Google One 사용자의 Gemini CLI는 2026년 6월 18일에 Antigravity CLI로 대체됐다"는 안내가 붙어 있어요(2026-10-19 기준). 위 표의 Gemini CLI 설정은 그 문서의 내용이고, 내 계정에서 어느 CLI를 쓰는지는 공식 안내를 확인하세요.
 - Gemini 앱이나 Google Workspace 안의 Gemini가 MCP 서버를 직접 연결하는지는 확인하지 못했어요. Workspace 안의 Gemini 사용은 [19편](/automation/19-google-workspace-gemini/)을 보세요.
 - MCP 스펙은 날짜별 버전(2025-03-26, 2025-06-18, 2026-07-28 등)이 여럿이에요. 이 편은 개념과 보안 원칙 위주로 썼고, 세부 규격은 최신 공식 문서를 확인하세요.
 - ChatGPT에서 커스텀 MCP 서버를 연결할 수 있는 요금제 목록은 OpenAI 문서에서 찾지 못했어요. 문서는 계정과 워크스페이스 정책이 적용된다고 안내하고, 관리자 문서는 MCP 서버 연결을 Workspace apps와 Permissions & roles에서 역할별로 정한다고만 설명해요. 내 플랜의 조건은 OpenAI 도움말(help.openai.com)에서 확인하세요.

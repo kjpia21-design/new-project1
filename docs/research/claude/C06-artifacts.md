@@ -40,3 +40,6 @@
 - 아티팩트 도움말(17153992): "Docs, Slides, Design은 모든 플랜에서 기본 켜짐. Enterprise는 2026-10-15부터 기본 켜짐." 릴리스 노트(2026-09-16)의 "Enterprise는 베타, 소유자가 켜기 전까지 꺼짐"과 다름. 본문에 둘 다 병기.
 - Dashboards(베타): Pro/Max/Team/Enterprise, Enterprise는 소유자가 켜기 전까지 꺼짐. Motion(베타): Team/Enterprise, Team은 기본 켜짐.
 - 공유 문서(9547008): 조직 밖 이메일 초대 설정(Organization settings > Artifacts)은 Team 기본 켜짐, Enterprise 기본 꺼짐.
+
+## 2026-10-19 점검 반영
+- 아티팩트·공유 도움말을 다시 읽음. Enterprise에서 Docs/Slides/Design이 2026-10-15부터 기본 켜짐이라는 문구, 20MB 저장, 50명 초대, 30일 만료 변동 없음. Dashboards(베타, Pro/Max/Team/Enterprise), Motion(베타, Team/Enterprise)도 동일.

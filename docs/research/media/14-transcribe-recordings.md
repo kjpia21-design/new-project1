@@ -38,3 +38,6 @@ Aside: 남김. 문구를 "개인용 클로바노트와 ChatGPT 녹음 기능은 
 
 ## 7단계 재점검 (2026-10-12)
 - NAVER WORKS ClovaNote 도움말 4건(본문 HTML 직접 추출), Gemini 업로드·Pixel 도움말, learn.chatgpt.com, OpenAI 전사 API 재열람. 변경 없음. 참고: API 전사 문서에 한국어 명시는 여전히 없음, 권장 모델 gpt-transcribe. help.openai.com(Record/Meetings)은 403.
+
+## 재점검 (2026-10-19)
+- NAVER WORKS ClovaNote 도움말 4건, Gemini 업로드(14903178: 오디오 10분/Pro·Ultra 3시간, 파일 100MB), Pixel 녹음기 2건(Korean (South Korea) 재변환 목록, 화자 라벨), learn.chatgpt.com 음성·프롬프트 문서, developers.openai.com 파일 전사(25MB, gpt-transcribe 권장)를 다시 열었다. 본문과 충돌 없음. help.openai.com Record/Meetings는 계속 403, learn.chatgpt.com llms.txt에도 Record(전사) 문서 없음(Record & Replay는 별개 기능). 변경 없음, lastVerified만 갱신.

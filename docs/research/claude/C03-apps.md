@@ -35,3 +35,6 @@
 ## 2026-10-11 업데이트 반영
 - 2026-09-16 릴리스 노트: Cowork 기능을 어느 대화에서나 사용(Pro·Max부터 순차 롤아웃), 디자인·슬라이드·문서 생성도 어느 대화에서나(유료 플랜 베타, Enterprise는 소유자가 켜기 전까지 기본 꺼짐). 출처: https://support.claude.com/en/articles/12138966-release-notes, https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude
 - 본문의 "통합되는 중" 표현을 위 내용으로 교체. Team 시점은 "More plans will follow soon"뿐이라 미확인.
+
+## 2026-10-19 점검 반영
+- 데스크톱 설치 도움말(10065433)에서 최소 OS가 macOS 13(Ventura) 이상으로 확인되어 본문의 macOS 11을 고침. Windows 10+, Linux 베타(Ubuntu 22.04+/Debian 12+, x64·arm64), iOS/iPadOS 18.0+, Android 8.0+ 변동 없음. 시작 가이드: 18세 이상, 지원 지역 조건 그대로.

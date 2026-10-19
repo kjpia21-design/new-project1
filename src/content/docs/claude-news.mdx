@@ -7,7 +7,7 @@ import NewsItem from '../../components/NewsItem.astro';
 
 Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 모았어요. 모델 출시, 가격, Claude Code와 앱의 새 기능처럼 실제로 쓰는 분에게 의미 있는 것만 골랐고, 사소한 버그 수정은 뺐어요. 공식 채널을 점검해 계속 갱신해요.
 
-**마지막 업데이트: 2026-10-16**
+**마지막 업데이트: 2026-10-19**
 
 ## 모니터링하는 공식 채널
 
@@ -18,6 +18,10 @@ Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 �
 - [Anthropic 뉴스](https://www.anthropic.com/news): 정책, 파트너십, 모델 발표
 
 ## 2026년 10월
+
+<NewsItem date="10월 16일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
+2.1.302부터 서브에이전트의 "포크(fork)" 방식이 터미널 밖에서도 기본으로 켜져요. 끄려면 `CLAUDE_CODE_FORK_SUBAGENT=0`을 설정하세요. 프롬프트·에이전트 훅은 이벤트마다 최대 12개까지 동시에 실행돼요. 또 자동 모드(auto mode)의 판정에 쓸 모델을 `CLAUDE_CODE_AUTO_MODE_MODEL`로 고를 수 있고, 별도 앱인 Claude Design은 2026년 12월 14일까지만 쓸 수 있다는 안내가 나왔어요. (10월 18일에는 2.1.303이 "버그 수정과 안정성 개선"만 담고 나왔어요.)
+</NewsItem>
 
 <NewsItem date="10월 15일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="개발자 심화 Managed Agents">
 Claude Opus 5.5의 fast mode가 리서치 프리뷰에서 벗어났어요. 이제 접근 권한을 따로 신청하지 않아도 되고, `fast-mode-2026-02-01` 베타 헤더도 필요 없어요(헤더를 계속 보내도 동작해요). 모든 사용 등급에 기본 fast mode 속도 제한이 생겼고, Microsoft Foundry(Azure)의 Claude에서도 쓸 수 있어요. Claude Opus 5와 Opus 4.8의 fast mode는 아직 리서치 프리뷰라서 헤더가 필요해요.

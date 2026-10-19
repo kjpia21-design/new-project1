@@ -16,3 +16,6 @@
 - PowerPoint의 Designer 라이선스 요건(검색 요약에만 있고 원문 미열람) — 본문 미기재.
 - 한국어 UI 버튼 이름, 기능별 한국어 품질.
 - Word/Outlook 웹·모바일 세부 차이.
+
+## 2026-10-19 재확인
+- Word/PowerPoint/Outlook Copilot 도움말(버튼명, 편집 모드, Chat only, Agent Mode 파일 참조 "곧 지원", 24MB, Draft/Summary by Copilot), 개인 구독 FAQ(AutoSave, 소유자 전용, 끄기), 언어 목록(한국어 O), Learn 개요(Basic/Premium, ms.date 2026-10-14) 재확인. 본문과 모순 없음, 변경 없음.

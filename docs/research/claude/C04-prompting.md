@@ -31,3 +31,6 @@
 - [Prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) — 확인일 2026-10-10
 - [Choosing the right model](https://platform.claude.com/docs/en/about-claude/models/choosing-a-model) — 확인일 2026-10-10
 - [Get started with Claude](https://support.claude.com/en/articles/8114491-get-started-with-claude) — 확인일 2026-10-10
+
+## 2026-10-19 점검 반영
+- 프롬프트 모범 사례, 모델 선택 문서를 다시 읽음. 변동 없음(Opus 5.5 시작 권장, Haiku 5.5 효율 우선 옵션).

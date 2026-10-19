@@ -42,3 +42,7 @@
 - Zoom 무료 계정에서 AI Companion 사용 가능 여부(이 페이지의 요구 사항 목록에는 유료 플랜만 나열됨, 무료 플랜 언급은 확인 못 함).
 - Meet 모바일 요약 세부, Zoom/Teams 한국어 UI 버튼명.
 - 한국 법률상 녹음 동의 요건(공식 근거 없음, 일반 권고로만 기술).
+
+## 2026-10-19 재확인
+- Meet(Take notes for me, 녹화, 전사), Zoom(Meeting summary, 지원 언어 Korean 포함), Teams(Copilot 회의 도움말, Recap 절차, 녹화 안내, 언어 목록) 재확인. 본문과 모순 없음, 변경 없음.
+- 참고(본문 미반영): Zoom 도움말에 "산업·지역에 따라 AI 기능을 쓸 수 없을 수 있다"는 문구, Teams Recap 도움말은 회의 채팅의 Recap 탭만 언급(Calendar 이벤트 언급 없음, 모순은 아님). 한국 지역 제공 여부는 여전히 미확인.

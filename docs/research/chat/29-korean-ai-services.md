@@ -26,3 +26,9 @@
 - AI탭, Kanana 요금. 뤼튼 채팅의 무료·유료 범위. LG ChatEXAONE 일반 사용자 가입 방법.
 - 서비스 간 품질 순위(공식 근거 없음, 쓰지 않음).
 - 사이트 내 사실 일치: 해외 서비스 설명은 기존 chat/05, basics/08로 링크만 연결.
+
+## 2026-10-19 재확인
+- EXAONE Showroom(showroom.exaone.ai): FAQ가 AI Research 솔루션이 기업(B2B) 대상이라 개인이 현재 쉽게 가입해 쓰기 어렵다고 안내. 본문의 "일반 사용자 가입 방법 미확인"을 이 내용으로 교체. 모델 표기는 EXAONE 4.5, EXAONE Path, K-EXAONE 2.0, "ChatEXAONE Beta는 더 이상 제공 안 함"이라는 문구도 있음(본문은 ChatEXAONE을 솔루션으로만 소개해 변경 없음).
+- 뤼튼 종료 공지(2026-03-09), 뤼튼 결제 안내, Kanana 약관(시행 2026-01-12)·소개, 네이버 AI탭/AI 브리핑, 에이닷 전화(Google Play), SKT 사이트 에이닷 배너: 본문과 일치. 변경 없음.
+- 여전히 미확인: CLOVA X 서비스 사이트(이번엔 미시도), clova.ai/hyperclova는 모델 소개만 있고 서비스 상태 언급 없음.
+- 열어 본 출처(2026-10-19): navercorp.com/service/search, mkt.naver.com/aitab(curl), kanana.kakao.com(+/chat/policy), help.wrtn.ai(notice_somend, wrtn_purchase), lgresearch.ai/exaone, showroom.exaone.ai, upstage.ai, clova.ai/hyperclova, sktelecom.com, Google Play 에이닷 전화.

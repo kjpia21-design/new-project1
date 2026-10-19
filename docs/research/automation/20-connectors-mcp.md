@@ -43,3 +43,7 @@ Claude 쪽 사실은 docs/research/claude/C07-connectors.md 를 재사용. 아�
 - 변경: (1) "도구 설명은 신뢰된 서버가 아니면 믿지 말라"는 문장은 security_best_practices 페이지가 아니라 2025-03-26 규격의 Tool Safety 원칙에 있음 → 출처 표기 수정. (2) Claude 커넥터 연결 위치를 현재 도움말 표기(Customize > Connectors)로, 승인 대상은 현재 도움말 기준 Gmail 전송·답장·전달로 수정. (3) 관리자 권한 "Upload plugins with custom MCP servers"는 현재 apps-and-connectors 문서에서 확인되지 않음(Permissions & roles, Workspace apps, Action control, App permissions만 언급) → 본문 표현 완화.
 - 변동 없음: ChatGPT 커스텀 MCP 서버 절차(chatgpt.com/plugins > + > Add custom MCP server, /mcp, Secure MCP Tunnel, "I understand and want to continue", Create as a plugin), 플러그인 사용처(웹·데스크톱·모바일 Chat/Work, Codex; IDE 확장 미지원), Gemini CLI 설정, Notion 경로.
 - 새로 알게 됨(미반영): migrate-custom-gpts — 커스텀 GPT가 플러그인으로 전환 중, 커스텀 액션은 이전되지 않음. 최신 MCP 스펙은 2026-07-28(보안 문서는 이 버전 기준: 프로토콜 수준 세션 없음). 플랜별 커스텀 MCP 서버 지원 목록은 여전히 문서에 없음.
+
+## 2026-10-19 재확인
+- MCP 소개/아키텍처/스펙/보안 페이지, Claude 커넥터 문서, Claude Code MCP, OpenAI 플러그인·관리자·연결·MCP 서버·GPT 마이그레이션 문서, Gemini CLI MCP 문서, Notion Agent 재확인. 본문과 모순 없음.
+- 변경: Gemini CLI 문서 상단에 "무료 등급·Google One 사용자는 2026-06-18부터 Antigravity CLI로 대체" 안내 확인 → 본문 "확인하지 못한 점"에 추가. 날짜 표기 갱신.
