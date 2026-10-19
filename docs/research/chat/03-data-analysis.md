@@ -30,3 +30,6 @@
 
 ## 재점검 (2026-10-12)
 - 출처 페이지를 다시 읽었고 본문과 어긋나는 내용 없음(변경 없음).
+
+## 재점검 (2026-10-19)
+- Claude 파일 생성(Free·Pro·Max 기본 켜짐, Settings > Capabilities, 30MB), claude.com/pricing, Gemini Keep Activity, ChatGPT Work/@Visualize/artifacts viewer/pricing 모두 본문과 일치. 변경 없음.

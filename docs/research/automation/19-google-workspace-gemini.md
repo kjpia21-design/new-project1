@@ -43,3 +43,7 @@
 - 14925782(언어), 14199860(Gmail), 14506398, 14590328, 14356410(Sheets), knowledge 포함 안내, workspace.google.com/pricing 비교표, Privacy Hub, Gemini Apps Privacy Hub, turn-the-gemini-app-on-or-off 모두 재확인. 본문 내용 변동 없음(언어 목록·에디션 표·버튼 이름·관리 콘솔 경로 동일).
 - 변경: Privacy Hub URL이 support.google.com/a/answer/15706919 -> knowledge.workspace.google.com/admin/gemini/generative-ai-in-google-workspace-privacy-hub 로 301 이동, sources URL 갱신.
 - 참고: 포함 안내 페이지는 애드온 판매 종료 목록(Gemini Business-Legacy 등)과 교육용 Google AI Pro for Education 애드온 유지를 명시. 에디션별 금액은 여전히 정적 HTML에 없음.
+
+## 2026-10-19 재확인
+- 요금제 페이지(비교표 Gmail 전 에디션 포함 / Docs·Sheets는 Starter 미포함, 금액은 여전히 원문에서 읽히지 않음), Gmail·Sheets 도움말 버튼명(Ask Gemini), 학습 센터 요약 절차, 언어 목록(Gmail Help me write 한국어 O, Docs Help me write 한국어 X), 관리자 Gemini 앱 경로, 개인정보 허브, 포함 안내 페이지 재확인.
+- 변경: 요금제 비교표의 Gemini 어시스턴트 항목(Starter 기본 접근, 그 외 확장 접근) 한 문장 추가.

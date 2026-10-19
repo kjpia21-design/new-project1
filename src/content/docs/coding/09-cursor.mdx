@@ -8,10 +8,10 @@ category: coding
 tools: ["Cursor"]
 duration: "40분"
 prerequisites:
-  - "Cursor 계정 (무료 Hobby 플랜으로 시작할 수 있어요. 사용량 한도가 있어요)"
+  - "Cursor 계정 (무료 Free 플랜으로 시작할 수 있어요. 사용량 한도가 있어요)"
   - "이해하거나 고치고 싶은 기존 코드 폴더 (연습용 복사본 권장)"
   - "Git 사용 경험이 있으면 좋지만 필수는 아니에요"
-lastVerified: 2026-10-13
+lastVerified: 2026-10-19
 sources:
   - title: "Cursor Quickstart"
     url: "https://cursor.com/docs/get-started/quickstart"
@@ -52,7 +52,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 - 기존 코드를 다룰 때는 **먼저 읽기 전용 Ask 모드로 이해하고, 그다음 Agent 모드로 작은 수정**을 맡기는 순서가 안전해요.
 - Agent의 수정은 작업 중에 적용되고, diff 뷰에서 검토해 거부할 수 있어요.
 - 프로젝트 지침은 **Rules**(`.cursor/rules`의 `.mdc` 파일)에 적어 두면 돼요. 민감한 코드는 **Privacy Mode**와 제외 설정을 확인하세요.
-- 무료 Hobby 플랜이 있고 Pro는 월 $20예요(2026-10-12 기준). 메뉴와 모드 이름은 버전에 따라 바뀔 수 있어요.
+- 무료(Free) 플랜이 있고, 유료 개인 플랜은 Plus 월 $8부터예요(2026-10-19 기준). 예전 Hobby·Pro 플랜은 기존 구독자용으로 이어져요. 메뉴와 모드 이름은 버전에 따라 바뀔 수 있어요.
 </Summary>
 
 ## 이 튜토리얼로 할 수 있게 되는 것
@@ -170,7 +170,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 ## 빠른 참조표
 
-### 모드 선택 가이드 (2026-10-12 기준, 공식 도움말은 Agent·Ask·Plan·Debug 네 모드를 안내해요)
+### 모드 선택 가이드 (2026-10-19 기준, 공식 도움말은 Agent·Ask·Plan·Debug 네 모드를 안내해요)
 
 | 하고 싶은 일 | 모드 | 파일이 바뀌나요? |
 | --- | --- | --- |
@@ -183,18 +183,19 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 ### Cursor 요금제
 
-2026-10-12 기준, 미국 달러예요.
+2026-10-19 기준, 미국 달러예요. 공식 가격 페이지와 가격 도움말에 따르면 신규 가입은 아래 플랜 중에서 골라요.
 
 | 플랜 | 가격 | 메모 |
 | --- | --- | --- |
-| Hobby | 무료 | 신용카드 불필요, Agent 요청 한도가 있음. Agent, Chat, Tab 완성을 Auto 모델로 사용 |
-| Pro | 월 $20 | 확장된 Agent 한도, 클라우드 에이전트 |
-| Pro+ | 월 $60 | |
-| Ultra | 월 $200 | |
-| Teams | 사용자당 월 $40(Standard), $120(Premium) | 중앙 청구·관리, 팀 전체 Privacy Mode |
+| Free | 무료 | Agent, Chat을 제한된 사용량으로 사용. 서드파티 모델은 포함되지 않음 |
+| Plus | 월 $8 | 기본 사용량(Plus 기준). 클라우드 에이전트는 포함되지 않음 |
+| Premium | 월 $30 | Plus의 4배 사용량. 클라우드 에이전트, 서드파티 모델(API 정가로 선불 크레딧에서 차감) |
+| Super | 월 $100 | Plus의 15배 사용량 |
+| Ultra | 월 $200 | Plus의 50배 사용량 |
+| Teams | 좌석당 월 $30, $100, $200 (좌석 등급별) | 중앙 청구·관리, 팀 전체 Privacy Mode |
 | Enterprise | 문의 | 풀링 사용량, SCIM, 감사 로그 |
 
-가격은 공식 가격 도움말 기준이에요. 인도에는 월 ₹649의 Start 플랜이 따로 있어요. Hobby의 구체적인 한도 수치는 공식 페이지에 없어서 적지 않았어요. 한도를 넘으면 추가 사용량을 결제하거나 상위 플랜으로 올릴 수 있어요. 한국 가격과 부가세는 결제 화면에서 확인하세요.
+연간 결제는 Plus $80, Premium $300, Super $1,000, Ultra $2,000예요(세금 별도). 공식 도움말에 따르면 예전 플랜(Hobby 무료, Pro 월 $20, Pro+ 월 $60, Ultra 월 $200, Teams Standard 사용자당 월 $40, Teams Premium 사용자당 월 $120)은 기존 구독자에게만 이어지고, 인도에는 월 ₹649의 Start 플랜이 따로 있어요. 같은 이름(Ultra, Pro 등)이 예전 플랜과 새 플랜에 모두 있으니 내 계정이 어느 쪽인지 확인하세요. 사용량은 신규 플랜에서 주간 단위 풀로 나뉘고, 구체적인 Free 한도 수치는 공식 페이지에 없어서 적지 않았어요. 한국 가격과 부가세는 공식 페이지에 없으니 결제 화면에서 확인하세요.
 
 ### 규칙 종류와 적용 방식 (공식 문서 요약)
 

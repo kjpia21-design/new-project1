@@ -12,7 +12,7 @@ prerequisites:
   - "C14. Claude Code 핵심 기능 (권한 모드, CLAUDE.md, 훅)"
   - "C16. API 시작하기 (API 키, 비용 개념)"
   - "GitHub 저장소 한 개와 그 저장소의 관리자(admin) 권한"
-lastVerified: 2026-10-13
+lastVerified: 2026-10-19
 sources:
   - title: "Run Claude Code programmatically (headless)"
     url: "https://code.claude.com/docs/en/headless"
@@ -201,7 +201,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
      { where: 'Actions 시크릿 화면', action: '시크릿을 추가하고 이름을 ANTHROPIC_API_KEY로 쓰기' },
    ]} />
 
-   조직 전체에 공유할 시크릿이라면 OAuth 토큰보다 **API 키**를 권장해요. OAuth 토큰은 `setup-token`을 실행한 사람의 구독에 묶이기 때문이에요.
+   조직 전체에 공유할 시크릿이라면 OAuth 토큰보다 **API 키**를 권장해요. OAuth 토큰은 `setup-token`을 실행한 사람의 구독에 묶이기 때문이에요. 오래 쓰는 시크릿을 아예 두고 싶지 않다면, 워크플로의 GitHub OIDC 토큰을 Console 서비스 계정으로 교환하는 워크로드 아이덴티티 연동(`anthropic_federation_rule_id` 등 입력, `id-token: write` 필요)도 공식 문서에 있어요(2026-10-19 기준). 설정은 공식 setup 가이드를 보세요.
 
 6. **PR 리뷰 워크플로 만들기**
 

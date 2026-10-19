@@ -42,3 +42,6 @@
 - Notion 커넥터 페이지(https://claude.com/connectors/notion)를 직접 열어 확인: 제작 Notion, Anthropic 검증, 2025년 11월 추가, 로그인 필요, URL `https://mcp.notion.com/mcp`, "Add to Claude" 버튼. 읽기: search, fetch, get-comments, get-users 등. 쓰기: create-pages, update-page, move-pages, duplicate-page, create-database, update-database, create-comment. 플랜 조건은 페이지에 없음.
 - support.claude.com의 Notion 단계별 도움말은 여전히 못 찾음.
 - Google Workspace 커넥터 도움말: 변동 없음(Gmail 전송·답장·전달, Drive 공유·이동·휴지통은 기본적으로 승인 필요).
+
+## 2026-10-19 점검 반영
+- claude.com/connectors 표시 개수가 940에서 973으로 바뀜(2026-10-19). Notion 커넥터 페이지(Made by Notion, https://mcp.notion.com/mcp, Anthropic verified, 2025-11) 변동 없음. 커넥터 도움말·Google Workspace 커넥터·커스텀 커넥터 도움말 메뉴 경로(Customize > Connectors) 변동 없음.

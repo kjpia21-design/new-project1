@@ -29,3 +29,6 @@ Anthropic 쪽 사실은 기존 조사 노트를 재사용한다(spec 규정).
 - routines, Google Workspace connectors, connectors 일반, custom connectors, code MCP 페이지 재확인.
 - 변경: (1) 스케줄에 1회 실행(one-off) 옵션 추가됨 → 반영. (2) 승인 프롬프트는 공식 문서상 전송·답장·전달에 명시(삭제는 명시 없음) → 본문 수정, Owner가 설정 변경 가능. (3) 결과 위치: 실행마다 새 세션 생성, 상세 페이지 지난 실행 목록, 초록 상태는 인프라 오류 없음만 의미 → 해소(기존 "확인 못 함").
 - 변동 없음: 리서치 프리뷰, Pro/Max/Team/Enterprise, 최소 간격 1시간, 정각 지연·분 어긋나게, 기본 커넥터 전체 포함, 승인 없이 자율 실행, 로컬 claude mcp add 서버는 루틴에서 불가(claude.ai/customize/connectors에서 추가).
+
+## 2026-10-19 재확인
+- routines(리서치 프리뷰, Pro/Max/Team/Enterprise, 스케줄 최소 1시간, 정각 지연, 커넥터 기본 포함, 사용량 크레딧), Google Workspace 커넥터, 커넥터 개요, MCP, 커스텀 커넥터 페이지 재확인. 본문과 모순 없음, 변경 없음.

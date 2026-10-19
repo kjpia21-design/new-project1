@@ -47,3 +47,8 @@ notion.com 원문을 직접 열어 대조했다: notion-agent, what-are-notion-c
 - notion-ai-faqs, credits, autofill, notion-agent, pricing, ai-meeting-notes, security-practices, Q&A 가이드, product/ai 모두 재확인. 플랜 범위·가격($10/$13 per 1,000, Plus $10, Business $20)·메뉴 경로 변동 없음.
 - 변경: credits 페이지가 크레딧 사용처에 Workers를 추가 명시 → 본문 반영.
 - FAQ는 AI Meeting Notes를 (beta)로 표기하나 meeting-notes 도움말은 beta 표기 없음(미반영). Notion AI 전체 한국어 지원 범위는 여전히 미확인.
+
+## 2026-10-19 재확인
+- faqs, credits, autofill, notion-agent, pricing, ai-meeting-notes, security-practices, Q&A 가이드 재확인. 가격·플랜 범위·Autofill 메뉴 변동 없음.
+- 변경: Q&A 가이드가 "오른쪽 아래 둥근 얼굴 아이콘"으로 연다고 안내(검색 메뉴/반짝이 아이콘 언급 없음) → 본문 수정. AI Meeting Notes는 FAQ만 (beta) 표기, 도움말 페이지는 beta 표기 없음(그대로).
+- security-practices 페이지에 AI LEAP Program 링크가 여전히 있음(원문 확인). Agent 도움말에 Claude Fable 5.1은 Business·Enterprise 전용이라는 문구 있음(본문 미반영).

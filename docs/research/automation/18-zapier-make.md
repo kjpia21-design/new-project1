@@ -53,3 +53,6 @@
 - 재확인(curl, help.make.com / apps.make.com): credits(1 operation = 1 credit), schedule-a-scenario(기본 15분, 최소 간격은 플랜별), cancel-your-subscription(Free 월 1,000 크레딧), adjustments-to-plans-and-pricing(2025-11-06), step-1-plan-your-scenario, gmail/google-sheets/slack-modules(Watch emails, Add a Row, Send a Message + 권한표의 Create a Message). 변동 없음.
 - 변경: Zapier 체험 도움말이 세분화됨 → 신규 계정 Pro 체험은 Free로 복귀, Free에서 직접 시작한 체험/Team 체험은 자동 유료 전환 가능으로 본문 보강.
 - 여전히 미확인: www.make.com 가격 페이지(봇 차단), Make 한국어 UI, Make Free 최소 간격, 국내 메신저 연동, Zapier 한도 도달 시 동작.
+
+## 2026-10-19 재확인
+- Zapier 가격(Free 100 task, 2단계, 15분 / Professional 2분, KRW 없음, 14일 Pro 체험·카드 불필요·자동 유료 전환 없음), task 계산·한도 도움말, 영어 전용 안내, Make 크레딧/스케줄(기본 15분, 최소 간격은 플랜별 미기재)/해지 시 Free 월 1,000 크레딧, 앱 모듈 이름(Watch emails, Add a Row, Send a Message) 모두 재확인. 변경 없음(날짜 표기만 갱신).

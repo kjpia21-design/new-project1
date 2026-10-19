@@ -27,3 +27,6 @@
 - Linux 데스크톱의 Cowork 지원 여부(Cowork 도움말 목록에 없음).
 - Cowork 단독의 한국 제공 문구(Claude 제공 국가 목록 포함 여부만 확인).
 - 플랜별 구체 사용량 수치.
+
+## 2026-10-19 점검 반영
+- Cowork 시작하기, 하나의 Claude 통합 문서, 컴퓨터 사용 도움말을 다시 읽음. 승인 방식 Manual/Auto/Skip, 플랜·기기 표 변동 없음. Anthropic 제공 국가 페이지(https://www.anthropic.com/supported-countries)에 South Korea 포함, Cowork는 같은 규칙의 대상이고 Cowork만의 지역 제한은 적혀 있지 않음 -> 본문 '확인하지 못한 항목'에서 한국 제공 문구 제거. Linux 데스크톱 Cowork 지원 여부와 폴더 연결 메뉴 이름은 여전히 미확인.

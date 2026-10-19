@@ -38,3 +38,6 @@ Aside: 남김. 문구를 "Canva 공식 도움말 원문은 아직 확인하지 �
 
 ## 7단계 재점검 (2026-10-12)
 - 열린 것: canva.dev 브랜드 키트(Pro/Business/Enterprise, 무료 제외 유지), 브랜드 템플릿 API(Pro/Teams/Enterprise), App Store(미국)·Google Play 등록 정보(Brand는 Pro 항목). canva.com 도움말·약관은 여전히 403이라 본문 변경 없음, lastVerified도 갱신하지 않음.
+
+## 재점검 시도 (2026-10-19)
+- canva.com 도움말은 curl 403(계속 접근 불가). canva.dev list-brand-kits("Canva Pro, Business, Enterprise")와 App Store·Google Play 등록 정보만 재확인, 기존 서술과 충돌 없음. 핵심 출처(canva.com)를 읽지 못해 본문·lastVerified 변경 없음.

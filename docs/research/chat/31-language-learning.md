@@ -21,3 +21,6 @@
 
 ## 본문 반영
 - 학습 방법은 공식 확인 사실이 아닌 "써 보는 방법"으로 프롬프트 예시로만 제시. 앱 기능 설명은 위 확인 범위만.
+
+## 재점검 (2026-10-19)
+- Claude 음성 모드(전 플랜, 베타, Settings > General > Voice > Language), Gemini Live(Android 앱 도움말, 웹 불가), ChatGPT Voice(Plus·Pro·Business·Edu·Enterprise, 데스크톱 앱 중심) 모두 본문과 일치. 변경 없음.

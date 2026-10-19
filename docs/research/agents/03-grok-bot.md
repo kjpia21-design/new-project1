@@ -124,3 +124,8 @@
 | 결제 기능 | 전용 결제 수단/지출 상한 기능은 문서에서 확인 안 됨. 구매 작업은 가능(도메인 구매 예시)하나 결제 확인은 사용자가 직접 컴퓨터를 인수해 입력. 구매/이체는 요청에서 경계 지정 및 승인 권고 | [공식-열람] |
 | 확인 수준 | 공식 공지, 공식 문서(2026-10-07 갱신), Cursor 도움말, 한국 스토어 두 곳 직접 열람. 한국어 품질, 한국 청구, 베타 종료, 지출 상한은 미확인 | - |
   - 2026-10-12: docs.x.ai/grok-bot/security 에 Anysphere ISO/IEC 27001, 42001 보유, Grok Bot 범위 포함 명시. Bot 컴퓨터는 현재 미국 [공식-열람]
+
+## 2026-10-19 재확인
+- cursor.com/help/grok-bot/plans: 접근 경로에 "The X Subscription"(Premium·Super·Ultra 포함, Plus·Free 제외, Grok·Cursor 공유 주간 풀, 초과분은 선불 크레딧)이 새로 나오고 Cursor Pro/Pro+/Ultra/Teams는 "legacy"로 표기. 본문(03) 플랜 표에 반영. 가격은 Cursor pricing 페이지 URL이 404라 재확인 못 해 기존 값 유지.
+- 한국 App Store 목록: 한국어 지원, Pro ₩44,000 / Pro+ ₩129,000 / Ultra ₩449,000 그대로.
+- cursor.com/help/the-x-subscription/overview 읽음. 한국 제공 여부는 이 페이지들에 여전히 언급 없음.

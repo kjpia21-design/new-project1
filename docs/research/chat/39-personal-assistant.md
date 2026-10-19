@@ -60,3 +60,7 @@
 - https://learn.chatgpt.com/docs/automations.md
 - https://learn.chatgpt.com/docs/personalize.md
 - https://learn.chatgpt.com/docs/plugins.md
+
+## 2026-10-19 재확인
+- Gemini 예약 작업 도움말(16316416): 대상이 "개인 Google 계정 또는 해당 Workspace 버전의 업무·학교 계정"으로 표기됨(점진 제공, 활동 기록 보관 필요, 활성 10개 유지). 본문 두 곳 보정.
+- Gemini 캘린더(15305236)·연결된 앱(13695044; 모바일 맞춤설정 > 커넥터 탭), Claude Workspace 커넥터·메모리(Settings > Memory), ChatGPT plugins/automations/personalize: 본문과 일치. ChatGPT의 Google Calendar 플러그인은 여전히 문서에 없음.

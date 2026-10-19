@@ -37,3 +37,10 @@
 - https://developers.openai.com/codex/pricing
 - https://developers.openai.com/codex/agent-approvals-security
 - https://developers.openai.com/codex/agent-configuration/agents-md
+
+## 2026-10-19 재점검
+- 문서 위치: developers.openai.com/codex/* 는 learn.chatgpt.com/docs/* 로 308 영구 이동(pricing, codex/cli, agent-approvals-security, cloud, codex/ide, auth, agent-configuration/agents-md, app). frontmatter의 기존 URL은 리디렉션으로 계속 열림.
+- 가격 페이지: Free $0, Go $8, Plus $20, Pro $100/$200/$500 ("Everything in Plus", Pro 플랜은 현재 5시간 제한 없음 새로 확인), Business 사용자당 $20(월 결제 $25), Enterprise 문의. Plus 로컬 메시지 GPT-6.1 Sol 15-160 / 5시간. GPT-5.5는 ChatGPT 로그인 Codex에서 2026-10-14 종료(API 키는 영향 없음). Free·Go의 클라우드/한도 수치, 한국 제공은 여전히 문서에 없음.
+- 인증 문서: 데스크톱 앱, CLI, IDE 확장은 ChatGPT 또는 API 키, 클라우드는 ChatGPT 필수. 본문 표 수정.
+- 데스크톱 앱 페이지: macOS·Windows·Linux 앱 다운로드 안내, chatgpt.com/download 링크는 더는 페이지에 없음. 본문 표현 수정.
+- 변경 없음: 승인/샌드박스 기본값, `approval_policy = "untrusted"` 중단, 클라우드 환경 생성 순서, AGENTS.md 32 KiB, CLI 명령. CLI 페이지의 네 가지 설치 방법(macOS·Linux 스탠드얼론, Windows, npm, Homebrew) 탭은 확인했으나 Windows·npm·Homebrew 명령 문자열은 이번에 직접 읽지 못해 기존 확인(2026-10-15)을 유지.

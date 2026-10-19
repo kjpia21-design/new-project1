@@ -27,3 +27,6 @@
 - Copilot: 한국어 지원 범위, 라이선스별 가격·포함 여부(라이선스 확인 페이지는 열지 않음), Agent Mode 현재 정식 제공 여부.
 - Claude Slides: 플랜별 사용량 소모량(공식 수치 없음), 한국어 품질.
 - 첫 시도 URL 오류: support.microsoft.com 의 추측 URL 2개는 404였다(이후 목록 페이지의 링크로만 이동).
+
+## 재점검 (2026-10-19)
+- Gamma 도움말 6건, Claude 도움말 2건, Microsoft Copilot in PowerPoint 도움말을 다시 열었다. 변경: (1) Pro 플랜도 한 번에 최대 100장(upgrade 글) → '확인하지 못함'을 '최대 100장'으로. (2) 새 Free 사용자는 가입 시 400 크레딧(credits 글) → 표에 추가. 그 밖에 Plus 1,000/Pro 4,000 크레딧, 2배 이월, Plan·Express·Research 모드, 학습 기본값, Export 배지, Claude Slides 내보내기(PowerPoint·PDF·Google Slides), Copilot Agent Mode 안내(파일 참조 coming soon, 24MB)는 동일.

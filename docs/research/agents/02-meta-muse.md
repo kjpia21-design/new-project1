@@ -140,3 +140,6 @@
 | 외부 서비스 연동 | 예. 이메일, 캘린더, 인스타그램, Shopify, Slack, Notion, GitHub 등 커넥터와 커스텀 커넥터 | 공식 열람 |
 | 결제 기능 | 예. Stripe Link 일회용 카드(적격 구매 보호), Shop Pay와 PayPal 추가 발표. 구매 전 사람 승인 | 공식 열람 |
 | 확인 수준 | 공식 페이지 다수 직접 열람. 도움말센터 요금·지역 본문은 검색 요약 수준 | — |
+
+## 2026-10-19 재확인
+- 변경 없음. Newsroom 발표문은 미국 롤아웃만 언급(한국·언어 언급 없음, 9/30 업데이트 표기 있으나 내용 미상). 도움말센터: 무료/Power $20 5억 토큰/Maximum $100 30억 토큰, "limited testing, not available in all locations" 동일.

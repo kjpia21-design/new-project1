@@ -44,3 +44,6 @@ Aside("확인 중인 튜토리얼"): 핵심 사실(가격·동의·메뉴 경로
 
 ## 7단계 재점검 (2026-10-12)
 - ElevenLabs 모델·가격·약관·정책·클로닝·라이브러리 문서, OpenAI custom-voices·TTS 재열람. 변경 없음(Starter $6/Creator $22/Pro $99, 글자 한도, 동의 규칙 동일). help.elevenlabs.io·canva.com은 미열람.
+
+## 재점검 (2026-10-19)
+- ElevenLabs pricing(Free $0 10k / Starter $6 30k / Creator $22 121k / Pro $99 600k; Scale $299, Business $990), models 문서(v4·v4 Turbo·v3·Multilingual v2·Flash v2.5, 글자 한도 10,000/5,000/10,000/40,000, v4 90개 이상 언어에 Korean), IVC·PVC 문서, 이용약관(무료는 비상업), 사용 정책을 다시 열었다. 본문과 충돌 없음. 가격 페이지의 Starter 첫 달 $1 프로모션은 'Until Oct 18'로 표시(프로모션은 계속 변동). help.elevenlabs.io(No-Go Voices 등)는 계속 403. 변경 없음, lastVerified만 갱신.

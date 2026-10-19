@@ -63,3 +63,6 @@
 ## 2026-10-12 점검 반영
 - 서브에이전트 문서: 내장 목록에 `claude`(만능 에이전트)가 추가로 보임. 본문 표에 반영.
 - 플러그인: `claude plugin install <plugin> --marketplace <source>`는 v2.1.292 이상, 세션 안 `/plugin install ... --marketplace`는 v2.1.275 이상. 본문 수정.
+
+## 2026-10-19 점검 반영
+- permission-modes, sub-agents, skills, memory, hooks-guide를 다시 읽음. 본문 사실 변동 없음. CHANGELOG 2.1.302는 fork 서브에이전트를 -p, SDK, 데스크톱, VS Code에서 기본 켜짐으로 바꿨다고 하나 sub-agents 문서는 아직 -p/SDK에서 꺼짐이라고 적어 문서 간 차이가 있음(본문 미반영).

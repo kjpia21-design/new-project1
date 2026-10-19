@@ -71,3 +71,7 @@
 - pricing(모델별 단가, 캐시 배수, Haiku 5.5 10만 토큰 구간, inference_geo 1.1x), 캐시 최소 512토큰, 브레이크포인트 4개·20블록, 배치 10만건/256MB/29일 모두 변동 없음.
 - effort 페이지에 메시지별 effort 변경(베타, `mid-conversation-output-config-2026-07-01`, 캐시 유지; Fable 5.1·Mythos 5.1·Opus 5.5·Opus 5·Sonnet 5.5·Haiku 5.5, Bedrock은 일부) 설명이 있음 -> 02편 Aside에 한 문장 추가. 최상위 effort 변경은 여전히 캐시 무효화.
 - rate-limits 페이지에 지출 한도 설정 절차 추가 확인: Settings > Billing > Spend limits > Adjust limit/Set limit, 한도 도달 시 HTTP 400 invalid_request_error. 알림(alerts) 절차는 여전히 미확인. 본문 Aside 갱신.
+
+## 2026-10-19 재검증
+- 가격표(Opus 5.5 $4/$20, Sonnet 5.5 $2/$10 · 캐시 읽기 $0.10(2026-10-07 인하 반영 확인), Haiku 5.5 계층 가격, Fable 5.1 $10/$50), 배치 50%, 지출 상한(Start $500/Build $1,000/Scale $200,000), count_tokens RPM(5,000/10,000/20,000), 최소 캐시 길이 512토큰 모두 본문과 일치. 변경 없음.
+- 스크린샷 자리 officialUrl을 현재 정식 경로(manage-claude/usage-cost-api)로 교체(이전 경로는 리디렉션).

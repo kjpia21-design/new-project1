@@ -71,3 +71,8 @@
 - https://support.google.com/gemini/answer/16719589?hl=ko
 - https://support.google.com/websearch/answer/9116649?hl=ko
 - https://support.google.com/youtube/answer/14328491?hl=ko
+
+## 2026-10-19 재확인
+- 변경 반영: Gemini 초상권 신고(support.google.com/gemini/answer/16719589)에 "Google 셀피 인증 서비스 사용 가능 지역" 조건과 이미지·동영상만 지원 명시 확인. KISA 스미싱 확인서비스(boho.or.kr/kr/subPage.do?menuNo=205116)는 카카오톡 보호나라 채널에서 이용, 10분 뒤 재조회 시 정상/악성 확정 재확인.
+- 변경 없음: 피싱안심SOS 제보 안내(1394, 공공·금융기관 문구), 금감원 대처방법(112/1332, pd.fss.or.kr, payinfo.or.kr, msafer.or.kr, 3영업일), 주요 연락처(112/1332/118), 주요 사기유형, d4u.stop.or.kr(02-735-8994, 평일 8-22시/주말 9-18시, 1366; WebFetch 503이라 curl로 확인), Gemini AI 확인(100MB·90초·1시간), Google 검색 삭제 요청, YouTube AI 공개.
+- 미재확인: 금감원 2026.9.18 보도자료 본문(PDF 첨부, 페이지에는 본문 없음)의 1394·악성 앱 각주·안심차단서비스 날짜; police.go.kr.
