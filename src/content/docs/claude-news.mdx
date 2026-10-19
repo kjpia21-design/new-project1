@@ -7,7 +7,7 @@ import NewsItem from '../../components/NewsItem.astro';
 
 Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 모았어요. 모델 출시, 가격, Claude Code와 앱의 새 기능처럼 실제로 쓰는 분에게 의미 있는 것만 골랐고, 사소한 버그 수정은 뺐어요. 공식 채널을 점검해 계속 갱신해요.
 
-**마지막 업데이트: 2026-10-19**
+**마지막 업데이트: 2026-10-20**
 
 ## 모니터링하는 공식 채널
 
@@ -18,6 +18,10 @@ Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 �
 - [Anthropic 뉴스](https://www.anthropic.com/news): 정책, 파트너십, 모델 발표
 
 ## 2026년 10월
+
+<NewsItem date="10월 19일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
+2.1.304에서 `/auto-mode-setup`이 생겼어요. 프로젝트와 최근 세션을 바탕으로 자동 모드(auto mode)가 무엇을 허용할지 안내해 주는 설정 도우미예요. Pro·Max 플랜에서는 오래 쉰 대화를 다시 열 때 5시간 사용 한도를 꽤 쓰게 되면 경고가 떠요. Code Review에는 검토 수준(Quick, Standard, Deep)이 생겼고, GitHub 조직의 모든 저장소를 한 번에 검토하는 옵션도 추가됐어요.
+</NewsItem>
 
 <NewsItem date="10월 16일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
 2.1.302부터 서브에이전트의 "포크(fork)" 방식이 터미널 밖에서도 기본으로 켜져요. 끄려면 `CLAUDE_CODE_FORK_SUBAGENT=0`을 설정하세요. 프롬프트·에이전트 훅은 이벤트마다 최대 12개까지 동시에 실행돼요. 또 자동 모드(auto mode)의 판정에 쓸 모델을 `CLAUDE_CODE_AUTO_MODE_MODEL`로 고를 수 있고, 별도 앱인 Claude Design은 2026년 12월 14일까지만 쓸 수 있다는 안내가 나왔어요. (10월 18일에는 2.1.303이 "버그 수정과 안정성 개선"만 담고 나왔어요.)
