@@ -7,7 +7,7 @@ import NewsItem from '../../components/NewsItem.astro';
 
 Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 모았어요. 모델 출시, 가격, Claude Code와 앱의 새 기능처럼 실제로 쓰는 분에게 의미 있는 것만 골랐고, 사소한 버그 수정은 뺐어요. 공식 채널을 점검해 계속 갱신해요.
 
-**마지막 업데이트: 2026-10-21**
+**마지막 업데이트: 2026-10-22**
 
 ## 모니터링하는 공식 채널
 
@@ -18,6 +18,18 @@ Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 �
 - [Anthropic 뉴스](https://www.anthropic.com/news): 정책, 파트너십, 모델 발표
 
 ## 2026년 10월
+
+<NewsItem date="10월 21일" channel="Claude 앱" href="https://claude.com/resources/articles/claude-duet" tutorial="/claude/c01-overview/" tutorialLabel="C1 한눈에 보기">
+Pro·Max 플랜용 "Claude Duet" 리서치 프리뷰가 시작됐어요. 아침 요약을 보내 주고, 연결한 앱을 살펴보다가 맡긴 일을 처리하며, 실행 전에 승인을 물어보는 "먼저 움직이는 에이전트" 앱이에요. 2026-10-21 기준 대기자 명단(waitlist)으로 받고 있고, 미국의 Pro·Max 구독자부터 시작해요. iOS·Android 앱과 claude.ai에서 쓰며 기존 Claude 앱과는 따로 동작해요. 사용량은 플랜의 한도를 함께 쓰고, 연결된 계정은 몇 시간마다 확인해요. 한국에서 쓸 수 있는지는 공식 글에 나와 있지 않아요.
+</NewsItem>
+
+<NewsItem date="10월 21일" channel="API" href="https://platform.claude.com/docs/en/api/migration-2026-10-21" tutorial="/claude/c16-api/" tutorialLabel="C16 API 시작하기">
+API 버전 `2026-10-21`이 나왔어요. 새 SDK와 `ant` CLI(Python 2.0.0, TypeScript 1.0.0 등)는 이 버전을 기본으로 쓰고, SDK와 CLI의 라이선스가 MIT에서 Apache 2.0으로 바뀌었어요. SDK를 새 메이저 버전으로 올리면 호환되지 않는 변경이 있을 수 있어서 이전 가이드를 먼저 확인하세요. Claude Code 2.1.307에는 코드를 새 버전으로 옮기는 `/claude-api api-version`이 추가됐어요.
+</NewsItem>
+
+<NewsItem date="10월 20일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="개발자 심화 Managed Agents">
+조직 관리자가 Claude Console의 Capabilities 페이지에서 웹 가져오기(web fetch)를 끌 수 있어요. 끄면 web fetch 도구를 넣은 API 요청이 400 오류가 나고, Managed Agents의 `web_fetch`도 오류를 돌려줘요. 켜 둔 경우 허용·차단 도메인도 정할 수 있고, Managed Agents의 web fetch와 web search는 조직 설정과 에이전트 설정을 둘 다 통과해야 해요. 또 최종 고객별로 요청을 구분하는 사용자 프로필(User profiles)이 생겼어요.
+</NewsItem>
 
 <NewsItem date="10월 20일" channel="API" href="https://platform.claude.com/docs/en/manage-claude/inference-hooks">
 Claude Enterprise 조직용 "추론 훅(Inference hooks)"이 베타에서 정식으로 나왔어요. 조직이 운영하는 AI 보안 서버가 사용자의 프롬프트를 모델에 보내기 전에 검사해서 허용 또는 차단을 결정하는 기능이에요. claude.ai, Cowork, Claude Code 등 조직의 모든 Claude 제품에 한꺼번에 적용되고, 설정은 소유자(Owner) 역할만 할 수 있어요. 개인·Pro·Max 사용자에게는 해당이 없어요.
