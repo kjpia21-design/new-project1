@@ -32,3 +32,7 @@
 - 뤼튼 종료 공지(2026-03-09), 뤼튼 결제 안내, Kanana 약관(시행 2026-01-12)·소개, 네이버 AI탭/AI 브리핑, 에이닷 전화(Google Play), SKT 사이트 에이닷 배너: 본문과 일치. 변경 없음.
 - 여전히 미확인: CLOVA X 서비스 사이트(이번엔 미시도), clova.ai/hyperclova는 모델 소개만 있고 서비스 상태 언급 없음.
 - 열어 본 출처(2026-10-19): navercorp.com/service/search, mkt.naver.com/aitab(curl), kanana.kakao.com(+/chat/policy), help.wrtn.ai(notice_somend, wrtn_purchase), lgresearch.ai/exaone, showroom.exaone.ai, upstage.ai, clova.ai/hyperclova, sktelecom.com, Google Play 에이닷 전화.
+
+## 재점검 (2026-10-26)
+- navercorp.com/service/search(AI 브리핑·AI탭 현재 서비스로 소개, CLOVA X·Cue는 언급 없음), tech/hyperclovax, clova.ai/hyperclova(모델 소개만), mkt.naver.com/aitab(curl로 확인; WebFetch는 차단), Kanana 소개(지원 기기, 베타·요금 언급 없음)·약관(시행 2026-01-12), 뤼튼 종료 공지(2026-03-09, 5개 기능, 채팅 유지)를 다시 읽음. 본문과 일치, 변경 없음.
+- 읽지 못함: wrtn.ai (HTTP 402).

@@ -32,3 +32,8 @@
 - https://code.claude.com/docs/en/permission-modes — 2026-10-15
 - https://code.claude.com/docs/en/overview — 2026-10-15
 - https://code.claude.com/docs/en/quickstart, /best-practices, /permissions — 2026-10-14 (coding/27 노트)
+
+## 2026-10-26 재점검
+- checkpointing, permission-modes, overview, quickstart, best-practices, permissions 재열람.
+- 변경: 체크포인트 한계 서술을 현재 문서에 맞게 정밀화. "명령으로만 바뀐 파일은 추적 안 됨"이고, Claude가 편집 도구로 이미 고친 파일이면 뒤따른 Bash 변경도 되돌려진다는 문장 추가. 세션당 최근 100개 체크포인트, 기본 약 30일 후 스냅샷 삭제(cleanupPeriodDays) 추가. 결론(작업 전 폴더 복사가 가장 확실)은 그대로.
+- 여전히 확인 못 함: Claude Code가 엑셀(.xlsx)을 읽고 쓰는 방식.

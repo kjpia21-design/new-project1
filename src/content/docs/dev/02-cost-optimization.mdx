@@ -12,7 +12,7 @@ prerequisites:
   - "C15. 모델 분담 전략"
   - "1. 도구 사용으로 업무 봇 만들기 (도구가 있는 봇이면 도움이 돼요)"
   - "Python 3.10 이상, pip install anthropic"
-lastVerified: 2026-10-19
+lastVerified: 2026-10-26
 sources:
   - title: "Pricing"
     url: "https://platform.claude.com/docs/en/about-claude/pricing"
@@ -248,8 +248,9 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
    공식 비용 가이드의 측정(내부·방향성 수치)은 이래요.
 
-   - 연구형 벤치마크에서 `low`는 정확도 1~3점을 내주고 비용을 3분의 1~2분의 1로 줄였고, `medium`은 기본 정확도에 비용 70~87%였어요.
+   - Fable 5로 잰 연구형 벤치마크에서 `low`는 정확도 1~3점을 내주고 비용을 3분의 1~2분의 1로 줄였고, `medium`은 기본 정확도에 비용 70~87%였어요.
    - 코딩 벤치마크(SWE-bench Pro)에서 `high` 대비 `medium`은 약 2.5점 낮고 비용은 약 70%, `low`는 약 8점 낮고 비용은 약 3분의 1, `xhigh`는 1.4점 높고 비용은 2.5배였어요.
+   - 다만 모델마다 달라요. 같은 가이드에서 Fable 5.1은 DeepResearch Bench II에서 `low`와 `high`의 점수가 거의 같았지만, Opus 5.5는 DRACO(연구 과제)에서 `low`가 `medium`보다 13.3점 낮았어요(2026-10-26 기준).
    - 일부 측정에서는 Opus 5.5를 `medium`으로 쓴 쪽이 Fable 5.1 기본 설정과 비슷한 정확도를 훨씬 낮은 "정답당 비용"으로 냈어요.
 
    내 작업에서도 같다는 보장은 없어요. 채팅·분류·대량 처리는 `low`로도 충분한 경우가 많고, 코딩·긴 에이전트 작업은 effort에 민감해요. **대표 샘플로 직접 재 보세요.**

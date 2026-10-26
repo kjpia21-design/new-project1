@@ -57,3 +57,7 @@
 ## 2026-10-19 재검증
 - 변경: Python SDK 요구 버전. python-sdk README(main)와 py.sdk.modelcontextprotocol.io가 "Python 3.11+", pyproject.toml도 `requires-python >=3.11`. (PyPI mcp 2.3.0 메타데이터는 아직 `>=3.10`.) 본문의 "Python 3.10 이상"을 "3.11 이상"으로 수정.
 - 확인 유지: MCPServer/`from mcp.server import MCPServer`, TS SDK v2(`@modelcontextprotocol/server`, Node 20+), `claude mcp add` 문법·범위, 커스텀 커넥터 경로(Pro/Max: Customize > Connectors; Team/Enterprise: Organization settings > Connectors), Free 1개 제한, MCP 보안 문서(token passthrough 금지).
+
+## 2026-10-26 재검증
+- python-sdk README(raw: `MCPServer`, Python 3.11+; PyPI 최신 mcp 2.3.0, PyPI 메타는 >=3.10이지만 README는 3.11+), typescript-sdk README(main = v2, `@modelcontextprotocol/server`, v1.x 별도 브랜치)와 first-server.md(Node.js 20+, `McpServer`, `registerTool`), code.claude.com/mcp(MAX_MCP_OUTPUT_TOKENS 기본 25,000, 경고 10,000, `Pending approval`, `reset-project-choices`, scope), support 커스텀 커넥터 문서(Customize > Connectors > + Add > Add custom connector, Team/Enterprise는 Organization settings > Connectors > Add > Custom > Web, Free 1개 제한, 연결은 Anthropic 클라우드에서 시작), MCP 보안 모범 사례 페이지 재확인: 본문과 일치. 변경 없음.
+- GitHub 웹 페이지는 프록시에서 403이라 raw.githubusercontent.com 로 README/문서 원문을 읽음.

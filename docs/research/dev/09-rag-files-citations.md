@@ -71,3 +71,8 @@
 ## 2026-10-19 재검증
 - 변경: PDF 쪽수 한도는 600쪽이지만 "요청의 컨텍스트 창이 1M 토큰 미만이면 100쪽"(pdf-support). 본문에 괄호로 추가.
 - 확인 유지: Files API GA(베타 헤더 불필요), 500MB/파일·1TB/조직·분당 약 500회, `expires_in_seconds` 3,600~7,776,000, 업로드 파일 다운로드 불가, 워크스페이스 단위 접근, ZDR 비대상, citations 전부/전무 규칙, 인용+구조화 출력 비호환, Covered Models(Fable 5.1 등) 30일 보존.
+
+## 2026-10-26 재검증
+- files(GA, 파일당 500MB, 조직당 1TB, 약 분당 500회, expires_in_seconds 3,600~7,776,000, 만료 시 다운로드 404, 워크스페이스 전체 접근, 플랫폼 Claude API/Platform on AWS/Foundry(Anthropic 호스팅)), pdf-support(600쪽, 1M 미만이면 100쪽, 32MB), citations·search-results(search_result는 user 메시지/도구 결과에만), api-and-data-retention(Files API ZDR 비대상), models/overview 재확인: 본문과 일치.
+- 변경: migration-2026-10-21 가이드: API 버전 2026-10-21부터 user 메시지 text 블록의 비어 있지 않은 citations, assistant 메시지에 직접 넣은 document 블록은 400. assistant 이전 답변의 citations와 document의 citations.enabled 설정은 그대로 허용. "인용의 한계" Aside에 불릿 추가, sources에 마이그레이션 가이드 추가.
+- 참고: Oct 22 출시 "Claude Models on Google Cloud (Anthropic managed)"가 Files API를 지원하는지 files 페이지 featureMetadata에는 없음(Claude API, Platform on AWS, Foundry만 표기). 본문 변경 없음.

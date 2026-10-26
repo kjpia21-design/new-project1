@@ -7,7 +7,7 @@ import NewsItem from '../../components/NewsItem.astro';
 
 Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 모았어요. 모델 출시, 가격, Claude Code와 앱의 새 기능처럼 실제로 쓰는 분에게 의미 있는 것만 골랐고, 사소한 버그 수정은 뺐어요. 공식 채널을 점검해 계속 갱신해요.
 
-**마지막 업데이트: 2026-10-23**
+**마지막 업데이트: 2026-10-26**
 
 ## 모니터링하는 공식 채널
 
@@ -18,6 +18,10 @@ Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 �
 - [Anthropic 뉴스](https://www.anthropic.com/news): 정책, 파트너십, 모델 발표
 
 ## 2026년 10월
+
+<NewsItem date="10월 23일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c13-cloud-sessions/" tutorialLabel="C13 Claude Code 클라우드 세션">
+2.1.310에서 Enterprise 사용자 지정 역할(custom roles)에 클라우드 세션과 Remote Control 권한을 줄 수 있게 돼서, 소유자가 역할별로 접근을 정할 수 있어요. 클라우드 환경 대화상자에는 설정 스크립트를 파일에서 불러오는 "Choose file" 버튼이 생겼고, Monitor 도구와 플러그인 모니터가 Bedrock, Vertex, Foundry에서도 동작해요.
+</NewsItem>
 
 <NewsItem date="10월 22일" channel="API" href="https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/anthropic-managed" tutorial="/claude/c16-api/" tutorialLabel="C16 API 시작하기">
 "Claude Models on Google Cloud (Anthropic managed)"가 나왔어요. Anthropic이 운영하는 Claude API를 내 Google Cloud 프로젝트를 통해 쓰는 방식이고, 접근은 Google Cloud IAM으로, 결제는 Google Cloud Marketplace로 처리해요. 이 방식에서는 Claude Opus 5.5의 fast mode도 쓸 수 있어요.

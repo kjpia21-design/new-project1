@@ -22,3 +22,6 @@
 
 ## 재점검 (2026-10-19)
 - Gemini 이미지 도움말·소개 페이지, learn.chatgpt.com 이미지 문서(영역 선택 편집, Image 1/Image 2 지정, 글자 지정, 크레딧 표기 불필요)는 본문과 동일. 변경: policies.google.com/terms/generative-ai 페이지가 'Google 서비스 약관이 2024-05-22에 AI 항목을 포함하도록 개정되어 이 추가 약관은 파트너 서명 계약이 없으면 더는 적용되지 않는다'고 안내 → 출처 제목에 반영(본문은 이 약관을 인용하지 않음). midjourney.com 소개 페이지는 열렸고 docs.midjourney.com은 계속 403.
+
+## 재확인 2026-10-26
+- Gemini 이미지 도움말·소개 페이지(2:3 예시, Local edits, Library > Chat, Redo with Pro, 2K/1K), ChatGPT 이미지 문서(영역 선택 편집, Image 1/2 지정, 크레딧 표기 선택), Google 생성형 AI 약관 페이지를 다시 열어 본문과 일치 확인(변경 없음). docs.midjourney.com은 여전히 403, midjourney.com 소개 페이지만 열림.

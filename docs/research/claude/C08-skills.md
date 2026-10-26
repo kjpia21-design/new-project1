@@ -47,3 +47,6 @@
 
 ## 2026-10-19 점검 반영
 - Claude Code skills 문서와 claude.ai 스킬 도움말을 다시 읽음. SKILL.md, 메뉴 경로(Customize > Skills, Settings > Capabilities) 변동 없음. Claude Code 문서는 name 길이 상한을 적지 않고 description+when_to_use를 1,536자에서 자른다고 설명함(본문 표의 claude.ai 쪽 64자/200자는 지원센터 기준 그대로 둠).
+
+## 2026-10-26 점검 반영
+- Skills 도움말(12512180)·커스텀 스킬 도움말(12512198)·code.claude.com/docs/en/skills(앞 100,000자) 재확인: name 64자·description 200자(claude.ai), Settings > Capabilities / Customize > Skills / Organization settings > Plugins & skills(Policy) 변동 없음. 신규: Claude Code 문서의 description+when_to_use 목록 표시 1,536자 제한 반영. 도움말은 업로드 후 Customize > Skills에서 켜라고만 안내하고 "+ Create skill > Upload a skill" 표기는 이번에 확인하지 못함(기존 문구 유지, 화면 우선 안내 그대로).

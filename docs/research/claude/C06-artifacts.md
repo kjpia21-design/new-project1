@@ -43,3 +43,7 @@
 
 ## 2026-10-19 점검 반영
 - 아티팩트·공유 도움말을 다시 읽음. Enterprise에서 Docs/Slides/Design이 2026-10-15부터 기본 켜짐이라는 문구, 20MB 저장, 50명 초대, 30일 만료 변동 없음. Dashboards(베타, Pro/Max/Team/Enterprise), Motion(베타, Team/Enterprise)도 동일.
+
+## 2026-10-26 점검 반영
+- 공유 도움말(9547008)을 다시 읽음: 이메일 초대(베타)는 Pro/Max/Team/Enterprise만. Free는 링크 공유만. 본문 5단계의 "Free/Pro/Max ... 이메일 초대"를 고침. 그 외 Enterprise 2026-10-15 기본 켜짐, 20MB, 50명, 30일, Dashboards/Motion 베타 변동 없음. Docs/Slides/Design 템플릿은 도움말상 모든 플랜(릴리스 노트 문구와의 차이는 기존대로).
+- (2026-10-26) Skills 도움말 기준 설정 항목 이름: "Code execution and file creation"(새 화면 "Create and edit files"). C6·C8 본문에 병기.

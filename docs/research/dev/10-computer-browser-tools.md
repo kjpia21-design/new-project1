@@ -48,3 +48,7 @@
 
 ## 2026-10-12 재확인
 - 본문 비용 Aside·요약에 브라우저 툴셋 오버헤드 약 6,600 반영. 나머지(GA 상태, 모델 목록, 멤버 수, 호환성, ZDR) 변동 여부는 아래 확인 결과 참고.
+
+## 2026-10-26 재검증
+- computer-use-tool / browser-use-tool / browser-use-sdk / pricing / release notes 재확인: GA 상태(컴퓨터 툴셋: Claude API·Google Cloud(Google managed) GA, Platform on AWS·Bedrock·Foundry 베타 / 브라우저: Claude API·Google Cloud GA), 지원 모델 목록(10개), 5.5 모델은 `computer_toolset_20260801`만(Bedrock은 `computer_20251124`도 허용), Managed Agents 미지원, 이미지 한도 2,576px/4,784 시각 토큰(이전 1,568px/약 1.15MP), 스크린샷 1,000~1,800토큰, 툴셋 오버헤드(컴퓨터 약 4,500 / 브라우저 약 6,600), 브라우저 31개 멤버, SDK 클래스 이름(BetaAbstractBrowserToolset20260801 등), 파트너(Browser Use, Browserbase, Daytona, E2B) 모두 본문과 일치. 변경 없음.
+- 참고: 2026-10-21 SDK 메이저 업(Python 2.0.0). 본문 SDK 예제는 anthropic 1.13.0에서 임포트 검증한 것이며 v2 재검증은 못 함.

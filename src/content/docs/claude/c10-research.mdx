@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 계정 (웹 검색은 계정 설정에 따라, Research는 유료 플랜 Pro·Max·Team·Enterprise)"
   - "웹, 데스크톱 앱, 모바일 앱 중 하나"
   - "(선택) Gmail, Google Calendar, Google Docs 연결"
-lastVerified: 2026-10-19
+lastVerified: 2026-10-26
 sources:
   - title: "Enable and use web search"
     url: "https://support.claude.com/en/articles/10684626-enable-and-use-web-search"
@@ -37,7 +37,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 <Summary>
 - **웹 검색**은 한두 번의 검색으로 답할 수 있는 사실 확인용이에요. 모든 응답에 인용(citation)이 붙어요.
 - **Research**는 여러 번 검색하며 단계적으로 조사해서 인용이 달린 보고서를 주는 기능이에요. 유료 플랜(Pro, Max, Team, Enterprise)의 웹·데스크톱·모바일에서 쓰고, 웹 검색이 켜져 있어야 해요.
-- 공식 도움말은 Research를 "5회 이상의 도구 호출, 1~3분이 걸리는 포괄적 조사"에 쓰라고 안내해요.
+- 공식 도움말은 Research를 "5회 이상의 도구 호출과 몇 분이 걸리는 포괄적 조사"(2026-10-26 기준 문구)에 쓰라고 안내해요.
 - 두 기능 모두 사용량 한도에 합산돼요. 특히 Research는 한도를 더 빨리 쓸 수 있어요.
 - 인용 링크를 눌러 출처를 직접 확인하는 습관이 가장 중요해요.
 </Summary>
@@ -66,7 +66,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | 최신 정보 없이 깊이 따져야 하는 문제 | 확장된 사고 | 수학 문제, 코드 디버깅 |
 | 여러 출처를 모아 비교·정리해야 하는 포괄적 조사 | Research | 경쟁사 비교, 정책 변화 정리 |
 
-공식 도움말은 웹 검색을 "한두 번의 도구 호출로 답할 수 있는 단순한 사실형 질문"에, Research를 "5회 이상의 도구 호출과 1~3분이 걸리는 포괄적 조사"에 쓰라고 설명해요. Research와 확장된 사고를 함께 쓰면 더 길고 종합적인 보고서를 받을 수 있다고 안내해요.
+공식 도움말은 웹 검색을 "한두 번의 도구 호출로 답할 수 있는 단순한 사실형 질문"에, Research를 "5회 이상의 도구 호출과 몇 분이 걸리는 포괄적 조사"에 쓰라고 설명해요. Research와 확장된 사고를 함께 쓰면 더 길고 종합적인 보고서를 받을 수 있다고 안내해요.
 
 ### 지원 모델
 
@@ -141,7 +141,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | 항목 | 웹 검색 | Research |
 | --- | --- | --- |
 | 용도 | 사실형 질문 | 포괄적 조사 |
-| 규모 | 한두 번의 도구 호출 | 5회 이상, 1~3분(공식 도움말 기준) |
+| 규모 | 한두 번의 도구 호출 | 5회 이상, 몇 분(공식 도움말 기준) |
 | 켜는 법 | "+" > Web search (통합 경험에서는 자동) | "+" > Research 또는 `/deep-research` |
 | 내 자료 활용 | URL을 주면 페이지 전체를 가져와요 | Gmail, Google Calendar, Google Docs를 웹과 함께 활용 |
 | 결과 | 인용이 포함된 답 | 인용이 포함된 보고서 |
@@ -157,7 +157,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | 초과 사용 | 추가 사용량(usage credits)이 Research에도 적용돼요. Research 세션은 토큰을 빠르게 소모해요. |
 | 이미지 검색 | 검색 결과 이미지를 출처 링크와 함께 보여 줘요. Bing 기반이에요. |
 | 위치 | 대략적인 위치를 IP로 추정할 수 있어요. |
-| 커넥터 도구 | Research는 커넥터 도구를 추가 승인 없이 호출해요. 로컬 MCP 서버는 쓸 수 없어요. 쓰기 가능한 도구는 미리 끄라는 권고가 있어요. |
+| 커넥터 도구 | Research는 커넥터 도구를 추가 승인 없이 호출해요. 로컬 MCP 서버는 쓸 수 없어요. 모바일 앱에서는 커넥터를 건너뛰고 웹만 검색하니(별도 경고 없음), 커넥터를 포함하려면 웹이나 데스크톱에서 시작하세요. 쓰기 가능한 도구는 미리 끄라는 권고가 있어요. |
 
 한도 구조 전반은 [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/)에서 다뤄요.
 

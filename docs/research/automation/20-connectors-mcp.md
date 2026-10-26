@@ -47,3 +47,8 @@ Claude 쪽 사실은 docs/research/claude/C07-connectors.md 를 재사용. 아�
 ## 2026-10-19 재확인
 - MCP 소개/아키텍처/스펙/보안 페이지, Claude 커넥터 문서, Claude Code MCP, OpenAI 플러그인·관리자·연결·MCP 서버·GPT 마이그레이션 문서, Gemini CLI MCP 문서, Notion Agent 재확인. 본문과 모순 없음.
 - 변경: Gemini CLI 문서 상단에 "무료 등급·Google One 사용자는 2026-06-18부터 Antigravity CLI로 대체" 안내 확인 → 본문 "확인하지 못한 점"에 추가. 날짜 표기 갱신.
+
+## 2026-10-26 재확인
+- 재확인: learn.chatgpt.com plugins / enterprise/apps-and-connectors, developers.openai.com connect-chatgpt, modelcontextprotocol.io 소개(2026-07-28), geminicli.com mcp-server, support.claude.com 11176164 / 11175166(커스텀 커넥터: Free 포함 전 플랜, Free 1개 제한, Customize > Connectors > + Add), 변동 없음. Developer mode 언급은 여전히 없음, 커스텀 MCP 플랜 목록 여전히 없음("account and workspace policies apply").
+- Gemini CLI 문서 배너(2026-06-18 Antigravity CLI 대체)는 그대로. 추가 배너: Gemini CLI가 "Gemini 4 Argon" 모델에 최적화되지 않아 Antigravity를 권장(본문 미반영, 모델명 전용 안내라 생략).
+- 본문 수정 없음, 날짜 표기만 2026-10-26으로 갱신. 이번에 다시 읽지 않음: MCP 아키텍처/스펙(2025-06-18, 2025-03-26)/보안 페이지, code.claude.com/docs/en/mcp, learn.chatgpt.com migrate-custom-gpts, developers.openai.com build/mcp-server.

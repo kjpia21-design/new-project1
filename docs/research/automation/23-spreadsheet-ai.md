@@ -25,3 +25,8 @@
 - Excel Copilot 시작/인사이트/FAQ/COPILOT 함수(2026-09-14 종료, #NAME?), M365 구독 FAQ(AutoSave, Family·Premium 소유자만), Sheets AI 함수, Gemini in Sheets, 파일 생성 도움말(Free 포함, 30MB, 2026-08-06 갱신) 재확인. 모드·플랫폼표 변동 없음.
 - 변경 1: Sheets AI 함수 도움말 본문에서 "Workspace Experiments/베타 프로그램 사용자에게만" 문구가 사라지고 요금제 요건만 남음(문제 해결 항목에만 Experiments 언급) → 안내 상자 수정.
 - 변경 2: Claude for Excel 도움말(support.claude.com/.../12650343)이 301로 https://claude.com/docs/office-agents/excel 로 이동 → sources·FlowSteps URL 교체. 내용(Pro/Max/Team/Enterprise GA, 빌드 번호, 데이터 테이블·VBA 미지원, iPad/Android 미지원)은 동일.
+
+## 2026-10-26 재확인
+- 재확인: Excel Copilot 시작(편집/계획/채팅, 기본 편집, 오른쪽 아래 아이콘, iPad 채팅·계획 / iPhone 채팅 / Android 채팅), COPILOT 함수(2026-09-14 종료, #NAME?), Excel Copilot FAQ(라이선스, .xlsx, 모델 선택에 Claude/GPT), claude.com/docs/office-agents/excel(Pro/Max/Team/Enterprise GA, 빌드 번호, 미지원 항목, AppSource Get it now), 파일 생성 도움말, Sheets AI 함수(=AI()/=Gemini(), 350셀, 요금제 요건) 변동 없음.
+- 변경: 파일 생성 도움말에서 설정 이름이 "Create and edit files"(예전 "Code execution and file creation")로 바뀜. Free/Pro/Max는 Settings > Capabilities, Team/Enterprise는 Organization settings > Capabilities, 30MB, Drive 저장 동일 → 본문 수정.
+- 참고(미반영): Excel FAQ에 모델 선택(Claude/GPT, 상용 Copilot·M365 Premium 필요, 엔터프라이즈는 Anthropic 하위 처리자 활성화 필요), Claude for Excel 문서에 pivot·조건부 서식 등 기본 Excel 작업 지원 명시. 이번에 다시 읽지 않음: identify-insights, M365 구독 FAQ, 14356410, 14925782.

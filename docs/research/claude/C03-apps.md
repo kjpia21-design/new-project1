@@ -38,3 +38,6 @@
 
 ## 2026-10-19 점검 반영
 - 데스크톱 설치 도움말(10065433)에서 최소 OS가 macOS 13(Ventura) 이상으로 확인되어 본문의 macOS 11을 고침. Windows 10+, Linux 베타(Ubuntu 22.04+/Debian 12+, x64·arm64), iOS/iPadOS 18.0+, Android 8.0+ 변동 없음. 시작 가이드: 18세 이상, 지원 지역 조건 그대로.
+
+## 2026-10-26 점검 반영
+- 시작 가이드(8114491), 데스크톱(10065433: macOS 13+, Windows 10+, Linux 베타 Ubuntu 22.04+/Debian 12+), iOS 18.0+(9266462), Android 8.0+(9612887), Cowork 통합(16761823) 다시 읽음. 변동 없음 — 단, 전역 지침 위치가 Settings > Your Claude(예전: Settings > Account)로 확인되어 본문 "설정 > 일반(General)"을 고침. 릴리스 노트 최신 항목(2026-10-21 Claude Duet 연구 프리뷰, Pro/Max)은 본문 미반영.

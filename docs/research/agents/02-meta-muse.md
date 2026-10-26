@@ -143,3 +143,6 @@
 
 ## 2026-10-19 재확인
 - 변경 없음. Newsroom 발표문은 미국 롤아웃만 언급(한국·언어 언급 없음, 9/30 업데이트 표기 있으나 내용 미상). 도움말센터: 무료/Power $20 5억 토큰/Maximum $100 30억 토큰, "limited testing, not available in all locations" 동일.
+
+## 2026-10-26 재확인
+- 변경 없음. Newsroom 발표문(2026-09-08, 9/30 업데이트 표기): "rolling out in the US on iOS, Android, and muse.ai, coming soon to AI glasses", 한국·언어 언급 없음, 요금 언급 없음(대부분 무료, 헤비 사용은 구독). Small Business 글(9/29, 10/8 업데이트): "available in the US and Canada", 커넥터 Asana·Canva·Shopify·Stripe·QuickBooks. 도움말센터: Power $20 주당 5억 토큰 / Maximum $100 주당 30억 토큰, limited testing 동일. muse.ai와 ai.meta.com/muse는 로그인 리디렉션/본문 없음으로 읽지 못함.

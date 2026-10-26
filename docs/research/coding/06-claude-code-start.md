@@ -31,3 +31,7 @@
 - https://code.claude.com/docs/en/web-quickstart — 확인일 2026-10-10
 - https://code.claude.com/docs/en/commands, permission-modes (C12/C14 연구 파일 경유)
 - https://claude.com/pricing (C12 연구 파일 경유)
+
+## 2026-10-26 재점검
+- overview, quickstart, commands, permission-modes, claude.com/pricing 재열람(permission-modes는 앞 10만 자만 읽음). 기존 서술과 일치: Pro·Max·Team·Enterprise 또는 Console 계정(Free는 Claude Code 미포함), v2.1.283 이상 터미널·VS Code 기본 시작 모드 auto, 계획 승인 선택지 3종, 설치 명령. 변경 없음. lastVerified만 갱신.
+- 새로 확인(본문 미반영): overview에 "cloud scheduled tasks(예전 이름 routines)" 표기.

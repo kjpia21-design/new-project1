@@ -124,3 +124,10 @@
 
 ## 2026-10-19 재확인
 - 변경 없음. developers.openai.com/codex/dots는 learn.chatgpt.com/docs/dots로 308 이동. Pro 100/200/500은 18세 초과·EEA/영국/스위스 제외, Business Premium·Enterprise 전 세계 롤아웃, Enterprise 기본 꺼짐. 한국·언어 언급 없음. 본문의 "Beta"는 이 페이지에 없음(관리자 문서 표기는 미재확인).
+
+## 2026-10-26 재확인
+- developers.openai.com/codex/* 가 learn.chatgpt.com/docs/* 로 308 영구 이동. 본문 sources/officialUrl를 새 주소로 교체 (dots, getting-started, channels, tasks-and-memory, computers-and-apps, controls, enterprise/dots-admin-guide, pricing 모두 열람 성공).
+- 접근: Pro 100/200/500 만 18세 이상·EEA/영국/스위스 제외, Business Premium 전 세계 순차, Enterprise 관리자가 켜야 함, "대상 플랜이어도 바로 안 보일 수 있음", 한국 언급 없음 — 변경 없음. 공개 문서에 Beta 표기 없음(관리자 문서만 "Use dots (Beta)", 경로 Admin Console > Permissions > Workspace default > Workspace capabilities). 모델 GPT-6 Astra 동일.
+- 수정: Custom rules 경로가 Settings > Personalization > Custom rules(데스크톱/웹), Customize > Custom rules(iOS/Android)로 확인됨. 기존 "개인 설정 > 권한(Permissions) > Custom rules" 정정. 플러그인 권한은 Open Plugins.
+- pricing 페이지: Pro 월 $100/$200/$500, Plus $20, Go $8, Business 사용자당 $20(연 결제)/$25(월 결제). Dots 포함 플랜은 이 페이지에 없음. 한국 App Store: Pro 100 ₩159,000 / Pro 200 ₩299,000 / Pro 500 ₩790,000 동일, 앱 버전 1.2026.286.
+- 새로 확인: iOS 위젯·단축어는 ChatGPT iOS 1.2026.279부터 롤아웃(dot 접근 필요), SMS 미제공("곧"), dot이 먼저 거는 전화는 출시 후 예정 — 본문과 일치.

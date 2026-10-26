@@ -23,3 +23,6 @@
 
 ## 재점검 (2026-10-19)
 - Gemini YouTube 도움말(16622858), 파일 업로드(14903178: 영상 2GB·5분/Pro·Ultra 1시간), YouTube 도움말 5건(Shorts 최대 3분, AI use 공개 기준, reused content), Vrew 사이트·약관·공지(2026-04-22 통합 크레딧 공지가 최신)를 다시 열었다. 본문과 충돌 없음(Vrew 홈페이지는 맥·윈도우·우분투 지원 표기). Vrew 요금·모바일 앱은 계속 미확인. 변경 없음, lastVerified만 갱신.
+
+## 재확인 2026-10-26
+- Gemini YouTube 도움말(Keep Activity, Live 불가, Messages 불가), Gemini 파일 업로드 도움말(영상 2GB·총 5분/Pro·Ultra 1시간, 10개), YouTube 도움말 5건(Shorts 최대 3분, AI use 공개, 1~3분 Shorts 클레임 시 차단), Vrew 홈페이지(Mac/Windows/Ubuntu)·이용약관·공지사항을 다시 열어 본문과 일치 확인(변경 없음). Vrew 공지에는 2026-04-22 통합 크레딧 이후 새 공지(AI 이미지·비디오 모델 소개, 일부 모델 2026-10-31 종료, Vrew 에이전트 유료화)가 올라와 있으나 본문은 요금·모델을 단정하지 않으므로 수정 불필요.

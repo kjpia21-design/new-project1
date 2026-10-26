@@ -11,7 +11,7 @@ prerequisites:
   - "Claude Code가 설치된 터미널 (설치는 C12 참고)"
   - "작업할 프로젝트 폴더 하나"
   - "(훅 예제를 따라 한다면) jq와 Node.js(npx)"
-lastVerified: 2026-10-19
+lastVerified: 2026-10-26
 sources:
   - title: "How Claude remembers your project (CLAUDE.md, auto memory)"
     url: "https://code.claude.com/docs/en/memory"
@@ -274,7 +274,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 **auto 모드 알아 두기** (2026-10-11 기준, 공식 permission-modes 문서와 변경 이력 기준)
 
-- **시작 조건**: v2.1.283 이상에서는 터미널과 VS Code 세션이 모드를 따로 정하지 않으면 auto로 시작해요. `--permission-mode`나 `permissions.defaultMode`가 우선하고, 조직이 `disableAutoMode`로 끄면 Manual로 시작해요. 모델이 auto를 지원하지 않는 경우에도 Manual로 시작해요.
+- **시작 조건**: v2.1.283 이상에서는 터미널과 VS Code 세션이 모드를 따로 정하지 않으면 auto로 시작해요. `--permission-mode`나 `permissions.defaultMode`가 우선하고, 조직이 `disableAutoMode`로 끄면 Manual로 시작해요. 모델이 auto를 지원하지 않는 경우에도 Manual로 시작해요. `claude -p`와 Agent SDK 실행은 v2.1.302 이상에서 Manual로 시작하니 auto를 쓰려면 `--permission-mode auto`를 주세요(2026-10-26 기준). `.claude/settings.json`에 `defaultMode: "auto"`를 적어도 효과가 없고 `~/.claude/settings.json`에 적어야 해요.
 - **분류기**: 직접 Anthropic API 연결에서는 서버가 검사하는 방식이 기본이고, 서버가 검사하지 않는 환경(게이트웨이가 요청을 막는 경우 등)에서는 Claude Code가 자체 분류기 요청으로 대신해요. `CLAUDE_CODE_AUTO_MODE_SERVER=0`이면 항상 자체 분류기를 써요. 이 경우 분류기 호출이 토큰 사용량에 잡힐 수 있어요.
 - **규칙 보기**: `/permissions`의 **Auto mode** 탭에서 분류기 규칙을 보고 고칠 수 있어요(v2.1.246 이상). 막힌 동작은 **Recently denied** 탭에서 `r`로 수동 승인 재시도를 할 수 있어요.
 
@@ -299,7 +299,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | 그 밖의 필드 | `effort`, `tools`, `permissionMode`, `memory`, `isolation: worktree` 등 |
 | 자동 압축 | frontmatter와 `--agents`의 `autoCompactWindow`로 서브에이전트가 메인 대화보다 일찍 자동 압축하게 할 수 있어요(v2.1.296 이상) |
 | 호출 때 effort | 정의의 `effort`와 별개로 Claude가 Agent 도구의 `effort` 매개변수로 이번 호출만 effort를 정할 수 있어요(v2.1.292 이상). `CLAUDE_CODE_EFFORT_LEVEL` 환경변수가 둘보다 우선해요. |
-| 내장 | Explore(읽기 전용 탐색), Plan, General-purpose, claude(만능 에이전트), statusline-setup, claude-code-guide |
+| 내장 | Explore(읽기 전용 탐색), Plan, general-purpose, statusline-setup, claude-code-guide (2026-10-26 기준 공식 문서 표) |
 
 ### 플러그인 설치와 평가
 

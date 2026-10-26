@@ -129,3 +129,10 @@
 - cursor.com/help/grok-bot/plans: 접근 경로에 "The X Subscription"(Premium·Super·Ultra 포함, Plus·Free 제외, Grok·Cursor 공유 주간 풀, 초과분은 선불 크레딧)이 새로 나오고 Cursor Pro/Pro+/Ultra/Teams는 "legacy"로 표기. 본문(03) 플랜 표에 반영. 가격은 Cursor pricing 페이지 URL이 404라 재확인 못 해 기존 값 유지.
 - 한국 App Store 목록: 한국어 지원, Pro ₩44,000 / Pro+ ₩129,000 / Ultra ₩449,000 그대로.
 - cursor.com/help/the-x-subscription/overview 읽음. 한국 제공 여부는 이 페이지들에 여전히 언급 없음.
+
+## 2026-10-26 재확인
+- cursor.com/help/grok-bot/plans: X Subscription(Premium·Super·Ultra 포함, Plus·Free 제외)은 "Grok·Cursor·Grok 앱과 같은 주간 풀, 별도 Grok Bot 계량기 아님". x.ai 8월 공지의 "별도 사용량" 표현과 다름 → 본문에서 "전용 주간 사용량" 단정 제거. SuperGrok Lite 미포함, 초과분 선불 크레딧(X Subscription)/On-demand(legacy) 동일. [공식-열람]
+- App Store 한국: 버전 1.18.0, 언어 12개(11개에서 증가), 연령 19+, 앱 내 구입 Pro ₩44,000 / Pro+ ₩129,000 / Ultra ₩449,000 동일, 판매자 X Corp.(저작권 표기 Anysphere). [스토어-열람]
+- docs.x.ai get-started: 첫 실행 시 "Grok Bot"이라는 첫 Bot이 자동 생성되고 대화가 열림. "Meet a future teammate" 문구는 확인되지 않아 스크린샷 캡션 수정. 베타 문구는 x.ai 공지(8/11)에만 있고 docs에는 없음.
+- tag-on-x(호주·영국·EU·아이슬란드·리히텐슈타인·노르웨이 미지원, 한국 제외 목록 없음), 루틴 50개/5분/20개 기록/녹화 10분, 승인 만료 10분, 로컬 실행 3값, 컴퓨터 미국 실행 모두 동일. 
+- 확인 못 함: Android 9 이상(이번 docs 페이지에 버전 명시 없음, Play 페이지는 동적 로딩으로 읽기 실패), 파일 첨부 25MB/200MB/6개(approvals 페이지에 없음, 다른 하위 문서일 수 있음), 데스크톱 문서의 한국어 언어 목록.

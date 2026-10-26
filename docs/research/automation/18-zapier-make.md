@@ -56,3 +56,8 @@
 
 ## 2026-10-19 재확인
 - Zapier 가격(Free 100 task, 2단계, 15분 / Professional 2분, KRW 없음, 14일 Pro 체험·카드 불필요·자동 유료 전환 없음), task 계산·한도 도움말, 영어 전용 안내, Make 크레딧/스케줄(기본 15분, 최소 간격은 플랜별 미기재)/해지 시 Free 월 1,000 크레딧, 앱 모듈 이름(Watch emails, Add a Row, Send a Message) 모두 재확인. 변경 없음(날짜 표기만 갱신).
+
+## 2026-10-26 재확인
+- Zapier(WebFetch): 가격(Free 100 task/2단계/15분, Professional 2분 다단계, Team 1분, KRW 없음 19개 통화, 신규 14일 Pro 체험 카드 불필요), task 도움말(폴링은 task 미사용, 한도 도달 시 보류/종량제), 체험 도움말(신규는 Free 복귀, Free에서 시작한 체험·Team 체험은 자동 유료 전환), 영어 전용 안내, Gmail+Sheets 연동 페이지(New Email/New Labeled Email/Create Spreadsheet Row) 변동 없음.
+- Make(curl, help.make.com / apps.make.com): credits(1 operation = 1 credit, AI는 토큰 추가), cancel-your-subscription(해지 후 Free 월 1,000 크레딧), schedule-a-scenario(기본 15분, 최소 간격 플랜별), adjustments-to-plans-and-pricing(2025-11-06), create-your-first-scenario(2026-05-18 갱신, Google Sheets + Slack 예제), gmail-modules(Watch emails), google-sheets-modules(Add a Row) 변동 없음. 본문 수정 없이 날짜 표기만 2026-10-26으로 갱신.
+- 읽지 못함/미재확인: www.make.com(봇 차단), help.make.com/step-1-plan-your-scenario, apps.make.com/slack-modules, 일부 Zapier 연동 서브페이지(9991).

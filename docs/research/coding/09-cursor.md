@@ -48,3 +48,8 @@
 - 요금제 변경: cursor.com/pricing, cursor.com/help/account-and-billing/pricing, cursor.com/docs/models-and-pricing 기준으로 신규 가입 플랜이 Free $0 / Plus $8 / Premium $30 / Super $100 / Ultra $200 / Teams 좌석당 $30·$100·$200 / Enterprise 문의로 바뀜. 연 결제 Plus $80, Premium $300, Super $1,000, Ultra $2,000. 클라우드 에이전트는 Premium 이상(Plus 제외). 예전 Hobby(무료)·Pro $20·Pro+ $60·Ultra $200·Teams Standard $40·Teams Premium $120·인도 Start ₹649는 기존 구독자용(가격 도움말). 사용량은 주간 풀. 본문 요금제 표를 이에 맞게 수정.
 - 한국 가격/원화는 여전히 공식 페이지에 없음.
 - 재확인(변경 없음): Agent/Ask/Plan/Debug 모드, Shift+Tab, Cmd/Ctrl+I, Restore Checkpoint, Rules `.mdc` 필수, `.cursorignore` 동작, Privacy Mode, 색인 설명, 설치 형식(.dmg/.exe/apt·dnf), macOS 12+/Windows 10+. first-project.md는 WebFetch에서 404, curl은 시간 초과(미확정). 확장자 없는 first-project 페이지는 열려 File > Open Folder, Cmd/Ctrl+I를 확인함.
+
+## 2026-10-26 재점검
+- 열람: pricing 도움말, quickstart, agent, ask-mode, rules, data-use, release-notes(IDE 3.23~3.27), ignore-files, codebase-indexing, first-project.md. models-and-pricing·가격 문서는 curl로 새 요금 체계(Free/Plus $8/Premium $30/Super $100/Ultra $200, Teams $30·$100·$200, 레거시 Hobby·Pro·Pro+·Start) 재확인.
+- 본문과 일치하여 변경 없음: 요금제 표, 모드 4종(Agent·Ask·Plan·Debug), Cmd/Ctrl+I, Shift+Tab, Restore Checkpoint, Rules 4종 적용 방식(.mdc), File > Open Folder, 색인(로컬, 경로·코드 업로드 안 함), 기본 제외 목록.
+- 새로 확인(미반영): Rules 만들기는 채팅에서 /create-rule 또는 Customize > Rules > Add Rule. 3.26에서 + 메뉴 파일 항목 이름이 Attach로 바뀜. Instant Grep은 베타로 표기. Privacy Mode 기본값과 Teams 강제 여부는 data-use 페이지에 없음.

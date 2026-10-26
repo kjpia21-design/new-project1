@@ -30,3 +30,7 @@
 
 ## 재점검 (2026-10-19)
 - Gamma 도움말 6건, Claude 도움말 2건, Microsoft Copilot in PowerPoint 도움말을 다시 열었다. 변경: (1) Pro 플랜도 한 번에 최대 100장(upgrade 글) → '확인하지 못함'을 '최대 100장'으로. (2) 새 Free 사용자는 가입 시 400 크레딧(credits 글) → 표에 추가. 그 밖에 Plus 1,000/Pro 4,000 크레딧, 2배 이월, Plan·Express·Research 모드, 학습 기본값, Export 배지, Claude Slides 내보내기(PowerPoint·PDF·Google Slides), Copilot Agent Mode 안내(파일 참조 coming soon, 24MB)는 동일.
+
+## 재확인 2026-10-26
+- Gamma 도움말 6건(생성 모드 Plan/Express/Research, 내보내기 Share > Export·All cards·"Made by Gamma" 배지, 크레딧 Free 400/추천 200/최대 2,000·Plus 1,000·Pro 4,000·2배 이월, 업그레이드 슬라이드 10/100/100장, 학습 기본값), Claude Artifacts·파일 만들기 도움말(Slides 템플릿, PowerPoint/PDF/Google Slides 내보내기), Microsoft 도움말을 다시 열었다.
+- 변경: Microsoft 도움말(Last updated: October 2026)이 개편되어 "Add Content > Agent Mode" 단계와 "AI-generated 출처 표시" 설명이 없어지고, Copilot Chat 아이콘(우하단) > 모델 선택기(Auto) > Brand Kit 선택(조직 요구 시) > 설명 입력 > 질문 > 생성 순서로 바뀜. 본문 FlowSteps, 스크린샷 caption, 표, FAQ 제목 수정. 24MB 이하 Word 문서 팁, 라이선스 확인 안내는 동일.

@@ -11,7 +11,7 @@ prerequisites:
   - "Claude Console 계정 (platform.claude.com)"
   - "API 사용을 위한 결제 설정 (Pro/Max 구독과 별개예요)"
   - "터미널, Python 3.10 이상 (Python 예제용)"
-lastVerified: 2026-10-19
+lastVerified: 2026-10-26
 sources:
   - title: "How do I pay for my Claude API usage?"
     url: "https://support.claude.com/en/articles/8977456-how-do-i-pay-for-my-api-usage"
@@ -229,7 +229,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 | 항목 | 값 |
 | --- | --- |
 | 주소 | `POST https://api.anthropic.com/v1/messages` |
-| 헤더 | `content-type: application/json`, `x-api-key: $ANTHROPIC_API_KEY`, `anthropic-version: 2023-06-01` |
+| 헤더 | `content-type: application/json`, `x-api-key: $ANTHROPIC_API_KEY`, `anthropic-version: 2023-06-01` (공식 quickstart 기준. 새 API 버전은 아래 설명 참고. 2026-10-26 기준 마이그레이션 문서는 API가 키를 `X-Api-Key`와 `Authorization: Bearer <키>` 두 헤더 모두로 받는다고 안내해요) |
 | 본문 | `model`, `max_tokens`, `messages` (시스템 프롬프트는 `system`) |
 
 ### 모델별 요청 제한 (400 오류 주의, 2026-10-11 기준)
@@ -243,6 +243,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 | Fable 5.1, Mythos 5.1 | `tool_choice`의 `any`, `tool`은 지원되지 않고 400 오류예요(`auto`, `none`은 그대로). 스키마에 맞는 도구 입력이 필요하면 strict tool use를 쓰세요. |
 | Haiku 5.5 | Haiku 4.5 방식 코드가 깨질 수 있어요. `budget_tokens`(수동 확장 사고), `temperature`·`top_p`·`top_k`, assistant 메시지 prefill이 각각 400 오류를 낼 수 있어요. 적응형 사고가 기본이라 응답이 `thinking` 블록으로 시작할 수 있고, 그 텍스트는 `thinking.display`를 `"summarized"`로 정하지 않으면 생략돼요. |
 
+- **새 API 버전 2026-10-21 (2026-10-21 출시, 2026-10-26 기준)**: 새 SDK 메이저 버전(Python `anthropic` 2.0.0, TypeScript `@anthropic-ai/sdk` 1.0.0, C# 13.0.0, Go 2.0.0, Java 3.0.0, PHP·Ruby 등)과 `ant` CLI 2.0.0은 기본으로 `anthropic-version: 2026-10-21`을 보내요. SDK 없이 직접 호출한다면 이 헤더 값을 `2026-10-21`로 바꿔야 새 동작이 적용되고, 기존 `2023-06-01`을 계속 보내면 예전 동작이에요. 새 버전에서는 `temperature`·`top_p`·`top_k`를 보내면 기본값이어도 400 오류예요. 사용자 메시지의 `citations`와 assistant 메시지 안의 `document` 블록도 400 오류예요. 새 SDK는 API 키를 `Authorization: Bearer`로 보내요. 올리기 전에 [공식 마이그레이션 문서](https://platform.claude.com/docs/en/api/migration-2026-10-21)의 체크리스트를 따르세요.
 - **데이터 보관**: Fable 5.1과 Mythos 5.1은 Fable 5처럼 **30일 데이터 보관이 필요**하고, Anthropic이 명시적으로 허용하지 않는 한 **ZDR(zero data retention) 조직에서는 쓸 수 없어요.** ZDR 계약이 있다면 Fable로 바꾸기 전에 확인하세요.
 - 어떤 모델이 thinking 끄기나 서버 도구를 받는지는 Models API의 `capabilities`(`thinking.types.disabled`, `server_tools`)로 조회할 수 있어요.
 
@@ -253,7 +254,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 | Python | `pip install anthropic` (v1.0부터 Python 3.10 이상) |
 | TypeScript | `npm install @anthropic-ai/sdk` |
 | C# | `dotnet add package Anthropic` |
-| Go | `go get github.com/anthropics/anthropic-sdk-go` |
+| Go | `go get github.com/anthropics/anthropic-sdk-go/v2` (2.0.0부터 모듈 경로 끝에 `/v2`) |
 | PHP | `composer require anthropic-ai/sdk` |
 | Ruby | `bundle add anthropic` |
 | Java | 공식 quickstart의 Gradle/Maven 안내 참고 |
@@ -283,7 +284,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 ### Python SDK를 올렸더니 `temperature`가 오류예요 (SDK 1.0)
 
-- **원인**: Python SDK v1.0(2026-08-20)은 Python 3.10 이상이 필요하고, 오래 전에 지원 중단된 것들을 없앴어요. Text Completions API, Messages 메서드의 `temperature`·`top_p`·`top_k` 파라미터가 그 예예요. HTTP 계층도 `httpx`에서 `httpx2`로 바뀌었어요.
+- **원인**: 2026-10-21 API 버전과 새 SDK 메이저 버전(Python 2.0.0 등)에서는 `temperature`·`top_p`·`top_k`가 아예 없어졌어요. 앞서 Python SDK v1.0(2026-08-20)은 Python 3.10 이상이 필요하고, 오래 전에 지원 중단된 것들을 없앴어요. Text Completions API, Messages 메서드의 `temperature`·`top_p`·`top_k` 파라미터가 그 예예요. HTTP 계층도 `httpx`에서 `httpx2`로 바뀌었어요.
 - **해결**: 해당 파라미터를 빼거나 공식 마이그레이션 안내의 전후 코드를 따르세요. 예제의 `pip install anthropic`은 그대로 쓰면 돼요.
 
 ### 개인 키가 갑자기 작동하지 않아요

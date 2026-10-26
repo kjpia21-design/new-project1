@@ -11,7 +11,7 @@ prerequisites:
   - "C16. Claude API 시작하기를 끝낸 상태 (API 키, 환경변수 설정)"
   - "Python 3.10 이상, pip, 터미널"
   - "질문에 써도 되는 연습용 문서 몇 개 (PDF 또는 .txt, .md)"
-lastVerified: 2026-10-19
+lastVerified: 2026-10-26
 sources:
   - title: "Files API"
     url: "https://platform.claude.com/docs/en/build-with-claude/files"
@@ -25,6 +25,8 @@ sources:
     url: "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention"
   - title: "Models overview"
     url: "https://platform.claude.com/docs/en/models/overview"
+  - title: "Migrating to API version 2026-10-21"
+    url: "https://platform.claude.com/docs/en/api/migration-2026-10-21"
   - title: "Prompting best practices (Long context prompting)"
     url: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
 status: published
@@ -77,6 +79,7 @@ C16에서 API 키와 첫 호출을 끝냈다고 가정해요. 키 발급과 환�
 - 텍스트 인용만 돼요. 이미지 인용은 안 되어서, **텍스트가 없는 스캔 PDF는 인용할 수 없어요.**
 - `citations`는 요청 안의 모든 문서에 켜거나 모두 꺼야 해요. 섞어 쓸 수 없어요.
 - 인용과 **구조화 출력(`output_config.format`)은 함께 쓸 수 없어요.** 같이 보내면 400 오류예요. JSON이 필요하면 인용 대신 별도 호출로 나누세요.
+- API 버전 `2026-10-21`(2026-10-21 발표, 새 SDK는 이 버전을 기본으로 보내요)부터는 `user` 메시지의 `text` 블록에 비어 있지 않은 `citations`를 넣거나 `assistant` 메시지에 `document` 블록을 직접 넣으면 400 오류예요(2026-10-26 기준, 공식 마이그레이션 안내). 대화를 이어 갈 때 Claude의 이전 답변을 `assistant`로 돌려보내는 것과 문서의 `citations: {"enabled": true}` 설정은 그대로 돼요. 문서는 `user` 메시지에 넣으세요.
 - 인용은 "문서의 이 위치"를 가리켜요. 답변의 해석이 맞다는 보증은 아니니, 중요한 답은 `cited_text`를 사람이 확인하세요.
 </Aside>
 

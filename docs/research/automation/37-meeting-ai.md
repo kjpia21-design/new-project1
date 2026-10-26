@@ -46,3 +46,8 @@
 ## 2026-10-19 재확인
 - Meet(Take notes for me, 녹화, 전사), Zoom(Meeting summary, 지원 언어 Korean 포함), Teams(Copilot 회의 도움말, Recap 절차, 녹화 안내, 언어 목록) 재확인. 본문과 모순 없음, 변경 없음.
 - 참고(본문 미반영): Zoom 도움말에 "산업·지역에 따라 AI 기능을 쓸 수 없을 수 있다"는 문구, Teams Recap 도움말은 회의 채팅의 Recap 탭만 언급(Calendar 이벤트 언급 없음, 모순은 아님). 한국 지역 제공 여부는 여전히 미확인.
+
+## 2026-10-26 재확인
+- 재확인: Meet 14754931(Take notes for me, 8개 언어 Korean 포함, 15분~8시간, Drive Google Meet 폴더), 9308681(녹화 요건, 동의 설정 기본 꺼짐), 12849897(전사 Korean 포함, 기존 Meet Recordings 폴더는 2026-07부터 Legacy Meet Recordings로 이름 변경 안내), Zoom KB0058013(플랜 목록, Start Zoom AI, 소그룹 회의실 불가), KB0078144(Meeting summary 언어에 Korean), Teams Copilot 회의 도움말(라이선스, 외부 주최 회의 불가), catch-up 도움말(Allow Copilot and Facilitator 3가지 옵션 문구), Recap 도움말(Recap 탭 > Copilot > View prompts), 녹화 도움말(지역별 동의 문구). 본문과 모순 없음.
+- 변경: Zoom 도움말의 "일부 산업·지역 고객은 AI 기능 미제공 가능" 문구를 본문 "확인하지 못한 점"에 한 문장 추가(이전 노트에서는 미반영). 한국 제공 여부는 여전히 미확인.
+- 이번에 다시 읽지 않음: supported-languages-for-microsoft-365-copilot, Teams welcome-to-copilot-in-microsoft-teams의 세부(Meet Now, 10분 전 제안만 확인), 상세 Zoom 한국어 목록 원문 전체.

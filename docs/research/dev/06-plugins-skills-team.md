@@ -71,3 +71,7 @@ code.claude.com/docs/en/skills(앞 100,000자), /plugins, /plugin-marketplaces(�
 - 변경 1: `claude plugin eval`은 git이 설치돼 있으면 Git 2.31 이상 필요(plugin-evals; 더 오래된 git이면 케이스 실행 전 중단). 본문 4단계에 반영.
 - 변경 2: 세션 안에서 `/plugin install <이름> --marketplace <저장소>`로 등록+설치 한 번에(Claude Code v2.1.275 이상, plugins/publish). 셸 한 줄 명령(v2.1.292 이상)은 기존 그대로.
 - 확인 유지: description+when_to_use 1,536자 절단, SKILL.md 500줄, `.claude-plugin/`에는 plugin.json만, version 고정 시 업데이트 안 됨, `claude plugin tag --push` 태그 형식, 관리 설정 키(strictKnownMarketplaces 등)와 Owner 경로, 디렉터리 제출 포털 흐름(단계·플랜 조건·claude-plugins-official 미접수).
+
+## 2026-10-26 재검증
+- skills(결합 텍스트 1,536자 상한, SKILL.md 500줄), plugin-evals(v2.1.269+, Git 2.31+), plugins/publish(`/plugin install ... --marketplace` v2.1.275+, 셸 명령 v2.1.292+, `claude plugin tag` `{name}--v{version}`, claude-plugins-official은 포털 미접수), plugins/org(strictKnownMarketplaces, syncClaudeAiPlugins, SEED_DIR, SYNC_PLUGIN_INSTALL, Organization settings > Plugins & skills), claude.com/docs/plugins/submit(조직당 24시간 10건), claude.com/docs/directory/publish(Pro/Max/Team/Enterprise만, Free 불가, Enterprise는 Directory 권한 역할) 재확인: 본문과 일치. 변경 없음.
+- 여전히 미확인: claude.ai 채팅·Cowork에서 로드되는 플러그인 구성요소 범위, plugin.json 전체 필드 목록.

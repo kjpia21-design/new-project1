@@ -49,3 +49,6 @@
 
 ## 2026-10-19 점검 반영
 - model-config, 모델 개요, sub-agents, costs를 다시 읽음. opusplan, 모델 해석 표, 서브에이전트 모델 우선순위 변동 없음.
+
+## 2026-10-26 점검 반영
+- choosing-a-model(시작 전략 두 가지, Opus 5.5 권장 시작점), model-config(별칭, 최소 버전, 기본 모델 Opus 5.5), costs(Sonnet 위주·Opus 아껴 쓰기, 에이전트 팀 약 7배), advisor(실험 기능·Anthropic API 한정·페어링 표), 서브에이전트 모델 결정 순서(4단계) 모두 변동 없음. 가격 비율(Sonnet = Opus의 절반, Fable = 2.5배) 유지. 변경 없음.

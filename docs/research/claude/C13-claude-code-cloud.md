@@ -56,3 +56,8 @@
 
 ## 2026-10-19 점검 반영
 - claude-code-on-the-web, cloud-environments, routines, fast-mode를 다시 읽음. 4 vCPU/16GB/30GB, Trusted/None/Custom/Full, 루틴 한도(스케줄 계정당 100/시간, Run now 30/시간), 최소 간격 1시간, 베타 헤더 값 변동 없음. 루틴은 여전히 research preview. 새로 보인 것(본문 미반영): 클라우드 세션 안에서 /teleport 입력 시 명령 안내(v2.1.223+), Quick setup 조직 설정. '클라우드 세션 크레딧'은 이번에도 공식 문서에 없음.
+
+## 2026-10-26 점검 반영
+- 루틴 문서(code.claude.com/docs/en/routines)가 이제 제목을 "Automate work with scheduled tasks"로, 기능을 "cloud scheduled task, formerly a routine"으로 부름(리서치 프리뷰 유지). 웹은 claude.ai/code/routines(주소 유지)에서 "New task"(일부 계정은 "New routine"), 데스크톱 Code 탭은 사이드바 Scheduled > New task, CLI는 `/schedule`(별칭 `/routines`), 조직 설정 토글은 "Scheduled tasks (Was Routines)"(Organization settings > Capabilities > Remote sessions). 본문에 새 이름과 예전 이름을 병기하고 "루틴" 표현은 유지.
+- 한도 재확인: 스케줄 실행(1회성 포함) 계정당 시간당 100회, Run now·API·1회성 재실행은 작업당 시간당 30회(계정당 별도 100회), 초과 과금 없음, 1시간 미만 cron은 거부, 구독 일시중지 시 보류, GitHub 연결 끊김 72시간 후 꺼짐 — 본문과 일치.
+- 클라우드 세션 문서(claude-code-on-the-web)·클라우드 환경 문서 재확인: 플랜(Pro/Max/Team, Enterprise 프리미엄·Chat+Claude Code 좌석), 네트워크 수준 None/Trusted/Full/Custom, 4 vCPU/16GB/30GB, 캐시 약 7일·설정 스크립트 약 5분, `--cloud`(`--remote`는 deprecated 별칭), `--teleport` 변동 없음. 신규(본문 미반영): 조직 IP 허용 목록이 켜져 있으면 Anthropic 호스팅 클라우드 세션·예약 작업이 인증 오류, Team/Enterprise "Quick setup" 토글, GitHub 없는 저장소를 번들로 업로드(`CCR_FORCE_BUNDLE=1`, 100MB 미만). "클라우드 세션 크레딧"은 이번에도 공식 문서에서 찾지 못함.

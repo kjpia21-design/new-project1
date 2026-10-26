@@ -41,3 +41,6 @@ Aside: 남김. 문구를 "Canva 공식 도움말 원문은 아직 확인하지 �
 
 ## 재점검 시도 (2026-10-19)
 - canva.com 도움말은 curl 403(계속 접근 불가). canva.dev list-brand-kits("Canva Pro, Business, Enterprise")와 App Store·Google Play 등록 정보만 재확인, 기존 서술과 충돌 없음. 핵심 출처(canva.com)를 읽지 못해 본문·lastVerified 변경 없음.
+
+## 재확인 2026-10-26
+- canva.dev list-brand-kits(Pro·Business·Enterprise 제공), Brand templates API 문서, Google Play·App Store 등록 정보를 다시 열어 본문과 일치함을 확인(변경 없음). 참고: App Store·Play 설명에 Veo 3 영상 생성이 언급됨(본문 영향 없음). canva.com 도움말·약관은 여전히 403.

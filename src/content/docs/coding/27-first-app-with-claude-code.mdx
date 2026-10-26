@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 유료 플랜 (Pro 이상) 또는 Console 계정"
   - "Claude Code 설치와 로그인 (C12 참고)"
   - "빈 폴더 하나와 웹 브라우저"
-lastVerified: 2026-10-19
+lastVerified: 2026-10-26
 sources:
   - title: "Quickstart"
     url: "https://code.claude.com/docs/en/quickstart"
@@ -34,7 +34,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - 설치와 로그인은 [C12](/claude/c12-claude-code-overview/)에 있어요. 이 편은 반복하지 않아요.
 - 요령은 세 가지예요. **뼈대부터 → 기능을 하나씩 → 매번 눈으로 확인.** 큰 요청 하나보다 작은 요청 여러 개가 훨씬 잘 돼요.
 - 안전 습관도 같이 익혀요. 변경 내용 확인, 비밀정보(비밀번호·API 키) 넣지 않기, 되돌리기, 작업 폴더 밖은 건드리지 않기.
-- Claude Code는 Pro 이상 유료 플랜에서 쓸 수 있어요([C2](/claude/c02-plans-limits/), 2026-10-19 기준).
+- Claude Code는 Pro 이상 유료 플랜에서 쓸 수 있어요([C2](/claude/c02-plans-limits/), 2026-10-26 기준).
 </Summary>
 
 ## 이 튜토리얼로 할 수 있게 되는 것
@@ -56,7 +56,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | **체크포인트** | Claude가 파일을 바꾸기 전에 남기는 되돌리기 지점이에요. `/rewind`로 열어요. |
 | **확인 방법** | 결과가 맞는지 보는 방법이에요. 이 실습에서는 "브라우저에서 직접 눌러 보기"예요. |
 
-공식 문서는 Claude에게 **스스로 확인할 방법을 주라**고 권해요. 테스트, 빌드, 스크린샷처럼 결과를 읽을 수 있는 신호가 있으면 결과 품질이 좋아져요. 그리고 "검증할 수 없다면 내보내지 말라"고 해요(2026-10-19 확인). 이 편의 프롬프트에는 그래서 "만든 뒤에 이렇게 시험해 줘"가 들어 있어요.
+공식 문서는 Claude에게 **스스로 확인할 방법을 주라**고 권해요. 테스트, 빌드, 스크린샷처럼 결과를 읽을 수 있는 신호가 있으면 결과 품질이 좋아져요. 그리고 "검증할 수 없다면 내보내지 말라"고 해요(2026-10-26 확인). 이 편의 프롬프트에는 그래서 "만든 뒤에 이렇게 시험해 줘"가 들어 있어요.
 
 <Aside type="note" title="이 실습의 가계부는 연습용이에요">
 브라우저에 데이터를 저장하는 아주 단순한 앱이에요. 실제 은행 연동, 로그인, 여러 기기 동기화는 들어 있지 않아요. 진짜 개인 금융 정보는 넣지 말고 **연습용 예시 데이터**로만 시험하세요.
@@ -150,7 +150,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 7. **마음에 안 들면 되돌리기**
 
-   일부러 이상한 변경을 요청해 보고 되돌려 보세요. 세션에서 `Esc`를 두 번 누르거나 `/rewind`를 입력하면 이전 체크포인트로 대화와 코드를 되돌리는 메뉴가 열려요. 되돌릴 대상은 대화만, 코드만, 둘 다 중에서 고를 수 있어요(공식 문서 2026-10-19 기준).
+   일부러 이상한 변경을 요청해 보고 되돌려 보세요. 세션에서 `Esc`를 두 번 누르거나 `/rewind`를 입력하면 이전 체크포인트로 대화와 코드를 되돌리는 메뉴가 열려요. 되돌릴 대상은 대화만, 코드만, 둘 다 중에서 고를 수 있어요(공식 문서 2026-10-26 기준).
 
    <FlowSteps title="변경이 마음에 안 들 때" officialUrl="https://code.claude.com/docs/en/best-practices" steps={[
      { where: '브라우저', action: '새로고침하고 직접 눌러 보기', result: '문제를 발견' },

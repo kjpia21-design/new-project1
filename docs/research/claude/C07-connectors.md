@@ -45,3 +45,6 @@
 
 ## 2026-10-19 점검 반영
 - claude.com/connectors 표시 개수가 940에서 973으로 바뀜(2026-10-19). Notion 커넥터 페이지(Made by Notion, https://mcp.notion.com/mcp, Anthropic verified, 2025-11) 변동 없음. 커넥터 도움말·Google Workspace 커넥터·커스텀 커넥터 도움말 메뉴 경로(Customize > Connectors) 변동 없음.
+
+## 2026-10-26 점검 반영
+- 커넥터(11176164)·Google Workspace(10166901)·커스텀(11175166)·Notion 커넥터 페이지 재확인: 경로(Customize > Connectors, Org settings > Connectors), Free 커스텀 1개, 15분 전파, Notion URL 변동 없음. 모바일 커넥터 설치는 베타, Enterprise 관리형 인증 베타(본문 미반영). Docs/Sheets/Slides "베타" 표기는 이번 페이지에서 확인하지 못함. 변경 없음.

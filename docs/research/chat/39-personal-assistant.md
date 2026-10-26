@@ -64,3 +64,7 @@
 ## 2026-10-19 재확인
 - Gemini 예약 작업 도움말(16316416): 대상이 "개인 Google 계정 또는 해당 Workspace 버전의 업무·학교 계정"으로 표기됨(점진 제공, 활동 기록 보관 필요, 활성 10개 유지). 본문 두 곳 보정.
 - Gemini 캘린더(15305236)·연결된 앱(13695044; 모바일 맞춤설정 > 커넥터 탭), Claude Workspace 커넥터·메모리(Settings > Memory), ChatGPT plugins/automations/personalize: 본문과 일치. ChatGPT의 Google Calendar 플러그인은 여전히 문서에 없음.
+
+## 재점검 (2026-10-26)
+- Claude 채팅 검색·메모리(11817273): 신규 확인 — 새 화면 경로는 설정 > Your Claude의 "Memory from chats"(예전 화면: 설정 > Memory "Generate memory from chats"). 본문 메모리 항목에 반영(C9와 일치). 메모리 Free/Pro/Max 기본 켜짐, 시크릿 채팅 전 플랜 일치.
+- Claude Workspace 커넥터(10166901): Gmail·캘린더·Drive 모든 사용자, 기본 승인 필요 일치. Gemini 캘린더(15305236)·연결된 앱(13695044; 모바일 맞춤설정 > 커넥터) 일치.

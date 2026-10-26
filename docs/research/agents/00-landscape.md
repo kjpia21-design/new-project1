@@ -122,3 +122,6 @@
 - https://x.ai/news/grok-bot-more-plans (curl, 공식)
 - https://www.metroseoul.co.kr/article/20261001500469 (curl, 한국 언론)
 - https://openai.com/ko-KR/index/introducing-dots/ (curl, HTTP 403, 열람 실패)
+
+## 2026-10-26 메모
+- OpenAI Dots 공식 문서가 developers.openai.com/codex/* 에서 learn.chatgpt.com/docs/* 로 이전(308). 03/04/06 조사 노트의 2026-10-26 재확인 항목 참고.

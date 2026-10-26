@@ -66,3 +66,8 @@
 
 ## 2026-10-19 점검 반영
 - permission-modes, sub-agents, skills, memory, hooks-guide를 다시 읽음. 본문 사실 변동 없음. CHANGELOG 2.1.302는 fork 서브에이전트를 -p, SDK, 데스크톱, VS Code에서 기본 켜짐으로 바꿨다고 하나 sub-agents 문서는 아직 -p/SDK에서 꺼짐이라고 적어 문서 간 차이가 있음(본문 미반영).
+
+## 2026-10-26 점검 반영
+- permission-modes 문서(앞 100,000자) 재확인: 모드 6종과 Shift+Tab 순환, plan 모드(/plan, Ctrl+G), auto는 v2.1.283+에서 터미널·VS Code 시작 모드, 신규: `claude -p`·Agent SDK는 v2.1.302+에서 Manual 시작(auto는 `--permission-mode auto`), 프로젝트 settings의 `defaultMode: "auto"`는 무효(사용자 설정에만) — 본문 auto 박스에 반영.
+- sub-agents 문서: 내장 서브에이전트 표가 Explore / Plan / general-purpose / statusline-setup / claude-code-guide 5종(이전 본문의 "claude(만능 에이전트)"는 현재 표에 없어 삭제). model 값, 위치 우선순위, autoCompactWindow(v2.1.296+), 중첩 깊이 3·동시 20개(본문 미반영) 확인.
+- memory(200줄 권장, auto memory 첫 200줄/25KB), hooks-guide(exit 2 차단, onFailure "block"), mcp(스코프 local/project/user, SSE deprecated, v2.1.265+ HTTP 우선 자동 폴백, claude.ai 커넥터 자동 표시) 변동 없음. 문서 후반부 일부(각 50,000자 이상 페이지)는 읽지 못함.

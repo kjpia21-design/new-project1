@@ -18,3 +18,8 @@
 - Gemini 작업 기능의 한국 제공을 명시한 문장(제외 지역 목록에 한국 없음, 일반 지원 국가 목록에는 있음).
 - Chrome auto browse 별도 도움말(미열람).
 - 요금 수치(의도적으로 제외).
+
+## 2026-10-26 재확인
+- 변경 없음. Claude in Chrome(support 12012173, 12902446): 유료 4개 플랜, Chrome 전용(타 Chromium 불가), 사이드 패널은 Max·Team Cowork 세션/Pro 순차, 권한 모드 3종·사이트 옵션 동일. 단 get-started 페이지에는 "베타"가 1Password(macOS)에만 표기되고 사이드 패널 베타 문구는 확인되지 않음(요약 열람이라 확정 못 함, C11 본문은 "사이드 패널 베타"). anthropic.com/supported-countries에 South Korea 있음. claude.com/pricing: Pro $17(연)/$20(월), Max $100부터, Team 동일.
+- ChatGPT(learn.chatgpt.com/docs/browser, chrome-extension): Work 클라우드 브라우저 사이트 로그인 Plus·Pro(Enterprise·Edu 제외), 확장 승인 옵션 4종, 브라우저 목록 동일, 플랜·지역 조건 문서에 없음.
+- Gemini(support.google.com/gemini 16596215, 13575153): Google AI Pro/Ultra, EEA·나이지리아·스위스·영국 제외, auto browse 데스크톱만, 원격 브라우저 모바일, 예약 경고 동일. South Korea·Korean 목록에 있음.

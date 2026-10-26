@@ -47,3 +47,8 @@
 ## 2026-10-19 재확인
 - 요금제 페이지(비교표 Gmail 전 에디션 포함 / Docs·Sheets는 Starter 미포함, 금액은 여전히 원문에서 읽히지 않음), Gmail·Sheets 도움말 버튼명(Ask Gemini), 학습 센터 요약 절차, 언어 목록(Gmail Help me write 한국어 O, Docs Help me write 한국어 X), 관리자 Gemini 앱 경로, 개인정보 허브, 포함 안내 페이지 재확인.
 - 변경: 요금제 비교표의 Gemini 어시스턴트 항목(Starter 기본 접근, 그 외 확장 접근) 한 문장 추가.
+
+## 2026-10-26 재확인
+- 언어 목록(14925782), Gmail(14199860), Sheets(14356410), 포함 안내 페이지, workspace.google.com/pricing 재확인. 변동 없음: Ask Gemini 위치, Gmail Help me write 한국어 O(개인 계정은 미국만), Docs Help me write 한국어 X / Help me create·사이드 패널(29개 언어) 한국어 O, Proofread en/es, 2025-01부터 Business/Enterprise 포함, 애드온 판매 종료 목록, 비교표(Starter Gmail만, Docs/Sheets 미지원, 최대 300명, 연간 16%), 금액은 여전히 원문에 없음.
+- 참고(미반영): 비교표에 "Gemini on web or mobile: 전 에디션 Yes", "most capable models: Starter 미지원" 행이 있음. 이전 노트의 Gemini 어시스턴트 기본/확장 접근 문구와 표현이 달라 보이므로 본문의 해당 문장은 2026-10-19 기준 표기로 둠. Sheets 도움말에 수식용 단축키(= 입력 후 Ctrl+Alt+G)와 .xlsx는 Google Sheets로 저장 안내 있음.
+- 이번에 다시 읽지 않음: 14506398, 14590328, 14207419, Privacy Hub, turn-the-gemini-app-on-or-off, support.google.com/gemini/answer/13594961.

@@ -30,3 +30,6 @@
 
 ## 2026-10-19 점검 반영
 - Cowork 시작하기, 하나의 Claude 통합 문서, 컴퓨터 사용 도움말을 다시 읽음. 승인 방식 Manual/Auto/Skip, 플랜·기기 표 변동 없음. Anthropic 제공 국가 페이지(https://www.anthropic.com/supported-countries)에 South Korea 포함, Cowork는 같은 규칙의 대상이고 Cowork만의 지역 제한은 적혀 있지 않음 -> 본문 '확인하지 못한 항목'에서 한국 제공 문구 제거. Linux 데스크톱 Cowork 지원 여부와 폴더 연결 메뉴 이름은 여전히 미확인.
+
+## 2026-10-26 점검 반영
+- Cowork 시작 가이드(13345190)·웹/데스크톱/모바일(15520349)·예약 작업(13854387)·안전(13364135) 재확인: 데스크톱 macOS·Windows·Linux(베타), 웹·모바일 Pro/Max/Team(베타)/Enterprise(소유자 활성화), 2026-10-06부터 Pro/Max 새 세션 클라우드 실행, "Only on your computer" 제거, 예약 작업은 Scheduled 사이드바 > New task(주기: 시간별·매일·매주·평일·수동)로 클라우드에서 실행 — 본문과 일치. Linux 베타 항목을 본문에 반영(이전 "확인하지 못함" 해소). 도움말은 `/schedule` 언급 없음(본문 유지, 미확인).

@@ -50,3 +50,14 @@
 ## 2026-10-19 재점검
 - 서브에이전트 `model` 필드 허용값에 `fable` 별칭과 전체 모델 ID(예 claude-opus-5-5)가 문서에 명시됨 (code.claude.com/docs/en/sub-agents). 본문 예시 목록에 `fable` 추가.
 - 루틴 리서치 프리뷰, 시간당 한도(예약 100/계정, Run now·API 30/루틴), 최소 간격 1시간, 72시간 건너뛰기 규칙, `/agents` 안내 문구(v2.1.197 이하 마법사)는 변경 없음.
+
+## 2026-10-26 재점검
+- routines(제목이 "Automate work with scheduled tasks"로 변경), skills, sub-agents(앞 10만 자), overview, claude-code-on-the-web 재열람.
+- 변경(본문 반영):
+  - 이름: "cloud scheduled task, formerly a routine". 주소 claude.ai/code/routines, `/schedule`(별칭 `/routines`), API 경로·헤더는 routines 유지. 조직 설정 토글 "Scheduled tasks (Was Routines)"(Organization settings > Capabilities > Remote sessions).
+  - 생성 UI: New task > New scheduled task 창. 계정에 따라 New routine 버튼과 전체 페이지 양식. 데스크톱 앱은 Code 탭의 Scheduled > New task.
+  - 승인: 새 세션은 auto 모드로 시작(분류기), auto를 쓸 수 없으면 시작 모드 유지. ask 규칙·반복 차단 시 대기. 기존 "승인 없이 자율 실행" 서술 수정. 커넥터는 쓰기 포함 사용 가능(승인 언급 삭제).
+  - 스케줄 프리셋: hourly·daily·weekly 예시(weekdays 언급 삭제). 그 밖은 Custom cron(UTC, 1시간 미만 간격 거부).
+  - 개인 스킬(~/.claude/skills)은 클라우드 예약 작업에서 "not found" (skills 문서). 저장소 .claude/skills는 가능.
+- 변경 없음: 리서치 프리뷰, Pro·Max·Team·Enterprise, 한도(스케줄 계정당 100/h, Run now·API 루틴당 30/h 공유, 초과 과금 없음), 72시간 건너뛰기, claude/ 브랜치, usage credits, 서브에이전트 model 값(sonnet·opus·haiku·fable·전체 ID·inherit), /agents 안내 문구.
+- 확인 못 함: skills·sub-agents 문서의 마지막 약 1.6~1.8만 자 미열람.

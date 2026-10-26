@@ -52,3 +52,10 @@ notion.com 원문을 직접 열어 대조했다: notion-agent, what-are-notion-c
 - faqs, credits, autofill, notion-agent, pricing, ai-meeting-notes, security-practices, Q&A 가이드 재확인. 가격·플랜 범위·Autofill 메뉴 변동 없음.
 - 변경: Q&A 가이드가 "오른쪽 아래 둥근 얼굴 아이콘"으로 연다고 안내(검색 메뉴/반짝이 아이콘 언급 없음) → 본문 수정. AI Meeting Notes는 FAQ만 (beta) 표기, 도움말 페이지는 beta 표기 없음(그대로).
 - security-practices 페이지에 AI LEAP Program 링크가 여전히 있음(원문 확인). Agent 도움말에 Claude Fable 5.1은 Business·Enterprise 전용이라는 문구 있음(본문 미반영).
+
+## 2026-10-26 재확인
+- credits, faqs, notion-agent, autofill 원문 재확인. 가격($10/$13 per 1,000), Autofill 메뉴, Agent 메뉴 경로(All sources > MCP servers, Settings > Connections > Discover) 변동 없음. Agent 도움말에 Gmail/Calendar는 Settings > Notion AI > AI connectors 경로 추가 안내(본문 미반영).
+- 변경: credits 페이지가 새 크레딧 체계 전환일(신규 Business/Enterprise 2026-10-19, 기존 2026-11-02)과 Standard/Select 크레딧(수량 미공개) 설명을 추가 → 본문 참고 Aside에 반영.
+- FAQ: Business 체험은 모델 선택기가 없을 수 있음, 이미지 생성(beta) 등. 본문 미반영. 나머지(Q&A 가이드, product/ai, ai-meeting-notes, security-practices, pricing)는 이번에 다시 읽지 않음.
+- 추가 재확인(2026-10-26): ai-meeting-notes(Business/Enterprise, Korean 지원, beta 표기 없음, 데스크톱 4.7.0 이상), security-practices(기본 학습 미사용, Enterprise 대부분 ZDR, 그 외 플랜 30일 이하 보존) 변동 없음. security-practices 요약에서는 AI LEAP 언급을 확인하지 못함(요약 도구 한계일 수 있어 본문 변경 없음). Q&A 가이드(오른쪽 아래 둥근 얼굴 아이콘), 요금제 페이지(Free $0 / Plus $10 / Business $20 월 결제, 연 결제 개별 금액 미표기) 재확인. product/ai는 다시 읽지 않음.
+- 변경: security-practices가 Enterprise 보존을 "대부분 모델 ZDR, 일부 모델은 ZDR 아님·기본 꺼짐·소유자 옵트인"으로 설명 → 본문 개인정보 표 수정. AI LEAP 링크는 원문 HTML에 여전히 있음(curl 확인).

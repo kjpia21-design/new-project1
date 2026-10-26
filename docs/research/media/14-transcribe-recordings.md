@@ -41,3 +41,7 @@ Aside: 남김. 문구를 "개인용 클로바노트와 ChatGPT 녹음 기능은 
 
 ## 재점검 (2026-10-19)
 - NAVER WORKS ClovaNote 도움말 4건, Gemini 업로드(14903178: 오디오 10분/Pro·Ultra 3시간, 파일 100MB), Pixel 녹음기 2건(Korean (South Korea) 재변환 목록, 화자 라벨), learn.chatgpt.com 음성·프롬프트 문서, developers.openai.com 파일 전사(25MB, gpt-transcribe 권장)를 다시 열었다. 본문과 충돌 없음. help.openai.com Record/Meetings는 계속 403, learn.chatgpt.com llms.txt에도 Record(전사) 문서 없음(Record & Replay는 별개 기능). 변경 없음, lastVerified만 갱신.
+
+## 재확인 2026-10-26
+- NAVER WORKS ClovaNote 도움말(create/note)의 한국어·영어용 안내가 "상품별 최대 360분: Lite/Team 180분, Business/Business Plus/Enterprise 360분"으로 확인됨(이전 기록은 180분). 본문 3곳 수정. 일본어용 블록은 Free 60/solo 180/Team 이상 360으로 달라 한국어·영어 블록 기준으로 씀. PC 웹 형식(m4a/mp3/aac/wav, 300MB), iOS 확장자, 쿼터(월 갱신·이월 없음), 봇 녹음 지원 서비스, 언어 목록 동일.
+- Gemini 파일 업로드 도움말(오디오 10분/Pro·Ultra 3시간, 파일 10개, 100MB), OpenAI STT 문서(25MB, 형식), Pixel 화자 라벨(미국 영어만) 동일. help.openai.com 2건(Record, Meetings)은 403 유지.
