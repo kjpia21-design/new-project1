@@ -7,7 +7,7 @@ import NewsItem from '../../components/NewsItem.astro';
 
 Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 모았어요. 모델 출시, 가격, Claude Code와 앱의 새 기능처럼 실제로 쓰는 분에게 의미 있는 것만 골랐고, 사소한 버그 수정은 뺐어요. 공식 채널을 점검해 계속 갱신해요.
 
-**마지막 업데이트: 2026-10-27**
+**마지막 업데이트: 2026-10-28**
 
 ## 모니터링하는 공식 채널
 
@@ -18,6 +18,10 @@ Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 �
 - [Anthropic 뉴스](https://www.anthropic.com/news): 정책, 파트너십, 모델 발표
 
 ## 2026년 10월
+
+<NewsItem date="10월 27일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c13-cloud-sessions/" tutorialLabel="C13 Claude Code 클라우드 세션">
+2.1.312에서 클라우드에서 도는 루틴의 모델 선택기에 노력 수준(effort)을 고르는 항목이 생겼고, 클라우드 환경의 설정 스크립트를 Bash 편집기에서 쓰고 복사 버튼으로 옮길 수 있어요. 사용 한도 안내 문구는 5시간 창을 "세션 한도" 대신 "5-hour limit"으로 불러요. 또 클라우드 세션에서 WebFetch가 호스트를 못 찾으면, 허용된 네트워크 도메인 밖일 수 있다고 알려 줘요.
+</NewsItem>
 
 <NewsItem date="10월 26일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
 2.1.311에서 터미널의 `ultrathink` 키워드가 Anthropic API 기준 Opus 5.5, Sonnet 5.5, Haiku 5.5, Fable 5.1에서 그 턴을 xhigh 노력 수준으로 실행해요. 요청이 200K 토큰을 넘을 때 "Usage credits required for 1M context" 오류로 멈추던 문제도 고쳐져서, 이제는 대화를 압축하고 계속 진행해요. 또 `DISABLE_COMPACT` 설정은 압축을 끄는 쪽으로만 동작해요.
