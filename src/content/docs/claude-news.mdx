@@ -7,7 +7,7 @@ import NewsItem from '../../components/NewsItem.astro';
 
 Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 모았어요. 모델 출시, 가격, Claude Code와 앱의 새 기능처럼 실제로 쓰는 분에게 의미 있는 것만 골랐고, 사소한 버그 수정은 뺐어요. 공식 채널을 점검해 계속 갱신해요.
 
-**마지막 업데이트: 2026-10-28**
+**마지막 업데이트: 2026-10-30**
 
 ## 모니터링하는 공식 채널
 
@@ -18,6 +18,10 @@ Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 �
 - [Anthropic 뉴스](https://www.anthropic.com/news): 정책, 파트너십, 모델 발표
 
 ## 2026년 10월
+
+<NewsItem date="10월 29일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/02-cost-optimization/" tutorialLabel="개발자 심화 비용 최적화">
+사용량·비용 분석 API(베타)가 생겼어요. Claude Console과 Claude Enterprise 조직의 토큰 사용량과 비용을 모델, 워크스페이스, API 키, 요청한 사용자·서비스 계정별로 걸러서 묶어 볼 수 있어요. `analytics-usage-cost-2026-08-24` 베타 헤더를 써요. 기존 Usage and Cost API와 Enterprise Analytics API의 보고 엔드포인트는 레거시가 됐지만 계속 지원해요. 10월 28일에는 Messages API와 토큰 세기 API의 최대 요청 크기가 32MB에서 128MB로 늘었어요(Claude API 직접 호출 기준).
+</NewsItem>
 
 <NewsItem date="10월 27일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c13-cloud-sessions/" tutorialLabel="C13 Claude Code 클라우드 세션">
 2.1.312에서 클라우드에서 도는 루틴의 모델 선택기에 노력 수준(effort)을 고르는 항목이 생겼고, 클라우드 환경의 설정 스크립트를 Bash 편집기에서 쓰고 복사 버튼으로 옮길 수 있어요. 사용 한도 안내 문구는 5시간 창을 "세션 한도" 대신 "5-hour limit"으로 불러요. 또 클라우드 세션에서 WebFetch가 호스트를 못 찾으면, 허용된 네트워크 도메인 밖일 수 있다고 알려 줘요.
