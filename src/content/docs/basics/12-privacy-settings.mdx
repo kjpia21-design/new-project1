@@ -1,0 +1,170 @@
+---
+title: "Turn Off AI Training on Your Chats: Privacy Settings in Claude, ChatGPT and Gemini"
+description: "Where to find the setting that controls whether your chats are used to improve AI, plus incognito and temporary chats and deleting history"
+sidebar:
+  label: "12. Privacy settings"
+level: beginner
+category: basics
+status: published
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "15 min"
+prerequisites: ["An account with at least one of Claude, ChatGPT, or Gemini"]
+lastVerified: 2026-10-31
+sources:
+  - title: "Anthropic Privacy Center: How do I change my model improvement privacy settings?"
+    url: "https://privacy.claude.com/en/articles/12109829-how-do-i-change-my-model-improvement-privacy-settings"
+  - title: "Anthropic Privacy Center: Is my data used for model training?"
+    url: "https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training"
+  - title: "Anthropic Privacy Center: How long do you store my data?"
+    url: "https://privacy.claude.com/en/articles/10023548-how-long-do-you-store-my-data"
+  - title: "Claude Help Center: Using incognito chats"
+    url: "https://support.claude.com/en/articles/12260368-using-incognito-chats"
+  - title: "Gemini Apps Privacy Hub (Google)"
+    url: "https://support.google.com/gemini/answer/13594961"
+  - title: "ChatGPT docs (Data controls, temporary chat shortcut, Business and Enterprise data)"
+    url: "https://learn.chatgpt.com/llms-full.txt"
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- Each service has a switch that decides whether your chats may be used to **improve its AI**. Check it once, right after you sign up.
+- **Claude**: Settings > Privacy > "Help Improve our AI models" (toggle). **Gemini**: turn off "Keep Activity" in Gemini Apps Activity. **ChatGPT**: Settings > Data controls.
+- **Incognito (Claude) and temporary chats (Gemini, ChatGPT)** are for one-off conversations you don't want kept or used for training.
+- Turning training off is **not the same as deleting**. Delete old chats separately.
+- Work and team plans follow different rules. Your company's policy comes first.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Find the "use my chats to improve AI" setting in Claude, ChatGPT, and Gemini.
+- Start a chat that isn't kept or used for training.
+- Delete old chats and know what that does and doesn't change.
+
+## Concepts to know first
+
+[Tutorial 5](/basics/05-privacy-safety/) covers what you should never paste into AI. This tutorial is the hands-on follow-up: opening the settings and changing them.
+
+| Term | Plain meaning |
+| --- | --- |
+| **Model improvement / training** | Using your conversations to make the AI better. Each service has its own switch. |
+| **Incognito / temporary chat** | A one-off chat that isn't saved to your history and isn't used for training. |
+| **Auto-delete period** | How long a service keeps your activity before removing it automatically (Gemini). |
+
+What the official pages say (as of 2026-10-31, for personal accounts; your plan and region may differ):
+
+| Service | Setting | Where | One-off chat |
+| --- | --- | --- | --- |
+| **Claude** (Free, Pro, Max) | Chats and coding sessions are used to improve Claude if you allow it. | Settings > Privacy > "Help Improve our AI models" toggle (web, desktop, and mobile) | Incognito chat (ghost icon, upper right). Not used for training even if the setting is on. |
+| **Gemini** | With Keep Activity on, chats are saved and may be used to improve Google AI, including with human reviewers. | Gemini Apps Activity: turn off Keep Activity, change the auto-delete period, delete activity | Temporary chat. Not used to train Google's AI models. Kept for 72 hours. |
+| **ChatGPT** | A data controls area exists, and the docs say chat content may be used to improve models "if allowed by your data controls." | Settings > Data controls | A temporary chat exists (the docs list a keyboard shortcut). |
+
+<Aside type="caution" title="What I could not confirm">
+I could not find ChatGPT's default for personal accounts, or the exact name of its training toggle, in the official pages I can open. OpenAI's own help pages (help.openai.com) were not accessible here. Open Settings > Data controls in the app and read the wording on screen.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I opened the training setting in each service I use',
+  'I decided on and set the switch on purpose',
+  'I tried one incognito or temporary chat',
+  'I know how to delete old chats',
+  'I checked whether my work account has its own rules',
+]} />
+
+<Steps>
+
+1. **Claude: open the privacy toggle**
+
+   Per Anthropic's Privacy Center, on a computer you select your name in the settings menu, then Settings, then Privacy. Under "Help Improve our AI models," switch the toggle off or on. On mobile the path is name, Settings, Privacy.
+
+   If you turn it off, new chats and coding sessions are not used for future model training. Data already used in training runs that started earlier, or in models already trained, stays included.
+
+   <ScreenshotPlaceholder caption="Claude: Settings > Privacy > Help Improve our AI models" officialUrl="https://privacy.claude.com/en/articles/12109829-how-do-i-change-my-model-improvement-privacy-settings" officialLabel="See it in the Anthropic Privacy Center" />
+
+2. **Gemini: turn off Keep Activity if you prefer**
+
+   In Gemini Apps Activity you can review and delete activity, change the auto-delete period, and control whether your data is used to improve Google AI. Google says that with Keep Activity off, your future chats are not used to improve its AI models unless you submit feedback. It also says Google still uses your chats to respond to you and to protect Google and its users, including with human reviewers.
+
+   <ScreenshotPlaceholder caption="Gemini Apps Activity: Keep Activity and auto-delete" officialUrl="https://support.google.com/gemini/answer/13594961" officialLabel="See it in Google's help" />
+
+3. **ChatGPT: read the Data controls screen**
+
+   Open Settings > Data controls in the web or mobile app. The official docs point there for data settings. Because I could not confirm the toggle's exact wording, read each option on screen before you change it.
+
+4. **Use a one-off chat for things you don't want kept**
+
+   - **Claude**: the ghost icon (upper right) on a new chat outside a project starts an incognito chat. It isn't used for training. Claude says it won't use your memory in it and won't add it to memory. Incognito chats aren't saved to your history but are retained for 30 days by default.
+   - **Gemini**: temporary chats are kept with your account for 72 hours to respond to you and protect against abuse, and are not used to train Google's AI models.
+   - **ChatGPT**: the docs list a "New temporary chat" shortcut (Ctrl+Shift+N on Windows, Command+Shift+N on Mac). I could not confirm in official pages how long these are kept.
+
+   <PromptBox>
+   I'm about to ask you about a personal situation. Before I paste details, list which kinds of information (names, numbers, addresses) I should replace with placeholders.
+   </PromptBox>
+
+   "Not used for training" does not mean "kept nowhere." Still don't paste secrets (see [tutorial 5](/basics/05-privacy-safety/)).
+
+5. **Delete old chats, and know the limits**
+
+   Anthropic says that when you delete a Claude conversation it disappears from your history immediately and is removed from its back-end systems within 30 days. A deleted chat is also not used for future training. Gemini lets you delete activity manually and set auto-delete (default 18 months; 3 months, 36 months, or indefinite are options). Google says chats that human reviewers already reviewed are not deleted when you delete your activity and are kept for up to three years.
+
+6. **Check your plan type**
+
+   - Anthropic's training article is about consumer plans (Free, Pro, Max). Commercial products such as Claude for Work and the API are covered separately.
+   - ChatGPT's docs say Business and Enterprise data is not used to train models by default (as of 2026-10-31).
+   - On a work or school account, an administrator may set the policy. Ask your IT or security contact.
+
+</Steps>
+
+<Aside type="note">
+Memory is a separate feature from training. Claude's memory settings are in [C9](/claude/c09-memory-settings/), and ChatGPT's memory is under Settings > Personalization.
+</Aside>
+
+## Quick reference
+
+| I want to... | Claude | Gemini | ChatGPT |
+| --- | --- | --- | --- |
+| Stop my chats from improving AI | Settings > Privacy toggle | Turn off Keep Activity | Settings > Data controls (check wording) |
+| Chat without keeping it | Incognito chat | Temporary chat | Temporary chat |
+| Delete old chats | Delete the conversation | Gemini Apps Activity | Not confirmed in official pages |
+| Auto-delete | Not confirmed | Auto-delete period | Not confirmed |
+
+## Common sticking points
+
+### I don't see the training toggle
+
+- **Cause**: Menu names change, and work or school accounts may hide the setting.
+- **Fix**: Open the official page linked above and compare. If it's a work account, ask your administrator.
+
+### I turned training off but my old chats may still be used
+
+- **Cause**: Turning it off applies to future training. Data already in training that started, or in models already trained, stays.
+- **Fix**: Delete chats you don't want kept and avoid pasting sensitive details in the first place.
+
+### Gemini still keeps something with Keep Activity off
+
+- **Cause**: Google says it still uses chats to respond to you and to protect its users. Chats kept for that purpose are retained for 72 hours.
+- **Fix**: That is expected. Treat it as short-term retention, not as zero retention.
+
+### A flagged conversation
+
+- **Cause**: Anthropic says conversations flagged for safety review may still be used to improve its safety systems, even with the toggle off.
+- **Fix**: Nothing to do. Follow the usage policy.
+
+## Practical tips
+
+- Do this check **once per service, right after signing up**, and again after big app updates.
+- For one-off sensitive questions, use incognito or temporary chat and also mask names and numbers.
+- Re-read the policies once or twice a year. They change, and this page is only accurate as of 2026-10-31.
+
+## What to read next
+
+- [5. Using AI while protecting personal and company information](/basics/05-privacy-safety/) — What not to paste
+- [13. Asking AI about health, legal and money questions safely](/basics/13-sensitive-questions/) — High-stakes questions
+- [C9. Memory and personal settings](/claude/c09-memory-settings/) — Claude memory
+- [8. How far does free go? Choosing a plan](/basics/08-free-vs-paid/) — Plan differences

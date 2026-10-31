@@ -1,0 +1,170 @@
+---
+title: "내 대화가 AI 학습에 쓰이지 않게: Claude·ChatGPT·Gemini 개인정보 설정"
+description: "대화를 AI 개선에 쓸지 정하는 설정 위치와 시크릿·임시 채팅, 기록 삭제까지 따라하기"
+sidebar:
+  label: "12. 개인정보 설정"
+level: beginner
+category: basics
+status: published
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "15분"
+prerequisites: ["Claude, ChatGPT, Gemini 중 하나 이상의 계정"]
+lastVerified: 2026-10-31
+sources:
+  - title: "Anthropic 개인정보 센터: 모델 개선 개인정보 설정을 바꾸려면 (영문)"
+    url: "https://privacy.claude.com/en/articles/12109829-how-do-i-change-my-model-improvement-privacy-settings"
+  - title: "Anthropic 개인정보 센터: 내 데이터가 모델 학습에 쓰이나요? (영문)"
+    url: "https://privacy.claude.com/en/articles/10023580-is-my-data-used-for-model-training"
+  - title: "Anthropic 개인정보 센터: 내 데이터를 얼마나 보관하나요? (영문)"
+    url: "https://privacy.claude.com/en/articles/10023548-how-long-do-you-store-my-data"
+  - title: "Claude 지원센터: 시크릿(incognito) 채팅 사용하기 (영문)"
+    url: "https://support.claude.com/en/articles/12260368-using-incognito-chats"
+  - title: "Gemini 앱 개인정보 보호 허브 (Google)"
+    url: "https://support.google.com/gemini/answer/13594961"
+  - title: "ChatGPT 문서 (Data controls, 임시 채팅 단축키, Business·Enterprise 데이터, 영문)"
+    url: "https://learn.chatgpt.com/llms-full.txt"
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- 서비스마다 내 대화를 **AI 개선에 써도 되는지** 정하는 스위치가 있어요. 가입 직후 한 번 확인해 두세요.
+- **Claude**: 설정 > 개인정보(Privacy)의 "Help Improve our AI models" 토글. **Gemini**: Gemini 앱 활동에서 "Keep Activity" 끄기. **ChatGPT**: 설정 > Data controls.
+- **시크릿(Claude)·임시 채팅(Gemini, ChatGPT)** 은 기록을 남기거나 학습에 쓰이는 게 싫은 일회성 대화용이에요.
+- 학습을 끄는 것과 **삭제는 달라요.** 지난 대화는 따로 지워야 해요.
+- 회사·팀 플랜은 규칙이 달라요. 회사 규정이 우선이에요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- Claude, ChatGPT, Gemini에서 "내 대화를 AI 개선에 사용" 설정을 찾을 수 있어요.
+- 기록이 남지 않고 학습에도 쓰이지 않는 대화를 시작할 수 있어요.
+- 지난 대화를 지우고, 지워도 남는 것이 무엇인지 알 수 있어요.
+
+## 먼저 알아둘 개념
+
+[5편](/ko/basics/05-privacy-safety/)에서 AI에 붙여넣으면 안 되는 정보를 다뤘어요. 이 글은 그 후속으로, 설정 화면을 직접 열어 바꾸는 데 집중해요.
+
+| 용어 | 쉬운 뜻 |
+| --- | --- |
+| **모델 개선·학습** | 내 대화를 AI를 더 좋게 만드는 데 쓰는 것이에요. 서비스마다 스위치가 따로 있어요. |
+| **시크릿·임시 채팅** | 기록에 저장되지 않고 학습에도 쓰이지 않는 일회용 대화예요. |
+| **자동 삭제 기간** | 서비스가 내 활동을 보관하다가 자동으로 지우는 기간이에요(Gemini). |
+
+공식 페이지가 안내하는 내용이에요. (2026-10-31 기준, 개인 계정 기준이며 플랜·지역에 따라 다를 수 있어요.)
+
+| 서비스 | 설정 | 위치 | 일회성 채팅 |
+| --- | --- | --- | --- |
+| **Claude** (Free, Pro, Max) | 내가 허용하면 대화와 코딩 세션을 Claude 개선에 써요. | 설정 > Privacy > "Help Improve our AI models" 토글 (웹·데스크톱·모바일) | 시크릿 채팅(오른쪽 위 유령 아이콘). 설정을 켜 두었어도 학습에 쓰이지 않아요. |
+| **Gemini** | Keep Activity가 켜져 있으면 대화가 저장되고, 사람 검토를 포함해 Google AI 개선에 쓰일 수 있어요. | Gemini 앱 활동: Keep Activity 끄기, 자동 삭제 기간 변경, 활동 삭제 | 임시 채팅. Google AI 모델 학습에 쓰이지 않고 72시간 보관돼요. |
+| **ChatGPT** | 데이터 제어(Data controls) 메뉴가 있고, 공식 문서는 대화 내용이 "데이터 제어에서 허용한 경우" 모델 개선에 쓰일 수 있다고 해요. | 설정 > Data controls | 임시 채팅이 있어요(공식 문서에 단축키가 나와요). |
+
+<Aside type="caution" title="확인하지 못한 점">
+ChatGPT 개인 계정의 학습 기본값과 학습 토글의 정확한 이름은 제가 열 수 있는 공식 페이지에서 찾지 못했어요. OpenAI 도움말(help.openai.com)은 접근이 막혀 있었어요. 앱의 설정 > Data controls에서 화면에 적힌 설명을 직접 읽어 보세요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '쓰는 서비스마다 학습 설정을 열어 봤어요',
+  '스위치를 내가 정해서 설정했어요',
+  '시크릿·임시 채팅을 한 번 써 봤어요',
+  '지난 대화를 지우는 방법을 알아요',
+  '회사 계정은 별도 규정이 있는지 확인했어요',
+]} />
+
+<Steps>
+
+1. **Claude: 개인정보 토글 열기**
+
+   Anthropic 개인정보 센터에 따르면 컴퓨터에서는 설정 메뉴의 내 이름을 눌러 Settings, 그다음 Privacy로 가요. "Help Improve our AI models" 아래 토글을 끄거나 켜요. 모바일도 이름, Settings, Privacy 순서예요.
+
+   끄면 새 대화와 코딩 세션은 앞으로의 모델 학습에 쓰이지 않아요. 이미 시작된 학습이나 이미 학습된 모델에 들어간 데이터는 그대로 남아요.
+
+   <ScreenshotPlaceholder caption="Claude: 설정 > Privacy > Help Improve our AI models" officialUrl="https://privacy.claude.com/en/articles/12109829-how-do-i-change-my-model-improvement-privacy-settings" officialLabel="Anthropic 개인정보 센터에서 보기" />
+
+2. **Gemini: 원하면 Keep Activity 끄기**
+
+   Gemini 앱 활동에서 활동을 보고 지우고, 자동 삭제 기간을 바꾸고, 내 데이터를 Google AI 개선에 쓸지 정할 수 있어요. Google은 Keep Activity를 끄면 피드백을 보내지 않는 한 이후 대화를 AI 모델 개선에 쓰지 않는다고 안내해요. 다만 응답을 만들고 Google과 이용자를 보호하기 위해, 사람 검토를 포함해 대화를 쓰는 것은 계속된다고도 해요.
+
+   <ScreenshotPlaceholder caption="Gemini 앱 활동: Keep Activity와 자동 삭제" officialUrl="https://support.google.com/gemini/answer/13594961" officialLabel="Google 도움말에서 보기" />
+
+3. **ChatGPT: Data controls 화면 읽기**
+
+   웹이나 모바일 앱의 설정 > Data controls를 열어요. 공식 문서도 데이터 설정을 이곳으로 안내해요. 토글의 정확한 문구는 확인하지 못했으니, 바꾸기 전에 화면의 설명을 읽어 보세요.
+
+4. **기록을 남기기 싫은 대화는 일회성 채팅으로**
+
+   - **Claude**: 프로젝트 밖의 새 채팅 오른쪽 위 유령 아이콘으로 시크릿 채팅을 시작해요. 학습에 쓰이지 않고, 기존 메모리를 쓰지도 않으며 메모리에 추가되지도 않아요. 채팅 기록에는 남지 않지만 기본 30일간 보관돼요.
+   - **Gemini**: 임시 채팅은 응답과 악용 방지를 위해 계정과 함께 72시간 보관되고, Google AI 모델 학습에는 쓰이지 않아요.
+   - **ChatGPT**: 공식 문서에 "새 임시 채팅" 단축키(Windows Ctrl+Shift+N, Mac Command+Shift+N)가 있어요. 보관 기간은 공식 페이지에서 확인하지 못했어요.
+
+   <PromptBox>
+   개인적인 상황을 물어볼 거야. 내용을 붙여넣기 전에, 이름·번호·주소 중 어떤 종류의 정보를 가명이나 [ ]로 바꿔야 하는지 알려줘.
+   </PromptBox>
+
+   "학습에 안 쓰인다"가 "어디에도 안 남는다"는 뜻은 아니에요. 비밀 정보는 여전히 넣지 마세요([5편](/ko/basics/05-privacy-safety/) 참고).
+
+5. **지난 대화 삭제와 그 한계**
+
+   Anthropic은 Claude 대화를 삭제하면 기록에서 바로 사라지고 30일 안에 내부 저장소에서도 지워진다고 안내해요. 삭제한 대화는 이후 학습에도 쓰이지 않아요. Gemini는 활동을 직접 삭제하거나 자동 삭제를 설정할 수 있어요(기본 18개월, 3개월·36개월·무기한 선택). 단, 사람이 이미 검토한 대화는 활동을 지워도 삭제되지 않고 최대 3년 보관된다고 Google이 밝혀요.
+
+6. **내 플랜 종류 확인**
+
+   - Anthropic의 학습 안내는 개인용 플랜(Free, Pro, Max) 기준이에요. Claude for Work나 API 같은 상업용 제품은 따로 다뤄요.
+   - ChatGPT 문서는 Business·Enterprise 데이터는 기본적으로 모델 학습에 쓰지 않는다고 안내해요(2026-10-31 기준).
+   - 회사·학교 계정은 관리자가 정책을 정할 수 있어요. IT·보안 담당자에게 물어보세요.
+
+</Steps>
+
+<Aside type="note">
+메모리는 학습과 별개의 기능이에요. Claude 메모리 설정은 [C9](/ko/claude/c09-memory-settings/)에서, ChatGPT 메모리는 설정 > Personalization에서 다뤄요.
+</Aside>
+
+## 빠른 참조표
+
+| 하고 싶은 일 | Claude | Gemini | ChatGPT |
+| --- | --- | --- | --- |
+| 내 대화가 AI 개선에 안 쓰이게 | 설정 > Privacy 토글 | Keep Activity 끄기 | 설정 > Data controls (문구 확인) |
+| 기록 안 남기고 대화 | 시크릿 채팅 | 임시 채팅 | 임시 채팅 |
+| 지난 대화 삭제 | 대화 삭제 | Gemini 앱 활동 | 공식 페이지에서 확인 못 함 |
+| 자동 삭제 | 확인 못 함 | 자동 삭제 기간 | 확인 못 함 |
+
+## 자주 막히는 지점
+
+### 학습 토글이 안 보여요
+
+- **원인**: 메뉴 이름이 바뀌었거나, 회사·학교 계정이라 숨겨져 있을 수 있어요.
+- **해결**: 위 공식 페이지를 열어 비교하고, 회사 계정이면 관리자에게 물어보세요.
+
+### 학습을 껐는데 예전 대화는 이미 쓰였을 수 있어요
+
+- **원인**: 끄기는 앞으로의 학습에 적용돼요. 이미 시작된 학습이나 학습된 모델에 들어간 데이터는 남아요.
+- **해결**: 남기기 싫은 대화는 지우고, 처음부터 민감한 내용은 넣지 마세요.
+
+### Keep Activity를 껐는데도 Gemini에 뭔가 남아요
+
+- **원인**: Google은 응답을 만들고 이용자를 보호하는 데 대화를 계속 쓴다고 해요. 이 목적의 대화는 72시간 보관돼요.
+- **해결**: 정상이에요. 보관이 0이 아니라 단기 보관이라고 이해하세요.
+
+### 안전 검토로 분류된 대화
+
+- **원인**: Anthropic은 안전 검토 대상으로 분류된 대화는 토글을 꺼도 안전 시스템 개선에 쓰일 수 있다고 안내해요.
+- **해결**: 따로 할 일은 없어요. 이용 정책을 지키면 돼요.
+
+## 실전 팁
+
+- 이 점검은 **서비스마다 가입 직후 한 번**, 그리고 큰 앱 업데이트 뒤에 다시 하세요.
+- 민감한 질문 한 번이라면 시크릿·임시 채팅에, 이름·번호 가리기를 함께 쓰세요.
+- 정책은 바뀌어요. 이 글은 2026-10-31 기준이니 1년에 한두 번 다시 확인하세요.
+
+## 다음에 볼 튜토리얼
+
+- [5. 개인정보·회사 정보 안전하게 지키며 쓰기](/ko/basics/05-privacy-safety/) — 넣지 말아야 할 정보
+- [13. 건강·법률·돈 문제를 AI에 물을 때 주의할 점](/ko/basics/13-sensitive-questions/) — 중요한 질문
+- [C9. 메모리와 개인 설정](/ko/claude/c09-memory-settings/) — Claude 메모리
+- [8. 무료로 어디까지? 요금제 고르기 기초](/ko/basics/08-free-vs-paid/) — 플랜 차이
