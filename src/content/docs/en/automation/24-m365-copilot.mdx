@@ -1,0 +1,222 @@
+---
+title: "Working in Word, PowerPoint, and Outlook with Microsoft 365 Copilot"
+description: "A reference on using Copilot for Word drafts and summaries, PowerPoint presentations, and Outlook email summaries and reply drafts, with personal vs. work license differences, Korean-language support, and cautions"
+sidebar:
+  label: "7. Working with M365 Copilot"
+level: practical
+category: automation
+tools: ["Microsoft 365 Copilot", "Word", "PowerPoint", "Outlook"]
+duration: "30 min"
+prerequisites:
+  - "A Microsoft 365 subscription that includes Copilot, or a Copilot license from your company (admin approval may be required)"
+  - "Made-up practice documents and an email thread (don't use real customer or internal confidential information)"
+lastVerified: 2026-10-26
+sources:
+  - title: "Welcome to Copilot in Word (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/word/welcome-to-copilot-in-word"
+  - title: "Create a new presentation with Copilot in PowerPoint (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d"
+  - title: "Welcome to Copilot in Outlook (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/outlook/welcome-to-copilot-in-outlook"
+  - title: "Copilot in Microsoft 365 Personal, Family, Premium, and Pro (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/microsoft-365-copilot/copilot-in-microsoft-365-personal-family-and-premium"
+  - title: "Frequently asked questions about Copilot in Microsoft 365 subscriptions (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/microsoft-365-copilot/frequently-asked-questions-about-copilot-in-microsoft-365-subscriptions"
+  - title: "Supported languages for Microsoft Copilot (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/microsoft-365-copilot/supported-languages-for-microsoft-365-copilot"
+  - title: "Microsoft Copilot overview (Microsoft Learn)"
+    url: "https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-overview"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- **Word**: The Copilot button at the bottom right (the corner of the document) opens a chat pane for drafting, polishing, and summarizing. Edit mode is the default.
+- **PowerPoint**: The Copilot icon at the bottom right opens a chat pane where you can build a presentation from a prompt (as of 2026-10-26). The official documentation also covers building from a Word document and best practices.
+- **Outlook**: In a new email, the Copilot icon creates a draft, and **Summary by Copilot** at the top of a thread summarizes a long email.
+- Whether Copilot shows up on your screen depends on your **subscription, license, and organization settings**. Work accounts split into experiences such as Copilot Chat (basic), Copilot (Basic), and Copilot (Premium) (as of 2026-10-14).
+- We couldn't read the official pricing page during this check, so prices aren't listed. Always read and edit generated content before sending.
+</Summary>
+
+<Aside type="caution" title="We couldn't confirm prices and plan names, or they change often">
+Microsoft's pricing page (microsoft.com) blocked access during this check, so we couldn't read it, and we couldn't confirm Korean won (KRW) prices either. Some official blog posts render their pages with scripts, so we couldn't read the numbers. Plan names are also being changed in recent official documentation. Check directly on [Microsoft's official pricing page](https://www.microsoft.com/ko-kr/microsoft-365/microsoft-365-copilot) before subscribing (this link goes to the Korean page).
+</Aside>
+
+## What you'll be able to do
+
+- In Word, **create a draft**, **rewrite** selected sentences, and **summarize** a long document.
+- In PowerPoint, create a **presentation draft** from a prompt or an existing Word document.
+- In Outlook, **summarize** a long email thread and get a **reply draft**.
+- Troubleshoot why Copilot doesn't show up in your account (subscription, license, organization settings).
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Copilot in Microsoft 365 apps** | Microsoft's AI that you use inside apps like Word, Excel, PowerPoint, and Outlook. |
+| **Edit mode / Chat only** | Copilot in Word defaults to Edit mode. If you choose **Chat only**, it answers only in chat and doesn't change the document. |
+| **Copilot Chat (Basic)** | The basic chat included with eligible Microsoft 365 licenses. It mainly uses web data, and you have to paste or attach company content yourself (for work accounts). |
+| **Microsoft 365 Copilot (Basic)** | An experience with no Copilot add-on license but standard access in Word, Excel, PowerPoint, OneNote, and more. It's described as possibly varying with service capacity. |
+| **Microsoft 365 Copilot (Premium)** | The full experience with an add-on license. It includes priority access and answers based on company data (mail, files, meetings, etc.). |
+| **Copilot in personal subscriptions** | Copilot is included in Microsoft 365 Personal, Family, Premium, and Pro. They use an AI credit model, and AI features in Family and Premium can be used only by the subscription owner. |
+
+<Aside type="note" title="Personal and work accounts look different (as of 2026-10-14)">
+The official documentation gives separate guidance for personal (home and family) subscriptions and work or school accounts. Personal use falls under the Microsoft Services Agreement and the Copilot terms of use, while work use falls under your organization's data protection policy. If a button is missing on your screen, that's not unusual. **It may be because of your account type or license**, so follow the on-screen instructions. The official documentation explains that you can tell which experience you have from the label inside the app (for example, "M365 Copilot (Premium)").
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I checked that Copilot is turned on in my account',
+  'I created a draft in Word and edited it myself',
+  'I summarized a Word document',
+  'I created a presentation draft in PowerPoint',
+  'I summarized a long email in Outlook',
+  'I created a reply draft in Outlook, read it, and then sent it',
+]} />
+
+<Steps>
+
+1. **Check Copilot in your account**
+
+   Open Word and check whether the Copilot button (Copilot Dynamic Action Button) appears in the corner of the document. The official documentation says if it doesn't, it may not be included in your subscription or may be blocked by organization settings. On a personal subscription, age restrictions may apply; on a work account, tell your admin which app is missing what.
+
+   <ScreenshotPlaceholder caption="The Copilot button in the corner of a Word document and the opened chat pane" officialUrl="https://support.microsoft.com/en-us/word/welcome-to-copilot-in-word" />
+
+2. **Word: create a draft**
+
+   Click the Copilot button to open the chat pane (it opens in Edit mode). Describe the output, audience, length, and tone, and if there's material to reference, type `/` in the chat box and pick a document, email, or meeting name to point to it. You can keep the result, discard it, or keep refining it with follow-up prompts.
+
+   <PromptBox>
+   Write a draft project status report to send to an executive at a client company. Use this structure: background, progress, risks, next steps. I'll fill in the numbers myself, so leave them blank as [ ]. Keep the tone professional and the length to about one page.
+   </PromptBox>
+
+   <Aside type="caution" title="Have it leave the numbers blank">
+   AI can make up plausible-looking numbers. Enter the figures yourself and leave the structure and wording to the AI.
+   </Aside>
+
+3. **Word: polish and summarize**
+
+   For text you've already written, select the sentences and pick a preset such as **Rewrite**, or describe the change you want in the chat pane. If you only want to summarize or ask questions without touching the document, choose **Chat only**. The official documentation says that in shared documents, Copilot first shows a preview of what it will change and adds nothing to the document until you approve.
+
+   <PromptBox>
+   Summarize this document in five bullets. And tell me what decisions need to be made before it's shared.
+   </PromptBox>
+
+4. **PowerPoint: create a presentation draft**
+
+   In a new presentation, click the Copilot icon at the bottom right of the screen to open Copilot Chat. If you like, choose an AI model in the model selector, or leave it on the default, Auto. If your organization requires a Brand Kit, pick the one to use under Select brand (skip this on a personal account or if your organization doesn't have one). Then describe the presentation you want in the input box. Copilot may first ask questions such as the audience, presentation length, template and design direction, and image types; answer or skip them, and Copilot gathers the content and builds the presentation with the template you chose (official documentation as of 2026-10-26). The "Add Content > Agent Mode" guidance that was in the 2026-10-14 version of the documentation couldn't be found in the current one, so if you see that menu on your screen, follow the on-screen instructions.
+
+   <FlowSteps title="Starting a presentation with Copilot in PowerPoint" officialUrl="https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d" steps={[
+     { where: 'A new PowerPoint presentation', action: 'Click the Copilot icon at the bottom right of the slide', result: 'The Copilot chat pane' },
+     { where: 'Chat pane', action: '(Optional) Pick a model and a Brand Kit', result: 'Model and brand settings' },
+     { where: 'Chat pane', action: 'Enter a prompt, then click the arrow button', result: 'Copilot\'s clarifying questions' },
+     { where: 'Chat pane', action: 'Answer the questions or skip them', result: 'A draft of the slides' },
+   ]} />
+
+   <PromptBox>
+   Create a draft presentation for onboarding new hires. The audience is 20 employees in their first week, and it should run 10 minutes. Structure it as company overview, first-week schedule, FAQ, and contacts.
+   </PromptBox>
+
+   The official documentation also has best practices for building from an existing Word document. Organizing the document with Word styles (headings, etc.) improves how slides are split, relevant images are included where possible, and starting from a company template preserves the theme. It works best with Word documents under 24 MB.
+
+   <ScreenshotPlaceholder caption="Building a presentation in the PowerPoint Copilot pane" officialUrl="https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d" />
+
+5. **Outlook: summarize a long email thread**
+
+   Open a conversation in your inbox. In new Outlook, click the **Summary by Copilot** box at the top of the thread; in classic Outlook, click **Summarize**. The summary includes numbered citations that you can click to jump to the matching email.
+
+6. **Outlook: create a reply draft**
+
+   In a new email (Home > New Mail), click the Copilot icon on the toolbar, then choose **Draft** in new Outlook or **Draft with Copilot** in classic Outlook. Enter a prompt and click **Generate** to get a draft. You can adjust the length and tone, and regenerate if you don't like it. When you're satisfied, click **Keep it** (**Keep** in classic), edit it yourself, and then send. New Outlook also has **Schedule with Copilot**, which creates a meeting invitation from an email thread.
+
+   <PromptBox>
+   Write a reply to Ms. Kim, our contact at the partner company. Say that I'll send the quote she asked for by Friday. Polite but short, no more than 3 sentences.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Using Copilot Draft in a new Outlook email" officialUrl="https://support.microsoft.com/en-us/outlook/welcome-to-copilot-in-outlook" />
+
+</Steps>
+
+## Quick reference
+
+### Features and locations by app (as of 2026-10-14, official help)
+
+| App | What you want to do | Location / button |
+| --- | --- | --- |
+| Word | Create a draft | Copilot button > chat pane (Edit mode) |
+| Word | Rewrite selected sentences | Select the sentences, then Rewrite |
+| Word | Summarize or ask questions only | Chat only |
+| Word | Reference other documents, emails, meetings | `/` in the chat box |
+| PowerPoint | Create a presentation | Copilot icon at the bottom right > enter a prompt |
+| Outlook (new) | Draft | Toolbar Copilot icon > Draft |
+| Outlook (classic) | Draft | Copilot icon > Draft with Copilot |
+| Outlook (new) | Summarize a thread | Summary by Copilot above the thread |
+| Outlook (classic) | Summarize a thread | Summarize |
+| Outlook (new) | Create a meeting invitation | Schedule with Copilot |
+
+### Account and license tiers (work accounts, per the Microsoft Learn overview, 2026-10-14)
+
+| Tier | Description |
+| --- | --- |
+| Copilot Chat (Basic) | Included with eligible licenses. Web-data focused. It's described as not including in-app Copilot in Word, Excel, PowerPoint, and OneNote. |
+| Microsoft 365 Copilot (Basic) | No add-on. Standard in-app access (Word, Excel, PowerPoint, Outlook, etc.). May vary with capacity. |
+| Microsoft 365 Copilot (Premium) | Add-on license. Includes priority access and answers based on company data (Microsoft Graph, Work IQ). |
+
+### Personal subscriptions and other
+
+| Item | Details |
+| --- | --- |
+| Personal subscriptions | Personal, Family, Premium, and Pro include Copilot and AI credits. AI features in Family and Premium are usable only by the subscription owner. |
+| Korean | Korean is on the official supported-language list for both work or school accounts and personal accounts. Quality by feature needs to be checked separately. |
+| Model selection | In Word, you're told you can pick supported models such as OpenAI or Claude with the Model Selector. The Learn documentation says Anthropic models are available only in some license experiences, and are not provided by default. |
+| Turning off | There are settings to turn Copilot on and off in Word, Excel, and PowerPoint (for personal subscriptions). Designer, Notepad, and Paint can't be turned off. |
+| Price | We couldn't read the official pricing page during this check, so it isn't listed. |
+
+## Common sticking points
+
+### I don't see the Copilot button
+
+- **Cause**: Your subscription may not include Copilot, it may be restricted by organization settings, or an age restriction may apply.
+- **Fix**: On a personal subscription, check the subscription on your account; on a work account, ask your admin. Telling them which app is missing what speeds things up.
+
+### Korean output is awkward
+
+- **Cause**: Korean is an officially supported language, but the Excel documentation says Copilot is trained mainly on English material, so performance can vary by language. The Word documentation says Copilot supports fewer languages than the Word interface does.
+- **Fix**: In your prompt, specify the language and tone (for example, "in polite Korean"), plus the audience and length, and read and edit the result.
+
+### I can't build a presentation by referencing a file in PowerPoint
+
+- **Cause**: As of 2026-10-26, the official PowerPoint documentation covers best practices for building from a Word document (Word styles, images, templates, under 24 MB) but doesn't describe Agent Mode file references. We also couldn't find the "coming soon" wording that was in the earlier version of the documentation. The feature may be rolling out gradually.
+- **Fix**: Follow the instructions on your screen, and if needed, get a summary in Word first and paste it into the prompt to build an outline. For shared documents, also use Word's preview and approval features.
+
+### The summary missed something important
+
+- **Cause**: The context of a long thread or the details of an attachment may not all fit in the summary.
+- **Fix**: Request specific categories such as "decided / undecided / my to-dos," and check the original of key emails using the citation numbers.
+
+### I'm not sure whether I can use company confidential information
+
+- **Cause**: Each company has different rules about using AI. Data protection also differs between personal subscriptions and work accounts.
+- **Fix**: Use your work account for company work, and check with your internal security team. Also read [Using AI while keeping personal and company information safe](/en/basics/05-privacy-safety/).
+
+## Practical tips
+
+- **Be specific.** Include the audience, purpose, length, and tone. Microsoft's documentation also says "your prompt doesn't have to be perfect; start from the result you want and add length, format, tone, and sources."
+- **A draft is a draft.** The official documentation tells you to read Outlook drafts before sending, and to have a person review and fix AI-generated presentation content.
+- **Check numbers and dates yourself.** Be especially careful with names, dates, amounts, and wording of commitments.
+- **Compare the same job across tools.** If you use Google Workspace, see [19. Gemini in Google Workspace](/en/automation/19-google-workspace-gemini/); to compare conversational AI, see [Comparing Claude, ChatGPT, and Gemini](/en/chat/05-compare-assistants/).
+- **You can also work with Office files in Claude.** For the Claude approach, see [23. Adding AI to Excel and Google Sheets](/en/automation/23-spreadsheet-ai/) and [C7. Connectors](/en/claude/c07-connectors/).
+
+## What to read next
+
+- [23. Adding AI to Excel and Google Sheets: Copilot, Gemini, and Claude](/en/automation/23-spreadsheet-ai/) — Copilot in Excel and spreadsheet automation
+- [17. Get a morning briefing](/en/automation/17-morning-briefing/) — Getting email and schedule summaries every day
+- [4. Writing reports and proposals](/en/chat/04-write-reports/) — Writing report drafts with conversational AI
+- [An AI usage guide for office, planning, and admin roles](/en/roles/office/) — Looking at repetitive work like email, reports, and presentations from a job-role perspective

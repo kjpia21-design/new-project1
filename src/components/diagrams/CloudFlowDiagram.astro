@@ -1,29 +1,48 @@
 ---
 // C13 도식: 내 기기(브라우저·앱·터미널) <-> 클라우드 VM <-> GitHub
+import { getLang } from '../../lib/i18n';
+const lang = getLang(Astro);
+const en: Record<string, string> = {
+  '클라우드 세션 구조도': 'Cloud session map',
+  '내 기기의 브라우저, 앱, 터미널에서 작업을 지시하면 클라우드 VM이 GitHub에서 저장소를 복제해 작업하고, 결과는 브랜치와 풀 리퀘스트로 GitHub에 올라갑니다.': 'You give instructions from the browser, app, or terminal on your device. The cloud VM clones the repository from GitHub, does the work, and pushes the results to GitHub as a branch and pull request.',
+  '내 기기': 'My device',
+  '브라우저 · 앱 · 터미널': 'Browser · app · terminal',
+  '지시하고, 진행을 보고, 결과를 검토해요': 'Give tasks, follow progress, review results',
+  '지시': 'Instruct',
+  '진행·결과': 'Progress · results',
+  '클라우드 VM': 'Cloud VM',
+  '저장소 복제본 + 환경(Environment)': 'Repo copy + environment',
+  '네트워크 수준 · 환경변수 · 설정 스크립트': 'Network level · env vars · setup script',
+  '내 기기를 꺼도 계속 실행돼요': 'Keeps running even if my device is off',
+  '복제(clone)': 'Clone',
+  '저장소 · 브랜치 · 풀 리퀘스트': 'Repo · branch · pull request',
+  '자격 증명은 VM 밖(프록시)에 보관돼요': 'Credentials stay outside the VM (proxy)',
+};
+const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
 ---
 <figure class="diagram not-content">
   <svg viewBox="0 0 360 440" role="img" aria-labelledby="cloud-flow-title cloud-flow-desc">
-    <title id="cloud-flow-title">클라우드 세션 구조도</title>
-    <desc id="cloud-flow-desc">내 기기의 브라우저, 앱, 터미널에서 작업을 지시하면 클라우드 VM이 GitHub에서 저장소를 복제해 작업하고, 결과는 브랜치와 풀 리퀘스트로 GitHub에 올라갑니다.</desc>
+    <title id="cloud-flow-title">{tx('클라우드 세션 구조도')}</title>
+    <desc id="cloud-flow-desc">{tx('내 기기의 브라우저, 앱, 터미널에서 작업을 지시하면 클라우드 VM이 GitHub에서 저장소를 복제해 작업하고, 결과는 브랜치와 풀 리퀘스트로 GitHub에 올라갑니다.')}</desc>
     <g class="box blue"><rect x="30" y="10" width="300" height="100" rx="16" />
-      <text x="180" y="44" class="t1">내 기기</text>
-      <text x="180" y="70" class="t2">브라우저 · 앱 · 터미널</text>
-      <text x="180" y="92" class="t3">지시하고, 진행을 보고, 결과를 검토해요</text></g>
+      <text x="180" y="44" class="t1">{tx('내 기기')}</text>
+      <text x="180" y="70" class="t2">{tx('브라우저 · 앱 · 터미널')}</text>
+      <text x="180" y="92" class="t3">{tx('지시하고, 진행을 보고, 결과를 검토해요')}</text></g>
     <g class="arrow"><path d="M150 112 V158" /><path d="M141 150 L150 160 L159 150" /><path d="M210 160 V114" /><path d="M201 122 L210 112 L219 122" /></g>
-    <text x="48" y="140" class="t3 left">지시</text>
-    <text x="226" y="140" class="t3 left">진행·결과</text>
+    <text x="48" y="140" class="t3 left">{tx('지시')}</text>
+    <text x="226" y="140" class="t3 left">{tx('진행·결과')}</text>
     <g class="box coral"><rect x="30" y="162" width="300" height="110" rx="16" />
-      <text x="180" y="196" class="t1">클라우드 VM</text>
-      <text x="180" y="222" class="t2">저장소 복제본 + 환경(Environment)</text>
-      <text x="180" y="244" class="t3">네트워크 수준 · 환경변수 · 설정 스크립트</text>
-      <text x="180" y="262" class="t3">내 기기를 꺼도 계속 실행돼요</text></g>
+      <text x="180" y="196" class="t1">{tx('클라우드 VM')}</text>
+      <text x="180" y="222" class="t2">{tx('저장소 복제본 + 환경(Environment)')}</text>
+      <text x="180" y="244" class="t3">{tx('네트워크 수준 · 환경변수 · 설정 스크립트')}</text>
+      <text x="180" y="262" class="t3">{tx('내 기기를 꺼도 계속 실행돼요')}</text></g>
     <g class="arrow"><path d="M150 274 V320" /><path d="M141 312 L150 322 L159 312" /><path d="M210 322 V276" /><path d="M201 284 L210 274 L219 284" /></g>
-    <text x="48" y="302" class="t3 left">복제(clone)</text>
+    <text x="48" y="302" class="t3 left">{tx('복제(clone)')}</text>
     <text x="226" y="302" class="t3 left">push · PR</text>
     <g class="box green"><rect x="30" y="324" width="300" height="100" rx="16" />
       <text x="180" y="358" class="t1">GitHub</text>
-      <text x="180" y="384" class="t2">저장소 · 브랜치 · 풀 리퀘스트</text>
-      <text x="180" y="406" class="t3">자격 증명은 VM 밖(프록시)에 보관돼요</text></g>
+      <text x="180" y="384" class="t2">{tx('저장소 · 브랜치 · 풀 리퀘스트')}</text>
+      <text x="180" y="406" class="t3">{tx('자격 증명은 VM 밖(프록시)에 보관돼요')}</text></g>
   </svg>
 </figure>
 

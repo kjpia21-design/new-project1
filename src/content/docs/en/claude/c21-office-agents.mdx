@@ -1,0 +1,222 @@
+---
+title: "Using Claude inside Excel and PowerPoint with Claude for M365"
+description: "How to install the Claude add-in in Excel and PowerPoint and hand off formula explanations, error tracing, and slide creation and edits, plus plans, supported versions, limits, and safety rules, based on the official docs"
+sidebar:
+  label: "C21. Excel and PowerPoint"
+level: practical
+category: claude
+tools: ["Claude for Excel", "Claude for PowerPoint", "Microsoft 365"]
+duration: "30 min"
+prerequisites:
+  - "A paid Claude plan (Pro, Max, Team, Enterprise)"
+  - "Excel or PowerPoint from a Microsoft 365 subscription (web, Windows, Mac). 2016 and 2019 perpetual licenses don't work"
+  - "A practice file you can trust (a copy is recommended)"
+lastVerified: 2026-10-31
+sources:
+  - title: "Claude for M365 overview"
+    url: "https://claude.com/docs/office-agents"
+  - title: "Use Claude for Excel"
+    url: "https://claude.com/docs/office-agents/excel"
+  - title: "Use Claude for PowerPoint"
+    url: "https://claude.com/docs/office-agents/powerpoint"
+  - title: "Work across M365 apps"
+    url: "https://claude.com/docs/office-agents/work-across-apps"
+  - title: "Connectors and Skills (Claude for M365)"
+    url: "https://claude.com/docs/office-agents/connectors-and-skills"
+  - title: "Performance and limits (Claude for M365)"
+    url: "https://claude.com/docs/office-agents/performance"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- **Claude for M365** is a **Claude add-in** that you install inside Excel, PowerPoint, Word, and Outlook. It chats while looking at the file or email you have open, reads it, edits it, and moves work between apps. This article focuses on Excel and PowerPoint (as of 2026-10-31).
+- It's generally available (GA) on **Pro, Max, Team, and Enterprise** plans. The free plan isn't listed as eligible. Usage shares the limits of your existing Claude account.
+- Installation is **Microsoft AppSource "Get it now" > turn on the add-in in the Office app > sign in with your Claude account**. It works on the web, Windows (Microsoft 365), and Mac. It doesn't work on iPad, Android, or 2016 and 2019 perpetual licenses.
+- For Excel, the strengths are noted as **explanations with cell-level citations, value edits that keep formula relationships intact, and tracing the cause of errors**; for PowerPoint, **creating slides that respect your template, editing only specific slides, and converting to native charts**.
+- Use it **only on files you trust**. External files may contain hidden instructions (prompt injection), macros, VBA, and data tables don't work, and a person has to review the results.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Check whether you can use the Claude add-in with your plan and Office version, and install it.
+- In Excel, get complex formulas explained, trace the cause of errors, and change assumptions to see how results change.
+- In PowerPoint, make a draft deck, fix only specific slides, and turn bullet points into charts and diagrams.
+- Know about cross-app work, like moving Excel numbers into slides, and the safety rules.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Add-in** | An extension that attaches as a sidebar next to an Office app. It's installed separately from the Claude app, and you sign in with your Claude account. |
+| **Claude for M365** | The name of the bundle of add-ins for Excel, PowerPoint, Word, and Outlook. The AppSource listing is named "Claude for Microsoft 365." |
+| **Cell-level citation** | A link attached to Claude's answer in Excel. Click it to jump to the cell that served as evidence. |
+| **Instructions** | Standing preferences you write in the add-in sidebar's Settings. They're saved separately for each app. |
+| **Cross-app work** | A feature for reading and writing across open Excel, PowerPoint, Word, and Outlook in one conversation. You need to turn on "Let Claude work across files" in Settings. |
+
+### What do you use where?
+
+| What you want to do | Right place | Details |
+| --- | --- | --- |
+| Formulas, errors, and model work inside an open Excel file | Claude for Excel in this article | This article |
+| Building or fixing an open deck to match a template | Claude for PowerPoint in this article | This article |
+| Getting a newly created file (without installing the app) | File creation in Claude chat, built-in skills | [C8](/en/claude/c08-skills/) |
+| Long tasks organizing multiple files in your folder | Cowork | [C19](/en/claude/c19-cowork/) |
+| Screen mockups and prototypes | Claude Design | [C20](/en/claude/c20-claude-design/) |
+| Microsoft's own AI (Copilot) | Copilot | [Automation 23](/en/automation/23-spreadsheet-ai/), [Automation 24](/en/automation/24-m365-copilot/) |
+
+The overview doc introduces tracked changes and comment-based editing in Word, and inbox triage, reply drafts in your voice, thread summaries, and finding meeting times in Outlook. This article doesn't cover the details of using those two apps.
+
+<Aside type="caution" title="Chat history may disappear after a Windows update (as of 2026-10-31)">
+The official docs carry a warning about a problem where, after the September and October 2026 Microsoft 365 updates, some users on Windows **can't see their chat history and uploaded skills**. It's noted that Anthropic is working with Microsoft to resolve it. Copy important conversation content elsewhere, and check the relevant item in the official data storage doc for the fix.
+</Aside>
+
+<Aside type="note" title="Things we couldn't confirm">
+We couldn't confirm in the official docs we read this time the range of support for Korean-language screens and Korean prompts, usage numbers by plan, or wording on availability in Korea (for users in Korea). Try conversing in Korean too, but check the results yourself. The model list varies by account and organization settings, so this site doesn't list a fixed one.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  'I checked my plan (Pro, Max, Team, Enterprise) and my Office version',
+  'I installed the Claude add-in from AppSource and signed in',
+  'I prepared a copy of a practice file',
+  'I tried explaining, changing a value, and tracing an error once each in Excel',
+  'I tried generating slides and editing part of a deck in PowerPoint',
+  'I reviewed the results myself and decided not to use it on external files',
+]} />
+
+<Steps>
+
+1. **Check the supported versions**
+
+   This is the support range stated in the official docs (as of 2026-10-31).
+
+   | App | Supported | Not supported |
+   | --- | --- | --- |
+   | Excel | Web, Windows (Microsoft 365, build 16.0.13127.20296 or later), Mac (16.46 or later, build 21011600 or later) | Excel 2016 and 2019 perpetual/volume licenses, iPad, Android, builds older than the SharedRuntime baseline |
+   | PowerPoint | Web, Windows (Microsoft 365, build 16.0.13127.20296 or later), Mac (16.46 or later) | PowerPoint 2016 and 2019 perpetual/volume licenses, iPad, Android, older builds |
+
+2. **Install the add-in and sign in**
+
+   Install from the "Claude for Microsoft 365" listing in Microsoft AppSource with "Get it now." Then open Excel or PowerPoint, turn on the add-in, and sign in with your Claude account. Where to turn it on is noted as Tools > Add-ins on Mac and Home > Add-ins on Windows. If you're using it at an organization, an admin can deploy it from the Microsoft 365 Admin Center, and Microsoft Graph consent is needed at first. Talk to your IT person about this part.
+
+   <ScreenshotPlaceholder caption="Turning on Claude from Add-ins on the Excel Home tab, with the sidebar open" officialUrl="https://claude.com/docs/office-agents/excel" />
+
+3. **Excel: understand, change, and catch errors**
+
+   Open a practice copy and make requests naming the sheet and range. The official docs say that for large files, you should mention only the sheets or ranges you need, or copy only the sheets you need into a new workbook.
+
+   <PromptBox>
+   Please explain step by step how the value in cell C42 of the "Monthly Sales" sheet is calculated. Mark the cells that served as evidence as citations.
+   </PromptBox>
+
+   <PromptBox>
+   Change the growth rate on the "Assumptions" sheet from 5% to 10%, and summarize how the linked calculations change. Don't delete the formulas; change only the values.
+   </PromptBox>
+
+   <PromptBox>
+   Find the cell causing the #REF! error on the "Summary" sheet and tell me, and suggest a fix first. Don't change anything until I've reviewed it.
+   </PromptBox>
+
+   When Claude changes a value, it keeps formula relationships so the cells below recalculate, and it warns you before overwriting existing data. It's noted that you can also directly ask for basic operations like sorting, filtering, editing pivot tables, conditional formatting, and data validation dropdowns.
+
+4. **PowerPoint: apply the template first, then start**
+
+   The official best practice is to **apply the template first** and then have it build the content. Claude reads the slide master, layouts, fonts, and color scheme, and builds and edits to match.
+
+   <PromptBox>
+   Using this deck's template, make a 6-slide draft for a "Local library usage" report. Slide 1 is the summary, slides 2-5 are visitor counts, time of day, age groups, and program participation, and slide 6 is recommendations. Leave the numbers blank for now and put [numbers here] placeholders.
+   </PromptBox>
+
+   <PromptBox>
+   Please trim the text on slide 3. It's too dense. Keep only the three key points and move the rest into the speaker notes.
+   </PromptBox>
+
+   If you select a specific slide and then speak, it fixes just that part without rebuilding the whole deck. It can also turn bullet points into process diagrams or editable native charts (directly editable, not images).
+
+   <FlowSteps title="Making your first deck in PowerPoint" officialUrl="https://claude.com/docs/office-agents/powerpoint" steps={[
+     { where: 'PowerPoint', action: 'Open a blank deck with your company template applied' },
+     { where: 'Claude sidebar', action: 'Request a draft by writing the goal and slide structure', result: 'Slides appear using the template\'s layouts, fonts, and colors' },
+     { where: 'Select a slide', action: 'Request a partial edit like "shorten just this slide"' },
+     { where: 'Human review', action: 'Check brand guidelines and content yourself, then finalize' },
+   ]} />
+
+5. **(Optional) Work across apps**
+
+   Install the add-in in each app and turn it on once, then turn on "Let Claude work across files" in each add-in's settings. It's on by default for Pro and Max and off by default for Team and Enterprise. This setting is per device, so you need to turn it on on each device you'll use, and it works only when you sign in directly with a Claude account (it isn't supported with third-party platform connections such as Bedrock).
+
+   <PromptBox>
+   From the "Quarterly Summary" sheet in the open Excel file, take the revenue and operating profit numbers and put them into slide 4 of the open deck as a table and a bar chart. Tell me separately which numbers changed.
+   </PromptBox>
+
+6. **Write standing instructions in Settings**
+
+   In Instructions under the sidebar Settings, write the rules you always want followed. For Excel, it's noted you can write formatting rules like "use thousands separators for numbers" and "make column headers bold," plus currency and region preferences; for PowerPoint, brand rules like "keep bullets to one line" and "use blue tones for emphasis." They're saved separately for each app, so rules written for Excel don't apply in PowerPoint.
+
+</Steps>
+
+## Quick reference
+
+| Item | Details (as of 2026-10-31) |
+| --- | --- |
+| Available plans | Pro, Max, Team, Enterprise (GA for both Excel and PowerPoint) |
+| Install | Microsoft AppSource "Claude for Microsoft 365" > Get it now |
+| Usage | Same limits as your existing Claude account |
+| Connectors and skills | The + button below the sidebar input box > Connectors. Skills you turn on in Settings apply to all add-ins and can be invoked directly with `/` (for example, `/deck-check` in PowerPoint) |
+| Long conversations | When they get long, they're automatically compacted and continue in a new conversation |
+| Not supported in Excel | Data tables, macros and VBA |
+| Processing time limits | 90 seconds for code execution steps; for other steps, 5 minutes on desktop and 2 minutes on web; 30 seconds for Word text edits |
+| Excel read limit | 2,000 cells with data that Claude reads at a time. Large sheets are read in multiple steps |
+| Data | Inputs and outputs are deleted from the backend within 30 days (with exceptions). Chat history is stored locally in the browser (IndexedDB) and isn't synced across devices |
+| Organization policy | The Excel add-in doesn't inherit an organization's custom data retention settings and isn't included in Enterprise audit logs. For Enterprise with the Compliance API on, sessions are included |
+
+## Common sticking points
+
+### I don't see the add-in
+
+- **Cause**: Your plan or Office version may not be eligible. Your organization may have blocked access to the Office store, or an admin may not have deployed it yet.
+- **Fix**: Check the supported versions table above and your plan. For an organization account, ask your IT person to deploy it from AppSource (or via a custom manifest).
+
+### The task stalls or Office gets slow
+
+- **Cause**: Large ranges, many shapes, and heavy formulas can make the app slow or unresponsive. Each step times out after a set wait time. Even after a timeout, a step Office already started may keep running.
+- **Fix**: While it's working, don't click, type, run macros, or refresh data. Name the sheet and range, break big changes into smaller requests, and after a timeout, save, wait, and then request smaller steps.
+
+### On a large file it says a step didn't finish
+
+- **Cause**: The official docs explain that on larger files, more sessions end on an unfinished step. This is how it detects an Office crash, forced quit, or refresh.
+- **Fix**: Save before working, and try on a smaller file with only the range you need copied in.
+
+### My chat history or skills disappeared
+
+- **Cause**: It may be the same problem as the Windows update warning above. Chat history is by design stored only inside this browser and isn't synced across devices.
+- **Fix**: Check the guidance in the official data storage doc, and keep important content elsewhere.
+
+### Macros and data tables don't work
+
+- **Cause**: The Excel add-in doesn't support data tables or macros and VBA.
+- **Fix**: Do those parts yourself.
+
+## Practical tips
+
+- **Use it only on files you trust.** Templates, client files, and imported data from outside may contain hidden instructions that trick Claude. The official docs warn that testing found situations where it could be induced into extracting sensitive information, tampering with data, or taking destructive actions. It asks for confirmation before risky actions, so read the confirmation prompts carefully.
+- **Start with a copy.** Before having it change a wide range, it's recommended to do it first on a copy you trust.
+- **Be specific.** Instead of "clean this up," name the sheet, range, or slide number, like "make the dates in column C consistent as YYYY-MM-DD."
+- **Human review is essential.** The official docs say not to use models that feed final client deliverables, audit-critical calculations, or sensitive or regulated data without verification or proper controls. For PowerPoint, too, it's noted that it doesn't replace your judgment on design and narrative flow.
+- **Be careful with personal information.** The add-in sends content it reads from the file and attachments to Anthropic. Clearing chat history doesn't delete copies remaining on Anthropic's side. For files that contain national ID numbers (such as Korean resident registration numbers), bank accounts, or customers' personal information, check your organization's policy before using it.
+- **Distinguish it from Microsoft Copilot.** This add-in is Anthropic's Claude add-in, a different product from Microsoft 365 Copilot. How to use Copilot is covered in [Automation 24](/en/automation/24-m365-copilot/).
+
+## What to read next
+
+- [C8. Skills](/en/claude/c08-skills/) — skills that also apply in the add-in, and the built-in Excel and PowerPoint skills
+- [C19. Getting started with Cowork](/en/claude/c19-cowork/) — long tasks organizing multiple files in your folder
+- [C20. Claude Design](/en/claude/c20-claude-design/) — making mockups and prototypes and exporting to PPTX
+- [Adding AI to Excel and Google Sheets](/en/automation/23-spreadsheet-ai/) — comparing Copilot, Gemini, and Claude
+- [Guide for office workers](/en/roles/office/) — how to bring AI into your work

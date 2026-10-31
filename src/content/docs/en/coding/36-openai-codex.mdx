@@ -1,0 +1,297 @@
+---
+title: "Getting Started with OpenAI Codex: A Coding Agent Comparison Perspective"
+description: "A hands-on exercise: confirm OpenAI's coding agent Codex (how it's offered, plans, installation, approval settings) from official docs, and compare it with Claude Code and Cursor using facts only in a table"
+sidebar:
+  label: "9. Getting started with OpenAI Codex"
+level: practical
+category: coding
+tools: ["OpenAI Codex", "Claude Code", "Cursor"]
+duration: "40 min"
+prerequisites:
+  - "A ChatGPT account (there's a free plan, but what's offered varies by plan)"
+  - "A computer where you can open a terminal, and a practice project folder (a copy is recommended)"
+  - "Using Git is helpful (for undoing before and after a task)"
+lastVerified: 2026-10-26
+sources:
+  - title: "Codex CLI"
+    url: "https://learn.chatgpt.com/docs/codex/cli"
+  - title: "Codex IDE extension"
+    url: "https://learn.chatgpt.com/docs/codex/ide"
+  - title: "ChatGPT desktop app (Codex)"
+    url: "https://learn.chatgpt.com/docs/app"
+  - title: "Codex Cloud"
+    url: "https://learn.chatgpt.com/docs/cloud"
+  - title: "Authentication (Codex)"
+    url: "https://learn.chatgpt.com/docs/auth"
+  - title: "Codex Pricing"
+    url: "https://learn.chatgpt.com/docs/pricing"
+  - title: "Agent approvals & security (Codex)"
+    url: "https://learn.chatgpt.com/docs/agent-approvals-security"
+  - title: "Custom instructions with AGENTS.md (Codex)"
+    url: "https://learn.chatgpt.com/docs/agent-configuration/agents-md"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- **Codex** is OpenAI's coding agent. According to the official docs (2026-10-26), you can use it in four ways: **terminal (CLI), editor extension (IDE), desktop app, and cloud**.
+- You log in with a **ChatGPT account** or an **API key**. The cloud requires a ChatGPT login. Plans include Free, Go, Plus, and Pro, and cloud integrations and the CLI and IDE extension are listed on the Plus card.
+- The default safeguards are the **sandbox (restricting the scope of access) and approval policy**. Locally, the network is off, and edits outside the working folder ask for approval.
+- With Claude Code ([Tutorial 6](/en/coding/06-claude-code-start/)) and Cursor ([Tutorial 9](/en/coding/09-cursor/)), we **compare facts only, in a table**. We don't write any ranking of which is better.
+- Whether it's offered in Korea, Korean language support, and KRW prices weren't in the documents we checked. Check directly on the sign-up screen.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Know how Codex is offered and choose which form fits your situation.
+- Install Codex CLI the official way, log in with a ChatGPT account, and hand off your first task.
+- Read the approval policy and sandbox, and start with safe settings.
+- Know **what to weigh** when comparing with Claude Code and Cursor.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Codex** | OpenAI's coding agent. It reads code, edits it, and runs commands. It's offered in several forms. |
+| **Codex CLI** | The form you use by running `codex` in the terminal. |
+| **IDE extension** | The form you use inside an editor like VS Code. It can bring the open file and your selection into the prompt. |
+| **Desktop app** | Introduced in the official docs as the "ChatGPT desktop app", where you choose between ChatGPT and Codex at startup. |
+| **Codex Cloud** | A form where tasks run in an isolated workspace in the cloud, and you review the results and bring them in as a commit or PR (pull request). |
+| **Sandbox** | A mechanism that technically limits what Codex can access. |
+| **Approval policy** | Rules that decide which actions Codex must ask you about first. |
+| **AGENTS.md** | A project instructions file Codex reads before working. |
+
+### The forms at a glance (per official docs, 2026-10-26)
+
+| Form | How to start | Login |
+| --- | --- | --- |
+| **CLI** | After installing, run `codex` in the project folder | ChatGPT account or API key |
+| **IDE extension** | The Codex extension for VS Code, Cursor, and Windsurf. Xcode and JetBrains have their own integrations | ChatGPT account or API key |
+| **Desktop app** | Download the app for macOS, Windows, or Linux as the official docs direct. Linux has separate install instructions | ChatGPT account or API key |
+| **Cloud** | Create an Environment and start a task from ChatGPT on the web, mobile, or desktop app | ChatGPT account only |
+
+### Plans (US dollars, per the official pricing page, 2026-10-26)
+
+The official docs say "ChatGPT Work and Codex share usage". Prices change often, so check the official page again before signing up.
+
+| Plan | Price | What the docs say about Codex |
+| --- | --- | --- |
+| Free | $0/month | A taste of quick coding tasks. GPT-6 Luna in the desktop app (varies by rollout) |
+| Go | $8/month | Light coding tasks |
+| Plus | $20/month | Codex on web, CLI, IDE extension, and iOS; cloud integrations like automatic code review and Slack; expanded usage with ChatGPT credits |
+| Pro | From $100 ($100, $200, $500) | Everything in Plus. Ultrafast mode is on Pro $500. The Pro plan is currently noted as having no 5-hour limit |
+| API Key | Usage-based billing | Use in CLI, SDK, and IDE extension. No cloud features (GitHub code review, Slack, etc.) |
+| Business | $20/month per user (2 or more users, annual billing; $25 on monthly billing) | Team workspace, expanded usage with credits |
+| Enterprise & Edu | Contact sales | Admin features, audit logs, etc. |
+
+Usage limits vary by model, task size, and local vs. cloud. The official docs estimate local messages for Plus and Standard Business as per-model ranges per 5 hours (for example, 15-160), but say these aren't fixed limits and tell you to check the usage dashboard. The official docs also include a notice that GPT-5.5 ended in ChatGPT-login Codex on 2026-10-14. Model names and availability change often, so go by the options you see in the app.
+
+<Aside type="note" title="What we couldn't confirm">
+**Whether it's offered in Korea, Korean screen support, and KRW prices and VAT** were not on the official pages we checked. The official pricing page (checked 2026-10-26) says Codex is available on all of the Free, Go, Plus, Pro, Business, Edu, and Enterprise plans. However, it has no limit figures for Free and Go, and the cloud docs don't say which plans support it, so we couldn't confirm whether the cloud is offered on Free and Go. Please check on the sign-up screen and the official pricing page. This tutorial doesn't cover differences in model performance.
+</Aside>
+
+### Comparing facts with Claude Code and Cursor
+
+The table below only lists facts confirmed in each tool's official docs. **We haven't written any ranking of quality or speed.** The fact-check dates differ, so look at prices and the like again on the official pages.
+
+| | Codex (OpenAI) | Claude Code (Anthropic) | Cursor |
+| --- | --- | --- | --- |
+| **Forms offered** | CLI, IDE extension, desktop app, cloud | Terminal, IDE extension, desktop app, web ([C12](/en/claude/c12-claude-code-overview/)) | Code editor (desktop app), with a CLI for the terminal too ([Tutorial 9](/en/coding/09-cursor/)) |
+| **Account / plan** | ChatGPT account (Free to Pro, Business, etc.) or API key | Claude Pro or higher paid plan, or a Console account ([C2](/en/claude/c02-plans-limits/)) | Free, paid Plus from $8/month (as of 2026-10-26, [Tutorial 9](/en/coding/09-cursor/)) |
+| **Project instructions file** | AGENTS.md | CLAUDE.md ([C14](/en/claude/c14-claude-code-features/)) | Rules (`.cursor/rules`); AGENTS.md also usable |
+| **Undoing work** | The official docs recommend Git checkpoints before and after a task | Checkpoints and `/rewind` (files changed by commands excluded) | Restore Checkpoint |
+| **Working in the cloud** | Codex Cloud (ChatGPT login required) | Cloud sessions ([C13](/en/claude/c13-cloud-sessions/)) | Cloud agents on Premium ($30/month) and above |
+| **Together with each other's tools** | The Codex IDE extension can be installed in Cursor | The VS Code extension can also be installed in Cursor | The install target for the two extensions above |
+
+When choosing a tool, it's more realistic to base it not on rankings but on **the subscription you already have (ChatGPT or Claude), the screen you work in (terminal, editor, app), and your company's data policy**.
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I chose the form (CLI, IDE, app, cloud) that fits my situation',
+  'I prepared a practice project folder as a copy and saved the starting state with Git',
+  'I installed Codex CLI and logged in with ChatGPT',
+  'I asked my first question with "Tell me about this project"',
+  'I checked current permissions with /permissions and tried switching to read-only',
+  'I handed off a small edit and reviewed the changes',
+  'I created project instructions with AGENTS.md',
+  'I checked Codex\'s pricing and limits screen',
+]} />
+
+<Steps>
+
+1. **Choose which form to use**
+
+   | If this describes you | Form to consider |
+   | --- | --- |
+   | You're comfortable with the terminal and also want to use it in scripts and CI | CLI (non-interactive runs with `codex exec`) |
+   | You want to use it while looking at the open file in your editor | IDE extension |
+   | You want to handle files and projects in an installed app screen | Desktop app |
+   | You want tasks to run without leaving your computer on | Cloud (needs environment setup) |
+
+   The exercise in this tutorial uses the **CLI**. The concepts of login and approval are the same for the other forms.
+
+2. **Make a practice folder and a Git save point**
+
+   The official CLI and IDE docs both advise **creating a Git checkpoint before and after a task so you can undo changes**. Practice on a copy, not the original company repository, and if you have Git, commit the starting state. If Git is new to you, copying the whole folder is another option.
+
+3. **Install Codex CLI**
+
+   The official CLI page (checked 2026-10-15) lists the following four installation methods. Pick just one. For Windows, it advises starting in a new PowerShell window.
+
+   | Method | Command |
+   | --- | --- |
+   | macOS / Linux | `curl -fsSL https://chatgpt.com/codex/install.sh \| sh` |
+   | Windows (PowerShell) | `powershell -ExecutionPolicy ByPass -c "irm https://chatgpt.com/codex/install.ps1 \| iex"` |
+   | npm | `npm install -g @openai/codex` |
+   | Homebrew | `brew install --cask codex` |
+
+   <Aside type="caution" title="These commands run a script downloaded from the internet right away">
+   The `curl ... | sh` and `irm ... | iex` styles run the downloaded script immediately. Check that the address is **the same as written in the official docs, down to the last character**, and if it's a work computer, check your installation policy first. If you'd rather not, you can use npm or Homebrew.
+   </Aside>
+
+   The docs say to update by running the same command you used to install (for Homebrew, `brew upgrade --cask codex`).
+
+4. **Log in and ask your first question**
+
+   Move to the practice folder and run `codex`, and at first a screen appears for choosing a login method, such as **Sign in with ChatGPT**. Billing and data policy differ depending on whether you use your ChatGPT subscription or an API key. The authentication docs also include Device Code login (`codex login --device-auth`), which is in beta and must first be turned on in ChatGPT security settings (admin permission settings for workspaces) (as of 2026-10-26). The official authentication docs explain that with ChatGPT login, Codex usage follows the ChatGPT workspace's permissions and retention and residency settings, and with API key login it follows the API organization's retention and data sharing settings.
+
+   ```sh
+   cd ~/practice-project
+   codex
+   ```
+
+   Once you're logged in, start with the first question the official docs suggest.
+
+   <PromptBox>
+   Tell me about this project. Explain what it does so that someone who doesn't know coding can understand it. Put the main folders and entry-point files in a table, and mark anything you're not sure about as a guess. Don't modify anything yet.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Codex CLI's first launch and login selection screen" officialUrl="https://learn.chatgpt.com/docs/codex/cli" />
+
+5. **Understand and set approvals and the sandbox**
+
+   According to the official approvals and security docs (checked 2026-10-26), the default state is as follows.
+
+   - The agent starts with **network access turned off**.
+   - Locally, an OS-level sandbox limits access (usually to the current workspace).
+   - In the `Auto` preset (`--sandbox workspace-write --ask-for-approval on-request`), reading, editing, and running commands inside the working folder are automatic, and **edits outside the working folder or commands that need the network ask for approval**.
+   - To just chat or plan without changes, you can switch to `read-only` mode with the `/permissions` command.
+
+   At first, check the current state with `/permissions`, and stay in read-only while you're understanding the code. To specify it from the start, do this.
+
+   ```sh
+   codex --sandbox read-only --ask-for-approval on-request
+   ```
+
+   <Aside type="caution" title="Watch out for outdated settings">
+   According to the official docs, the `approval_policy = "untrusted"` setting is no longer supported, and if it's left in, it can prevent the program from starting. If you touched a config file after reading an older article, check it.
+   </Aside>
+
+   If you want to compare with Claude Code's permission modes, see [C14](/en/claude/c14-claude-code-features/). The names and structure differ, but the purpose of "deciding what can be done without asking" is similar.
+
+6. **Hand off a small edit and review it**
+
+   Hand off a small, verifiable edit first. If an approval screen appears at this step, read which files will change and then allow it.
+
+   <PromptBox>
+   In the README's installation section, fix only typos and awkward sentences. Don't modify any other files. When you're done, list the files you changed and why.
+   </PromptBox>
+
+   When it's done, check the Git changes (diff) or open the files yourself. If you don't like it, you can go back to the state you saved in step 2. The official docs didn't mention, within what we checked this time, whether Codex has a feature to restore files like Claude Code's `/rewind`. That's why a Git save point matters.
+
+7. **Leave project instructions with AGENTS.md**
+
+   According to the official docs, Codex reads AGENTS.md before working. It combines global instructions (`~/.codex/AGENTS.md` in the Codex home folder) and the AGENTS.md files in your project folders starting from the root, and files closer to the current folder come later and take priority. The combined size is up to 32 KiB by default.
+
+   <PromptBox>
+   Create an AGENTS.md in this project's root. Keep it short, with just 3 rules: (1) write explanations and comments in English (2) don't modify files I didn't ask about (3) when a task is done, list the files you changed.
+   </PromptBox>
+
+   We confirmed in [Tutorial 9](/en/coding/09-cursor/) that Cursor can read the same AGENTS.md. That's useful when you want to give the same rules to several tools with one file. Claude Code's CLAUDE.md is a separate file, so see [C14](/en/claude/c14-claude-code-features/).
+
+8. **(Optional) Hand off work in the cloud**
+
+   The cloud runs tasks in an isolated environment, so you don't have to leave your computer on. Creating the environment is the most confusing part, so here's the order. It's based on the official cloud docs (checked 2026-10-26).
+
+   <FlowSteps title="Getting started with Codex Cloud" officialUrl="https://learn.chatgpt.com/docs/cloud" steps={[
+     { where: 'ChatGPT on web, mobile, or desktop app', action: 'Log in with your ChatGPT account', result: 'The cloud requires a ChatGPT login' },
+     { where: 'Web or desktop app', action: 'Choose Work in > Cloud and open Select environment', result: 'Pick an existing environment or create a new one' },
+     { where: 'Create environment screen', action: 'Pick a GitHub repository and choose Get started (connect GitHub if needed)', result: 'Codex looks through the repository, installs dependencies, and runs tests' },
+     { where: 'Settings review screen', action: 'Review the settings and test results, save, then Publish', result: 'Environment published is shown' },
+     { where: 'Task input', action: 'Send a task with Start a new task and review the result', result: 'Look at the changes and test results, then continue with a commit or PR' },
+   ]} />
+
+   Cloud tasks are given access to your GitHub repository. For personal repositories or company code, check the scope of access and company policy first. For network settings and handling of secret values, you need to read the environment settings section of the official docs separately. We didn't run the cloud ourselves in this tutorial.
+
+</Steps>
+
+## Quick reference
+
+### Commands commonly used at the start (per the official CLI and approvals docs)
+
+| Command | What it does |
+| --- | --- |
+| `codex` | Start Codex in the current folder |
+| `/permissions` | Check and change current permissions (approval policy, sandbox). Switch to read-only |
+| `codex resume` | Reopen a previous conversation |
+| `codex --search` | Run with live web search on |
+| `codex --image` | Attach an image (such as an error screen) to the first prompt |
+| `codex exec` | Non-interactive run for scripts and CI |
+| `codex cloud` | View cloud conversations and send tasks from the CLI |
+
+### Order for checking usage and cost
+
+1. Check whether you log in with ChatGPT or an API key.
+2. If you log in with ChatGPT, look at what Codex includes for your plan on the official pricing page.
+3. Check usage limits in the app's usage dashboard (the method the official docs describe).
+4. With an API key, you're billed at API prices and can't use the cloud features.
+
+## Common sticking points
+
+### After installing, it says `codex` can't be found
+
+- **Cause**: The install location may not be in your PATH, or you may not have reopened the terminal window you installed from.
+- **Fix**: Open a new terminal and try again. If that still doesn't work, use another installation method (npm, Homebrew) or check the official CLI docs again. We couldn't confirm fixes for each installation error in this tutorial.
+
+### A configuration error appears right at startup
+
+- **Cause**: You may have put `approval_policy = "untrusted"` in a config file after following an older article.
+- **Fix**: See the caution in step 5 and remove that setting. For read-only, the official docs advise using `--sandbox read-only --ask-for-approval on-request` instead.
+
+### The network or installs don't work during a task
+
+- **Cause**: The local default sandbox has the network turned off.
+- **Fix**: If it's an approval screen, read why it's needed and decide. You can turn it on in settings to keep going, but for safety, turn it on only for tasks that really need it.
+
+### I don't see the cloud menu
+
+- **Cause**: The cloud requires a ChatGPT login, and what's offered varies by plan. We couldn't confirm whether it's offered on Free and Go.
+- **Fix**: Check that you're logged in to ChatGPT and the entry for your plan on the pricing page.
+
+### My usage drops faster than expected
+
+- **Cause**: According to the official docs, the model, task size, context, tool use, and whether it runs in the cloud all have an effect. It's hard to predict from prompt length alone.
+- **Fix**: Break tasks into smaller pieces and look at the usage dashboard.
+
+## Practical tips
+
+- **Compare using the same task.** If you want to choose a tool, give each tool the same small task in a practice repository (for example, fixing a typo or explaining a function), and compare how readable the changes are, the approval process, and the cost by your own standards. This site doesn't judge which is better.
+- **Start read-only.** For unfamiliar code, understand it in read-only first, then hand off edits afterward; it's the safer order.
+- **Don't keep secrets.** By default, don't keep passwords or API keys in conversations or folders. Whether you may upload company code to an outside service is a company policy question first. See [Privacy and safety](/en/basics/05-privacy-safety/).
+- **Data policy differs by login method.** The policies that apply differ between ChatGPT login and an API key, so for work use, check with your administrator.
+- **If you want to start without knowing code**, [Tutorial 27](/en/coding/27-first-app-with-claude-code/) or [Tutorial 7](/en/coding/07-no-code-web-tools/), which build things with Claude Code, may be easier. This tutorial is written for people who can read code.
+
+## Next tutorials
+
+- [6. Getting started with Claude Code](/en/coding/06-claude-code-start/) — the same kind of terminal agent, with Claude
+- [9. Understanding and fixing code with Cursor](/en/coding/09-cursor/) — an editor-style tool
+- [28. Getting started with GitHub Copilot](/en/coding/28-github-copilot/) — another tool you use in VS Code
+- [C14. Claude Code core features](/en/claude/c14-claude-code-features/) — permission modes, CLAUDE.md
+- [Developer guide](/en/roles/developer/) · [Student guide](/en/roles/student/) — how to use it by role

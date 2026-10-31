@@ -5,11 +5,13 @@
 //   { where: 'claude.ai/code', action: 'GitHub 연결 누르기' },
 //   { where: 'GitHub 권한 화면', action: '저장소 선택 후 승인' },
 // ]} />
+import { getLang, t } from '../lib/i18n';
 interface Step { where: string; action: string; result?: string }
 interface Props { title?: string; steps: Step[]; officialUrl?: string }
 const { title, steps, officialUrl } = Astro.props;
+const lang = getLang(Astro);
 ---
-<figure class="flow not-content" aria-label={title ?? '절차 흐름도'}>
+<figure class="flow not-content" aria-label={title ?? t(lang, 'flow.label')}>
   {title && <figcaption class="flow-title">{title}</figcaption>}
   <ol class="flow-list">
     {steps.map((s, i) => (
@@ -24,10 +26,10 @@ const { title, steps, officialUrl } = Astro.props;
     ))}
   </ol>
   <p class="flow-note">
-    단순화한 흐름도예요. 실제 화면은{' '}
+    {t(lang, 'flow.noteA')}{' '}
     {officialUrl
-      ? <a href={officialUrl} target="_blank" rel="noopener noreferrer">공식 도움말</a>
-      : '공식 도움말'}에서 확인하세요.
+      ? <a href={officialUrl} target="_blank" rel="noopener noreferrer">{t(lang, 'flow.help')}</a>
+      : t(lang, 'flow.help')}{t(lang, 'flow.noteB')}
   </p>
 </figure>
 

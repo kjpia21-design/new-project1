@@ -1,0 +1,184 @@
+---
+title: "Using AI on Your Phone: Installing the App and Voice Conversations"
+description: "How to install the Claude, ChatGPT, and Gemini apps on your phone, the OS versions they need, and the voice feature for talking out loud, explained for first-timers"
+sidebar:
+  label: "7. AI on your phone"
+level: beginner
+category: basics
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "20 min"
+prerequisites: ["A smartphone (iPhone or Android)", "An account logged in to the app store", "The AI account you made in [tutorial 2](/en/basics/02-sign-up-first-question/) (if you don't have one, you can sign up in the app)"]
+lastVerified: 2026-10-26
+sources:
+  - title: "Get started with Claude"
+    url: "https://support.claude.com/en/articles/8114491-get-started-with-claude"
+  - title: "Install Claude for iOS"
+    url: "https://support.claude.com/en/articles/9266462-install-claude-for-ios"
+  - title: "Install Claude for Android"
+    url: "https://support.claude.com/en/articles/9612887-install-claude-for-android"
+  - title: "Using voice mode (Claude)"
+    url: "https://support.claude.com/en/articles/11101966-using-voice-mode"
+  - title: "ChatGPT - App Store Korea listing (OpenAI OpCo, LLC)"
+    url: "https://apps.apple.com/kr/app/chatgpt/id6448311069"
+  - title: "ChatGPT Voice (OpenAI, ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/features/voice"
+  - title: "Gemini mobile app availability (Google)"
+    url: "https://support.google.com/gemini/answer/14579026"
+  - title: "Talk naturally with Gemini Live (Google)"
+    url: "https://support.google.com/gemini/answer/15274899"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- You can use AI right away on a **phone app** without a computer. Download it from the app store (App Store or Google Play), log in, and you're done.
+- Each app has an **OS version requirement**. Claude needs iOS 18.0 or later or Android 8.0 or later, the ChatGPT iOS app needs iOS 18.0 or later, and the Gemini Android app needs Android 9 or later. (As of 2026-10-11)
+- **Voice conversation** lets you talk back and forth instead of typing. Claude's voice mode works in the phone app even on the free plan, and Gemini starts from the Live button at the bottom.
+- Voice conversations also **count toward your usage limit**. Long spoken conversations can use up your limit quickly.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Check whether you can install the AI apps on your phone, and install them.
+- Log in to the app with the account you used on your computer and pick up your conversations.
+- Turn the voice feature, for talking with the AI out loud, on and off.
+- Know how to use AI when your hands are busy, like when you're out walking or cooking.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **App store** | Where you download apps. On iPhone it's the App Store; on Android it's Google Play. |
+| **OS version** | The version of your phone's operating system. On a very old phone, you may not see the install button. |
+| **Voice conversation** | A feature where you ask questions out loud and hear the answers spoken, instead of typing. |
+| **Dictation (voice input)** | Only turns your speech into text in the input box. The AI doesn't answer out loud. It's different from voice conversation. |
+| **Beta** | A feature that's still being polished. It may feel rough or change. |
+
+### Can I install it on my phone? (as of 2026-10-11)
+
+| Service | App name | iPhone | Android |
+| --- | --- | --- | --- |
+| Claude | Claude by Anthropic | iOS / iPadOS 18.0 or later | Android 8.0 Oreo or later |
+| ChatGPT | ChatGPT | iOS / iPadOS 18.0 or later (from the Korean App Store listing) | We couldn't find the version in official documentation. Check the app info on Google Play |
+| Gemini | Gemini | iOS / iPadOS 18.2 or later (from the Korean App Store listing, as of 2026-10-26). The official help page doesn't list a version | Android 9 or later, 2 GB or more of memory (RAM). Android Go isn't supported |
+
+- You can see your iPhone's version under Settings > General > About, and on Android under Settings > About phone. Menu names vary a little by model.
+- If your phone doesn't meet the requirements, you can **open the website in your phone's browser** (such as claude.ai) instead of using the app.
+- Age requirements and supported countries differ by service. Claude requires you to be 18 or older and in a supported region ([C3](/en/claude/c03-getting-started/)). The Gemini mobile app is for ages 13 and up (or the applicable age in your country) and is offered in more than 150 countries.
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I checked my phone\'s OS version',
+  'I downloaded the official app from the app store',
+  'I logged in with the account I used on my computer',
+  'I allowed microphone permission',
+  'I tried one voice conversation',
+]} />
+
+<Steps>
+
+1. **Check your OS version**
+
+   Use the table above to see whether your phone meets the requirements. If it doesn't, use the website in a browser.
+
+2. **Find and install the official app**
+
+   Type the service name into the App Store or Google Play search box, and be sure to check the **developer name**.
+
+   - Claude: app name "Claude by Anthropic," developer Anthropic
+   - ChatGPT: developer OpenAI (OpenAI OpCo, LLC in the Korean App Store listing)
+   - Gemini: developer Google
+
+   There can be fake apps with similar names. If the developer is different, or the app asks for a separate payment right away, don't install it.
+
+   <ScreenshotPlaceholder caption="Finding and installing the Claude app in the app store" officialUrl="https://support.claude.com/en/articles/9266462-install-claude-for-ios" officialLabel="See it in the Anthropic Help Center (iPhone)" />
+
+3. **Log in**
+
+   Log in with the account you made in [tutorial 2](/en/basics/02-sign-up-first-question/). With the same account, you can see on your phone the conversations you had on your computer. If a verification text or email arrives, just enter it.
+
+4. **Allow microphone permission**
+
+   The first time you turn on voice conversation, it asks "Allow access to the microphone?" You need to tap **Allow** for it to hear you. If you blocked it by mistake, turn on that app's microphone permission in your phone's settings.
+
+5. **Start a voice conversation**
+
+   The location differs by service.
+
+   - **Claude**: In the input box, tap the **sound-wave icon** next to the microphone icon. Pick a voice and start talking.
+   - **Gemini (Android)**: Tap **Live** at the bottom of the app. Your screen needs to be unlocked.
+   - **ChatGPT**: Please read the note below first.
+
+   <ScreenshotPlaceholder caption="The sound-wave icon in the Claude app's input box" officialUrl="https://support.claude.com/en/articles/11101966-using-voice-mode" officialLabel="See it in the Anthropic Help Center" />
+
+   <ScreenshotPlaceholder caption="The Live button at the bottom of the Gemini app" officialUrl="https://support.google.com/gemini/answer/15274899" officialLabel="See it in Google Help" />
+
+6. **Ask your first question out loud**
+
+   <PromptBox label="Something to try first">
+   Give me just three dishes I can make tonight with the tofu, eggs, and green onions in my fridge.
+   </PromptBox>
+
+   When you're done, tap the end button on the screen. Check in the app whether the finished conversation stays in your conversation list as text.
+
+</Steps>
+
+<Aside type="caution" title="What we confirmed about ChatGPT voice is limited (as of 2026-10-11)">
+The voice guide we could open in OpenAI's ChatGPT docs (ChatGPT Voice) is **for the desktop app**, and says it's available on the Plus, Pro, Business, Edu, and Enterprise plans. For phones, that document only covers use through Codex on iOS paired with the desktop (as of 2026-10-19). We couldn't confirm where the voice conversation is in the ChatGPT app or whether the free plan can use it. Check the in-app instructions and OpenAI's help pages.
+</Aside>
+
+## Quick reference
+
+| Item | Claude | Gemini | ChatGPT |
+| --- | --- | --- | --- |
+| Starting voice | The sound-wave icon in the input box | Live at the bottom of the app | Only "Start voice chat" on the desktop app confirmed |
+| Possible for free? | Yes (all plans, including Free) | Used with a logged-in account. Google's help page doesn't list a paid plan among the requirements | Plus or higher per the docs (desktop) |
+| Korean | Voice language is chosen under Settings > Capabilities > Voice > Spoken language (if you don't see it, Settings > General > Voice > Language, as of 2026-10-26). The official docs don't say whether Korean is in the list | Korean is among the app's supported languages. Check Live's supported languages separately | Not confirmed |
+| Usage | Counts toward the normal usage limit | Plan limits apply ([tutorial 8](/en/basics/08-free-vs-paid/)) | Shares the plan's usage limit with other tasks (OpenAI pricing docs) |
+| Other | Beta. The Fable model can't be used in voice | Can't be started from the lock screen | - |
+
+## Common sticking points
+
+### I can't find the app in the app store
+
+- **Cause**: Your phone's OS version may be too low, or the region or device may not be supported.
+- **Fix**: Check the version with the table above, and if it doesn't work, use the website in a browser.
+
+### The AI can't hear me when I talk
+
+- **Cause**: You may have blocked microphone permission, or another app may be using the microphone.
+- **Fix**: Allow the app's microphone in your phone's settings, and try closing other calling or recording apps.
+
+### I spoke in Korean but it understood something else
+
+- **Cause**: Claude's voice language is set separately from the app's display language. The official help page says "changing the app's display language doesn't change the voice language." Voice in non-English languages is in beta.
+- **Fix**: In Claude, check Settings > Capabilities > Voice > Spoken language. If that item isn't there, look under Settings > General > Voice > Language. Speak clearly in a quiet place, and double-check important content in writing.
+
+### My limit drops fast when I use voice
+
+- **Cause**: Claude's voice conversations count toward your plan's normal usage limit. They also use more battery than text conversations.
+- **Fix**: Split it up: long tasks in text, short questions by voice. You can read about limits in [C2](/en/claude/c02-plans-limits/).
+
+### Gemini Live won't start from the lock screen
+
+- **Cause**: Gemini Live can't be started from the lock screen.
+- **Fix**: Unlock your phone first.
+
+## Practical tips
+
+- **Talk it out, then write it up.** Say a thought that came to you while out and about, then look back at the conversation history as text later.
+- **Don't say personal information out loud.** People nearby can hear you. See [tutorial 5](/en/basics/05-privacy-safety/) for safety rules.
+- **Log in with the same account.** You can pick up your conversations even if you switch devices.
+- **It's fine to use the web first.** You can install the app any time later.
+
+## What to read next
+
+- [8. How far does free go? Choosing a plan](/en/basics/08-free-vs-paid/) — Limits and pricing
+- [C3. Getting started with the Claude app](/en/claude/c03-getting-started/) — Web, desktop, and mobile in detail
+- [1. Writing prompts for work](/en/chat/01-prompt-basics/) — A question framework that works when you speak, too

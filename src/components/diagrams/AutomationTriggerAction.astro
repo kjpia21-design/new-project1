@@ -1,25 +1,41 @@
 ---
 // 자동화 18 도식: 트리거 -> 액션 -> 알림
+import { getLang } from '../../lib/i18n';
+const lang = getLang(Astro);
+const en: Record<string, string> = {
+  '트리거와 액션 구조도': 'Trigger and action map',
+  'Gmail에 새 메일이 오면(트리거) 시트에 행이 추가되고(액션 1) 알림이 전송됩니다(액션 2).': 'When a new email arrives in Gmail (trigger), a row is added to a sheet (action 1) and a notification is sent (action 2).',
+  '트리거': 'Trigger',
+  'Gmail에 새 메일 도착': 'New email arrives in Gmail',
+  '액션 1': 'Action 1',
+  'Google Sheets에 행 추가': 'Add a row to Google Sheets',
+  '받은 시각 · 보낸 사람 · 제목 · 링크': 'Received time · sender · subject · link',
+  '메일 내용이 열(칸)에 매핑돼요': 'Email details map to columns',
+  '액션 2': 'Action 2',
+  '알림 보내기': 'Send a notification',
+  '메신저 · 메일 (도구와 플랜에 따라 다름)': 'Chat app · email (varies by tool and plan)',
+};
+const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
 ---
 <figure class="diagram not-content">
   <svg viewBox="0 0 360 440" role="img" aria-labelledby="ta-title ta-desc">
-    <title id="ta-title">트리거와 액션 구조도</title>
-    <desc id="ta-desc">Gmail에 새 메일이 오면(트리거) 시트에 행이 추가되고(액션 1) 알림이 전송됩니다(액션 2).</desc>
+    <title id="ta-title">{tx('트리거와 액션 구조도')}</title>
+    <desc id="ta-desc">{tx('Gmail에 새 메일이 오면(트리거) 시트에 행이 추가되고(액션 1) 알림이 전송됩니다(액션 2).')}</desc>
     <g class="box blue"><rect x="30" y="10" width="300" height="100" rx="16" />
-      <text x="180" y="44" class="t1">트리거</text>
-      <text x="180" y="70" class="t2">Gmail에 새 메일 도착</text>
+      <text x="180" y="44" class="t1">{tx('트리거')}</text>
+      <text x="180" y="70" class="t2">{tx('Gmail에 새 메일 도착')}</text>
       <text x="180" y="92" class="t3">Zapier: New Email · Make: Watch emails</text></g>
     <g class="arrow"><path d="M180 112 V158" /><path d="M171 150 L180 160 L189 150" /></g>
     <g class="box coral"><rect x="30" y="162" width="300" height="110" rx="16" />
-      <text x="180" y="196" class="t1">액션 1</text>
-      <text x="180" y="222" class="t2">Google Sheets에 행 추가</text>
-      <text x="180" y="244" class="t3">받은 시각 · 보낸 사람 · 제목 · 링크</text>
-      <text x="180" y="262" class="t3">메일 내용이 열(칸)에 매핑돼요</text></g>
+      <text x="180" y="196" class="t1">{tx('액션 1')}</text>
+      <text x="180" y="222" class="t2">{tx('Google Sheets에 행 추가')}</text>
+      <text x="180" y="244" class="t3">{tx('받은 시각 · 보낸 사람 · 제목 · 링크')}</text>
+      <text x="180" y="262" class="t3">{tx('메일 내용이 열(칸)에 매핑돼요')}</text></g>
     <g class="arrow"><path d="M180 274 V320" /><path d="M171 312 L180 322 L189 312" /></g>
     <g class="box green"><rect x="30" y="324" width="300" height="100" rx="16" />
-      <text x="180" y="358" class="t1">액션 2</text>
-      <text x="180" y="384" class="t2">알림 보내기</text>
-      <text x="180" y="406" class="t3">메신저 · 메일 (도구와 플랜에 따라 다름)</text></g>
+      <text x="180" y="358" class="t1">{tx('액션 2')}</text>
+      <text x="180" y="384" class="t2">{tx('알림 보내기')}</text>
+      <text x="180" y="406" class="t3">{tx('메신저 · 메일 (도구와 플랜에 따라 다름)')}</text></g>
   </svg>
 </figure>
 

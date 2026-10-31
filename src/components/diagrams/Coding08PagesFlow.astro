@@ -1,28 +1,45 @@
 ---
 // coding/08 도식: 클라우드 세션 브랜치 -> PR -> main 병합 -> GitHub Pages 배포
+import { getLang } from '../../lib/i18n';
+const lang = getLang(Astro);
+const en: Record<string, string> = {
+  'README 개선부터 Pages 배포까지의 흐름': 'From README update to Pages deployment',
+  '클라우드 세션이 작업 브랜치에 README 변경을 올리고, 풀 리퀘스트를 만들어 main에 병합하면, main에 대한 push로 GitHub Actions가 실행되어 GitHub Pages에 배포됩니다.': 'A cloud session pushes a README change to a working branch, you create a pull request and merge it into main, and the push to main triggers GitHub Actions, which deploys to GitHub Pages.',
+  '1. 클라우드 세션': '1. Cloud session',
+  'README를 고치고 작업 브랜치에 push': 'Edit the README and push to a branch',
+  '내 컴퓨터는 꺼져 있어도 돼요': 'My computer can be off',
+  '2. 풀 리퀘스트(PR)': '2. Pull request (PR)',
+  'diff를 읽고 Create PR': 'Read the diff and Create PR',
+  '내가 눈으로 확인하는 단계예요': 'The step where I check it myself',
+  '3. main에 병합(Merge)': '3. Merge into main',
+  'main에 push가 일어나요': 'A push to main happens',
+  '배포 워크플로가 시작돼요': 'The deploy workflow starts',
+  'Actions 실행 결과가 사이트로 공개돼요': 'Actions output is published as a site',
+};
+const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
 ---
 <figure class="diagram not-content">
   <svg viewBox="0 0 360 440" role="img" aria-labelledby="c08-title c08-desc">
-    <title id="c08-title">README 개선부터 Pages 배포까지의 흐름</title>
-    <desc id="c08-desc">클라우드 세션이 작업 브랜치에 README 변경을 올리고, 풀 리퀘스트를 만들어 main에 병합하면, main에 대한 push로 GitHub Actions가 실행되어 GitHub Pages에 배포됩니다.</desc>
+    <title id="c08-title">{tx('README 개선부터 Pages 배포까지의 흐름')}</title>
+    <desc id="c08-desc">{tx('클라우드 세션이 작업 브랜치에 README 변경을 올리고, 풀 리퀘스트를 만들어 main에 병합하면, main에 대한 push로 GitHub Actions가 실행되어 GitHub Pages에 배포됩니다.')}</desc>
     <g class="box coral"><rect x="30" y="10" width="300" height="90" rx="16" />
-      <text x="180" y="42" class="t1">1. 클라우드 세션</text>
-      <text x="180" y="66" class="t2">README를 고치고 작업 브랜치에 push</text>
-      <text x="180" y="86" class="t3">내 컴퓨터는 꺼져 있어도 돼요</text></g>
+      <text x="180" y="42" class="t1">{tx('1. 클라우드 세션')}</text>
+      <text x="180" y="66" class="t2">{tx('README를 고치고 작업 브랜치에 push')}</text>
+      <text x="180" y="86" class="t3">{tx('내 컴퓨터는 꺼져 있어도 돼요')}</text></g>
     <g class="arrow"><path d="M180 102 V128" /><path d="M171 120 L180 130 L189 120" /></g>
     <g class="box blue"><rect x="30" y="132" width="300" height="90" rx="16" />
-      <text x="180" y="164" class="t1">2. 풀 리퀘스트(PR)</text>
-      <text x="180" y="188" class="t2">diff를 읽고 Create PR</text>
-      <text x="180" y="208" class="t3">내가 눈으로 확인하는 단계예요</text></g>
+      <text x="180" y="164" class="t1">{tx('2. 풀 리퀘스트(PR)')}</text>
+      <text x="180" y="188" class="t2">{tx('diff를 읽고 Create PR')}</text>
+      <text x="180" y="208" class="t3">{tx('내가 눈으로 확인하는 단계예요')}</text></g>
     <g class="arrow"><path d="M180 224 V250" /><path d="M171 242 L180 252 L189 242" /></g>
     <g class="box green"><rect x="30" y="254" width="300" height="90" rx="16" />
-      <text x="180" y="286" class="t1">3. main에 병합(Merge)</text>
-      <text x="180" y="310" class="t2">main에 push가 일어나요</text>
-      <text x="180" y="330" class="t3">배포 워크플로가 시작돼요</text></g>
+      <text x="180" y="286" class="t1">{tx('3. main에 병합(Merge)')}</text>
+      <text x="180" y="310" class="t2">{tx('main에 push가 일어나요')}</text>
+      <text x="180" y="330" class="t3">{tx('배포 워크플로가 시작돼요')}</text></g>
     <g class="arrow"><path d="M180 346 V372" /><path d="M171 364 L180 374 L189 364" /></g>
     <g class="box blue"><rect x="30" y="376" width="300" height="56" rx="16" />
       <text x="180" y="400" class="t1">4. GitHub Pages</text>
-      <text x="180" y="420" class="t3">Actions 실행 결과가 사이트로 공개돼요</text></g>
+      <text x="180" y="420" class="t3">{tx('Actions 실행 결과가 사이트로 공개돼요')}</text></g>
   </svg>
 </figure>
 

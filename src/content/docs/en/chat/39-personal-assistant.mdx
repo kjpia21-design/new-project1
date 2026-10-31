@@ -1,0 +1,281 @@
+---
+title: "AI as Your Personal Assistant: Planning Your Schedule, To-Dos, and Trips"
+description: "Dump your to-dos and sort them by priority, build a weekly schedule and a trip plan, then go on to calendar sync and recurring briefings in Claude, Gemini, and ChatGPT, explained at a beginner's level"
+sidebar:
+  label: "10. Using AI like a personal assistant"
+level: beginner
+category: chat
+tools: ["Claude", "Gemini", "ChatGPT"]
+duration: "30 min"
+prerequisites:
+  - "An account for at least one of Claude, Gemini, or ChatGPT"
+  - "For calendar sync, a Google account with Google Calendar makes it easier to follow along (steps 1 to 3 and 5 to 6 still work without one)"
+lastVerified: 2026-10-26
+status: published
+sources:
+  - title: "Claude Help Center: Use Google Workspace connectors"
+    url: "https://support.claude.com/en/articles/10166901-use-google-workspace-connectors"
+  - title: "Claude Help Center: Use Claude's chat search and memory"
+    url: "https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context"
+  - title: "Gemini Apps Help: Create and manage Calendar events in the Gemini app"
+    url: "https://support.google.com/gemini/answer/15305236?hl=en"
+  - title: "Gemini Apps Help: Use and manage connected apps in Gemini"
+    url: "https://support.google.com/gemini/answer/13695044?hl=en"
+  - title: "Gemini Apps Help: Schedule actions in the Gemini app"
+    url: "https://support.google.com/gemini/answer/16316416?hl=en"
+  - title: "ChatGPT docs: Scheduled tasks"
+    url: "https://learn.chatgpt.com/docs/automations.md"
+  - title: "ChatGPT docs: Personalize ChatGPT"
+    url: "https://learn.chatgpt.com/docs/personalize.md"
+  - title: "ChatGPT docs: Plugins"
+    url: "https://learn.chatgpt.com/docs/plugins.md"
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- The key to an AI assistant is **telling it about your situation once: your fixed commitments, how much time you have per day, and what you want to avoid.** Then its plans fit your real life much better.
+- Chat alone is enough. **Connecting your calendar is optional.** Once connected, you can check and add events by conversation (confirmed in the official help pages as of 2026-10-15).
+- The Gemini help pages say it can **create, find, and edit** calendar events, but **can't invite attendees or edit the location or description.**
+- Claude's Gmail, Google Calendar, and Drive connectors are described as available to all users. By default, Claude asks for your approval each time before it does something on your behalf.
+- The AI can get opening hours, prices, and booking availability wrong in a trip itinerary. **Check them directly on official sites.**
+- The AI reads the content of connected apps. Don't put national ID numbers, passport numbers, or card numbers into the conversation.
+</Summary>
+
+## What you'll be able to do
+
+- Dump the to-dos in your head and narrow them to **your 3 things for today.**
+- Tell the AI your fixed commitments and get a **realistic weekly schedule.**
+- Plan a **trip with constraints** (including a backup plan and a checklist).
+- Connect your calendar and **check and add events by conversation.**
+- Learn which services and conditions let you schedule **recurring briefings** such as a morning summary.
+
+## Concepts first
+
+| Term | Plain meaning |
+| --- | --- |
+| **Assistant setup (role instruction)** | A passage at the start that gives the role and rules, like "You're my scheduling assistant." For details, see [Writing work prompts](/en/chat/01-prompt-basics/). |
+| **Connectors / connected apps** | A feature that lets the AI read or write your services, like Gmail and your calendar. Names differ by service. |
+| **Memory** | A feature where the AI remembers content from earlier conversations and uses it in later ones. Each service has its own settings. |
+| **Scheduled tasks** | A feature where the AI does a task on its own at a set time and tells you the result. Whether you can use it depends on the service and account. |
+
+<Aside type="note" title="How this guide avoids overlap">
+[10 everyday uses for AI](/en/basics/06-everyday-uses/) has one line each for "organizing schedules and to-dos" and "planning a trip." This guide is the next step, covering **deeper examples** such as adding constraints, building a schedule, connecting a calendar, and recurring briefings.
+</Aside>
+
+<Aside type="note" title="What we couldn't confirm in this guide">
+- **ChatGPT's Google Calendar integration**: The official docs we checked (Plugins) give Gmail and Google Drive plugins as examples. We couldn't confirm Google Calendar in this document.
+- **Plan requirements for ChatGPT scheduled tasks**: The official docs only say "eligible plans" and "if enabled in your workspace," so we couldn't confirm which plans can use it.
+- We didn't verify any feature where **the AI books** flights, lodging, or restaurants for you. This guide only covers drafting plans and checklists.
+- On-screen menu names vary by account, device, and time. The paths below are examples from the help pages.
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I organized my situation (fixed commitments, available time) once and made an assistant setup',
+  'I dumped my to-dos and picked 3 for today',
+  'I got this week\'s schedule and fixed the overloaded spots',
+  'I decided how to get it into my calendar (enter it myself, or connect)',
+  'I checked the trip plan\'s opening hours and reservations on official sites',
+  'I reviewed my connected apps and memory settings once',
+]} />
+
+<Steps>
+
+1. **Start by creating an assistant setup that tells it your situation**
+
+   The first thing an assistant needs is your circumstances. Adapt the text below to your situation and paste it at the start of the chat. You don't need to include personal information like your name, address, or contact details. If you'll use it often, save it in a notes app.
+
+   <PromptBox label="Assistant setup (paste at the start of a chat)">
+   From now on, you're my personal scheduling assistant. Follow the rules below.
+
+   - My weekday working hours are [9 a.m. to 6 p.m.], and don't schedule anything after [8] p.m.
+   - Don't give me more than [3] must-do tasks per day.
+   - Build in [30] minutes each for travel and breaks.
+   - For facts I haven't told you (dates, prices, opening hours), don't make them up. Mark them "needs confirmation."
+   - Keep answers short, in tables or lists.
+   If you understand, reply only "Yes" and wait for my schedule.
+   </PromptBox>
+
+   If you want to keep using the same rules, you can use each service's personalization features. The official docs say that in Claude you can save instructions in a [project](/en/claude/c05-projects/), and in ChatGPT you can set a default style and custom instructions in Settings > Personalization on the web. Note that the only thing we confirmed directly in this guide is ChatGPT's settings path, and screens may change.
+
+2. **Dump your to-dos and narrow them to "today's 3"**
+
+   It's important to write everything down before organizing. It's fine if the order and wording are a mess.
+
+   <PromptBox label="Dump to-dos → priorities">
+   Below are the to-dos I have in my head right now. I just wrote them down in no order.
+
+   [Write your to-dos freely, one per line]
+
+   Organize them in this order.
+   1. Split them into ones with deadlines, ones that affect other people, and ones that can wait.
+   2. Roughly estimate how long each takes. If an estimate is hard, ask me.
+   3. Pick only 3 for today, with a one-line reason each.
+   4. Split the rest into things to do this week and things for later.
+   </PromptBox>
+
+   The 3 the AI picks are only a **suggestion.** If you think the order is wrong, just say, "Swap 2 and 3."
+
+3. **Tell it your fixed commitments and get this week's schedule**
+
+   If you first tell it about commitments you can't move, like a doctor's appointment, a meeting, or a child's pickup, the AI fits everything else into the free time.
+
+   <PromptBox label="Build a weekly schedule">
+   Here are my fixed commitments this week.
+   - Monday [10:00 to 11:00 team meeting]
+   - Wednesday [3:00 p.m. doctor's appointment]
+   - Friday [plans after 6 p.m.]
+
+   Take this week's to-dos from the step above and build a day-by-day schedule that avoids these commitments. I focus better in the morning, so put difficult tasks in the morning. Below the schedule, tell me about any "overloaded parts," and suggest which tasks to push back first if things slip.
+   </PromptBox>
+
+   Don't just trust the schedule you get; skim it once. If you think, "Will this really take one hour?", ask it to fix the time.
+
+4. **Get it into your calendar: enter it yourself, or connect and do it by conversation**
+
+   The simplest way is to **enter it into your calendar yourself** while looking at the schedule the AI made. It works with no connection and carries fewer privacy concerns. If you want to do it by conversation, it differs by service.
+
+   | Service | What we confirmed (as of 2026-10-15) |
+   | --- | --- |
+   | **Claude** | Gmail, Google Calendar, and Google Drive connectors are described as available to all users. It says you can view, create, edit, and delete events, find mutual free time, and set up recurring events in the calendar. By default, Claude asks for your approval for actions it takes on your behalf. For how to connect, see [the connectors tutorial](/en/claude/c07-connectors/). |
+   | **Gemini** | You can ask it to create, find, and edit events in Google Calendar and elsewhere. You need to turn on Keep Activity and connect Google Workspace. You can specify the calendar by putting `@Google Calendar` in your prompt. It can't invite attendees or edit the location or description. |
+   | **ChatGPT** | It's described as letting you install plugins from the Plugins tab on web and desktop. The official docs' examples are the Gmail and Google Drive plugins. We **couldn't confirm** Google Calendar. |
+
+   <FlowSteps title="Adding an event to your calendar in Gemini (per the help pages)" officialUrl="https://support.google.com/gemini/answer/15305236?hl=en" steps={[
+     { where: 'Gemini settings', action: 'Turn on Keep Activity', result: 'If it\'s off, you can\'t connect to the calendar' },
+     { where: 'gemini.google.com (same Google account as Workspace)', action: 'Enter an event request, for example: "Create a doctor\'s appointment for next Wednesday at 3 p.m."', result: 'If it isn\'t connected, a connection prompt appears' },
+     { where: 'Connection prompt screen', action: 'Follow the instructions shown and approve the Google Workspace connection' },
+     { where: 'Below the reply', action: 'Check the event that was created. If it\'s wrong, use "Undo" or open the event and edit it', result: 'Edit attendees, location, and description directly in the calendar app' },
+   ]} />
+
+   <ScreenshotPlaceholder caption="The help page for creating and managing Calendar events in the Gemini app" officialUrl="https://support.google.com/gemini/answer/15305236?hl=en" />
+
+   When you leave adding events to the AI, **check in your calendar that the date and time are right** after it creates them. The help pages also warn that Gemini can state incorrect information.
+
+   <PromptBox label="Request to add an event (if connected)">
+   Add [a dental appointment] to my calendar at [next Wednesday at 3 p.m.]. Before creating the event, first tell me whether it overlaps with any other event at that time.
+   </PromptBox>
+
+5. **For trip plans, ask for constraints and a backup plan too**
+
+   You'll get a usable plan only if you say **who's going, at what pace, and what you want to avoid**, not just "make an itinerary." Don't include passport numbers, booking numbers, or card numbers.
+
+   <PromptBox label="Trip planning, in depth">
+   I'm taking a [4-day, 3-night] trip to [city]. I'm traveling with [my parents], and I want to keep walking to [under 2 hours] a day. The budget is [KRW 600,000] per person, and I want to avoid spicy food and steep hills.
+
+   Make it in this format.
+   1. A daily itinerary table (morning, afternoon, evening, including how to get around)
+   2. 2 indoor alternatives to switch to if it rains
+   3. A list of things I should check on official sites (opening hours, closing days, whether a reservation is needed, admission fees)
+   4. For anything where you don't know the exact price or time, don't make it up. Mark it "needs confirmation."
+
+   And if the schedule feels tight, tell me where to cut.
+   </PromptBox>
+
+   The plan you get is a **draft.** Before you go, check opening hours, closing days, fees, and booking availability directly on each place's official site. How to check is covered in [Tutorial 4: How to fact-check](/en/basics/04-fact-checking/). If you want the AI to look up recent information, see [Using AI search well](/en/chat/22-ai-search/) too.
+
+6. **Hand off scheduling and messages too**
+
+   Messages for coordinating a meeting are something an assistant is good at. Mask the other person's name and contact details, and tell it only your available times.
+
+   <PromptBox label="Message for coordinating a meeting">
+   I want to set up a 30-minute call next week with [the client contact]. My available times are [Tuesday 2 to 5 p.m., Thursday 10 a.m. to 12 p.m.]. Write a polite but short text message proposing 3 candidate times. Also write a short follow-up message to send two days later if there's no reply.
+   </PromptBox>
+
+   Before you send it, check yourself that the dates and days of the week match your calendar. Either send it yourself, or if you're using a connection, read what the AI shows you and approve before it goes out.
+
+7. **Try scheduling a morning briefing (only where available)**
+
+   This is a feature where the AI summarizes your schedule and to-dos at a set time and tells you. There are conditions, so check first.
+
+   - **Gemini**: It's described as letting you schedule daily, weekly, and monthly recurring tasks. The help page's examples include "a daily summary of your calendar, to-do list, and email." But this feature is rolling out gradually to personal Google accounts and to work or school accounts on the relevant Google Workspace editions (as of 2026-10-19), so **some accounts can't use it yet.** Keep Activity must be on, and you can have up to 10 active scheduled tasks. Results are prepared in advance, so fast-changing information may not be current when you receive it. You manage them at gemini.google.com under Settings & help > Scheduled actions.
+   - **ChatGPT**: It's described as letting you schedule recurring tasks and view their status and run history under **Scheduled**. As noted above, we couldn't confirm the plan requirements. The official docs recommend testing the prompt in a regular chat before scheduling, and reviewing the results of the first few runs.
+   - **Claude**: Recurring runs are covered in [Automating recurring tasks](/en/claude/c18-automate-recurring/) and [Morning briefing from Gmail and Calendar](/en/automation/17-morning-briefing/).
+
+   <PromptBox label="Morning briefing request (example for Gemini scheduled actions)">
+   Prepare today's briefing for me every morning by [7:30 a.m.]. Summarize today's calendar events, the 3 to-dos with the nearest deadlines, and things I need to bring, in 5 lines or fewer. Mark any information that isn't accurate "needs confirmation."
+   </PromptBox>
+
+   Scheduled tasks automatically read the content of connected apps. It's safer to start with summaries that only read, and not hand off sending email on your behalf. That last sentence is this guide's recommendation, based on the official guidance about having an approval step.
+
+8. **Review your connections and memory**
+
+   The more you use an assistant, the more the AI knows about you. Review these once in a while.
+
+   - **Disconnecting**: Gemini says you can connect or disconnect at any time in the connected apps settings (web: Settings & help > Connected apps; mobile: Menu > Personalization > Connectors. Menu names vary by device and account). For Claude, disconnecting is covered in [the connectors tutorial](/en/claude/c07-connectors/).
+   - **Memory**: In Claude, memory is on by default for Free, Pro, and Max, and you can turn it off with "Memory from chats" under Settings > Your Claude (on older screens, "Generate memory from chats" under Settings > Memory). For chats you don't want recorded, you can use an incognito chat with the ghost icon at the upper right of a new chat, and it's described as available to all users, including the free plan. Details are in [Memory and personal settings](/en/claude/c09-memory-settings/).
+   - **ChatGPT**: The official docs say you can turn personalization and memory on or off in Settings.
+   - Each service's training and history settings are covered in [Tutorial 5: Privacy and safety](/en/basics/05-privacy-safety/).
+
+</Steps>
+
+<Aside type="caution" title="What not to put into your assistant">
+- National ID numbers, passport numbers, card or account numbers, passwords, and your home's door codes
+- Other people's names, contact details, and health information, or any **information that's hard to hand over without that person's consent**
+- Meeting schedules and customer names that contain company secrets (company rules come first)
+
+A schedule holds more information than you might think, because it reveals who you meet, when, and where. Before connecting your calendar, picture which events the AI will be able to see.
+</Aside>
+
+## Quick reference
+
+| What you want to do | What to include | Caution |
+| --- | --- | --- |
+| Decide today's tasks | All your to-dos, deadlines, how many you can do per day | The AI's priorities are only a suggestion |
+| Weekly schedule | Fixed commitments you can't move, your working hours | Time estimates can be wrong |
+| Get it into the calendar | Date, time, event name | Check in the calendar after it's created. Gemini can't invite attendees |
+| Trip plan | Companions, budget, pace, what to avoid | Check opening hours, fees, and bookings on official sites |
+| Meeting-coordination message | Your candidate available times | Check the day of the week before sending |
+| Recurring briefing | Time, items to include | Availability varies by service and account |
+
+## Common sticking points
+
+### When I try to connect to my calendar, it says "unavailable"
+
+- **Cause**: Gemini says you can't connect if Keep Activity is off. It also says supported calendar apps can't be used from Gemini in Google Messages. Work and school accounts can be affected by admin settings.
+- **Fix**: Turn on Keep Activity in settings and sign in at gemini.google.com with the same account as Workspace. For a work account, check the admin settings.
+
+### The event was created but the attendees or location are empty
+
+- **Cause**: The Gemini help pages say it can't invite attendees to an event or add or edit the location or description of an existing event.
+- **Fix**: Fill in the attendees, location, and description yourself in the calendar app.
+
+### The opening hours the AI gave me were wrong
+
+- **Cause**: The AI can state incorrect things in a convincing way.
+- **Fix**: Add "mark what you don't know as needs confirmation" to your assistant setup, and check on official sites before you go ([Tutorial 4](/en/basics/04-fact-checking/)).
+
+### The schedule is too tight to follow
+
+- **Cause**: The AI doesn't know your stamina and focus, and filled the free time as much as it could.
+- **Fix**: Give it limits, like "No more than 3 per day," "Add 30 minutes for travel and breaks," or "Keep Friday light." You can also build the schedule once and then ask, "Find the overloaded spots."
+
+### I can't see scheduled tasks
+
+- **Cause**: Gemini is rolling the feature out gradually to personal accounts and to work or school accounts on the relevant Workspace editions, so some accounts can't use it yet. In ChatGPT, it depends on your plan and workspace settings.
+- **Fix**: If it's not there, start by sending the same prompt yourself each morning. Just save the prompt in a notes app.
+
+## Practical tips
+
+- Ask your assistant for **one thing at a time.** Splitting it into "organize to-dos → schedule → add to calendar" makes mistakes easier to catch.
+- If you like the result, ask for changes **within that same chat.** It's faster than starting over.
+- Saying a date like "next Wednesday" can cause misunderstandings. For important events, **write the month and day too.**
+- Making "build next week's schedule" a Sunday-evening routine, once a week, pays off.
+- For plans that mix in information about several people, like family schedules, change their names to nicknames or initials when you ask.
+
+## What to read next
+
+- [10 everyday uses for AI](/en/basics/06-everyday-uses/) — basic use cases
+- [Writing work prompts](/en/chat/01-prompt-basics/) — getting more out of your assistant setup
+- [Connecting Gmail, Calendar, Drive, and Notion with connectors](/en/claude/c07-connectors/) — connecting your calendar in Claude
+- [Connecting Gmail and Calendar to AI for a morning briefing](/en/automation/17-morning-briefing/) — recurring briefings in depth
+- [Using AI while keeping personal and company information safe](/en/basics/05-privacy-safety/) — information you shouldn't enter
+- [A guide for office workers](/en/roles/office/) — when using AI for work schedules
+- [An AI guide for solo business owners and small shops](/en/roles/solo-business/) — schedule management for people working alone

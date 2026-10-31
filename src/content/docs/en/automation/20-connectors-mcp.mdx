@@ -1,0 +1,229 @@
+---
+title: "Connecting AI to Your Work Tools with Connectors (MCP)"
+description: "A reference covering the MCP (Model Context Protocol) concept shared across AI tools, work scenarios, how each tool connects (Claude, ChatGPT, Gemini CLI, Notion), and security principles"
+sidebar:
+  label: "5. Connecting with connectors (MCP)"
+level: practical
+category: automation
+tools: ["Claude", "MCP", "ChatGPT", "Gemini CLI", "Notion"]
+duration: "35 min"
+prerequisites:
+  - "An account with the AI tool you use (Claude, ChatGPT, etc.)"
+  - "An account with a work service you want to connect (Gmail, Notion, etc.)"
+lastVerified: 2026-10-26
+sources:
+  - title: "What is the Model Context Protocol (MCP)?"
+    url: "https://modelcontextprotocol.io/docs/2026-07-28/getting-started/intro"
+  - title: "MCP Architecture (specification 2025-06-18)"
+    url: "https://modelcontextprotocol.io/specification/2025-06-18/architecture"
+  - title: "MCP Specification (2025-03-26)"
+    url: "https://modelcontextprotocol.io/specification/2025-03-26"
+  - title: "MCP Security Best Practices"
+    url: "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices"
+  - title: "Use connectors to extend Claude's capabilities"
+    url: "https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities"
+  - title: "Get started with custom connectors using remote MCP"
+    url: "https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp"
+  - title: "Connect Claude Code to tools via MCP"
+    url: "https://code.claude.com/docs/en/mcp"
+  - title: "Plugins (OpenAI, ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/plugins"
+  - title: "Plugin controls (OpenAI, ChatGPT admin docs)"
+    url: "https://learn.chatgpt.com/docs/enterprise/apps-and-connectors"
+  - title: "Connect and test your plugin (OpenAI developer docs)"
+    url: "https://developers.openai.com/plugins/deploy/connect-chatgpt"
+  - title: "Build an MCP server (OpenAI developer docs)"
+    url: "https://developers.openai.com/plugins/build/mcp-server"
+  - title: "Moving your custom GPT workflows to plugins (OpenAI, ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/migrate-custom-gpts"
+  - title: "MCP servers with Gemini CLI"
+    url: "https://geminicli.com/docs/tools/mcp-server/"
+  - title: "Get started with Notion Agent"
+    url: "https://www.notion.com/help/notion-agent"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import AutomationMcpMap from '../../../../components/diagrams/AutomationMcpMap.astro';
+
+<Summary>
+- **MCP (Model Context Protocol)** is an **open-source common standard** for connecting AI apps to external systems. The official documentation compares it to a USB-C port.
+- The name differs from one AI tool to the next (connector, app, MCP server), but the structure is the same: **AI app ↔ MCP server ↔ work service**.
+- Risk usually comes from **write access** and **untrusted servers/text**. Start with read access, approve writes, and connect only servers you trust.
+- The click-by-click steps for Claude connectors are in [C7. Connectors](/en/claude/c07-connectors/). This tutorial focuses on tool-agnostic concepts and work scenarios.
+</Summary>
+
+<Aside type="note" title="ChatGPT's screen names have changed">
+OpenAI's current documentation (learn.chatgpt.com, developers.openai.com, checked 2026-10-26) refers to the former "apps and connectors" as **Plugins**. A plugin can hold skills and MCP servers. We couldn't find the older name "developer mode," used in earlier versions of this tutorial, in the current documentation. On-screen wording and plan requirements can change, so check both your actual screen and OpenAI's help pages.
+</Aside>
+
+
+## What you'll be able to do
+
+- Explain in one sentence what MCP is and how it relates to "connectors."
+- Know **what to check** when looking for the connection setting in the AI tool you use.
+- Design 3 work scenarios (briefing, note organizing, schedule coordination) safely, starting with read access.
+- Write a security checklist to review before connecting.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **MCP** | Model Context Protocol. An open-source standard for connecting AI applications to external systems (files, databases, work tools, etc.). |
+| **Host and client** | The AI app the user uses is the host, and the part inside it that talks to servers is the client. |
+| **MCP server** | A program or address that exposes a service's functions through the MCP standard. Each service has its own server. |
+| **Tools** | Functions the server provides that the AI can call. Example: search email, create an event |
+| **Resources and prompts** | Data used as context, and pre-made instruction templates. |
+| **Connector** | The name differs by product. It's called a connector in Claude and a plugin in ChatGPT (which holds an MCP server inside). OpenAI's admin docs say they use "app" and "MCP server" to mean the same thing. |
+| **Remote MCP server** | A server you reach at an internet address (URL). Distinguished from a local server running on your own computer. |
+
+<AutomationMcpMap />
+
+**How it differs from automation services**: [Zapier/Make in tutorial 18](/en/automation/18-zapier-make/) runs rules that a person set in advance. With MCP, the difference is that the AI looks at the situation and **chooses on its own** which tool to call. That makes approvals and permission management all the more important.
+
+### Comparing how each tool connects (as of 2026-10-26)
+
+| Tool | What it's called | Where you connect | Facts we confirmed |
+| --- | --- | --- | --- |
+| **Claude** (claude.ai) | Connectors | Input box + > Connectors, Settings (Customize) > Connectors | Custom connectors are remote MCP servers. Steps in [C7](/en/claude/c07-connectors/) |
+| **Claude Code** | MCP servers | The command `claude mcp add`; authenticate with `/mcp` | claude.ai connectors show up in `/mcp` once you sign in |
+| **ChatGPT** | Plugins; for your own MCP server, Add custom MCP server | Install a plugin from the Plugins screen on chatgpt.com, or use the plus (+) button > Add custom MCP server | Per OpenAI docs: plugins are used in Chat and Work on web, desktop, and mobile, and after installing you select one in a new chat with `@`. A custom MCP server connects via a public HTTPS address (usually the `/mcp` path) or a Secure MCP Tunnel, and after you set up authentication you have to click "I understand and want to continue" on the risk warning. Account and workspace policies apply. Admins set availability, Action control, and App permissions under Workspace apps |
+| **Gemini CLI** | MCP servers | `mcpServers` in the `settings.json` settings file, or `gemini mcp add` | For remote servers, `url`/`httpUrl`/`headers`; filter tools with `includeTools`/`excludeTools`, and `excludeTools` takes precedence |
+| **Notion Agent** | Connections | All sources > MCP servers > Add MCP server, or Settings > Connections > Discover | Confirmed from Notion's official help. Once you connect an MCP server, it appears under MCP servers in the All sources list |
+
+<Aside type="note" title="What we couldn't confirm">
+- The official Gemini CLI documentation page carries a notice that "Gemini CLI for the unpaid tier and Google One users was replaced by Antigravity CLI on June 18, 2026" (as of 2026-10-26). The Gemini CLI settings in the table above come from that document; check the official notice for which CLI your account uses.
+- We couldn't confirm whether the Gemini app, or Gemini inside Google Workspace, connects to MCP servers directly. For Gemini inside Workspace, see [tutorial 19](/en/automation/19-google-workspace-gemini/).
+- The MCP spec has several date-based versions (2025-03-26, 2025-06-18, 2026-07-28, etc.). This tutorial focuses on concepts and security principles; for detailed specs, check the latest official documentation.
+- We couldn't find in OpenAI's documentation a list of plans that can connect custom MCP servers in ChatGPT. The documentation says account and workspace policies apply, and the admin docs only explain that connecting MCP servers is set by role under Workspace apps and Permissions & roles. Check your own plan's requirements in OpenAI's help (help.openai.com).
+- Notion says agent usage allowance is included in Business and Enterprise plans. Check Notion's help for the plan requirements for the connection itself.
+</Aside>
+
+## Step-by-step
+
+Here you'll follow a **safe connection order** that works regardless of tool. For the click-by-click steps, see your tool's documentation.
+
+<Checklist items={[
+  'I checked whether my AI tool supports MCP/connectors and whether it works on my plan',
+  'I checked that the server I want to connect is from a trustworthy source',
+  'I tested the connection with one read-only request',
+  'I turned write tools off or left them in approval mode',
+  'I actually ran one work scenario',
+  'I disconnected connections I\'m not using',
+]} />
+
+<Steps>
+
+1. **Check that it works with your tool and plan**
+
+   MCP support varies by tool and plan. For example, per OpenAI's docs, connecting your own MCP server in ChatGPT is affected by account and workspace policies, and your organization admin may need to grant permission. In Claude's Team/Enterprise, too, an organization Owner turns connectors on first. If you're blocked, ask your admin.
+
+2. **Judge whether the server is trustworthy**
+
+   Prefer servers provided by the official service (for example, an address operated by Notion). Claude's official help says Anthropic does not verify custom connectors. The official MCP specification (2025-03-26) also says to **not trust information like tool descriptions unless it comes from a trusted server**. Don't connect servers of unclear origin.
+
+3. **Test the connection read-only**
+
+   Right after connecting, check with a request that doesn't change any data.
+
+   <PromptBox>
+   Show me the 3 most recent items from the service I just connected. Read only. Don't edit, delete, or send anything.
+   </PromptBox>
+
+4. **Stop at the approval prompt for writes**
+
+   The MCP specification says the host must get the user's explicit consent before calling a tool. Claude's Gmail connector asks for approval by default before sending, replying to, or forwarding email. Don't click through the approval window out of habit; read the recipient, content, and target file. It's even safer to turn off write tools you don't need at all.
+
+   <ScreenshotPlaceholder caption="An AI app asking for approval before calling a write tool" officialUrl="https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities" />
+
+5. **Run a work scenario**
+
+   Pick one of the scenarios below. All follow the order **read → organize → a person checks**.
+
+   <PromptBox label="Scenario 1: Organize meeting notes (Notion connected)">
+   Find this week's "meeting notes" pages in Notion and organize the decisions and each person's to-dos into a table. Don't edit any pages; just show me the organized result.
+   </PromptBox>
+
+   <PromptBox label="Scenario 2: Coordinate schedules (Calendar connected)">
+   Find the gaps of 1 hour or more in my calendar next week, by day of the week. Don't create any events; just give me candidates.
+   </PromptBox>
+
+   <PromptBox label="Scenario 3: Find materials (Drive connected)">
+   In Drive, find documents with "2026 Business Plan" in the title and show them in order of most recently edited, with a one-line description of each. Don't change any sharing settings.
+   </PromptBox>
+
+   If you want to repeat this every morning, you can turn it into a routine like [17. Morning briefing](/en/automation/17-morning-briefing/).
+
+6. **Clean up connections you don't use**
+
+   Keep connections on only when you need them. In Claude you can turn connectors on and off per conversation, and the official guidance recommends disconnecting services you don't use.
+
+</Steps>
+
+## Quick reference
+
+### Security checklist before connecting
+
+| Check | Why |
+| --- | --- |
+| Is the server's operator trustworthy? | Custom servers may be unverified |
+| Did you turn on only the tools you need? | The more tools, the wider the scope of an incident |
+| Is approval required on write tools? | The spec requires user consent before a call, but implementation is up to the host |
+| Is the text being read trustworthy? | Email and web text can hide instructions (prompt injection) |
+| Which account and permissions did you connect with? | It acts with your permissions on the service |
+| Did you check company policy? | Work data may pass through external servers |
+
+### Read/write distinction
+
+| Type | Examples | Recommendation |
+| --- | --- | --- |
+| Read | Search, summarize, find free time | Start here |
+| Draft | Save an email draft, draft a document | Use after a person checks |
+| Write/destructive | Send, delete, change sharing | Approval required; turn off if possible |
+
+## Common sticking points
+
+### I don't see the connection menu
+
+- **Cause**: Your plan may not support it, your organization admin may have blocked it, or it may be a beta feature. For ChatGPT, OpenAI's admin docs say plugin usage permissions and app permissions are managed separately in workspace settings.
+- **Fix**: Check your plan's requirements in the official help and ask your admin.
+
+### I entered the server address but it won't connect
+
+- **Cause**: Claude's custom connectors connect from Anthropic's cloud, so the server must be reachable on the public internet. Internal-network and local addresses don't work. The authentication method may also not match.
+- **Fix**: Check the address and authentication method. For local servers, see how to use them in local tools like Claude Code or Gemini CLI.
+
+### The AI calls the wrong tool
+
+- **Cause**: You've connected too many tools and the AI gets confused, or your instruction is vague.
+- **Fix**: Turn on only the tools you need, and name the target in your request, like "Search only in Notion." Gemini CLI can filter tools with `includeTools`/`excludeTools`.
+
+### The connection suddenly dropped
+
+- **Cause**: Authentication may have expired or gotten tangled.
+- **Fix**: Disconnect and reconnect (Claude's official guidance).
+
+### After reading outside text, the AI tries to do something strange
+
+- **Cause**: The text it read may contain wording that steers the AI (prompt injection).
+- **Fix**: Decline the write approval and check the original on that service yourself. Keep write tools you don't need turned off.
+
+## Practical tips
+
+- **Start with one connection per job.** The more connections, the more there is to check.
+- **Make "read only" a habit in your prompts.** Don't rely only on the write approval window.
+- **When you connect the same service to several tools**, check approvals and permissions independently in each tool.
+- **Be careful with local servers.** A server running on your own computer can access your files and environment. Don't copy and run commands to launch servers from unknown sources.
+- To use MCP in Claude Code, see [C14. Claude Code core features](/en/claude/c14-claude-code-features/).
+
+## What to read next
+
+- [C7. Connectors](/en/claude/c07-connectors/) — Click-by-click steps and troubleshooting for Claude connectors
+- [17. Get a morning briefing from Gmail and Calendar](/en/automation/17-morning-briefing/) — Hands-on with connectors + routines
+- [16. Organize documents with Notion AI](/en/automation/16-notion-ai/) — Hands-on with the Notion connection
+- [Build your own MCP server and connect it to Claude](/en/dev/05-mcp-server/) — If you want to turn your own service into an MCP server
+- [Using personal AI agents safely](/en/agents/05-agent-safety/) — How much permission to give a connected agent

@@ -6,7 +6,7 @@ import { isTutorial } from '../lib/tutorials';
 const PAGE_TITLE_ID = '_top'; // Starlight 목차가 가리키는 제목 id
 const entry = Astro.locals.starlightRoute.entry;
 const { title, level, category, duration, prerequisites, tools, lastVerified, status } = entry.data;
-const isHome = entry.id === 'index' || entry.id === '';
+const isHome = ['index', '', 'en', 'en/index'].includes(entry.id);
 const showMeta = isTutorial(entry.id);
 ---
 {isHome ? (

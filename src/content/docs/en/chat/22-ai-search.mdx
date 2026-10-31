@@ -1,0 +1,171 @@
+---
+title: "Using AI Search Well: Perplexity vs. ChatGPT Search vs. Claude Web Search"
+description: "How AI search differs from regular search, a comparison of the three services' search and deep research features based on official documentation, and how to verify sources yourself"
+sidebar:
+  label: "7. Using AI search well"
+level: practical
+category: chat
+tools: ["Perplexity", "ChatGPT", "Claude"]
+duration: "20 min"
+prerequisites:
+  - "An account for at least one of Perplexity, ChatGPT, or Claude (free accounts work)"
+  - "2 or 3 questions that need up-to-date information"
+lastVerified: 2026-10-26
+sources:
+  - title: "How does Perplexity work? (Perplexity Help Center)"
+    url: "https://www.perplexity.ai/help-center/en/articles/10352895-how-does-perplexity-work"
+  - title: "Tips for Getting Better Answers from Perplexity"
+    url: "https://www.perplexity.ai/help-center/en/articles/13645819-tips-for-getting-better-answers-from-perplexity"
+  - title: "Which Perplexity Subscription Plan is right for you?"
+    url: "https://www.perplexity.ai/help-center/en/articles/11187416-which-perplexity-subscription-plan-is-right-for-you"
+  - title: "What is Perplexity Pro?"
+    url: "https://www.perplexity.ai/help-center/en/articles/10352901-what-is-perplexity-pro"
+  - title: "Web search (ChatGPT docs, OpenAI)"
+    url: "https://learn.chatgpt.com/docs/web-search.md"
+  - title: "Use ChatGPT (ChatGPT docs, OpenAI)"
+    url: "https://learn.chatgpt.com/docs/use-chatgpt"
+  - title: "Enable and use web search (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/10684626-enable-and-use-web-search"
+  - title: "Use research on Claude"
+    url: "https://support.claude.com/en/articles/11088861-use-research-on-claude"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- AI search **searches the web and summarizes the results, with sources.** The official documentation says all three attach citations (source links).
+- For a quick fact check, regular web search fits. For a roundup that pulls together many sources, use deep research (Perplexity Research, ChatGPT deep research, Claude Research).
+- **Citations don't guarantee correctness.** Open the citation links and check important numbers and dates against the original.
+- We don't rank the services by accuracy because there's no official basis for it. Compare them yourself with your own questions.
+- Prices and limits change often. The dates in this guide are as of 2026-10-14.
+</Summary>
+
+## What you'll be able to do
+
+- Choose among regular search, AI search, and deep research to fit the situation.
+- Write questions that search well.
+- Know where to turn on search and deep research in each of the three services.
+- Learn the order for verifying an answer with its citation links.
+
+## Concepts first
+
+| Term | Meaning |
+| --- | --- |
+| **AI search (answer engine)** | It interprets your question, searches the web, and summarizes what it finds into an answer. You get an answer instead of a list of links. |
+| **Citation** | Source links that back up the answer. Perplexity uses numbered citations, and Claude says citations are included in every response. |
+| **Deep research** | A feature that searches many times and reads lots of sources to produce a report. It takes longer. |
+
+<Aside type="note" title="What we couldn't confirm (as of 2026-10-14)">
+We couldn't confirm in the official documents we opened the monthly price of Perplexity Pro, whether Perplexity is available in Korea and how good its Korean is, the search limits on ChatGPT's free plan, or the details of on-screen menu names. The ChatGPT search docs (learn.chatgpt.com) focus heavily on Codex, a developer tool, and have only a short description of the regular chat screen. We didn't use blocked sites (openai.com, help.openai.com).
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I decided whether my question is for regular search or deep research',
+  'I turned on search in the service I will use',
+  'I made my request with a specific question',
+  'I opened the citation links and checked the key numbers',
+  'I narrowed the scope with a follow-up question when needed',
+]} />
+
+<Steps>
+
+1. **Pick the type of question**
+
+   - For a single fact or recent news, regular AI search is enough.
+   - If you need a roundup that compares several perspectives or sources, use deep research.
+   - If the answer is inside your own files, use [NotebookLM](/en/chat/21-notebooklm/) or a file upload, not search.
+
+2. **Turn on search in each service**
+
+   - **Perplexity**: It says it searches the web in real time for each question and adds numbered citations. For free (Standard) accounts, it says Pro Search is 3 times a day and Research is once a month (as of 2026-10-19, per the plan comparison help page), and Pro expands this. The Perplexity feature names we confirmed for this guide are Pro Search and Research.
+   - **ChatGPT**: When you ask about recent information or sources on the web, search results and citations appear in the chat. Search can be restricted depending on workspace settings.
+   - **Claude**: Turn on Web search from the `+` button in the chat input box. In the new unified Claude experience there's no toggle, and Claude searches on its own when it would help. For team and enterprise accounts, an admin must turn it on first.
+
+   <ScreenshotPlaceholder caption="The Web search item under the + button in Claude's input box" officialUrl="https://support.claude.com/en/articles/10684626-enable-and-use-web-search" />
+
+3. **Ask specifically**
+
+   Perplexity's help pages recommend "a specific question rather than a single word, background, key terms, and the answer format you want (summary, table, steps)."
+
+   <PromptBox label="A question template that searches well (works in all three)">
+   Using only sources from the last 6 months, summarize the AI adoption support programs that small businesses in [your country or region] can apply for. Make a table with the program name, the administering organization, and the application deadline, and attach a source link to each item. For anything you couldn't confirm, write "couldn't confirm."
+   </PromptBox>
+
+4. **Use deep research**
+
+   <FlowSteps title="Turning on Research in Claude" officialUrl="https://support.claude.com/en/articles/11088861-use-research-on-claude" steps={[
+     { where: 'Chat input box', action: 'Choose Research from the + button', result: 'A blue indicator appears below' },
+     { where: 'Chat window', action: 'Enter a specific research question', result: 'It searches many times and builds an answer that includes citations' },
+     { where: 'Blue indicator', action: 'Click it again to turn Research off' },
+   ]} />
+
+   Claude Research is available on paid plans (Pro, Max, Team, Enterprise), and web search must be turned on. It uses the same limits, but because it pulls in a lot of material, your limit drops faster. Perplexity says Research runs dozens of searches and builds a report in 2 to 4 minutes. In ChatGPT, you can use Deep research from the + menu in Work. Availability varies by account and workspace, though.
+
+5. **Verify with citations**
+
+   - Open the citation links for key numbers, dates, and quotes, and check them directly in the original.
+   - Look at whether the source is an official body and whether it's an old article.
+   - ChatGPT's docs say to treat web results as untrusted input.
+   - For the detailed verification order, follow [how to fact-check](/en/basics/04-fact-checking/).
+
+6. **Narrow it down with follow-up questions**
+
+   Keep asking, like "Give me more detail on just the second item" or "Redo it using only official site sources." Perplexity says you can continue Research as a conversation too.
+
+</Steps>
+
+## Quick reference
+
+| Item | Perplexity | ChatGPT | Claude |
+| --- | --- | --- | --- |
+| How it searches | Real-time web search and summary for each question | Searches when you ask about recent information or sources, with citations shown | Searches when needed, with citations in every response |
+| Deep research | Research (dozens of searches, 2 to 4 minutes) | Deep research in Work (depending on account) | Research (paid plans) |
+| Free use | Yes; Pro Search 3 times a day, Research once a month (as of 2026-10-19) | We couldn't confirm this for this guide | Free accounts can use web search too, subject to usage limits (reset every 5 hours; both web search and web fetch count toward the limit; as of 2026-10-26). Research isn't available on Free. For limit details, see [C2](/en/claude/c02-plans-limits/) |
+| Model choice | Choose Best or another model in Pro Search | We couldn't confirm this for this guide | Research uses a fixed model regardless of the model you picked |
+| Price | We couldn't confirm Pro's monthly price. Education Pro is $10/month when verified | See [Tutorial 5](/en/chat/05-compare-assistants/) | See [C2](/en/claude/c02-plans-limits/) |
+
+## Common sticking points
+
+### I opened the citation link and the content doesn't match the answer
+
+- **Cause**: The meaning may have shifted in summarizing, or the article at the link may have changed.
+- **Fix**: Find the original sentence and compare, and if it doesn't match, ask again: "Quote the sentence at this link that supports your claim."
+
+### Search isn't working and I get outdated answers
+
+- **Cause**: Search may be turned off or blocked by the workspace.
+- **Fix**: In Claude, check the `+` button setting, and on a team account, the admin setting (Organization settings > Capabilities). In ChatGPT too, workspace settings can restrict search.
+
+### I turned on Research but it isn't researching
+
+- **Cause**: Claude's help pages note that Research sometimes doesn't kick in even when turned on.
+- **Fix**: Be explicit, like "Use the research tool to look into this." If you also want it to look at connected Google material, tell it, "Also look through my Drive/Gmail material."
+
+### My limit drops quickly
+
+- **Cause**: Web search and Research pull in a lot of material, so they use more of your allowance.
+- **Fix**: Turn off search in chats that don't need it, and use regular search for fact checks.
+
+## Practical tips
+
+- Put the **time period, region, and type of source you want** (official bodies, press releases, and so on) in your question.
+- Putting the same question into two services and seeing **whether the cited sources overlap** helps you gauge reliability.
+- For medical, legal, and tax decisions, check the original text from the relevant agency, not an AI summary.
+- Don't paste company information straight into your question. Read [Protecting your privacy](/en/basics/05-privacy-safety/) first.
+
+## What to read next
+
+- [5. Comparing Claude, ChatGPT, and Gemini](/en/chat/05-compare-assistants/) — comparing pricing and policies too
+- [C10. Research](/en/claude/c10-research/) — Claude web search and Research in detail
+- [Can you trust AI answers? How to fact-check](/en/basics/04-fact-checking/) — the order for verifying sources
+- [21. Studying and organizing with NotebookLM](/en/chat/21-notebooklm/) — answers based only on your own material
+- [Office worker guide](/en/roles/office/) — using AI for research at work
+- [Marketer guide](/en/roles/marketer/) — using AI for market and competitor research

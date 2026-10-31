@@ -1,25 +1,42 @@
 ---
 // 자동화 20 도식: AI 앱(호스트) <-> MCP 서버 <-> 업무 서비스
+import { getLang } from '../../lib/i18n';
+const lang = getLang(Astro);
+const en: Record<string, string> = {
+  'MCP 연결 구조도': 'MCP connection map',
+  'AI 앱이 MCP 규격으로 MCP 서버에 요청하고, MCP 서버가 Gmail, Notion, Drive 같은 업무 서비스에 접근합니다. 쓰기 작업은 사용자 승인을 거칩니다.': "An AI app sends requests to MCP servers using the MCP standard, and each MCP server accesses work services such as Gmail, Notion, and Drive. Write actions require the user's approval.",
+  'AI 앱': 'AI app',
+  'Claude · ChatGPT · Gemini CLI 등': 'Claude · ChatGPT · Gemini CLI, etc.',
+  '도구를 부르기 전에 내 승인을 물어요': 'Asks for my approval before calling tools',
+  'MCP 서버': 'MCP server',
+  '공통 규격(MCP)으로 말해요': 'Speaks a common standard (MCP)',
+  '도구(tools) · 리소스 · 프롬프트': 'Tools · resources · prompts',
+  '서비스마다 서버가 하나씩 있어요': 'One server per service',
+  '업무 서비스': 'Work services',
+  'Gmail · Calendar · Drive · Notion': 'Gmail · Calendar · Drive · Notion',
+  '내 계정의 권한 범위 안에서만 동작해요': "Works only within my account's permissions",
+};
+const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
 ---
 <figure class="diagram not-content">
   <svg viewBox="0 0 360 440" role="img" aria-labelledby="mcp-title mcp-desc">
-    <title id="mcp-title">MCP 연결 구조도</title>
-    <desc id="mcp-desc">AI 앱이 MCP 규격으로 MCP 서버에 요청하고, MCP 서버가 Gmail, Notion, Drive 같은 업무 서비스에 접근합니다. 쓰기 작업은 사용자 승인을 거칩니다.</desc>
+    <title id="mcp-title">{tx('MCP 연결 구조도')}</title>
+    <desc id="mcp-desc">{tx('AI 앱이 MCP 규격으로 MCP 서버에 요청하고, MCP 서버가 Gmail, Notion, Drive 같은 업무 서비스에 접근합니다. 쓰기 작업은 사용자 승인을 거칩니다.')}</desc>
     <g class="box blue"><rect x="30" y="10" width="300" height="100" rx="16" />
-      <text x="180" y="44" class="t1">AI 앱</text>
-      <text x="180" y="70" class="t2">Claude · ChatGPT · Gemini CLI 등</text>
-      <text x="180" y="92" class="t3">도구를 부르기 전에 내 승인을 물어요</text></g>
+      <text x="180" y="44" class="t1">{tx('AI 앱')}</text>
+      <text x="180" y="70" class="t2">{tx('Claude · ChatGPT · Gemini CLI 등')}</text>
+      <text x="180" y="92" class="t3">{tx('도구를 부르기 전에 내 승인을 물어요')}</text></g>
     <g class="arrow"><path d="M180 112 V158" /><path d="M171 150 L180 160 L189 150" /></g>
     <g class="box coral"><rect x="30" y="162" width="300" height="110" rx="16" />
-      <text x="180" y="196" class="t1">MCP 서버</text>
-      <text x="180" y="222" class="t2">공통 규격(MCP)으로 말해요</text>
-      <text x="180" y="244" class="t3">도구(tools) · 리소스 · 프롬프트</text>
-      <text x="180" y="262" class="t3">서비스마다 서버가 하나씩 있어요</text></g>
+      <text x="180" y="196" class="t1">{tx('MCP 서버')}</text>
+      <text x="180" y="222" class="t2">{tx('공통 규격(MCP)으로 말해요')}</text>
+      <text x="180" y="244" class="t3">{tx('도구(tools) · 리소스 · 프롬프트')}</text>
+      <text x="180" y="262" class="t3">{tx('서비스마다 서버가 하나씩 있어요')}</text></g>
     <g class="arrow"><path d="M180 274 V320" /><path d="M171 312 L180 322 L189 312" /></g>
     <g class="box green"><rect x="30" y="324" width="300" height="100" rx="16" />
-      <text x="180" y="358" class="t1">업무 서비스</text>
-      <text x="180" y="384" class="t2">Gmail · Calendar · Drive · Notion</text>
-      <text x="180" y="406" class="t3">내 계정의 권한 범위 안에서만 동작해요</text></g>
+      <text x="180" y="358" class="t1">{tx('업무 서비스')}</text>
+      <text x="180" y="384" class="t2">{tx('Gmail · Calendar · Drive · Notion')}</text>
+      <text x="180" y="406" class="t3">{tx('내 계정의 권한 범위 안에서만 동작해요')}</text></g>
   </svg>
 </figure>
 

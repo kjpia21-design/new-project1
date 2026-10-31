@@ -1,0 +1,205 @@
+---
+title: "How to Write Good Prompts (Based on the Official Guide)"
+description: "The official prompting guide turned into work examples like meeting-notes summaries, report drafts, and data cleanup, with bad-versus-good comparisons"
+sidebar:
+  label: "C4. Writing good prompts"
+level: practical
+category: claude
+tools: ["Claude"]
+duration: "25 min"
+prerequisites: ["A Claude account (a free account works)"]
+lastVerified: 2026-10-26
+sources:
+  - title: "Prompting best practices"
+    url: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+  - title: "Choosing the right model"
+    url: "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+  - title: "Get started with Claude"
+    url: "https://support.claude.com/en/articles/8114491-get-started-with-claude"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- Treat Claude like **"a brilliant new hire who doesn't know your company's norms."** Tell it the purpose, the audience, and the format, and results improve dramatically.
+- The golden rule: if you show your prompt to a colleague with almost no context and they'd be confused, Claude will be confused too.
+- The five core techniques are **be clear, add the reason, give examples, separate with XML tags, and put long material on top with the question at the bottom.**
+- Model choice and effort are as important a dial as the prompt.
+- The examples below are **examples** made by applying the official principles; the official docs don't contain sample prompts in this form.
+</Summary>
+
+## What you'll be able to do
+
+- Rewrite a vague request into a specific one.
+- Hand off meeting-notes summaries, report drafts, and data cleanup to Claude precisely.
+- Shape the format exactly how you want it, using examples and XML tags.
+- Know what to fix when you don't like the result.
+
+## Concepts to know first
+
+The official "Prompting best practices" doc is a prompt reference that applies across the latest models (Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5, and others). This tutorial turns its common techniques into work examples.
+
+| Term | Meaning |
+| --- | --- |
+| **Prompt** | The wording of the request you send Claude. |
+| **Context** | Background information, such as why you're doing this and who will read it. |
+| **Few-shot (giving examples)** | A method of showing example inputs and outputs you want. The official docs recommend 3 to 5. |
+| **XML tags** | Markers like `<context>` that label the kind of content. They reduce misunderstandings when instructions, context, examples, and input get mixed together. |
+| **effort** | How deeply the model thinks. The models are compared in [C1](/en/claude/c01-overview/). |
+
+<Aside type="note" title="Model-specific guidance is separate">
+The official guide runs about 1,100 lines, and some sentences are written for earlier-generation models (Opus 4.5/4.6). For model-specific details, check the per-model sections of the official doc. This tutorial covers only the common principles that apply regardless of model.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  'I put the purpose, audience, and format in my request',
+  'I added the reason in one sentence',
+  'I gave 1 to 3 examples',
+  'I wrapped long material in XML tags and put the question below',
+  'I looked at the result and refined it with follow-up questions',
+]} />
+
+<Steps>
+
+1. **State the purpose, audience, and format (meeting-notes summary)**
+
+   If order matters, use a numbered list, and be specific about the output format and constraints.
+
+   Bad example:
+
+   <PromptBox>
+   Summarize the meeting notes.
+   </PromptBox>
+
+   Good example:
+
+   <PromptBox>
+   Summarize the following meeting notes in 5 lines to report to my team lead. Include the decisions, the owner, and the deadline, one line each.
+
+   [Paste the meeting notes]
+   </PromptBox>
+
+2. **Add the reason (report draft)**
+
+   When you explain the reason, Claude grasps the intent behind the rule and generalizes it. The official docs also say that explaining why works better than just throwing out rules.
+
+   Bad example:
+
+   <PromptBox>
+   Write a draft of the quarterly report. Don't use lists.
+   </PromptBox>
+
+   Good example:
+
+   <PromptBox>
+   Write a draft of the quarterly report that I'll read aloud at an executive meeting. Because it will be read out loud, write in flowing sentences with no lists or symbols. Keep it to one page, in the order: results, problems, next quarter's plan.
+   </PromptBox>
+
+   It also helps to say "what to do" instead of "don't." For example, instead of "don't use markdown," try "write in naturally flowing paragraphs."
+
+3. **Give examples (data cleanup)**
+
+   <PromptBox>
+   Classify the customer inquiries below as one of "Shipping," "Refund," or "Other." Answer in this format.
+
+   &lt;examples&gt;
+   &lt;example&gt;Input: It's been 5 days since I ordered and it still hasn't arrived. Output: Shipping&lt;/example&gt;
+   &lt;example&gt;Input: The size doesn't fit, so I'd like my money back. Output: Refund&lt;/example&gt;
+   &lt;/examples&gt;
+
+   &lt;input&gt;
+   [List of inquiries to classify]
+   &lt;/input&gt;
+   </PromptBox>
+
+   Examples work best when they're relevant, varied, and structured with tags. For best results, 3 to 5 are recommended.
+
+4. **Put long material on top and the question at the bottom**
+
+   For long inputs over 20k tokens, put the documents at the very top of the prompt and your question or instructions at the very bottom. The official docs say this improved response quality by up to 30% on complex multi-document inputs (in testing). For multiple documents, they describe a structure that separates them inside `<documents>` as `<document index="1">` and uses `<source>` and `<document_content>`.
+
+   <PromptBox>
+   &lt;documents&gt;
+   &lt;document index="1"&gt;
+   &lt;source&gt;Q2 sales report&lt;/source&gt;
+   &lt;document_content&gt;[Paste the content]&lt;/document_content&gt;
+   &lt;/document&gt;
+   &lt;document index="2"&gt;
+   &lt;source&gt;Q3 sales report&lt;/source&gt;
+   &lt;document_content&gt;[Paste the content]&lt;/document_content&gt;
+   &lt;/document&gt;
+   &lt;/documents&gt;
+
+   Compare the three products whose sales grew the most across the two reports, and tell me the cause, along with the sentences in the reports that support it.
+   </PromptBox>
+
+5. **Give it a role, then refine**
+
+   Even a one-sentence role in the system prompt or the first line helps. And don't try to write it perfectly in one go; refine with follow-up questions.
+
+   <PromptBox>
+   You're an HR manager with 10 years of experience. Rewrite the announcement you just wrote in simpler language, as if a new hire were reading it.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="A conversation refining the result with follow-up questions" officialUrl="https://support.claude.com/en/articles/8114491-get-started-with-claude" />
+
+</Steps>
+
+## Quick reference
+
+| Principle | Weak request | Strong request |
+| --- | --- | --- |
+| Be clear and direct | Summarize the meeting notes | 5 lines for the team lead, including decisions, owner, and deadline |
+| Add the reason | Don't use lists | It's read aloud, so use flowing sentences with no lists |
+| "Do" instead of "don't" | Don't use markdown | Write in naturally flowing paragraphs |
+| Give examples | Explanation only | 3 to 5 input/output examples |
+| Structure | Material and instructions mixed together | Use `<context>` `<input>` `<instructions>` tags |
+| Long material | Question at the top | Documents on top, question below |
+
+## Common sticking points
+
+### The answer is too generic or too short
+
+- **Cause**: Your request may be asking only for the baseline.
+- **Fix**: Say so if you want more. As in the official guide's example, ask directly for "more than that," such as "include as many features as possible and go beyond the basics for a polished result."
+
+### The format is different every time
+
+- **Cause**: The format criteria exist only in words.
+- **Fix**: Give an output example, or use XML format indicators.
+
+### It produces things I didn't ask for (especially in coding)
+
+- **Cause**: The model can over-implement.
+- **Fix**: Limit the scope, like "Make only the requested changes. Don't create unnecessary abstractions or new files." This example paraphrases the intent of the official doc.
+
+### It thinks too long about easy things
+
+- **Cause**: Blanket instructions like "always use tools," or high effort, may be the cause.
+- **Fix**: Make blanket instructions specific, like "use them when they help you understand the problem," and if that's not enough, lower the effort.
+
+### I get off-target answers with long documents
+
+- **Cause**: The question comes before the documents, or the document boundaries are unclear.
+- **Fix**: Put the documents on top and the question below, and separate them with tags.
+
+## Practical tips
+
+- **Write as if you're giving a new hire a work assignment.** Just write down the information you'd need when asking a colleague for a favor.
+- **Start with a simple question and get more specific as you go.** The official getting-started guide describes the same flow.
+- **Save your frequent requests as templates.** Instructions and memory are covered in [C9](/en/claude/c09-memory-settings/).
+- **If a prompt doesn't fix it, try changing the model and effort.** Model choice is as strong a lever as the prompt. See [C1](/en/claude/c01-overview/).
+
+## Next tutorials
+
+- [C1. Claude at a glance](/en/claude/c01-overview/) — Choosing a model and effort
+- [C9. Memory and personal settings](/en/claude/c09-memory-settings/) — Saving instructions you repeat
+- [C5. Projects](/en/claude/c05-projects/) — Reusing the same material and instructions
+- [Writing practical prompts: specifying role, context, and format](/en/chat/01-prompt-basics/) — More practice with work examples

@@ -1,0 +1,243 @@
+---
+title: "Polishing Cover Letters and Resumes with AI, and Practicing Interviews"
+description: "How to organize your experience as it really happened, polish your cover letter and resume, and practice mock interviews with likely questions. We also cover not making things up, masking personal information, and checking a company's guidance on AI use."
+sidebar:
+  label: "11. AI for cover letters and interviews"
+level: beginner
+category: chat
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "40 min"
+prerequisites:
+  - "One AI account (any of Claude, ChatGPT, or Gemini)"
+  - "Your experience notes and the job posting you're applying to (prepare them without personal information)"
+  - "To practice interviews by voice, a phone app and a microphone (see [Using AI on your phone](/en/basics/07-ai-on-phone/))"
+lastVerified: 2026-10-31
+sources:
+  - title: "Upload files to Claude (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/8241126-upload-files-to-claude"
+  - title: "Use voice mode (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/11101966-using-voice-mode"
+  - title: "Upload & analyze files in Gemini Apps (Gemini Help)"
+    url: "https://support.google.com/gemini/answer/14903178"
+  - title: "Talk naturally with Gemini Live (Gemini Help)"
+    url: "https://support.google.com/gemini/answer/15274899"
+  - title: "Use ChatGPT (ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/use-chatgpt.md"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- AI is a **tool for organizing and polishing** your experience. Never ask it to invent experience or achievements you don't have. You must be able to explain every sentence in your documents in an interview.
+- The order is **organize experience notes → match them to the job posting → polish cover letter paragraphs → fix resume entries → mock interview with likely questions.**
+- **Don't paste personal information** such as national ID numbers, addresses, contact details, or bank accounts. Use company and school names only as much as needed.
+- Some employers publish guidance on AI use. **Read the job posting and application instructions first** and follow them.
+- File upload and voice features differ by service. The scope we confirmed is in the table below, "as of 2026-10-31."
+</Summary>
+
+## What you'll be able to do
+
+- Organize scattered experience notes in a **situation-action-result** framework.
+- **Connect** the skills a job posting asks for with your own experience, and see where there are gaps.
+- Get **feedback without rewrites** on your cover letter paragraphs, then polish them yourself.
+- Do a **mock interview** with likely questions and find the weak spots in your answers.
+
+## Concepts first
+
+| Term | Meaning |
+| --- | --- |
+| **Situation-action-result** | A framework for writing experience in this order: "what the situation was, what I did, and what the result was." It's also the method used in the guide [AI guide for students and job seekers](/en/roles/student/). |
+| **Hallucination** | When the AI convincingly makes up content that isn't true. In a cover letter, the biggest danger is **something you never did getting in.** See [How to fact-check](/en/basics/04-fact-checking/). |
+| **Feedback vs. ghostwriting** | Feedback means being told where your own writing is weak; ghostwriting means the AI writes the whole thing. This tutorial focuses on feedback. |
+| **Masking** | Replacing details such as your name, contact info, or student ID with placeholders like `[name]` and `[contact]` before pasting. |
+
+## Three things to follow before you start
+
+<Aside type="caution" title="1. Don't enter personal information">
+Resume files often contain your name, date of birth, address, contact details, and photo. **Before uploading a file as-is**, make a copy with those parts removed. Never enter national ID numbers (such as Korean resident registration numbers), bank or card numbers, or passwords under any circumstances. Each service's training settings and how to use temporary (incognito) chats are covered in [Using AI while keeping personal and company information safe](/en/basics/05-privacy-safety/).
+</Aside>
+
+<Aside type="caution" title="2. Use only facts, and don't inflate">
+Even if the AI writes to "make your achievements stand out more," check **numbers, titles, awards, certifications, and tools used** one by one against what you actually did. It's safest to delete any sentence you couldn't answer for when an interviewer asks, "How exactly did you do this?" Writing something untrue in your documents can cause problems even after you're hired.
+</Aside>
+
+<Aside type="note" title="3. Check the employer's guidance on AI use">
+Depending on the employer and the posting, the guidance on whether you may use AI to write an application, and whether you must disclose it if you did, can differ. We couldn't confirm a general rule for this from official sources this time. Check directly in **the job posting, the guidance on the application page, or by asking the recruiter.** For school assignments and scholarship applications, follow your school's guidance as well (see [Can I use AI output? Copyright and ethics basics](/en/basics/09-ai-copyright-ethics/)).
+</Aside>
+
+### What to hand to AI and what to do yourself
+
+| Good to do with AI | Do yourself |
+| --- | --- |
+| Organizing experience notes into a structure | Choosing which experiences to write about |
+| Finding weak spots, repetition, and vague wording in a paragraph | Checking facts and numbers |
+| Connecting the posting's required skills to your experience | Writing your motivation and real thoughts |
+| Generating likely questions and pushing back on your answers | Making the answers your own |
+| Checking spelling, sentence length, and awkward phrasing | Reading the final version and deciding |
+
+### Features confirmed by service (as of 2026-10-31)
+
+| Feature | Claude | Gemini | ChatGPT |
+| --- | --- | --- | --- |
+| Uploading files | You can upload PDF, DOCX, TXT, and more. Use **+** > Add files or photos in the input box. Up to 20 files per chat, 500MB per file, and 1,000 PDF pages. | In the web app, you can upload documents with **Add files** > Upload files. It says you need a Google AI plan to raise the limits. | It says you can attach documents, presentations, spreadsheets, PDFs, and images. We couldn't confirm the app's upload limits in the official docs. |
+| Voice conversation | Voice mode (beta). Available on mobile, desktop, and web on all plans, and works best on a phone. Voice conversations also count toward your normal usage limit. | Gemini Live is available in the Gemini app on Android phones and tablets. Not in the web app. "Practice aloud" is described as available. | ChatGPT Voice is available on the desktop app for Plus, Pro, Business, Edu, and Enterprise. We couldn't confirm the phone app or the free plan. |
+| Korean voice quality | We couldn't confirm this in the official docs. | We couldn't confirm this in the official docs. | We couldn't confirm this in the official docs. |
+
+<Aside type="note" title="What we couldn't confirm">
+We couldn't confirm in the official docs the recognition and pronunciation quality when practicing a Korean-language interview by voice (for users in Korea). Try it briefly yourself first, and if it doesn't work well, switch to a text-based mock interview. Usage limits by plan change often, so see [Claude plans and usage limits](/en/claude/c02-plans-limits/) and [How free and paid differ](/en/basics/08-free-vs-paid/).
+</Aside>
+
+## Step-by-step
+
+The example is "applying for an entry-level marketing role." Swap in your own role and experience.
+
+<Checklist items={[
+  'I made a copy of my resume and cover letter with personal information removed',
+  'I copied the job description and required skills from the posting',
+  'I wrote 3 to 5 experience notes exactly as they happened',
+  'I checked what the AI organized against my memory, item by item',
+  'I got feedback on a cover letter paragraph and revised it by hand',
+  'I did at least 5 questions of a mock interview and noted my weak answers',
+]} />
+
+<Steps>
+
+1. **Organize your experience notes exactly as they happened**
+
+   First, write down your experiences as they come to mind. It's fine if the sentences are rough. Use the prompt below to organize them into the framework, but **block the AI from filling in anything you didn't say.**
+
+   <PromptBox>
+   Below are notes on experiences I actually had. Organize them in situation-action-result order. Never add numbers, achievements, tools, or titles that aren't in the notes. Where information is missing, don't make it up. Mark it "[needs confirmation: what]" and ask me as a question so I can fill it in.
+
+   [Experience notes: paste them without your name, contact details, student ID, etc.]
+   </PromptBox>
+
+2. **Match the posting to your experience**
+
+   If you line up the posting's required skills against your experience in a table, you can see which experiences to use and where the gaps are. If something's missing, you shouldn't invent it. It's right to accept that you don't have it.
+
+   <PromptBox>
+   Below is the posting for the role I'm applying to. Pull out 3 to 5 required skills, and make a table of which of the experiences I organized above could serve as evidence for each skill. For skills with no experience to use as evidence, write "no supporting experience." Don't stretch my experience to make a connection.
+
+   [Posting content]
+   </PromptBox>
+
+3. **Write the cover letter paragraphs yourself, and use AI for feedback only**
+
+   Write a first draft for one prompt yourself first. Then ask the AI **not to rewrite it** and only to tell you the weak spots. That way the sentences stay in your own voice, and you can explain them naturally in the interview.
+
+   <PromptBox>
+   Below is a draft I wrote myself for one cover letter prompt. Don't rewrite it for me. Instead, give me the following, numbered: (1) parts that stray from the intent of the question, (2) sentences that lack evidence or are vague, (3) repeated content, (4) hard-to-read sentences. At the end, ask me 3 questions so I can improve it myself.
+
+   [Prompt/question]
+   [My draft]
+   </PromptBox>
+
+   After you get feedback, revise in your own sentences, and if needed, have it check just spelling and sentence length one more time.
+
+   <PromptBox>
+   Never change the meaning or content of the paragraph below. Find only spelling and spacing errors and overly long sentences, and show me the corrections in a table. Don't add new content.
+
+   [Revised paragraph]
+   </PromptBox>
+
+4. **Polish your resume entries**
+
+   Resume entries for experience and activities should be short and specific. Paste them in one line at a time and have them checked only for whether they show "what, in what role, with what result." When you upload a resume file, use a copy with personal information removed.
+
+   <PromptBox>
+   Below are the activity entries from my resume. Check whether each entry shows "my role, what I did, and a verifiable result." For vague wording, tell me as a question what information would make it specific. Don't write in numbers or achievements I haven't told you.
+
+   [Resume entries]
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Choosing Add files or photos from the + button in Claude's input box (upload only a copy with personal information removed)" officialUrl="https://support.claude.com/en/articles/8241126-upload-files-to-claude" />
+
+5. **Practice a mock interview**
+
+   You get likely questions, answer them, and then get feedback. Asking one question at a time, with **follow-up questions** on your answers, is close to a real interview. You can do it in writing or by voice.
+
+   <PromptBox>
+   You're an interviewer for entry-level hiring at a [type of company/role]. Based on my cover letter content (below), ask me questions one at a time. When I answer, briefly tell me (1) one thing I did well and (2) one thing to improve, ask one follow-up question about my answer, and then move to the next question. After 5 questions in total, give me an overall review. Don't assume I did experiences I didn't write about.
+
+   [Cover letter summary: no personal information]
+   </PromptBox>
+
+   <FlowSteps title="One round of mock interview" officialUrl="https://support.claude.com/en/articles/11101966-using-voice-mode" steps={[
+     { where: 'AI chat window', action: 'Start by setting the interviewer role, the number of questions, and the feedback style', result: 'The first question' },
+     { where: 'My answer', action: 'Answer aloud or in writing, about 1 to 2 minutes\' worth', result: 'One strength, one thing to improve, and a follow-up question' },
+     { where: 'After 5 questions', action: 'Ask for an overall review and a list of weak answers', result: 'Questions to practice again' },
+     { where: 'My notes', action: 'Rewrite the weak answers in your own words and practice once more', result: 'Ready for the next practice session' },
+   ]} />
+
+6. **Collect your weak answers and practice once more**
+
+   Take only the weak questions from the review and try them again. This time, rather than memorizing the answer, it's better to settle on **one key sentence and one supporting experience.**
+
+   <PromptBox>
+   I'll bring back only the questions I was weak on in the mock interview just now. Ask one at a time, and only check whether my answer follows the structure "one-sentence conclusion → supporting experience → what I learned." Don't make up the content for me. If it's lacking, ask me questions so I can fill it in.
+   </PromptBox>
+
+7. **Do the final check yourself**
+
+   Before you submit, check yourself that the facts match (numbers, periods, roles), that no personal information remains, and that you meet the posting's word count and format requirements. If any part uses the AI's sentences as-is, read it aloud to see whether you could explain it in your own words in an interview.
+
+</Steps>
+
+## Quick reference
+
+| What you want to do | What to include in the prompt |
+| --- | --- |
+| Organize experience | "Don't add numbers or achievements that aren't in the notes. Mark gaps as [needs confirmation]" |
+| Match the posting | "For skills with no supporting experience, write 'no supporting experience'" |
+| Cover letter feedback | "Don't rewrite it for me; just number the weak spots" |
+| Spelling check | "Don't change the meaning or content; show only the errors in a table" |
+| Mock interview | "One at a time, one strength and one improvement, a follow-up question, an overall review after 5 questions" |
+
+## Common sticking points
+
+### The AI wrote in achievements I didn't have
+
+- **Cause**: If you ask something like "make it sound better," the AI may fill in plausible content.
+- **Fix**: Add "Don't add numbers or achievements that aren't in the notes" to the prompt, check the numbers and proper nouns in the result against your notes one by one, and delete anything that isn't there.
+
+### The result reads like anyone could have written it
+
+- **Cause**: If the experience isn't specific, generic sentences come out.
+- **Fix**: Add to your notes what was hard at the time, what you did differently, and how others reacted. Ask the AI only for feedback, like "tell me which sentences are generic."
+
+### I uploaded my resume file but the information isn't being read
+
+- **Cause**: The document may be an image-based PDF, or have many tables and shapes, so the text isn't extracted well. According to the official help pages, Claude looks at both text and visual elements when a PDF is 100 pages or fewer, and reads longer PDFs and documents like DOCX mostly as text.
+- **Fix**: After removing personal information, paste the content you need as text.
+
+### It misunderstands me in a voice interview
+
+- **Cause**: It could be noise, your microphone setup, or the feature's level of Korean support. We couldn't confirm Korean quality in the official docs.
+- **Fix**: Try it in a quiet place, and in Claude voice mode, switch to push-to-talk. If it stays difficult, do the mock interview in writing.
+
+### Content from an earlier conversation shows up again
+
+- **Cause**: The service's memory feature may refer to earlier conversations.
+- **Fix**: Start application documents in a new chat, or use an incognito (temporary) chat. Claude's memory settings are in [Memory and personal settings](/en/claude/c09-memory-settings/).
+
+## Practical tips
+
+- **One prompt = one chat**: Opening a new chat for each prompt keeps different applications from getting mixed together.
+- **In your own words once more**: After applying the AI's feedback, read it aloud and check that it sounds like you.
+- **Different for each company**: Change the emphasis of the same experience to match the skills each posting asks for, but don't change the facts.
+- **Build a question list**: After an interview, write down the questions you were asked and use them in your next practice.
+- **Show it to a person too**: If you can, show the final version to your school's career services staff or a mentor. The AI doesn't fully know your situation or the company's culture.
+
+## What to read next
+
+- [AI guide for students and job seekers](/en/roles/student/) — a role-based guide that covers studying and job hunting together
+- [Using AI while keeping personal and company information safe](/en/basics/05-privacy-safety/) — information not to enter, and training settings
+- [Studying English and other foreign languages with AI](/en/chat/31-language-learning/) — continuing into English interview and conversation practice
+- [Asking questions well: the basics](/en/basics/03-asking-well/) — how to write more specific prompts

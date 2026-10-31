@@ -1,0 +1,210 @@
+---
+title: "Connecting Gmail and Calendar to AI for a Morning Briefing"
+description: "How to build a morning-briefing prompt that summarizes today's schedule and important emails using Claude's Gmail and Google Calendar connectors, and run it automatically on weekday mornings with routines"
+sidebar:
+  label: "2. Get a morning briefing"
+level: practical
+category: automation
+tools: ["Claude", "Gmail", "Google Calendar"]
+duration: "30 min"
+prerequisites:
+  - "A claude.ai account and a Google account (using Gmail and Google Calendar)"
+  - "(To go as far as automatic runs) A plan that can use routines: Pro, Max, Team, Enterprise"
+lastVerified: 2026-10-26
+sources:
+  - title: "Use Google Workspace connectors"
+    url: "https://support.claude.com/en/articles/10166901-use-google-workspace-connectors"
+  - title: "Use connectors to extend Claude's capabilities"
+    url: "https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities"
+  - title: "Get started with custom connectors using remote MCP"
+    url: "https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp"
+  - title: "Automate work with routines"
+    url: "https://code.claude.com/docs/en/routines"
+  - title: "Connect Claude Code to tools via MCP"
+    url: "https://code.claude.com/docs/en/mcp"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- Connect Claude's **Gmail and Google Calendar connectors** and you can get a **morning briefing** that rolls "today's schedule + emails that need a reply" into one summary.
+- Start by running it yourself in **read-only** mode. Once you like the prompt, save it as a **routine** and let it run on weekday mornings.
+- A routine runs on its own with nobody watching, so be sure to write **"read only; don't send or delete anything"** in the prompt.
+- Watch out for instructions hidden in email bodies (prompt injection), and turn off tools you don't need.
+</Summary>
+
+## What you'll be able to do
+
+- Connect Gmail and Calendar to Claude and get today's schedule and important emails in a single view.
+- Build a **briefing prompt** (priority criteria, output format) that fits your work.
+- Save the same prompt as a **routine** and run it automatically on weekday mornings.
+- Follow the rules for using read and write access safely.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Connector** | A connection that lets Claude access your services and pull in data. Claude inherits your permissions as they are. |
+| **Gmail connector** | Searches and reads mail, writes drafts, sends/replies/forwards, and manages labels. It can't see the contents of attachments. |
+| **Calendar connector** | Looks up, creates, edits, and deletes events, finds common free time, and more. |
+| **Routines = Scheduled tasks** | A feature that saves a prompt, connectors, and more, and runs them automatically in the cloud. As of 2026-10-26, the name in the official documentation is "Scheduled tasks" (formerly routines), and some account screens still show "Routines." It's a research preview. |
+| **Read / write actions** | Reading doesn't change data. Writing means sending, deleting, or editing. A briefing needs only reading. |
+
+The connection procedure itself is covered in detail in [C7. Connectors](/en/claude/c07-connectors/). Here we'll assume you're connected and focus on building the briefing.
+
+```text
+[Morning briefing flow]
+Connect connectors → Run read-only by hand → Refine the prompt → Save as a routine → Runs automatically on weekday mornings
+```
+
+## Step-by-step
+
+<Checklist items={[
+  'I connected the Gmail and Calendar connectors',
+  'I ran the read-only briefing prompt by hand',
+  'I adjusted the priority criteria and output format to my work',
+  'I put "no sending or deleting" in the prompt',
+  '(Optional) I saved it as a routine and scheduled it for weekday mornings',
+  'I checked the first automatic run and removed connectors I don\'t need',
+]} />
+
+<Steps>
+
+1. **Connect the Gmail and Calendar connectors**
+
+   In the chat input box, go to **+** > Connectors, pick Gmail and Google Calendar, sign in with your Google account, and grant consent. On Team/Enterprise, an organization Owner has to turn the connectors on first. For the detailed steps and troubleshooting, see [C7. Connectors](/en/claude/c07-connectors/).
+
+   <ScreenshotPlaceholder caption="Gmail and Google Calendar turned on under Connectors" officialUrl="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" />
+
+2. **Run a read-only briefing by hand**
+
+   Turn on both connectors in a new chat and ask like this. The goal at first is to see the result with your own eyes.
+
+   <PromptBox label="Basic morning briefing prompt">
+   Make me a morning briefing for today (in my local time zone). Read only. Don't send emails or edit or delete any events or emails.
+
+   1) Today's schedule: Put it in a table in time order with title, time, attendees, and location (or video meeting link), and tell me about any gaps of 30 minutes or more between events.
+   2) Email: From the emails I received in the last 24 hours, pick only the ones I need to reply to. For each, give the sender, a one-line summary, why a reply is needed, and urgency (High/Medium/Low). For ads and newsletters, just give the count.
+   3) At the end, list the 3 things I must not forget today.
+   If you're not sure about something, don't guess. Write "needs checking."
+   </PromptBox>
+
+3. **Refine the prompt for your work**
+
+   Look at the result and decide what to fix. Try changing the items below and run it a few times.
+
+   - **Urgency criteria**: Name names or conditions, like "Emails from the CEO or clients are always High."
+   - **Scope**: Narrow it down, like "Only emails labeled 'Project A'," for better accuracy.
+   - **Length**: Set a length, like "Keep the whole thing under 20 lines."
+   - **Keep in mind**: The Gmail connector can't read attachment contents. If an attachment has something important in it, you'll need to check separately.
+
+4. **Have it go as far as drafting replies (optional)**
+
+   After the briefing, you can also have it draft replies to emails that need one. Don't let it send. If it leaves a draft, you can read it and send it yourself.
+
+   <PromptBox>
+   For the 2 "High urgency" emails you just listed, write polite reply drafts as Gmail drafts. Never send them. I'll read and send them myself.
+   </PromptBox>
+
+   <Aside type="caution" title="Confirm write actions once more in the approval window">
+   By default, Claude asks for approval before sending, replying to, or forwarding email (an organization Owner can change this setting). Read the recipient and content before approving. Don't click through out of habit.
+   </Aside>
+
+5. **Save it as a routine to run automatically on weekday mornings (optional)**
+
+   Once the prompt is stable, save it as a routine. You can create routines at claude.ai/code/routines, in the desktop app, or with `/schedule` in the terminal. On the web, set the name, prompt, and trigger (schedule) under New task (New routine on some accounts). You can pick the schedule from hourly, daily, weekdays, or weekly, or set it to run once at a specific time; for the exact input fields, **follow the on-screen instructions.** According to the official documentation, a routine also has you pick a repository and environment along with the prompt. A mail briefing doesn't need a repository, but if an optional field appears, follow the on-screen instructions. Routines themselves are explained in [C13. Cloud sessions](/en/claude/c13-cloud-sessions/).
+
+   Here's what to keep in mind when using routines.
+
+   - Put "Read only; no sending, deleting, or editing" at the very start of the prompt. A routine is **an autonomous run with nobody watching**. According to the official documentation as of 2026-10-26, new sessions started in the cloud begin in auto mode, where a classifier model allows or blocks actions that would need approval. Even so, in some cases a run can stop and wait for an answer.
+   - If you set it exactly on the hour (for example, 8:00), it may run a few minutes late. The official documentation recommends offsetting the minute (for example, 8:07). Schedules that run more often than once an hour (cron) aren't accepted. For intervals not in the presets, create the routine and then set a cron expression under Custom on the edit screen; the times in that expression are in UTC (as of 2026-10-26).
+   - Routines include your connected connectors by default. Keep only the Gmail and Calendar you need for the briefing and remove the rest.
+   - Servers added only on your own computer with `claude mcp add` can't be used in routines. You need to add them to claude.ai as connectors.
+   - Routines use your subscription usage. If you run short of your limit, behavior depends on your extra usage (usage credits) settings. For usage, see [C2. Plans and usage limits](/en/claude/c02-plans-limits/).
+
+   ```text
+   /schedule Weekday morning briefing: read only, and summarize today's schedule and the emails that need a reply
+   ```
+
+   <ScreenshotPlaceholder caption="Setting the name, prompt, and schedule on the routine creation screen" officialUrl="https://code.claude.com/docs/en/routines" />
+
+   <FlowSteps title="Saving the morning briefing as a routine" officialUrl="https://code.claude.com/docs/en/routines" steps={[
+     { where: 'Chat input box', action: 'Pick Gmail and Google Calendar under + > Connectors', result: 'Sign in to your Google account and grant consent' },
+     { where: 'New chat', action: 'Turn on both connectors and ask for a read-only briefing', result: 'Check the result with your own eyes' },
+     { where: 'claude.ai/code/routines', action: 'Set the name, prompt, and trigger (schedule) under New task (or New routine)', result: 'Runs automatically on weekday mornings' },
+   ]} />
+
+6. **Check and refine the first automatic run**
+
+   After the scheduled time passes, check the list of past runs on the routine's detail page. Each run creates a new session, and if you open it you can see a record of what Claude did. A green status in the list only means the run finished without errors, not that the job succeeded, so be sure to open it and check the content. If there's a wrong summary or a missing event, fix the prompt and update the routine.
+
+</Steps>
+
+## Quick reference
+
+### Parts of a briefing prompt
+
+| Element | Example | Why |
+| --- | --- | --- |
+| Safety rule | "Read only; no sending or deleting" | Routines run autonomously |
+| Reference time | "Today in my local time zone" | Avoids date mix-ups |
+| Schedule format | Table in time order + free time | Ready to use for planning your day |
+| Email scope | Last 24 hours, specified labels | Controls volume and accuracy |
+| Priority criteria | People, keywords, deadlines | States your judgment criteria |
+| Uncertainty | "If unsure, needs checking" | Prevents guessing |
+
+### Read vs. write
+
+| Action | Type | Recommendation |
+| --- | --- | --- |
+| Viewing and summarizing mail and events | Read | The default for a briefing |
+| Creating mail drafts | Write (save only) | OK; send yourself after checking |
+| Sending or forwarding mail, deleting events | Write | Not in routines |
+
+## Common sticking points
+
+### The connector isn't in the list or isn't working
+
+- **Cause**: Your organization may not have turned the connector on, or authentication may be tangled.
+- **Fix**: See the sticking points in [C7. Connectors](/en/claude/c07-connectors/). Disconnecting and reconnecting is the simplest fix.
+
+### An important email was missed
+
+- **Cause**: The search scope or criteria may be too narrow, or the important content may be inside an attachment (attachment contents can't be read).
+- **Fix**: Widen the scope and write the criteria more specifically. Check emails where the attachment matters yourself.
+
+### No result arrived at the scheduled time
+
+- **Cause**: A run set exactly on the hour can be a few minutes late. Exceeding your limit or an expired connector authorization are also possible.
+- **Fix**: Offset the minute (for example, 8:07) and check the run history. If authorization expired, reconnect the connector.
+
+### An email gives strange instructions
+
+- **Cause**: An email from outside may hide wording meant to trick the AI (prompt injection).
+- **Fix**: In the briefing routine, state firmly in the prompt that no write tools are to be used, and open the original to check any summary that looks off.
+
+### My personal and work accounts got mixed up
+
+- **Cause**: A connector is tied to one signed-in Google account.
+- **Fix**: Check which account you connected, and check your company's rules before connecting work email.
+
+## Practical tips
+
+- **Use it by hand for a week first.** Move it to a routine once the prompt is stable.
+- **Shorter briefings get read.** Limit the length and ask it to show High urgency first.
+- **Keep only the connectors you need.** Routines include all connectors by default.
+- **Start with reading when coordinating schedules.** "Free slots of 30 minutes or more this week" is a safe example of a use.
+- If you also use Gemini besides Claude, see [19. Gemini in Google Workspace](/en/automation/19-google-workspace-gemini/) for how to summarize right inside Gmail.
+
+## What to read next
+
+- [C7. Connectors](/en/claude/c07-connectors/) — Connection steps and a security checklist
+- [C13. Cloud sessions and routines](/en/claude/c13-cloud-sessions/) — Routine limits and settings
+- [18. Automate mail → sheet → notification with Zapier/Make](/en/automation/18-zapier-make/) — Rule-based automation
+- [Using personal AI agents safely](/en/agents/05-agent-safety/) — Managing permissions for agents that act on their own

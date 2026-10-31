@@ -1,0 +1,467 @@
+---
+title: "Cut API Costs with Prompt Caching, Batches, and Effort"
+description: "An API cost optimization reference covering cache read pricing, the 50% Message Batches discount, effort tuning, dividing work among models, token counting, and usage logging, with Python examples and price comparison calculations"
+sidebar:
+  label: "2. Cut API costs with prompt caching, batches, and effort"
+level: advanced
+category: dev
+tools: ["Claude API", "Python SDK"]
+duration: "60 min"
+prerequisites:
+  - "C16. Getting started with the Claude API (API key, first call, price list)"
+  - "C15. Model division strategy"
+  - "1. Build a work bot with tool use (helpful if your bot uses tools)"
+  - "Python 3.10 or later, pip install anthropic"
+lastVerified: 2026-10-26
+sources:
+  - title: "Pricing"
+    url: "https://platform.claude.com/docs/en/about-claude/pricing"
+  - title: "Prompt caching"
+    url: "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+  - title: "Batch processing"
+    url: "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+  - title: "Token counting"
+    url: "https://platform.claude.com/docs/en/build-with-claude/token-counting"
+  - title: "Optimizing for cost and intelligence"
+    url: "https://platform.claude.com/docs/en/about-claude/models/optimizing-for-cost-and-intelligence"
+  - title: "Effort"
+    url: "https://platform.claude.com/docs/en/build-with-claude/effort"
+  - title: "Usage and Cost Admin API"
+    url: "https://platform.claude.com/docs/en/manage-claude/usage-cost-api"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- Look at cost as **"the total it takes to finish one task," not the price of a single call.** If you run the same job several times, or retry after failures, even a cheap model gets expensive.
+- The official order is **caching and trimming input -> auditing prompts -> tuning effort -> comparing models -> output and budget caps.** Start with the things that don't touch quality.
+- **Prompt caching**: if you cache the part at the front that repeats identically, the read price is 10% of the base input price. For Opus 5.5 and Sonnet 5.5 it's 5%, and for Fable 5.1 it's 2.5%.
+- **Message Batches API**: for work that isn't urgent, both input and output get a **50% discount**. The tradeoff is that results can take up to 24 hours.
+- In the example calculation below (1,000 requests), Opus 5.5 costs $88.00 at baseline, $12.10 with caching, $44.00 with batches, and $6.05 in theory with caching plus batches.
+- Log `usage` on every call, and measure input size with `count_tokens` before making real calls.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Cache repeated prompts with `cache_control`, and confirm through `usage` that the cache is really working.
+- Run large, non-urgent jobs through the Message Batches API and cut the cost in half.
+- Compare "cost per task" by switching effort levels and models.
+- Estimate and track the cost of your own workload with a calculator and usage logs.
+
+<Aside type="note" title="What the examples were verified against">
+The examples follow the official documentation, and on 2026-10-11 only the Python syntax was verified (`python3 -m py_compile`). We actually ran the price calculator (`cost_calc.py`) to get the numbers in the table. We had no API key, so we couldn't confirm the results of runs that call Claude.
+</Aside>
+
+## Concepts to know first
+
+### Prices by model (USD per 1 million tokens, as of 2026-10-11)
+
+Prices are in US dollars and can change. Always check the [official pricing page](https://platform.claude.com/docs/en/about-claude/pricing). Model IDs and input/output prices match [C16](/en/claude/c16-api/).
+
+| Model | Input | 5-minute cache write | 1-hour cache write | Cache read | Output |
+| --- | --- | --- | --- | --- | --- |
+| Fable 5.1 (`claude-fable-5-1`) | $10 | $12.50 | $20 | $0.25 | $50 |
+| Opus 5.5 (`claude-opus-5-5`) | $4 | $5 | $8 | $0.20 | $20 |
+| Sonnet 5.5 (`claude-sonnet-5-5`) | $2 | $2.50 | $4 | $0.10 | $10 |
+| Haiku 5.5 (`claude-haiku-5-5`), prompts of 100K tokens or less | $0.10 | $0.125 | $0.20 | $0.01 | $0.50 |
+| Haiku 5.5, prompts over 100K tokens | $0.50 | $0.625 | $1 | $0.05 | $2.50 |
+
+- For Haiku 5.5, **if a single request's prompt is over 100K tokens**, the higher price applies to that request. Cache read and write tokens count toward the prompt length.
+- **Batches** are 50% of the prices above. It multiplies with other modifiers (per the official docs, the batch discount stacks with other pricing modifiers).
+- If you pin inference to the US only (`inference_geo`), all prices get a 1.1x multiplier (per the official pricing page).
+
+### The order for cutting costs
+
+The official cost guide says to do the "free" measures that don't touch quality first, and the "tradeoffs" that trade away quality later.
+
+| Order | Measure | Nature |
+| --- | --- | --- |
+| 1 | Prompt caching, trimming input tokens | Quality unchanged |
+| 2 | Audit old prompts | Quality unchanged |
+| 3 | Batches for non-urgent work | Quality unchanged, but slower |
+| 4 | Tune effort | Trades off against quality |
+| 5 | Compare models (cost per task) | Trades off against quality |
+| 6 | `max_tokens` and budget caps | Safeguard |
+| 7 | Combine multiple models | Last, and only after measuring |
+
+The official guide cites a case where internal measurements showed caching cutting the cost of an agent loop by 2.7x to 5.3x. This figure shows the direction and is for reference; it isn't a guarantee that you'll get the same on your workload.
+
+## Step by step
+
+<Checklist items={[
+  'I found the repeated front part of my requests (system prompt, tools, documents)',
+  'I added cache_control and confirmed that cache_read_input_tokens shows up in usage',
+  'I sent non-urgent work as a batch and got the results by custom_id',
+  'I compared cost per task while changing effort',
+  'I measured input size ahead of time with count_tokens',
+  'I attached a logger that writes usage to a CSV',
+  'I estimated our workload with the price calculator',
+]} />
+
+<Steps>
+
+1. **Apply prompt caching**
+
+   The cache applies **only when the front part is identical down to the byte.** Requests are compared as `tools` -> `system` -> `messages` concatenated in that order, so put the things that don't change (the policy manual, tool definitions) first and the things that do change (the question, the date) last.
+
+   Save a long text like an internal policy manual in `company_manual.txt` and create `cache_demo.py`. To be cached, the prefix must be at least 512 tokens (for Opus 5.5, Sonnet 5.5, and Haiku 5.5). If it's shorter, it silently isn't cached, with no error.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   # The same long manual on every request (it must be 512 tokens or more to be cached). Don't put in values like dates or request IDs.
+   MANUAL = open("company_manual.txt", encoding="utf-8").read()
+
+
+   def ask(question: str):
+       response = client.messages.create(
+           model="claude-sonnet-5-5",
+           max_tokens=1024,
+           system=[
+               {"type": "text", "text": "You are an internal policy assistant. Answer in English, based only on the manual."},
+               {
+                   "type": "text",
+                   "text": MANUAL,
+                   # Cache everything up to here (tools -> system -> this block). The default lifetime is 5 minutes.
+                   "cache_control": {"type": "ephemeral"},
+               },
+           ],
+           messages=[{"role": "user", "content": question}],  # Always put the changing part at the back
+           output_config={"effort": "low"},
+       )
+       u = response.usage
+       print(
+           f"new input {u.input_tokens} | cache write {u.cache_creation_input_tokens}"
+           f" | cache read {u.cache_read_input_tokens} | output {u.output_tokens}"
+       )
+       return response
+
+
+   ask("How many days of annual leave do I get?")  # First call: you should see a cache write
+   ask("What about leave for family events?")  # Second call: you should see a cache read (if it's 0, look for what invalidated the cache)
+   ```
+
+   The first call should show `cache write`, and the second call should show `cache read`. A write costs 1.25x the base input price, and a read costs 0.05x for Opus 5.5 and Sonnet 5.5. A 5-minute cache recovers its write premium **with just one reuse.**
+
+   | Item | Value |
+   | --- | --- |
+   | Default lifetime (TTL) | 5 minutes. Refreshed on each hit (no extra cost) |
+   | 1-hour lifetime | `"cache_control": {"type": "ephemeral", "ttl": "1h"}`. Writes cost 2x |
+   | Explicit breakpoints | Up to 4 per request |
+   | Lookback of one breakpoint | Up to 20 blocks |
+   | Total input tokens | `cache_read_input_tokens + cache_creation_input_tokens + input_tokens` |
+
+   If the gap between requests is longer than 5 minutes, you rewrite the cache every time, which can actually cost you. Consider the 1-hour lifetime only in that case. Because 1-hour cache writes cost 2x, it only pays off if there are several reuses.
+
+   <Aside type="caution" title="Common reasons the cache breaks">
+   - You put the current time, a request ID, or a user name at the start of the system prompt.
+   - You added tools or changed their order (tools come first, so everything after is invalidated).
+   - You changed the effort or thinking setting in the middle of a conversation.
+   - Requests with the same prefix use different caches because they're in different workspaces.
+   - The key order differs from request to request when you build the JSON.
+
+   If `cache_read_input_tokens` stays at 0, check the items above one by one. The official cost guide says that in agent loops a median of 84% of input is read from cache, and that if you're under 80%, you should look for what's breaking the cache.
+   </Aside>
+
+2. **Process at half price with batches**
+
+   Send work that nobody is waiting on (classification, summaries, evaluation, overnight reports) to the Message Batches API. Both input and output get a 50% discount. Create `batch_demo.py`.
+
+   ```python
+   import time
+
+   import anthropic
+   from anthropic.types.message_create_params import MessageCreateParamsNonStreaming
+   from anthropic.types.messages.batch_create_params import Request
+
+   client = anthropic.Anthropic()
+
+   tickets = {
+       "t-001": "My delivery is way too late. Please refund me.",
+       "t-002": "I'm wondering how to use this. Thank you!",
+       "t-003": "I was charged twice.",
+   }
+
+   batch = client.messages.batches.create(
+       requests=[
+           Request(
+               custom_id=ticket_id,  # Results come back out of order, so always match them up by custom_id
+               params=MessageCreateParamsNonStreaming(
+                   model="claude-haiku-5-5",
+                   max_tokens=1024,  # Haiku 5.5 thinks by default, and thinking counts toward max_tokens
+                   output_config={"effort": "low"},
+                   messages=[
+                       {
+                           "role": "user",
+                           "content": f"Classify this inquiry as exactly one of 'refund', 'how-to', 'payment error', or 'other': {text}",
+                       }
+                   ],
+               ),
+           )
+           for ticket_id, text in tickets.items()
+       ]
+   )
+   print("Batch ID:", batch.id)
+
+   # It usually finishes within an hour but can take up to 24 hours. In practice, check on it in separate runs with a scheduler.
+   while True:
+       batch = client.messages.batches.retrieve(batch.id)
+       if batch.processing_status == "ended":
+           break
+       time.sleep(60)
+
+   for entry in client.messages.batches.results(batch.id):
+       if entry.result.type == "succeeded":
+           text = next((b.text for b in entry.result.message.content if b.type == "text"), "")
+           print(entry.custom_id, "->", text)
+       else:
+           print(entry.custom_id, "failed:", entry.result.type)
+   ```
+
+   | Item | Value |
+   | --- | --- |
+   | Batch limit | 100,000 requests or 256 MB, whichever you hit first |
+   | Processing time | Most finish within an hour; expires if not finished within 24 hours |
+   | Result retention | 29 days after creation |
+   | Result order | Random. Always match by `custom_id` |
+   | Result types | `succeeded`, `errored`, `canceled`, `expired` |
+
+   - You can use caching inside batches too, but since requests are processed concurrently, **cache hits are best-effort** (the official docs mention a range of 30 to 98%).
+   - A batch answers once per request, so **you can't run a tool loop.** You have to change your approach to fetch the data you need ahead of time and put it in the prompt.
+   - Batches keep input and output on the server. For personal data and retention policy (ZDR) conditions, check the official "API and data retention" docs. You can delete a batch once it has finished processing.
+   - Claude Managed Agents sessions have no batch mode.
+
+   <Aside type="danger" title="Sending a lot in one batch gets expensive too">
+   If you put tens of thousands of requests into a single batch, the total is large even at half price. Start by testing with 3 to 10, limit `max_tokens` appropriately, and calculate the expected cost first (the calculator in step 7). For models that think by default, such as Haiku 5.5, thinking tokens count toward output `max_tokens` and cost.
+   </Aside>
+
+3. **Tune depth and cost with effort**
+
+   When you set effort, as in `output_config={"effort": "low"}`, the depth of thinking and the total token usage change. The levels are `low`, `medium`, `high`, `xhigh`, and `max`. The default differs by model: it's `medium` for Opus 5.5 and Haiku 5.5, and `high` for Sonnet 5.5. That's why we recommend **setting it explicitly.**
+
+   The measurements in the official cost guide (internal, directional figures) are as follows.
+
+   - On a research-style benchmark measured with Fable 5, `low` gave up 1 to 3 points of accuracy and cut cost to between a third and a half, while `medium` matched baseline accuracy at 70 to 87% of the cost.
+   - On a coding benchmark (SWE-bench Pro), compared with `high`, `medium` scored about 2.5 points lower at about 70% of the cost, `low` scored about 8 points lower at about a third of the cost, and `xhigh` scored 1.4 points higher at 2.5x the cost.
+   - It does vary by model, though. In the same guide, Fable 5.1 scored almost the same at `low` and `high` on DeepResearch Bench II, but Opus 5.5 at `low` scored 13.3 points lower than at `medium` on DRACO (a research task) (as of 2026-10-26).
+   - In some measurements, using Opus 5.5 at `medium` reached accuracy similar to Fable 5.1's default setting at a much lower "cost per correct answer."
+
+   There's no guarantee it's the same for your task. Chat, classification, and bulk processing are often fine at `low`, while coding and long agent tasks are sensitive to effort. **Measure it yourself with a representative sample.**
+
+   <Aside type="caution" title="Changing effort mid-conversation breaks the cache">
+   The official cost guide says changing effort invalidates the message cache, so test each effort level in a separate session. Avoid designs that move the top-level effort value up and down within one conversation. That said, according to the official effort docs (as of 2026-10-12), Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5, and others support changing effort per message (beta, with the beta header `mid-conversation-output-config-2026-07-01`), and this approach keeps the prompt cache.
+   </Aside>
+
+   Look at `max_tokens` too. If it's too low, responses get cut off and you pay for retries; for agent work, about 64,000 is recommended (per the official cost guide). On the other hand, for short classification, a small value like 256 works as a safeguard. Opus 5.5 can't turn thinking off, so effort is the only dial you have.
+
+4. **Lower cost per task by dividing work among models**
+
+   The biggest model doesn't always give the most expensive results. In a measured case in the official cost guide, Haiku 5.5 scored 85% on one science reasoning benchmark (GPQA Diamond) at about one twentieth the cost of Opus 5.5 (which scored 91%). If small models do the easy work and you escalate only the hard work to larger models, the average cost drops a lot.
+
+   - Start bulk work like classification, extraction, and summarization on Haiku 5.5 or Sonnet 5.5.
+   - Escalate only the hard judgment calls to Opus 5.5, and if needed use Fable 5.1 only for the hardest work.
+   - Compare by **cost per task**, not by price. If a cheap model fails more often and you retry, it ends up costing more. The official guide also says to look separately at "the cost of the hardest 10% of tasks."
+   - When you switch models, check [C16's request limits by model](/en/claude/c16-api/) first (for example, Haiku 5.5 returns a 400 error for `budget_tokens` and sampling parameters).
+   - If the model changes, the cache is separate too. Caches are separated by model.
+
+   We covered how to split models in Claude Code in [C15. Model division strategy](/en/claude/c15-model-division/).
+
+5. **Count tokens ahead of time**
+
+   Before you send, use `count_tokens` to measure how many tokens the input is. This endpoint is **free**, and it has its own per-minute request limits separate from message creation (Start 5,000, Build 10,000, Scale 20,000). The result is an estimate, so it may differ slightly from the actual count. Create `count_demo.py`.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   system_prompt = open("company_manual.txt", encoding="utf-8").read()
+   question = [{"role": "user", "content": "How many days of annual leave do I get?"}]
+
+   # Counting tokens is free, but there's a per-minute request limit. Token counts differ by model, so count with the model you'll use.
+   for model in ["claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5"]:
+       count = client.messages.count_tokens(model=model, system=system_prompt, messages=question)
+       print(model, count.input_tokens)
+   ```
+
+   - **Token counts differ by model.** The tokenizer of models from Opus 4.7 onward uses about 30% more tokens for the same text than earlier models. Don't estimate cost from numbers measured on an older model; count again with the ID of the model you'll use.
+   - Server tools like web search, MCP connectors, and images or documents passed by URL or file ID cause errors when counting. For those requests, check the response `usage`.
+   - Even if you put `cache_control` in `count_tokens`, the cache isn't used. You can only see the cache effect in the `usage` of real calls.
+   - Also use it to check whether an input is so large it would exceed the model's context window.
+
+6. **Usage logs and monitoring**
+
+   If you record `usage` on every call, you can see which features are spending money. Create `usage_log.py`. It calculates based on 5-minute cache writes, so if you use a 1-hour cache, add `ephemeral_1h_input_tokens` from `usage.cache_creation` to the calculation separately.
+
+   ```python
+   import csv
+   import time
+
+   PRICES = {  # input, cache_write_5m, cache_read, output  (USD / MTok)
+       "claude-opus-5-5": (4.00, 5.00, 0.20, 20.00),
+       "claude-sonnet-5-5": (2.00, 2.50, 0.10, 10.00),
+   }
+
+
+   def log_usage(response, model: str, task: str, path: str = "usage.csv") -> float:
+       """Calculate the cost of one call and write one line to the CSV. Returns USD."""
+       u = response.usage
+       p_in, p_write, p_read, p_out = PRICES[model]
+       usd = (
+           u.input_tokens * p_in
+           + (u.cache_creation_input_tokens or 0) * p_write
+           + (u.cache_read_input_tokens or 0) * p_read
+           + u.output_tokens * p_out
+       ) / 1_000_000
+       with open(path, "a", newline="", encoding="utf-8") as f:
+           csv.writer(f).writerow(
+               [time.strftime("%Y-%m-%d %H:%M:%S"), model, task, u.input_tokens,
+                u.cache_creation_input_tokens or 0, u.cache_read_input_tokens or 0,
+                u.output_tokens, f"{usd:.6f}"]
+           )
+       return usd
+   ```
+
+   Where you use it, just call `log_usage(response, model, task)` right after you get the response. If you also record a task name (`task`), you can roll things up into "cost per task."
+
+   You can see usage for your whole organization on the Console's Usage and Cost pages or through the Usage and Cost Admin API. This API has `usage_report/messages` and `cost_report` endpoints and needs an **Admin API key** (`sk-ant-admin...`). Admin API keys are organization keys that you can't create on a personal account, so check the requirements in the official docs. Traffic you send through Amazon Bedrock, Vertex AI, or Foundry may not show up in these reports.
+
+   <ScreenshotPlaceholder caption="The Console's Usage and Cost pages" officialUrl="https://platform.claude.com/docs/en/manage-claude/usage-cost-api" officialLabel="View in the Anthropic docs" />
+
+   <Aside type="note" title="Setting a spend limit">
+   The organization spend cap is set by your usage tier (Start $500, Build $1,000, Scale $200,000, per month, as of 2026-10-12). According to the official rate limits docs, in the Console under Settings > Billing, you can click **Adjust limit** (or **Set limit** if none exists) in the **Spend limits** section to set your own spend limit at or below the tier cap. When you hit the limit you set, requests are rejected with HTTP 400 (`invalid_request_error`). The official rate limits docs have no procedure for setting spend alerts (checked 2026-10-13). We also introduced the tiers in [C16](/en/claude/c16-api/).
+   </Aside>
+
+7. **Run a price comparison**
+
+   Compare with numbers before you switch. `cost_calc.py` calculates cost by model and by method from the number of requests, the fixed prefix, new input, and output tokens. It assumes the first request is a write and all the rest are reads (the cache stays alive).
+
+   ```python
+   """Price comparison calculator. Prices are USD per 1 million tokens (MTok), per the official pricing page of 2026-10-11."""
+
+   PRICES = {  # input, cache_write_5m, cache_read, output
+       "claude-opus-5-5": (4.00, 5.00, 0.20, 20.00),
+       "claude-sonnet-5-5": (2.00, 2.50, 0.10, 10.00),
+       "claude-haiku-5-5": (0.10, 0.125, 0.01, 0.50),  # For prompts of 100,000 tokens or less
+   }
+
+
+   def cost(model, requests, prefix_tokens, new_input_tokens, output_tokens,
+            cached=False, batch=False):
+       p_in, p_write, p_read, p_out = PRICES[model]
+       if cached:
+           # The first request is a cache write, the rest are cache reads (assuming the cache stays alive)
+           prefix = prefix_tokens * p_write + prefix_tokens * p_read * (requests - 1)
+           total_in = prefix + new_input_tokens * requests * p_in
+       else:
+           total_in = (prefix_tokens + new_input_tokens) * requests * p_in
+       total_out = output_tokens * requests * p_out
+       total = (total_in + total_out) / 1_000_000
+       return total * 0.5 if batch else total
+
+
+   if __name__ == "__main__":
+       args = dict(requests=1000, prefix_tokens=20_000, new_input_tokens=500, output_tokens=300)
+       for model in PRICES:
+           base = cost(model, **args)
+           cached = cost(model, cached=True, **args)
+           batch = cost(model, batch=True, **args)
+           both = cost(model, cached=True, batch=True, **args)
+           print(f"{model:20s} base ${base:7.2f} | cached ${cached:6.2f} | batch ${batch:6.2f} | both ${both:6.2f}")
+   ```
+
+   Assumptions: 1,000 requests per day, a fixed prefix (the policy manual) of 20,000 tokens, 500 tokens of new input, and 300 tokens of output. The results of running it are as follows.
+
+   | Model | Baseline | Cached | Batch | Cached + batch |
+   | --- | --- | --- | --- | --- |
+   | Opus 5.5 | $88.00 | $12.10 | $44.00 | $6.05 |
+   | Sonnet 5.5 | $44.00 | $6.05 | $22.00 | $3.02 |
+   | Haiku 5.5 | $2.20 | $0.40 | $1.10 | $0.20 |
+
+   Here's how to read it.
+
+   - For the same Opus 5.5, **caching alone saves about 86%** (88.00 -> 12.10). The bigger the prefix, the bigger the effect.
+   - Switching from Opus 5.5 to Sonnet 5.5 halves the base rate, and Haiku 5.5 is about one fortieth. But you have to measure separately whether the quality is good enough for that task.
+   - Cached + batch is the **theoretical minimum.** In batches, cache hits are best-effort, and the real figure is likely somewhere in the middle.
+   - This calculation doesn't include thinking tokens. Thinking is billed as output, so actual output costs may be higher. Correct it with real `usage`.
+   - If the gap between requests is over 5 minutes and the cache often expires, write costs repeat and the benefit of caching shrinks.
+
+   <PromptBox>
+   My service gets ( ) requests per day, the fixed prompt is about ( ) tokens, questions average ( ) tokens, and answers average ( ) tokens. Update cost_calc.py with these values and run it, then put the daily cost in a table for Sonnet 5.5 with caching and with batches applied separately. Also separate the requests that users are waiting on from the ones they aren't, and suggest where I should use batches.
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+### Comparison of measures
+
+| Measure | Savings | Cost | Good for |
+| --- | --- | --- | --- |
+| Prompt caching | 90 to 95% of repeated-prefix input | 1.25x write premium, the prefix must stay fixed | Reusing a long system prompt, tools, or documents many times |
+| Message Batches | 50% of input and output | Up to 24 hours of delay, no tool loops | Classification, evaluation, overnight processing |
+| Lower effort | Varies by task | Lower quality on hard tasks | Chat, classification, simple lookups |
+| Smaller model | The price difference | Quality risk | Bulk, structured work, subagents |
+| `max_tokens` cap | Prevents unintended long output | Cuts off if too low | Tasks with a known short answer |
+| Trim input | As many input tokens as you cut | Risk of dropping information | Tidying tool results and long documents |
+
+### Cache rules at a glance
+
+| Item | Value |
+| --- | --- |
+| Minimum length | 512 tokens for Opus 5.5, Sonnet 5.5, and Haiku 5.5 (official caching page) |
+| Write cost | 1.25x for 5 minutes, 2x for 1 hour |
+| Read cost | 0.1x of base input. 0.05x for Opus 5.5 and Sonnet 5.5, 0.025x for Fable 5.1 |
+| Lifetime | 5 minutes (default) or 1 hour. Refreshed on a hit |
+| Order | tools -> system -> messages |
+| If you mix TTLs in one request | 1-hour entries must come before 5-minute entries |
+
+## Common sticking points
+
+### `cache_read_input_tokens` stays at 0
+
+- **Cause**: The prefix is shorter than 512 tokens, or the front part differs from request to request (time, ID, a change in tool order). The same happens if the gap between requests is longer than the TTL or the workspace differs.
+- **Fix**: Check the prefix length with `count_tokens`, and move the changing values to after `cache_control`. Make sure the second request goes out within 5 minutes of the first.
+
+### Batch results come back in a different order than you sent them
+
+- **Cause**: Batches process requests asynchronously and without order.
+- **Fix**: Always match by `custom_id`.
+
+### Some batch requests are `expired`
+
+- **Cause**: They weren't processed within 24 hours. The official docs explain that this can increase when demand is high or there are many requests.
+- **Fix**: Collect only the expired requests and submit them again. The official docs (as of 2026-10-12) explain that `expired` requests aren't charged.
+
+### After switching to Haiku 5.5, you get a 400 error or an empty response
+
+- **Cause**: Haiku 5.5 returns a 400 error for `budget_tokens`, sampling parameters, and prefill. It thinks by default, so if `max_tokens` is small it can finish with only thinking.
+- **Fix**: Check [C16's request limits by model](/en/claude/c16-api/), remove the parameters, and either leave `max_tokens` generous or lower `effort` to `low`.
+
+### The estimated cost differs from the invoice
+
+- **Cause**: Thinking tokens, the tool-use system prompt (about 286 tokens), tool definitions and results, and the cache write premium may have been left out of the calculation. `count_tokens` is also an estimate.
+- **Fix**: Collect the four real token types from your `usage` logs (input, cache write, cache read, output) and multiply by the unit prices to correct it.
+
+## Practical tips
+
+- **Measure cost per "task."** Log not one call, but the sum of all the calls it takes to finish a single user request.
+- **Measure first.** Don't optimize before you've seen in the logs where the money is going. The official guide also says that if most of your input cost is a repeated prefix, caching is the biggest lever.
+- **Separate the requests users are waiting on from those they aren't.** Even within one service, send real-time responses as regular calls and overnight reports as batches.
+- **Make big changes one at a time.** If you change caching, effort, and the model all at once, you can't tell what worked. Measure quality on a representative sample too (for quality measurement, see tutorial 08 on evals).
+- **Set caps.** For agent loops and repeated calls, put caps on the number of iterations, `max_tokens`, and daily calls in your code. Batches and agents can spend a lot in a single run.
+- This site itself was built by dividing the work too: a larger model for planning and a smaller model for implementation. That case is in [C15](/en/claude/c15-model-division/).
+
+## What to read next
+
+- [1. Build a work bot with tool use](/en/dev/01-tool-use/) — apply caching to a bot with long tool definitions
+- [C15. Model division strategy](/en/claude/c15-model-division/) — dividing models in Claude Code
+- [C16. Getting started with the Claude API](/en/claude/c16-api/) — the price list and request limits by model
+- [9. Build internal document Q&A: the Files API and citations](/en/dev/09-rag-files-citations/) — a real example of applying prompt caching to long documents

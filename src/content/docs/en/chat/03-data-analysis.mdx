@@ -1,0 +1,202 @@
+---
+title: "Handing Excel and CSV Data Analysis to AI"
+description: "How to upload CSV or Excel files and have AI clean, summarize, and chart them, then check the results, plus cautions for personal and confidential company data"
+sidebar:
+  label: "3. Handing off data analysis"
+level: practical
+category: chat
+tools: ["Claude", "ChatGPT"]
+duration: "30 min"
+prerequisites: ["An account for the chat AI you plan to use", "A practice CSV or Excel file (made-up data recommended)"]
+lastVerified: 2026-10-26
+sources:
+  - title: "Create and edit files with Claude"
+    url: "https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude"
+  - title: "Upload files to Claude"
+    url: "https://support.claude.com/en/articles/8241126-upload-files-to-claude"
+  - title: "Sensitive data in chats with Claude"
+    url: "https://support.claude.com/en/articles/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations"
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "Prompting best practices (Claude official prompting guide)"
+    url: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+  - title: "Upload & analyze files in Gemini Apps"
+    url: "https://support.google.com/gemini/answer/14903178"
+  - title: "Gemini Apps Privacy Hub"
+    url: "https://support.google.com/gemini/answer/13594961"
+  - title: "Use ChatGPT (OpenAI, ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/use-chatgpt"
+  - title: "Work with files (OpenAI, ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/artifacts-viewer"
+  - title: "Visualizations (OpenAI, ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/visualizations"
+  - title: "Pricing (OpenAI, ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/pricing"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- When you hand a spreadsheet to AI, go in this order: **describe the data structure → clean → ask → check the math → get a result file.**
+- Claude's **code execution and file creation** feature analyzes CSV and TSV files and creates .xlsx files and charts (PNG) (as of 2026-10-10).
+- **Check a few sample results yourself in Excel.** Asking the AI to show its calculation steps (the code) makes this easier.
+- **Mask personal information and confidential company data before you upload.** Training and retention policies differ by tool.
+- The Gemini app says it can also make charts from uploaded spreadsheets (Gemini Help). According to OpenAI's docs, ChatGPT in Work mode can analyze uploaded files and create spreadsheets (2026-10-10). We couldn't find file size or row limits.
+</Summary>
+
+## What you'll be able to do
+
+- Clean up a messy CSV (duplicates, blanks, inconsistent formats) and build a summary table.
+- Ask questions in plain language, like "Which month is highest?", and get answers with supporting reasoning.
+- Get charts and Excel files as deliverables.
+- Set your own standards for handling personal and confidential data safely.
+
+## Concepts first
+
+| Term | Meaning |
+| --- | --- |
+| **Code execution and file creation** | A Claude feature where the AI runs code in an isolated environment to do calculations and create files (Code execution and file creation). That's why even large tables are processed by calculation, not by eyeballing. |
+| **De-identification** | Deleting identifying information such as names, contact details, and account numbers, or replacing it with pseudonyms. |
+| **Checking the math** | Verifying the AI's answer yourself by another method, such as Excel. |
+
+According to Claude's official help pages, this feature is on by default for Free, Pro, and Max. It's also on by default for Team and new Enterprise organizations, but an Owner can turn it off. On a personal account, look under Settings > Capabilities for "Code execution and file creation." For Team and Enterprise, check Organization settings > Capabilities. The screens may change, so follow the on-screen guidance.
+
+<Aside type="note" title="Formats used for data analysis">
+The official help pages specifically name CSV and TSV as uploads for data analysis. To upload XLSX, code execution and file creation must be turned on. Files it can create include .xlsx, .pptx, .docx, PDF, and PNG charts, and uploads and downloads are both limited to 30MB per file.
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I masked personal information in the file to analyze',
+  'I checked that code execution and file creation is turned on',
+  'I explained the column names and their meanings to the AI',
+  'I confirmed the cleaning rules before asking for the analysis',
+  'I checked at least 3 samples in Excel',
+]} />
+
+<Steps>
+
+1. **Prepare the data and de-identify it**
+
+   Practice with made-up data. For a real work file, check the following first.
+
+   - Did you delete or replace with IDs the columns for names, phone numbers, emails, addresses, national ID numbers (for example, Korean resident registration numbers), and account or card numbers?
+   - Are there values that would be a problem if competitors learned them, like unit prices, costs, or supplier names?
+   - Does your company's security policy allow the use of external AI services?
+
+   Claude's official help pages warn you to be careful when entering financial information, health records, passwords, and confidential documents.
+
+2. **Upload the file and have the AI describe its structure**
+
+   Attach the file and ask the AI to just read it first. Don't jump straight to the analysis.
+
+   <PromptBox>
+   The attached CSV is sales by branch for the first half of 2026. The columns are date, branch, product category, quantity, and sales amount. For now, do only the following. Don't analyze anything yet.
+   1) Number of rows and data type of each column
+   2) Blanks, duplicates, and mixed-format values (for example, date formats, or commas inside numbers)
+   3) Five values that look odd
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="The result of checking the structure after attaching a file" officialUrl="https://support.claude.com/en/articles/8241126-upload-files-to-claude" />
+
+3. **Set the cleaning rules and get confirmation**
+
+   So the AI doesn't delete or fill things in on its own, you set the rules.
+
+   <PromptBox>
+   Handle the problems you just found like this. Remove duplicate rows, standardize dates to YYYY-MM-DD, and if the sales amount is blank, don't delete the row; mark it "missing." After processing, tell me how many rows changed, and leave the original data as is while creating a new cleaned copy.
+   </PromptBox>
+
+4. **Ask questions and get the reasoning**
+
+   Ask specific questions, and get the calculation method along with each answer.
+
+   <PromptBox>
+   Using the cleaned copy, build a table of sales totals by branch and by month, and tell me the 3 branches with the biggest month-over-month drop. For each result, explain in one line which column you summed and by what criteria.
+   </PromptBox>
+
+   With code execution on, the AI actually runs the calculations. If you're curious how it calculated, ask, "Show me the calculation steps you used."
+
+5. **Get a chart and a result file**
+
+   <PromptBox>
+   Put the branch-by-month totals above into an Excel file (.xlsx). Make sheet 1 the cleaned data, sheet 2 the totals table, and sheet 3 a line chart of monthly sales by branch.
+   </PromptBox>
+
+   The official help pages' example requests also look like "Move the data from this PDF into Excel and make a summary chart."
+
+6. **Check the math**
+
+   Open the Excel file you received, pick one branch and one month, and add up the total yourself. If three or more match, you can relax. If one is off, ask the AI where it diverged.
+
+   <PromptBox>
+   I calculated this in Excel and the March total for Branch A doesn't match your table. Show me the list of rows you included for Branch A in March, and check whether any rows were dropped because of date formats or the way missing values were handled.
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+| Item | Claude (2026-10-10) |
+| --- | --- |
+| Name of the analysis feature | Code execution and file creation |
+| Where to turn it on (personal) | Settings > Capabilities |
+| Where to turn it on (Team, Enterprise) | Organization settings > Capabilities |
+| Uploads for analysis | CSV, TSV (XLSX can be uploaded only when this feature is on) |
+| Files it creates | .xlsx, .pptx, .docx, PDF, PNG charts, Python scripts |
+| File size | 30MB per file for both upload and download |
+| Model training entry (pricing page) | Free, Pro, Max: "Opt-out"; Team, Enterprise: "None by default" |
+| Gemini | Can create charts from uploaded spreadsheets; 10 files per prompt, 100MB per file (Gemini Help) |
+| ChatGPT (per OpenAI docs) | The docs say that picking Work in the Chat/Work switch lets you hand off file analysis, code execution, and creating documents, presentations, spreadsheets, and PDFs. For charts, you can request them with `@Visualize` (under Plugins), but it's rolling out in stages by account and platform, so you might not see it |
+| ChatGPT limits | We couldn't find upload size or row limits in public docs |
+
+## Common sticking points
+
+### My Excel (.xlsx) file won't upload
+
+- **Cause**: Code execution and file creation may be turned off. On Team and Enterprise, an Owner may have turned it off.
+- **Fix**: Turn it on in Settings > Capabilities. On an organization account, ask your admin. In the meantime, you can save the Excel file as a CSV and upload that.
+
+### The numbers don't match Excel
+
+- **Cause**: The rows included may differ because of how duplicates were removed, how missing values were handled, or date formats.
+- **Fix**: State the cleaning rules explicitly and ask to see the list of included rows.
+
+### The file is too big
+
+- **Cause**: The limit for analysis files is 30MB per file.
+- **Fix**: Keep only the columns and period you need, or upload it split by month.
+
+### It tries to reach external data during analysis
+
+- **Cause**: The official help pages warn that when network access is on, malicious instructions hidden in external files or websites can make Claude run untrusted code or send conversation data outside.
+- **Fix**: Watch what the AI is doing, and stop it if you see access you didn't expect. When working with internal company data, it's safer to turn off network access. Don't upload external files from unknown sources.
+
+## Cautions for personal and confidential company data
+
+- **Not uploading it is the default.** For customer lists, payroll tables, health information, and contract cost sheets, de-identify them or use only tools your company has approved.
+- **Check the training settings.** Claude's pricing page lists model training for Free, Pro, and Max as "Opt-out," and for Team and Enterprise as "None by default." The help pages explain that only conversations you allow are used for improvement, and you can change the setting at any time. Incognito chats aren't used for improvement. Follow the on-screen guidance for the actual setting names.
+- **Consider an organization account first.** For work data, an organizational plan your company has contracted, like Team or Enterprise, may be better on policy than a free personal account. Policies vary by contract, so check with your security lead.
+- **For Gemini, check the Keep Activity setting.** The Gemini Privacy Hub says that when Keep Activity is on, some conversations may be reviewed by people and used to improve the service. It says that if you turn it off or use temporary chats, they aren't used to train AI models, but responses and processing for protection purposes continue. Don't enter confidential information.
+- **For ChatGPT, check the Data controls settings.** OpenAI's docs say the data control settings you choose apply to the information ChatGPT uses while working, and list the location as Settings > Data controls. We couldn't find the default model-training setting or retention period for personal accounts in the OpenAI docs we could open, so we haven't listed them. For the Business plan, it says "doesn't train on business data by default" (Pricing docs, 2026-10-10). We confirmed from the shortcut guide that a temporary chat feature exists, but check the official help pages for how saving and training are handled.
+- **Legal obligations such as data protection laws** are for your company's legal and security staff to decide. This tutorial is not legal advice.
+
+## Practical tips
+
+- **Don't touch the original.** Ask for "a new cleaned copy" to protect the original.
+- **Make it state its assumptions.** Get in the habit of asking, "At the end, list the assumptions you used and the rows you excluded."
+- **Ask for one thing at a time.** Requesting cleaning, summarizing, and charting separately catches errors early.
+- **Double-check important numbers.** Recalculate any number that will go in a report once more with Excel formulas.
+- **Save repeat analyses as instructions.** If you put your cleaning rules in a Claude project, you don't have to explain them every time ([C5](/en/claude/c05-projects/)).
+
+## What to read next
+
+- [4. Drafting and polishing reports and proposals](/en/chat/04-write-reports/) — turning analysis results into a report
+- [1. Writing work prompts](/en/chat/01-prompt-basics/) — a framework for asking specific questions
+- [C6. Artifacts](/en/claude/c06-artifacts/) — turning results into a dashboard or tool

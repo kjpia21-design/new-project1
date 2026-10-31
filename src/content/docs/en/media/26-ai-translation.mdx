@@ -1,0 +1,245 @@
+---
+title: "AI Translation in Practice: Translate Work Documents with DeepL, Papago, and Claude"
+description: "How to translate work documents with DeepL, Papago, and Claude, protect confidential documents, and review the results"
+sidebar:
+  label: "7. AI translation in practice"
+level: beginner
+category: media
+tools: ["DeepL", "파파고", "Claude"]
+duration: "30 min"
+prerequisites:
+  - "A document to translate (use a non-confidential document for practice)"
+  - "At least one of DeepL, Papago, or Claude (you can start free)"
+lastVerified: 2026-10-26
+sources:
+  - title: "DeepL - Plan comparison (official site)"
+    url: "https://www.deepl.com/en/pro"
+  - title: "DeepL - Data security (official site)"
+    url: "https://www.deepl.com/en/pro-data-security"
+  - title: "DeepL - Document translation (official site)"
+    url: "https://www.deepl.com/en/features/document-translation"
+  - title: "DeepL API docs - Supported languages"
+    url: "https://developers.deepl.com/docs/getting-started/supported-languages"
+  - title: "Papago (NAVER) - Translation service"
+    url: "https://papago.naver.com/"
+  - title: "Papago (NAVER) - Document translation"
+    url: "https://papago.naver.com/docs"
+  - title: "Papago Help Center (NAVER Help Center)"
+    url: "https://help.naver.com/service/16448/category/bookmark?lang=ko"
+  - title: "Claude Help - Create and edit files with Claude"
+    url: "https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude"
+  - title: "Claude Help - Sensitive data in chats with Claude"
+    url: "https://support.claude.com/en/articles/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- **DeepL** and **Papago** are dedicated translation services, so when you upload a file (Word, PPT, PDF, etc.), they give you a translation that keeps the formatting. With **Claude**, you can specify tone, terminology, and audience in conversation to translate and polish.
+- **Don't paste confidential documents into free services.** Each service has different conditions for storing your data or using it for improvement. Check the official guidance before you use one.
+- AI translation is a **draft**. A person must always check numbers, dates, proper nouns, and legal wording.
+- Limits and features differ by plan. The figures below are as of 2026-10-14, and what's shown on screen takes priority.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Choose among DeepL, Papago, and Claude based on the type and purpose of your document.
+- Upload a file and translate it while keeping the formatting.
+- Decide how to handle documents that contain company secrets or personal information.
+- Review translation results with a checklist.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Machine translation service** | A service specialized in translation, like DeepL or Papago. When you upload a file, it translates while preserving formatting. |
+| **Conversational AI translation** | A chat-based approach like Claude. If you explain the audience, tone, and terminology, it adapts to them. |
+| **Glossary** | A list that sets the translations to use in advance, like "고객사 = client." DeepL and Papago have one. |
+| **Back-translation** | A method of translating the result back into the original language to check that the meaning matches. |
+| **Model improvement / quality improvement consent** | A setting for whether the service may use what you enter to improve itself. |
+
+### How do the three tools differ?
+
+| Comparison | DeepL | Papago | Claude |
+| --- | --- | --- | --- |
+| Strengths | File translation, glossary, business plans | Text, image, document, voice, and website translation in one place | Specify tone, audience, and terminology in conversation; summarize and review after translating |
+| Document translation | PDF, Word, PowerPoint, etc. (file count and size limits vary by plan) | PDF, DOCX, XLSX, PPTX, HWPX, up to 20 MB per file | Upload a file, ask for a translation, and receive a result file (30 MB per file) |
+| Korean | Korean is among the languages supported by the DeepL API | A service provided by NAVER | We didn't verify its quality in this guide against official docs |
+
+<Aside type="note" title="Things we couldn't confirm">
+DeepL's Help Center (support.deepl.com) blocks automated access, so we couldn't open it. For DeepL, we therefore used the official site's pricing, security, and document translation pages. For Papago, we checked the guidance text on the service screen, but couldn't open the Help Center article bodies. We didn't state which tool translates better, because there's no official basis for it. For important documents, translate with two tools and compare.
+</Aside>
+
+## Step by step
+
+The example is "translating an English supply contract notice (a Word file) into Korean and sharing it with your team."
+
+<Checklist items={[
+  'I first checked whether the document contains confidential or personal information',
+  'I checked the service\'s data policy and chose a tool',
+  'I ran the translation with a translation tool',
+  'I organized terms and tone and polished it again',
+  'I checked numbers, dates, and proper nouns against the original',
+  'If needed, I had the responsible person (legal or a local employee) review it',
+]} />
+
+<Steps>
+
+1. **Check the document's sensitivity**
+
+   Before handing it off for translation, check whether the document contains any of the following.
+
+   - Company secrets: contract terms, unit prices, unreleased product or financial information
+   - Personal information: names and contact details, national ID numbers, bank account details
+   - Customer or partner materials under a confidentiality obligation
+
+   If it does, read "Handling confidential documents" in step 3 first and then choose a tool. If your company has rules on using AI or translation tools, those rules come first. For the general principles, see [Using AI While Protecting Personal and Company Information](/en/basics/05-privacy-safety/).
+
+2. **Choose a tool**
+
+   - **Short sentences and emails**: All three tools are fine. If you want to specify tone, Claude is convenient.
+   - **Files where formatting matters**: Document translation in DeepL or Papago is convenient.
+   - **Documents that need consistent terminology**: Use the glossary in DeepL or Papago, or give Claude a terminology table along with the document.
+
+3. **Handling confidential documents (check before translating)**
+
+   If you paste or upload a confidential document to a free translation service, that content is sent to the service's company. Decide based on the official guidance below. It can vary by account type and over time, so check it yourself before translating.
+
+   | Service | What the official guidance says (as of 2026-10-14) |
+   | --- | --- |
+   | **DeepL** | The plan comparison table has a "No data training" row, shown for paid plans (Individual and above) but grayed out for the free version. The enterprise security page says it "does not store text or use it to train models without consent." We couldn't confirm the exact data-handling terms for the free version, so see the terms on screen. |
+   | **Papago** | If you agree to "Consent to improving quality" at the bottom of the screen, translation request data (text, voice, images, documents, etc.) may be stored and used for service improvement and research and development. You can change your consent at any time, and the change applies from that point on. We couldn't confirm the default consent state. |
+   | **Claude** | For personal accounts (Free, Pro, Max), conversations are used for improvement if you've allowed the model improvement setting. Incognito chats aren't used for model improvement. The official help also advises being careful when sharing confidential business documents. Team and enterprise accounts have different policies, so follow your administrator's guidance. |
+
+   <FlowSteps title="Check the quality improvement consent in Papago" officialUrl="https://papago.naver.com/" steps={[
+     { where: 'Very bottom of the papago.naver.com screen', action: 'Click "품질 개선 동의" (English: Consent to improving quality)', result: 'The consent notice opens' },
+     { where: 'Notice window', action: 'Read it and turn consent off if you don\'t want it', result: 'The change applies from that point on' },
+   ]} />
+
+   If you're still not sure, do one of these.
+
+   - **Mask before translating**: Replace names, amounts, and company names with placeholders like "Company A" or "XXX won," translate, and then fill them back in.
+   - **Use only tools your company allows**: If your company has a contracted paid or enterprise plan, use that.
+   - **Don't translate it yourself**: Leave legally binding contracts to a translator or your legal team.
+
+   <ScreenshotPlaceholder caption="The 'Consent to improving quality' link at the bottom of the Papago screen" officialUrl="https://papago.naver.com/" />
+
+4. **Run the translation**
+
+   **File translation (DeepL, Papago)**: Drag your file onto the document translation screen and choose the language. Papago reportedly supports PDF, DOCX, XLSX, PPTX, and HWPX up to 20 MB per file. In DeepL, the monthly file count and file size limits depend on your plan (see the reference table below). After you download the translation, be sure to open the file and visually check the tables, line breaks, and images.
+
+   **Translating through conversation (Claude)**: Tell it the audience, tone, and terminology together.
+
+   <PromptBox>
+   Translate the English contract notice below into Korean. The reader is a teammate who doesn't know English. Use a polite, formal register (the "합니다" style), and follow this glossary: supplier = 공급업체, lead time = 납기, purchase order = 발주서. For any sentence that's hard to translate or could be read two ways, flag it separately below the translation. Don't add anything that isn't in the original.
+
+   (Paste the text here)
+   </PromptBox>
+
+   To translate a whole Word file, file creation has to be turned on (for Free, Pro, and Max, "Code execution and file creation" under Settings > Capabilities). The limit is 30 MB per file. Check the formatting of the result file yourself.
+
+5. **Review the translation**
+
+   AI translation can look smooth and still be wrong. Check the following in order.
+
+   - **Numbers, dates, units, currency**: Compare against the original one by one. This is the riskiest part.
+   - **Proper nouns**: Check that company names, product names, people's names, and place names were rendered correctly.
+   - **Terminology consistency**: Check that the same term is translated the same way throughout the document.
+   - **Missing or added sentences**: Compare paragraph and sentence counts against the original.
+   - **Negatives and conditionals**: Look at expressions where the meaning flips easily, like "unless..." or "provided, however,".
+   - **Tone and honorifics**: Check that it suits the reader (a boss, a customer, a colleague).
+   - **Legal, medical, and financial documents**: Always have an expert or a local contact review them.
+
+   Back-translation helps too. Translate the Korean result back into English, and if the meaning differs from the original, take another look at that sentence.
+
+   <PromptBox>
+   Compare the Korean sentences you just translated against the original, one sentence at a time, and put the following in a table: places where the meaning changed, was dropped, or was added, and places where numbers or dates differ. Mark anything you're not sure about as "needs checking."
+   </PromptBox>
+
+   Even if you have Claude do the review, that review is also AI output. Have a person do the final check. For how to check, see [Can You Trust AI Answers? How to Fact-Check](/en/basics/04-fact-checking/).
+
+</Steps>
+
+## Quick reference
+
+### DeepL limits by plan (as of 2026-10-14, DeepL pricing page)
+
+| Item | Free version | Individual | Team | Business |
+| --- | --- | --- | --- | --- |
+| Text translation (monthly) | 50,000 characters | 300,000 characters | 1,000,000 characters per user | Unlimited |
+| File translation (monthly) | 1 file | 3 files | 20 files | 100 files |
+| File size | Up to 5 MB | Up to 30 MB | Up to 30 MB | Up to 100 MB |
+| Glossary | 1 (5 entries) | 1 (5 entries) | 5 (1,000 entries per language pair) | Unlimited |
+
+The DeepL document translation page (as of 2026-10-26) separately says a free account can translate one Word, PowerPoint, or PDF file of 5 MB or less and 100,000 characters or fewer per month. Prices vary by region, so we left them out. The numbers above are based on the screen shown in Germany, so check the table you see in Korea. Enterprise limits are described as negotiated separately.
+
+### Papago document translation
+
+| Item | Details |
+| --- | --- |
+| Supported formats | PDF, DOCX, XLSX, PPTX, HWPX |
+| File size | Up to 20 MB per file |
+| Features | Reportedly keeps the original tables and images. You can edit directly on screen after translating |
+| Glossary | The document translation screen has an option to use a glossary |
+| Limits | A notice appears when you use up your monthly translation count. We couldn't confirm the specific count |
+| Plus | Some features are marked as PAPAGO PLUS only. Check the details on screen |
+
+### Review checks at a glance
+
+| Item | How to check |
+| --- | --- |
+| Numbers and dates | Compare side by side with the original |
+| Proper nouns | Check official spellings (company websites, etc.) |
+| Terminology | Make a glossary, then search (Ctrl+F) to standardize |
+| Omissions | Compare counts of paragraphs, tables, and footnotes |
+| Reversed meaning | Read negative and conditional sentences separately |
+| Specialist fields | Expert review |
+
+## Common sticking points
+
+### The translated file's formatting broke
+
+- **Cause**: Documents with lots of tables, text boxes, and special fonts tend to get misaligned after translation because line lengths change. Korean can come out longer or shorter than English.
+- **Fix**: Open the translation and adjust it by hand. Restoring formatting in a PDF can be hard, so if you have the original (such as Word), it's safer to translate from that.
+
+### The file won't upload
+
+- **Cause**: You hit a limit on file size, format, or monthly file count.
+- **Fix**: Papago allows up to 20 MB and DeepL's free version up to 5 MB. Split the document before uploading, or check your plan.
+
+### The same term is translated differently each time
+
+- **Cause**: AI can render things differently depending on context.
+- **Fix**: Use the glossary in DeepL or Papago, or give Claude a glossary first. After translating, search for the key terms and standardize them.
+
+### The tone is too stiff or awkward
+
+- **Cause**: You didn't tell it the audience and situation.
+- **Fix**: Tell Claude the audience and purpose, such as "This is an email to a customer. Polite but not heavy-handed," and ask again.
+
+### I already uploaded a confidential document to a free service
+
+- **Cause**: You didn't check the policy before using it.
+- **Fix**: Don't hide it; tell your company's security or information officer. You can check settings such as deleting history on the service screen or withdrawing data-use consent, but for how data that has already been sent is handled, see the service's terms and privacy policy.
+
+## Practical tips
+
+- **Clean up the original before translating.** Typos and ambiguous sentences turn into translation errors.
+- **Translate long documents in parts.** They're easier to review and errors are easier to spot.
+- **Keep your glossary with the document.** You can reuse it as is for the next translation.
+- **Translate with two tools and compare.** The places where they differ are where the meaning splits.
+- **For important documents, schedule a human review step.**
+- **Remove or mask personal information in the file before uploading.** Also check document properties (author) and hidden comments.
+
+## What to read next
+
+- [Using AI While Protecting Personal and Company Information](/en/basics/05-privacy-safety/) — what information is okay to put into AI
+- [Can You Trust AI Answers? How to Fact-Check](/en/basics/04-fact-checking/) — the habit of reviewing results
+- [02. Summarizing Meeting Notes and Long Documents, and Pulling Out Action Items](/en/chat/02-summarize-documents/) — summarize the document you translated
+- [Office Roles Guide](/en/roles/office/) — a collection of ways to use AI at work

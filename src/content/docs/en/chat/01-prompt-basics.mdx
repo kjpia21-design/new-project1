@@ -1,0 +1,199 @@
+---
+title: "Writing Work Prompts: Setting Role, Context, and Format"
+description: "A 6-slot framework (role, goal, context, format, constraints, examples) plus prompt templates for everyday work like email, meeting notes, and planning"
+sidebar:
+  label: "1. Writing work prompts"
+level: beginner
+category: chat
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "20 min"
+prerequisites: ["An account for the chat AI you plan to use (a free account works)"]
+lastVerified: 2026-10-26
+sources:
+  - title: "Prompting best practices (Claude official prompting guide)"
+    url: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+  - title: "Get started with Claude"
+    url: "https://support.claude.com/en/articles/8114491-get-started-with-claude"
+  - title: "Sensitive data in chats with Claude"
+    url: "https://support.claude.com/en/articles/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- Fill in just six slots, **role, goal, context, format, constraints, and examples**, and most work prompts will be fine.
+- There's one test: if you showed this request to a coworker who knows nothing about the context, could they get started right away?
+- This tutorial is based on Claude's official guide. The principles are basic skills for giving instructions in writing, so they carry over to other tools, but we didn't cross-check the official prompting guides for ChatGPT and Gemini. Check each tool's official help pages too.
+- Don't try to get it perfect on the first try. Look at the first result and **refine it with follow-up requests.**
+- Think twice before pasting in customer information or confidential company material.
+</Summary>
+
+## What you'll be able to do
+
+- Turn a vague request into a specific one using the 6-slot framework.
+- Copy and use ready-made templates for email, meeting notes, brainstorming, and translation or editing.
+- Find which slot is empty when a result is disappointing, and fix it.
+- Tell which kinds of information should never go into an AI.
+
+## Concepts first
+
+Claude-specific techniques (model choice, effort, XML tag details, and so on) are covered in [C4. Writing good prompts](/en/claude/c04-prompting/). Here we focus on a **work framework** that applies in any tool.
+
+| Slot | Question | Example |
+| --- | --- | --- |
+| **Role** | Who should it answer as? | A sales planning manager with 10 years of experience |
+| **Goal** | What will you do with the result? | Weekly report to my team lead |
+| **Context** | What's the background, and who's the reader? | The reader is an executive who cares about numbers |
+| **Format** | What shape do you want it in? | 5-line summary + 1 table |
+| **Constraints** | What to follow and what to avoid? | One page, explain jargon |
+| **Examples** | Something like this | Paste a paragraph you liked from last time |
+
+The basic attitude the official guide describes is to treat Claude like "a brilliant new employee who doesn't know your norms." The golden rule is that if a coworker with almost no context would be confused by your prompt, the AI will be confused too.
+
+<Aside type="caution" title="Check before you paste">
+Claude's official help pages warn you to be careful when entering financial information (national ID numbers, card or account numbers), health records, passwords, and confidential work documents. Get in the habit of masking names and numbers before using personal or company information. Whether your data is used for training, and how to change that setting, differs by tool and plan, so check the privacy settings of each service. More details are in [Tutorial 3](/en/chat/03-data-analysis/).
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I picked one of my own work requests and split it into the 6 slots',
+  'I compared a bad example and a good example side by side',
+  'I added a one-sentence reason',
+  'I refined the result with at least one follow-up request',
+  'I saved one frequently used template in a notes app',
+]} />
+
+<Steps>
+
+1. **Split the job into 6 slots**
+
+   Before you make a request, jot the six slots down briefly in a notes app. Any slot you leave empty becomes a weak spot in the result.
+
+   Bad example:
+
+   <PromptBox>
+   Write an email to a client.
+   </PromptBox>
+
+   Good example:
+
+   <PromptBox>
+   You're a B2B sales rep. Write an email to a client's purchasing manager letting them know their delivery will be 3 days late. The reader is already on edge because the schedule slipped once before. Use this order: apology, one line on the cause, the new delivery date (October 20), and an offer of compensation. Keep it polite and around 100 words. Leave out anything that sounds like an excuse.
+   </PromptBox>
+
+2. **Add the reason**
+
+   If you only say "don't do X," the AI doesn't know why. The official guide also says explaining the reason works better than giving bare rules. And instead of "don't," say what to do.
+
+   <PromptBox>
+   This will be posted in our team chat, and people won't read anything long. So keep it to three sentences or fewer, written as flowing sentences.
+   </PromptBox>
+
+3. **Borrow a template for your task**
+
+   The templates below are **examples** built with the 6-slot framework. Just change what's inside `[ ]`. The official docs don't provide examples like these.
+
+   **Organizing meeting notes**
+
+   <PromptBox>
+   Organize the meeting notes below for a report to my team lead. Split them into three parts: decisions, action items (with owner and deadline), and open issues. If an owner or deadline isn't in the notes, don't make one up. Write "needs confirmation."
+
+   [Paste meeting notes]
+   </PromptBox>
+
+   **Widening your planning ideas**
+
+   <PromptBox>
+   Suggest 10 promotion ideas for [product/event]. The audience is [customer segment], the budget is [amount], and the timeframe is [period]. For each idea, give a one-line description and the likely difficulties, and sort them from most to least feasible.
+   </PromptBox>
+
+   **Translating and polishing**
+
+   <PromptBox>
+   Rewrite the text below so it's easy for [audience] to read. Don't change the meaning, keep sentences short, and swap difficult words for plain ones. Show the changes in a table next to the original.
+
+   [Original text]
+   </PromptBox>
+
+   **Making a table**
+
+   <PromptBox>
+   Organize the content below into a table with four columns: item, details, owner, and deadline. Don't leave cells blank when information is missing. Write "TBD" instead.
+
+   [Content]
+   </PromptBox>
+
+4. **Add long material and examples**
+
+   When you give long material along with your request, put the material on top and the request below it. The official guide says this can improve response quality for long documents (20k tokens or more). If you want a particular tone, show an example. The official guide recommends 3 to 5 examples.
+
+   <PromptBox>
+   [Paste material]
+
+   Using the material above, write a customer notice in the tone of the example below.
+   Example: "Hello, and thank you for reaching out. We'll look into your inquiry and get back to you by this afternoon."
+   </PromptBox>
+
+5. **Refine with follow-up requests**
+
+   The first result is a draft. Ask for changes one at a time.
+
+   <PromptBox>
+   The second paragraph is too stiff. Rewrite it in a softer tone with the same content and the same length.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="A conversation refining a draft with follow-up requests" />
+
+</Steps>
+
+## Quick reference
+
+| Symptom | Empty slot | How to fix it |
+| --- | --- | --- |
+| Too generic and obvious | Context, goal | Tell it who the reader is and how it will be used |
+| Format differs every time | Format, examples | Show the output shape you want with an example |
+| Length is off | Constraints | State the length in words or lines |
+| Tone doesn't fit | Role, examples | Specify the reader and give a tone example |
+| Makes things up | Constraints | Add "If it's not in the material, write 'needs confirmation'" |
+| Ignores the rules | Context | Add a one-sentence reason next to each rule |
+
+## Common sticking points
+
+### I wrote a long prompt, but the result is still poor
+
+- **Cause**: The problem may be the type of information, not the length. Often there's a lot of background but no format or constraints.
+- **Fix**: Check the 6-slot table to see which slot is empty.
+
+### The AI writes something plausible but wrong
+
+- **Cause**: The AI may have filled in parts that aren't in your material.
+- **Fix**: Paste in the source material and say, "Don't write anything that isn't in the material. Write 'needs confirmation' instead." Check numbers and proper nouns yourself.
+
+### I have to retype the same request every time
+
+- **Cause**: You haven't saved a template.
+- **Fix**: Save your go-to frameworks in a notes app. In Claude, you can store recurring instructions in project instructions ([C5](/en/claude/c05-projects/)).
+
+### I'm not sure whether I can upload material containing customer information
+
+- **Cause**: Training and retention policies differ by tool and plan.
+- **Fix**: Check your company's security guidelines first, and delete or pseudonymize identifying information such as names, contact details, and account numbers before uploading.
+
+## Practical tips
+
+- **Write as if you're giving instructions to a new hire.** Just include the information you'd need to give a coworker when asking for a favor.
+- **Start with a simple question and get more specific over time.** The official getting-started guide describes this flow too.
+- **Save prompts that worked well.** Next time, just change what's in `[ ]` and you'll save a lot of time.
+- **The framework is the same across tools.** How to run the same prompt in two tools and compare is covered in [Tutorial 5](/en/chat/05-compare-assistants/).
+
+## What to read next
+
+- [2. Summarizing meeting notes and long documents, and pulling out action items](/en/chat/02-summarize-documents/) — how to hand off long material
+- [4. Drafting and polishing reports and proposals](/en/chat/04-write-reports/) — applying the framework to document writing
+- [C4. Writing good prompts](/en/claude/c04-prompting/) — details of Claude's official guide

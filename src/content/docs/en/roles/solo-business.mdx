@@ -1,0 +1,119 @@
+---
+title: "AI Guide for Solo Business Owners and Small Shops"
+description: "How people who work alone can save time with AI on customer service, promotional copy and images, and organizing quotes and accounts"
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- Solo business owners have to do **sales, promotion, customer service, and admin** all by themselves, so AI makes a big difference.
+- Start with a free plan, and consider paying only when the limits aren't enough ([Free vs. paid comparison](/en/basics/08-free-vs-paid/)).
+- The basic rule is not to enter customer names, contact details, or payment information into AI.
+- For money and legal matters such as pricing, taxes, and contracts, use AI's answers only as a reference and confirm with official sources or an expert.
+</Summary>
+
+## Who this is for
+
+This guide suits people who run a shop, an online store, freelance work, or a one-person service business themselves.
+
+- You don't have time to create promotional copy and images.
+- You're worn out from answering the same customer questions over and over.
+- You have to handle quotes, announcements, and sales records all by yourself.
+
+## Top 5 ways AI helps
+
+### 1. Write promotional posts and social media copy
+
+Tell it your product's features and your tone, and you can get several drafts of posts, product descriptions, and event announcements. Write the copy with a chat AI, then continue with a tool like Canva for images ([Create social content with Canva AI](/en/media/12-canva-sns/)).
+
+<PromptBox>
+I'm a solo business owner running a [type of business]. What I want to promote this time is [product/service], and its features are [3 features]. My main customers are [customer group]. Write 3 Instagram post captions, each with a different feel. Keep each under 30 words, and end each with one line that encourages action. Avoid wording that looks like exaggerated advertising.
+</PromptBox>
+
+### 2. Draft replies to customer inquiries
+
+You can organize frequently asked questions (business hours, shipping, exchanges and refunds) and create polite reply templates. Remove customer names and order numbers, and describe only the situation.
+
+<PromptBox>
+Create reply templates for customer inquiries. My business is a [type of business], and our policies are below. Write polite, short replies for each type of inquiry (shipping delay, exchange request, price question). Don't make promises that aren't in our policies.
+
+[Our policies]
+</PromptBox>
+
+### 3. Draft quotes, proposals, and announcements
+
+Give it items and amounts and it will organize them into a clear document structure. Check the amounts and dates yourself. If you need something like a simple calculator tool, see [Build web tools for work](/en/coding/07-no-code-web-tools/) too.
+
+<PromptBox>
+Using the information below, create an email to send to a client with the quote, and a table of quote items. Include item, quantity, unit price, and amount in the table, and show the total as you calculated it. At the end, add wording for the validity period and payment terms. Leave anything you don't know blank with [ ].
+
+[Items, quantities, unit prices, terms]
+</PromptBox>
+
+### 4. Organize sales and inventory data
+
+From an Excel or CSV file, you can get monthly sales, best-selling products, and candidates for low stock organized for you. The details are in [Analyze Excel and CSV data](/en/chat/03-data-analysis/). Delete columns containing customers' personal information before you upload.
+
+<PromptBox>
+Below is my shop's monthly sales data (customer information has been excluded). Organize in a table the ranking of sales volume by product, the products with the biggest change from last month, and candidates for products whose inventory I should check. At the end, suggest 3 actions I could try next month, but don't state reasons as fact if the data doesn't confirm them.
+
+[Data]
+</PromptBox>
+
+### 5. Organize email and schedule, and get a morning briefing
+
+You can connect Gmail and your calendar to get the daily email check and schedule overview all at once in the morning ([Build a morning briefing](/en/automation/17-morning-briefing/)).
+
+<PromptBox>
+Look at today's schedule and my unread email and create a morning briefing. Organize the 3 things I must do today, the emails that need an urgent reply, and the gaps of free time between my appointments. Don't copy the email contents verbatim; just give me the key points.
+</PromptBox>
+
+## A day in the life
+
+<FlowSteps title="From before opening to closing" steps={[
+  { where: 'Before opening', action: 'Summarize today\'s schedule and urgent inquiries with AI', result: '3 things to do' },
+  { where: 'Morning', action: 'Get 3 promotional copy options for a new product, then pick one and polish it', result: 'Ready to post' },
+  { where: 'Afternoon', action: 'Use reply templates for frequent inquiries', result: 'Shorter response times' },
+  { where: 'After closing', action: 'Organize today\'s sales and check what\'s needed for tomorrow', result: 'A to-do list for tomorrow' },
+]} />
+
+## Recommended learning path
+
+1. [The first 30 minutes](/en/basics/01-first-30-minutes/): Get a basic feel for using AI.
+2. [From signing up to your first question](/en/basics/02-sign-up-first-question/): Start with a free account.
+3. [Asking good questions](/en/basics/03-asking-well/): Build the habit of telling it about your type of business.
+4. [Using AI while protecting privacy](/en/basics/05-privacy-safety/): Set standards for handling customer information.
+5. [How far can you go for free?](/en/basics/08-free-vs-paid/): Decide how much you need before you spend money.
+6. [Drafting reports and proposals](/en/chat/04-write-reports/): Apply it to writing quotes and proposal documents.
+7. [Analyze Excel and CSV data](/en/chat/03-data-analysis/): Read your sales and inventory.
+8. [Business image generation](/en/media/11-business-images/): Create promotional images.
+9. [Create social content with Canva AI](/en/media/12-canva-sns/): Complete a full set of posts.
+10. [Build a morning briefing](/en/automation/17-morning-briefing/): Automate your repetitive morning check.
+
+### More: new tutorials that suit solo business owners
+
+- [Advanced image generation](/en/media/30-image-generation-advanced/): Create product and promotional images in the style you want, more precisely.
+- [Making presentations with AI](/en/media/25-ai-presentations/): Quickly draft proposals and introductory materials.
+- [Adding AI to Excel and Google Sheets](/en/automation/23-spreadsheet-ai/): Learn how to hand off cleanup of sales and inventory tables to AI.
+- [Can I use this AI output? Copyright and ethics basics](/en/basics/09-ai-copyright-ethics/): A summary of what to check before using AI output in promotional materials.
+
+## What to watch out for
+
+<Aside type="caution" title="Don't enter customer or payment information">
+The basic rule is not to enter customer names, phone numbers, addresses, or order and payment information into AI services. If you must, delete or mask it before entering. The standards are in [Using AI while protecting personal and company information](/en/basics/05-privacy-safety/).
+</Aside>
+
+- **Check advertising claims**: Claims such as effectiveness, lowest price, and No. 1 must be true and may be subject to legal regulation. Remove claims that have no basis ([how to fact-check](/en/basics/04-fact-checking/)).
+- **Images and copyright**: Check that AI images don't contain someone else's trademark or a famous person's likeness, and read the terms of use of the tool you use.
+- **Money, taxes, and contracts**: AI's calculations and its explanations of legal and tax matters can be wrong. Recalculate amounts yourself, and confirm anything important with official guidance or an expert.
+- **Keep automation small**: Before you hand hard-to-undo actions like sending email or making payments to AI, read the [agent safety guide](/en/agents/05-agent-safety/) first.
+
+## Next steps
+
+- [Guide for marketers and content managers](/en/roles/marketer/): Continue here if you want to go deeper on promotional content.
+- [Guide for office, planning, and admin roles](/en/roles/office/): Has tips for organizing documents and accounts.
+- [Collection of role guides](/en/roles/): Browse other roles.
+- [Ready-to-use prompt collection](/en/start/prompts/): Find more phrases to copy and use.

@@ -1,40 +1,44 @@
 ---
 import { getCollection } from 'astro:content';
 import { entryUrl, url } from '../lib/tutorials';
+import { getLang, langOfId, t } from '../lib/i18n';
+
+const lang = getLang(Astro);
+const pre = lang === 'en' ? 'en/' : '';
 
 // astro.config.mjs 사이드바와 같은 순서로 묶음을 보여 준다. 모바일 홈에는 사이드바가 없어서 만든 전체 목차.
 const all = await getCollection('docs');
 const byDir = (dir: string) =>
   all
-    .filter((e) => e.id.startsWith(dir + '/') && e.id !== `${dir}/index`)
+    .filter((e) => e.id.startsWith(pre + dir + '/') && e.id !== `${pre}${dir}/index`)
     .sort((a, b) => (a.data.sidebar?.order ?? 999) - (b.data.sidebar?.order ?? 999) || a.id.localeCompare(b.id));
 const chips = (dir: string) => byDir(dir).map((e) => ({ label: e.data.sidebar?.label ?? e.data.title, href: entryUrl(e.id) }));
 
-const L = (label: string, path: string) => ({ label, href: url(path) });
+const L = (label: string, path: string) => ({ label, href: url(path, lang) });
 
 // 사이드바 6개 묶음과 같은 구성. 칩은 콘텐츠 컬렉션에서 가져와 항상 최신 상태를 유지한다.
 const sections = (items: { title: string; dir: string }[]) =>
-  items.map((s) => ({ title: s.title, href: url(`/${s.dir}/`), chips: chips(s.dir) }));
+  items.map((s) => ({ title: s.title, href: url(`/${s.dir}/`, lang), chips: chips(s.dir) }));
 
 const groups: { title: string; href?: string; chips?: { label: string; href: string }[]; subs?: { title: string; href: string; chips: { label: string; href: string }[] }[] }[] = [
-  { title: '시작하기', chips: [
-    L('입문자 시작점', '/start/beginner/'), L('실무자 시작점', '/start/practical/'),
-    L('고급 사용자 시작점', '/start/advanced/'), L('직무별 가이드', '/roles/'),
+  { title: t(lang, 'toc.start'), chips: [
+    L(t(lang, 'toc.beginner'), '/start/beginner/'), L(t(lang, 'toc.practical'), '/start/practical/'),
+    L(t(lang, 'toc.advanced'), '/start/advanced/'), L(t(lang, 'toc.rolesGuide'), '/roles/'),
   ] },
-  { title: 'AI 첫걸음', href: url('/basics/'), chips: chips('basics') },
-  { title: 'Claude 완전 정복', href: url('/claude/'), chips: [L('Claude 최신 소식', '/claude-news/'), ...chips('claude')] },
-  { title: '분야별 튜토리얼', subs: sections([
-    { title: '대화형 AI 기본기', dir: 'chat' },
-    { title: '코딩·에이전트', dir: 'coding' },
-    { title: '이미지·영상·음성', dir: 'media' },
-    { title: '업무 자동화·생산성', dir: 'automation' },
-    { title: '화제의 AI 에이전트', dir: 'agents' },
-    { title: '개발자 심화', dir: 'dev' },
+  { title: t(lang, 'cat.basics'), href: url('/basics/', lang), chips: chips('basics') },
+  { title: t(lang, 'cat.claude'), href: url('/claude/', lang), chips: [L(t(lang, 'toc.news'), '/claude-news/'), ...chips('claude')] },
+  { title: t(lang, 'toc.fields'), subs: sections([
+    { title: t(lang, 'cat.chat'), dir: 'chat' },
+    { title: t(lang, 'cat.coding'), dir: 'coding' },
+    { title: t(lang, 'cat.media'), dir: 'media' },
+    { title: t(lang, 'cat.automation'), dir: 'automation' },
+    { title: t(lang, 'cat.agents'), dir: 'agents' },
+    { title: t(lang, 'cat.dev'), dir: 'dev' },
   ]) },
-  { title: '직무별 AI 활용', href: url('/roles/'), chips: chips('roles') },
-  { title: '참고 자료', chips: [
-    L('바로 쓰는 프롬프트 모음', '/start/prompts/'), L('AI 용어 사전', '/start/glossary/'),
-    L('전체 튜토리얼', '/tutorials/'), L('최근 업데이트', '/updates/'), L('소개', '/about/'),
+  { title: t(lang, 'cc.roles'), href: url('/roles/', lang), chips: chips('roles') },
+  { title: t(lang, 'toc.ref'), chips: [
+    L(t(lang, 'toc.prompts'), '/start/prompts/'), L(t(lang, 'toc.glossary'), '/start/glossary/'),
+    L(t(lang, 'toc.all'), '/tutorials/'), L(t(lang, 'toc.updates'), '/updates/'), L(t(lang, 'toc.about'), '/about/'),
   ] },
 ];
 ---
@@ -44,7 +48,7 @@ const groups: { title: string; href?: string; chips?: { label: string; href: str
       <h3>{g.href ? <a href={g.href}>{g.title}</a> : g.title}</h3>
       {g.chips && (g.chips.length > 6 ? (
         <details class="fold" open>
-          <summary>{g.chips.length}개 보기</summary>
+          <summary>{t(lang, 'toc.show', { n: g.chips.length })}</summary>
           <ul>{g.chips.map((c) => <li><a href={c.href}>{c.label}</a></li>)}</ul>
         </details>
       ) : (
@@ -56,7 +60,7 @@ const groups: { title: string; href?: string; chips?: { label: string; href: str
             <div class="sub">
               <h4><a href={s.href}>{s.title}</a></h4>
               <details class="fold" open>
-                <summary>{s.chips.length}개 보기</summary>
+                <summary>{t(lang, 'toc.show', { n: s.chips.length })}</summary>
                 <ul>{s.chips.map((c) => <li><a href={c.href}>{c.label}</a></li>)}</ul>
               </details>
             </div>

@@ -1,0 +1,443 @@
+---
+title: "Build Your Own MCP Server and Connect It to Claude"
+description: "How to build a two-tool MCP server with the official Python SDK and connect it to Claude Code (claude mcp add) and to the Claude app as a custom connector, including least privilege and prompt injection cautions."
+sidebar:
+  label: "5. Build your own MCP server"
+level: advanced
+category: dev
+tools: ["Claude Code", "Claude", "MCP", "Python"]
+duration: "60 min"
+prerequisites:
+  - "C7. Connectors (what a custom connector is)"
+  - "C14. Claude Code core features (MCP connections and scopes)"
+  - "Python 3.11 or later and a terminal. Claude Code must be installed."
+  - "(If you also connect to the Claude app) An environment where you can create an HTTPS address reachable from the public internet"
+lastVerified: 2026-10-26
+sources:
+  - title: "MCP Python SDK (README)"
+    url: "https://github.com/modelcontextprotocol/python-sdk"
+  - title: "MCP Python SDK docs"
+    url: "https://py.sdk.modelcontextprotocol.io/"
+  - title: "MCP TypeScript SDK (README, v2)"
+    url: "https://github.com/modelcontextprotocol/typescript-sdk"
+  - title: "MCP TypeScript SDK: Build your first server"
+    url: "https://github.com/modelcontextprotocol/typescript-sdk/blob/main/docs/get-started/first-server.md"
+  - title: "Connect Claude Code to tools via MCP"
+    url: "https://code.claude.com/docs/en/mcp"
+  - title: "Get started with custom connectors using remote MCP"
+    url: "https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp"
+  - title: "MCP Security Best Practices"
+    url: "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- An MCP server is a **program that exposes tools (functions) that Claude can call.** With the official Python SDK (`mcp`), you build one just by adding `@mcp.tool()` to a function.
+- For use only on your own computer, run it over **stdio**; for use by several people or in the Claude app, run it over **Streamable HTTP** (a public HTTPS address).
+- Connect it to Claude Code with `claude mcp add`, and to the Claude app as a **custom connector** (a remote server URL). A local stdio server can't be used in the Claude app chat (claude.ai).
+- The text a server returns is input the model reads. The basics are **read-only tools first, input validation, secrets in environment variables, and never expose it publicly without authentication.**
+- The examples follow the official documentation, and we verified the syntax on 2026-10-11. We also confirmed the server's behavior by calling it directly on our own machine.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Build an MCP server with two inventory lookup tools using the official SDK, and test calling them.
+- Attach the same server to Claude Code with `claude mcp add` and check its status with `/mcp`.
+- Know the steps and requirements for connecting a server you run over HTTP as a custom connector in the Claude app.
+- Apply the security principles to follow when building an MCP server (least privilege, prompt injection, secrets).
+
+<Aside type="note" title="This tutorial makes no Claude API calls">
+The server doesn't call a model; it only provides tools. So the example code in this tutorial needs no API key. The side that spends money is the client, where the model calls the tools. To define tools yourself and call them through the API, see [1. Build a work bot with tool use](/en/dev/01-tool-use/).
+</Aside>
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **MCP** | Model Context Protocol. An open standard that connects AI apps to external tools and data. For an easy introduction, see [20. Connectors (MCP)](/en/automation/20-connectors-mcp/). |
+| **MCP server** | A program that exposes tools, resources, and prompts. This tutorial covers only **tools.** |
+| **Host and client** | An AI app such as Claude Code or the Claude app is the host, and the client inside it connects to a server one-to-one. |
+| **stdio** | A way for the host to **run the server as a child process** on its own computer and talk to it over standard input and output. |
+| **Streamable HTTP** | A way where the server is up at a URL (default path `/mcp`) and several clients connect to it. It's the approach used for remote servers. |
+| **Custom connector** | A feature in the Claude app where you enter a remote MCP server's URL to connect it. We covered the concept in [C7](/en/claude/c07-connectors/). |
+
+### Where can you connect it?
+
+| Connect to | Server type | Where the server lives |
+| --- | --- | --- |
+| Claude Code (terminal) | stdio or HTTP | Your computer or remote |
+| Claude Desktop local config (`claude_desktop_config.json`) | stdio | Your computer (not used in Cowork or claude.ai) |
+| Claude app custom connector (claude.ai, Desktop, Cowork) | HTTP | **The public internet, reachable from Anthropic's cloud** |
+
+<Aside type="caution" title="The SDK version has changed">
+The official Python SDK is now in the v2 line (the version we installed while writing this was 2.3.0). The server class is `MCPServer`, imported with `from mcp.server import MCPServer`. This may differ from the `FastMCP` examples in older tutorials, so if code you found by searching doesn't run, check the SDK version first. For TypeScript too, v2 (`@modelcontextprotocol/server`) is on main, and v1 (`@modelcontextprotocol/sdk`) is maintained on a separate branch.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  'I created a working folder and installed mcp in a virtual environment',
+  'I created server.py and it passed the Python syntax check',
+  'I called the tools directly with an in-memory client',
+  'I connected to Claude Code with claude mcp add and saw Connected in /mcp',
+  '(Optional) I ran it over HTTP and checked the requirements for a Claude app custom connector',
+  'I applied the security checklist to the server',
+]} />
+
+<Steps>
+
+1. **Working folder and installing the SDK**
+
+   You need Python 3.11 or later (per the official SDK docs and README, as of 2026-10-19). Create a virtual environment and install the official SDK. The `cli` extra also installs the `mcp dev` command for development.
+
+   ```bash
+   mkdir inventory-mcp && cd inventory-mcp
+   python3 -m venv .venv
+   source .venv/bin/activate
+   pip install "mcp[cli]"
+   ```
+
+   If you use `uv`, `uv add "mcp[cli]"` gives the same result.
+
+2. **Build the server: two read-only tools**
+
+   Create `server.py`. It's an inventory lookup server. In real life it would read a database or an internal API, but the example uses fake data in memory.
+
+   ```python
+   """Inventory lookup MCP server (a read-only example)."""
+   import sys
+
+   from mcp.server import MCPServer
+   from mcp.server.mcpserver.exceptions import ToolError
+   from mcp.types import ToolAnnotations
+
+   mcp = MCPServer("inventory")
+
+   # In real life this would read a database or an internal API, but the example uses in-memory data.
+   STOCK = {
+       "KB-100": {"name": "Wireless keyboard", "qty": 42, "location": "A-1"},
+       "MS-200": {"name": "Wireless mouse", "qty": 0, "location": "A-2"},
+       "MN-300": {"name": "27-inch monitor", "qty": 7, "location": "B-1"},
+   }
+
+
+   @mcp.tool(annotations=ToolAnnotations(readOnlyHint=True))
+   def get_stock(sku: str) -> str:
+       """Look up the stock quantity and storage location by SKU code (e.g. KB-100)."""
+       print(f"get_stock called: {sku!r}", file=sys.stderr)  # Logs go to stderr
+       item = STOCK.get(sku.strip().upper())
+       if item is None:
+           raise ToolError(f"Unknown SKU: {sku}")
+       return f"{item['name']}: {item['qty']} units (location {item['location']})"
+
+
+   @mcp.tool(annotations=ToolAnnotations(readOnlyHint=True))
+   def search_items(keyword: str, max_results: int = 5) -> list[dict]:
+       """Find items whose product name contains the keyword, and return their SKU and quantity."""
+       max_results = max(1, min(max_results, 20))  # Enforce the cap in code
+       hits = [
+           {"sku": sku, "name": v["name"], "qty": v["qty"]}
+           for sku, v in STOCK.items()
+           if keyword.lower() in v["name"].lower()
+       ]
+       return hits[:max_results]
+
+
+   if __name__ == "__main__":
+       mcp.run()  # The default is stdio
+   ```
+
+   Here's what to notice in the code.
+
+   - **Type hints are the schema.** `sku: str` and `max_results: int = 5` produce the JSON schema, and the SDK also validates input for you. The docstring is the tool description the model sees. The more specific you make the description, the better Claude calls it.
+   - **`readOnlyHint=True` is only a hint.** It tells the client "this tool only reads," but the MCP spec says not to trust annotations like this unless the server is trusted. You have to keep things safe in code.
+   - **Raise expected failures as `ToolError`.** The message in a `ToolError` is passed to the model as is, so Claude can retry with a different SKU. For a regular exception (`ValueError` and the like), the model gets only "Error executing tool ..." and the original text stays in the server log only. We ran it ourselves to confirm the difference between the two.
+   - **Write logs to stderr.** In a stdio server, standard output (stdout) is the protocol channel. If you `print()` to stdout, communication breaks.
+
+   Check the syntax.
+
+   ```bash
+   python3 -m py_compile server.py && echo Syntax OK
+   ```
+
+3. **Call it directly before connecting**
+
+   If you check the server by itself before attaching it to Claude, you can separate problems. Create `test_server.py` using the SDK's in-memory client.
+
+   ```python
+   import asyncio
+
+   from mcp import Client
+
+   from server import mcp
+
+
+   async def main() -> None:
+       async with Client(mcp) as client:
+           tools = await client.list_tools()
+           print([t.name for t in tools.tools])
+
+           ok = await client.call_tool("get_stock", {"sku": "kb-100"})
+           print(ok.content[0].text)
+
+           found = await client.call_tool("search_items", {"keyword": "wireless"})
+           print(found.structured_content)
+
+           bad = await client.call_tool("get_stock", {"sku": "zz"})
+           print(bad.is_error, bad.content[0].text)
+
+
+   asyncio.run(main())
+   ```
+
+   ```bash
+   python test_server.py
+   ```
+
+   If you see the tool list, `Wireless keyboard: 42 units (location A-1)`, the search results, and on the last line `True Error executing tool get_stock: Unknown SKU: zz`, it's working. If you'd like to click through the tools on a browser screen, you can open the MCP Inspector with `mcp dev server.py` (per the official README).
+
+4. **Connect to Claude Code (stdio)**
+
+   In `claude mcp add`, what comes before `--` is Claude Code's options, and what comes after is the command that runs the server. Write the server's run path as an **absolute path.**
+
+   ```bash
+   claude mcp add inventory -- "$PWD/.venv/bin/python" "$PWD/server.py"
+   claude mcp list
+   ```
+
+   If you see `inventory: … - Connected`, it worked. Open a session and check the status with `/mcp`, or just ask.
+
+   <PromptBox>
+   Using the inventory server, tell me the stock for KB-100, and pick out the products with "wireless" in the name that have a stock of 0.
+   </PromptBox>
+
+   Claude asks for approval before it calls a tool. Server tools are referenced in permission rules and hooks in the form `mcp__servername__toolname`, such as `mcp__inventory__get_stock`.
+
+   <ScreenshotPlaceholder caption="The /mcp screen showing the inventory server as Connected" officialUrl="https://code.claude.com/docs/en/mcp" officialLabel="View in the Claude Code docs" />
+
+   Choose a scope like this. There's a detailed explanation in [C14](/en/claude/c14-claude-code-features/).
+
+   | Scope | Option | Stored in | Used for |
+   | --- | --- | --- | --- |
+   | local (default) | `--scope local` | `~/.claude.json` | Just you, in this project |
+   | project | `--scope project` | The project's `.mcp.json` | Sharing with your team through git |
+   | user | `--scope user` | `~/.claude.json` | All your projects |
+
+   <Aside type="note" title="The project scope needs approval">
+   Adding with `--scope project` creates a `.mcp.json`. When we ran it ourselves, `claude mcp list` showed `Pending approval (run claude to approve)`. Interactive sessions ask for approval the first time you use it, and headless runs such as `claude -p` load it without asking (official docs). In a team repository's `.mcp.json`, keep **only servers whose uploader has been verified.**
+   </Aside>
+
+   For a server that needs secrets, pass them with `--env KEY=value` or use `${VAR}` environment variable expansion in `.mcp.json`. Don't write the value itself in a file and commit it.
+
+   ```json
+   {
+     "mcpServers": {
+       "inventory": {
+         "type": "stdio",
+         "command": "${CLAUDE_PROJECT_DIR:-.}/.venv/bin/python",
+         "args": ["${CLAUDE_PROJECT_DIR:-.}/server.py"],
+         "env": { "INVENTORY_API_TOKEN": "${INVENTORY_API_TOKEN}" }
+       }
+     }
+   }
+   ```
+
+   <Aside type="note">
+   The `.mcp.json` above follows the official docs' format (`type`, `command`, `args`, `env`, `${VAR:-default}`). `INVENTORY_API_TOKEN` in the example is a name for illustration; this server doesn't actually use it.
+   </Aside>
+
+5. **Run it over HTTP (for remote servers and the Claude app)**
+
+   Run the same server in the mode where you connect to it by URL. Create one more file.
+
+   ```python
+   from server import mcp
+
+   mcp.run(transport="streamable-http", host="127.0.0.1", port=8000)
+   ```
+
+   Save it as `serve_http.py` and run `python serve_http.py`, and you can connect at `http://127.0.0.1:8000/mcp`. We ran it ourselves and checked it with Claude Code.
+
+   ```bash
+   claude mcp add --transport http inventory-http http://127.0.0.1:8000/mcp
+   claude mcp list
+   ```
+
+   You want to see `Connected`. If you turn off the server, it changes to `Failed to connect`.
+
+   <Aside type="caution" title="Don't open this example server to the internet as is">
+   `127.0.0.1` is reachable only from your own computer. The example server has **no authentication.** If you open it at a public address, anyone who knows the address can call the tools. If the server holds real data, add authentication first, such as OAuth or token verification. The Python SDK's `MCPServer` accepts auth settings in its constructor (`auth`, `token_verifier`), but we haven't verified the specifics of using them here, so follow the SDK's official docs. Before you change `host` to `0.0.0.0` and open it to the outside, you also need to check the SDK's transport security (host header validation) settings.
+   </Aside>
+
+6. **Connect to the Claude app as a custom connector**
+
+   A custom connector in the Claude app reaches your server **from Anthropic's cloud,** not from your device. So there are requirements.
+
+   - The server must be reachable **over HTTPS from the public internet.** A server on `127.0.0.1`, an internal network, or behind a VPN won't work.
+   - To keep a private server behind a firewall, you have to allow Anthropic's IP ranges (the list of ranges is at platform.claude.com/docs/en/api/ip-addresses).
+   - Write the server address including the MCP path, like `https://your-domain/mcp`.
+
+   Once the requirements are met, here's what to do on a Pro/Max personal account (per the support center docs of 2026-10-11; the on-screen wording may change).
+
+   1. In Customize > Connectors, click **+ Add** > **Add custom connector**
+   2. Enter a name and the server URL, then click **Continue**
+   3. Check the authentication settings. Choose from **Sign in now**, **Sign in when needed**, and **No sign in**. You can also use OAuth or request headers (fixed credentials).
+   4. Click **Add**, then turn it on from **+** > **Connectors** in the chat window.
+
+   On Team/Enterprise, an Owner (or Primary Owner) adds it under Organization settings > Connectors with Add > Custom > Web, and members click **Connect** in Customize > Connectors. To edit one, you remove it and add it again. The Free plan allows up to 1 custom connector.
+
+   <ScreenshotPlaceholder caption="The Add custom connector dialog (name, server URL, choosing authentication)" officialUrl="https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp" officialLabel="View in the Anthropic Help Center" />
+
+   <FlowSteps title="Adding a custom connector in the Claude app (Pro/Max)" officialUrl="https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp" steps={[
+     { where: 'Customize > Connectors', action: 'Click + Add and choose Add custom connector' },
+     { where: 'Add dialog', action: 'Enter a name and the server URL (https://your-domain/mcp), then click Continue' },
+     { where: 'Authentication settings', action: 'Choose from Sign in now / Sign in when needed / No sign in' },
+     { where: 'Add dialog', action: 'Click Add', result: 'You can turn it on from + > Connectors in the chat window' },
+   ]} />
+
+   <Aside type="caution" title="With shared credentials, everyone gets the same permissions">
+   If a connector uses fixed credentials (a shared token), every member who uses that connector gets that credential's permissions. Make it a read-only token, and don't include write tools. Advanced Research can call connector tools without extra approval, so if there are tools that can write, turn them off ahead of time.
+   </Aside>
+
+7. **If you build the same server in TypeScript (for reference)**
+
+   With the TypeScript SDK v2 it looks like this. You need Node.js 20 or later, and you must turn on ESM with `npm pkg set type=module`.
+
+   ```bash
+   npm init -y && npm pkg set type=module
+   npm install @modelcontextprotocol/server zod tsx
+   ```
+
+   ```typescript
+   import { McpServer } from '@modelcontextprotocol/server';
+   import { serveStdio } from '@modelcontextprotocol/server/stdio';
+   import * as z from 'zod/v4';
+
+   const STOCK: Record<string, { name: string; qty: number; location: string }> = {
+       'KB-100': { name: 'Wireless keyboard', qty: 42, location: 'A-1' },
+       'MS-200': { name: 'Wireless mouse', qty: 0, location: 'A-2' }
+   };
+
+   function createServer(): McpServer {
+       const server = new McpServer({ name: 'inventory', version: '1.0.0' });
+
+       server.registerTool(
+           'get_stock',
+           {
+               description: 'Look up the stock quantity and storage location by SKU code (e.g. KB-100).',
+               inputSchema: z.object({ sku: z.string().max(20).describe('SKU code') }),
+               annotations: { readOnlyHint: true }
+           },
+           async ({ sku }) => {
+               const item = STOCK[sku.trim().toUpperCase()];
+               if (!item) {
+                   return { content: [{ type: 'text', text: `Unknown SKU: ${sku}` }], isError: true };
+               }
+               return { content: [{ type: 'text', text: `${item.name}: ${item.qty} units (location ${item.location})` }] };
+           }
+       );
+       return server;
+   }
+
+   void serveStdio(createServer);
+   console.error('inventory MCP server running on stdio'); // Logs go to stderr
+   ```
+
+   Run it with `npx tsx server.ts`, and attach it to Claude Code with `claude mcp add inventory -- npx tsx /absolute/path/server.ts`. We launched this code directly with `tsx` and checked the responses to `initialize` and the tool call.
+
+</Steps>
+
+## Quick reference
+
+### `claude mcp` commands
+
+| What you want to do | Command |
+| --- | --- |
+| Add a local stdio server | `claude mcp add <name> -- <command> [args...]` |
+| Add with environment variables | `claude mcp add --env KEY=value --transport stdio <name> -- <command>` |
+| Add a remote HTTP server | `claude mcp add --transport http <name> <URL>` |
+| Attach a header (token) | `--header "Authorization: Bearer ..."` (be careful not to leave the token in your shell history) |
+| List and status | `claude mcp list` |
+| Server details | `claude mcp get <name>` |
+| Remove | `claude mcp remove <name>` (also deletes a stored OAuth token) |
+| Status, auth, and reconnecting within a session | `/mcp` |
+| Add with JSON | `claude mcp add-json <name> '<json>'` |
+
+The SSE transport is deprecated. Use HTTP for new servers.
+
+### Tool result size limits (Claude Code)
+
+| Item | Behavior |
+| --- | --- |
+| Over 10,000 tokens | A warning is shown |
+| `MAX_MCP_OUTPUT_TOKENS` | Maximum output tokens, default 25,000 |
+| Text result over 50,000 characters | Saved to a file and replaced with a file reference |
+| HTTP/SSE response body over 16 MB | The request fails. Split it up on the server (pagination) |
+
+### Server security checklist
+
+| Item | What to do |
+| --- | --- |
+| Least privilege | Start with read-only tools. Add write and delete tools only when truly necessary, with a narrow scope. Make the database account and tokens the server uses read-only too. |
+| Input validation | Limit types, lengths, and ranges in code (for example, the `max_results` cap). Input the model produces is untrusted input. When building file paths, SQL, or shell commands, don't just concatenate it. |
+| Prompt injection | Text a tool returns (email, web pages, ticket bodies) may contain hidden instructions like "ignore your previous instructions." Don't put a tool that fetches outside text on the same server as write tools. |
+| Secrets | Don't write them directly in code or `.mcp.json`; receive them through environment variables. Don't put tokens or personal data in tool results or logs. |
+| Output size | Limit how much you return at once. Large results grow both tokens (cost) and context. |
+| Authentication | Add authentication to a server you expose over HTTP. A shared token gives everyone the same permissions. According to the official MCP security docs (as of 2026-10-12), a server should accept **only tokens issued to itself,** and the spec forbids token passthrough, where a received token is handed straight to another API. Start OAuth scopes with a minimal range like read. |
+| Local HTTP servers | Other processes on the same PC can reach them. The official security docs say to use `stdio` for local servers, or for HTTP, to use an auth token or IPC with restricted access. |
+| Don't rely on hints | Annotations like `readOnlyHint` are hints. Block real permissions with server code and credentials. |
+| Logs | A stdio server writes only to stderr. Don't leave sensitive values in logs. |
+
+## Common sticking points
+
+### `ImportError: cannot import name 'FastMCP'` or `MCPServer` can't be found
+
+- **Cause**: Older tutorials use `FastMCP`, and the current SDK v2 uses `MCPServer`. It happens when the installed `mcp` version differs from the text.
+- **Fix**: Check the version with `pip show mcp`, and remember that the code in this tutorial is for v2. With the virtual environment activated, try reinstalling with `pip install "mcp[cli]"`.
+
+### `claude mcp list` shows `Failed to connect`
+
+- **Cause**: With stdio, it's often that the server run command is wrong (a relative path, or a `python` outside the virtual environment) or the server died while starting. With HTTP, the server isn't running or the address or port is different.
+- **Fix**: Run the same command directly in a terminal and look at the error. Use an absolute path, then `claude mcp remove` and `claude mcp add` again. For HTTP, if you see `ECONNREFUSED`, start the server first.
+
+### A stdio server hangs right after connecting or sends back garbled responses
+
+- **Cause**: If the server prints `print()` logs to standard output (stdout), they get mixed in with protocol messages.
+- **Fix**: Switch all logs to `sys.stderr` (`console.error` in TypeScript).
+
+### Claude doesn't call my tool
+
+- **Cause**: The tool name and description may be vague, the server may not be connected, or you may have declined at the approval step.
+- **Fix**: Check the connection status in `/mcp`, and rewrite the docstring concretely in the form "what it does + an input example." Try putting the server name in your request (for example, "Using the inventory server, ...").
+
+### I added a custom connector but it won't connect
+
+- **Cause**: The server isn't reachable from the public internet (local, internal network, VPN), or the authentication method doesn't match the server. The connection goes out from Anthropic's cloud, not your device.
+- **Fix**: Check that `https://your-domain/mcp` opens from an external network, and for a private server, allow Anthropic's IP ranges. Match the authentication setting to the method the server requires (OAuth, header, or none). To edit a connector, remove it and add it again.
+
+### A `.mcp.json` server is stuck at `Pending approval`
+
+- **Cause**: A project-scope server needs approval the first time you use it. In a folder you haven't trusted, the repository can't approve itself.
+- **Fix**: Open interactive `claude` and approve it. To reset your approval choices, use `claude mcp reset-project-choices`.
+
+## Practical tips
+
+- **Few tools, specific descriptions.** With many tools, Claude has a harder time choosing and uses more context. Make each tool do one thing.
+- **The model reads error messages.** Write "what went wrong and how to retry" in the `ToolError`. Leave out server internals such as internal paths or SQL.
+- **Build it with local stdio first, and move to HTTP when you need to.** You only change the transport in `mcp.run()` and keep the same tool code.
+- **Look at what already exists before building your own.** For a service that already has an official connector or a public server, the cost of building a new one may be higher. But Anthropic doesn't verify third-party servers, so read the code and permissions before you use one.
+- **When you hand it out to a team, put it in a plugin.** A plugin distributes skills and MCP servers (`.mcp.json`) as one bundle. See [6. Package skills and plugins and deploy to your team](/en/dev/06-plugins-skills-team/).
+
+## What to read next
+
+- [6. Package skills and plugins and deploy to your team](/en/dev/06-plugins-skills-team/) — bundling servers and skills into a plugin for team distribution
+- [1. Build a work bot with tool use](/en/dev/01-tool-use/) — how to define and call tools yourself through the API
+- [C7. Connectors](/en/claude/c07-connectors/) — how to use ready-made connectors, and their security
+- [C14. Claude Code core features](/en/claude/c14-claude-code-features/) — MCP scopes, permission modes, and hooks

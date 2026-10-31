@@ -1,0 +1,209 @@
+---
+title: "Make AI Music: Create Background Music and Jingles with Suno and Check Copyright"
+description: "How to make video background music and short jingles with Suno, plus commercial-use terms by free and paid plan, download rules, and copyright cautions, based on the official terms and help pages."
+sidebar:
+  label: "9. Make AI music"
+level: beginner
+category: media
+tools: ["Suno"]
+duration: "30 min"
+prerequisites:
+  - "A Suno account (you can start free; commercial use requires a paid subscription)"
+  - "The purpose of the song you want to make (video background music, a shop jingle, etc.)"
+lastVerified: 2026-10-26
+sources:
+  - title: "Suno Terms of Service (last revised 2026-08-10, effective 2026-09-03)"
+    url: "https://suno.com/terms"
+  - title: "Suno Pricing"
+    url: "https://suno.com/pricing"
+  - title: "Suno Help: What rights do I have with the free plan?"
+    url: "https://help.suno.com/en/articles/9601601"
+  - title: "Suno Help: What rights do I have with a paid subscription?"
+    url: "https://help.suno.com/en/articles/9601665"
+  - title: "Suno Help: How do downloads work?"
+    url: "https://help.suno.com/en/articles/13876865"
+  - title: "Suno Help: Can I distribute my songs to Spotify, etc?"
+    url: "https://help.suno.com/en/articles/2410177"
+  - title: "Suno Help: Do I have the copyrights to songs I made?"
+    url: "https://help.suno.com/en/articles/2746945"
+  - title: "Suno Help: Make a song in Simple Mode"
+    url: "https://help.suno.com/en/articles/2462273"
+  - title: "Suno Help: Can I use my own lyrics?"
+    url: "https://help.suno.com/en/articles/2415873"
+  - title: "Suno Help: How long will my song be?"
+    url: "https://help.suno.com/en/articles/13924929"
+  - title: "Suno Help: What does Upload Audio do?"
+    url: "https://help.suno.com/en/articles/2477633"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- This guide covers only **Suno**, the one service whose official terms and help pages we opened and checked ourselves. We didn't cover other AI music services because we couldn't verify their terms.
+- You can make a song by describing it in words (Simple mode) or by entering your own lyrics (Custom mode). It's described as able to make up to 8 minutes at a time. (as of 2026-10-15)
+- **Free plan songs are for personal, non-commercial use only.** Commercial uses, such as monetized videos, shop promotion, or streaming distribution, require **songs you received (downloaded) while subscribed to Pro or Premier**.
+- Having commercial-use rights **doesn't guarantee copyright protection.** Suno's help also says songs made with AI alone may not be protected.
+- Avoid including other people's songs, lyrics, or voices. Before you publish, follow the check sequence in [Can You Use AI Output? Copyright and Ethics](/en/basics/09-ai-copyright-ethics/).
+</Summary>
+
+<Aside type="caution" title="This is not legal advice">
+This guide is general information that explains Suno's official terms and help pages in plain language. Terms can change, and we couldn't confirm whether they apply in Korea or what's right for your business. For high-value contracts or disputes, ask a professional.
+</Aside>
+
+## What you'll be able to do after this tutorial
+
+- Make video background music or a shop jingle (a short logo song) with Suno.
+- Tell whether your use works for free or needs a paid subscription.
+- Understand how downloads relate to commercial-use rights.
+- Use a sequence for checking copyright risks before you publish.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Simple mode** | A way of making a song by describing the song you want to hear in words. |
+| **Custom mode** | A way to specify more detail by writing lyrics and style separately. You can enter lyrics you wrote yourself. |
+| **Instrumental** | A song with no vocals. It suits background music. The help page says you can set this when extending an uploaded song. |
+| **Credits** | Points used to make songs. The amount each plan gives differs. |
+| **Download** | Saving a song outside Suno. Under the terms, **commercial use applies only to songs obtained through a permitted download**. |
+| **Commercial-use rights** | The right to earn money from a song. It's a different concept from copyright protection. |
+
+### Differences by plan (as of 2026-10-15, Suno pricing page and help)
+
+| Item | Free | Pro | Premier |
+| --- | --- | --- | --- |
+| Credits | 50 per day | 2,500 per month | 10,000 per month |
+| Monthly downloads | No monthly subscription downloads. There may be trial downloads (up to 7 for those who signed up before 2026-09-03, occasionally offered to later sign-ups), and trial downloads can't be used commercially | 20 | 60 (Suno Studio workflows aren't counted against the download limit) |
+| Commercial-use rights | None | Yes | Yes |
+
+- We didn't list dollar prices because it's hard to tell monthly from annual pricing displays. We couldn't confirm Korean won pricing or availability in Korea on the official pages. Check on the sign-up screen yourself.
+- We also couldn't confirm in the official docs how well Korean lyrics and pronunciation come out. Listen and judge for yourself.
+
+## Step by step
+
+<Checklist items={[
+  'I decided the song\'s purpose (personal, or for video, shop, or sale)',
+  'I checked the plan that fits that purpose',
+  'I made a first song in Simple mode and listened to it',
+  'If needed, I entered lyrics in Custom mode and made it again',
+  'For commercial use, I downloaded it while subscribed',
+  'I went through the copyright check sequence before publishing',
+]} />
+
+<Steps>
+
+1. **Decide the purpose first**
+
+   Songs made for free are allowed only for personal, non-commercial use. If you plan to use one in ads, monetized YouTube videos, shop videos, or for sale, make and download it while you have a paid subscription from the start. Suno's help says **songs made for free don't gain commercial-use rights retroactively, even if you subscribe later**.
+
+2. **Make your first song in Simple mode**
+
+   At suno.com/create, choose Simple and describe the song you want to hear.
+
+   <PromptBox label="Background music description example (Simple mode)">
+   Calm, bright acoustic guitar background music. The feel of music playing behind a café intro video. Slow tempo, instrumental with no vocals, about 1 minute.
+   </PromptBox>
+
+   <PromptBox label="Jingle description example (Simple mode)">
+   A cheerful jingle of about 10 seconds to attach to the end of a shop promo video. Bright pop style, no lyrics, with a feel of whistling and clapping.
+   </PromptBox>
+
+   If you don't like the result, change the description and make it several times. It uses credits.
+
+   <ScreenshotPlaceholder caption="Simple mode and the description box on Suno's Create screen" officialUrl="https://help.suno.com/en/articles/2462273" officialLabel="View in Suno Help" />
+
+3. **Custom mode if you want to write your own lyrics**
+
+   If you choose Custom, a box for entering lyrics appears. The help says **you keep your rights to lyrics you write yourself on any plan**. Don't enter other people's lyrics or lyrics from famous songs.
+
+   <PromptBox label="Prompt to get a lyrics draft from an AI chat">
+   Write lyrics for a 10-second jingle for [OO Café]. Keep it warm and short, with the shop name appearing once. Don't imitate the lyrics or melody of any famous song; write it completely fresh. Give me 3 lyric options.
+   </PromptBox>
+
+   Before you trust and use lyrics written by a chat AI as is, search to see whether they overlap with existing songs, following the check sequence in [Copyright and Ethics Basics](/en/basics/09-ai-copyright-ethics/).
+
+4. **Length and extending**
+
+   Suno's help says v6-family models can make up to 8 minutes at a time. To go longer, it says to use the Extend feature. It's convenient to make background music a bit longer than your video.
+
+5. **Upload your own sound to build on it (optional)**
+
+   You can upload sound you recorded with Upload Audio. The length guidance differs between sources. The help (revised 2025-03-24) says 6-60 seconds (up to 120 seconds for Pro and Premier), while the pricing page (checked 2026-10-26) shows uploadable audio of up to 8 minutes for Free and up to 30 minutes for Pro and Premier. Follow the guidance on the upload screen for the actual limit. When you upload, you must **agree that you hold the rights to that sound**. Don't use it to upload someone else's song and make something similar.
+
+6. **Download and confirm commercial use**
+
+   For commercial use, you need to download while subscribed. The terms prohibit obtaining songs by recording or stream ripping instead of the download methods Suno provides, and also prohibit removing watermarks or metadata.
+
+   <FlowSteps title="Check flow before commercial use" officialUrl="https://help.suno.com/en/articles/9601665" steps={[
+     { where: 'Your Suno subscription status', action: 'Check whether you\'re on Pro or Premier', result: 'On Free, only personal, non-commercial use is allowed' },
+     { where: 'Suno library', action: 'Download the song while subscribed', result: 'Monthly download counts are set by plan' },
+     { where: 'Where you\'ll use it', action: 'Check the rules of YouTube, your distributor, or the platform', result: 'Platform rules are set by that platform' },
+     { where: 'Right before publishing', action: 'Check whether it resembles anyone else\'s lyrics, voice, or song', result: 'If it does, make it again' },
+   ]} />
+
+</Steps>
+
+## Copyright: what you must know
+
+- **Ownership and copyright are different.** Suno's help says Suno owns free plan songs, and users own songs made while subscribed to Pro or Premier. But either way, it says they **may not be eligible for copyright protection**. The terms also say that, given the nature of AI, copyright isn't guaranteed to arise.
+- **Whether music made with AI alone is protected**: Suno's help explains that in the US only human-made work is protected, and writing a prompt isn't authorship. **We couldn't confirm in this guide how AI music output is treated in Korea.** For the general principles in Korea's official guidance, see [Tutorial 9](/en/basics/09-ai-copyright-ethics/).
+- **Lyrics you write yourself are yours.** Suno's help says writing the lyrics yourself may help with registering or protecting the song as a whole. However, the decision is up to each country's copyright office.
+- **Songs can overlap.** The terms say other users can get the same or similar results. Don't use it believing it's "my exclusive song."
+- **Don't imitate others' music**: The terms say not to create inputs or outputs that infringe others' intellectual property. You must warrant that you have the rights to your inputs.
+- **No other people's voices**: The terms say Suno's Voice Model can only make **your own voice**. Imitating another person's voice or making it seem like that person made it is also prohibited.
+- **Distributors and platforms may refuse.** The help says some distributors exclude songs that aren't eligible for copyright protection. The terms also say third-party platforms set their own rules. We couldn't confirm the AI music policies of platforms like YouTube and Spotify.
+- **Remixes can't be used commercially**: The terms say output made with another user's remix feature is treated as a joint work but can be used only for personal, non-commercial purposes.
+
+## Quick reference
+
+| Question | Answer (per Suno's official docs) |
+| --- | --- |
+| Can I use a song I made for free in a monetized YouTube video? | No. Free is for non-commercial use |
+| Can I use an old free song commercially after subscribing? | There's no retroactive license |
+| Conditions for commercial use | Songs obtained through permitted downloads while subscribed to Pro/Premier |
+| Is Suno attribution required? | The help says no attribution is required (it only says they appreciate being told) |
+| Age | 18 or older, or 13 or older with a parent or guardian who reviews and agrees to the terms |
+| Is copyright protection guaranteed? | No. Neither the help nor the terms guarantee it |
+
+## Common sticking points
+
+### The song isn't what I imagined
+
+- **Cause**: The description may be too short or mix styles.
+- **Fix**: Describe the instruments, mood, tempo, and whether there are vocals in detail, and make it several times to compare. Remember that credits go down.
+
+### The Korean lyrics sound awkward
+
+- **Cause**: We couldn't confirm Korean quality in the official docs.
+- **Fix**: Listen for yourself, and for awkward parts, simplify the lyrics or go with an instrumental.
+
+### I can't download
+
+- **Cause**: Free accounts have no monthly downloads, and even when subscribed, there's a cap on monthly downloads.
+- **Fix**: Check your plan's download count. The help says unused downloads don't carry over to the next month.
+
+### My distributor or platform rejects it
+
+- **Cause**: The song may not be eligible for copyright protection or may not fit the platform's policy.
+- **Fix**: Check that platform's AI content policy yourself. This guide couldn't verify each platform's policy.
+
+## Practical tips
+
+- **Decide the purpose first, then choose a plan.** Free is a taster; for commercial use, it's safer to use songs made while subscribed.
+- **Keep screenshots or the date of the terms.** Terms can change. The terms this guide checked are the version effective 2026-09-03.
+- **When using it in a video, leave extra length.** It makes it easy to finish with a fade-out. For making videos, continue with [Make a Short Promo Video](/en/media/13-promo-video/).
+- **We couldn't confirm in Korean regulations whether you must disclose that music is AI-made.** Follow it if a contest, platform, or client requires it.
+- **Add your own creative work.** Writing lyrics yourself or recording your own playing is a good idea. Still, whether it's protected remains undetermined either way.
+
+## What to read next
+
+- [9. Can You Use AI Output? Copyright and Ethics Basics](/en/basics/09-ai-copyright-ethics/) — the check sequence before publishing
+- [13. Make a Short Promo Video](/en/media/13-promo-video/) — attach your music to a video
+- [15. AI Voice Narration](/en/media/15-voice-narration/) — voice consent principles and commercial-use checks
+- [AI Guide for Solo Business Owners and Small Shops](/en/roles/solo-business/) — how to use it for shop promotion

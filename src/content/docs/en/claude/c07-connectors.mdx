@@ -1,0 +1,226 @@
+---
+title: "Connecting Gmail, Calendar, Drive, and Notion with Connectors"
+description: "A reference on connecting Claude to work tools like Gmail, Google Calendar, Google Drive, and Notion, with notes on permissions, approvals, security, and how it relates to MCP"
+sidebar:
+  label: "C7. Connectors"
+level: practical
+category: claude
+tools: ["Claude", "Gmail", "Google Calendar", "Google Drive", "Notion"]
+duration: "30 min"
+prerequisites:
+  - "A claude.ai account"
+  - "An account for the service you'll connect (Google account, Notion account, etc.)"
+  - "(For Team/Enterprise) Check that your organization Owner has already turned connectors on"
+lastVerified: 2026-10-26
+sources:
+  - title: "Use connectors to extend Claude's capabilities"
+    url: "https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities"
+  - title: "Use Google Workspace connectors"
+    url: "https://support.claude.com/en/articles/10166901-use-google-workspace-connectors"
+  - title: "Get started with custom connectors using remote MCP"
+    url: "https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp"
+  - title: "Connect Claude Code to tools via MCP"
+    url: "https://code.claude.com/docs/en/mcp"
+  - title: "Automate work with routines"
+    url: "https://code.claude.com/docs/en/routines"
+  - title: "Notion connector"
+    url: "https://claude.com/connectors/notion"
+  - title: "Claude release notes"
+    url: "https://support.claude.com/en/articles/12138966-release-notes"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- A connector is **a link that lets Claude reach your apps and services to pull in data and take actions**. Claude **inherits your permissions as-is** in each service, so it can't see anything you can't see.
+- Connect from the **+** or **/** menu in chat > Connectors, or from the directory in Customize > Connectors, and turn them on and off per conversation.
+- Google Workspace has Gmail, Google Calendar, and Google Drive connectors. By default they ask for **your approval** before sending, replying, forwarding, sharing, moving, or deleting.
+- Custom connectors let you connect a **remote MCP server**. Anthropic doesn't verify them, so connect only servers you trust.
+- Notion has a connector intro page but no dedicated Notion step-by-step help (as of 2026-10-13). Follow the general connection steps, and go by the on-screen guidance first.
+</Summary>
+
+## What you'll be able to do
+
+- Connect Gmail, Google Calendar, and Google Drive to Claude and hand off jobs like "find open time" and "draft an email."
+- Turn connectors on and off per conversation, and handle approvals for write actions safely.
+- Understand how to connect a service like Notion through a remote MCP address.
+- Handle connection problems and security risks (such as prompt injection).
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Connector** | A feature that links Claude to your apps and services so it can pull in data and carry out actions. |
+| **Permission inheritance** | Claude acts with your exact permissions in each service. Files and emails you can't see, Claude can't see either. |
+| **Connector directory** | The list of connectors you can connect. It's in Customize > Connectors. |
+| **MCP** | Model Context Protocol. A standard for connecting tools and AI. Custom connectors link a remote MCP server. |
+| **Custom connector** | A way to connect a service that isn't in the directory directly by its server URL. Free is limited to 1. |
+| **Always allow / Needs approval / Blocked** | The permission levels a Team/Enterprise Owner sets for each connector tool. |
+
+### What the Google Workspace connectors do
+
+| Connector | What it can do |
+| --- | --- |
+| **Gmail** | Search and read, draft, send, reply, forward, and manage labels. It can't see attachment contents. |
+| **Google Calendar** | View, create, edit, and delete events; find common free time; attendees and RSVPs |
+| **Google Drive** | Search and read Docs/Sheets/Slides/PDFs and more; upload; create folders; share, move, and delete; check permissions |
+| **Docs/Sheets/Slides (beta)** | Edit files directly in a side panel next to the chat. Separate from the Drive connector. |
+
+By default they ask for user approval before sending, replying, forwarding, sharing, moving, or deleting. The official docs say models are not trained on data from the Gmail, Drive, and Calendar connectors.
+
+### Salesforce in Claude (beta, as of 2026-10-11)
+
+Salesforce in Claude appeared as a beta in the 2026-09-15 release notes. It's available on all paid plans, but only for organizations that Salesforce approved through the beta application. Check the official announcement for whether you're approved and for specific usage.
+
+<Aside type="note" title="Notes on Notion and the directory">
+- **Notion**: There's no dedicated click-by-click help article (support.claude.com), only the general connectors help. On the official connector page (claude.com/connectors/notion), we confirmed that it's a connector built by Notion and verified by Anthropic (added November 2025), that it requires login, and that the server address is `https://mcp.notion.com/mcp` (as of 2026-10-12). The same page lists read and write capabilities such as search, fetch, creating, editing, and moving pages, creating databases, and writing comments, but it doesn't say which plans can use it. The Notion connection steps below are general principles, so follow the actual on-screen guidance.
+- The total number of connectors keeps changing. The official connectors page (claude.com/connectors) shows "973 connectors" as of 2026-10-19. For the latest list, see that page or the directory in the app.
+- The menu location may appear as "Customize > Connectors" in the latest docs and "Settings > Connectors" in older ones.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  '(Team/Enterprise) I confirmed that the organization Owner has turned connectors on',
+  'I connected the Google connectors and gave consent',
+  'I turned on the connector in a conversation and tried a read task',
+  'I checked the approval window for a write task and handled it',
+  '(Optional) I connected a custom connector such as Notion',
+  'I disconnected connections I no longer use',
+]} />
+
+<Steps>
+
+1. **(Team/Enterprise) Turn it on in the organization first**
+
+   An Owner or Primary Owner has to pick the connector in Organization settings > Connectors > Browse connectors and click **Add to your team**. After that, each member authenticates separately. Individual plans skip this step.
+
+2. **Connect the Google connectors**
+
+   In the chat input box, go to **+** > Connectors, choose Google Drive, Gmail, or Google Calendar, then sign in with your Google account and consent. You can also click Connect/Install in the directory (Customize > Connectors), authenticate, and adjust permissions.
+
+   <ScreenshotPlaceholder caption="Choosing a Google connector from + > Connectors in the input box" officialUrl="https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities" />
+
+3. **Turn it on in a conversation and start with a read task**
+
+   Turn connectors on and off per conversation under **+** > Connectors. At first, read tasks that don't change any data are the safe choice.
+
+   <PromptBox>
+   Find the stretches of 30 minutes or longer when I'm free on my calendar this week, grouped by day. Don't change any events; just show them to me.
+   </PromptBox>
+
+4. **Check approvals for write tasks**
+
+   For tasks like sending an email, deleting an event, or sharing a file, an approval window appears. Read the recipient, the content, and the target file before you approve.
+
+   <PromptBox>
+   Find the emails I've exchanged with my client contact Ms. Kim over the past week and summarize them. Then draft a reply asking to coordinate schedules. Don't send it; just leave it as a draft.
+   </PromptBox>
+
+   <Aside type="caution" title="Double-check sending and deleting in the approval window">
+   If you ask it to stop at the draft stage, you can read the content and send it yourself. Don't click through approval windows out of habit.
+   </Aside>
+
+   <ScreenshotPlaceholder caption="The approval window that appears before an email is sent" officialUrl="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" />
+
+   <FlowSteps title="How to add a custom connector (remote MCP server)" officialUrl="https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp" steps={[
+     { where: 'Customize > Connectors', action: 'Click + Add' },
+     { where: 'Add menu', action: 'Choose Add custom connector' },
+     { where: 'Connector input', action: 'Enter the name and server URL, and pick the authentication method', result: 'Follow the on-screen guidance for login and permission approval' },
+   ]} />
+
+5. **(Optional) Connect a remote MCP server such as Notion**
+
+   The Notion connector is at claude.com/connectors/notion, the server address is `https://mcp.notion.com/mcp`, and it requires login (per the connector page). You can also add it with the "Add to Claude" button on that page. If it's in the directory, use that; if it isn't, or if you want to connect it yourself, go to Customize > Connectors > Add > Custom on the web and enter the server URL. The general procedure is to choose the authentication method (Sign in now / when needed / No sign in) and, if needed, request headers. For the actual on-screen wording and the login and permission approval steps, **follow the on-screen guidance.** MCP tools act with the permissions of the user who connected them.
+
+   In Claude Code, add it like this and authenticate with OAuth using `/mcp`.
+
+   ```sh
+   claude mcp add --transport http notion https://mcp.notion.com/mcp
+   ```
+
+   The server is reached from Anthropic's cloud, so it must be reachable from the public internet.
+
+6. **If the connection gets tangled, disconnect and reconnect**
+
+   Disconnect in Customize > Connectors, then connect again. It's good practice to disconnect services you don't use.
+
+</Steps>
+
+## Quick reference
+
+### Where do I do what?
+
+| What you want to do | Where |
+| --- | --- |
+| Turn connectors on and off in a conversation | Input box + or / menu > Connectors |
+| Find, connect, and disconnect connectors | Customize > Connectors (directory) |
+| Add a custom connector | Customize > Connectors > Add > Custom (web) |
+| Turn on a connector for the organization (Team/Enterprise) | Organization settings > Connectors > Browse connectors > Add to your team |
+| Set tool permissions (Owner) | Always allow / Needs approval / Blocked |
+
+### How claude.ai and Claude Code relate
+
+| Situation | Behavior |
+| --- | --- |
+| Connectors added in claude.ai | Show up automatically in `/mcp` when you log in to Claude Code |
+| Servers added locally with `claude mcp add` | Not saved to your claude.ai account. To use them in routines, add them as connectors in claude.ai |
+| Free plan | 1 custom connector |
+
+### Security checklist
+
+| Item | Details |
+| --- | --- |
+| Custom connectors | Not verified by Anthropic. Connect only servers you trust |
+| Prompt injection | Watch for instructions hidden in text from external services. Turn off tools you don't need |
+| Advanced research | It can call connector tools without extra approval, so turn off write tools beforehand |
+| Data protection | Transmission is encrypted. Third-party services use their own infrastructure and terms (possibly outside the US). Disconnect services you don't use |
+
+## Common sticking points
+
+### The service I want isn't in the connector list
+
+- **Cause**: On Team/Enterprise, your organization may not have turned it on yet. The menu location may also appear as either "Customize > Connectors" or "Settings > Connectors."
+- **Fix**: Ask an Owner to adjust the organization settings, and look for both menu names.
+
+### Google blocks access
+
+- **Cause**: Google may be blocking access.
+- **Fix**: A Workspace admin has to set Claude as a trusted app in API controls. It can take about 15 minutes to take effect.
+
+### I connected it but it doesn't work
+
+- **Cause**: The authentication may have expired or gotten tangled.
+- **Fix**: Disconnect in Customize > Connectors, then connect again.
+
+### The custom connector won't connect
+
+- **Cause**: The connection goes out from Anthropic's cloud, so the server must be reachable from the public internet.
+- **Fix**: Internal-network and local addresses won't work, so check the server address and authentication method.
+
+### I can't share connector data in a team Project
+
+- **Cause**: On Team/Enterprise, connectors work only in private Projects, and chats with synced content can't be shared.
+- **Fix**: Work in a private Project and organize just the results to share. See [C5. Projects](/en/claude/c05-projects/).
+
+## Practical tips
+
+- **Start with read tasks.** Get comfortable with safe use before you hand off write tasks.
+- **Ask for email "as a draft only."** That lets you check the content and send it yourself.
+- **Turn on only the connectors you need.** You can turn them on and off per conversation, and it's good to disconnect ones you don't use.
+- **Trim the tools on custom connectors.** Turn off tools you don't need, and handle write tools especially carefully.
+- **You can use them with artifacts.** An artifact can read and write connected apps (Pro/Max/Team/Enterprise). See [C6. Artifacts](/en/claude/c06-artifacts/).
+
+## Next tutorials
+
+- [C6. Artifacts](/en/claude/c06-artifacts/) — Building small tools that read and write connected apps
+- [C8. Skills](/en/claude/c08-skills/) — Bundling repeat work into a Skill
+- [C14. Key Claude Code features](/en/claude/c14-claude-code-features/) — Using MCP in Claude Code
+- [Connecting AI to work tools with connectors (MCP)](/en/automation/20-connectors-mcp/) — Connectors and MCP alongside other AI tools
+- [Build your own MCP server and connect it to Claude](/en/dev/05-mcp-server/) — Building an MCP server for your own connector

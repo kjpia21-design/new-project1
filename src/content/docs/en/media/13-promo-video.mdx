@@ -1,0 +1,217 @@
+---
+title: "Make a Short Promo Video with AI Video Tools"
+description: "How to storyboard a 15-second promo video, make it with Gemini app video generation and Canva editing, and what to watch for with likeness rights and AI labeling"
+sidebar:
+  label: "3. Make a short promo video"
+level: practical
+category: media
+tools: ["Gemini 앱", "Canva"]
+duration: "60 min"
+prerequisites:
+  - "A Google account and a Google AI plan that supports video generation (check availability on the official page)"
+  - "A Canva account"
+  - "A one-line description of the product or service you're promoting"
+lastVerified: 2026-10-26
+sources:
+  - title: "Generate videos with Gemini Apps (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/16126339"
+  - title: "Introduction to Gemini video generation (Google)"
+    url: "https://gemini.google/overview/video-generation/"
+  - title: "Verify AI-generated images, videos, and audio (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/16722517"
+  - title: "Gemini Apps limits & upgrades for Google AI subscribers"
+    url: "https://support.google.com/gemini/answer/16275805"
+  - title: "Google AI Pro & Ultra (subscription info)"
+    url: "https://gemini.google/subscriptions/"
+  - title: "Create 60-second videos instantly with Magic Video (Canva Help) - original not verified, based on search results"
+    url: "https://www.canva.com/help/magic-video/"
+  - title: "Transform your image into a video (Canva Help) - original not verified, based on search results"
+    url: "https://www.canva.com/help/image-to-video/"
+  - title: "Generate and animate captions in Canva (Canva Help) - original not verified, based on search results"
+    url: "https://www.canva.com/help/generate-edit-captions-on-videos/"
+  - title: "Canva AI Product Terms - original not verified, based on search results"
+    url: "https://www.canva.com/policies/ai-product-terms/"
+  - title: "Deprecations (OpenAI API docs) - Sora 2 model and Videos API shutdown schedule"
+    url: "https://developers.openai.com/api/docs/deprecations"
+  - title: "Sora 2 (OpenAI) - includes product shutdown notice - original not verified, based on search results"
+    url: "https://openai.com/index/sora-2/"
+  - title: "Creating with Sora safely (OpenAI) - original not verified, based on search results"
+    url: "https://openai.com/index/creating-with-sora-safely/"
+  - title: "Adobe Firefly - original not verified, based on search results"
+    url: "https://www.adobe.com/products/firefly.html"
+  - title: "Canva AI Photo & Video Editor (App Store, listing by developer Canva, US store checked 2026-10-10)"
+    url: "https://apps.apple.com/us/app/canva-ai-photo-video-editor/id897446215"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- AI video works by making **short clips, a few seconds at a time**. The Gemini overview page says you can make 10-second videos in the Gemini app.
+- The practical way to make a promo video is: **storyboard (3-4 scenes) → generate a clip for each scene → stitch them together in an editing tool and add captions and a logo**.
+- Videos made in the Gemini app include an invisible **SynthID watermark**.
+- **Don't use people's faces, voices, or other people's brands** without their consent and permission.
+- Plans, limits, and availability in Korea change often. This guide is accurate as of 2026-10-13, and where we couldn't confirm something, we point you to the official page.
+</Summary>
+
+<Aside type="caution" title="We haven't been able to verify the original Canva help pages">
+We checked the Gemini app video generation content against the originals of Google's official help and overview pages (as of 2026-10-10). On 2026-10-10, Canva's App Store listing (listed by developer Canva, US store) described Magic Video as a feature where you add clips and AI adds beats, effects, and text to stitch them into a video (labeled iPhone-only), but as of 2026-10-26 the description no longer mentions Magic Video and instead describes making videos with sound using Veo 3 and video editing features such as Beat Sync. Access was blocked to Canva's help pages (Magic Video, captions, and so on) and to OpenAI's product pages (Sora), so we couldn't open the originals, and those descriptions are based on official-site search results. Double-check Canva's clip lengths, limits, and menu locations on the official pages.
+</Aside>
+
+
+## What you'll be able to do after this tutorial
+
+- Storyboard a 15-second promo video.
+- Write a video prompt for each scene and generate clips in the Gemini app.
+- Stitch the clips together in Canva and add captions and a logo.
+- Check likeness rights, commercial use, and AI labeling.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Text to video** | Making a short video from a written description. |
+| **Image to video** | Turning a single photo into a moving clip. Canva has a help page on this too. |
+| **Clip** | A short piece of video the AI makes in one go. |
+| **Storyboard** | A plan that lays out the order and content of the scenes in advance. |
+| **SynthID** | An invisible watermark Google embeds in AI-generated video. |
+
+### Which tool should you use?
+
+| | Gemini app | Canva | Other options |
+| --- | --- | --- | --- |
+| Use | Generating scene clips | Editing clips, captions, logos, simple video generation | Adobe Firefly and others |
+| Availability in Korea | Korean and South Korea are on the Gemini app's supported list, and South Korea is also on the list of countries for Google AI Plus, Pro, and Ultra plans. However, it says video generation **requires a Google AI plan for personal accounts and isn't available to users under 18**. It also says features may differ by plan and region | Korean is on the supported list for captions, dubbing, and text-to-speech | Firefly describes its own model as "commercially safe," but beta features may be limited to personal use |
+| Limits | Limits are based on compute, refresh every 5 hours, and there's a weekly limit. The multipliers by plan are 2x for Plus, 4x for Pro, and 5x or 20x of Pro for Ultra (relative to the base limit). Limits may change | Monthly AI allowance by plan; Magic Video has an hourly limit | Check each service |
+
+<Aside type="note" title="Video model names may change (as of 2026-10-19)">
+Google's official help and overview pages call the Gemini app's video generation and editing model "Gemini Omni," and the overview page says Gemini Omni (model name Gemini Omni 1.1 Flash) replaces the earlier Veo 3.1 in the Gemini app. Some parts of the subscription page still say Veo 3.1. Model names and features change often, so rely on what's on screen and the official pages.
+</Aside>
+
+<Aside type="note" title="Sora is reported to be unavailable">
+OpenAI's developer docs (deprecations) say the Sora 2 models (sora-2, sora-2-pro) and the Videos API are removed from the API on 2026-09-24 (checked 2026-10-10; that date has already passed). Official-site search results also said the app and web products have been unavailable since 2026-04-26, but we couldn't open the openai.com original to confirm it ourselves. That's why this tutorial doesn't cover it. Still, OpenAI at the time required confirmation of the performer's consent and your rights when you uploaded photos of people, and blocked generating public figures, which is a useful example of the consent principle in this field.
+</Aside>
+
+## Step by step
+
+The example is "a 15-second video announcing a new café menu item (vertical, for social media Reels)."
+
+<Checklist items={[
+  'I made a storyboard (3 scenes)',
+  'I created a clip for each scene in the Gemini app',
+  'I stitched the clips together in Canva',
+  'I added captions, a logo, and music',
+  'I checked likeness rights, trademarks, and AI labeling',
+  'I checked the resolution and aspect ratio and exported',
+]} />
+
+<Steps>
+
+1. **Make a storyboard**
+
+   Build the 15 seconds from 3 scenes. Keep in mind that one clip is around 10 seconds (per the overview page), so keep scenes short and descriptions simple. You can also ask an AI like Claude for a first draft.
+
+   <PromptBox>
+   Create a storyboard with 3 scenes for a 15-second vertical video announcing our new café menu item, the "Yuja Cream Latte." For each scene, write (1) what's on screen, (2) the camera movement, and (3) one line of caption text. Don't show any faces; focus on hands and the cup.
+   </PromptBox>
+
+2. **Generate a clip for each scene**
+
+   Create the video in the Gemini app. The official help page says to go to gemini.google.com on a computer, open the sidebar at the top left, click **Create video** (optionally pick a template), enter a prompt, and click **Submit**. To use an image or video as a reference, upload it with Add image / Add video (1 video, up to 5 images). Video can take a few minutes to generate, and you can't use the same chat while it's being made. If you need audio, you can reportedly ask for it to be generated too. **Only upload photos you have the right to use.** Make one prompt per scene. If you ask for several scenes at once, the results get messy.
+
+   <PromptBox>
+   A close-up looking slowly down from above at a cup of yuja cream latte on a wooden table. Natural light, warm tones. A bit of yuja zest drops onto the cream. No faces, text, or logos.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Sending a video generation request in the Gemini app and the clip being created" officialUrl="https://support.google.com/gemini/answer/16126339" />
+
+   If you don't like the result, change just one thing and ask again. According to the help page, you can keep editing a generated video with simple prompts, such as swapping objects, changing camera angles, or modifying scenes. There are usage limits, so conserve your attempts.
+
+3. **Stitch the clips together in Canva**
+
+   In Canva, open a new vertical (Reels/Shorts format) video design, upload the 3 clips, and arrange them in order. Canva reportedly offers automatic caption generation (Korean is on the supported list) and a feature that turns images into video. Follow the on-screen guidance for exact button locations.
+
+4. **Add captions, a logo, and music**
+
+   - Place captions away from the bottom 20% of the screen (the app UI can cover them).
+   - Bring your logo in from the Brand Kit in [Tutorial 12](/en/media/12-canva-sns/).
+   - For music and sound effects, check the license scope the editing tool provides.
+   - If you want to add narration, see [Tutorial 15](/en/media/15-voice-narration/).
+
+5. **Check**
+
+   <Aside type="caution" title="Likeness rights and consent">
+   Don't use the video if it shows employees, customers, or celebrities, uses their voices, or shows someone who resembles them. To use a real person in a video, **explain the purpose, duration, and media to them and get their written consent**. At the time of Sora, OpenAI required confirmation of the performer's consent and your upload rights when you uploaded images with people in them.
+   </Aside>
+
+   - Do the brand logos, trademarks, characters, or background music resemble anyone else's?
+   - Are the facts (price, dates, claimed benefits) correct? Does the product in the video look different from the real one?
+   - Have you set your company's policy on labeling AI-made videos?
+
+6. **Export and verify**
+
+   Before exporting, play it through once more to check the aspect ratio, length, and caption placement. Download the video via **Share > Download video**. According to Google's official guidance, every video made in the Gemini app includes an invisible SynthID, and you can upload a file to Gemini and ask whether it was made with Google AI (it only recognizes Google AI content; videos must be under 90 seconds and 100 MB, with a limit of about 10 checks per day).
+
+</Steps>
+
+## Quick reference
+
+### What to check by tool (as of 2026-10-10)
+
+| Item | Gemini app video | Canva |
+| --- | --- | --- |
+| Clip length | Up to 10-second videos (per the Gemini overview page) | Magic Media video is described as a short, silent clip |
+| Limits | Compute-based limits, refresh every 5 hours, weekly limit | Monthly AI allowance. Magic Video has an hourly limit |
+| Watermark | Invisible SynthID (all Gemini app videos) | Check the official page |
+| Availability in Korea | Personal accounts need a Google AI plan and must be 18 or older. The plans list South Korea as a supported country | Some features are on the Korean supported list |
+| Commercial use | The help page says to follow the Google Terms of Service and prohibited use policy, and not to create or share content that infringes others' rights, deceives, or harasses. The help page has no separate sentence that directly allows or prohibits commercial use (as of 2026-10-13). Read the terms yourself to decide whether commercial use is okay | AI output is owned by you (except Canva-licensed content), for lawful purposes, at your responsibility |
+
+### Video prompt template
+
+| Item | Example |
+| --- | --- |
+| Subject | A cup of yuja cream latte |
+| Camera | Slowly looking down from above, close-up |
+| Lighting and tone | Natural light, warm tones |
+| Motion | Zest drops onto the cream |
+| Don'ts | Faces, text, logos |
+
+## Common sticking points
+
+### I don't see a video generation menu
+
+- **Cause**: Personal accounts need a Google AI plan, and work or school accounts need the relevant Workspace license. It's also described as unavailable to users under 18.
+- **Fix**: Check the availability requirements on the official subscription page and help pages.
+
+### I hit my limit
+
+- **Cause**: Video generation uses up a lot of your compute-based limit.
+- **Fix**: Wait for the 5-hour refresh or compare higher plans. The monthly prices on the subscription page, as shown on the US site on 2026-10-10, start at $4.99 for Plus, $19.99 for Pro, and $99.99 for Ultra (check Korean pricing on the official page). Polish your prompts in advance to cut down on attempts.
+
+### The clips don't match each other's mood
+
+- **Cause**: When you make clips separately, the color and lighting can differ.
+- **Fix**: Put the same lighting and tone sentence in every prompt, and color-correct in editing. You can also reuse the same reference image.
+
+### The Korean captions come out garbled in the video
+
+- **Cause**: Text the AI generates inside a video isn't accurate.
+- **Fix**: Remove text from the prompt and add it as Canva captions.
+
+## Practical tips
+
+- **Start with short videos.** Two or three clips of around 10 seconds are plenty.
+- **Use just one camera movement.** Something like a "slow zoom in" is stable.
+- **If you need people, use footage you shoot yourself.** Real footage with consent is the safest.
+- **Save prompts that worked.** They help you keep the same tone across a series.
+- **Terms differ by tool and by plan.** Read the official terms yourself before commercial use.
+
+## What to read next
+
+- [12. Make a Set of Social Media Content with Canva AI](/en/media/12-canva-sns/) — an image set to pair with your video
+- [15. AI Voice Narration](/en/media/15-voice-narration/) — a voice to lay over your video
+- [11. Business Image Generation](/en/media/11-business-images/) — make images for image-to-video

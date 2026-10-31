@@ -1,0 +1,213 @@
+---
+title: "Business Image Generation: Make Thumbnails and Promo Images"
+description: "A reference guide to making thumbnails and promo images with the Gemini app (and ChatGPT), and checking copyright, likeness rights, and commercial use"
+sidebar:
+  label: "1. Business image generation"
+level: practical
+category: media
+tools: ["Gemini 앱", "ChatGPT"]
+duration: "30 min"
+prerequisites:
+  - "A Google account (Gemini app) or an OpenAI account (ChatGPT)"
+  - "The purpose and size of the image you want (for example, a 16:9 blog thumbnail)"
+lastVerified: 2026-10-26
+sources:
+  - title: "Generate & edit images with Gemini Apps (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/14286560"
+  - title: "Where you can use the Gemini web app (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/13575153"
+  - title: "Nano Banana (Introduction to Gemini image generation)"
+    url: "https://gemini.google/overview/image-generation/"
+  - title: "How we're bringing AI image verification to the Gemini app (Google)"
+    url: "https://blog.google/innovation-and-ai/products/ai-image-verification-gemini-app/"
+  - title: "Image generation (OpenAI, ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/image-generation"
+  - title: "Content provenance (OpenAI API docs)"
+    url: "https://developers.openai.com/api/docs/guides/content-provenance"
+  - title: "Pricing (OpenAI, ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/pricing"
+  - title: "ChatGPT - App Store Korea listing (OpenAI OpCo, LLC)"
+    url: "https://apps.apple.com/kr/app/chatgpt/id6448311069"
+  - title: "OpenAI Usage policies - original not verified (openai.com access blocked)"
+    url: "https://openai.com/policies/usage-policies/"
+  - title: "OpenAI Terms of Use - original not verified (openai.com access blocked)"
+    url: "https://openai.com/policies/row-terms-of-use/"
+  - title: "Adobe Firefly - original not verified (adobe.com access blocked)"
+    url: "https://www.adobe.com/products/firefly.html"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- Business images come out much better when you decide the **purpose (where it will be used), aspect ratio, mood, and any text** before you ask.
+- This tutorial focuses on the **Gemini app** (the Nano Banana family), which is available in Korea and supports Korean, and covers **ChatGPT** as an alternative.
+- You need to **check copyright, likeness rights, and trademarks yourself** for every image you generate. The tools' terms make the user responsible.
+- **Don't use images that include a real person's face or someone else's logo or character** without their consent or permission.
+- Plans, limits, and terms change often. This guide is accurate as of 2026-10-13, and where we couldn't confirm something, we point you to the official page.
+</Summary>
+
+<Aside type="caution" title="We couldn't verify the original OpenAI terms or Adobe Firefly">
+We checked the Gemini app content against Google's official help pages, and the ChatGPT image generation steps and provenance marks (C2PA, SynthID) against OpenAI's ChatGPT docs and API docs (as of 2026-10-10). However, access was blocked to OpenAI's terms of use and usage policy pages (openai.com) and to the Adobe Firefly page, so we couldn't open the originals. Don't assume anything about output ownership, commercial-use terms, or Firefly details; check the official pages yourself.
+</Aside>
+
+
+## What you'll be able to do after this tutorial
+
+- Create business images such as blog thumbnails and event announcement graphics with AI, and refine them through conversation.
+- Use a prompt structure that produces good images.
+- Use a checklist to review copyright, likeness, and trademark risks before publishing.
+- Understand what AI-generated marks (watermarks and metadata) are and how to handle them.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Prompt** | The description you write to ask for an image. The general principles are the same as in [C4. How to write prompts](/en/claude/c04-prompting/). |
+| **Image editing (conversational)** | Refining a generated image by following up with requests such as "make the background brighter" or "remove the text." |
+| **SynthID** | An invisible watermark Google embeds in AI-generated images. Google says you can upload an image to the Gemini app and ask whether it was made with Google AI. |
+| **C2PA (Content Credentials)** | A metadata standard that carries an image's provenance information. OpenAI describes C2PA and SynthID as supported provenance signals. C2PA can be stripped by editing, conversion, screenshots, or platform uploads, while SynthID is a watermark embedded in the image itself, so it may survive some modifications. |
+| **Likeness rights / right of publicity** | The right to stop others from using a person's face or appearance without permission. Tool terms also restrict recreating real people without consent. |
+
+### Which tool should you use?
+
+| | Gemini app | ChatGPT | Other options |
+| --- | --- | --- | --- |
+| Availability in Korea | The web app is offered in more than 70 languages and more than 230 countries and regions, and Korean and South Korea are on the list | The app is listed on the Korean App Store and Korean is in the language list. In-app prices are shown in Korean won (KRW) (Go ₩13,000, Plus ₩29,000, etc., 2026-10-10) | Canva (Tutorial 12), Adobe Firefly (we couldn't confirm whether Korean help is available) |
+| Free use | You can use it for free (with daily limits), and Google AI plans reportedly give you better models and higher limits. Model names differ by page (the help page mentions Nano Banana 2 and Pro, and the overview page also mentions Nano Banana 2.1) | OpenAI's docs say image availability and limits on the web depend on your plan and workspace settings. Free is $0/month, Go is $8/month, and Plus is $20/month (Pricing docs). We couldn't find specific limit numbers for the free plan | Check each service |
+| Ownership guidance | Says not to infringe others' copyright or privacy rights, and to use your own judgment before using or publishing generated content | OpenAI's docs say generated images don't require OpenAI credit, and tell you to follow your organization's guidelines and OpenAI's usage policies. We couldn't open the original terms, so we couldn't confirm the output ownership clause | Firefly describes its own model as "commercially safe" (beta features may be limited to personal use) |
+
+The Gemini column is based on Google's official help pages, and the ChatGPT column on OpenAI's docs and the App Store listing. The Firefly column is based on official-site search results because we couldn't open adobe.com, so don't treat it as definitive.
+
+**Age requirements (Gemini, personal accounts)**: The help page says you must be at least 13 (or the applicable age in your country) to create images and at least 18 to edit images. School accounts may have different access restrictions.
+
+## Step by step
+
+The example is "a 16:9 thumbnail for a blog post announcing an in-house training seminar."
+
+<Checklist items={[
+  'I decided the purpose, aspect ratio, mood, and whether to include text',
+  'I created the first image in the Gemini app',
+  'I refined it 2-3 times through conversation',
+  'I went through the copyright, likeness, and trademark checklist',
+  'I decided whether to label it as AI-generated and saved the file',
+]} />
+
+<Steps>
+
+1. **Decide four things before you ask**
+
+   - **Purpose and aspect ratio**: Blog thumbnail, 16:9, landscape
+   - **Subject**: A training seminar (a laptop and sticky notes on a desk, no faces)
+   - **Mood**: A bright, clean office feel, in blues
+   - **Text**: Whether to put Korean text directly in the image. AI-generated text can come out garbled, so it's safer to **leave the text out and add it later in an editing tool like Canva**.
+
+2. **Create the first image in the Gemini app**
+
+   Sign in to the Gemini app and choose image creation. The official help page says to go to gemini.google.com on a computer, open the sidebar at the top left, click **Images**, and then pick a template or enter a prompt. The overview page also mentions "Create images" in the tools menu. The screen layout may change, so follow what you actually see. It works best to start your prompt with something like "Create...," and the help page says adding a style (a realistic photo, watercolor, and so on) helps.
+
+   <PromptBox>
+   Create an image for a blog thumbnail. 16:9 landscape. The topic is an announcement for an in-house training seminar. Show a bright office desk with a laptop, sticky notes, and a coffee cup, and don't include any people. Use a clean look in blue tones. Don't put any text in the image. Leave the top third empty so I can add a title.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Screen after sending an image generation request in the Gemini app" officialUrl="https://support.google.com/gemini/answer/14286560" />
+
+   <FlowSteps title="Create and refine an image in Gemini" officialUrl="https://support.google.com/gemini/answer/14286560" steps={[
+     { where: 'gemini.google.com sidebar', action: 'Click Images', result: 'Pick a template or enter a prompt' },
+     { where: 'Generated image', action: 'Open it from Library in the left sidebar', result: 'Keep refining in Chat below' },
+     { where: 'Hover over the image', action: 'Click Download full size', result: 'Image saved' },
+   ]} />
+
+3. **Refine through conversation**
+
+   Point out only the parts you don't like and ask for changes in a follow-up. This is more stable than starting over from scratch. According to the help page, you can open a generated image from **Library** in the left sidebar and keep refining it in Chat below, and you can also upload an image from your device and ask for edits (image editing requires age 18 or older). On paid plans, you can use **More > Redo with Pro** under the image to regenerate it with Nano Banana Pro. To save, hover over the image and click "Download full size." The download resolution is reportedly 2K with a Google AI plan and 1K without one.
+
+   <PromptBox>
+   In the image you just made, remove the coffee cup and change the laptop screen to a blank screen. Make the overall tone a little brighter.
+   </PromptBox>
+
+4. **Check copyright, likeness, and trademarks**
+
+   Check the items below before you publish. The tool won't take responsibility for you.
+
+   - Is there a real person's face (an employee, a customer, a celebrity) or a face that resembles one?
+   - Are there elements similar to an existing logo, trademark, character, or artwork?
+   - Does the image contain readable text or a fake brand name?
+   - Did you avoid uploading internal confidential images (blueprints, screen captures) as reference images?
+
+   <Aside type="caution" title="Likeness rights: don't use them without consent">
+   OpenAI's ChatGPT image generation docs say to confirm you have permission when depicting a real person, and to ask for original-feeling work instead of imitating a specific brand or artist. We couldn't open the exact wording of the terms and usage policy, so check the official pages. Other tools take a similar approach. If you want to turn photos of employees or customers into AI images for promotion, **explain the purpose to the person and get their written consent**.
+   </Aside>
+
+5. **Save the file and decide on AI labeling**
+
+   The Gemini overview page explains that it uses an invisible SynthID watermark and a visible watermark. However, the image help page (Gemini Apps Help) doesn't explain how the visible watermark is applied by plan or screen (as of 2026-10-13). Check the saved file yourself. Decide whether to label it "AI-generated image" according to your company's policy. Avoid deliberately removing or hiding the marks.
+
+6. **(Alternative) Compare with ChatGPT**
+
+   Enter the same prompt in ChatGPT and compare the results. Ask for an image in web chat, and to refine it, attach a reference image and tell it what to change and what to keep. OpenAI's docs say image availability and limits depend on your plan and workspace settings. Follow the guidance shown on screen for limit numbers.
+
+</Steps>
+
+## Quick reference
+
+### Image prompt template
+
+| Item | Example |
+| --- | --- |
+| Purpose and ratio | Blog thumbnail, 16:9 |
+| Scene | A laptop and sticky notes on a desk |
+| Mood and color | Bright and clean, in blues |
+| Composition | Leave the top third empty |
+| Don'ts | No faces, text, or logos |
+
+### Commercial-use checklist
+
+| Item | What to check |
+| --- | --- |
+| Terms | The terms and usage policy of the tool you use (sources above, as of 2026-10-10). Check the official pages for differences between plans |
+| Ownership | We couldn't open the original output ownership clause in OpenAI's terms, so we couldn't confirm it. Even if there is an ownership clause, it doesn't mean copyright protection, and copyright for AI-generated works differs by country |
+| People | Real people require consent |
+| Trademarks and characters | Avoid even similar ones |
+| Provenance labeling | Company policy, plus keep the tool's watermarks and metadata |
+
+## Common sticking points
+
+### The Korean text is garbled or comes out as nonsense
+
+- **Cause**: Image models may not be able to draw text accurately.
+- **Fix**: Don't put text in the image. Add the title in Canva ([Tutorial 12](/en/media/12-canva-sns/)) or in a slide.
+
+### I hit a limit and it won't generate any more
+
+- **Cause**: The Gemini help page says Nano Banana 2 images have a daily quota, and once you reach it, you can't redo with Pro either. The help page doesn't give specific numbers.
+- **Fix**: Check the on-screen message and wait until the limit resets, or compare plans. Writing a good prompt in one go reduces the number of attempts.
+
+### The generated image looks similar to an existing work or brand
+
+- **Cause**: The model may resemble styles it was trained on.
+- **Fix**: Don't use it. Remove any specific artist or brand names from the prompt and generate again. If you're unsure, ask your legal team.
+
+### I want to check whether an image is AI-generated
+
+- **Cause**: Metadata can disappear through screenshots or conversion.
+- **Fix**: According to Google's official blog, if you upload an image to the Gemini app and ask whether it was made or edited with Google AI, it checks for SynthID (it only recognizes Google AI content). Nano Banana Pro images also reportedly include C2PA metadata. OpenAI provides a web tool (openai.com/verify) and an API that check whether an image or audio file carries OpenAI's C2PA or SynthID signals. However, a "not detected" result doesn't mean OpenAI didn't make it (the metadata may have been removed or the watermark damaged, and it can't detect output from other companies' models).
+
+## Practical tips
+
+- **Start by stating the aspect ratio and purpose.** If you change the ratio later, the composition falls apart.
+- **Start with scenes that have no people.** They carry the lowest likeness-rights risk.
+- **When refining, ask for one change at a time.**
+- **Save prompts you like.** You can reuse them to make a series of images in the same tone.
+- **Only upload reference images you have the rights to.**
+
+## What to read next
+
+- [12. Make a Set of Social Media Content with Canva AI](/en/media/12-canva-sns/) — edit your images to social media specs
+- [13. Make a Short Promo Video](/en/media/13-promo-video/) — extend your images into video
+- [C4. How to write prompts](/en/claude/c04-prompting/) — the common principles for writing requests

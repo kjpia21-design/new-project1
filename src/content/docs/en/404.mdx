@@ -1,0 +1,33 @@
+---
+title: Page not found
+description: The address may have changed, or the page may not exist. Try the home page or the full tutorial list.
+template: splash
+tableOfContents: false
+---
+
+import HeroIllustration from '../../../components/HeroIllustration.astro';
+
+<div class="nf not-content">
+  <div class="art"><HeroIllustration /></div>
+  <p class="code">404</p>
+  <h1>Oops, you took a wrong turn</h1>
+  <p class="lead">The page you are looking for does not exist or its address has changed. Use the buttons below to head back, or type what you are looking for into the search box at the top of the page.</p>
+  <div class="actions">
+    <a class="btn primary" href="/en/">Back to home</a>
+    <a class="btn" href="/en/tutorials/">All tutorials</a>
+  </div>
+  <p class="hint">You can search from the <strong>Search</strong> box at the top of the page. The shortcut is <kbd>Ctrl</kbd> + <kbd>K</kbd>.</p>
+</div>
+
+<style>{`
+  .nf { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.6rem; padding: 1rem 0 2rem; }
+  .nf .art svg { width: 100%; max-width: 260px; }
+  .nf .code { margin: 0; font-weight: 800; font-size: var(--sl-text-xl); color: var(--sl-color-accent-high); letter-spacing: 0.08em; }
+  .nf h1 { margin: 0; font-size: clamp(1.8rem, 6vw, 2.8rem); font-weight: 800; color: var(--sl-color-white); line-height: 1.25; }
+  .nf .lead { margin: 0; max-width: 34rem; font-size: var(--sl-text-lg); color: var(--sl-color-gray-2); line-height: 1.65; }
+  .nf .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.7rem; margin-top: 0.6rem; }
+  .nf .btn { display: inline-block; padding: 0.65rem 1.4rem; border-radius: 999px; font-weight: 700; text-decoration: none; border: 2px solid var(--sl-color-accent); color: var(--sl-color-accent-high); background: transparent; }
+  .nf .btn.primary { background: var(--sl-color-accent); color: var(--sl-color-text-invert); }
+  .nf .btn:hover { filter: brightness(1.08); }
+  .nf .hint { margin: 0.4rem 0 0; font-size: var(--sl-text-sm); color: var(--sl-color-gray-3); }
+`}</style>

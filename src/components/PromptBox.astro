@@ -1,11 +1,13 @@
 ---
+import { getLang, t } from '../lib/i18n';
 interface Props { label?: string }
-const { label = '이 프롬프트를 복사해서 붙여넣으세요' } = Astro.props;
+const lang = getLang(Astro);
+const { label = t(lang, 'prompt.label') } = Astro.props;
 ---
-<prompt-box class="not-content">
+<prompt-box class="not-content" data-copy={t(lang, 'prompt.copy')} data-copied={t(lang, 'prompt.copied')} data-manual={t(lang, 'prompt.manual')}>
   <div class="head">
     <span class="label">{label}</span>
-    <button type="button" class="copy" aria-live="polite">복사</button>
+    <button type="button" class="copy" aria-live="polite">{t(lang, 'prompt.copy')}</button>
   </div>
   <div class="body"><slot /></div>
 </prompt-box>
@@ -46,9 +48,9 @@ const { label = '이 프롬프트를 복사해서 붙여넣으세요' } = Astro.
         const text = body?.innerText.trim() ?? '';
         try {
           await navigator.clipboard.writeText(text);
-          btn.textContent = '복사됨!';
+          btn.textContent = this.dataset.copied ?? '';
         } catch {
-          btn.textContent = '직접 복사해 주세요';
+          btn.textContent = this.dataset.manual ?? '';
           if (body) {
             const range = document.createRange();
             range.selectNodeContents(body);
@@ -57,7 +59,7 @@ const { label = '이 프롬프트를 복사해서 붙여넣으세요' } = Astro.
             sel?.addRange(range);
           }
         }
-        setTimeout(() => (btn.textContent = '복사'), 1800);
+        setTimeout(() => (btn.textContent = this.dataset.copy ?? ''), 1800);
       });
     }
   }

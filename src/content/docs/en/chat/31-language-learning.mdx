@@ -1,0 +1,186 @@
+---
+title: "Studying English and Other Foreign Languages with AI: Conversation Practice, Corrections, and Vocabulary Lists"
+description: "How to practice speaking with AI, get your writing corrected, and even build vocabulary lists and quizzes. We also cover the fact that AI corrections can be wrong, and the confirmed scope of voice features."
+sidebar:
+  label: "9. Studying a foreign language"
+level: beginner
+category: chat
+tools: ["Claude", "Gemini", "ChatGPT"]
+duration: "30 min"
+prerequisites:
+  - "One AI account (any of Claude, Gemini, or ChatGPT)"
+  - "For voice practice, a phone app and a microphone (see [Using AI on your phone](/en/basics/07-ai-on-phone/))"
+lastVerified: 2026-10-26
+sources:
+  - title: "Use voice mode (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/11101966-using-voice-mode"
+  - title: "Talk naturally with Gemini Live (Google Help)"
+    url: "https://support.google.com/gemini/answer/15274899"
+  - title: "Gemini mobile app availability (Google Help)"
+    url: "https://support.google.com/gemini/answer/14579026"
+  - title: "ChatGPT Voice (ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/features/voice"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- You can use AI as a **conversation partner, a correcting tutor, and a vocabulary helper.** Start in writing, and move to voice once you're comfortable.
+- For **voice conversation**, we confirmed Claude's voice mode (all plans, beta) and Gemini Live (Android app) in the official help pages. ChatGPT Voice is described mainly for the desktop app. (as of 2026-10-15)
+- **AI corrections can be wrong.** A grammar explanation can sound convincing and still be untrue, so double-check important writing with a dictionary, a textbook, or a native speaker.
+- Writing **your level, your goal, and the kind of feedback you want** in the prompt makes it far more useful. Below are 6 prompts you can copy.
+- There's no official documentation on how much your test scores or real ability will improve, so we can't say. Keep at it and check for yourself.
+- This guide was written with Korean-speaking learners of English in mind, and the example prompts reflect that. Swap in your own native language and target language.
+</Summary>
+
+## What you'll be able to do
+
+- Practice role-play conversations with AI in set situations (ordering, interviews, travel).
+- Get your own sentences corrected and have **the reasons for each correction** explained.
+- Build a vocabulary list and a quiz from what you studied today.
+- Know where to turn on voice features and their limits, and how to verify the AI's answers.
+
+## Concepts first
+
+| Term | Meaning |
+| --- | --- |
+| **Role-play** | Practice where the AI takes a role such as a shop clerk or an interviewer, and you play the customer or the candidate. |
+| **Correction (feedback on writing)** | Fixing the mistakes in what you wrote and telling you why. |
+| **Voice mode** | A feature where you talk instead of typing. Details on setup and permissions are in [Using AI on your phone](/en/basics/07-ai-on-phone/). |
+| **Dictation** | Only turns your speech into text. The AI doesn't answer aloud, so it's different from voice mode. |
+| **Setting a level** | Telling the AI your level, like "beginner" or "travel conversation level." The AI then uses fewer difficult words. |
+
+### Voice features by service: the scope we confirmed (as of 2026-10-15)
+
+| Item | Claude | Gemini | ChatGPT |
+| --- | --- | --- | --- |
+| Name | Voice mode, beta | Gemini Live | ChatGPT Voice |
+| Where | Mobile app, desktop, web | The Gemini app on Android phones and tablets. Not available in the Gemini web app | ChatGPT desktop app |
+| Plans | Free, Pro, Max, Team, and Enterprise | The official help pages don't list plan requirements | Plus, Pro, Business, Edu, Enterprise (per official docs) |
+| How to start | The sound-wave icon in the input box | **Live** at the bottom of the app | **Start voice chat** |
+| Language setting | Settings > Capabilities > Voice > Spoken language. If Voice doesn't appear there, Settings > General > Voice > Language. Languages other than English are in beta | We couldn't confirm Live's supported languages in the docs | We couldn't confirm this |
+| Conversation history | A text record of the conversation is saved in your chat history | You can view the conversation transcript after it ends | We couldn't confirm this |
+
+<Aside type="note" title="What we couldn't confirm">
+For all three services, the official documentation doesn't say **how accurately they understand English or Korean pronunciation, or how reliable their pronunciation correction is.** The ChatGPT Voice docs focus on directing tasks by voice, so we couldn't confirm whether conversation practice works on a phone, or whether the free plan can use it. Check the guidance inside the app you use first. Gemini Live is described as not usable together with Gems (custom Gemini).
+</Aside>
+
+<Aside type="caution" title="AI corrections can be wrong">
+AI produces natural-sounding explanations, but it can state a grammar rule incorrectly, claim an expression exists when it doesn't, or invent example sentences that don't exist. For important emails, exam answers, and documents you'll submit, get a check from **a dictionary, a textbook, a teacher, or a native speaker.** For how to verify facts, see [Fact-checking](/en/basics/04-fact-checking/).
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I wrote my goal (travel, an exam, work email, etc.) and my level in one line',
+  'I tried role-play conversation in writing first',
+  'I had my writing corrected and read the reasons too',
+  'I made a vocabulary list and a quiz',
+  'I turned on the voice feature once',
+  'I checked one of the AI\'s corrections against a dictionary or textbook',
+]} />
+
+<Steps>
+
+1. **Set your goal and level first**
+
+   Be narrow, like "English for restaurants and hotels on my trip next month," not "I want to be good at English." Just swap the bracketed parts in the prompts below for your own situation. For more on question frameworks, see [Asking questions well](/en/basics/03-asking-well/) and [Writing prompts](/en/chat/01-prompt-basics/).
+
+2. **Practice role-play conversation in writing**
+
+   <PromptBox label="Role-play conversation prompt">
+   You're my English conversation practice partner. The situation is [checking in at a hotel abroad], and you're the hotel staff while I'm the guest. My level is [beginner], so please use easy words and short sentences. Say only one or two sentences at a time and wait for my reply. Even if I say something wrong, don't interrupt during the conversation. When it's over, gather my incorrect sentences and correct them.
+   </PromptBox>
+
+3. **Get your writing corrected, with reasons**
+
+   <PromptBox label="Correction prompt">
+   Below are English sentences I wrote. My level is [beginner]. Show me the corrected versions, and for each correction, explain the reason in one line in [your native language]. For sentences that don't need fixing, say "Already good." If you're not sure about a grammar explanation, mark it "not sure."
+
+   [My sentences here]
+   </PromptBox>
+
+   Having it **mark what it's unsure about**, as in the last line, helps reduce false confidence. It can still be wrong, so if a reason doesn't make sense, look it up in a dictionary.
+
+4. **Turn today's expressions into a vocabulary list**
+
+   <PromptBox label="Vocabulary list prompt">
+   From our conversation just now, pick only the expressions I didn't know or got wrong and make a vocabulary table. The columns are [expression, meaning in my native language, one easy example sentence, translation of the example]. Don't go over 10.
+   </PromptBox>
+
+5. **Review with a quiz**
+
+   <PromptBox label="Quiz prompt">
+   Quiz me using the vocabulary list above. Ask one question at a time, mixing fill-in-the-blank and translating from my native language into English. When I answer, tell me if I was right, and if I was wrong, give me the correct answer and the reason. After 5 questions, sum up my score and the expressions to review.
+   </PromptBox>
+
+6. **Move on to voice**
+
+   Once you're comfortable in writing, try the same role-play by speaking. It's hard to read many sentences at once in voice, so ask for short replies.
+
+   <FlowSteps title="Starting conversation practice by voice" officialUrl="https://support.claude.com/en/articles/11101966-using-voice-mode" steps={[
+     { where: 'In the app (Claude / Gemini)', action: 'In Claude, tap the sound-wave icon in the input box; in Gemini (Android), tap Live at the bottom', result: 'If it\'s your first time, allow microphone permission' },
+     { where: 'Claude settings', action: 'Choose the language to practice in Settings > Capabilities > Voice > Spoken language (if you don\'t see it, Settings > General > Voice > Language)', result: 'This is set separately from the app display language' },
+     { where: 'During the voice conversation', action: 'Say, "Let\'s practice English conversation with you as a hotel clerk"', result: 'Speak clearly in a quiet place' },
+     { where: 'After the conversation ends', action: 'Check the incorrect sentences in the conversation record', result: 'Review using the written record that remains' },
+   ]} />
+
+   <ScreenshotPlaceholder caption="The sound-wave icon in the Claude app's input box and the voice language settings screen" officialUrl="https://support.claude.com/en/articles/11101966-using-voice-mode" officialLabel="View in the Claude Help Center" />
+
+   <PromptBox label="Opening line for voice practice (say it aloud or type it)">
+   I want to practice English conversation. When I speak English, answer me naturally first. Even if there are mistakes in my sentences, don't interrupt during the conversation, and at the end, tell me just "three sentences to fix" in [my native language].
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+| What you want to do | Try this |
+| --- | --- |
+| Practice speaking | Claude voice mode, Gemini Live (Android) |
+| Written corrections | Works in any service. Ask for reasons and uncertainty marks |
+| Vocabulary lists and quizzes | Right after a conversation, build them from "the expressions I just got wrong" |
+| When there's noise | In Claude, you can switch to push-to-talk mode (hold to speak) |
+| Worried about limits | Claude voice conversations also count toward your normal usage limit. For limits, see [Claude plans and limits](/en/claude/c02-plans-limits/) |
+
+## Common sticking points
+
+### The AI misunderstands what I say
+
+- **Cause**: Background noise, microphone permission, or the voice language setting may be off. Non-English voice is also in beta.
+- **Fix**: Move somewhere quiet and check your phone's microphone permission. In Claude, switch to push-to-talk or check the voice language. If that doesn't work, practicing in writing is fine.
+
+### The AI keeps answering only in my native language
+
+- **Cause**: You may not have said in the prompt which language to converse in.
+- **Fix**: Try writing, "Talk only in English, and use [my native language] only when an explanation is needed."
+
+### I'm not sure whether the corrected sentence is right
+
+- **Cause**: AI corrections can be wrong.
+- **Fix**: Ask about the same sentence in different words, or check it against dictionary and textbook examples. For anything for an exam or to submit, have a person check it.
+
+### The conversation is too hard or too easy
+
+- **Cause**: Your level isn't in the prompt, or it doesn't match.
+- **Fix**: Just say, "One level easier" or "A bit harder."
+
+## Practical tips
+
+- There's no official evidence on how many minutes a day is effective. Set a length you can keep up consistently.
+- **Review only the sentences you got wrong.** It's easy if you ask for "only the incorrect sentences in a table" at the end of the conversation.
+- **Don't enter personal information.** It's best not to use real addresses, phone numbers, or company secrets in practice sentences. See [Privacy and safety](/en/basics/05-privacy-safety/).
+- **Separate translation from learning.** For translating a whole work document, [AI translation in practice](/en/media/26-ai-translation/) is the right fit.
+- In **places where other people can hear you**, voice practice can be hard. Use earphones or practice in writing. Gemini Live advises asking permission before recording or including other people.
+
+## What to read next
+
+- [7. Using AI on your phone](/en/basics/07-ai-on-phone/) — installing the app and turning on voice conversation
+- [4. Fact-checking](/en/basics/04-fact-checking/) — how to verify AI answers
+- [AI guide for students](/en/roles/student/) — more scenes for using AI to study

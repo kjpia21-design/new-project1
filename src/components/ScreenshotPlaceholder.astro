@@ -1,5 +1,6 @@
 ---
 import Illustration from './Illustration.astro';
+import { getLang, t } from '../lib/i18n';
 interface Props {
   caption: string;
   src?: string;
@@ -9,29 +10,31 @@ interface Props {
   /** 링크 문구 (기본: 공식 도움말에서 이 화면 보기) */
   officialLabel?: string;
 }
-const { caption, src, alt, officialUrl, officialLabel } = Astro.props;
+const { caption, src, alt, officialUrl } = Astro.props;
+const lang = getLang(Astro);
+const officialLabel = Astro.props.officialLabel ?? t(lang, 'shot.official');
 ---
 <figure class:list={["shot", "not-content", { compact: !src }]}>
   {!src && (
     <p class="line">
-      <span>📷 화면 안내: {caption}</span>
+      <span>📷 {t(lang, 'shot.guide')}: {caption}</span>
       {officialUrl && (
-        <a class="official" href={officialUrl} target="_blank" rel="noopener noreferrer">{officialLabel ?? '공식 도움말에서 이 화면 보기'} ↗</a>
+        <a class="official" href={officialUrl} target="_blank" rel="noopener noreferrer">{officialLabel} ↗</a>
       )}
     </p>
   )}
   {src && <div class="head">
     <Illustration name="media" size={28} />
-    <p class="title">이 단계에서 보게 될 화면</p>
+    <p class="title">{t(lang, 'shot.title')}</p>
   </div>}
   {src && <img class="img" src={src} alt={alt ?? caption} loading="lazy" />}
   {src && <figcaption class="cap">{caption}</figcaption>}
   {src && officialUrl && (
     <a class="official" href={officialUrl} target="_blank" rel="noopener noreferrer">
-      {officialLabel ?? '공식 도움말에서 이 화면 보기'} ↗
+      {officialLabel} ↗
     </a>
   )}
-  {src && <p class="note">실제 화면은 서비스 업데이트에 따라 다를 수 있어요</p>}
+  {src && <p class="note">{t(lang, 'shot.note')}</p>}
 </figure>
 
 <style>

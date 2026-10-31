@@ -1,0 +1,328 @@
+---
+title: "Getting started with the Claude API: from API key to first call to pricing"
+description: "A reference that walks you through creating an API key in Claude Console, making your first calls with curl and Python, and then covers SDKs and per-model pricing in one place"
+sidebar:
+  label: "C16. Getting started with the API"
+level: advanced
+category: claude
+tools: ["Claude API", "Claude Console"]
+duration: "40 min"
+prerequisites:
+  - "A Claude Console account (platform.claude.com)"
+  - "Billing set up for API use (separate from a Pro/Max subscription)"
+  - "A terminal, and Python 3.10 or later (for the Python examples)"
+lastVerified: 2026-10-26
+sources:
+  - title: "How do I pay for my Claude API usage?"
+    url: "https://support.claude.com/en/articles/8977456-how-do-i-pay-for-my-api-usage"
+  - title: "Rate limits"
+    url: "https://platform.claude.com/docs/en/api/rate-limits"
+  - title: "Get started with Claude (API)"
+    url: "https://platform.claude.com/docs/en/get-started"
+  - title: "Get your Claude API key"
+    url: "https://platform.claude.com/docs/en/get-api-key"
+  - title: "Models overview"
+    url: "https://platform.claude.com/docs/en/about-claude/models/overview"
+  - title: "What is the Pro plan?"
+    url: "https://support.claude.com/en/articles/8325606-what-is-the-pro-plan"
+  - title: "Prompting best practices"
+    url: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+  - title: "Claude Platform release notes"
+    url: "https://platform.claude.com/docs/en/release-notes/overview"
+  - title: "Model deprecations"
+    url: "https://platform.claude.com/docs/en/about-claude/model-deprecations"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- The Claude API runs on a **Claude Console (platform.claude.com)** account and an **API key**. Claude Pro/Max subscriptions don't include API usage, which is **billed separately**.
+- You create keys in the Console under Settings > API keys. They start with `sk-ant-`, and the full key is shown **only once, when you create it**.
+- If you put the key in the `ANTHROPIC_API_KEY` environment variable, the SDK reads it automatically. **Never write the key directly in your code.**
+- The model IDs are `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5`, and `claude-fable-5-1`.
+- Prices per 1M tokens (input/output) are $4/$20 for Opus 5.5 and $2/$10 for Sonnet 5.5 (as of 2026-10-10).
+- If you only swap the model ID in an example, **each model blocks different parameters.** Opus 5.5 can't turn thinking off, and Haiku 5.5 returns a 400 error for `budget_tokens` and sampling parameters. See the quick reference tables for details.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Create an API key in the Console and store it safely.
+- Call the Messages API directly with curl and read the response structure.
+- Make the same call with the Python SDK, and try changing the system prompt and the model.
+- Understand per-model pricing and ways to save (the Batch API and prompt caching), and choose a model.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Claude Console** | The developer console for managing API keys and billing (platform.claude.com). It's separate from a claude.ai subscription. |
+| **API key** | A secret string that authenticates your calls. It starts with `sk-ant-`. |
+| **Messages API** | The core API where you send a conversation and get a reply via `POST https://api.anthropic.com/v1/messages`. |
+| **Token** | The unit used to calculate price. The response's `usage` shows the input and output token counts. |
+| **SDK** | The official client library. It reads the key from an environment variable automatically. |
+
+### The Console Playground
+
+The screen formerly called Workbench was renamed **Playground** on 2026-08-18 (platform.claude.com/playground). It supports every Messages API parameter and shows the full SDK request and the API response for each run, so it's a good place to try out requests before writing code. If you see "Workbench" in older posts, it's the same screen.
+
+### Types of API keys
+
+| Type | Description |
+| --- | --- |
+| Personal key | Tied to your account. It becomes invalid if you leave the organization. |
+| Service account key | For CI, production, and agents. Recommended for shared use. |
+| Workspace key | Legacy. |
+
+<Aside type="note" title="Tiers and billing notes">
+Rate limits are set by usage tier (Start, Build, Scale, Custom), and your organization is placed automatically based on usage history (official Rate limits docs, 2026-10-10). Monthly spend caps are $500 for Start, $1,000 for Build, and $200,000 for Scale, and per-model requests-per-minute and token limits differ by tier. For example, Sonnet 5.5 on the Start tier allows 1,000 requests, 2,000,000 input tokens, and 400,000 output tokens per minute. New organizations may start on an Evaluation tier that's lower than this. To add credits, per the official billing help, sign in to the Console with the Admin or Billing role, go to Settings > Billing, click "Buy credits," enter an amount, and confirm. Purchased credits apply right away (confirmed 2026-10-13). Purchased credits expire one year after the purchase date, the expiration date can't be extended, and they are non-refundable (confirmed 2026-10-19). The minimum and maximum purchase amounts aren't stated in this help article. Organizations on invoice (billed) contracts are billed monthly. For adding a payment method, follow the prompts in the Console.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  'I signed up for the Console and logged in',
+  'I created an API key and saved it somewhere safe',
+  'I set the ANTHROPIC_API_KEY environment variable',
+  'I made my first call successfully with curl',
+  'I made my first call successfully with the Python SDK',
+  'I tried adding a system prompt and changing the model',
+]} />
+
+<Steps>
+
+1. **Create an API key in the Console**
+
+   Sign up or log in at platform.claude.com. Under Settings > API keys (https://platform.claude.com/settings/keys), click **Create key**. Set a name, an expiration, the account to link it to (Linked account: yourself or a service account), and a workspace if needed.
+
+   <ScreenshotPlaceholder caption="Clicking Create key under Settings > API keys in the Console" officialUrl="https://platform.claude.com/docs/en/get-api-key" />
+
+   <FlowSteps title="How to create an API key" officialUrl="https://platform.claude.com/docs/en/get-api-key" steps={[
+     { where: 'platform.claude.com (Console)', action: 'Sign up or log in' },
+     { where: 'Settings > API keys', action: 'Click Create key' },
+     { where: 'Key creation form', action: 'Set the name, expiration, and Linked account', result: 'The sk-ant- key is shown only once. Save it right away' },
+   ]} />
+
+   <Aside type="caution" title="The key is shown only once">
+   A key that starts with `sk-ant-` is displayed in full only once, when it's created. If you lose it, you have to create a new one. Save it right away somewhere safe, like a password manager.
+   </Aside>
+
+2. **Put the key in an environment variable**
+
+   Don't write the key directly in your code or repository. Pass it through an environment variable. The SDK reads `ANTHROPIC_API_KEY` automatically.
+
+   ```bash
+   export ANTHROPIC_API_KEY="your-api-key-here"
+   ```
+
+   <Aside type="danger" title="Never put your API key directly in code">
+   If you upload code that contains your key to a place like GitHub, anyone can call the API with your account and run up charges. In code, use only `os.environ` or the SDK's automatic reading, and add files that hold the key (for example `.env`) to `.gitignore`. If your key has been exposed, delete it in the Console and create a new one. Don't paste it into chats or screenshots either.
+   </Aside>
+
+3. **Make your first call with curl**
+
+   This is the example from the official quickstart. When you call over HTTP directly, you need the `x-api-key` header and the `anthropic-version: 2023-06-01` header.
+
+   ```bash
+   curl https://api.anthropic.com/v1/messages \
+     -H "content-type: application/json" \
+     -H "x-api-key: $ANTHROPIC_API_KEY" \
+     -H "anthropic-version: 2023-06-01" \
+     -d '{
+       "model": "claude-opus-5-5",
+       "max_tokens": 1000,
+       "messages": [
+         {
+           "role": "user",
+           "content": "What should I search for to find the latest developments in renewable energy?"
+         }
+       ]
+     }'
+   ```
+
+   The response is JSON. The answer is in the block of the `content` array whose `type` is `text`, the reason it stopped is in `stop_reason`, and the token counts are in `usage` (`input_tokens`, `output_tokens`).
+
+   <ScreenshotPlaceholder caption="curl response JSON (content, stop_reason, usage)" officialUrl="https://platform.claude.com/docs/en/get-started" />
+
+4. **Make your first call with Python**
+
+   Create a virtual environment and install the SDK.
+
+   ```bash
+   mkdir claude-quickstart && cd claude-quickstart
+   python3 -m venv .venv && source .venv/bin/activate
+   pip install anthropic
+   ```
+
+   Create a file named `quickstart.py`. The key isn't in the code; the SDK reads it from the environment variable.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   message = client.messages.create(
+       model="claude-opus-5-5",
+       max_tokens=1000,
+       messages=[
+           {
+               "role": "user",
+               "content": "What should I search for to find the latest developments in renewable energy?",
+           }
+       ],
+   )
+
+   for block in message.content:
+       if block.type == "text":
+           print(block.text)
+   ```
+
+   ```bash
+   python quickstart.py
+   ```
+
+5. **Try a system prompt and a different model**
+
+   You pass the system prompt in the top-level `system` field. If you want to cut costs, try changing `model` to `claude-sonnet-5-5` or `claude-haiku-5-5`. Below is a modified version of the example above.
+
+   ```python
+   message = client.messages.create(
+       model="claude-sonnet-5-5",
+       max_tokens=1000,
+       system="You are a helpful assistant. Keep your answers brief.",
+       messages=[
+           {"role": "user", "content": "What should I search for to find the latest developments in renewable energy?"}
+       ],
+   )
+   ```
+
+   <PromptBox>
+   Add a system prompt to the quickstart.py above so that answers are always three lines or fewer. Don't put the key in the code; read it from the environment variable.
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+### Model IDs and prices (per 1M tokens, input/output, as of 2026-10-10)
+
+Prices are in US dollars. For details, check the [official pricing page](https://platform.claude.com/docs/en/about-claude/pricing).
+
+| Model | Model ID | Input / Output |
+| --- | --- | --- |
+| Fable 5.1 | `claude-fable-5-1` | $10 / $50 |
+| Opus 5.5 | `claude-opus-5-5` | $4 / $20 |
+| Sonnet 5.5 | `claude-sonnet-5-5` | $2 / $10 |
+| Haiku 5.5 | `claude-haiku-5-5` | from $0.10 / from $0.50 |
+
+- The **Batch API** is a 50% discount.
+- **Prompt cache reads** cost 10% of the base input price. The exceptions are Fable 5.1 at 2.5%, and Opus 5.5 and Sonnet 5.5 at 5%.
+- For how to choose a model, see [C1](/en/claude/c01-overview/); for how to cut costs by splitting work across models, see [C15](/en/claude/c15-model-division/).
+
+### Required parts of a request (direct HTTP calls)
+
+| Item | Value |
+| --- | --- |
+| URL | `POST https://api.anthropic.com/v1/messages` |
+| Headers | `content-type: application/json`, `x-api-key: $ANTHROPIC_API_KEY`, `anthropic-version: 2023-06-01` (per the official quickstart. See below for the new API version. As of 2026-10-26, the migration docs say the API accepts the key through both the `X-Api-Key` and `Authorization: Bearer <key>` headers) |
+| Body | `model`, `max_tokens`, `messages` (the system prompt goes in `system`) |
+
+### Per-model request restrictions (watch for 400 errors, as of 2026-10-11)
+
+If you only change `model` in an example, you can hit a 400 error for the reasons below. This follows the official release notes.
+
+| Model | Restriction |
+| --- | --- |
+| Opus 5.5 | You can't turn thinking off. `thinking: {"type": "disabled"}` and `{"type": "enabled", ...}` return a 400 error. Leave out the `thinking` field and control depth with `effort`. `tool_choice` of `any` or `tool` also returns a 400 error, so use `auto` and strict tool use. |
+| Sonnet 5.5 | `tool_choice` of `any` or `tool` returns a 400 error. Use `auto` and strict tool use. (The 400 restriction on sampling parameters applies to the earlier-generation Sonnet 5 and Haiku 5.5, not Sonnet 5.5.) |
+| Fable 5.1, Mythos 5.1 | `tool_choice` of `any` or `tool` is not supported and returns a 400 error (`auto` and `none` still work). If you need tool input that matches a schema, use strict tool use. |
+| Haiku 5.5 | Code written the Haiku 4.5 way may break. `budget_tokens` (manual extended thinking), `temperature`, `top_p`, `top_k`, and assistant message prefill can each cause a 400 error. Adaptive thinking is the default, so the response may start with a `thinking` block, and that text is omitted unless you set `thinking.display` to `"summarized"`. |
+
+- **New API version 2026-10-21 (released 2026-10-21, as of 2026-10-26)**: The new major SDK versions (Python `anthropic` 2.0.0, TypeScript `@anthropic-ai/sdk` 1.0.0, C# 13.0.0, Go 2.0.0, Java 3.0.0, PHP, Ruby, and others) and the `ant` CLI 2.0.0 send `anthropic-version: 2026-10-21` by default. If you call without an SDK, you need to change this header value to `2026-10-21` to get the new behavior; if you keep sending the old `2023-06-01`, you get the old behavior. In the new version, sending `temperature`, `top_p`, or `top_k` returns a 400 error even at default values. `citations` on user messages and `document` blocks inside assistant messages also return a 400 error. The new SDKs send the API key as `Authorization: Bearer`. Before upgrading, follow the checklist in the [official migration docs](https://platform.claude.com/docs/en/api/migration-2026-10-21).
+- **Data retention**: Like Fable 5, Fable 5.1 and Mythos 5.1 **require 30-day data retention**, and **can't be used by ZDR (zero data retention) organizations** unless Anthropic explicitly allows it. If you have a ZDR agreement, check before switching to Fable.
+- You can look up which models accept turning thinking off or server tools through the Models API `capabilities` (`thinking.types.disabled`, `server_tools`).
+
+### Installing the official SDKs
+
+| Language | Install |
+| --- | --- |
+| Python | `pip install anthropic` (Python 3.10 or later from v1.0) |
+| TypeScript | `npm install @anthropic-ai/sdk` |
+| C# | `dotnet add package Anthropic` |
+| Go | `go get github.com/anthropics/anthropic-sdk-go/v2` (from 2.0.0, the module path ends in `/v2`) |
+| PHP | `composer require anthropic-ai/sdk` |
+| Ruby | `bundle add anthropic` |
+| Java | See the Gradle/Maven instructions in the official quickstart |
+| CLI | `brew install anthropics/tap/ant`, then `ant auth login` |
+
+## Common sticking points
+
+### I lost my key
+
+- **Cause**: The full key is shown only once, when it's created.
+- **Fix**: Create a new key in the Console and delete the old one.
+
+### I subscribe to Claude Pro/Max but the API doesn't work
+
+- **Cause**: Subscriptions don't include Console API usage, which is billed separately.
+- **Fix**: Set up billing for the API separately in the Console. Follow the on-screen instructions for the steps.
+
+### I get an error when calling over HTTP directly
+
+- **Cause**: A required header may be missing.
+- **Fix**: Check the `x-api-key` and `anthropic-version: 2023-06-01` headers and the `max_tokens` value.
+
+### I switched to Opus 5.5 or Haiku 5.5 and got a 400 error
+
+- **Cause**: Opus 5.5 doesn't allow turning off or fixing thinking, or `tool_choice` of `any`/`tool`, and Haiku 5.5 doesn't allow `budget_tokens`, sampling parameters, or prefill.
+- **Fix**: Look at "Per-model request restrictions" in the quick reference and remove the parameter in question. The parameter name in the error message is your clue.
+
+### After upgrading the Python SDK, `temperature` gives an error (SDK 1.0)
+
+- **Cause**: In the 2026-10-21 API version and the new major SDK versions (Python 2.0.0 and so on), `temperature`, `top_p`, and `top_k` are gone entirely. Before that, Python SDK v1.0 (2026-08-20) required Python 3.10 or later and removed things that had been deprecated long ago. Examples are the Text Completions API and the `temperature`, `top_p`, and `top_k` parameters on Messages methods. The HTTP layer also changed from `httpx` to `httpx2`.
+- **Fix**: Remove those parameters or follow the before-and-after code in the official migration guide. The `pip install anthropic` in the examples works as is.
+
+### My personal key suddenly stopped working
+
+- **Cause**: Personal keys become invalid when you leave the organization.
+- **Fix**: Use a service account key for CI and production.
+
+### The response gets cut off partway
+
+- **Cause**: `max_tokens` may be too small. Check the response's `stop_reason`.
+- **Fix**: Increase `max_tokens`.
+
+## Practical tips
+
+- **If cost worries you, start with a smaller model.** The examples use `claude-opus-5-5` as in the official quickstart, but you can switch to `claude-sonnet-5-5` or `claude-haiku-5-5`. The official guide says adjusting effort is also a good lever.
+- **Keep `max_tokens` small.** For calls where a short answer is fine, lowering the output cap prevents unintended long outputs.
+- **Log `usage`.** Recording input and output token counts per call makes it easy to estimate cost.
+- **Use the Batch API when you don't need real time.** It's a 50% discount.
+- **Use service account keys for shared use.** Don't use personal keys for team services.
+- **Review your keys regularly.** Set expiration dates and delete keys you don't use.
+- **Beta headers are no longer needed.** The Files API (`/v1/files`) and Agent Skills (`/v1/skills`) became generally available (GA) on the Claude API on 2026-08-19, so the `files-api-2025-04-14` and `skills-2025-10-02` beta headers are no longer needed. If you keep sending them it still works, but the Files API goes back to the earlier response format.
+- **If you're on Max or Team, check your API credits.** Your plan includes monthly API credits. See [C2](/en/claude/c02-plans-limits/) for how to claim them.
+
+## Next steps: going deeper
+
+These features go beyond the beginner scope. Just learn the names and consult the official docs when you need them.
+
+- **Claude Managed Agents**: A service that runs agents in the cloud. With dynamic workflows (beta, 2026-10-09), an agent can directly use workflows that run multiple agents step by step.
+- **Computer and browser toolsets**: `computer_toolset_20260801` left beta on 2026-08-19, and the browser toolset (`browser_toolset_20260801`) was released the same day. The Python and TypeScript SDKs have classes in beta that inherit from them.
+- **Compaction**: A Messages API feature that compresses long conversations into a summary block (2026-09-14, beta, `compact-2026-09-04` header).
+- **Models API `capabilities`**: Look up what a model accepts so your code can avoid the 400 errors above in advance.
+
+## What to read next
+
+- [C1. Claude at a glance](/en/claude/c01-overview/) — comparing the 4 models and a selection guide
+- [C15. Model division strategy](/en/claude/c15-model-division/) — splitting work across models to cut costs
+- [C14. Claude Code core features](/en/claude/c14-claude-code-features/) — writing API code with Claude Code
+- [C2. Plans and usage limits](/en/claude/c02-plans-limits/) — how subscriptions differ from the API
+- [Build a work bot with tool use](/en/dev/01-tool-use/) — building a bot that calls tools through the API
+- [Cut API costs with prompt caching, batching, and effort](/en/dev/02-cost-optimization/) — caching and the Batch API in depth
+- [Run agents on a server with Managed Agents](/en/dev/04-managed-agents/) — running agents in the cloud
