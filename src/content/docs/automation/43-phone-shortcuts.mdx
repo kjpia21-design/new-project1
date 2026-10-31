@@ -1,0 +1,202 @@
+---
+title: "Call AI from Your Phone's Shortcuts: iPhone Shortcuts, Siri and Android Quick Access"
+description: "How to start AI with one tap or one phrase on iPhone (Shortcuts, Siri, Action button, Back Tap) and Android (assistant, widgets), limited to what the official help pages confirm"
+sidebar:
+  label: "13. AI from phone shortcuts"
+level: beginner
+category: automation
+tools: ["Shortcuts", "Siri", "Claude", "Gemini"]
+duration: "30 min"
+prerequisites:
+  - "An iPhone with the Shortcuts app, or an Android phone"
+  - "The AI app installed and logged in ([7. AI on your phone](/basics/07-ai-on-phone/))"
+lastVerified: 2026-10-31
+sources:
+  - title: "Apple Support: Shortcuts User Guide (welcome)"
+    url: "https://support.apple.com/guide/shortcuts/welcome/ios"
+  - title: "Apple Support: Run shortcuts with Siri"
+    url: "https://support.apple.com/guide/shortcuts/run-shortcuts-with-siri-apd07c25bb38/ios"
+  - title: "Apple Support: Run shortcuts with the Action button"
+    url: "https://support.apple.com/guide/shortcuts/run-shortcuts-with-the-action-button-apdfea15680b/ios"
+  - title: "Apple Support: Run shortcuts from Control Center"
+    url: "https://support.apple.com/guide/shortcuts/run-shortcuts-from-control-center-apd06a9201d4/ios"
+  - title: "Apple Support: Run shortcuts by tapping the back of your iPhone"
+    url: "https://support.apple.com/guide/shortcuts/run-shortcuts-tapping-iphone-apd897693606/ios"
+  - title: "Apple Support: Use Apple Intelligence in Shortcuts"
+    url: "https://support.apple.com/guide/shortcuts/use-apple-intelligence-in-shortcuts-tpg3vrvwmclv/ios"
+  - title: "Claude Help Center: Use Claude app intents, shortcuts, and widgets on iOS"
+    url: "https://support.claude.com/en/articles/10263469-use-claude-app-intents-shortcuts-and-widgets-on-ios"
+  - title: "Claude Help Center: Access Claude for iOS on your Lock Screen, Control Center, and Action button"
+    url: "https://support.claude.com/en/articles/10302511-access-claude-for-ios-on-your-lock-screen-control-center-and-action-button"
+  - title: "Claude Help Center: Use the Claude widget on Android"
+    url: "https://support.claude.com/en/articles/10534883-use-the-claude-widget-on-android"
+  - title: "Claude Help Center: Use Claude with Android apps"
+    url: "https://support.claude.com/en/articles/11869629-use-claude-with-android-apps"
+  - title: "Gemini Apps Help: Get started with the Gemini mobile app (Android)"
+    url: "https://support.google.com/gemini/answer/14554984"
+  - title: "Gemini Apps Help: Talk naturally with Gemini Live"
+    url: "https://support.google.com/gemini/answer/15274899"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- On iPhone, a **shortcut** is a small saved recipe in the Shortcuts app. You can start it by **saying its name to Siri**, with the **Action button**, from **Control Center**, or by **tapping the back of the phone** (Apple's guide, iOS 27 version).
+- Apple's Shortcuts has a **Use Model** action that can call an Apple Intelligence model (on-device or Private Cloud Compute) or an extension model (Apple's page says ChatGPT). It needs a supported device and language.
+- **Claude** is the AI app we could verify: Anthropic's help page says the **"Ask Claude"** action works in Siri, Spotlight, the Share menu and the Shortcuts app on iOS 18 and later. On Android, Claude has a home-screen widget, and Gemini can be your phone assistant.
+- We could not verify shortcut support for other AI apps in official help pages, so this tutorial leaves them out. Messages sent this way still count toward your usage limit.
+</Summary>
+
+## What you'll be able to do
+
+- Start an AI chat from the lock screen, the Action button or a spoken phrase, without hunting for the app.
+- Build a one-step "Summarize with Claude" shortcut on iPhone.
+- Know what quick-access options exist on Android, and what we could not confirm.
+- Avoid sending private text to AI by accident.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Shortcut** | A saved set of steps in the Shortcuts app that runs with one tap or one phrase. |
+| **Action** | One step in a shortcut, such as "Ask Claude". |
+| **App Intent** | A feature an app offers to Siri, Spotlight and Shortcuts, so they can use it without opening the app. |
+| **Siri** | Apple's voice assistant. It can run a shortcut when you say the shortcut's name. |
+| **Widget / control** | A button on your home screen, lock screen or Control Center. |
+| **Assistant (Android)** | The app that answers when you long-press the power button or say "Hey Google". |
+
+### What works where (as of 2026-10-31)
+
+| Way to start | iPhone | Android |
+| --- | --- | --- |
+| Say a phrase | Say the shortcut's name to Siri; or ask Siri to "Ask Claude" | "Hey Google" if Gemini is your assistant (availability varies by language and country) |
+| Press a button | Action button (iPhone 15 Pro or later) | Long-press the power button, if Gemini is your assistant on your device |
+| Tap a screen element | Control Center, lock screen, home-screen widget | Home-screen widget (Claude) |
+| Tap the back of the phone | Back Tap (Settings > Accessibility > Touch) | Not confirmed in official help |
+| Chain with other steps | Shortcuts app | Not confirmed in official help |
+
+<Aside type="note" title="What we couldn't confirm">
+- **ChatGPT app and Gemini on iPhone:** We found no official help page saying these apps offer Siri or Shortcuts actions, so we do not describe them. Apple's guide only says its Extension Model option uses ChatGPT.
+- **Gemini widgets or shortcuts on Android**, and any shortcut-style automation on Android beyond Claude's widget and Gemini as assistant. We did not find official pages to confirm them.
+- **Korean language:** Apple says Apple Intelligence is not available in all languages or regions, and Gemini's "Hey Google" is not in all languages. Check your own phone's settings. We did not confirm Korean support for each feature.
+- The Apple pages we read are the **iOS 27** version of the guide. Use the version selector at the top of Apple's page if your iPhone runs an older iOS, because action names can differ.
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'The Claude app is installed on my iPhone (iOS 18 or later) and I am logged in',
+  'I made a shortcut that uses the Ask Claude action',
+  'I ran it once from the Shortcuts app and read the result',
+  'I added a quick way to start it (Siri name, Action button, Control Center or Back Tap)',
+  'I tested it with harmless text before using it with anything private',
+]} />
+
+<Steps>
+
+1. **Make a shortcut with "Ask Claude" (iPhone)**
+
+   According to Anthropic's help page, the steps are: open the **Shortcuts** app, tap **+** to create a shortcut, add the **Share** action and choose your input type, then add the **Ask Claude** action. In Ask Claude, write a prompt such as "Please summarize the following text:" and insert the **Shortcut Input**. Name the shortcut, for example "Summarize with Claude", and optionally add it to the Share Sheet. Then, in any app, you can select text, tap Share and choose your shortcut. The shortcut uses the default model you see when you open the Claude app.
+
+   <PromptBox label="Prompt text inside the Ask Claude action">
+   Summarize the following text in 3 bullet points. Then list any dates or deadlines separately. Do not add facts that are not in the text.
+
+   (insert the Shortcut Input variable here)
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Building a Summarize shortcut with the Ask Claude action" officialUrl="https://support.claude.com/en/articles/10263469-use-claude-app-intents-shortcuts-and-widgets-on-ios" />
+
+2. **Choose how to start it**
+
+   <FlowSteps title="Add a quick start on iPhone" officialUrl="https://support.apple.com/guide/shortcuts/run-shortcuts-with-the-action-button-apdfea15680b/ios" steps={[
+     { where: 'Siri', action: 'Say the exact name of the shortcut', result: 'Siri runs it; on a locked phone that opens an app, it asks you to unlock' },
+     { where: 'Settings > Action Button (iPhone 15 Pro or later)', action: 'Swipe to Shortcut, tap Choose a Shortcut, pick yours', result: 'Pressing the Action button runs it' },
+     { where: 'Control Center', action: 'Add a Control > Shortcut > Choose', result: 'A button in Control Center' },
+     { where: 'Settings > Accessibility > Touch > Back Tap', action: 'Choose Double Tap or Triple Tap, then your shortcut', result: 'Tapping the back of the phone runs it' },
+   ]} />
+
+   If your shortcut's name matches a built-in Siri command, Apple says Siri runs the shortcut instead, so avoid names like "What time is it?".
+
+3. **Ask Claude by voice without building anything**
+
+   The "Ask Claude" intent also works on its own. Ask Siri to "Ask Claude" and it prompts you for a message, or type "Ask Claude" in Spotlight. Anthropic's help also describes "Open Claude" controls for the lock screen, Control Center and Action button, and a Claude widget on the home screen.
+
+4. **Try Apple's own Use Model action (optional)**
+
+   In the Shortcuts app you can add a **Use Model** action and pick **On-Device**, **Cloud**, **Cloud Pro** or **Extension Model** (Apple says the last one uses ChatGPT). On-Device handles simple requests without a network connection; Cloud and Cloud Pro use Apple's Private Cloud Compute. The **Follow Up** checkbox lets you refine the model's reply before it passes on. The Apple Intelligence category of the Shortcuts Gallery has ready-made examples. This needs an Apple Intelligence-capable device (for iOS 27, for example iPhone 15 Pro or later), and usage limits may apply.
+
+5. **On Android**
+
+   - **Claude widget** (Android 8.0 or later): touch and hold an empty area of the home screen, tap **Widgets**, find **Claude**, and drag it onto the screen. Its buttons start a new chat, open the camera, or start voice dictation.
+   - **Gemini as your assistant:** if the Google app is your default digital assistant (Settings > Apps > Default apps > Digital assistant app), Google says you can reach Gemini with "Hey Google" if enabled, or by touch such as long-pressing the power button or swiping up from a corner, depending on your device.
+   - **Claude with Android apps:** inside a Claude chat it can draft messages and emails, create calendar events and set alarms and timers. Claude shows a preview, and you send or confirm it yourself.
+
+   <ScreenshotPlaceholder caption="Adding the Claude widget to the Android home screen" officialUrl="https://support.claude.com/en/articles/10534883-use-the-claude-widget-on-android" />
+
+6. **Test with harmless text first**
+
+   Run the shortcut on a public news paragraph. Check that the result appears where you expect. Only then use it on emails or documents, and only if you are comfortable sending that content to the AI service.
+
+</Steps>
+
+## Quick reference
+
+| What | Where it is documented | Notes |
+| --- | --- | --- |
+| Ask Claude action | Claude Help Center (iOS 18 or later) | Siri, Spotlight, Share menu, Shortcuts app |
+| Open Claude control | Claude Help Center | Lock screen, Control Center, Action button |
+| Claude widget | Claude Help Center | Home screen on iPhone; home screen on Android 8.0 or later |
+| Run shortcuts with Siri, Action button, Back Tap | Apple Shortcuts guide | Action button needs iPhone 15 Pro or later |
+| Use Model action | Apple Shortcuts guide | Needs Apple Intelligence; not in all languages or regions |
+| Gemini as assistant | Gemini Apps Help | Android; by "Hey Google" or touch; varies by device |
+
+All of these use the same quota as chatting in the app: Anthropic notes that messages sent with the "Ask Claude" intent and the widget count toward your overall usage limit (see [8. Free vs. paid plans](/basics/08-free-vs-paid/)).
+
+## Common sticking points
+
+### Ask Claude doesn't appear in Shortcuts
+
+- **Cause**: The Claude app is missing, is not logged in, or your iOS is older than 18 (Anthropic's page says these features are for iOS 18 and later).
+- **Fix**: Update iOS and the app, open Claude once, then search for "Ask Claude" in the action list.
+
+### Siri runs the wrong thing
+
+- **Cause**: The shortcut's name matches another Siri command, or Siri heard a different name.
+- **Fix**: Rename the shortcut to a short, unusual phrase and say it exactly.
+
+### The Action button option is missing
+
+- **Cause**: Apple says it is on supported models (iPhone 15 Pro or later).
+- **Fix**: Use Control Center, a widget or Back Tap instead.
+
+### The shortcut stops on a locked phone
+
+- **Cause**: Apple says that when the device is locked and the shortcut opens an app, Siri asks you to unlock first.
+- **Fix**: Unlock the phone, or start the shortcut from an unlocked screen.
+
+### "Hey Google" or the power button doesn't open Gemini
+
+- **Cause**: Gemini may not be your assistant, the Google app may not be the default assist app, or the feature is not offered for your language, country or device.
+- **Fix**: Check Settings > Apps > Default apps > Digital assistant app, and read Google's availability page.
+
+## Practical tips
+
+- **Read before you share.** Selecting text and sending it to AI means that text leaves your phone. Skip anything with personal, financial or confidential details ([5. Privacy and safety](/basics/05-privacy-safety/)).
+- **Make one shortcut per job.** "Summarize", "Translate to plain English" and "Reply draft" are easier to trust than one shortcut that does everything.
+- **Check important results.** Summaries can miss or invent details ([4. Fact-checking](/basics/04-fact-checking/)).
+- **Do not talk to your phone in public** about private things. People nearby can hear you.
+- **Watch your limit.** Quick access makes it easy to send many small requests, and they all count.
+
+## What to read next
+
+- [7. AI on your phone](/basics/07-ai-on-phone/) — Install the apps and try voice conversations
+- [5. Privacy and safety](/basics/05-privacy-safety/) — What not to send to AI
+- [12. AI workflows with n8n](/automation/42-n8n-ai/) — Automation that runs without your phone
+- [3. Zapier/Make automation](/automation/18-zapier-make/) — Rule-based automations
+- [Guide for office, planning and admin roles](/roles/office/) — Recommended order for your job

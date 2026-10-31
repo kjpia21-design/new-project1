@@ -1,0 +1,220 @@
+---
+title: "Build AI Workflows with n8n: Gmail Triage with Claude"
+description: "How n8n Cloud and self-hosting differ, how to connect an AI model to a workflow, and a step-by-step example that has Claude draft replies to labeled Gmail messages"
+sidebar:
+  label: "12. AI workflows with n8n"
+level: practical
+category: automation
+tools: ["n8n", "Claude", "Gmail"]
+duration: "60 min"
+prerequisites:
+  - "An n8n Cloud free trial or a self-hosted n8n you can open in a browser"
+  - "A Gmail account (use a practice label, not real customer mail)"
+  - "An Anthropic API key (or, on n8n Cloud Starter/Pro, Gateway credits instead)"
+lastVerified: 2026-10-31
+sources:
+  - title: "n8n Docs: Choose how to use n8n"
+    url: "https://docs.n8n.io/choose-n8n/"
+  - title: "n8n Docs: Compare editions (self-hosted)"
+    url: "https://docs.n8n.io/deploy/host-n8n/community-edition-features.md"
+  - title: "n8n Docs: Try free then choose a plan"
+    url: "https://docs.n8n.io/deploy/use-n8n-cloud/start-your-free-trial.md"
+  - title: "n8n: Plans and Pricing"
+    url: "https://n8n.io/pricing/"
+  - title: "n8n Docs: Install options (self-hosted)"
+    url: "https://docs.n8n.io/deploy/host-n8n/install-options.md"
+  - title: "n8n Docs: Integrate AI"
+    url: "https://docs.n8n.io/build/integrate-ai.md"
+  - title: "n8n Docs: Build your first workflow"
+    url: "https://docs.n8n.io/build-your-first-workflow.md"
+  - title: "n8n Docs: Gmail Trigger node"
+    url: "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.gmailtrigger.md"
+  - title: "n8n Docs: Basic LLM Chain node"
+    url: "https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.chainllm.md"
+  - title: "n8n Docs: Anthropic Chat Model node"
+    url: "https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.lmchatanthropic.md"
+  - title: "n8n Docs: Anthropic credentials"
+    url: "https://docs.n8n.io/integrations/builtin/credentials/anthropic.md"
+  - title: "n8n Docs: Gateway credits"
+    url: "https://docs.n8n.io/deploy/use-n8n-cloud/gateway-credits.md"
+  - title: "n8n Docs: Gmail node, Draft operations"
+    url: "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.gmail/draft-operations.md"
+  - title: "n8n Docs: AI Agent node"
+    url: "https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.agent.md"
+  - title: "n8n Docs: Human-in-the-loop for tools"
+    url: "https://docs.n8n.io/build/integrate-ai/ai-examples/human-in-the-loop-for-tools.md"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- **n8n** is a workflow automation tool with AI nodes. You can use **n8n Cloud** (n8n hosts it; 14-day free trial) or **self-host** it (the free Community edition has almost the full feature set, but you run the server).
+- In n8n you chain **nodes**: a trigger starts the workflow, an AI node (for example a Basic LLM Chain with an Anthropic Chat Model) thinks, and an app node (for example Gmail) acts. You choose which model provider to plug in.
+- This tutorial builds **new labeled Gmail message → Claude writes a reply → saved as a Gmail draft, not sent**.
+- Compared with [Zapier/Make](/automation/18-zapier-make/), n8n gives you more control and a self-hosting option, but expects you to think in nodes and data. Prices below are what we confirmed as of 2026-10-31.
+</Summary>
+
+## What you'll be able to do
+
+- Decide between n8n Cloud and self-hosting for your situation.
+- Explain the difference between a Basic LLM Chain and an AI Agent in n8n.
+- Connect Claude to a workflow with an Anthropic Chat Model node.
+- Build a small workflow that drafts (but never sends) replies, and test it safely.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Workflow** | One automation in n8n: nodes connected on a canvas. |
+| **Node** | One step. Trigger nodes start a workflow; other nodes do the work. |
+| **Credential** | A saved login or API key a node uses to reach a service. |
+| **Basic LLM Chain** | An AI node that sends a prompt you define to a model and returns the answer. It has fixed steps. |
+| **AI Agent** | An AI node that has a chat model plus one or more tools, and decides which tool to call. The official page says at least one tool must be connected. |
+| **Sub-node** | A node plugged into an AI node, such as the Anthropic Chat Model that supplies the model. |
+| **Publish** | Turning a workflow on so its trigger runs by itself (the Schedule Trigger page says to save and publish). |
+
+### n8n Cloud or self-hosted (as of 2026-10-31)
+
+| Item | n8n Cloud | Self-hosted |
+| --- | --- | --- |
+| Who runs it | n8n hosts, updates and scales it | You provide and maintain the server |
+| Getting started | Sign up for a 14-day free trial | Install with Docker Compose, Docker, npm and others |
+| Cost | Plans: Starter, Pro, Enterprise | Community edition is free; Business and Enterprise are paid |
+| Skills needed | None for setup | Servers, containers and security (n8n says mistakes can cause data loss and downtime) |
+| Features | Per plan | Community lacks some features such as SSO, Projects and Git version control |
+
+<Aside type="caution" title="Prices and limits: check the pricing page">
+On the [n8n pricing page](https://n8n.io/pricing/) as of 2026-10-31, Starter was listed at 20 EUR/month with 2.5K workflow executions, Pro at 50 EUR/month with 10K executions (both "billed annually"), Business at 667 EUR/month (shown as self-hosted only), and Enterprise by contacting sales. We could not confirm the monthly-billing prices from the page text. The docs also say the free trial gives Pro features with a limit of 1000 executions, and that if you do not upgrade by the end of the trial the instance is deleted (you have 90 days to download your workflows). Always check the pricing page before you decide.
+</Aside>
+
+<Aside type="note" title="What we couldn't confirm">
+- Whether n8n's interface is available in Korean. We did not find it in the docs.
+- The exact list of Claude models in the Anthropic Chat Model node. The node's docs page lists only "Claude" and "Claude Instant", which looks out of date, so **pick from the list on your screen**.
+- The current Gateway credits rates. n8n points to a service pricing page that we did not open.
+- The detailed Google (OAuth) credential setup. Follow n8n's Google credentials page for your Gmail account.
+- This workflow is assembled from the official node pages. We did not run it end to end, so test it on your own account first.
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I started an n8n Cloud trial or opened my self-hosted n8n',
+  'I created a Gmail label such as "ai-draft" and put one test email in it',
+  'I created an Anthropic credential (API key) or chose Gateway credits',
+  'I connected Gmail Trigger → Basic LLM Chain → Gmail (Create draft)',
+  'I ran a manual test and read the draft in Gmail',
+  'I published the workflow only after the test looked right',
+]} />
+
+<Steps>
+
+1. **Choose where to run n8n**
+
+   If you just want to try it, start the 14-day free trial on n8n Cloud. If you self-host, n8n recommends Docker Compose for installing with Docker (the plain Docker page is marked outdated). By default it listens on port 5678, so you open `http://localhost:5678` in a browser. The official docs recommend self-hosting for experienced users; if you do not manage servers, they recommend Cloud.
+
+   <ScreenshotPlaceholder caption="n8n docs page for choosing Cloud or self-hosted" officialUrl="https://docs.n8n.io/choose-n8n/" />
+
+2. **Get a model connection ready**
+
+   An Anthropic credential uses an API key. In the Anthropic Console, open **Settings > API Keys**, select **+ Create Key**, copy it and paste it as the API Key in the n8n credential. On n8n Cloud Starter or Pro you can instead select **Use Gateway credits** in the node's credential field, which bills a prepaid balance and needs no Anthropic account. Gateway credits are not available on Cloud Enterprise or self-hosted n8n. Treat the key like a password and never paste it into a chat or a shared doc.
+
+3. **Add the trigger: Gmail Trigger**
+
+   Create a new workflow and add **Gmail Trigger** with the event **Message Received**. Sign in with a Google credential, then set the filters. Use **Label Names or IDs** to react only to your practice label. The node checks at the **Poll Time** you choose (it does not react instantly), reads unread emails by default, and fetches up to 10 emails per poll by default.
+
+4. **Add the AI step: Basic LLM Chain with Anthropic Chat Model**
+
+   Add a **Basic LLM Chain** and connect an **Anthropic Chat Model** sub-node to it. In the chain, set the prompt to **Define below** and drop in the email fields from the trigger. Use a **System** message under Chat Messages to set tone and rules.
+
+   <PromptBox label="System message for the chain">
+   You write reply drafts for a small business owner. Be polite and brief, in at most 5 sentences. Use only facts that appear in the email. If the sender asks about price, delivery dates or anything you cannot know, write "[owner to confirm]" instead of guessing. Do not promise anything.
+   </PromptBox>
+
+   <Aside type="note">
+   If you need the AI to look things up or call apps by itself, use an **AI Agent** instead. For a fixed "read this, write that" task a Basic LLM Chain is simpler and easier to predict.
+   </Aside>
+
+5. **Save the result as a draft, not a sent email**
+
+   Add a **Gmail** node, set Resource to **Draft** and Operation to **Create**. Fill in **Subject**, **Message** (the chain's output) and **To Email**, and choose the email type. Because the output is a draft, you always read it before anything leaves your account.
+
+   <FlowSteps title="The workflow you are building" officialUrl="https://docs.n8n.io/build-your-first-workflow.md" steps={[
+     { where: 'Gmail Trigger', action: 'A new email with your practice label arrives', result: 'Subject, sender and body are passed on' },
+     { where: 'Basic LLM Chain + Anthropic Chat Model', action: 'Claude writes a short reply from your prompt', result: 'A text reply' },
+     { where: 'Gmail (Draft > Create)', action: 'The reply is saved as a draft', result: 'Nothing is sent' },
+   ]} />
+
+6. **Test, then publish**
+
+   Run the workflow manually with your test email and open the node outputs to see what each step received. Read the draft in Gmail. When it looks right, publish the workflow so the trigger runs on its own. Check the executions list the next day for errors.
+
+</Steps>
+
+## Quick reference
+
+| I want to... | Use this in n8n |
+| --- | --- |
+| Start on a schedule | Schedule Trigger (publish the workflow) |
+| Start when a Gmail message arrives | Gmail Trigger (polls; set a label filter) |
+| One prompt in, one answer out | Basic LLM Chain + a chat model sub-node |
+| Let AI pick tools | AI Agent (connect at least one tool) |
+| Use Claude | Anthropic Chat Model with an API key, or Gateway credits on Cloud Starter/Pro |
+| Require a human OK before an action | Human review for tools on an AI Agent (approve or deny) |
+| Build a first workflow by chat | n8n Assistant (preview; Cloud Starter/Pro and some self-hosted editions) |
+
+### n8n vs Zapier/Make
+
+| Question | Better fit |
+| --- | --- |
+| I want a no-install, point-and-click start with many ready apps | [Zapier/Make](/automation/18-zapier-make/) |
+| I want to run it on my own server, or control the data flow node by node | n8n |
+| I want AI to read my mail and chat directly, with no workflow | [Connectors (MCP)](/automation/20-connectors-mcp/) |
+
+## Common sticking points
+
+### The workflow does not start by itself
+
+- **Cause**: It is only saved, not published, or the trigger polls on an interval and you did not wait.
+- **Fix**: Publish the workflow, and use the manual test to check the logic first.
+
+### The AI node says it needs a tool
+
+- **Cause**: You added an AI Agent, which requires at least one connected tool.
+- **Fix**: Connect a tool, or use a Basic LLM Chain for a plain prompt-and-answer step.
+
+### The Anthropic credential fails
+
+- **Cause**: The key was copied wrongly, deleted, or the account has no usable balance.
+- **Fix**: Create a new key in the Anthropic Console and paste it again. On Cloud Starter/Pro, try Gateway credits instead.
+
+### Gateway credits are missing
+
+- **Cause**: They exist only on n8n Cloud Starter and Pro, and trials cannot top up until you upgrade.
+- **Fix**: Use your own API key, or upgrade the Cloud plan.
+
+### The same email is processed twice, or too many at once
+
+- **Cause**: The filter is too wide, or old unread emails match the label.
+- **Fix**: Narrow the label or search filter, and remove the label after you handle a message.
+
+## Practical tips
+
+- **Draft, do not send.** Anything an AI writes in your name should wait for a human. For agent tools that act (send, delete, change records), n8n offers human approval before the tool runs.
+- **Keep personal data out of prompts.** The email body goes to the model provider. Start with practice mail, and check your company's rules first ([5. Privacy and safety](/basics/05-privacy-safety/)).
+- **Start with one node of AI.** Get trigger, AI and action working with a single email, then add steps.
+- **Watch cost.** API calls are billed by the provider (or by your Gateway credits), and Cloud plans have execution limits.
+- **Self-hosting is a job.** Updates, backups and security are yours. n8n releases a new minor version most weeks.
+
+## What to read next
+
+- [3. Zapier/Make automation](/automation/18-zapier-make/) — The no-install alternative, and how the two approaches differ
+- [5. Connecting with connectors (MCP)](/automation/20-connectors-mcp/) — Letting Claude use your tools directly
+- [2. Get a morning briefing](/automation/17-morning-briefing/) — The AI-agent approach to a daily routine
+- [7. AI on your phone](/basics/07-ai-on-phone/) — Use AI away from your desk
+- [Guide for office, planning and admin roles](/roles/office/) — Recommended order for your job
