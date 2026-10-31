@@ -1,0 +1,280 @@
+---
+title: "Claude Code 훅으로 자동 검사·정리 붙이기"
+description: "Claude Code 훅으로 편집할 때마다 포맷터를 돌리고, 위험한 명령과 보호 파일 수정을 막고, Claude가 기다릴 때 알림을 받는 법. 이벤트 종류, 설정 파일 위치, 종료 코드, 보안 주의까지"
+sidebar:
+  label: "10. 훅으로 자동 검사 붙이기"
+level: practical
+category: coding
+tools: ["Claude Code", "jq", "Prettier"]
+duration: "40분"
+prerequisites:
+  - "Claude Code가 설치된 상태 (코딩 6 참고)"
+  - "연습용 프로젝트 폴더 (복사본 권장)"
+  - "jq 설치 (예제가 JSON을 jq로 읽어요), Prettier 예제에는 Node.js"
+lastVerified: 2026-10-31
+sources:
+  - title: "Automate actions with hooks (hooks guide)"
+    url: "https://code.claude.com/docs/en/hooks-guide"
+  - title: "Hooks reference"
+    url: "https://code.claude.com/docs/en/hooks"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- **훅**은 Claude Code가 작업 흐름의 특정 시점에 자동으로 실행하는 셸 명령(또는 HTTP 호출, 프롬프트, 에이전트)이에요. CLAUDE.md와 달리 **결정적**이에요. 모델이 기억하기를 기대하지 않고 매번 실행돼요.
+- 대표적인 쓰임새: 편집 뒤 포맷(`PostToolUse`), 위험한 명령·보호 파일 차단(`PreToolUse`), Claude가 입력을 기다릴 때 알림(`Notification`).
+- 훅은 이벤트 데이터를 **stdin의 JSON**으로 받아요. **종료 코드 0**은 이의 없음, **종료 코드 2**는 동작을 막고 stderr 메시지를 Claude에게 피드백으로 보내요.
+- 훅은 설정 파일에 둬요. `~/.claude/settings.json`(모든 프로젝트), `.claude/settings.json`(저장소와 공유), `.claude/settings.local.json`(나만).
+- **명령 훅은 내 사용자 권한 전체로 실행돼요.** 특히 남의 저장소에 들어 있던 훅은 명령을 읽고 시험해 본 뒤에 쓰세요.
+- 2026-10-31에 공식 문서를 확인했어요. 차단 스크립트의 논리만 샘플 JSON으로 로컬에서 시험했고, Claude Code 자체는 실행하지 못했어요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 설정 파일에 훅을 추가하고 `/hooks`로 확인하기
+- Claude가 편집한 파일을 자동으로 포맷하기
+- `PreToolUse` 훅으로 위험한 명령과 보호 파일 수정 막기
+- 동작하지 않는 훅을 디버그하고 보안 규칙 설명하기
+
+## 먼저 알아둘 개념
+
+[C14](/ko/claude/c14-claude-code-features/)에서 훅을 한 단계로 맛봤어요. 이 글은 더 깊이 다뤄요. 핵심은 이거예요. CLAUDE.md는 Claude가 대체로 따르는 **맥락**이고, 훅은 **항상 실행되는 코드**예요. "반드시 해야 하는 일"과 "절대 하면 안 되는 일"에 훅을 쓰세요.
+
+### 이벤트 (공식 훅 가이드, 2026-10-31)
+
+| 이벤트 | 실행 시점 |
+| --- | --- |
+| `SessionStart` / `SessionEnd` | 세션이 시작·재개될 때 / 끝날 때 |
+| `UserPromptSubmit` | 프롬프트를 제출했을 때, Claude가 처리하기 전 |
+| `PreToolUse` | 도구 호출 실행 전. **막을 수 있어요** |
+| `PermissionRequest` | 도구 호출에 권한 결정이 필요할 때 |
+| `PostToolUse` / `PostToolUseFailure` | 도구 호출이 성공한 뒤 / 실패한 뒤 |
+| `Notification` | Claude Code가 알림을 보낼 때 |
+| `SubagentStart` / `SubagentStop` | 서브에이전트가 시작될 때 / 끝날 때 |
+| `Stop` | Claude가 응답을 마쳤을 때(사용자 중단 시에는 아님) |
+| `PreCompact` / `PostCompact` | 컨텍스트 압축 전후 |
+| `FileChanged`, `CwdChanged`, `ConfigChange` | 감시 파일·작업 폴더·설정이 바뀔 때 |
+
+가이드 표에는 이 밖에도 `Setup`, `TaskCreated`, `WorktreeCreate`, `PreModelSwitch`, `Elicitation` 등이 더 있어요. 전체 목록과 스키마는 [훅 레퍼런스](https://code.claude.com/docs/en/hooks)를 보세요.
+
+### 훅 종류
+
+대부분은 `"type": "command"`(셸 명령)예요. 가이드에는 `http`(이벤트 데이터를 URL로 POST), `mcp_tool`, `prompt`(판단이 필요할 때 쓰는 한 번짜리 모델 검사), `agent`(여러 턴 검증, 가이드가 실험적이라고 표시)도 나와 있어요.
+
+### 어디에 둘까
+
+| 위치 | 범위 | 공유 |
+| --- | --- | --- |
+| `~/.claude/settings.json` | 내 모든 프로젝트 | 아니요 |
+| `.claude/settings.json` | 이 프로젝트 | 예, 커밋 가능 |
+| `.claude/settings.local.json` | 이 프로젝트 | 아니요(gitignore) |
+| 관리형 정책 설정 | 조직 전체 | 예, 관리자가 제어 |
+| 플러그인 `hooks/hooks.json`, 스킬·서브에이전트 frontmatter | 플러그인이 켜진 동안 / 스킬 호출 뒤 / 서브에이전트 실행 중 | 예 |
+
+<Aside type="danger" title="훅은 내 권한 전체로 실행돼요">
+공식 레퍼런스는 명령 훅이 내 사용자 권한 전체로 셸 명령을 실행하며, 내 계정이 접근할 수 있는 어떤 파일이든 수정·삭제·열람할 수 있다고 경고해요. 훅을 추가하기 전에 꼭 읽고 시험하세요. Claude Code는 폴더의 작업 공간 신뢰 대화상자를 수락하기 전까지 설정 파일의 훅을 보류해요. 하지만 `-p`(비대화형)나 SDK 세션에는 **대화상자가 없어서**, 저장소의 `.claude/settings.json`에 커밋된 훅이 한 번도 검토하지 않은 폴더에서도 실행돼요. 남이 만든 저장소에 `claude -p`를 스크립트로 돌리기 전에는 `.claude/` 파일을 읽어 보거나, `--settings '{"disableAllHooks": true}'`로 그 실행에서 훅을 끄세요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  'jq(Prettier용 Node.js 포함)를 설치하고 연습 프로젝트를 열었다',
+  'Notification 훅을 추가하고 /hooks에서 확인했다',
+  'PostToolUse 포맷터를 추가하고 파일이 다시 포맷되는 것을 확인했다',
+  '위험한 명령을 막는 PreToolUse 스크립트를 추가하고 시험했다',
+  '훅이 실행됐는지 확인하는 방법(Ctrl+O, /hooks, 디버그 로그)을 안다',
+]} />
+
+<Steps>
+
+1. **첫 훅: 알림**
+
+   `~/.claude/settings.json`을 열어(없으면 만들어) `Notification` 훅을 추가하세요. 아래는 macOS의 `osascript` 예시이고, 리눅스·윈도우 명령은 훅 가이드에 있어요.
+
+   ```json
+   {
+     "hooks": {
+       "Notification": [
+         {
+           "matcher": "",
+           "hooks": [
+             {
+               "type": "command",
+               "command": "osascript -e 'display notification \"Claude Code needs your attention\" with title \"Claude Code\"'"
+             }
+           ]
+         }
+       ]
+     }
+   }
+   ```
+
+   파일에 이미 `hooks` 키가 있으면 객체를 통째로 바꾸지 말고 기존 이벤트 키 옆에 `Notification`을 추가하세요. 그다음 Claude Code에서 `/hooks`를 입력하면 `Notification` 아래에 훅이 보여요. 시험하려면 `Shift+Tab`으로 수동 권한 모드로 바꾸고, 권한이 필요한 일을 시킨 뒤 다른 창으로 가 보세요.
+
+2. **편집할 때마다 자동 포맷**
+
+   프로젝트의 `.claude/settings.json`에 아래를 추가하세요. `Edit`나 `Write` 도구가 성공하면 그 파일에 Prettier를 돌려요. `jq`가 stdin의 JSON에서 파일 경로를 꺼내요.
+
+   ```json
+   {
+     "hooks": {
+       "PostToolUse": [
+         {
+           "matcher": "Edit|Write",
+           "hooks": [
+             {
+               "type": "command",
+               "command": "jq -r '.tool_input.file_path' | xargs npx prettier --write"
+             }
+           ]
+         }
+       ]
+     }
+   }
+   ```
+
+   <PromptBox>
+   이 프로젝트의 자바스크립트 파일에 작은따옴표 문자열이 들어간 줄을 하나 추가해 줘. 그다음 파일 내용을 보여 줘서 다시 포맷됐는지 내가 확인할 수 있게 해 줘.
+   </PromptBox>
+
+   Prettier 기본 설정이면 훅이 작은따옴표를 큰따옴표로 바꿔요. 성공하면 대화에는 **아무것도 표시되지 않으니** 파일 자체를 확인하세요. `matcher`는 대소문자를 구분하고 `Edit|Write`는 "둘 중 하나"라는 뜻이에요. `Bash` 명령으로 바뀐 파일은 잡지 못해요. 그런 경우 가이드는 `FileChanged` 훅을 권해요.
+
+3. **보호 파일 수정 막기**
+
+   `.claude/hooks/protect-files.sh`를 만드세요(공식 가이드 예시).
+
+   ```bash
+   #!/bin/bash
+   # protect-files.sh
+
+   INPUT=$(cat)
+   FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
+
+   # Normalize Windows backslash separators so the patterns below match
+   FILE_PATH="${FILE_PATH//\\//}"
+
+   PROTECTED_PATTERNS=(".env" "package-lock.json" ".git/")
+
+   for pattern in "${PROTECTED_PATTERNS[@]}"; do
+     if [[ "$FILE_PATH" == *"$pattern"* ]]; then
+       echo "Blocked: $FILE_PATH matches protected pattern '$pattern'" >&2
+       exit 2
+     fi
+   done
+
+   exit 0
+   ```
+
+   macOS·리눅스에서는 실행 권한을 주고 등록하세요.
+
+   ```bash
+   chmod +x .claude/hooks/protect-files.sh
+   ```
+
+   ```json
+   {
+     "hooks": {
+       "PreToolUse": [
+         {
+           "matcher": "Edit|Write",
+           "hooks": [
+             {
+               "type": "command",
+               "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/protect-files.sh"
+             }
+           ]
+         }
+       ]
+     }
+   }
+   ```
+
+   Claude에게 `.env`에 주석을 추가하라고 시켜 보세요. 편집이 막히고 `Blocked:` 메시지가 Claude에게 피드백으로 전달돼서 Claude가 방향을 바꿔요.
+
+4. **위험한 셸 명령 막기**
+
+   `Bash` 도구용 `PreToolUse` 패턴이에요. `tool_input.command`에 명령이 들어 있어요(가이드의 방식을 따랐어요). `.claude/hooks/block-risky.sh`로 저장하세요.
+
+   ```bash
+   #!/bin/bash
+   INPUT=$(cat)
+   COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // empty')
+
+   if echo "$COMMAND" | grep -Eq 'rm -rf|git push --force'; then
+     echo "Blocked: risky command: $COMMAND" >&2   # stderr가 Claude의 피드백이 돼요
+     exit 2                                         # 종료 코드 2 = 차단
+   fi
+
+   exit 0   # 이의 없음, 일반 권한 흐름이 적용돼요
+   ```
+
+   3단계와 같은 방식으로 `PreToolUse`에 `"matcher": "Bash"`로 등록하세요. 이 스크립트의 논리는 샘플 JSON을 파이프로 넣어 로컬에서 시험했어요. `rm -rf build`는 메시지와 함께 종료 코드 2로 끝났고, `ls`는 0으로 끝났어요. 이런 단순 패턴 매칭은 **간단한 방어일 뿐 보안 경계가 아니에요.** 위험한 명령을 쓰는 모든 방법을 잡지는 못해요.
+
+   <Aside type="note" title="종료 코드 0은 승인이 아니에요">
+   `PreToolUse` 훅이 0으로 끝나는 것은 "이의 없음"일 뿐이고, 호출은 여전히 일반 권한 흐름을 거쳐요. 훅은 `permissionDecision`을 `deny`, `ask`, `allow`로 담은 JSON을 출력할 수도 있어요. 한 훅에서는 종료 코드 2와 JSON 중 하나만 쓰세요. 훅의 `deny`는 `bypassPermissions` 모드에서도 유지돼요.
+   </Aside>
+
+5. **무슨 일이 있었는지 확인하기**
+
+   <FlowSteps title="훅이 아무것도 안 하는 것 같을 때" officialUrl="https://code.claude.com/docs/en/hooks-guide" steps={[
+     { where: 'Claude Code 프롬프트', action: '/hooks 입력', result: '훅이 맞는 이벤트 아래에 있는지 확인' },
+     { where: '내 설정 파일', action: 'matcher 철자와 대소문자 확인(예: Edit|Write)', result: '매처는 대소문자를 구분하고 도구 이름과 정확히 맞아야 해요' },
+     { where: 'Claude Code', action: 'Ctrl+O로 대화 기록 보기', result: '차단 메시지나 "hook error" 알림으로 무슨 일이 있었는지 보여요' },
+     { where: '터미널', action: 'claude --debug-file /tmp/claude.log로 시작하고 그 파일을 tail -f', result: '종료 코드, stdout, stderr가 기록돼요' },
+   ]} />
+
+</Steps>
+
+## 빠른 참조표
+
+| 종료 코드 | 의미 |
+| --- | --- |
+| 0 | 이의 없음. `UserPromptSubmit`과 `SessionStart`에서는 stdout이 Claude의 맥락에 추가돼요 |
+| 2 | 차단(막을 수 있는 이벤트에서). stderr는 이벤트에 따라 Claude나 사용자에게 가요 |
+| 그 밖 | 대부분의 이벤트에서 차단하지 않는 오류이고 동작은 계속돼요 |
+
+기본 시간 제한(가이드): command·http·mcp_tool 훅은 10분(`UserPromptSubmit`은 30초), prompt 훅은 30초, agent 훅은 60초예요. `timeout`(초)으로 바꿀 수 있어요. 명령 훅은 `/` 명령이나 도구를 호출할 수 없어요. `PostToolUse`는 이미 실행된 도구의 결과를 되돌릴 수 없어요.
+
+## 자주 막히는 지점
+
+### 훅이 전혀 실행되지 않아요
+
+- **원인**: 이벤트나 매처가 틀렸거나 도구 이름 오타예요.
+- **해결**: `/hooks`를 실행해 이벤트 표와 비교하고, 매처가 대소문자를 구분한다는 점을 기억하세요.
+
+### 스크립트가 실행되지 않거나 "permission denied"가 나요
+
+- **원인**: 스크립트에 실행 권한이 없어요.
+- **해결**: macOS·리눅스에서 `chmod +x` 하세요.
+
+### JSON 출력을 했는데 효과가 없어요
+
+- **원인**: 셸 프로필(`~/.zshrc` 등)의 출력이 JSON 앞에 섞였거나, 필드 위치가 틀렸어요.
+- **해결**: stdout을 깨끗하게 유지하고 결정 필드를 레퍼런스가 말하는 위치에 두세요. 가이드의 문제 해결 절을 보세요.
+
+### Stop 훅이 계속 막아서 Claude가 멈추지 않아요
+
+- **원인**: 매번 막는 `Stop` 훅이에요. Claude Code는 연속 8번 막히면 그 훅을 무시해요.
+- **해결**: 입력의 `stop_hook_active`를 읽고 `true`면 0으로 끝내세요.
+
+## 실전 팁
+
+- 작은 훅 하나로 시작해 확인한 뒤에 늘리세요.
+- 셸 변수는 따옴표로 감싸고(`"$VAR"`), 스크립트 경로는 `"$CLAUDE_PROJECT_DIR"/...`처럼 절대 경로로 쓰고, 레퍼런스의 모범 사례대로 `.env`, `.git/`, 키는 건너뛰세요.
+- `PreToolUse` 훅 둘이 같은 도구의 입력을 다시 쓰게 하지 마세요. 결과가 보장되지 않아요.
+- 공유할 훅은 `.claude/settings.json`에 커밋하고, 팀원에게 무슨 일을 하는지 알려 주세요.
+- 원하는 것을 말로 쓰고 Claude에게 훅 초안을 부탁해도 되지만, 저장하기 전에 직접 읽어 보세요.
+
+## 다음에 볼 튜토리얼
+
+- [C14. Claude Code 핵심 기능](/ko/claude/c14-claude-code-features/) — CLAUDE.md, 서브에이전트, MCP, 권한 모드
+- [6. Claude Code 시작하기](/ko/coding/06-claude-code-start/)
+- [8. 클라우드 세션에 일 맡기기](/ko/coding/08-cloud-github/)
+- [개발 7. 헤드리스와 GitHub Actions](/ko/dev/07-headless-ci/) — `-p` 실행, 신뢰 주의가 가장 중요한 곳
+- [개발자 가이드](/ko/roles/developer/)
