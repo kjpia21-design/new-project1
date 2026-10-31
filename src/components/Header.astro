@@ -1,0 +1,53 @@
+---
+// Starlight 기본 Header에 "모바일용 언어 전환 버튼"을 더한 오버라이드.
+// 기본 Header는 언어 선택기를 넓은 화면(50rem 이상)에서만 보여 주고, 좁은 화면에서는 사이드바 메뉴 안에 넣는다.
+// 홈처럼 사이드바가 없는 페이지에서는 휴대폰에서 언어를 바꿀 방법이 없어서, 좁은 화면 전용 버튼을 헤더에 둔다.
+import Default from '@astrojs/starlight/components/Header.astro';
+import { getLang } from '../lib/i18n';
+
+const lang = getLang(Astro);
+const path = Astro.url.pathname;
+const otherPath = lang === 'en' ? path.replace(/^\/en(\/|$)/, '/') : `/en${path === '/' ? '/' : path}`;
+const otherLang = lang === 'en' ? 'ko' : 'en';
+const label = lang === 'en' ? '한국어' : 'English';
+const aria = lang === 'en' ? '한국어 페이지로 보기' : 'View this page in English';
+---
+
+<div class="hdr">
+  <Default />
+  <a class="lang-toggle" href={otherPath} hreflang={otherLang} lang={otherLang} data-lang={otherLang} aria-label={aria}>
+    <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+    <span>{label}</span>
+  </a>
+</div>
+
+<script is:inline>
+  // 이 버튼으로 고른 언어도 기억한다(홈 첫 방문 이동 판단에 사용).
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a.lang-toggle') : null;
+    if (!a) return;
+    try { localStorage.setItem('lang-pref', a.getAttribute('data-lang')); } catch (err) {}
+  }, true);
+</script>
+
+<style>
+  .hdr { display: flex; align-items: center; gap: 0.5rem; height: 100%; }
+  .hdr > :global(.header) { flex: 1; min-width: 0; }
+  .lang-toggle {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    flex: none;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 999px;
+    color: var(--sl-color-white);
+    font-size: var(--sl-text-xs);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .lang-toggle:hover { border-color: var(--sl-color-accent); color: var(--sl-color-accent-high); }
+  /* 넓은 화면에서는 기본 언어 선택기가 보이므로 숨긴다. */
+  @media (min-width: 50rem) {
+    .lang-toggle { display: none; }
+  }
+</style>
