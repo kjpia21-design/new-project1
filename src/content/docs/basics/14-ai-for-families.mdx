@@ -1,0 +1,184 @@
+---
+title: "AI for Families: Age Rules, Teen Accounts and Homework Help"
+description: "What the official pages say about minimum ages for Claude, Gemini and ChatGPT, what parents can control, and how to use AI for homework without copying answers"
+sidebar:
+  label: "14. AI for families"
+level: beginner
+category: basics
+status: published
+tools: ["Claude", "Gemini", "ChatGPT"]
+duration: "20 min"
+prerequisites: ["You are a parent, guardian, or teacher, or you are an adult helping a young person use AI"]
+lastVerified: 2026-11-01
+sources:
+  - title: "Anthropic Consumer Terms of Service (minimum age)"
+    url: "https://www.anthropic.com/legal/consumer-terms"
+  - title: "Claude Help Center: Age assurance on Claude"
+    url: "https://support.claude.com/en/articles/15171100-age-assurance-on-claude"
+  - title: "Claude Help Center: Minimum age requirement access restriction"
+    url: "https://support.claude.com/en/articles/13117299-minimum-age-requirement-access-restriction"
+  - title: "Google For Families Help: Guide your child's Gemini Apps experience"
+    url: "https://support.google.com/families/answer/16109150"
+  - title: "Gemini Apps Help: What you need to sign in to Gemini Apps"
+    url: "https://support.google.com/gemini/answer/13278668"
+  - title: "Gemini Apps Help: Use learning tools in Gemini Apps"
+    url: "https://support.google.com/gemini/answer/16448384"
+  - title: "Gemini Apps limits & feature availability (age requirements)"
+    url: "https://support.google.com/gemini/answer/16275805"
+  - title: "ChatGPT docs (learn.chatgpt.com): only an Edu admin teen-filter setting and an acceptable-use line were found"
+    url: "https://learn.chatgpt.com/llms-full.txt"
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+<Summary>
+- **Claude** is for adults. Anthropic's Consumer Terms require you to be **18 or older** (or the minimum age to consent in your location, whichever is higher). Claude may ask you to verify your age.
+- **Gemini** lets a personal Google Account holder use it from **13** (or the applicable age in your country). For a child under 13, a parent can turn Gemini on in **Family Link**, though availability is rolling out gradually and excludes the EEA, Switzerland and the UK.
+- **ChatGPT**: I could not confirm its minimum age or any parental controls from pages I can open. Check OpenAI's current terms yourself.
+- For homework, ask AI to **explain, give hints and quiz**, not to hand over the answer. Never enter a child's address, school name or family details.
+- Rules and rollouts change quickly. This page is accurate as of 2026-11-01.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Find out which AI services a young person is allowed to use, from the official pages.
+- Turn Gemini on or off for a supervised child in Family Link.
+- Set up homework help that teaches instead of doing the work.
+- Decide what a child should never type into an AI chat.
+
+## Concepts to know first
+
+If you are new to AI chat, start with [tutorial 1](/basics/01-first-30-minutes/). Privacy basics are in [tutorial 5](/basics/05-privacy-safety/) and settings in [tutorial 12](/basics/12-privacy-settings/).
+
+| Term | Plain meaning |
+| --- | --- |
+| **Minimum age** | The youngest age a service's terms allow. It can differ by country. |
+| **Supervised account** | A child's Google Account managed by a parent with Family Link. |
+| **Age assurance** | A check a service uses to confirm that you are an adult. |
+| **Guided learning** | A tutor-style mode that walks through a topic instead of just answering. |
+
+What the official pages say (as of 2026-11-01):
+
+| Service | Minimum age and rules | Parent tools |
+| --- | --- | --- |
+| **Claude** | Consumer Terms: at least 18, or the minimum age to consent in your location if higher. Claude says it is only available to people over 18 and may ask you to verify your age (through Yoti). On mobile, an app store that reports you as under 18 can block sign-up. | No teen account. Not made for under-18 use. |
+| **Gemini** | 13 (or the applicable age in your country) for a personal or school Google Account; 18 for a work account. | A parent can allow or turn off Gemini Apps for a supervised child under 13 in Family Link. Extra content filters apply to signed-in minors. |
+| **ChatGPT** | Not confirmed (see below). | Not confirmed for personal accounts. |
+
+<Aside type="caution" title="What I could not confirm">
+OpenAI's own terms and help pages (openai.com, help.openai.com) were not accessible here, and I did not try to get around that. The ChatGPT docs I could open mention only a teen content filter setting for school (Edu) workspace admins and a rule against using its Sites feature to target children under 13. They do not state a minimum age for personal accounts. Read OpenAI's current Terms of Use before letting a young person sign up.
+</Aside>
+
+<Aside type="note" title="Google's pages do not fully agree">
+A Google sign-in page still says Family Link-managed accounts cannot use the Gemini web app, while the newer Family Link page says parents can enable Gemini Apps for children under 13 and that access is being released gradually. Treat Family Link access as "may be available, depending on your account and region" and check the screen in the app.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I checked the minimum age for each service on the official page',
+  'I set up Gemini in Family Link only if I want my child to use it',
+  'I told my child what never to type into AI',
+  'We agreed on a homework rule: explain and hint, never just answer',
+  'I will review the settings again when the child or the service changes',
+]} />
+
+<Steps>
+
+1. **Check the age rule before creating an account**
+
+   Open the official pages listed above for the service you have in mind. Do not create an account for a young person using a false birth date. Claude says it can disable accounts with signs of minor use and ask for age verification, and Google's pages describe filters and limits tied to the age on the account.
+
+2. **For Gemini, decide whether to turn it on in Family Link**
+
+   Per Google's page, a parent must enable access before a child under 13 (or the applicable age in the country) can use Gemini Apps on a supervised account. You get an email when the child first activates it, and you can change this at any time.
+
+   <FlowSteps title="Turn Gemini on or off for a supervised child" officialUrl="https://support.google.com/families/answer/16109150" steps={[
+     { where: 'familylink.google.com or the Family Link app', action: 'Select your child' },
+     { where: 'Controls', action: 'Open Gemini, then Gemini Apps' },
+     { where: 'Gemini Apps', action: 'Turn Gemini Apps on or off', result: 'It may take a few hours to take effect. Try restarting Gemini' },
+   ]} />
+
+   Older versions of Family Link use Controls > Content restrictions > Gemini > Gemini Apps. Gemini Apps is not available for supervised accounts in the European Economic Area, Switzerland, or the United Kingdom.
+
+   <ScreenshotPlaceholder caption="Family Link: Controls > Gemini > Gemini Apps" officialUrl="https://support.google.com/families/answer/16109150" officialLabel="See it in Google's help" />
+
+3. **Sit down and try it together first**
+
+   Google's family page suggests exploring the tool with your child and supervising early use. It also says the content filters "are not perfect," and that a child may still see content you do not want them to see. If that happens, you or the child can report it with feedback or by marking a bad response.
+
+4. **Teach three rules about the chat itself**
+
+   Based on Google's family guidance:
+   - **It is an app, not a person.** It can sound friendly and encouraging, but it should not be treated as a friend or used to discuss personal problems or secrets.
+   - **Do not enter personal information**, such as an address, school name, or family information.
+   - **Double-check answers.** AI can present wrong information as fact (see [tutorial 4](/basics/04-fact-checking/)).
+
+5. **Set the homework rule: understand, don't copy**
+
+   The aim is that the child can do the next problem alone. This is my suggestion, not an official rule. Google's page also describes Gemini helping with a tricky math problem or book report by giving "clues and explanations" so the child can figure it out. Try a prompt like this:
+
+   <PromptBox>
+   I'm a student working on this homework problem: [paste the problem]. Don't give me the final answer. First ask me what I already understand, then give me one hint at a time. After I solve it, give me a similar practice problem.
+   </PromptBox>
+
+   Then check against the textbook or ask the teacher, and make sure the child can explain the answer in their own words. Also follow the school's own rules on AI use.
+
+6. **Know what is not available to under-18s**
+
+   Google's help says Gemini's Guided Learning and learning tools are, for now, English and US only, and not available to users under 18 or to work or school accounts. Video generation in the Gemini app is also not available to users under 18 (see [tutorial 34](/media/34-ai-video-generation/)). So a teen account may not show every feature you read about.
+
+</Steps>
+
+## Quick reference
+
+| Question | Answer (as of 2026-11-01) |
+| --- | --- |
+| Can a 15-year-old use Claude? | Not under the Consumer Terms (18+). |
+| Can a 12-year-old use Gemini? | 13+ in most countries on a personal account; under 13 only with a parent turning it on in Family Link where available. |
+| Can a teen use ChatGPT? | Not confirmed in pages I could open. |
+| Where do parents switch Gemini on or off? | Family Link > your child > Controls > Gemini > Gemini Apps |
+| What should a child never type in? | Address, school name, family details, passwords |
+
+## Common sticking points
+
+### Gemini is not available for my child even though I turned it on
+
+- **Cause**: Google says access for supervised accounts is released gradually, and it is not available in the EEA, Switzerland, or the UK.
+- **Fix**: Restart Gemini and wait a few hours. Check the region and device, and read Google's troubleshooting section.
+
+### My teen's Claude account was disabled
+
+- **Cause**: Claude is for people over 18. Anthropic says it disables accounts when it detects signs of minor use.
+- **Fix**: Anthropic offers age verification through Yoti for adults. If a minor made the account, do not try to get around it. Use a service that allows their age.
+
+### "Minimum age requirement" message on the Claude mobile app
+
+- **Cause**: Your phone's app store reported an age under 18 based on the account.
+- **Fix**: Anthropic cannot change that data. If it is wrong, contact Apple or Google support. If the account is in a family group, a parent may have set the age.
+
+### The AI gives an answer that is wrong or off-topic
+
+- **Cause**: AI can make mistakes.
+- **Fix**: Ask for sources, compare with the textbook, and see [tutorial 4](/basics/04-fact-checking/).
+
+## Practical tips
+
+- Use AI as a **tutor**: ask it to quiz your child and give hints, then let the child try without it.
+- Keep your own account out of a child's hands. Paid accounts may have payment details and a history of your conversations.
+- Talk about sensitive topics (health, money, feelings) with a trusted adult, not only a chatbot. See [tutorial 13](/basics/13-sensitive-questions/).
+- Teach your child that scam messages and fake media exist ([tutorial 10](/basics/10-ai-scams-deepfakes/)).
+- Re-check the age and parent-control pages every few months. They change.
+
+## What to read next
+
+- [5. Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/) — What not to share
+- [12. Turn off AI training on your chats](/basics/12-privacy-settings/) — Privacy settings
+- [13. Asking AI about health, legal and money questions safely](/basics/13-sensitive-questions/) — Sensitive topics
+- [AI Guide for Students and Job Seekers](/roles/student/) — Study uses of AI
+- [AI Guide for Teachers, Instructors, and Education Staff](/roles/teacher/) — Classroom perspective

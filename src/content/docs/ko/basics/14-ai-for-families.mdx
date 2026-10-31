@@ -1,0 +1,184 @@
+---
+title: "아이와 함께 AI 쓰기: 나이 제한·청소년 계정·숙제 도움"
+description: "Claude·Gemini·ChatGPT의 공식 최소 연령, 보호자가 할 수 있는 설정, 답 베끼기 대신 이해하며 숙제하는 법"
+sidebar:
+  label: "14. 아이와 함께 AI 쓰기"
+level: beginner
+category: basics
+status: published
+tools: ["Claude", "Gemini", "ChatGPT"]
+duration: "20분"
+prerequisites: ["보호자·교사이거나, 청소년이 AI를 쓰도록 돕는 성인"]
+lastVerified: 2026-11-01
+sources:
+  - title: "Anthropic 소비자 이용약관 (최소 연령, 영문)"
+    url: "https://www.anthropic.com/legal/consumer-terms"
+  - title: "Claude 지원센터: Claude의 연령 확인 (영문)"
+    url: "https://support.claude.com/en/articles/15171100-age-assurance-on-claude"
+  - title: "Claude 지원센터: 최소 연령 요건에 따른 접근 제한 (영문)"
+    url: "https://support.claude.com/en/articles/13117299-minimum-age-requirement-access-restriction"
+  - title: "Google 가족 도움말: 자녀의 Gemini 앱 이용 안내"
+    url: "https://support.google.com/families/answer/16109150"
+  - title: "Gemini 앱 도움말: Gemini 앱에 로그인하려면"
+    url: "https://support.google.com/gemini/answer/13278668"
+  - title: "Gemini 앱 도움말: Gemini 앱의 학습 도구 사용하기"
+    url: "https://support.google.com/gemini/answer/16448384"
+  - title: "Gemini 앱 한도 및 기능 제공 여부 (연령 조건)"
+    url: "https://support.google.com/gemini/answer/16275805"
+  - title: "ChatGPT 문서 (learn.chatgpt.com, 영문): Edu 관리자용 청소년 필터 설정과 이용 금지 문구만 확인됨"
+    url: "https://learn.chatgpt.com/llms-full.txt"
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- **Claude**는 성인용이에요. Anthropic 소비자 약관은 **만 18세 이상**(또는 해당 지역에서 동의할 수 있는 최소 연령 중 더 높은 쪽)을 요구하고, 나이 확인을 요청할 수 있어요.
+- **Gemini**는 개인 Google 계정이면 **만 13세**(또는 해당 국가의 적용 연령)부터 쓸 수 있어요. 13세 미만 자녀는 보호자가 **Family Link**에서 켜 줄 수 있지만, 순차 제공 중이고 EEA·스위스·영국은 제외돼요.
+- **ChatGPT**는 열어 볼 수 있는 페이지에서 최소 연령과 보호자 기능을 확인하지 못했어요. OpenAI의 최신 약관을 직접 확인하세요.
+- 숙제에는 정답을 달라고 하지 말고 **설명·힌트·퀴즈**를 요청하세요. 아이의 주소, 학교 이름, 가족 정보는 입력하지 않아요.
+- 규정과 제공 범위는 빨리 바뀌어요. 이 글은 2026-11-01 기준이에요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 공식 페이지로 서비스별 이용 가능 연령을 확인할 수 있어요.
+- Family Link에서 자녀의 Gemini를 켜거나 끌 수 있어요.
+- 답을 대신 써 주지 않고 이해를 돕는 숙제 도움 방식을 만들 수 있어요.
+- 아이가 AI에 입력하면 안 되는 정보를 정할 수 있어요.
+
+## 먼저 알아둘 개념
+
+AI 챗봇이 처음이라면 [1편](/ko/basics/01-first-30-minutes/)부터 보세요. 개인정보 기본은 [5편](/ko/basics/05-privacy-safety/), 설정은 [12편](/ko/basics/12-privacy-settings/)에 있어요.
+
+| 용어 | 쉬운 뜻 |
+| --- | --- |
+| **최소 연령** | 서비스 약관이 허용하는 가장 어린 나이예요. 나라마다 다를 수 있어요. |
+| **감독 계정** | 보호자가 Family Link로 관리하는 아이의 Google 계정이에요. |
+| **연령 확인** | 서비스가 성인인지 확인하는 절차예요. |
+| **가이드 학습** | 답만 주지 않고 주제를 차근차근 짚어 주는 튜터형 모드예요. |
+
+공식 페이지가 안내하는 내용이에요. (2026-11-01 기준)
+
+| 서비스 | 최소 연령·규칙 | 보호자 도구 |
+| --- | --- | --- |
+| **Claude** | 소비자 약관: 만 18세 이상, 또는 해당 지역의 동의 가능 연령이 더 높으면 그 연령. 18세 초과 대상 서비스라고 안내하며 나이 확인(Yoti)을 요청할 수 있어요. 모바일에서는 앱스토어가 만 18세 미만으로 알려 주면 가입이 막힐 수 있어요. | 청소년 계정 없음. 18세 미만용이 아니에요. |
+| **Gemini** | 개인·학교 Google 계정은 만 13세(또는 해당 국가의 적용 연령), 업무 계정은 만 18세. | 감독 중인 13세 미만 자녀의 Gemini 앱을 Family Link에서 허용·해제할 수 있어요. 로그인한 미성년자에게는 추가 콘텐츠 필터가 적용돼요. |
+| **ChatGPT** | 확인하지 못했어요(아래 참고). | 개인 계정 기준 확인하지 못했어요. |
+
+<Aside type="caution" title="확인하지 못한 것">
+OpenAI의 약관·도움말(openai.com, help.openai.com)은 이 환경에서 열리지 않았고, 우회하지 않았어요. 열 수 있었던 ChatGPT 문서에는 학교(Edu) 워크스페이스 관리자용 청소년 콘텐츠 필터 설정과, Sites 기능으로 13세 미만 아동을 겨냥하지 말라는 문구만 있었어요. 개인 계정의 최소 연령은 나와 있지 않았어요. 청소년이 가입하기 전에 OpenAI 최신 이용약관을 직접 읽어 보세요.
+</Aside>
+
+<Aside type="note" title="Google 안내끼리 서로 다른 부분이 있어요">
+Google의 로그인 안내 페이지에는 아직 Family Link로 관리되는 계정은 Gemini 웹 앱을 쓸 수 없다고 적혀 있고, 더 새로운 Family Link 안내에는 보호자가 13세 미만 자녀의 Gemini 앱을 켤 수 있으며 순차 제공 중이라고 적혀 있어요. "계정과 지역에 따라 될 수도 있다"고 보고, 앱 화면에서 직접 확인하세요.
+</Aside>
+
+## 따라하기
+
+<Checklist items={[
+  '서비스별 최소 연령을 공식 페이지에서 확인했어요',
+  '아이가 Gemini를 쓰게 할 때만 Family Link에서 켰어요',
+  'AI에 절대 입력하면 안 되는 정보를 아이와 이야기했어요',
+  '숙제 규칙을 정했어요: 설명과 힌트는 OK, 답만 받기는 NO',
+  '아이나 서비스가 바뀌면 설정을 다시 확인할 거예요',
+]} />
+
+<Steps>
+
+1. **계정을 만들기 전에 연령 규정부터 확인해요**
+
+   위 출처의 공식 페이지에서 쓰려는 서비스의 규정을 확인하세요. 나이를 속여서 계정을 만들지 마세요. Claude는 미성년자 사용 징후가 있으면 계정을 비활성화하고 나이 확인을 요청할 수 있다고 안내하고, Google도 계정 연령에 따른 필터와 제한을 안내해요.
+
+2. **Gemini는 Family Link에서 켤지 정해요**
+
+   Google 안내에 따르면 13세 미만(또는 해당 국가의 적용 연령 미만) 자녀가 감독 계정으로 Gemini 앱을 쓰려면 보호자가 먼저 허용해야 해요. 아이가 처음 사용하면 이메일 알림이 오고, 언제든 바꿀 수 있어요.
+
+   <FlowSteps title="감독 중인 자녀의 Gemini 켜기·끄기" officialUrl="https://support.google.com/families/answer/16109150" steps={[
+     { where: 'familylink.google.com 또는 Family Link 앱', action: '자녀 선택' },
+     { where: '제어(Controls)', action: 'Gemini > Gemini 앱 열기' },
+     { where: 'Gemini 앱', action: 'Gemini 앱을 켜거나 끄기', result: '적용에 몇 시간 걸릴 수 있어요. Gemini를 다시 시작해 보세요' },
+   ]} />
+
+   이전 버전 Family Link는 제어 > 콘텐츠 제한 > Gemini > Gemini 앱 경로예요. 감독 계정의 Gemini 앱은 유럽경제지역(EEA), 스위스, 영국에서는 제공되지 않아요.
+
+   <ScreenshotPlaceholder caption="Family Link: 제어 > Gemini > Gemini 앱" officialUrl="https://support.google.com/families/answer/16109150" officialLabel="Google 도움말에서 보기" />
+
+3. **처음에는 함께 써 봐요**
+
+   Google 가족 안내는 아이와 함께 도구를 탐색하며 처음 사용을 지켜보라고 권해요. 필터는 "완벽하지 않아서" 원하지 않는 콘텐츠를 볼 수도 있다고도 해요. 그럴 때는 보호자나 아이가 피드백을 보내거나 나쁜 응답으로 표시해 신고할 수 있어요.
+
+4. **채팅에 대한 세 가지 규칙을 알려 줘요**
+
+   Google 가족 안내를 바탕으로 한 규칙이에요.
+   - **사람이 아니라 앱이에요.** 다정하고 격려하는 말투여도 친구처럼 대하거나 고민·비밀을 털어놓는 상대로 쓰면 안 돼요.
+   - **개인정보를 입력하지 않아요.** 주소, 학교 이름, 가족 정보 같은 것들이요.
+   - **답을 다시 확인해요.** AI는 틀린 내용을 사실처럼 말할 수 있어요([4편](/ko/basics/04-fact-checking/) 참고).
+
+5. **숙제 규칙: 베끼지 말고 이해하기**
+
+   목표는 아이가 다음 문제를 혼자 풀 수 있게 되는 거예요. 이 부분은 제 제안이고 공식 규칙은 아니에요. Google 안내에도 어려운 수학 문제나 독후감에서 막혔을 때 "단서와 설명"을 줘서 아이가 스스로 풀게 돕는다고 나와요. 이런 프롬프트를 써 보세요.
+
+   <PromptBox>
+   나는 학생이고 이 숙제 문제를 풀고 있어: [문제 붙여넣기]. 최종 답은 알려 주지 마. 먼저 내가 이미 이해한 부분을 물어보고, 힌트를 한 번에 하나씩 줘. 내가 풀고 나면 비슷한 연습 문제를 하나 내 줘.
+   </PromptBox>
+
+   그다음 교과서와 맞춰 보거나 선생님께 물어보고, 아이가 답을 자기 말로 설명할 수 있는지 확인하세요. 학교의 AI 사용 규칙도 꼭 따르세요.
+
+6. **18세 미만은 못 쓰는 기능도 알아 둬요**
+
+   Google 도움말에 따르면 Gemini의 가이드 학습 등 학습 도구는 현재 영어·미국에서만, 18세 미만과 업무·학교 계정에는 제공되지 않아요. Gemini 앱의 영상 생성도 18세 미만에게는 제공되지 않아요([34편](/ko/media/34-ai-video-generation/) 참고). 그래서 청소년 계정에는 글에서 본 기능이 보이지 않을 수 있어요.
+
+</Steps>
+
+## 한눈에 보기
+
+| 질문 | 답 (2026-11-01 기준) |
+| --- | --- |
+| 15세가 Claude를 쓸 수 있나요? | 소비자 약관상 안 돼요(만 18세 이상). |
+| 12세가 Gemini를 쓸 수 있나요? | 대부분 국가에서 개인 계정은 만 13세부터예요. 13세 미만은 제공되는 곳에서 보호자가 Family Link로 켜야 해요. |
+| 청소년이 ChatGPT를 쓸 수 있나요? | 열어 본 공식 페이지에서는 확인하지 못했어요. |
+| 보호자는 Gemini를 어디서 켜고 끄나요? | Family Link > 자녀 > 제어 > Gemini > Gemini 앱 |
+| 아이가 절대 입력하면 안 되는 것은? | 주소, 학교 이름, 가족 정보, 비밀번호 |
+
+## 자주 막히는 곳
+
+### Family Link에서 켰는데 Gemini가 안 열려요
+
+- **원인**: Google은 감독 계정 제공을 순차적으로 하고 있고, EEA·스위스·영국에서는 제공하지 않는다고 안내해요.
+- **해결**: Gemini를 다시 시작하고 몇 시간 기다려 보세요. 기기·언어·지역을 확인하고 Google의 문제 해결 항목을 보세요.
+
+### 청소년의 Claude 계정이 비활성화됐어요
+
+- **원인**: Claude는 18세 초과 대상이에요. Anthropic은 미성년자 사용 징후를 감지하면 계정을 비활성화한다고 안내해요.
+- **해결**: 성인이라면 Yoti를 통한 나이 확인을 이용할 수 있어요. 미성년자가 만든 계정이라면 우회하지 말고 연령에 맞는 서비스를 쓰세요.
+
+### Claude 모바일 앱에서 "최소 연령" 안내가 떠요
+
+- **원인**: 기기의 앱스토어가 계정 정보상 만 18세 미만으로 알려 준 경우예요.
+- **해결**: Anthropic은 그 정보를 바꿀 수 없어요. 잘못됐다면 Apple이나 Google 지원에 문의하세요. 가족 그룹이라면 보호자가 나이를 설정했을 수 있어요.
+
+### AI가 틀리거나 엉뚱한 답을 해요
+
+- **원인**: AI는 실수할 수 있어요.
+- **해결**: 출처를 물어보고 교과서와 비교하세요. [4편](/ko/basics/04-fact-checking/)을 참고하세요.
+
+## 실전 팁
+
+- AI는 **튜터**로 쓰세요. 퀴즈와 힌트를 요청하고, 마지막 풀이는 아이가 혼자 해 보게 해요.
+- 보호자 본인 계정을 아이에게 맡기지 마세요. 결제 정보와 내 대화 기록이 들어 있을 수 있어요.
+- 건강·돈·감정 같은 민감한 고민은 챗봇만이 아니라 믿을 수 있는 어른과 이야기하도록 알려 주세요([13편](/ko/basics/13-sensitive-questions/)).
+- 사기 메시지와 가짜 미디어가 있다는 것도 알려 주세요([10편](/ko/basics/10-ai-scams-deepfakes/)).
+- 연령·보호자 설정 페이지는 몇 달에 한 번 다시 확인하세요. 자주 바뀌어요.
+
+## 다음에 볼 튜토리얼
+
+- [5. 개인정보·회사 정보 안전하게 지키며 쓰기](/ko/basics/05-privacy-safety/) — 입력하면 안 되는 정보
+- [12. 내 대화가 AI 학습에 쓰이지 않게](/ko/basics/12-privacy-settings/) — 개인정보 설정
+- [13. 건강·법률·돈 문제를 AI에 물을 때 주의할 점](/ko/basics/13-sensitive-questions/) — 민감한 주제
+- [학생·취업 준비생을 위한 AI 활용 가이드](/ko/roles/student/) — 공부에 AI 쓰기
+- [교사·강사·교육 담당자를 위한 AI 활용 가이드](/ko/roles/teacher/) — 교실에서의 관점

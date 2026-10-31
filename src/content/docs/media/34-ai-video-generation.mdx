@@ -1,0 +1,183 @@
+---
+title: "Make Short AI Videos with Google's Video Tools"
+description: "How to make short videos in the Gemini app and Google Flow: who can use them, plans and credits, 10-second clips, editing, and SynthID watermarks"
+sidebar:
+  label: "11. Short AI videos with Google tools"
+level: practical
+category: media
+tools: ["Gemini", "Google Flow"]
+duration: "40 min"
+prerequisites:
+  - "A personal Google Account, age 18 or older, with a Google AI plan (Plus, Pro, or Ultra)"
+  - "A short idea for a video of about 10 seconds"
+lastVerified: 2026-11-01
+sources:
+  - title: "Gemini Apps Help: Generate videos with Gemini Apps"
+    url: "https://support.google.com/gemini/answer/16126339"
+  - title: "Gemini Omni: video generation overview (Google)"
+    url: "https://gemini.google/overview/video-generation/"
+  - title: "Gemini Apps limits & feature availability"
+    url: "https://support.google.com/gemini/answer/16275805"
+  - title: "Google Flow Help: Get started with Google Flow"
+    url: "https://support.google.com/flow/answer/16353333"
+  - title: "Google Flow Help: Manage your Google Flow credits"
+    url: "https://support.google.com/flow/answer/16526234"
+  - title: "Gemini Apps Help: Verify AI-generated images, videos, and audio"
+    url: "https://support.google.com/gemini/answer/16722517"
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+<Summary>
+- Google's video generation in the **Gemini app** now uses **Gemini Omni**, which Google says replaces Veo in the app. Google's overview page lists **10-second videos**, native audio, up to 5 photos as input, scene extension, and video editing by chat.
+- You need a **Google AI plan** for a personal account, and the feature is **not available to users under 18**. **Google Flow**, the filmmaking tool, requires age 18+, a supported region, and a Google AI plan.
+- Every video made in Gemini and Flow carries an invisible **SynthID** watermark. Flow can add a visible one too.
+- Video is the **most usage-hungry** feature. Plans, limits and regions change, so confirm on the official pages.
+- I have not run these tools myself. This is a guide built from Google's official pages as of 2026-11-01.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Check whether your account, age, plan and region can use Google's video tools.
+- Write a prompt for a short clip and generate it in the Gemini app.
+- Refine the video with follow-up prompts and download it.
+- Tell Gemini and Flow apart and know how credits and watermarks work.
+
+## Concepts to know first
+
+Earlier tutorials cover related ground: [tutorial 3](/media/13-promo-video/) plans a promo video and edits clips in Canva, and [tutorial 10](/media/33-video-summary-shorts/) summarizes existing videos. This tutorial focuses on generating the clip itself.
+
+<Aside type="note" title="Model names have changed since tutorial 3">
+Tutorial 3 was written when the Gemini app used Veo. Google's current pages say Gemini Omni replaces Veo in the Gemini app, and some pages still mention Veo. Menu names and limits may differ from what you read elsewhere, so follow the on-screen options.
+</Aside>
+
+| Term | Plain meaning |
+| --- | --- |
+| **Gemini Omni** | Google's video generation and editing model in the Gemini app. |
+| **Google Flow** | Google's AI filmmaking tool for clips, scenes and stories, with its own credits. |
+| **SynthID** | An invisible watermark Google embeds in AI-generated media. |
+| **Credits** | Points that Flow spends on each generation. The cost depends on the model. |
+
+| | Gemini app | Google Flow |
+| --- | --- | --- |
+| Best for | Making and editing a clip by chatting | More control over clips, scenes and stories |
+| Needs | Google AI plan (personal account); qualifying Workspace license for work or school | Age 18+, supported region, Plus/Pro/Ultra or a qualifying Workspace plan |
+| Where | gemini.google.com > Create video | Google Flow in a Chromium-based browser (Chrome, Edge); also a mobile app |
+| Under 18 | Not available | Not available (18+ required) |
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I am 18 or older and signed in with a personal Google Account',
+  'My plan includes video generation and I checked the usage limit',
+  'I have the rights to any photos or videos I upload',
+  'I wrote the prompt with subject, action, setting, camera and mood',
+  'I downloaded the video and labeled it as AI-made where needed',
+]} />
+
+<Steps>
+
+1. **Check access first**
+
+   Google says a personal account needs a Google AI plan to generate videos in Gemini Apps, and a work or school account needs a qualifying Workspace license. For now the feature is not available to users under 18. Google also says Gemini Apps with a Google AI plan needs age 13 or older in most countries and 18 or older in the EEA, Switzerland and the UK. In Flow, a supported region is also required, and VPNs will not enable access in unsupported regions.
+
+   I could not confirm from the pages I opened that your specific country or Korea is supported for every feature. Check Google's regional lists before you pay.
+
+2. **Open the video tool and write a prompt**
+
+   On a computer, go to gemini.google.com, open the sidebar, and choose Create video. Optionally pick a template. Describe the video in the text box. Google suggests you can brainstorm and refine the prompt in your main Gemini chat first.
+
+   <FlowSteps title="Generate a video in the Gemini app" officialUrl="https://support.google.com/gemini/answer/16126339" steps={[
+     { where: 'gemini.google.com > sidebar', action: 'Open Create video, optionally choose a template' },
+     { where: 'Text box', action: 'Enter your prompt; add up to 5 images or 1 video if you want to start from them' },
+     { where: 'Submit', action: 'Click Submit and wait a few minutes', result: 'You can start a new chat meanwhile and come back to the video later' },
+   ]} />
+
+   <PromptBox>
+   A 10-second video of a small bakery's window at sunrise: a baker places a tray of fresh croissants on the display, steam rising, soft golden light, slow push-in camera, gentle morning ambience. Landscape format.
+   </PromptBox>
+
+   Google says text prompts default to landscape, and you can choose the aspect ratio before generating. If you upload a reference image or video, the ratio follows your upload. You can also ask Gemini to generate audio with the video.
+
+   <ScreenshotPlaceholder caption="Gemini: Create video in the sidebar" officialUrl="https://support.google.com/gemini/answer/16126339" officialLabel="See it in Google's help" />
+
+3. **Edit with follow-up prompts**
+
+   Google lists multi-turn editing: after the video is made, ask for changes such as removing or replacing objects and characters, changing camera angles, or modifying the scene. The overview page also describes extending a scene and swapping backgrounds or wardrobe. Keep each change small so you can see what worked.
+
+   Uploading videos for edits is not available in the EEA, Switzerland, the United Kingdom, and some US states.
+
+4. **Download or share**
+
+   Under the video, choose Share, then Share on YouTube or Download video.
+
+5. **Use Flow when you need more control**
+
+   Flow is for clips, scenes and stories, and Google recommends a desktop Chromium-based browser for the most powerful editing. You spend credits per generation. Credits are deducted when generation begins, and are returned within one hour if it fails or hits a safety filter. The model and its credit cost are shown in settings before you confirm.
+
+6. **Know the plan limits and credits**
+
+   Gemini app usage limits are compute-based and refresh every 5 hours until you reach a weekly limit. Google rates video generation as high usage, saying video generally uses the most. Limits are standard without an AI plan, 2x with AI Plus, 4x with AI Pro, and 5x or 20x of Pro with AI Ultra.
+
+   In Flow, everyone gets 50 credits per day. Plus adds 200 per month, Pro 1,000, and the two Ultra tiers 10,000 and 25,000. Without a subscription, you may be unable to generate videos during peak hours (roughly 2 PM to 5 PM UTC). Figures are as of 2026-11-01 and may change.
+
+7. **Label and verify AI videos**
+
+   Videos from the Gemini app are embedded with SynthID. In Flow, outputs from Veo, Omni and Nano Banana include invisible SynthID watermarks, and a visible watermark can be switched with a "Visible watermarking" toggle. Google says a visible watermark is applied automatically for users in India, South Korea and Vietnam who are not on the Google AI Ultra 20x plan. You can upload a file to Gemini and ask whether it was made by Google AI. That check handles one file at a time, videos under 90 seconds.
+
+</Steps>
+
+<Aside type="caution" title="Rights and rules">
+Google says you must have rights to any images you upload, and that you must not generate or share videos to deceive, harass or harm others. Violating the Prohibited Use Policy can end your account. Use the avatar feature only for your own likeness, and do not use other people's faces or voices without permission. See [tutorial 9](/basics/09-ai-copyright-ethics/) and [tutorial 10](/basics/10-ai-scams-deepfakes/).
+</Aside>
+
+## Quick reference
+
+| Question | Answer (as of 2026-11-01) |
+| --- | --- |
+| Clip length | The overview page lists 10-second videos |
+| Inputs | Text, up to 5 photos, 1 video |
+| Free? | Gemini app video needs a Google AI plan. Flow gives 50 credits a day, with peak-hour limits for non-subscribers. |
+| Under 18? | Not available in Gemini; Flow requires 18+ |
+| Watermark | Invisible SynthID; visible one in Flow can be toggled, automatic in some countries |
+
+## Common sticking points
+
+### I don't see Create video
+
+- **Cause**: No Google AI plan, an under-18 account, or a work/school account without a qualifying license.
+- **Fix**: Check the "What you need" section of Google's help page.
+
+### Flow says I can't access it though I subscribe
+
+- **Cause**: Flow is not available in every country where Google AI Pro is sold.
+- **Fix**: Check Flow's supported-region list before buying. VPNs will not help.
+
+### The video was removed or not generated
+
+- **Cause**: Google says it may remove videos when systems detect a possible violation of its Terms of Service or Prohibited Use Policy.
+- **Fix**: Rewrite the prompt without real people, brands or harmful content.
+
+### I ran out of usage
+
+- **Cause**: Video uses a lot of your allowance.
+- **Fix**: Wait for the refresh, plan fewer, shorter attempts, or upgrade your plan.
+
+## Practical tips
+
+- Plan the shot in a regular Gemini chat first so you spend your video attempts on a good prompt.
+- Use one subject and one action per 10-second clip, then stitch clips together in an editor (see [tutorial 3](/media/13-promo-video/)).
+- AI video can look wrong in details like hands, text and physics. Review every second before publishing.
+- Tell viewers when a realistic video is AI-made. YouTube's disclosure rules are in [tutorial 10](/media/33-video-summary-shorts/).
+
+## What to read next
+
+- [Make a Short Promo Video with AI Video Tools](/media/13-promo-video/) — Storyboard and edit clips
+- [Video Summaries and Shorts: Working with Long Videos](/media/33-video-summary-shorts/) — Working with long videos
+- [9. Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/) — Rights and labeling
+- [14. AI for Families: Age Rules, Teen Accounts and Homework Help](/basics/14-ai-for-families/) — Age rules for young people
