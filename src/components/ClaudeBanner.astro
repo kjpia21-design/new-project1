@@ -1,18 +1,20 @@
 ---
 import Illustration from './Illustration.astro';
 import { url, getTutorials } from '../lib/tutorials';
-const claudeCount = (await getTutorials({ category: 'claude' })).length;
+import { getLang, t } from '../lib/i18n';
+const lang = getLang(Astro);
+const claudeCount = (await getTutorials({ category: 'claude', lang })).length;
 ---
 <div class="banner not-content">
-<a class="cover" href={url('/claude/')} aria-label="Claude 완전 정복 보러 가기"></a>
+<a class="cover" href={url('/claude/', lang)} aria-label={t(lang, 'claude.cover')}></a>
   <Illustration name="claude" size={72} />
   <div>
-    <p class="eyebrow">특별 섹션</p>
-    <p class="title">Claude 완전 정복</p>
-    <p class="desc">모델 고르기부터 프로젝트, 아티팩트, 커넥터, 스킬, Claude Code, API까지 {claudeCount}편으로 깊이 있게 다뤄요.</p>
+    <p class="eyebrow">{t(lang, 'claude.eyebrow')}</p>
+    <p class="title">{t(lang, 'cat.claude')}</p>
+    <p class="desc">{t(lang, 'claude.desc', { n: claudeCount })}</p>
   </div>
-  <span class="go">보러 가기 →</span>
-  <a class="news" href={url('/claude-news/')}>최신 소식 보기 →</a>
+  <span class="go">{t(lang, 'banner.go')}</span>
+  <a class="news" href={url('/claude-news/', lang)}>{t(lang, 'claude.news')}</a>
 </div>
 
 <style>

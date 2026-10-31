@@ -1,0 +1,259 @@
+---
+title: "Understanding and Fixing Existing Code with Cursor"
+description: "A hands-on exercise: use the AI code editor Cursor to understand code you've inherited and safely hand off small changes"
+sidebar:
+  label: "4. Understanding and fixing code with Cursor"
+level: practical
+category: coding
+tools: ["Cursor"]
+duration: "40 min"
+prerequisites:
+  - "A Cursor account (you can start on the free Free plan, which has usage limits)"
+  - "A folder of existing code you want to understand or fix (a practice copy is recommended)"
+  - "Git experience is helpful but not required"
+lastVerified: 2026-10-26
+sources:
+  - title: "Cursor Quickstart"
+    url: "https://cursor.com/docs/get-started/quickstart"
+  - title: "Agent mode (Cursor Help)"
+    url: "https://cursor.com/help/ai-features/agent"
+  - title: "Ask mode (Cursor Help)"
+    url: "https://cursor.com/help/ai-features/ask-mode"
+  - title: "First project (Cursor Help)"
+    url: "https://cursor.com/help/getting-started/first-project.md"
+  - title: "Rules (Cursor Docs)"
+    url: "https://cursor.com/docs/rules"
+  - title: "Cursor IDE release notes"
+    url: "https://cursor.com/docs/release-notes/ide"
+  - title: "Data Use & Privacy Overview (Cursor)"
+    url: "https://cursor.com/data-use"
+  - title: "Ignore files (Cursor Docs)"
+    url: "https://cursor.com/docs/context/ignore-files"
+  - title: "Models & Pricing (Cursor Docs)"
+    url: "https://cursor.com/docs/models-and-pricing"
+  - title: "Codebase indexing (Cursor Docs)"
+    url: "https://cursor.com/docs/context/codebase-indexing"
+  - title: "Pricing and plans (Cursor Help)"
+    url: "https://cursor.com/help/account-and-billing/pricing"
+  - title: "Claude Code overview"
+    url: "https://code.claude.com/docs/en/overview"
+status: published
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- Cursor is a **code editor** with AI built in. You open a folder, then have the AI explain the code or hand off file edits.
+- When working with existing code, a safe order is to **understand it first in read-only Ask mode, then hand off small changes in Agent mode**.
+- Agent's edits are applied while it works, and you can review them in the diff view and reject them.
+- Put project instructions in **Rules** (`.mdc` files in `.cursor/rules`). For sensitive code, check **Privacy Mode** and your exclusion settings.
+- There's a free (Free) plan, and paid individual plans start at Plus for $8 per month (as of 2026-10-26). The older Hobby and Pro plans continue for existing subscribers. Menu and mode names may change by version.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Install Cursor, open a folder of existing code, and have the AI explain its structure.
+- Tell Ask mode and Agent mode apart and use each appropriately.
+- Review the edits Agent made as a diff and reject parts you don't like.
+- Create project Rules and know what to check when working with sensitive code.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Cursor** | A code editor with AI features. You install it as a desktop app. There's also a Cursor CLI for use in the terminal. |
+| **Agent mode** | A mode that reads code, edits multiple files, and can run terminal commands. It searches the codebase automatically and applies edits as it works. |
+| **Ask mode** | A read-only mode. Use it to understand code and explore structure; it doesn't change files. |
+| **diff** | A screen that shows changed lines as additions and deletions. It's the basis for deciding whether to accept or reject an edit. |
+| **Rules** | Project instructions for the AI to follow. You keep them as `.mdc` files in the `.cursor/rules` folder and can manage them with version control. |
+| **Search index** | An index Cursor builds to find code quickly. The official docs explain that this index is built on your computer, and that file paths or code aren't uploaded and embeddings aren't stored for search. However, the contents of files the Agent opens can be included in model requests. |
+
+### How are Cursor and Claude Code different?
+
+| | Cursor | Claude Code |
+| --- | --- | --- |
+| **Form** | A code editor (desktop app), with a CLI for the terminal too | Terminal, IDE extension, desktop app, web |
+| **Convenient for** | Asking the AI and fixing things while looking at the code | Handing off work through conversation and running it in the cloud too |
+| **Using together** | Claude Code's VS Code extension can also be installed in Cursor | Usable inside Cursor with the extension above |
+| **Choose it when** | You want to read and edit code yourself with AI beside you | You want to describe a task, hand it off, and review the result |
+
+Rather than saying one is better, pick the tool that fits how you work. For the Claude Code side, see [Tutorial 6](/en/coding/06-claude-code-start/) and [C12](/en/claude/c12-claude-code-overview/).
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I installed Cursor and logged in',
+  'I opened a practice copy folder',
+  'I asked about the codebase structure in Ask mode',
+  'I handed a small edit to Agent mode and reviewed the diff',
+  'I rejected or undid a change I didn\'t like',
+  'I created a Rules file',
+  'I checked Privacy Mode and exclusion settings before using sensitive code',
+]} />
+
+<Steps>
+
+1. **Install and log in**
+
+   Download the installer for your operating system from the official Cursor site. The official quickstart recommends `.dmg` for macOS, `.exe` for Windows, and apt or dnf packages for Linux. After installing, open the app and log in. You need Windows 10 or later, or macOS 12 (Monterey) or later. See the [pricing table](#cursor-pricing-plans) below for costs. We couldn't confirm whether a Korean UI is supported in the official documentation, so check the app settings.
+
+   <ScreenshotPlaceholder caption="Cursor's first launch and login screen" officialUrl="https://cursor.com/docs/get-started/quickstart" />
+
+2. **Open a practice folder**
+
+   At first, practice on a **copy**, not the original company repository. Open Cursor and choose your folder from **File > Open Folder** (per the official help). Agent searches the codebase automatically, but it can take a while if there are a lot of files.
+
+3. **Understand the code in Ask mode**
+
+   Open the Agent panel (Cmd+I on Mac, Ctrl+I on Windows and Linux). Then choose **Ask** from the mode dropdown, or cycle through modes with Shift+Tab (per the official help). Ask mode is read-only, so files don't change.
+
+   <PromptBox>
+   Explain what this project does so that someone who doesn't know coding can understand it. Put the main folder structure, the entry-point files, and where data flows from and to into a table. Mark anything you're not sure about as a guess.
+   </PromptBox>
+
+   The official quickstart also suggests opening a folder and then asking the Agent to "explain the codebase and tell me where to start reading". Cursor searches the repository, reads the relevant files, and summarizes them.
+
+   Next, ask something specific.
+
+   <PromptBox>
+   Find where the error message for a failed login is generated. Tell me the related file and function names, and also other places that could be affected if that file is changed. Don't modify anything yet.
+   </PromptBox>
+
+4. **Hand off a small edit in Agent mode**
+
+   Start with edits that are **small and easy to verify**. Switch the mode to **Agent** and make your request.
+
+   <PromptBox>
+   Change the error message shown on a failed login to "Please check your username or password". Also find other files that contain this wording (including tests) and update them to match. Don't touch any other code. At the end, list the files you changed and why.
+   </PromptBox>
+
+   Agent's edits are applied while it works, and you check the result in the diff view. The official best practices say that if it heads in the wrong direction, you can cancel with Stop and tell it the direction again.
+
+   <ScreenshotPlaceholder caption="The diff screen for files the Agent edited" officialUrl="https://cursor.com/help/ai-features/agent" />
+
+5. **Review the diff and reject changes**
+
+   Open the changed files one by one. Check (1) that only the requested places changed, (2) that unrelated files didn't change too, and (3) that the line count didn't suddenly balloon. You can reject changes you don't want in the diff. To undo an edit, hover over an earlier message and click **Restore Checkpoint** at the bottom right. The files the Agent changed after that point are rolled back (only the files are restored; conversation messages aren't deleted). If you use Git, do this review before you commit the changes, and if you need to undo something, you can go back with Git too.
+
+   <FlowSteps title="Undoing the Agent's edits" officialUrl="https://cursor.com/help/ai-features/agent" steps={[
+     { where: 'Agent conversation', action: 'Hover over the earlier message at the point you want to go back to', result: 'A button appears at the bottom right of the message' },
+     { where: 'Bottom right of the earlier message', action: 'Click Restore Checkpoint', result: 'Files the Agent changed after that point are rolled back (conversation messages aren\'t deleted)' },
+   ]} />
+
+   For reference, the release notes describe a behavior where, when you edit an earlier message and resend it in Agent mode, Cursor asks whether to revert files to that point. Undo behavior can differ by version, so read the on-screen question and choose accordingly.
+
+6. **Create project instructions with Rules**
+
+   Put rules you'd otherwise have to repeat into Rules. Project rules go in `.cursor/rules`, and according to the official docs they must have the `.mdc` extension (a plain `.md` in `.cursor/rules` can't specify frontmatter, so it's ignored). If you'd rather write plain Markdown, use `AGENTS.md`. The ways to apply a rule are Always Apply, Apply Intelligently, Apply to Specific Files, and Apply Manually.
+
+   <PromptBox>
+   Create a Cursor rules file for this project in the .cursor/rules folder. Make it an always-apply rule that says: (1) write explanations and comments in English (2) don't modify files I didn't ask about (3) list the files you changed at the end. Use the .mdc extension and make the frontmatter format match Cursor's official docs.
+   </PromptBox>
+
+   Check once that the frontmatter of the generated file matches the official docs (Rules). There are also team rules and user rules, but this exercise only covers project rules.
+
+7. **Check before handling sensitive code**
+
+   If it contains company code or customer information, check the following first.
+
+   - **Privacy Mode**: The official data use page explains that when you turn on Privacy Mode in settings, customer data isn't used for training, and a zero data retention (ZDR) agreement is maintained with model providers. It also states that data may be stored if it trips abuse detection, and that some models may fall outside ZDR. Read the current terms directly on the official page.
+   - **Exclusion settings**: Files listed in the root `.cursorignore` (`.gitignore` syntax) are blocked from Agent, Tab, Inline Edit, and @ mentions. However, the Agent's terminal and MCP tools can't be blocked by this setting, and the official docs also say it doesn't guarantee complete protection. Don't put secret values like those in `.env` into your code in the first place.
+   - **Company policy**: Whether you may upload internal code to an outside AI service comes down to company policy first. If there's no policy, ask your security team.
+   - Don't paste `.env` contents, passwords, or API keys into chat.
+
+</Steps>
+
+## Quick reference
+
+### Mode selection guide (as of 2026-10-26; the official help lists four modes: Agent, Ask, Plan, and Debug)
+
+| What you want to do | Mode | Do files change? |
+| --- | --- | --- |
+| Understand what the code does | Ask | No |
+| Explore structure, gauge the impact range | Ask | No |
+| Small edits, editing several files at once | Agent | Yes, applied as it works |
+| A big feature across multiple files, or when you want to review a plan first | Plan | They change after you approve the plan |
+| A hard-to-reproduce bug | Debug | Yes |
+| When it's heading the wrong way | Stop, then re-request | Review the already-applied parts in the diff |
+
+### Cursor pricing plans
+
+As of 2026-10-26, in US dollars. According to the official pricing page and pricing help, new sign-ups choose from the plans below.
+
+| Plan | Price | Notes |
+| --- | --- | --- |
+| Free | Free | Agent and Chat with limited usage. Third-party models not included |
+| Plus | $8/month | Base usage (Plus is the baseline). Cloud agents not included |
+| Premium | $30/month | 4x the usage of Plus. Cloud agents, third-party models (deducted from prepaid credits at API list price) |
+| Super | $100/month | 15x the usage of Plus |
+| Ultra | $200/month | 50x the usage of Plus |
+| Teams | $30, $100, $200/month per seat (by seat tier) | Central billing and management, team-wide Privacy Mode |
+| Enterprise | Contact sales | Pooled usage, SCIM, audit logs |
+
+Annual billing is $80 for Plus, $300 for Premium, $1,000 for Super, and $2,000 for Ultra (excluding tax). According to the official help, the older plans (Hobby free, Pro $20/month, Pro+ $60/month, Ultra $200/month, Teams Standard $40/month per user, Teams Premium $120/month per user) continue only for existing subscribers, and India has a separate Start plan at ₹649/month. The same names (Ultra, Pro, and so on) exist in both the old and new plans, so check which one your account is on. Usage on the new plans is split into weekly pools, and we haven't listed specific Free limits because the official page doesn't give them. Korean pricing and VAT aren't on the official page, so check on the checkout screen.
+
+### Rule types and how they're applied (summary of the official docs)
+
+| Type | Description |
+| --- | --- |
+| Project Rules | Kept in `.cursor/rules` and used with version control |
+| User Rules | Personal rules that apply across your whole environment |
+| Team Rules | Team-wide rules |
+| AGENTS.md | An instruction file for agents |
+
+Ways to apply: Always Apply / Apply Intelligently / Apply to Specific Files / Apply Manually (@-mention)
+
+### Privacy and confidentiality checklist
+
+| Check | Where to look |
+| --- | --- |
+| Is Privacy Mode on? | Cursor settings, the official data use page |
+| Are there files to exclude? | `.cursorignore` |
+| Are secret values in the code? | `.env`, config files, hardcoded keys |
+| Does your company allow it? | Internal security policy |
+
+## Common sticking points
+
+### The AI says something that doesn't match the code
+
+- **Cause**: It may not have found the relevant files, or it may have guessed at parts it doesn't know.
+- **Fix**: Narrow the scope by including file or function names in your question, and add "If you're not sure, mark it as a guess." The safest habit is to check answers directly in the code.
+
+### Agent edited files I didn't ask about
+
+- **Cause**: You may not have set the scope of the request.
+- **Fix**: Reject the unnecessary changes in the diff. From your next request, use "Don't touch any other code", and put the same instruction in Rules.
+
+### My Rules file doesn't seem to apply
+
+- **Cause**: The official docs explain that project rules in `.cursor/rules` must be `.mdc` files and that a plain `.md` is ignored.
+- **Fix**: Use the `.mdc` extension, match the frontmatter to the official Rules docs, and set the apply mode, such as Always Apply.
+
+### It's slow in a big repository, or it references the wrong files
+
+- **Cause**: Unnecessary files (such as build output) may be in the search scope. Files listed in `.gitignore` and lock files are excluded by default, and according to the official docs, files like `.env*`, `.git/`, `node_modules/`, and binaries and images are also on the default exclusion list.
+- **Fix**: Add folders you don't need to `.cursorignore`, and specify files or folders in your question with `@`.
+
+### I'm blocked by pricing or limits
+
+- **Cause**: Each plan has limits.
+- **Fix**: Look at the pricing table above and check the latest terms on the [official pricing page](https://cursor.com/pricing). If you exceed the limit, you can choose to pay for extra usage or upgrade to a higher plan.
+
+## Practical tips
+
+- **Understand → plan → edit, in that order.** Understand with Ask, get the edit plan in words, then hand it to Agent.
+- **Hand off in small units.** One edit at a time makes both diff review and undoing easier.
+- **After an edit, actually run it.** Before trusting the AI's explanation, see with your own eyes that the program or tests work.
+- **Build a safety net with Git.** If you commit before you start, you can always go back.
+- **You can mix tools.** You can install the Claude Code extension in Cursor. For work you want to run in the cloud, you can hand it off as in [Tutorial 8](/en/coding/08-cloud-github/).
+
+## Next tutorials
+
+- [10. Delegating recurring work to agents](/en/coding/10-delegate-agents/) — skills, routines, subagents
+- [8. Handing off GitHub repository work to a cloud session](/en/coding/08-cloud-github/) — all the way to a PR in the cloud
+- [C14. Claude Code core features](/en/claude/c14-claude-code-features/) — CLAUDE.md, permission modes, hooks

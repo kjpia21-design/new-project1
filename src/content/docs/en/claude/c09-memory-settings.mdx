@@ -1,0 +1,185 @@
+---
+title: "Memory and personal settings"
+description: "Turning Claude's memory on and off, viewing and editing what's stored, incognito chats, chat search, and importing and exporting memory"
+sidebar:
+  label: "C9. Memory and personal settings"
+level: practical
+category: claude
+tools: ["Claude"]
+duration: "20 min"
+prerequisites: ["A Claude account", "Being able to sign in to claude.ai (web or desktop app)"]
+lastVerified: 2026-10-31
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "Use Claude's chat search and memory to build on previous context"
+    url: "https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context"
+  - title: "Import and export your memory from Claude"
+    url: "https://support.claude.com/en/articles/12123587-import-and-export-your-memory-from-claude"
+  - title: "Export your Claude data"
+    url: "https://support.claude.com/en/articles/9450526-export-your-claude-data"
+  - title: "Get started with Claude"
+    url: "https://support.claude.com/en/articles/8114491-get-started-with-claude"
+  - title: "Claude Code memory"
+    url: "https://code.claude.com/docs/en/memory"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- Memory is **saved automatically by topic** during conversations. You can also ask directly: "remember this."
+- It's **on by default** for Free/Pro/Max. On Team/Enterprise, the organization Owner has to turn it on. (as of 2026-10-10)
+- In Settings > Your Claude (Memory on the older screen), you can turn it on and off, and view, edit, and delete the stored topics.
+- If you don't want a record kept, use an **incognito chat**.
+- Claude Code's memory (CLAUDE.md, auto memory) is separate.
+</Summary>
+
+## What you'll be able to do
+
+- Explain what memory does and doesn't store.
+- Turn memory on, off, pause it, and reset it.
+- Check what's stored, and edit or delete it.
+- Use chats that leave no record, and search past conversations.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Memory** | A feature that stores what Claude learns about you in conversations, by topic, and uses it in later conversations. It's saved during the conversation rather than summarized after it ends. |
+| **Chat search** | Ask something like "What did I say about X last time?" and Claude searches past conversations and cites its sources. Available on paid plans (Pro/Max/Ultra/Team/Enterprise). |
+| **Incognito chat** | A chat that isn't saved to history or memory and can't be searched later. |
+| **Project memory** | Each project has its own memory space and summary, kept separate from other projects and regular chats. |
+
+### What gets stored and what doesn't?
+
+- **Sensitive topics** such as health, politics, and religion aren't stored unless you opt in.
+- **Government ID numbers and financial account numbers** aren't stored.
+
+### Defaults by plan
+
+- **Free/Pro/Max**: On by default.
+- **Team/Enterprise**: The organization Owner has to enable it, and it also starts off for each member. Owners can't view or edit an individual member's memory. If the organization turns it off, everyone's memory is permanently deleted.
+- Not available to organizations with HIPAA, public sector, or custom data retention agreements.
+
+<Aside type="note" title="Memory limits aren't published">
+The official memory help (confirmed 2026-10-13) doesn't state a limit on memory size or number of topics; it isn't a value that's officially disclosed. If you're curious, check the Settings > Your Claude screen or contact support. The older "Settings > Capabilities > Memory" screen may remain on some accounts (some Team/Enterprise organizations use the legacy version). If your screen looks different, check the official help for the latest.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  'I checked my memory status in Settings > Your Claude',
+  'I asked Claude to remember something in a chat',
+  'I opened a stored topic and edited or deleted it',
+  'I found where to start an incognito chat',
+  'I tried chat search',
+]} />
+
+<Steps>
+
+1. **Check that memory is on**
+
+   In Settings > Your Claude (Memory on the older screen), check that "Memory from chats" (on the older screen, "Generate memory from chats") is turned on.
+
+   <ScreenshotPlaceholder caption="The Settings > Your Claude screen" officialUrl="https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context" />
+
+2. **Ask Claude to remember something**
+
+   <PromptBox>
+   Remember that I'm a data analyst. From now on, when you help me write reports, lead with the conclusion and put the supporting evidence after it.
+   </PromptBox>
+
+3. **View, edit, and delete what's stored**
+
+   In Settings > Your Claude, click Manage next to "Your memory," open Topics, and use the pencil icon to edit or Delete to remove one. You can also say "forget that" in a chat.
+
+4. **Know the difference between pause and reset**
+
+   - **Pause**: Keeps your existing memory but stops using it and stops adding to it.
+   - **Reset**: Permanently deletes everything, including project memory. **It can't be undone.**
+
+5. **Use Claude without leaving a record**
+
+   - To turn memory off for just one chat, turn it off from the "+" menu before you send the first message. You can't change it once the chat has started.
+   - Click the ghost icon at the top right of a new chat screen to make it an incognito chat.
+
+6. **Search past conversations (paid plans)**
+
+   <PromptBox>
+   Find what I said last time about our new product pricing strategy and summarize it.
+   </PromptBox>
+
+   You can turn this feature off with "Search and reference chats" in Settings > Your Claude (Memory on the older screen).
+
+7. **Import memory from another AI (optional)**
+
+   Available on web and Claude Desktop for Free/Pro/Max/Ultra/Team/Enterprise (as of 2026-10-19).
+
+   1. Ask the other AI service you use now to put its stored memory and context into a single code block (the official help has suggested wording). Delete anything sensitive beforehand.
+   2. In Settings > Your Claude (Memory on the older screen), click "Start import," paste the text, and click "Add to memory."
+   3. It's saved as individual items. Check them with the "See what Claude learned about you" button or by asking.
+
+   Import is experimental, so not everything may come through. Claude focuses on work-related topics, so personal information unrelated to work may not be kept.
+
+</Steps>
+
+## Quick reference
+
+| What you want to do | How |
+| --- | --- |
+| Turn memory on/off | Settings > Your Claude > Memory from chats (older: Settings > Memory > Generate memory from chats) |
+| Pause for a while | Pause (existing memory is kept) |
+| Delete everything | Reset (including project memory, can't be undone) |
+| Edit what's stored | Your Claude > Manage next to "Your memory" > Topics > edit/Delete, or say "forget it" in a chat |
+| Turn memory off for one chat | Before the first message, "+" > turn Memory off |
+| Leave no record | Ghost icon at the top right of a new chat (incognito) |
+| Turn off past-chat search | Your Claude (older: Memory) > Search and reference chats |
+| Import memory | Your Claude (older: Memory) > Start import |
+| Export memory | In Settings > Your Claude, Manage next to "Your memory," or ask Claude to write out your memory verbatim |
+| Export all conversation data | Settings > Privacy > Export data (the link expires after 24 hours) |
+
+## Where people get stuck
+
+### I deleted the conversation, but the memory is still there
+
+- **Cause**: Memory follows the conversation retention policy, but if you delete a conversation, the memory it produced has to be deleted separately.
+- **Fix**: In Settings > Your Claude, use Manage to delete that topic.
+
+### I can't turn off memory in a chat I've already started
+
+- **Cause**: The per-chat memory switch can only be changed before the first message.
+- **Fix**: Open a new chat and turn it off before you start, or use an incognito chat.
+
+### Memory won't turn on with my team account
+
+- **Cause**: On Team/Enterprise, the organization Owner has to enable it first, and it also starts off for each member.
+- **Fix**: Contact your administrator.
+
+### Chat search doesn't work
+
+- **Cause**: It's a paid-plan feature, or "Search and reference chats" may be off.
+- **Fix**: Check your plan and settings.
+
+### Memory isn't showing up in Cowork
+
+- **Cause**: Cowork shares chats and memory only when it runs in the cloud. Local Cowork sessions don't use memory.
+- **Fix**: Check that it's running in the cloud.
+
+## Practical tips
+
+- **Export before you Reset.** A reset can't be undone, so first ask Claude to write out what you need verbatim and save it.
+- **Use incognito chat for sensitive conversations.** They don't stay in memory or search.
+- **Skim your topic list from time to time.** If wrong information piles up, the answers drift too.
+- **Claude Code has its own memory.** There's CLAUDE.md (you write it) and auto memory (Claude writes it); see [C14](/en/claude/c14-claude-code-features/) for the details.
+- **Global instructions**: In the unified experience, you can write instructions that always apply under "Instructions for Claude" in Settings > Your Claude (Account on the older screen) (see [C3](/en/claude/c03-getting-started/)).
+
+## What to read next
+
+- [C3. Getting started with the Claude app](/en/claude/c03-getting-started/) — Where settings live in each app
+- [C4. Prompting well](/en/claude/c04-prompting/) — Polishing your requests
+- [C5. Projects](/en/claude/c05-projects/) — Per-project memory and instructions

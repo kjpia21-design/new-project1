@@ -8,11 +8,13 @@ category: claude
 tools: ["Claude", "Claude Code", "GitHub"]
 duration: "40분"
 prerequisites:
-  - "Claude 유료 플랜 (예약 작업과 루틴은 Pro, Max, Team, Enterprise)"
+  - "Claude 유료 플랜 (예약 작업과 루틴은 Pro, Max, Ultra, Team, Enterprise)"
   - "C13(클라우드 세션과 루틴 기본)을 읽어 봤다면 더 수월해요"
   - "자동으로 돌리고 싶은 반복 업무 하나 (한 번은 손으로 해 본 것)"
-lastVerified: 2026-10-26
+lastVerified: 2026-10-31
 sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
   - title: "Automate work with routines"
     url: "https://code.claude.com/docs/en/routines"
   - title: "Run prompts on a schedule"
@@ -105,7 +107,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 3. **방식별로 만들어요**
 
-   **A. Claude 앱 예약 작업.** 공식 도움말 기준으로, 새 Claude 경험(Pro·Max에 순차 적용)에서는 아무 대화에서 "매주 월요일 9시에 지난주 팀 채널 메시지를 요약해 줘"처럼 작업과 주기를 말하면 돼요. Claude가 되묻는 질문에 답한 뒤, 제안된 작업 이름·일정·지침을 확인하고 **Schedule**을 눌러요. Cowork 화면에서는 왼쪽 사이드바의 **Scheduled** > **New task**에서 Create with Claude 또는 Set up manually를 고르고, 이름·프롬프트·승인 방식·주기(매시간·매일·평일·매주·수동)·모델·폴더를 정해요. 예정된 실행과 지난 실행은 사이드바의 Scheduled에서 봐요. 화면 구성은 계정과 앱 버전에 따라 다를 수 있어요.
+   **A. Claude 앱 예약 작업.** 공식 도움말 기준으로, 새 Claude 경험(Pro·Max·Ultra에 순차 적용)에서는 아무 대화에서 "매주 월요일 9시에 지난주 팀 채널 메시지를 요약해 줘"처럼 작업과 주기를 말하면 돼요. Claude가 되묻는 질문에 답한 뒤, 제안된 작업 이름·일정·지침을 확인하고 **Schedule**을 눌러요. Cowork 화면에서는 왼쪽 사이드바의 **Scheduled** > **New task**에서 Create with Claude 또는 Set up manually를 고르고, 이름·프롬프트·승인 방식·주기(매시간·매일·평일·매주·수동)·모델·폴더를 정해요. 예정된 실행과 지난 실행은 사이드바의 Scheduled에서 봐요. 화면 구성은 계정과 앱 버전에 따라 다를 수 있어요.
 
    **B. 루틴.** 만드는 방법은 [C13의 루틴 만들기](/claude/c13-cloud-sessions/)에 있어요. 요점만 말하면, claude.ai/code/routines의 New task(일부 계정은 New routine), 데스크톱 앱의 Routines(Cloud 선택), 또는 CLI의 `/schedule`로 만들어요. 세 곳은 같은 계정에 저장돼서 어디서 만들어도 다른 곳에 보여요. 예를 들어 이렇게 말해요.
 

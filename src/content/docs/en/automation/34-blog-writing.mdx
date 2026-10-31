@@ -1,0 +1,206 @@
+---
+title: "Writing Blog Posts with AI: From Planning to Review"
+description: "The order for planning, drafting, and reviewing a blog post with AI, plus the low-quality and mass-generation risks seen in Naver's official guidance (for users in Korea) and how to fact-check"
+sidebar:
+  label: "8. Writing blog posts"
+level: beginner
+category: automation
+tools: ["Claude", "ChatGPT", "Gemini", "네이버 블로그"]
+duration: "40 min"
+prerequisites:
+  - "An account with one AI chat service (any of Claude, ChatGPT, or Gemini)"
+  - "A topic you want to write about on your blog, and notes on your own firsthand experience"
+  - "Somewhere to publish, such as a Naver Blog (optional)"
+lastVerified: 2026-10-26
+sources:
+  - title: "Guide to writing content that users choose in the AI era (NAVER Search & Tech official blog, in Korean)"
+    url: "https://blog.naver.com/naver_search/224296857688"
+  - title: "A guide to \"web content spam cases\" worth knowing (NAVER Search & Tech official blog, in Korean)"
+    url: "https://blog.naver.com/naver_search/224335446939"
+  - title: "Recommendations for writing content (Naver Search Advisor, in Korean)"
+    url: "https://searchadvisor.naver.com/guide/content-basic"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- Use AI as **an assistant for drafting and organizing**, and **do your own experience and final review yourself**. Naver Search's official blog (Naver is Korea's largest search engine) also says that using AI tools alone doesn't automatically bring a penalty, but it tells you to go through final review and editing and to include real experience and knowledge (checked 2026-10-15).
+- The same official guidance says to avoid **indiscriminately publishing posts that AI mechanically generated or summarized** rather than sentences a person wrote. It also says that mass-publishing similar posts from a template can be treated as spam.
+- The order is **plan → outline → draft → add your experience → review (fact-check, sources, ad disclosure) → publish**.
+- The biggest risks are facts the AI made up, sources that don't exist, and sentences that resemble someone else's writing. Be sure to [fact-check](/en/basics/04-fact-checking/).
+- Some of the platform-specific AI disclosure rules are **things we couldn't confirm** in this article. See "What we couldn't confirm" below.
+</Summary>
+
+## What you'll be able to do
+
+- Decide on your reader and topic, and build the skeleton of a post with AI.
+- Turn an AI draft into your own writing by adding your experience notes.
+- Get a check sequence for reviewing facts, sources, ad disclosure, and copyright before you publish.
+- Recognize and avoid approaches that ruin a blog, such as mass generation and copying.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Draft** | The first rough version. AI produces it quickly, but you shouldn't post it as is. |
+| **Outline** | The skeleton of a post, built from a title and subheadings. |
+| **Hallucination** | When AI makes up content that isn't true but sounds plausible. |
+| **Mass generation of low-quality content** | A type Naver cites as a spam case: publishing lots of meaningless posts from the same or similar templates. |
+| **Scraping** | Automatically copying posts from elsewhere, or mechanically altering them and posting them almost unchanged. Naver cites it as a spam case. |
+| **Purchased-with-own-money / sponsorship disclosure** | A label that lets readers know whether you bought the item yourself or were paid. (In Korea this is often called 내돈내산 for "bought with my own money.") |
+
+### What Naver said on its official blog (checked 2026-10-15)
+
+This summarizes two posts on Naver Search's official blog (NAVER Search & Tech). Note that these posts are guidance for search and AI briefings, and **they are not the terms of service for the blog service.** They also don't guarantee any ranking results.
+
+| Guidance | Details |
+| --- | --- |
+| 5 principles of writing content | Firsthand knowledge, a consistent topic, honest sincerity, an easy-to-read structure, and staying up to date |
+| Posts to avoid | Indiscriminate copying and generation, excessive ads and promotion, unrelated keyword stuffing, unrelated images and videos, inaccurate information |
+| Using AI | You aren't automatically penalized for using AI tools. But it tells you to go through final review and editing and include your own experience and knowledge |
+| Spam cases | Mass-publishing low-quality posts from templates, keyword repetition, clickbait titles, scraping, clearly false synthetic or generated images and videos, etc. It says AI may be used in this process but that judgments aren't made solely on whether a particular technology was used |
+| If judged to be spam | It says posts can be removed from search results or ranked lower |
+
+<Aside type="caution" title="What we couldn't confirm (as of 2026-10-15)">
+- **Naver Blog's "AI use disclosure" feature and any disclosure obligation**: We couldn't open the original official help page to confirm. News articles interpret whether it's a recommendation or an obligation differently, so this article doesn't follow them. Check the current rules yourself on the blog writing screen and in Naver Customer Center.
+- **Brunch Story's policy on AI-generated posts and its writer application criteria**: We couldn't confirm the official documentation. If you plan to post on Brunch, read Brunch's official guidance yourself.
+- **Terms of each AI service**: Rights to AI output used in your post and commercial use vary by service. For a summary, see [Can I use AI output?](/en/basics/09-ai-copyright-ethics/).
+</Aside>
+
+## Step-by-step
+
+The example is "one blog post by someone who runs a neighborhood workshop and explains how to care for a leather wallet." Swap in your own topic and follow along.
+
+<Checklist items={[
+  'I decided my reader and the purpose of the post in one line',
+  'I gathered my experience notes (photos, numbers, failure stories)',
+  'I made an outline with AI and reordered it my way',
+  'I rewrote the AI draft with my experience in it',
+  'I checked the facts, numbers, and sources one by one',
+  'I checked sponsorship/ad disclosure and image sources',
+  'I set a date to fix errors after publishing',
+]} />
+
+<Steps>
+
+1. **Plan: your reader and purpose in one line**
+
+   Write in one line, "Who will read this post and what will they be able to do?" Then jot down **what you experienced yourself**. Cases you lived through, trial and error, failure stories, and photos are the parts AI can't make for you. Naver's official guidance also lists firsthand knowledge as its first principle.
+
+   <PromptBox>
+   I run a small leather workshop in my neighborhood. I'm writing a blog post for a person in their 30s with an office job who just bought their first leather wallet. Pull out 10 questions the reader is likely to have. Mark the questions where I can add my own experience with "experience needed." Don't make up numbers or statistics that look like facts.
+   </PromptBox>
+
+2. **Build an outline**
+
+   Ask the AI for a subheading structure, then reorder it in your own sequence and voice. Subheadings help readers find the parts they need. The official guidance also says it's good to write out in text the key points you put in images.
+
+   <PromptBox>
+   Pick 4 of the questions above and make a blog post outline. Give me 3 title options, no more than 5 subheadings, and a one-line description for each subheading. The title has to match the content exactly, and don't exaggerate.
+   </PromptBox>
+
+3. **Draft: write with your experience notes**
+
+   If you tell the AI "write a blog post" with no information, you get a generic post anyone could write. **Give it your experience notes first** and keep it from straying from them.
+
+   <PromptBox>
+   Write a blog draft from the outline and my experience notes below. Rules: (1) Don't invent experiences that aren't in the notes. (2) Don't write facts or numbers you're not sure about; mark them [needs checking]. (3) Use a friendly, conversational tone. (4) Leave out wording that sounds like an ad. (5) 3 to 5 sentences per subheading. [paste outline] [paste my experience notes]
+   </PromptBox>
+
+4. **Rewrite it as your own**
+
+   Find the [needs checking] marks and generic sentences in the draft and **replace them with your own examples.** Use photos you took yourself, and polish the tone into the expressions you normally use. Rather than leaving long stretches of AI-written sentences as is, read it aloud and change it to what you would actually say.
+
+5. **Review: the pre-publish check flow**
+
+   <FlowSteps title="Pre-publish review flow" steps={[
+     { where: 'Fact-check', action: 'Check numbers, dates, product info, and law or policy content against official sources', result: 'If it can\'t be confirmed, remove it or write "We couldn\'t confirm this."' },
+     { where: 'Sources and quotes', action: 'If you quote someone else\'s post, article, or paper, credit the original author and link to the source', result: 'Include only links you\'ve checked yourself' },
+     { where: 'Ads and sponsorship', action: 'Label clearly whether you were paid or bought it yourself, so readers can tell' },
+     { where: 'Images and copyright', action: 'Check the source and usage rights of photos and images', result: 'If real people or logos appear, check whether you have permission' },
+     { where: 'Personal information', action: 'Check that no customer names, contact details, or contract details are in the post' },
+   ]} />
+
+   Fact-checking methods are covered in detail in [Can I trust AI answers?](/en/basics/04-fact-checking/). You can ask AI to help with the review, but the checking itself has to be done by you.
+
+   <PromptBox>
+   From the post below, pull out only the sentences written as fact (numbers, dates, product info, policy explanations) as a list. For each sentence, tell me whether it's my experience or an outside fact, and for outside facts, give the type of official source I should check. Don't act like you know for certain and confirm them yourself. [paste post]
+   </PromptBox>
+
+6. **Publishing and afterward**
+
+   Read it aloud one more time before you publish. If wrong information comes to light later, fix the post, and if information changes, update it. Naver's official guidance also lists staying current, meaning revising posts to reflect changed information, as a principle. If you can, keep writing on a single area consistently. That is in the official principles too.
+
+</Steps>
+
+## Quick reference
+
+### What to leave to AI, and what's yours to do
+
+| OK to leave to AI | Do it yourself |
+| --- | --- |
+| Question lists, outlines, title options | Deciding the reader and purpose |
+| Polishing sentences, spelling, unifying tone | Experience, photos, examples, opinions |
+| Summarizing long notes, making tables | Fact-checking numbers, dates, and product info |
+| Checking the structure of a post | Sponsorship/ad disclosure, image rights |
+| Summaries, hashtag candidates | Final read-through and the decision to publish |
+
+### Approaches to avoid (per Naver's official guidance)
+
+| Approach | Why it's a problem |
+| --- | --- |
+| Churning out dozens of AI posts on one topic | Mass-publishing from a similar template is among the spam cases |
+| Lightly altering popular posts with AI and posting them | Close to copying, patchwork, and scraping |
+| Forcing search terms in repeatedly | Keyword repetition and abuse is a spam case |
+| Posts whose title and content differ | That's clickbait |
+| Using false or synthetic images to make things look real | May be classified as content that confuses or harms users |
+| Mass-registering posts with automated programs | Listed among cases that undermine service stability |
+
+## Common sticking points
+
+### The AI post is generic and anyone could have written it
+
+- **Cause**: You gave it only a topic, with no experience or material of your own.
+- **Fix**: Give it your experience notes, numbers, and photo descriptions first. Add "Don't write anything that isn't in the notes."
+
+### The AI makes up facts or links that don't exist
+
+- **Cause**: AI can fill in what it doesn't know with plausible-sounding content.
+- **Fix**: Open the links yourself, and remove any that don't open or whose content differs. Don't write anything unconfirmed.
+
+### My post seems similar to someone else's
+
+- **Cause**: Similar expressions the AI learned came out, or you showed the AI a post you referenced and had it rewrite it.
+- **Fix**: Don't paste sentences from a post you referenced into the AI and have it reword them. Rewrite key sentences in your own words, and credit the source if you quoted.
+
+### Is it OK to post several posts in the same format?
+
+- **Cause**: It's hard to tell a series from mass generation.
+- **Fix**: Check that each post has different experiences and information. Naver says that posting many posts with only parts of sentences changed is a spam case.
+
+### I got a sponsorship. How do I write it up?
+
+- **Cause**: Hiding that it's an ad loses readers' trust.
+- **Fix**: State clearly near the start of the post that you received payment or free products. Naver's official guidance also says to label whether you received economic compensation or bought it yourself so readers can tell at a glance. For legal disclosure standards, check the platform's guidance and the relevant authorities' guidance yourself.
+
+## Practical tips
+
+- **Find topics in your daily life.** Questions you got today, mistakes, and how you solved them make the best material.
+- **Depth over number of posts.** The official guidance lists posts with firsthand experience and concrete content as its principle. Choose checking one post properly over posting a lot.
+- **Keep your AI chat history.** You can check later which parts the AI wrote.
+- **Don't put customer information into AI.** Read [Using AI while keeping personal and company information safe](/en/basics/05-privacy-safety/) first.
+- **Check images separately.** When you use AI images, check [Making images](/en/media/11-business-images/) and [Copyright basics](/en/basics/09-ai-copyright-ethics/).
+- **Don't auto-post with macros.** Mass-registering posts through automation is listed in Naver's spam guidance.
+
+## What to read next
+
+- [Can I trust AI answers? How to fact-check](/en/basics/04-fact-checking/) — Methods you can use right away in reviewing a draft
+- [Can I use AI output? Copyright and ethics basics](/en/basics/09-ai-copyright-ethics/) — Checking rights before you post
+- [04. Writing reports and plans](/en/chat/04-write-reports/) — More practice writing long pieces with AI
+- [12. Making social media content with Canva](/en/media/12-canva-sns/) — Carrying your blog post over to social media
+- [Marketer guide](/en/roles/marketer/) — A collection of content tasks

@@ -1,0 +1,366 @@
+---
+title: "Claude Code key features: CLAUDE.md, slash commands, hooks, subagents, MCP"
+description: "A reference with minimal examples of when to use CLAUDE.md, slash commands, hooks, subagents, MCP, permission modes, plan mode, and skills, and how to set each up"
+sidebar:
+  label: "C14. Claude Code key features"
+level: advanced
+category: claude
+tools: ["Claude Code"]
+duration: "50 min"
+prerequisites:
+  - "A terminal with Claude Code installed (see C12 for installation)"
+  - "One project folder to work in"
+  - "(If you follow the hook example) jq and Node.js (npx)"
+lastVerified: 2026-10-26
+sources:
+  - title: "How Claude remembers your project (CLAUDE.md, auto memory)"
+    url: "https://code.claude.com/docs/en/memory"
+  - title: "Commands"
+    url: "https://code.claude.com/docs/en/commands"
+  - title: "Hooks guide"
+    url: "https://code.claude.com/docs/en/hooks-guide"
+  - title: "Custom subagents"
+    url: "https://code.claude.com/docs/en/sub-agents"
+  - title: "Connect Claude Code to tools via MCP"
+    url: "https://code.claude.com/docs/en/mcp"
+  - title: "Permission modes"
+    url: "https://code.claude.com/docs/en/permission-modes"
+  - title: "Skills"
+    url: "https://code.claude.com/docs/en/skills"
+  - title: "CLI reference"
+    url: "https://code.claude.com/docs/en/cli-reference"
+  - title: "Plugin commands reference"
+    url: "https://code.claude.com/docs/en/plugins/cli-reference"
+  - title: "Claude Code CHANGELOG (v2.1.246, 2.1.288, 2.1.292, 2.1.295, 2.1.296)"
+    url: "https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- A Claude Code session **starts with a fresh context every time**. Project rules written in `CLAUDE.md` carry over.
+- **Slash commands** are a control panel inside a session, and **hooks** lock in "things that must always run" as shell commands.
+- A **subagent** is a helper agent with its own context and tool permissions, and **MCP** is the standard for plugging in outside tools and data.
+- **Permission modes and plan mode** decide how freely Claude can act. Start complex work in plan mode.
+- CLAUDE.md is **context**, not "enforced settings." Use a hook (PreToolUse) for anything that must be blocked.
+</Summary>
+
+## What you'll be able to do
+
+- Create a project CLAUDE.md with `/init` and trim it to under 200 lines.
+- Set up a hook in `.claude/settings.json` that auto-formats every time a file is edited.
+- Define a subagent yourself, such as a read-only code reviewer.
+- Connect an MCP server, and adjust a task's safety level with permission modes and plan mode.
+
+## Concepts to know first
+
+The eight features have different roles. Settling when to use what first keeps things from getting confusing.
+
+| Feature | In one line | Use it when |
+| --- | --- | --- |
+| **CLAUDE.md** | A project instructions file read every session | You're tired of re-explaining build and test commands and coding rules every time |
+| **Slash commands** | Commands that start with `/` inside a session | Switching models, clearing context, checking settings |
+| **Hooks** | Shell commands that run automatically at specific points in the lifecycle | Things that must hold without exception, like "always format after saving" or "never modify this file" |
+| **Subagents** | Helper agents that work in a separate context and return only a summary | When output is long and would clutter the main conversation, like log analysis or code exploration |
+| **MCP** | An open standard for connecting outside tools and data | When you want to use an outside service like Notion from Claude Code |
+| **Permission modes** | The range of things Claude can do without approval | Auto-approving edits, or conversely allowing read-only |
+| **Plan mode** | A mode that only reads and proposes a plan first | Reviewing the direction before a big change |
+| **Skills** | A bundle of instructions you call up when needed (`SKILL.md`) | Reusing a repeated work procedure |
+
+<Aside type="note" title="CLAUDE.md is context, not an enforced rule">
+The official docs explain that both CLAUDE.md and auto memory are treated as "context, not enforced settings." Claude generally follows them but it's not guaranteed 100%. For actions that must be blocked for sure, use a PreToolUse hook.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  'I created CLAUDE.md with /init and trimmed it to under 200 lines',
+  'I got a work plan first in plan mode',
+  'I created a subagent definition file',
+  'I set up the auto-format hook and checked it with /hooks',
+  'I connected one MCP server and looked at its status with /mcp',
+  '(Optional) I created a skill',
+]} />
+
+<Steps>
+
+1. **Create CLAUDE.md**
+
+   Run `claude` in your project folder and type `/init`. Claude analyzes the codebase and generates a starter CLAUDE.md. If one already exists, it suggests improvements.
+
+   ```sh
+   cd my-project
+   claude
+   ```
+
+   ```text
+   /init
+   ```
+
+   <ScreenshotPlaceholder caption="The CLAUDE.md generated after running /init" officialUrl="https://code.claude.com/docs/en/memory" />
+
+   We recommend keeping the file **under 200 lines**. Write it short and specific, like this. (The following is an example.)
+
+   ```markdown
+   # Project instructions
+
+   ## Commands
+   - Dev server: `npm run dev`
+   - Tests: `npm test`
+
+   ## Rules
+   - Write documentation in a polite, friendly tone.
+   - Check existing files before creating a new one.
+   ```
+
+   To pull in another file, use the `@path/to/file` syntax, and for path-specific rules use `.claude/rules/`.
+
+2. **Start in plan mode**
+
+   For complex work, get a plan before any code is changed. Plan mode explores read-only, then proposes a plan, and blocks edits until you approve. There are three ways to turn it on.
+
+   ```sh
+   claude --permission-mode plan   # at startup
+   ```
+
+   During a session, type `/plan` or switch modes with `Shift+Tab`.
+
+   <PromptBox>
+   I want to add a "show password" toggle to the login screen. Before changing any code, read the relevant files and show me a plan first: which files you'll change and in what order.
+   </PromptBox>
+
+   Review and approve the plan, then move on to implementation.
+
+3. **Create a subagent**
+
+   Create a `.claude/agents/code-reviewer.md` file. The Markdown body becomes the subagent's system prompt, and the only required fields are `name` and `description`. The following is an example from the official docs.
+
+   ```markdown
+   ---
+   name: code-reviewer
+   description: Reviews code for quality and best practices
+   tools: Read, Glob, Grep
+   model: sonnet
+   ---
+
+   You are a code reviewer. When invoked, analyze the code and provide
+   specific, actionable feedback on quality, security, and best practices.
+   ```
+
+   Because `tools` is limited to read-only tools, the reviewer can't modify files. Usually you can either ask Claude to create it for you or write the file yourself like this.
+
+   <Aside type="note" title="The /agents command">
+   According to the official commands doc, `/agents` currently only prints a guidance message (v2.1.197 and earlier had an interactive wizard). Behavior may differ by version.
+   </Aside>
+
+4. **Set up the auto-format hook**
+
+   Add the following to `.claude/settings.json` at the project root. After every time Claude uses the `Edit` or `Write` tool, it runs Prettier on the edited file. This is an example from the official hooks guide, and it requires `jq`.
+
+   ```json
+   {
+     "hooks": {
+       "PostToolUse": [
+         {
+           "matcher": "Edit|Write",
+           "hooks": [
+             {
+               "type": "command",
+               "command": "jq -r '.tool_input.file_path' | xargs npx prettier --write"
+             }
+           ]
+         }
+       ]
+     }
+   }
+   ```
+
+   Type `/hooks` in a session to see the registered hooks. Even when a hook succeeds, nothing is shown in the chat, so check by whether the file was actually formatted.
+
+   <ScreenshotPlaceholder caption="The PostToolUse hook as seen in /hooks" officialUrl="https://code.claude.com/docs/en/hooks-guide" />
+
+   If you want to **block** something, have a PreToolUse hook script print the reason to stderr and finish with `exit 2`. Exit 2 blocks the action, and depending on the event the reason is passed to Claude as feedback.
+
+5. **Connect an MCP server**
+
+   Add a server from the terminal.
+
+   ```sh
+   claude mcp add --transport http notion https://mcp.notion.com/mcp
+   ```
+
+   Type `/mcp` in a session to check the connection status and go through OAuth authentication. Follow the prompts to authenticate in your browser. To add a stdio server that uses a local program:
+
+   ```sh
+   claude mcp add --transport stdio airtable --env KEY=... -- npx -y airtable-mcp-server
+   ```
+
+   <Aside type="caution" title="Connect only servers you trust">
+   Content that an MCP server brings in carries a risk of prompt injection. Connect only servers from sources you're sure of.
+   </Aside>
+
+6. **Create a skill (optional)**
+
+   Custom commands have been merged into skills. Creating `.claude/skills/deploy/SKILL.md` gives you `/deploy`. Here's the minimal example from the official docs, with only a `description`.
+
+   ```markdown
+   ---
+   description: Summarizes uncommitted changes and flags anything risky. Use when the user asks what changed, wants a commit message, or asks to review their diff.
+   ---
+
+   ## Current changes
+
+   !`git diff HEAD`
+
+   ## Instructions
+
+   Summarize the changes above in two or three bullet points, then list any risks you notice such as missing error handling, hardcoded values, or tests that need updating. If the diff is empty, say there are no uncommitted changes.
+   ```
+
+   `name` defaults to the folder name and every field is optional, but we recommend writing a `description` so Claude knows when to use it.
+
+</Steps>
+
+## Quick reference
+
+### CLAUDE.md locations
+
+| Scope | Location |
+| --- | --- |
+| Admin policy | macOS `/Library/Application Support/ClaudeCode/CLAUDE.md`, Linux `/etc/claude-code/CLAUDE.md` |
+| User (all projects) | `~/.claude/CLAUDE.md` |
+| Project (shared with team) | `./CLAUDE.md` or `./.claude/CLAUDE.md` |
+| Personal, for this project | `./CLAUDE.local.md` (we recommend adding it to `.gitignore`) |
+
+Files in parent directories load at startup, and files in subdirectories load when Claude reads files in that folder. They're concatenated rather than overriding each other. There's also **auto memory**, which Claude writes itself. It's on by default in local sessions and reads the first 200 lines or 25KB at startup. You can turn it on and off in `/memory`.
+
+### Commonly used slash commands
+
+| Command | Purpose |
+| --- | --- |
+| `/init` | Generate CLAUDE.md |
+| `/model` | Switch models |
+| `/clear` | Start a new conversation |
+| `/compact [instructions]` | Summarize the conversation to free up context |
+| `/context` | Check context usage |
+| `/memory` | Manage memory files and auto memory |
+| `/agents`, `/mcp`, `/hooks`, `/skills` | Check subagents, MCP, hooks, skills |
+| `/permissions`, `/config` | Permissions and settings |
+| `/plan` | Plan mode |
+| `/resume`, `/rewind` | Resume a previous session, roll back to a checkpoint |
+| `/usage` (= `/cost`) | Check usage |
+| `/review` (= `/code-review`), `/security-review` | Code and security review. You can set how many findings to report, as in `/code-review --max-findings 10` (`all` for everything), and the value you choose persists until you pass `--max-findings default` (v2.1.288 and later) |
+| `/teleport`, `/web-setup`, `/schedule` | Cloud session related ([C13](/en/claude/c13-cloud-sessions/)) |
+
+For the full list, see the official Commands doc.
+
+### Permission modes
+
+| Mode | Behavior |
+| --- | --- |
+| `default` (Manual) | Auto-approves reads only |
+| `acceptEdits` | Auto-approves file edits and basic file commands |
+| `plan` | Read-only. Explores, proposes a plan, and blocks edits until approval |
+| `auto` | A separate model (a classifier) runs a safety check in place of approval. With a direct Anthropic API connection and the like, a server-side classifier is the default (explained below) |
+| `dontAsk` | Uses only pre-approved tools (for CI) |
+| `bypassPermissions` | Only for isolated containers and VMs |
+
+You switch with `Shift+Tab` in the CLI, `claude --permission-mode <mode>` at startup, or `/plan` during a session. Deny rules block in every mode, including `bypassPermissions`, and protected paths like `.env` aren't auto-approved even in auto mode.
+
+**Good to know about auto mode** (as of 2026-10-11, per the official permission-modes doc and the changelog)
+
+- **Starting conditions**: On v2.1.283 and later, terminal and VS Code sessions start in auto if no mode is specified. `--permission-mode` and `permissions.defaultMode` take priority, and if your organization turns it off with `disableAutoMode`, it starts in Manual. It also starts in Manual if the model doesn't support auto. `claude -p` and Agent SDK runs start in Manual on v2.1.302 and later, so pass `--permission-mode auto` to use auto (as of 2026-10-26). Writing `defaultMode: "auto"` in `.claude/settings.json` has no effect; it has to go in `~/.claude/settings.json`.
+- **Classifier**: On a direct Anthropic API connection, the server doing the check is the default, and in environments where the server doesn't check (such as when a gateway blocks the request), Claude Code substitutes its own classifier request. With `CLAUDE_CODE_AUTO_MODE_SERVER=0`, it always uses its own classifier. In that case, classifier calls may count toward token usage.
+- **Viewing the rules**: In the **Auto mode** tab of `/permissions`, you can view and edit the classifier rules (v2.1.246 and later). For blocked actions, the **Recently denied** tab lets you press `r` to retry with manual approval.
+
+### Hooks summary
+
+| Item | Details |
+| --- | --- |
+| Where to configure | The `hooks` block in `~/.claude/settings.json` or `.claude/settings.json` |
+| Example events | `Notification`, `PreToolUse`, `PostToolUse`, `SessionStart` |
+| matcher | Narrow the scope by tool name, like `Edit\|Write` |
+| Blocking | Exit code 2 (print the reason to stderr) |
+| When the hook itself fails | The default is `"onFailure": "continue"`, so the action simply proceeds even if the hook can't start or times out. For a policy hook, add `"onFailure": "block"` to the `command` or `http` hook so it blocks on failure (v2.1.295 and later). |
+| Checking | `/hooks` |
+
+### Subagents summary
+
+| Item | Details |
+| --- | --- |
+| Definition file | Markdown + YAML frontmatter. `name` and `description` are required |
+| Location precedence | Managed settings > `--agents` flag > `.claude/agents/` > `~/.claude/agents/` > plugins |
+| `model` values | `sonnet`, `opus`, `haiku`, `fable`, a full model ID, `inherit` |
+| Other fields | `effort`, `tools`, `permissionMode`, `memory`, `isolation: worktree`, and more |
+| Auto-compaction | With `autoCompactWindow` in the frontmatter and `--agents`, you can make a subagent auto-compact earlier than the main conversation (v2.1.296 and later) |
+| Effort at call time | Separately from the `effort` in the definition, Claude can set effort for just this call with the Agent tool's `effort` parameter (v2.1.292 and later). The `CLAUDE_CODE_EFFORT_LEVEL` environment variable takes priority over both. |
+| Built in | Explore (read-only exploration), Plan, general-purpose, statusline-setup, claude-code-guide (the official docs table as of 2026-10-26) |
+
+### Installing and evaluating plugins
+
+| Command | Purpose |
+| --- | --- |
+| `claude plugin install <plugin> --marketplace <source>` | If you haven't added the marketplace yet, it adds it first and then installs (v2.1.292 and later). Inside a session it's `/plugin install <plugin> --marketplace <source>` (v2.1.275 and later), and it asks for confirmation before adding. |
+| `claude plugin eval` | Runs a plugin's eval cases and gives scored results (v2.1.269 and later). By default only read-only tools are allowed; widen that with `--allow-tools`. Create an eval suite with `claude plugin eval init`. |
+
+### MCP scopes
+
+| Scope | Where it's stored | Used for |
+| --- | --- | --- |
+| local (default) | `~/.claude.json` | Just you, in this project |
+| project | `.mcp.json` | Shared with your team |
+| user | User settings | All your projects |
+
+When you sign in with a claude.ai account, the connectors at claude.ai/customize/connectors show up automatically in `/mcp` (on Team/Enterprise only admins add them). The SSE method is deprecated.
+
+## Where people get stuck
+
+### Claude sometimes breaks rules I wrote in CLAUDE.md
+
+- **Cause**: CLAUDE.md is used as context, not as enforced settings. The longer the file or the vaguer the rule, the more easily it gets missed.
+- **Fix**: Cut it to under 200 lines and write specifically. Block rules that must never be broken with a PreToolUse hook or a deny rule.
+
+### I added a hook and nothing happens
+
+- **Cause**: The matcher may not match, `jq` or `npx` may not be installed, or the JSON syntax may be wrong. A hook that succeeds shows nothing in the chat.
+- **Fix**: Check that the hook shows up in `/hooks`, and see whether the file actually changed. Write tool names exactly, like `Edit|Write`. If Claude changes files through a `Bash` command, the `Edit|Write` matcher doesn't catch it.
+
+### I ran `/agents` and no wizard appeared
+
+- **Cause**: In the current version, `/agents` only prints a guidance message (v2.1.197 and earlier had an interactive wizard).
+- **Fix**: Ask Claude to create a subagent, or write the file directly in `.claude/agents/`.
+
+### I added an MCP server but can't use it
+
+- **Cause**: A server that needs OAuth authentication can't be used until you finish authenticating.
+- **Fix**: Check the status in `/mcp` and finish authenticating in your browser as prompted.
+
+### I'm in plan mode and files aren't changing
+
+- **Cause**: That's normal. Plan mode blocks edits until approval.
+- **Fix**: Review and approve the plan, then move on to implementation. You can also switch to another mode with `Shift+Tab`.
+
+## Practical tips
+
+- **Start CLAUDE.md small.** Keep only the build and test commands and the rules you really need from the `/init` result, and add one line each time Claude actually gets something wrong.
+- **"Always" means a hook; "usually" means CLAUDE.md.** When judgment is needed, there are also prompt-based and agent-based hooks.
+- **Hand long output to subagents.** A subagent returns only a summary, which saves the main conversation's context. Which model to use for subagents is covered in [C15. Model division strategy](/en/claude/c15-model-division/).
+- **Start big changes in plan mode.** It's the cheapest point to catch a wrong direction.
+- **Use `bypassPermissions` only in isolated environments.** Don't use it for everyday work on your own computer.
+- **Add only the MCP servers you need.** The more you connect, the more there is to manage and the more injection risk.
+- This article covers only part of the full list of hook events and the JSON schema. Check the official hooks reference.
+
+## What to read next
+
+- [C12. Claude Code overview: terminal, desktop, and web](/en/claude/c12-claude-code-overview/) — Installation and your first task
+- [C13. Cloud sessions](/en/claude/c13-cloud-sessions/) — Running in the cloud without your computer
+- [C15. Model division strategy](/en/claude/c15-model-division/) — How to assign models to subagents
+- [C8. Skills](/en/claude/c08-skills/) — Going deeper on skills
+- [Building your own agent with the Claude Agent SDK](/en/dev/03-agent-sdk/) — Building agents in code
+- [Building your own MCP server and connecting it to Claude](/en/dev/05-mcp-server/) — How to build an MCP server yourself
+- [Packaging skills and plugins and distributing them to your team](/en/dev/06-plugins-skills-team/) — Bundling into a plugin and distributing it

@@ -1,0 +1,482 @@
+---
+title: "Run Agents on a Server with Managed Agents"
+description: "A hands-on guide to Claude Managed Agents (beta), where Anthropic runs the agent loop and sandbox for you: understand the architecture, create an agent, environment, and session, stream the results, and set up dynamic workflows and cost caps"
+sidebar:
+  label: "4. Run it on a server with Managed Agents"
+level: advanced
+category: dev
+tools: ["Claude Managed Agents", "Claude API"]
+duration: "60 min"
+prerequisites:
+  - "C16. Getting started with the Claude API (API key, ANTHROPIC_API_KEY, installing the Python SDK)"
+  - "3. Build Your Own Agent with the Claude Agent SDK (concepts of agents, tools, and permissions)"
+  - "Python 3.10 or later and a terminal (Node.js for the TypeScript examples)"
+lastVerified: 2026-10-26
+sources:
+  - title: "Claude Managed Agents overview"
+    url: "https://platform.claude.com/docs/en/managed-agents/overview"
+  - title: "Get started with Claude Managed Agents"
+    url: "https://platform.claude.com/docs/en/managed-agents/quickstart"
+  - title: "Multiagent orchestration (dynamic workflows)"
+    url: "https://platform.claude.com/docs/en/managed-agents/multiagent-orchestration"
+  - title: "Workflow runs"
+    url: "https://platform.claude.com/docs/en/managed-agents/workflow-runs"
+  - title: "Session budgets"
+    url: "https://platform.claude.com/docs/en/managed-agents/budgets"
+  - title: "Managed Agents reference (events, rate limits)"
+    url: "https://platform.claude.com/docs/en/managed-agents/reference"
+  - title: "Pricing (Claude Managed Agents pricing)"
+    url: "https://platform.claude.com/docs/en/about-claude/pricing"
+  - title: "Agent SDK overview (comparison for choosing)"
+    url: "https://code.claude.com/docs/en/agent-sdk/overview"
+  - title: "Hosting the Agent SDK"
+    url: "https://code.claude.com/docs/en/agent-sdk/hosting"
+  - title: "Models overview (model IDs and pricing)"
+    url: "https://platform.claude.com/docs/en/about-claude/models/overview"
+  - title: "Claude Platform release notes (web_fetch limits)"
+    url: "https://platform.claude.com/docs/en/release-notes/overview"
+  - title: "Restrict web search and web fetch domains"
+    url: "https://platform.claude.com/docs/en/managed-agents/tools-web-restrictions"
+  - title: "Permission policies"
+    url: "https://platform.claude.com/docs/en/managed-agents/permission-policies"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- **Managed Agents is a service where Anthropic runs the "agent loop + sandbox" for you.** Your code only creates sessions and exchanges events. The feature is in **beta** and requests need the `managed-agents-2026-04-01` beta header (the SDK adds it automatically).
+- The structure is **agent (create once) -> environment (where it runs) -> session (one run) -> events (the messages exchanged).** An agent is a versioned, stored object, so you don't create a new one every time.
+- Cost is **tokens + session runtime ($0.08/hour, only while the session is `running`).** The Batch API discount doesn't apply. When you create a session, set a **dollar cap** with `budget`.
+- For work that splits into hundreds of pieces, **dynamic workflows (beta)** let an agent run many agents in stages. They use a lot of tokens, so turn them on only for work that needs them.
+- **It isn't eligible for ZDR (zero data retention) or a HIPAA BAA.** Sessions and conversation history are stored on the server.
+</Summary>
+
+The examples follow the official documentation. We verified the syntax on 2026-10-11, and in the installed SDKs (Python `anthropic` 1.13.0, TypeScript `@anthropic-ai/sdk` 0.133.0) we confirmed that the methods and parameter names exist, and for TypeScript we also ran type checking. We made no real calls. It's a beta, so fields and figures may change; check the docs alongside this.
+
+## What you'll be able to do after this tutorial
+
+- Explain how Managed Agents differs from the Messages API and the Agent SDK, and choose between them.
+- Create an agent and environment once, open a session, send a message, and receive the result by streaming.
+- Calculate the cost of one run from the session budget and runtime rate, and set a cap.
+- Turn on dynamic workflows and know how to correctly tell when they're finished.
+
+## Concepts to know first
+
+### Four building blocks
+
+| Component | Meaning |
+| --- | --- |
+| **Agent** | A configuration that bundles a model, system prompt, tools, MCP servers, and skills. It's stored and **versioned.** |
+| **Environment** | Where a session runs. Either a cloud sandbox managed by Anthropic, or a self-hosted sandbox on your own infrastructure. |
+| **Session** | One run of an agent inside an environment. The conversation history and sandbox files are preserved. |
+| **Events** | The messages your app and the agent exchange. User messages, tool results, and status notices are all events. |
+
+The flow goes like this. You create an agent once and save its ID. Each time you open a session, you point to the agent ID and the environment ID. When you send an event, the agent uses bash, file operations, web search, and MCP tools in the sandbox on its own, and streams the process as server-sent events (SSE). The event history is stored on the server so you can fetch it again later.
+
+<Aside type="caution" title="The model, system prompt, and tools live on the agent, not the session">
+A session creation request takes only `agent` (an ID or `{type: "agent", id, version}`). To change the model or system prompt, **update** the agent. Updating creates a new version, and sessions already running keep the version they started with. If you call `agents.create()` on every run, you just pile up unused agents.
+</Aside>
+
+### When to use what
+
+| What you need | What to pick |
+| --- | --- |
+| I want to receive responses myself and control them with my own loop | Messages API + [Tool use](/en/dev/01-tool-use/) |
+| I want to run a Claude Code-style agent in my own server process | [Agent SDK](/en/dev/03-agent-sdk/) (you do the hosting) |
+| I want to hand off async work that takes minutes to hours, a sandbox that keeps state, or cron-style runs | **Managed Agents** |
+
+The uses the official overview docs list for Managed Agents are long-running work, cloud sandboxes, self-hosted execution needed for compliance or data location reasons, minimizing the infrastructure you build yourself, sessions that keep state, and cron-scheduled runs (scheduled deployments). The Agent SDK hosting docs also say to consider Managed Agents if you don't want to host the agent loop yourself.
+
+<Aside type="danger" title="Check this first: ZDR and a HIPAA BAA aren't supported">
+The official docs state that Managed Agents is designed so sessions run long and store conversation history, sandbox state, and outputs on the server, so it currently isn't eligible for ZDR (zero data retention) or a HIPAA BAA. You can delete a session through the API at any time, and you can delete uploaded files separately. If you handle personal or confidential information, check the retention policy first (the Fable 5.1 data retention note in [C16](/en/claude/c16-api/) is in the same vein). It also can't be used on Bedrock, Vertex, or Foundry.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  'I installed the anthropic SDK and set ANTHROPIC_API_KEY as an environment variable',
+  'I created the environment and agent once and saved the IDs to a file',
+  'I set a session budget and created a session',
+  'I opened the stream first, then sent the message and received the result',
+  'I checked session usage (list_cost)',
+  'I created a dynamic workflow agent and understood how to tell when it is finished',
+  'I deleted the finished session',
+]} />
+
+<Steps>
+
+1. **Install the SDK and set the key**
+
+   Managed Agents lives under `client.beta.*` in the regular `anthropic` SDK. It is not the Agent SDK package.
+
+   ```bash
+   python3 -m venv .venv && source .venv/bin/activate
+   pip install anthropic
+   export ANTHROPIC_API_KEY="your-api-key-here"
+   ```
+
+   - Don't write the key in code; handle it only as an environment variable ([C16](/en/claude/c16-api/)).
+   - For TypeScript, it's `npm install @anthropic-ai/sdk`. There's also a way to manage agent configuration as files with the command-line tool `ant` (`brew install anthropics/tap/ant`). The official quickstart introduces this approach too.
+   - Every Managed Agents request needs the `managed-agents-2026-04-01` beta header, which the SDK adds automatically.
+
+2. **Create the environment and agent just once**
+
+   An environment is the sandbox configuration. The one below uses `limited` networking on a cloud sandbox and allows only package managers. For the agent, you set the model, system prompt, and the toolset bundle `agent_toolset_20260401`. We turn off web search and web fetch because this example doesn't need them.
+
+   - With `limited` networking, the `allowed_hosts` list also applies to web search and fetch. If you don't list any hosts, those two tools can't retrieve results. Turn them on by listing only the sites you need.
+   - This file is **for setup.** Don't call it on every run; run it once and save the IDs.
+
+   Save it as `ma_setup.py`.
+
+   ```python
+   """Setup step: create the environment and agent just once and save their IDs. (Don't create them on every request path.)"""
+   import json
+
+   import anthropic
+
+   client = anthropic.Anthropic()  # Reads the ANTHROPIC_API_KEY environment variable
+
+   environment = client.beta.environments.create(
+       name="report-env",
+       config={
+           "type": "cloud",
+           "networking": {"type": "limited", "allow_package_managers": True},
+       },
+   )
+
+   agent = client.beta.agents.create(
+       name="Report Writer",
+       model="claude-sonnet-5-5",
+       system="You are a data analyst. Save your results as a markdown file in /mnt/session/outputs/.",
+       tools=[
+           {
+               "type": "agent_toolset_20260401",
+               "configs": [
+                   {"name": "web_fetch", "enabled": False},
+                   {"name": "web_search", "enabled": False},
+               ],
+           }
+       ],
+   )
+
+   with open("managed-agent-ids.json", "w", encoding="utf-8") as f:
+       json.dump({"agent_id": agent.id, "agent_version": agent.version, "environment_id": environment.id}, f)
+   print(agent.id, agent.version, environment.id)
+   ```
+
+   ```bash
+   python ma_setup.py
+   ```
+
+   <Aside type="note" title="Choosing a model">
+   The agent example in the official quickstart uses `claude-opus-5-5`. This example uses `claude-sonnet-5-5` to save cost, but the quickstart has no example using that model, so we couldn't confirm it by running it. If you get stuck, try switching to `claude-opus-5-5`. How to choose a model is covered in [C15](/en/claude/c15-model-division/).
+   </Aside>
+
+3. **Create a session, open the stream first, and send a message**
+
+   You create a session by pointing to the agent ID and environment ID. This is where you can set a **budget.** A budget can only be attached when you create the session; you can't add a new one later.
+
+   - `max_list_cost.amount` is an **integer string in cents.** `"200"` is 2 dollars, and `"2.00"` is rejected. Only USD works as the currency.
+   - The stream gives you only events that happen after it's opened. So **open the stream first** and then send the message.
+   - When `session.status_idle` arrives, the agent has finished its work. But if `stop_reason.type` is `requires_action`, it's **waiting for your response (a tool approval, or the result of a custom tool)**, so you must keep listening.
+
+   Save it as `ma_run.py`.
+
+   ```python
+   """Run step: create a session with the saved IDs, open the stream first, then send the message."""
+   import json
+
+   import anthropic
+
+   client = anthropic.Anthropic()
+   ids = json.load(open("managed-agent-ids.json", encoding="utf-8"))
+
+   session = client.beta.sessions.create(
+       agent={"type": "agent", "id": ids["agent_id"], "version": ids["agent_version"]},
+       environment_id=ids["environment_id"],
+       title="First report session",
+       budget={  # Cost cap for one session: an integer number of cents, as a string ("200" = 2 dollars)
+           "type": "limit",
+           "max_list_cost": {"amount": "200", "currency": "USD"},
+       },
+   )
+   print("Session:", session.id)
+
+   with client.beta.sessions.events.stream(session.id) as stream:
+       client.beta.sessions.events.send(
+           session.id,
+           events=[
+               {
+                   "type": "user.message",
+                   "content": [
+                       {
+                           "type": "text",
+                           "text": "Write and run a Python script that calculates the Fibonacci sequence from 1 to 20, and save the result to /mnt/session/outputs/fib.md.",
+                       }
+                   ],
+               }
+           ],
+       )
+       for event in stream:
+           if event.type == "agent.message":
+               for block in event.content:
+                   if block.type == "text":
+                       print(block.text, end="")
+           elif event.type == "agent.tool_use":
+               print(f"\n[tool: {event.name}]")
+           elif event.type == "session.status_idle":
+               # If it's requires_action, it's waiting for my response, so keep listening
+               if event.stop_reason.type != "requires_action":
+                   print(f"\nStop reason: {event.stop_reason.type}")
+                   break
+           elif event.type == "session.status_terminated":
+               print("\nThe session has ended.")
+               break
+
+   done = client.beta.sessions.retrieve(session.id)
+   print("Cumulative usage:", done.usage)  # Includes list_cost and more
+   ```
+
+   ```bash
+   python ma_run.py
+   ```
+
+   <details>
+   <summary>TypeScript version</summary>
+
+   ```typescript
+   import Anthropic from "@anthropic-ai/sdk";
+   import { readFileSync } from "node:fs";
+
+   const client = new Anthropic();
+   const ids = JSON.parse(readFileSync("managed-agent-ids.json", "utf-8"));
+
+   const session = await client.beta.sessions.create({
+     agent: { type: "agent", id: ids.agent_id, version: ids.agent_version },
+     environment_id: ids.environment_id,
+     title: "First report session",
+     budget: {
+       type: "limit",
+       max_list_cost: { amount: "200", currency: "USD" }, // String in cents: 2 dollars
+     },
+   });
+
+   const stream = await client.beta.sessions.events.stream(session.id);
+   await client.beta.sessions.events.send(session.id, {
+     events: [
+       {
+         type: "user.message",
+         content: [{ type: "text", text: "Calculate the Fibonacci sequence from 1 to 20 and save it to /mnt/session/outputs/fib.md." }],
+       },
+     ],
+   });
+
+   loop: for await (const event of stream) {
+     switch (event.type) {
+       case "agent.message":
+         for (const block of event.content) {
+           if (block.type === "text") process.stdout.write(block.text);
+         }
+         break;
+       case "agent.tool_use":
+         console.log(`\n[tool: ${event.name}]`);
+         break;
+       case "session.status_idle":
+         if (event.stop_reason.type !== "requires_action") break loop;
+         break;
+       case "session.status_terminated":
+         break loop;
+     }
+   }
+   ```
+
+   </details>
+
+   - If you have the agent save files to `/mnt/session/outputs/` in the sandbox, you can list and download them through the Files API. Right after the session goes idle, it can take 1 to 3 seconds for the list to reflect them.
+   - If the stream drops, you need to reconnect and then list the events to filter out duplicates. SSE doesn't resend events you missed.
+
+   <PromptBox>
+   Write code with Claude Managed Agents (Python SDK) that creates an agent and an environment once and saves their IDs to a file, then creates a session, opens the stream first, and sends a message. Set the session budget to 2 dollars, and keep listening when status_idle arrives with a stop_reason of requires_action. Have it read the key only from an environment variable.
+   </PromptBox>
+
+4. **Check the cost**
+
+   The session object's `usage` holds the cumulative usage. `usage.list_cost` is the cumulative cost calculated at public list prices, and `usage.active_seconds` is the running time that the runtime rate is charged on. The stream has a `session.usage` event, which always arrives once just before the session goes idle.
+
+   <Aside type="caution" title="A budget is not an 'exact stopping point'">
+   When it hits the limit, it stops new model requests, and the session doesn't terminate; it goes idle with `stop_reason: budget_reached`. Requests already sent run to completion, so it may overshoot a little. While at the limit, it only accepts events that "wrap up work in progress," such as tool approvals, tool results, and interrupts, and a `user.message` gets a 400 error. Raise or remove the budget and it resumes. If you remove the budget, you can't attach a budget to that session again. The budget is based on **public list prices,** not negotiated prices, so your actual bill may be lower.
+   </Aside>
+
+5. **Turn on dynamic workflows (beta)**
+
+   If a job has a very large number of pieces, like "review hundreds of documents," the agent can write a **workflow** itself, run many agents in stages, and combine the results. The server runs this as a background **workflow run.** You turn it on with the agent's `multiagent` setting.
+
+   - You don't start a run with a separate API call. When you describe the job in a user message, the agent **decides for itself** whether to start a run.
+   - So you guide it by writing in the system prompt which jobs should use a run and which it should do directly. The example below is in the spirit of the official example.
+   - Every agent in a run uses tokens. Don't let it use runs even for small jobs.
+   - Inline agents use the same model as the session agent. To run only some on a different model, create those agents separately and list them in `workflows.predefined_agents` (up to 20).
+   - An agent with `multiagent` configured can't be put in another agent's list (itself, `{"type": "self"}`, is allowed).
+   - If you use the `multiagent_20261001` type, `subagents` and `workflows` are **on by default** (as of 2026-10-19). If you don't need dynamic workflows, turn them off with `{"workflows": {"type": "disabled"}}`.
+
+   Save it as `ma_workflow.py`.
+
+   ```python
+   """An agent with dynamic workflows (beta) turned on. The key is writing 'when to use it' in the system prompt."""
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   agent = client.beta.agents.create(
+       name="Contract Reviewer",
+       model="claude-opus-5-5",
+       system=(
+           "You are a contract reviewer. If there are more than a few contracts, start a workflow run "
+           "to read them in parallel and combine the results. Review one or two contracts directly."
+       ),
+       tools=[{"type": "agent_toolset_20260401"}],
+       multiagent={"type": "multiagent_20261001", "workflows": {"type": "enabled"}},
+   )
+   print(agent.id)
+
+   # To turn it off: update the agent and send {"workflows": {"type": "disabled"}}.
+   ```
+
+   While a run is going, events like `workflow_run.created`, `workflow_run.phase_started`, and `workflow_run.status_ended` arrive on the stream. **How to tell it's finished** matters.
+
+   1. `workflow_run.status_ended` has arrived for every run you've seen so far.
+   2. After that, a `session.status_idle` that you didn't cause (with a `stop_reason` of `end_turn`) arrives.
+
+   `idle` alone doesn't mean it's over. A session can go idle with a run stopped by a budget halt, and the agent can read the results and start a new run. To end it, you have to **archive the session,** not send `user.interrupt`. An interrupt event doesn't end a run.
+
+   <Aside type="note" title="What we don't assert because the docs don't cover it">
+   The official docs don't describe the program format (script syntax) the agent uses inside a workflow (workflow run docs, checked 2026-10-13). This tutorial only covers up to "the agent writes the workflow and the server runs it." The docs say that within a single run, more than one thread can end up doing the same work, so make your own tools that the agent calls safe to call twice.
+   </Aside>
+
+6. **Clean up finished sessions**
+
+   Session and sandbox state stays on the server. Download the outputs you need first, then delete. Deletion can't be undone. Also, **archiving** agents, environments, and sessions can't be undone and archived ones can't be used in new sessions, so don't archive an agent you're using carelessly.
+
+   Save it as `ma_cleanup.py`.
+
+   ```python
+   """Delete a finished session. Conversation history and sandbox state are deleted from the server, so download your outputs first."""
+   import sys
+
+   import anthropic
+
+   client = anthropic.Anthropic()
+   client.beta.sessions.delete(session_id=sys.argv[1])  # e.g. python ma_cleanup.py sesn_...
+   print("Deleted:", sys.argv[1])
+   ```
+
+   ```bash
+   python ma_cleanup.py sesn_YOUR_SESSION_ID
+   ```
+
+</Steps>
+
+## Quick reference
+
+### Pricing structure (as of 2026-10-11, US dollars)
+
+| Item | Details |
+| --- | --- |
+| Tokens | Same model rates as the Messages API. Prompt cache multipliers are the same too. |
+| Session runtime | **$0.08 / session-hour.** Only time in the `running` state is counted, in milliseconds. Time in `idle` (waiting for your response), `rescheduling`, and `terminated` is excluded. |
+| Web search | $10 per 1,000 searches |
+| Container pricing | Session runtime replaces the code execution container-hour charge, so you don't pay it separately. |
+| Batch API discount | **Does not apply.** Sessions are stateful and conversational, so there's no batch mode. |
+| Pinning inference to the US (`inference_geo: us`) | Tokens cost 1.1x. |
+
+### Cost calculation example
+
+This is a session that was `running` for 1 hour on Opus 5.5 (input $4, output $20, cache read $0.20 per 1 million tokens) and used 50,000 input tokens and 15,000 output tokens. We recalculated it in the same way as the official docs' calculation example, using this site's model prices ([C16](/en/claude/c16-api/)).
+
+| Item | Calculation | Cost |
+| --- | --- | --- |
+| Input tokens | 50,000 × $4 / 1,000,000 | $0.20 |
+| Output tokens | 15,000 × $20 / 1,000,000 | $0.30 |
+| Session runtime | 1.0 hours × $0.08 | $0.08 |
+| **Total** | | **$0.58** |
+
+If 40,000 of the input tokens were cache reads, the input drops to $0.04 (10,000 tokens × $4) plus $0.008 (40,000 tokens × $0.20), and the total is about **$0.43.** Tokens are most of the cost and runtime is comparatively small, but if a run grows to dozens or hundreds of agents, tokens multiply.
+
+### Limits and rate limits (from the official docs; they may change since this is a beta)
+
+| Item | Value |
+| --- | --- |
+| Create endpoints (agents, sessions, environments, and so on) | 300 requests per minute per organization |
+| Read endpoints (retrieve, list, stream) | 1,200 requests per minute per organization |
+| Threads working at the same time in one run | 64 |
+| Agents one run can start | 1,000 (beyond that, `thread_limit_error`) |
+| Run lifetime | 24 hours by default (beyond that, `timeout_error`) |
+| Runs open at the same time in a session | 10 by default (beyond that, `max_workflow_runs_error`) |
+| Child threads of a session | 25 (workflow run threads are separate) |
+| `predefined_agents` in `multiagent` | Up to 20 per list |
+
+A run's model requests also count toward your organization's Messages API rate limits. The docs state that the run limits above are "not figures the API guarantees, so they may change."
+
+### Events you'll see often
+
+| Event | Meaning |
+| --- | --- |
+| `agent.message` | The agent's response |
+| `agent.tool_use` / `agent.tool_result` | A call to a built-in tool (bash, file operations, and so on) and its result |
+| `agent.custom_tool_use` | A call to a tool you defined. You answer with `user.custom_tool_result`. |
+| `session.status_running` / `session.status_idle` | Working / finished one turn and waiting for input (includes `stop_reason`) |
+| `session.status_terminated` | The session ended |
+| `session.usage` | Cumulative usage and `list_cost` (once, just before idle) |
+| `workflow_run.*` | Creation, phases, completion, and errors of dynamic workflow runs |
+
+## Common sticking points
+
+### I sent a message, but the first events arrive all at once
+
+- **Cause**: The stream gives you only events that happen after it's opened. If you send the message first and open the stream later, the early events arrive in a bunch.
+- **Fix**: Open the stream first (`with ... events.stream(...)`) and send the message inside it.
+
+### `session.status_idle` arrived but the work isn't done
+
+- **Cause**: If `stop_reason.type` is `requires_action`, it's waiting for a tool approval or the result of a custom tool. If you use workflows, a run may not be finished or may be blocked by the budget.
+- **Fix**: If it's `requires_action`, keep listening and respond. For workflows, check both conditions in step 5 above.
+
+### Sending a message to a session that hit its limit gives a 400 error
+
+- **Cause**: A session in the `budget_reached` state doesn't accept events that start new work (`user.message`).
+- **Fix**: Update the budget to a value **at least 1 cent larger** than the session's `usage.list_cost`, or remove the budget. The new value must be larger than the cost consumed so far.
+
+### Web search and fetch retrieve no results
+
+- **Cause**: The environment uses `limited` networking, but you didn't list any hosts in `allowed_hosts`. This list applies to the web tools too.
+- **Cause 2**: Web fetch (`web_fetch`) retrieves only URLs that have already appeared in the session conversation (official release notes, as of 2026-10-19). Other URLs give a `url_not_in_prior_context` error. Include the address you want fetched in the `user.message` you send.
+- **Cause 3**: An organization admin turned off web search or web fetch, or restricted domains, on the **Capabilities** page of the Claude Console. If turned off, calls to that tool return to the agent as an error result and the session continues. A URL has to pass both the organization list and the agent's `allowed_domains`/`blocked_domains`, and the same goes for URLs reached via redirects (official docs, as of 2026-10-26).
+- **Fix**: Put only the sites you need in `allowed_hosts`, or if the job doesn't use web tools, turn the tools off. `unrestricted` opens up outside communication for the whole sandbox, so don't keep secrets or sensitive files in the sandbox.
+
+### An error when creating an agent, or about `ant__` names
+
+- **Cause**: When you turn on `multiagent`, custom tool names that start with `ant__` are reserved, so if any exist the update fails with a 400 error.
+- **Fix**: Rename or remove the tool and turn on the workflow in the same update.
+
+### I reran the same code and the agents keep piling up
+
+- **Cause**: You put the setup code (`agents.create`) on the run path.
+- **Fix**: Separate setup from running. Create sessions only, using the saved agent ID, and update the agent when you change its configuration.
+
+## Practical tips
+
+- **Make budgets a habit.** Attach a `budget` to every session, start with a small value (for example, 2 dollars), and raise it while watching `usage.list_cost`. The `"200"` in this example is 2 dollars. A budget is a cap for one session, and with cron deployments (scheduled deployments) it applies separately to each run.
+- **Use only the toolset you need.** If you don't need the web tools, turn them off, and if you do, restrict sites with `allowed_hosts` and `allowed_domains`.
+- **Design tool permissions too.** For the agent's tools, a permission policy (`always_allow`, `always_ask`, `auto`) decides how approval works. The defaults are `always_allow` for the agent toolset and `always_ask` for the MCP toolset (as of 2026-10-26, [official permission policies docs](https://platform.claude.com/docs/en/managed-agents/permission-policies)). With `auto`, the server decides on each call whether to run it, deny it, or wait for approval. For runs nobody is watching, it's safer to leave calls that need approval to be denied.
+- **Watch out for instructions hidden in documents and the web.** A document or web page the agent reads may hide an instruction like "send this file outside" (prompt injection). Don't keep secrets in the sandbox, and entrust credentials for external tools like MCP servers to the vault described in the official docs.
+- **Using it together with the Agent SDK.** A natural flow is to test quickly on your own computer with the Agent SDK during development, then move work that runs long without a person, or that needs hosting, to Managed Agents ([tutorial 03](/en/dev/03-agent-sdk/)).
+- **Divide work among models.** Use a larger model for the main agent and a cheaper model for agents doing simple reading work to lower costs ([C15](/en/claude/c15-model-division/)).
+
+## What to read next
+
+- [3. Build Your Own Agent with the Claude Agent SDK](/en/dev/03-agent-sdk/) — compare it with running in your own process
+- [1. Build a work bot with tool use](/en/dev/01-tool-use/) — how to design the tools your agent calls
+- [C16. Getting started with the Claude API](/en/claude/c16-api/) — the basics of keys, model IDs, and pricing

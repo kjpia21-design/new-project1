@@ -1,0 +1,132 @@
+---
+title: AI Guide for Office, Planning, and Admin Roles
+description: Meeting notes, reports, data cleanup, email, and scheduling. How office, planning, and management professionals can cut repetitive work with AI, and the order to learn it.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+## Who this is for
+
+This page suits people whose work moves between documents and people, such as general affairs, HR, finance, planning, operations, and team managers.
+
+- After every meeting, writing up the notes and follow-up tasks becomes another job.
+- Writing reports and emails takes more time than you'd expect.
+- Cleaning up and summarizing Excel data is always about the same, yet it takes a lot of manual effort.
+
+## Top 5 ways AI helps
+
+### 1. Organize meeting notes and pull out to-dos
+
+**What it can do**: Extract decisions, owners, and deadlines into a table from your notes or a transcript.
+**Suggested tools**: A chat AI. For recordings, first turn them into text with [Transcribe and organize meeting and lecture recordings](/en/media/14-transcribe-recordings/). Summarizing tips are in [Summarize meeting notes and long documents and pull out to-dos](/en/chat/02-summarize-documents/).
+
+<PromptBox label="Organize meeting notes">
+Below are my meeting notes. Organize them in this format.
+1) The meeting's purpose in one line
+2) Decisions (numbered list)
+3) Action items table: task, owner, deadline, notes
+4) Open issues not yet decided
+If an owner or deadline isn't in the notes, write "TBD" and don't make one up.
+
+[Paste meeting notes]
+</PromptBox>
+
+### 2. Draft reports and plans
+
+**What it can do**: Set up an outline, write a draft for each section, and adjust the tone for the reader.
+**Suggested tools**: A chat AI. Follow [Write and polish report and proposal drafts](/en/chat/04-write-reports/) for the full flow.
+
+<PromptBox label="Outline a report">
+I'm going to write a report on [topic] for [audience: e.g., executives, teammates].
+Purpose: [request a decision / share status / make a proposal]
+Length: [number] pages
+First, suggest a table of contents and a key sentence for each section. Once I confirm, we'll draft section by section. Don't include any numbers that aren't in the materials I give you.
+Reference materials: [paste materials]
+</PromptBox>
+
+### 3. Summarize Excel and CSV data
+
+**What it can do**: Upload a table and it finds totals, trends, and odd values, and can also suggest Excel formulas.
+**Suggested tools**: A chat AI that can analyze files. See [Let AI analyze your Excel and CSV data](/en/chat/03-data-analysis/).
+
+<PromptBox label="Explore the data">
+The attached table is data about [what the data is].
+1) First check the column layout, blank cells, duplicates, and odd values.
+2) Summarize [monthly / by-department] totals and changes in a table.
+3) Tell me 3 notable changes and questions worth checking.
+Write down how you calculated things so I can verify them.
+</PromptBox>
+
+### 4. Write emails and announcements
+
+**What it can do**: Draft emails with a tricky tone, such as requests, apologies, reminders, and announcements.
+**Suggested tools**: A chat AI. To use it inside Gmail, see [Practical use of AI features (Gemini) in Google Workspace](/en/automation/19-google-workspace-gemini/).
+
+<PromptBox label="Email draft">
+Write an email for the situation below.
+Recipient: [title, relationship]
+Purpose: [request / scheduling / delay notice / reminder]
+Must include: [dates, what's being requested]
+Tone: polite but concise, within 5 sentences. Also give me 3 subject line options.
+</PromptBox>
+
+### 5. Morning briefing and schedule planning
+
+**What it can do**: Read your email and calendar and organize today's to-dos and the emails you need to reply to.
+**Suggested tools**: Claude connectors and similar. Follow [Connect Gmail and Calendar to AI for a morning briefing](/en/automation/17-morning-briefing/) for setup.
+
+<PromptBox label="Organize today's to-dos">
+Look at today's schedule and the emails that have come in since yesterday, and organize the following.
+1) The 3 things I must do today
+2) Emails that need a reply, and their priority
+3) What to prepare before meetings
+Only read my email. Don't send or delete anything.
+</PromptBox>
+
+## A day in the life
+
+<FlowSteps title="An office worker's day" steps={[
+  { where: 'Right after arriving', action: 'Check today\'s schedule and emails to reply to with a morning briefing', result: 'A day with priorities set' },
+  { where: 'Morning', action: 'Turn last meeting\'s notes into minutes and an action-item table', result: 'Minutes ready to share' },
+  { where: 'After lunch', action: 'Summarize the monthly data table and outline a report', result: 'The skeleton of a report draft' },
+  { where: 'Afternoon', action: 'Write the draft and emails, and check numbers and facts yourself', result: 'Documents and emails ready for review' },
+  { where: 'Before leaving', action: 'Plan tomorrow\'s tasks with AI and check for sensitive information', result: 'Ready for tomorrow' },
+]} />
+
+## Recommended learning path
+
+1. [Your first 30 minutes with AI](/en/basics/01-first-30-minutes/): Get a feel for talking to AI.
+2. [Asking good questions: the basics](/en/basics/03-asking-well/): Even for work instructions, how you ask shapes the result.
+3. [Using AI while protecting personal and company information](/en/basics/05-privacy-safety/): Set your standards before you use internal materials.
+4. [Writing practical prompts](/en/chat/01-prompt-basics/): Structure your instructions with role, context, and format.
+5. [Summarize meeting notes and long documents and pull out to-dos](/en/chat/02-summarize-documents/): Start with the summarizing work you do most often.
+6. [Let AI analyze your Excel and CSV data](/en/chat/03-data-analysis/): Take the load off number work.
+7. [Write and polish report and proposal drafts](/en/chat/04-write-reports/): Connect document writing into one flow.
+8. [Can you trust AI answers?](/en/basics/04-fact-checking/): Build a verification habit before you submit.
+9. [Connect Gmail and Calendar to AI for a morning briefing](/en/automation/17-morning-briefing/): Hand off repetitive work to automation.
+10. [Organize work documents and databases with Notion AI](/en/automation/16-notion-ai/): Tidy up the documents that have piled up.
+
+### More: new tutorials that suit office workers
+
+- [Adding AI to Excel and Google Sheets](/en/automation/23-spreadsheet-ai/): Compare how to hand table cleanup, formulas, and summaries to Copilot, Gemini, and Claude.
+- [Working with Word, PowerPoint, and Outlook in Microsoft 365 Copilot](/en/automation/24-m365-copilot/): Create document drafts, presentations, and email reply drafts with Copilot.
+- [Making presentations with AI](/en/media/25-ai-presentations/): Learn the flow of drafting report slides and polishing them yourself.
+- [AI translation in practice](/en/media/26-ai-translation/): How to translate work documents while protecting confidential information and reviewing the results.
+
+## What to watch out for
+
+<Aside type="caution" title="Before you paste in internal materials">
+- **Company and personal information**: Don't casually paste in performance reviews, salaries, customer lists, or contracts. Check your company's AI usage policy first, and mask names and contact details. The standards are in [Using AI while protecting personal and company information](/en/basics/05-privacy-safety/).
+- **Numbers and facts**: Check any numbers AI calculates or summarizes against the original, and do the same for laws, regulations, and dates. The method is in [Can you trust AI answers?](/en/basics/04-fact-checking/).
+- **Email and calendar connections**: Grant read access first, and decide carefully about send and delete permissions. See [How to use personal AI agents safely](/en/agents/05-agent-safety/).
+- **Copyright**: Don't copy external reports or articles word for word, and keep track of your sources.
+</Aside>
+
+## Next steps
+
+- If you also handle content and promotion, see the [Guide for marketers and content managers](/en/roles/marketer/).
+- If you run a small business yourself, the [Guide for solo business owners and small shops](/en/roles/solo-business/) fits too.
+- Find more prompts in the [Ready-to-use prompt collection](/en/start/prompts/).
+- You can see all the roles in [AI Guides by Role](/en/roles/).

@@ -1,0 +1,251 @@
+---
+title: "Claude in Chrome and computer use"
+description: "A reference for handing browser tasks to Claude in Chrome and app-screen control to Computer use, plus safety rules"
+sidebar:
+  label: "C11. Chrome and computer use"
+level: practical
+category: claude
+tools: ["Claude in Chrome", "Claude Desktop", "Claude Code"]
+duration: "30 min"
+prerequisites:
+  - "A paid Claude plan (the Chrome extension: Pro, Max, Team, Enterprise; computer use: Pro, Max)"
+  - "Google Chrome and an environment where you can install from the Chrome Web Store"
+  - "(Computer use) The Claude Desktop app on macOS or Windows"
+lastVerified: 2026-10-31
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "Get started with Claude in Chrome"
+    url: "https://support.claude.com/en/articles/12012173-get-started-with-claude-in-chrome"
+  - title: "Claude in Chrome permissions guide"
+    url: "https://support.claude.com/en/articles/12902446-claude-in-chrome-permissions-guide"
+  - title: "Let Claude use your computer in Cowork"
+    url: "https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork"
+  - title: "Install Claude Desktop"
+    url: "https://support.claude.com/en/articles/10065433-install-claude-desktop"
+  - title: "Claude Cowork and chat are one Claude"
+    url: "https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude"
+  - title: "Use Claude Code with Chrome"
+    url: "https://code.claude.com/docs/en/chrome"
+  - title: "Claude Code changelog"
+    url: "https://code.claude.com/docs/en/changelog"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- **Claude in Chrome** is an extension that lets Claude read pages in Chrome and click, type, and navigate for you. It works on all paid plans. The new Cowork-based side panel is rolling out in stages (as of 2026-10-26; the help doesn't label Claude in Chrome itself as beta).
+- **Computer use** lets Claude operate apps on your computer screen directly when connectors or the browser won't do. It's in beta on Pro and Max, and the help says it's currently unavailable on Team and Enterprise (as of 2026-10-10).
+- Computer use runs inside the Claude Desktop app (Cowork, Claude Code) on macOS and Windows. It doesn't work on Linux desktops.
+- The tool priority is **connectors, then the browser, then screen control**. Screen control is the slowest and most error-prone.
+- **Don't use it with banking, medical, or government apps, financial accounts, or legal documents.** Computer use has no sandbox, so Claude can see everything on your screen.
+</Summary>
+
+## What you'll be able to do
+
+- Pick the right tool for the job among connectors, Claude in Chrome, and computer use.
+- Install the Chrome extension and hand off your first task from the side panel.
+- Understand permission modes and per-site approvals, and set them up safely.
+- Turn on computer use in the desktop app and start with small tasks while protecting sensitive information.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Claude in Chrome** | A Chrome extension. It reads pages, clicks, types, navigates, fills in forms, and manages multiple tabs. Available in Claude Cowork and Claude Code. |
+| **Side panel** | The Claude window that opens next to Chrome. The new Cowork-based panel is rolling out in stages, and on Enterprise an owner has to turn on Claude in Chrome and cloud Cowork before you can use the new panel (as of 2026-10-26). To go back to the old version, use "Switch back to classic" in the panel's three-dot menu. |
+| **Computer use** | A feature where Claude looks at the screen and clicks, types, opens apps, and navigates directly. If your computer stays on, it keeps working while you're away. |
+| **Cowork** | A space inside Claude Desktop where you hand off tasks. You can use computer use here and in Claude Code. |
+| **Permission mode** | A setting for how much approval Claude asks for before it acts. |
+
+### Which tool should you use?
+
+Claude is set up to try the faster, more reliable method first whenever possible. The priority is:
+
+| Order | Method | Description |
+| --- | --- | --- |
+| 1 | **Connectors** | Connect directly to services like Gmail and Drive. The fastest and most accurate. See [C7. Connecting Gmail, Calendar, Drive, and Notion with connectors](/en/claude/c07-connectors/). |
+| 2 | **Browser** | Operate web pages with the built-in browser or Claude in Chrome. |
+| 3 | **Screen control** | Operate app screens directly with computer use. The slowest and most error-prone. |
+
+<Aside type="caution" title="Where the docs disagree (as of 2026-10-10)">
+- **Supported browsers**: The Help Center doc says it's Chrome only, with no support for other Chromium browsers or mobile. The Claude Code doc, on the other hand, says it works in Chrome and Edge, and that other Chromium browsers such as Brave and Arc can be set up to connect. Check each official doc for the latest on the environment you plan to use.
+- **Plans for computer use**: The Help Center doc says Pro and Max beta, not available on Team or Enterprise. Availability by plan changes often, so check what actually shows in Claude Desktop's settings.
+</Aside>
+
+<Aside type="note" title="Chrome extension usage">
+How much usage the Chrome extension consumes isn't given as a number in the official getting-started guide, and it isn't disclosed (confirmed 2026-10-13). All it says is that the Auto mode may use more because of extra safety checks. Check your limits in [C2. Plans and usage limits](/en/claude/c02-plans-limits/) and Settings > Usage.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  'I installed the Claude extension from the Chrome Web Store and signed in',
+  'I pinned the extension and granted the permissions',
+  'I asked for a first task in the side panel',
+  'I checked the permission mode and reviewed per-site approvals',
+  '(Optional) I turned on computer use in Claude Desktop',
+  'I closed sensitive apps and tried computer use on a small task',
+]} />
+
+<Steps>
+
+1. **Install the Chrome extension**
+
+   In Google Chrome, go to the Chrome Web Store and add the Claude extension. After installing, sign in with your Claude account, pin it from the puzzle icon, and grant the permissions it asks for.
+
+   <ScreenshotPlaceholder caption="Installing the Claude extension from the Chrome Web Store and pinning it from the puzzle icon" officialUrl="https://support.claude.com/en/articles/12012173-get-started-with-claude-in-chrome" />
+
+   To use it from the Claude Desktop app, turn it on from Claude in Chrome's Configure in Settings > Customize > Connectors (the help's path as of 2026-10-26). It's off by default for each conversation.
+
+2. **Hand off a first task from the side panel**
+
+   Start with something simple on the page you're looking at.
+
+   <PromptBox>
+   Read the table on this page and pull out the key point for each item into a simple list. Don't change anything on the page.
+   </PromptBox>
+
+3. **Check the permission mode**
+
+   Pick a permission mode from the dropdown in the input box.
+
+   | Mode | Behavior |
+   | --- | --- |
+   | **Manually approve** | Asks for approval on every action. Start with this one. |
+   | **Automatically approve** | Keeps going but runs a safety check on each action. Unsafe actions are blocked automatically. This is the side panel's default. |
+   | **Skip all approvals** | Runs without automatic checks. Use only for tasks you fully trust. |
+
+   The modes used to be called "Ask before acting" and "Act without asking." The on-screen labels can differ by version.
+
+4. **Handle per-site permissions**
+
+   When a "New permissions required" window appears on a new site, pick one of three:
+
+   - **Allow this action**: Allows just this one action. The safest.
+   - **Always allow actions on this site**: Keeps allowing that site. Use only for sites you completely trust.
+   - **Decline**: Blocks it.
+
+   You can review and revoke the sites you've allowed under "Your approved sites" on the Permissions page in the extension settings (the three dots in the side panel).
+
+   <ScreenshotPlaceholder caption="The New permissions required window and the Your approved sites list" officialUrl="https://support.claude.com/en/articles/12902446-claude-in-chrome-permissions-guide" />
+
+5. **Turn on computer use (optional, Pro/Max)**
+
+   Update Claude Desktop to the latest version, then turn on "Enable computer use" in Settings > Capabilities. If you don't see a Computer use item, it's under This computer in Settings > System (as of 2026-10-26). Then ask for an app-related task in a Cowork or Claude Code session, and Claude asks for access approval for each app.
+
+   <ScreenshotPlaceholder caption="The Enable computer use toggle in Settings > Capabilities" officialUrl="https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork" />
+
+   <FlowSteps title="How to turn on computer use" officialUrl="https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork" steps={[
+     { where: 'Claude Desktop app', action: 'Update to the latest version' },
+     { where: 'Settings > Capabilities (or Settings > System if you don\'t see it)', action: 'Turn on Enable computer use' },
+     { where: 'A Cowork or Claude Code session', action: 'Ask for an app-related task', result: 'Claude asks for access approval for each app' },
+   ]} />
+
+6. **Test with a small task**
+
+   First, close any files and apps that contain sensitive information. Then ask for something specific and low-risk, and watch what Claude does at first.
+
+   <PromptBox>
+   Look at the screenshot files on my desktop and organize them by creating a folder for each date. Don't delete any files. Before you start, tell me how you plan to organize them.
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+### Claude in Chrome vs. computer use (as of 2026-10-10)
+
+| Item | Claude in Chrome | Computer use |
+| --- | --- | --- |
+| Target | Tasks inside the web browser | App screens on your computer |
+| Plans | All paid plans (Pro, Max, Ultra, Team, Enterprise) | Pro, Max (not Team or Enterprise) |
+| Status | New side panel rolling out in stages | Beta |
+| OS / browser | Chrome (see above for where the docs differ). Not on mobile | Claude Desktop on macOS and Windows. Not on Linux desktops. Works in the background on macOS 15 and later |
+| Where it's used | Cowork, Claude Code, the Chrome side panel | Cowork and Claude Code in Claude Desktop |
+| Where to turn on | Install the extension; in Desktop, Settings > Customize > Connectors | Settings > Capabilities (or Settings > System) > Enable computer use |
+
+### What Claude in Chrome can do
+
+- Read pages, click, type, navigate, and fill in forms
+- Manage multiple tabs
+- Scheduled tasks, shortcut commands ("/"), and background workflows
+- Debugging the console, network, and DOM
+- Navigating Slack, Google Calendar, Gmail, Google Docs, and GitHub
+- Login requests through 1Password are a macOS beta (Claude can't see your passwords).
+
+### Permissions and safety
+
+| Item | Details |
+| --- | --- |
+| Actions that always need explicit permission | Changing permission settings, approving authentication, and entering information that may be sensitive on a website. Even on "always allow" sites, it asks before downloading files and before entering sensitive information. |
+| Things it won't do regardless of permissions | Making purchases, creating accounts, handling credit card or ID information, permanent deletion, and following instructions written inside emails or web content |
+| Blocked by default for computer use | Investing and trading platforms, crypto apps |
+| App block list | You can add to it yourself, and requests for blocked apps are rejected automatically. |
+| Sandbox | There isn't one for computer use. It can see everything on your screen. |
+| Admins | Team/Enterprise admins can set site allow/block lists. |
+
+### Limits
+
+- Chrome extension: Tasks involving local files and your computer require Claude Desktop to be open and connected. Background tasks only run while Chrome is open.
+- Computer use: Your computer has to be awake and Claude Desktop open. Complex multi-step tasks may need to be retried.
+- Computer use and local file access from the web and mobile depend on the Claude Desktop app.
+
+### Using Chrome with Claude Code
+
+If you're a developer, you can also connect Chrome to Claude Code to test local web apps and debug while looking at console errors. According to the Claude Code docs, the requirements are the Claude in Chrome extension, Claude Code, and a direct Anthropic plan (Pro, Max, Team, Enterprise). Start the connection with `claude --chrome`, and use `/chrome` to check status and reconnect. You can't use this feature with just an API key or a third-party provider (such as Bedrock). Claude Code's Chrome integration follows your organization's Claude in Chrome admin settings (2.1.260), so if an admin turns it off, you can't use `--chrome`, `/chrome`, or the browser tools. Also, it can't be turned on through a project settings file (2.1.290); you turn it on only with `--chrome`, `/chrome`, or user settings (as of 2026-10-11). Claude Code as a whole is covered in [C12. Claude Code overview](/en/claude/c12-claude-code-overview/).
+
+## Where people get stuck
+
+### I don't see the computer use menu
+
+- **Cause**: You may be on a Team or Enterprise plan, on a Linux desktop, or Claude Desktop may not be up to date.
+- **Fix**: Check that you're on Pro/Max and on macOS or Windows, and update Claude Desktop. Availability by plan can change, so check the official help for the latest.
+
+### Claude clicks the wrong thing or repeats the same action
+
+- **Cause**: Screen control is the slowest and most error-prone method. Complex multi-step tasks may need retries.
+- **Fix**: Break the task into small pieces and give specific instructions. See first whether a connector or the browser can handle it.
+
+### My computer is on, but the task stopped
+
+- **Cause**: The computer may have gone to sleep or Claude Desktop may have been closed.
+- **Fix**: Check that the computer is awake and Claude Desktop is open.
+
+### The Chrome extension can't do local file tasks
+
+- **Cause**: Tasks involving local files and your computer require Claude Desktop to be open and connected.
+- **Fix**: Keep Claude Desktop open and check the connection.
+
+### Claude Code says "Browser extension is not connected"
+
+- **Cause**: According to the Claude Code docs, the extension may not be installed or running, or the extension and Claude Code may be signed in to different claude.ai accounts or organizations.
+- **Fix**: Check that it's the same account and organization, restart Chrome and Claude Code, and reconnect with `/chrome`.
+
+### A site keeps asking for permission
+
+- **Cause**: File downloads and entering sensitive information require confirmation even under "always allow."
+- **Fix**: That's normal behavior. Read what it's about to do before you approve, and use your judgment.
+
+## Practical tips
+
+- **Put away sensitive things first.** Close sensitive files and apps before using computer use. Claude can see everything on your screen.
+- **Don't hand over finance, medical, or legal work.** There's an official recommendation not to use it with banking, medical, or government apps, financial accounts, legal documents, or medical information.
+- **Start with Manually approve.** It's not too late to switch to Automatically approve once you're comfortable. Use Skip all approvals only for tasks you fully trust.
+- **Use "always allow" sparingly.** Give it only to sites you completely trust, and review and clean up the approved list from time to time.
+- **Watch out for instructions in web content.** The extension is built not to follow instructions hidden in web pages or emails. Safeguards aren't perfect, though, so keep an eye on it on unfamiliar sites.
+- **Watch closely early on.** Small tasks, specific prompts, and early observation are the basics. You can stop it at any time.
+- **Remember it's beta.** Features and availability can change (as of 2026-10-10).
+
+## What to read next
+
+- [C7. Connecting Gmail, Calendar, Drive, and Notion with connectors](/en/claude/c07-connectors/) — A direct connection method to try before screen control
+- [C12. Claude Code overview](/en/claude/c12-claude-code-overview/) — Claude Code, which uses the Chrome integration in a dev environment
+- [C3. Getting started with the Claude app](/en/claude/c03-getting-started/) — Differences between the desktop and mobile apps
+- [Automating screen tasks with the computer and browser tool APIs](/en/dev/10-computer-browser-tools/) — Using the same capability from code (the API)

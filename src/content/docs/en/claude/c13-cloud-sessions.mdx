@@ -1,0 +1,341 @@
+---
+title: "Claude Code cloud sessions: GitHub integration, environments, routines"
+description: "A reference for handing GitHub repository work to the cloud without keeping your computer on, configuring environments, and running tasks automatically with routines"
+sidebar:
+  label: "C13. Cloud sessions"
+level: practical
+category: claude
+tools: ["Claude Code", "GitHub"]
+duration: "40 min"
+prerequisites:
+  - "A paid Claude plan (Pro, Max, Ultra, Team, or an Enterprise Premium or Chat + Claude Code seat)"
+  - "A GitHub account and one repository to hand work to"
+  - "(If you use the terminal method) A terminal with Claude Code installed"
+lastVerified: 2026-10-31
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "Use Claude Code in the cloud"
+    url: "https://code.claude.com/docs/en/claude-code-on-the-web"
+  - title: "Configure cloud environments"
+    url: "https://code.claude.com/docs/en/cloud-environments"
+  - title: "Automate work with routines"
+    url: "https://code.claude.com/docs/en/routines"
+  - title: "Speed up responses with fast mode"
+    url: "https://code.claude.com/docs/en/fast-mode"
+  - title: "Claude Code CHANGELOG (v2.1.271, 2.1.275, 2.1.288, 2.1.292)"
+    url: "https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import CloudFlowDiagram from '../../../../components/diagrams/CloudFlowDiagram.astro';
+
+<Summary>
+- A cloud session is **Claude Code running in the cloud, not on your computer**. It keeps running even if you close your laptop, and you can check on it and steer it from any device.
+- It's available on Pro, Max, and Team plans, and on Enterprise Premium or Chat + Claude Code seats.
+- There are five ways to start: the browser (claude.ai/code), the Code tab in the mobile app, choosing Cloud in the desktop app, `claude --cloud "task"` in the terminal, and routines.
+- There's no separate charge for the cloud VM; it **counts toward your plan usage**. The more you run in parallel, the faster your limit shrinks.
+- Environments set the network, environment variables, and setup script, and Routines run automatically on a schedule, an API call, or a GitHub event.
+</Summary>
+
+## What you'll be able to do
+
+- Connect a GitHub repository and hand work to a cloud session.
+- Review the result (diff) and create a PR, or bring the session into your terminal and keep working.
+- Configure an environment, including network access level and setup script, to fit your work.
+- Create routines that run automatically at set times or on GitHub events.
+
+## Concepts to know first
+
+<CloudFlowDiagram />
+
+| Term | Meaning |
+| --- | --- |
+| **Cloud session** | A Claude Code session that runs on cloud infrastructure. It keeps running even if you turn off your device. |
+| **Claude GitHub App** | One way to connect GitHub. You approve it through web onboarding, and private repositories work only where the app is installed. |
+| **`/web-setup`** | Another way to connect, run from the terminal. It sends the `gh` token from your computer to your account. It works whether or not the app is installed. |
+| **Environment** | A saved configuration of network access, environment variables, and a setup script. The first time you use it, a **Default** environment (Trusted network, no variables or script) is created. |
+| **Setup script** | A script that runs before the session starts. Use it for things like installing packages. |
+| **teleport** | A feature that brings a cloud session into your terminal so you can continue the work. |
+| **Routines** | A feature that saves a prompt + repository + connectors and runs them automatically in the cloud. Currently a research preview. As of 2026-10-26, the official docs present this feature as **cloud scheduled tasks, formerly called routines**. The address (claude.ai/code/routines), the `/routines` alias, and the screens on some accounts still say "Routines." This article uses the familiar name, "routines." Cloud sessions that a routine starts begin in auto mode (a classifier decides on approvals for you), and for intervals not in the presets you set a cron expression under Custom, written in UTC (as of 2026-10-26; intervals more frequent than hourly are rejected). |
+| **Auto-fix** | A feature that responds automatically to CI failures and review comments on a PR. |
+
+### How is the GitHub connection kept safe?
+
+GitHub credentials are stored encrypted on Anthropic's servers and are **not placed inside the VM.** GitHub operations from the VM go through a proxy.
+
+### Which repositories can you use?
+
+- Cloning and creating PRs require GitHub. Team and Enterprise also support GitHub Enterprise Server.
+- For GitLab or Bitbucket, you can upload a local repository as a bundle with `CCR_FORCE_BUNDLE=1`. However, you can't push the results to the remote.
+- The bundle upload requires the git repository to have at least 1 commit and the bundle to be under 100MB. Untracked files are excluded. Uncommitted changes to files like `.env`, `*.tfvars`, `id_rsa`, and `*.pem` are left out of the upload (macOS/Linux/WSL).
+
+### What does it cost?
+
+There's no separate charge for the cloud VM. Usage counts toward your plan's limit along with your other Claude and Claude Code usage. For the details of how limits work, see [C2. Plans and usage limits](/en/claude/c02-plans-limits/).
+
+Depending on your account, you may see a **"cloud session credits"** item on the Settings > Usage screen. It isn't explained in the official docs yet, so we've written it up in C2 under [If you've seen an item called "cloud session credits"](/en/claude/c02-plans-limits/#if-youve-seen-an-item-called-cloud-session-credits).
+
+## Step by step
+
+<Checklist items={[
+  'I confirmed that my account and plan are eligible for cloud sessions',
+  'I connected GitHub (GitHub App or /web-setup)',
+  'I handed a task to my first cloud session',
+  'I reviewed the result diff and created a PR',
+  '(Optional) I brought the session into the terminal and kept working',
+  'I configured the environment (network, setup script) to fit my work',
+  '(Optional) I tried turning on Auto-fix',
+  '(Optional) I created a routine',
+]} />
+
+<Steps>
+
+1. **Connect GitHub**
+
+   Go to claude.ai/code in your browser. The first time, it guides you through connecting GitHub. Just approve the Claude GitHub App.
+
+   <ScreenshotPlaceholder caption="The GitHub connection screen (approving the Claude GitHub App) at claude.ai/code" officialUrl="https://code.claude.com/docs/en/claude-code-on-the-web" />
+
+   If you'd rather do it in the terminal, run `/web-setup`. It sends your local `gh` token to your account, so you don't need to install the GitHub App.
+
+   <Aside type="note" title="Auto-fix and Projects need the GitHub App">
+   You can use sessions with `/web-setup` alone, but Auto-fix and Projects require the Claude GitHub App to be installed.
+   </Aside>
+
+2. **Start your first session in the browser**
+
+   At claude.ai/code, pick a repository and type a task. You can also start from the Code tab in the mobile Claude app or the desktop app (choose Cloud instead of Local). Start with a small task at first.
+
+   <PromptBox>
+   Read this repository's README.md and rewrite the installation and usage sections to be easier for a first-time reader to follow. Don't touch the code, and summarize what you changed at the end.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Choosing a repository and typing a task at claude.ai/code" officialUrl="https://code.claude.com/docs/en/claude-code-on-the-web" />
+
+   <FlowSteps title="How to start your first cloud session" officialUrl="https://code.claude.com/docs/en/claude-code-on-the-web" steps={[
+     { where: 'claude.ai/code', action: 'Follow the GitHub connection prompt' },
+     { where: 'Claude GitHub App screen', action: 'Approve' },
+     { where: 'claude.ai/code', action: 'Pick a repository and type a task', result: 'The session runs in the cloud' },
+   ]} />
+
+3. **Start from the terminal (optional)**
+
+   With the terminal method you have to **push first**. `claude --cloud` **clones the current directory's GitHub remote at the current branch**, so commits that exist only locally aren't included.
+
+   ```sh
+   git push
+   claude --cloud "Fix the authentication bug in src/auth/login.ts"
+   ```
+
+   Running `--cloud` several times runs independent sessions in parallel. To send a follow-up message to an existing session:
+
+   ```sh
+   claude -p "message" --cloud <session-id>
+   ```
+
+   Session IDs look like `session_...`.
+
+4. **Review the result and create a PR**
+
+   When the work finishes, review the changed diff. Click the +/- markers to open the changes, and leave inline comments if needed. If everything looks fine, create the PR at claude.ai/code.
+
+   <ScreenshotPlaceholder caption="Viewing the session result's diff and the Create PR button" officialUrl="https://code.claude.com/docs/en/claude-code-on-the-web" />
+
+   <Aside type="tip" title="Sharing sessions">
+   On Team/Enterprise you can choose between Private and Team; on Max/Pro, between Private and Public. If you choose Public, any user signed in to claude.ai can see it, so before sharing, be sure the conversation doesn't contain any credentials.
+   </Aside>
+
+5. **Pick it up locally (teleport)**
+
+   You can bring work started in the cloud into your terminal and continue it.
+
+   ```sh
+   claude --teleport            # pick a session from the selector
+   claude --teleport <id>       # specify a session ID
+   ```
+
+   During a session you can also use `/teleport` or `/tp`, and `t` in `/tasks`. The conditions are listed in the [quick reference](#quick-reference). In the other direction, the desktop app's Open in menu can send a local session to the cloud.
+
+6. **Configure the environment**
+
+   In the environment selector, click the settings icon to edit network access, environment variables, and the setup script.
+
+   - **Network**: The default is Trusted. If you need to install packages or call an external API, adjust the level. The four levels are in the table below.
+   - **Setup script**: Runs before the session starts. If it finishes within about 5 minutes, a filesystem snapshot is cached and later sessions start faster.
+   - **Environment variables**: Stores key-value pairs. But anyone who uses the environment can read them, so **don't store secrets.**
+
+   <ScreenshotPlaceholder caption="Environment settings: network access level, environment variables, setup script" officialUrl="https://code.claude.com/docs/en/cloud-environments" />
+
+   <Aside type="caution" title="Where do secrets go?">
+   Environment variables and setup scripts can be read by anyone who uses the environment. Pro/Max can use **network secrets**. The proxy attaches the key to requests, so the session never sees the value itself. Not yet available on Team/Enterprise.
+   </Aside>
+
+7. **Turn on Auto-fix (optional)**
+
+   After you open a PR, you can have Claude respond automatically when CI fails or review comments come in. Turn on Auto-fix from the session's CI status bar, run `/autofix-pr` in the terminal, or ask from mobile. It requires the Claude GitHub App to be installed, and it can't respond automatically to merge conflicts because there's no webhook for them.
+
+8. **Create a routine (optional)**
+
+   Create one with `/schedule` in the terminal or at claude.ai/code/routines. You can also create one in the desktop app.
+
+   ```sh
+   /schedule daily PR review at 9am
+   ```
+
+   On the web, click New task (New routine on some accounts), set the name, prompt, repository, environment, and trigger, and click Create.
+
+   <ScreenshotPlaceholder caption="The New task / New routine creation screen at claude.ai/code/routines" officialUrl="https://code.claude.com/docs/en/routines" />
+
+   <PromptBox>
+   Check the open PRs in this repository. For each PR, summarize the changes in two or three lines and tell me one thing to look at especially closely when reviewing. Don't modify any code.
+   </PromptBox>
+
+   If a routine's job is "keeping a page up to date," hand it an **editable artifact** that you've already published. When a run started by a schedule or Run now republishes only that page, it updates an artifact that you can edit, that's within your organization, and that isn't publicly shared, without asking for confirmation. Cases like having permissions that reach beyond the page (such as connector calls) or creating a new one are asked about first, according to the official docs (as of 2026-10-11).
+
+</Steps>
+
+## Quick reference
+
+### Commands and locations by start method
+
+| Method | Command / location |
+| --- | --- |
+| Browser | claude.ai/code |
+| Mobile | The Code tab in the Claude app |
+| Desktop app | Choose Cloud instead of Local (send a local session to the cloud with the Open in menu) |
+| Terminal | `claude --cloud "task"` (push first) |
+| Routines | claude.ai/code/routines, the desktop app, CLI `/schedule` |
+
+### The four network access levels
+
+| Level | Meaning |
+| --- | --- |
+| **None** | No outside access. Claude Code's own communication with the Anthropic API still works. |
+| **Trusted** | Access only to allowlisted domains (package registries, GitHub, cloud SDKs, and so on). **The default for the Default environment.** |
+| **Full** | Access to all domains. |
+| **Custom** | Uses an allowlist you make. You can choose whether to include the default list. |
+
+This document doesn't cover the full list of domains allowed under Trusted. Check the default allowed domains section of the official docs.
+
+### Commonly used commands
+
+| Command | Purpose |
+| --- | --- |
+| `claude --cloud "task"` | Start a cloud session with the current repository and branch |
+| `claude -p "message" --cloud <session-id>` | Send a follow-up message to an existing session |
+| `claude --teleport` / `claude --teleport <id>` | Bring a cloud session into the terminal |
+| `/teleport`, `/tp` | Teleport during a session |
+| `/web-setup` | Connect GitHub with your local `gh` token |
+| `/autofix-pr` | Turn on Auto-fix |
+| `/schedule ...` | Create a routine |
+| `/compact`, `/context` | Available inside cloud sessions |
+| `/model sonnet` | Change the model (use it with an argument like this) |
+| `/fast on` | Turn on fast mode for this session only (v2.1.271 and later; requires extra usage (usage credits)) |
+| `gh api repos/{owner}/{repo}/...` | Call the GitHub REST API (`gh pr` and `gh issue`, which use GraphQL, are blocked) |
+| `/clear` | **Not available in cloud sessions** |
+
+### Teleport conditions
+
+- A clean git state
+- The same repository (not a fork)
+- The branch has been pushed
+- The same claude.ai account
+
+Moving through the CLI is **one-way** (cloud to terminal). If you continue in the terminal, that work stays local and doesn't show up in the cloud session.
+
+### Resource limits (may change, as of 2026-10-10)
+
+| Item | Value |
+| --- | --- |
+| CPU / memory / disk | 4 vCPU, 16GB RAM, 30GB |
+| Default command timeout | 2 minutes (you can request up to 10 minutes) |
+| On timeout | Moves to the background and runs up to 30 more minutes |
+| When idle | The VM is paused and may be reclaimed later. The conversation history is restored, but background tasks that were running are not. |
+
+### Setup script and cache
+
+| Item | Details |
+| --- | --- |
+| When it runs | Before the session starts |
+| Cache condition | Finishes within about 5 minutes |
+| Cache expiry | About 7 days. Rebuilt when you change the script or allowed hosts |
+| What persists | Installed packages, pulled Docker images |
+| What doesn't persist | Running processes |
+
+### Routines summary
+
+| Item | Details |
+| --- | --- |
+| Triggers | Schedule (hourly, daily, weekdays, weekly, or one-time), API (HTTP POST + bearer token), GitHub events (pull request, release) |
+| Available plans | Pro, Max, Ultra, Team, Enterprise |
+| Minimum schedule interval | 1 hour |
+| Hourly limits | 100 scheduled runs per account, 30 Run now/API runs per routine, and so on. There's no overage billing on these limits. |
+| Usage | Consumes subscription usage like interactive sessions. When you hit your limit, if extra usage (usage credits) is on, the overage keeps running pay-as-you-go; if it's off, runs are rejected until the reset. |
+| Ownership | Owned by your personal account. Not shared with teammates. |
+| How it runs | Acts autonomously without approvals. It pushes branches with a `claude/` prefix, and commits and PRs are made under your GitHub user. |
+| Connectors | All connectors are included by default. Remove the ones you don't need. |
+| API trigger (beta) | Use the request header `anthropic-beta: experimental-cc-routine-2026-04-01` |
+
+## Where people get stuck
+
+### Changes I made locally don't show up in the cloud session
+
+- **Cause**: `claude --cloud` clones the current branch of the GitHub remote. Local commits you haven't pushed aren't in the cloud.
+- **Fix**: Run `git push` first, then start again.
+
+### `--teleport` fails
+
+- **Cause**: The conditions may not be met.
+- **Fix**: Check that your git state is clean (commit or stash changes), that it's the same repository (not a fork), that the branch has been pushed, and that you're signed in with the same claude.ai account.
+
+### Package installs or outside sites are blocked
+
+- **Cause**: The environment's network access level may be outside what's allowed (None means no outside access, Trusted means allowlisted domains only).
+- **Fix**: Raise the network access level in the environment settings, or use Custom and add the domains you need. If an install keeps repeating, put it in the setup script to take advantage of the cache.
+
+### I can't push to GitLab/Bitbucket repositories
+
+- **Cause**: Cloning and creating PRs require GitHub. The `CCR_FORCE_BUNDLE=1` upload method can't push results to the remote.
+- **Fix**: If you need to push results to the remote, use a GitHub repository. Keep in mind that the bundle method has limits.
+
+### Sessions fail with an authentication error in my organization
+
+- **Cause**: If your organization's IP allowlist is on, Anthropic-hosted cloud sessions fail with an authentication error. Organizations configured for Zero Data Retention or HIPAA can't use cloud sessions.
+- **Fix**: Ask your organization administrator to check the settings.
+
+### Auto-fix doesn't react to merge conflicts
+
+- **Cause**: There's no webhook for merge conflicts, so it can't respond automatically.
+- **Fix**: Resolve conflicts yourself, or tell it to resolve them with a new request.
+
+## Practical tips
+
+- **Hand off small tasks first.** Look at the result diffs to see how it works, then scale up gradually.
+- **Running in parallel uses more of your limit.** Handing off several tasks at once shrinks your plan limit that much faster. Also see the limit structure in [C2](/en/claude/c02-plans-limits/).
+- **Avoid the top of the hour for routines.** Runs at the top of the hour can be a few minutes late, so we recommend staggering the minute, like 9:07.
+- **Trim a routine's connectors.** All of them are included by default, so keep only what you need.
+- **Don't put secrets in environment variables.** Use network secrets (Pro/Max).
+- **Check before sharing.** Before sharing a session as Public, make sure it doesn't contain credentials.
+- **You can change models inside a session too.** Use it with an argument, like `/model sonnet`.
+- **If you need faster responses, try fast mode.** You can turn it on in cloud sessions with `/fast on`, and in the browser (claude.ai/code) a switch appears in the model menu of the message input box. It applies only to the session where you turn it on and isn't saved as a default. It works only with Opus-family models, on subscription plans extra usage (usage credits) must be on and it costs more, and on Team/Enterprise an Owner must allow it first. For the detailed conditions, see the [fast mode docs](https://code.claude.com/docs/en/fast-mode).
+- **If GitHub work gets blocked, have it use `gh api`.** In cloud sessions, you can call the GitHub REST API with `gh api`. The built-in `gh api` works even if the image has no GitHub CLI (v2.1.288 and later). The proxy attaches the token for you, so you don't need to sign in separately, but GraphQL-only features (such as Projects v2) and `gh pr` and `gh issue` are blocked.
+
+<Aside type="note" title="This site was built this way too">
+This site was built in a cloud session. Opus handled planning and review, and Sonnet subagents handled implementation. This division of labor is covered in detail in [C15. Model division strategy](/en/claude/c15-model-division/).
+</Aside>
+
+## What to read next
+
+- [C12. Claude Code overview: terminal, desktop, and web](/en/claude/c12-claude-code-overview/) — The big picture of Claude Code
+- [C14. Claude Code key features](/en/claude/c14-claude-code-features/) — CLAUDE.md, slash commands, hooks, subagents, MCP
+- [C15. Model division strategy](/en/claude/c15-model-division/) — Opus for planning, Sonnet for implementation
+- [C2. Plans and usage limits](/en/claude/c02-plans-limits/) — Understanding the limits cloud sessions use
+- [Handing GitHub repository work to cloud sessions](/en/coding/08-cloud-github/) — Following along from README improvements to publishing on the web
+- [Delegating recurring work to agents: skills, routines, and subagents](/en/coding/10-delegate-agents/) — Automating recurring work with routines

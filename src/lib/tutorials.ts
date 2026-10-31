@@ -1,8 +1,10 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
+import { t, formatDateLang, langPrefix, langOfId, type Lang } from './i18n';
 
 export type Level = 'beginner' | 'practical' | 'advanced';
 export type Category = 'claude' | 'chat' | 'coding' | 'media' | 'automation' | 'agents' | 'dev' | 'basics';
 
+/** 한국어 라벨(기본). 영어는 `getLevelLabel`/`getCategoryLabel` 또는 `levelLabelsFor(lang)` 사용. */
 export const levelLabels: Record<Level, string> = {
   beginner: '입문',
   practical: '실무',
@@ -20,46 +22,51 @@ export const categoryLabels: Record<Category, string> = {
   basics: 'AI 첫걸음',
 };
 
+export const getLevelLabel = (level: Level, lang: Lang = 'ko') => t(lang, `level.${level}`);
+export const getCategoryLabel = (cat: Category, lang: Lang = 'ko') => t(lang, `cat.${cat}`);
+
 export const categoryOrder: Category[] = ['basics', 'claude', 'agents', 'dev', 'chat', 'coding', 'media', 'automation'];
 
-/** 사이트 base 경로(`/`, 도메인 연결 후)를 붙인 내부 링크를 만든다. */
-export function url(path: string): string {
+/** 사이트 base 경로(`/`, 도메인 연결 후)를 붙인 내부 링크를 만든다. lang을 주면 영어는 `/en` 접두사를 붙인다. */
+export function url(path: string, lang: Lang = 'ko'): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   const clean = path.startsWith('/') ? path : `/${path}`;
-  return `${base}${clean}`;
+  return `${base}${langPrefix(lang)}${clean}`;
 }
 
+/** 문서 id로 URL을 만든다. 영어 문서 id(`en/...`)는 그대로 `/en/...`가 된다. */
 export function entryUrl(id: string): string {
   return url(`/${id.replace(/\/index$/, '').replace(/^index$/, '')}/`.replace(/\/\/$/, '/'));
 }
 
 export type Tutorial = CollectionEntry<'docs'>;
 
-/** 튜토리얼 = 분야 폴더 안의 index가 아닌 페이지 */
+/** 튜토리얼 = 분야 폴더 안의 index가 아닌 페이지 (영어는 `en/` 접두사 허용) */
 export function isTutorial(id: string): boolean {
-  return /^(basics|claude|agents|dev|chat|coding|media|automation)\/(?!index$)/.test(id);
+  return /^(en\/)?(basics|claude|agents|dev|chat|coding|media|automation)\/(?!index$)/.test(id);
 }
 
 export async function getTutorials(
-  opts: { level?: Level; category?: Category } = {},
+  opts: { level?: Level; category?: Category; lang?: Lang } = {},
 ): Promise<Tutorial[]> {
+  const lang = opts.lang ?? 'ko';
   const all = await getCollection('docs');
   return all
+    .filter((e) => langOfId(e.id) === lang)
     .filter((e) => isTutorial(e.id))
     .filter((e) => !opts.level || e.data.level === opts.level)
     .filter((e) => !opts.category || e.data.category === opts.category)
     .sort((a, b) => a.id.localeCompare(b.id));
 }
 
-export async function getRecentlyVerified(limit = 5): Promise<Tutorial[]> {
-  const list = await getTutorials();
+export async function getRecentlyVerified(limit = 5, lang: Lang = 'ko'): Promise<Tutorial[]> {
+  const list = await getTutorials({ lang });
   return list
     .filter((e) => e.data.lastVerified)
     .sort((a, b) => b.data.lastVerified!.getTime() - a.data.lastVerified!.getTime())
     .slice(0, limit);
 }
 
-export function formatDate(d?: Date): string {
-  if (!d) return '';
-  return `${d.getUTCFullYear()}년 ${d.getUTCMonth() + 1}월 ${d.getUTCDate()}일`;
+export function formatDate(d?: Date, lang: Lang = 'ko'): string {
+  return formatDateLang(d, lang);
 }

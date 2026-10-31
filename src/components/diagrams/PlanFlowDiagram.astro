@@ -1,26 +1,44 @@
 ---
 // C2 도식: 세션 한도 -> 주간 한도 -> 추가 사용량(usage credits) 흐름. 색은 사이트 CSS 변수를 써서 다크 모드에서도 읽힌다.
+import { getLang } from '../../lib/i18n';
+const lang = getLang(Astro);
+const en: Record<string, string> = {
+  '사용량 한도 흐름도': 'Usage limit flow',
+  '세션 한도는 5시간마다 리셋되고, 주간 한도는 주 1회 리셋되며, 둘을 다 쓰면 켜 둔 경우에만 추가 사용량(usage credits)으로 이어집니다.': 'The session limit resets every 5 hours and the weekly limit resets once a week. If you use up both, usage continues on extra usage (usage credits) only if you have turned it on.',
+  '1. 세션 한도': '1. Session limit',
+  '5시간마다 리셋돼요': 'Resets every 5 hours',
+  '가장 먼저 만나는 한도': 'The first limit you hit',
+  '계속 쓰면': 'Keep going',
+  '2. 주간 한도': '2. Weekly limit',
+  '주 1회 리셋돼요 (모든 모델 적용)': 'Resets once a week (all models)',
+  '리셋 시각은 계정마다 고정': 'Reset time is fixed per account',
+  '한도를 다 쓰면': 'Limit used up',
+  '3. 추가 사용량': '3. Extra usage',
+  'usage credits (직접 켜야 해요)': 'usage credits (you must turn it on)',
+  '꺼져 있으면 리셋까지 대기': 'If off, wait until reset',
+};
+const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
 ---
 <figure class="diagram not-content">
   <svg viewBox="0 0 360 420" role="img" aria-labelledby="plan-flow-title plan-flow-desc">
-    <title id="plan-flow-title">사용량 한도 흐름도</title>
-    <desc id="plan-flow-desc">세션 한도는 5시간마다 리셋되고, 주간 한도는 주 1회 리셋되며, 둘을 다 쓰면 켜 둔 경우에만 추가 사용량(usage credits)으로 이어집니다.</desc>
+    <title id="plan-flow-title">{tx('사용량 한도 흐름도')}</title>
+    <desc id="plan-flow-desc">{tx('세션 한도는 5시간마다 리셋되고, 주간 한도는 주 1회 리셋되며, 둘을 다 쓰면 켜 둔 경우에만 추가 사용량(usage credits)으로 이어집니다.')}</desc>
     <g class="box blue"><rect x="30" y="10" width="300" height="100" rx="16" />
-      <text x="180" y="44" class="t1">1. 세션 한도</text>
-      <text x="180" y="70" class="t2">5시간마다 리셋돼요</text>
-      <text x="180" y="92" class="t3">가장 먼저 만나는 한도</text></g>
+      <text x="180" y="44" class="t1">{tx('1. 세션 한도')}</text>
+      <text x="180" y="70" class="t2">{tx('5시간마다 리셋돼요')}</text>
+      <text x="180" y="92" class="t3">{tx('가장 먼저 만나는 한도')}</text></g>
     <g class="arrow"><path d="M180 112 V148" /><path d="M171 140 L180 150 L189 140" /></g>
-    <text x="196" y="136" class="t3 left">계속 쓰면</text>
+    <text x="196" y="136" class="t3 left">{tx('계속 쓰면')}</text>
     <g class="box purple"><rect x="30" y="152" width="300" height="100" rx="16" />
-      <text x="180" y="186" class="t1">2. 주간 한도</text>
-      <text x="180" y="212" class="t2">주 1회 리셋돼요 (모든 모델 적용)</text>
-      <text x="180" y="234" class="t3">리셋 시각은 계정마다 고정</text></g>
+      <text x="180" y="186" class="t1">{tx('2. 주간 한도')}</text>
+      <text x="180" y="212" class="t2">{tx('주 1회 리셋돼요 (모든 모델 적용)')}</text>
+      <text x="180" y="234" class="t3">{tx('리셋 시각은 계정마다 고정')}</text></g>
     <g class="arrow"><path d="M180 254 V290" /><path d="M171 282 L180 292 L189 282" /></g>
-    <text x="196" y="278" class="t3 left">한도를 다 쓰면</text>
+    <text x="196" y="278" class="t3 left">{tx('한도를 다 쓰면')}</text>
     <g class="box coral"><rect x="30" y="294" width="300" height="100" rx="16" />
-      <text x="180" y="328" class="t1">3. 추가 사용량</text>
-      <text x="180" y="354" class="t2">usage credits (직접 켜야 해요)</text>
-      <text x="180" y="376" class="t3">꺼져 있으면 리셋까지 대기</text></g>
+      <text x="180" y="328" class="t1">{tx('3. 추가 사용량')}</text>
+      <text x="180" y="354" class="t2">{tx('usage credits (직접 켜야 해요)')}</text>
+      <text x="180" y="376" class="t3">{tx('꺼져 있으면 리셋까지 대기')}</text></g>
   </svg>
 </figure>
 

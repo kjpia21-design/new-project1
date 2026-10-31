@@ -1,7 +1,8 @@
 ---
 import LevelBadge from './LevelBadge.astro';
 import Illustration from './Illustration.astro';
-import { getTutorials, entryUrl, categoryLabels, categoryOrder, levelLabels, type Level, type Category } from '../lib/tutorials';
+import { getTutorials, entryUrl, getCategoryLabel, categoryOrder, getLevelLabel, type Level, type Category } from '../lib/tutorials';
+import { getLang, t } from '../lib/i18n';
 
 interface Props {
   level?: Level;
@@ -11,26 +12,27 @@ interface Props {
   emptyText?: string;
 }
 const Heading = Astro.props.filters ? 'h2' : 'h3';
-const { level, category, filters = false, emptyText = '아직 이 조건에 맞는 튜토리얼이 없어요.' } = Astro.props;
-const items = await getTutorials({ level, category });
+const lang = getLang(Astro);
+const { level, category, filters = false, emptyText = t(lang, 'grid.empty') } = Astro.props;
+const items = await getTutorials({ level, category, lang });
 const levels: Level[] = ['beginner', 'practical', 'advanced'];
 ---
-<div class="tutorial-grid not-content" data-filterable={filters ? '' : undefined}>
+<div class="tutorial-grid not-content" data-filterable={filters ? '' : undefined} data-result={t(lang, 'grid.count')}>
   {filters && (
     <div class="filters">
       <div class="search">
-        <label for="tg-q">제목·도구로 찾기</label>
-        <input id="tg-q" type="search" placeholder="예: 클로드, 엑셀, MCP" autocomplete="off" />
+        <label for="tg-q">{t(lang, 'grid.search')}</label>
+        <input id="tg-q" type="search" placeholder={t(lang, 'grid.placeholder')} autocomplete="off" />
       </div>
-      <div class="group" role="group" aria-label="수준 필터" data-group="level">
-        <span class="group-label">수준</span>
-        <button type="button" data-value="" aria-pressed="true">전체</button>
-        {levels.map((l) => <button type="button" data-value={l} aria-pressed="false">{levelLabels[l]}</button>)}
+      <div class="group" role="group" aria-label={t(lang, 'grid.levelFilter')} data-group="level">
+        <span class="group-label">{t(lang, 'grid.level')}</span>
+        <button type="button" data-value="" aria-pressed="true">{t(lang, 'grid.allBtn')}</button>
+        {levels.map((l) => <button type="button" data-value={l} aria-pressed="false">{getLevelLabel(l, lang)}</button>)}
       </div>
-      <div class="group" role="group" aria-label="분야 필터" data-group="category">
-        <span class="group-label">분야</span>
-        <button type="button" data-value="" aria-pressed="true">전체</button>
-        {categoryOrder.map((c) => <button type="button" data-value={c} aria-pressed="false">{categoryLabels[c]}</button>)}
+      <div class="group" role="group" aria-label={t(lang, 'grid.catFilter')} data-group="category">
+        <span class="group-label">{t(lang, 'grid.cat')}</span>
+        <button type="button" data-value="" aria-pressed="true">{t(lang, 'grid.allBtn')}</button>
+        {categoryOrder.map((c) => <button type="button" data-value={c} aria-pressed="false">{getCategoryLabel(c, lang)}</button>)}
       </div>
       <p class="result" aria-live="polite"></p>
     </div>
@@ -46,13 +48,13 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
               <Illustration name={e.data.category!} size={40} />
               <div class="badges">
                 {e.data.level && <LevelBadge level={e.data.level} />}
-                {e.data.status === 'draft' && <span class="soon-tag">준비 중</span>}
+                {e.data.status === 'draft' && <span class="soon-tag">{t(lang, 'meta.draft')}</span>}
               </div>
             </div>
             <Heading>{e.data.title}</Heading>
             {e.data.description && <p class="desc">{e.data.description}</p>}
             <p class="foot">
-              <span>{categoryLabels[e.data.category!]}</span>
+              <span>{getCategoryLabel(e.data.category!, lang)}</span>
               {e.data.duration && <span>· {e.data.duration}</span>}
             </p>
           </a>
@@ -60,7 +62,7 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
       ))}
     </ul>
   )}
-  {filters && <p class="empty none" hidden>조건에 맞는 튜토리얼이 없어요. 필터를 바꿔 보세요.</p>}
+  {filters && <p class="empty none" hidden>{t(lang, 'grid.none')}</p>}
 </div>
 
 <style>
@@ -137,7 +139,7 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
         });
         root.querySelector('.none')?.toggleAttribute('hidden', shown !== 0);
         const r = root.querySelector('.result');
-        if (r) r.textContent = `튜토리얼 ${shown}개`;
+        if (r) r.textContent = (root.dataset.result ?? '').replace('{n}', String(shown));
       };
       root.querySelectorAll<HTMLButtonElement>('.group button').forEach((b) =>
         b.addEventListener('click', () => {

@@ -1,0 +1,212 @@
+---
+title: "Using Google Workspace's AI Features (Gemini) at Work"
+description: "A reference for using Gemini in Gmail, Docs, and Sheets to summarize email, draft replies and documents, and organize tables, with cautions on editions, languages, privacy, and admin settings"
+sidebar:
+  label: "4. Google Workspace and Gemini"
+level: practical
+category: automation
+tools: ["Gemini", "Google Workspace", "Gmail", "Google Docs", "Google Sheets"]
+duration: "30 min"
+prerequisites:
+  - "A Google Workspace account with Gemini features turned on (your company or school admin may need to allow it)"
+  - "A practice email thread and document"
+lastVerified: 2026-10-26
+sources:
+  - title: "Gemini Apps Privacy Hub (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/13594961"
+  - title: "Gemini AI features now included in Google Workspace subscriptions"
+    url: "https://knowledge.workspace.google.com/admin/generative-ai/workspace-with-gemini/gemini-ai-features-now-included-in-google-workspace-subscriptions"
+  - title: "Collaborate with Gemini in Gmail"
+    url: "https://support.google.com/mail/answer/14199860"
+  - title: "Summarize content & organize data - Google Workspace Learning Center"
+    url: "https://support.google.com/a/users/answer/14506398"
+  - title: "Start with a great prompt - Google Workspace Learning Center"
+    url: "https://support.google.com/a/users/answer/14590328"
+  - title: "Collaborate with Gemini in Google Sheets"
+    url: "https://support.google.com/docs/answer/14356410"
+  - title: "Supported languages for Google Workspace with Gemini"
+    url: "https://support.google.com/docs/answer/14925782"
+  - title: "Generative AI in Google Workspace Privacy Hub"
+    url: "https://knowledge.workspace.google.com/admin/gemini/generative-ai-in-google-workspace-privacy-hub"
+  - title: "Turn the Gemini App on or off (for admins)"
+    url: "https://knowledge.workspace.google.com/admin/gemini/turn-the-gemini-app-on-or-off"
+  - title: "Google Workspace pricing"
+    url: "https://workspace.google.com/pricing"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- You can use Gemini **right inside Gmail, Docs, and Sheets** in Google Workspace. Typical jobs are summarizing email, drafting replies, drafting documents, and organizing tables.
+- According to the official admin guidance, since January 2025 Gemini features are **included by default** in the Business and Enterprise editions. Which features you see still depends on your edition, admin settings, and language (as of 2026-10-10).
+- Button names differ from one help page to the next. Gmail drafting and Docs use **Help me write**, while Gmail summaries and Sheets use **Ask Gemini** at the top right (a side panel).
+- Language support varies by feature. Check the official language list.
+</Summary>
+
+<Aside type="caution" title="We couldn't confirm prices from the original source">
+We confirmed menu names, Gemini coverage by edition, and the language list from Google's support pages and the Workspace pricing page (as of 2026-10-10). However, the per-edition prices on the pricing page couldn't be read from the original source, so they aren't listed in this tutorial. Check prices directly on [Google Workspace pricing](https://workspace.google.com/pricing).
+</Aside>
+
+
+## What you'll be able to do
+
+- Summarize a long email thread in Gmail and get a **reply draft**.
+- Write and polish a report **draft** in Docs.
+- Hand table cleanup and analysis to Gemini in Sheets.
+- Troubleshoot why Gemini doesn't show up in your account (edition, admin, language).
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Gemini for Google Workspace** | Google's AI features built into Workspace apps such as Gmail, Docs, Sheets, Slides, and Meet. |
+| **Gemini app** | The separate chat service at gemini.google.com and in the mobile app. Admins control this app and the features inside Workspace separately. |
+| **Help me write** | The button name for the feature that creates and polishes drafts in Gmail and Docs. |
+| **Ask Gemini** | The top-right button in Gmail and Sheets. A side panel opens where you type a prompt. |
+| **Edition** | A Workspace plan tier such as Business Starter, Standard, or Plus. The scope of Gemini differs by edition. |
+
+<Aside type="note" title="The screen differs by account type (as of 2026-10-10)">
+The official help pages give separate guidance for work/school Workspace accounts and personal subscription accounts (Google AI Pro, Ultra, etc.). The Gmail help says this feature requires "an eligible Google Workspace or Google AI plan," and says personal accounts can also try it through a trial program (Google Workspace Experiments). If a button is missing on your screen, that's not unusual. **It may be because of your account type**, so follow the on-screen instructions.
+</Aside>
+
+## Step-by-step
+
+Practice with fake emails and a made-up report. Don't use real customer information.
+
+<Checklist items={[
+  'I checked that Gemini features are turned on for my account',
+  'I summarized a long thread in Gmail',
+  'I made a reply draft with Help me write and edited it myself',
+  'I made a report draft in Docs and polished it',
+  'I organized a table with Ask Gemini in Sheets',
+  'I checked the facts and numbers in the results against the original',
+]} />
+
+<Steps>
+
+1. **Check that Gemini is turned on in your account**
+
+   Open Gmail, Docs, and Sheets and see whether Gemini-related buttons appear. If they don't, your company or school admin may have turned them off, or the feature may not be in your edition. Admins control this under the Generative AI settings in the Admin console. It can be turned on differently by organizational unit (OU) or group, so when you ask, tell them which feature you can't see to speed things up.
+
+2. **Gmail: summarize a long thread**
+
+   Open the thread and click **Ask Gemini** at the top right to open the side panel. You can pick **What’s this email about?** in the sidebar or type a prompt yourself, such as "Summarize this email" (per the Google Workspace Learning Center). For button names, follow the on-screen instructions.
+
+   <PromptBox>
+   Summarize this email thread. Give me bullets split into what's been decided, what's still undecided, and what I need to do. If there's a deadline, include it.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Summarizing a Gmail thread with the Gemini side panel" officialUrl="https://support.google.com/mail/answer/14199860" />
+
+3. **Gmail: create a reply draft**
+
+   In a new email or reply window, click **Help me write** and type your request to get a draft. According to the official language list, Gmail's Help me write supports 8 languages, including Korean (English, French, German, Italian, Japanese, Korean, Portuguese, Spanish). For personal Google accounts, this feature is available only in the US. Always read and edit the generated text before sending.
+
+   <PromptBox>
+   Write a reply to Ms. Kim, our contact at the partner company. Say that I'll send the quote she asked for by Friday. Polite but short, no more than 3 sentences.
+   </PromptBox>
+
+4. **Docs: create and polish a report draft**
+
+   In a new document, click **Help me write** on the left, type a prompt, and click **Create**. If you like the result, use **Insert**; if you want to change it, use **Refine** (per Google's Learning Center). According to the official language list, **Help me write (writing) in Docs covers only English, French, German, Italian, Japanese, Portuguese, and Spanish, and not Korean.** On the same list, Korean is available for Docs' **Help me create** (formatted document generation) and for the Docs side panel. So if you want a Korean draft, try the side panel (Ask Gemini) and be sure to check the result. For the latest list, see the [official language list](https://support.google.com/docs/answer/14925782).
+
+   <PromptBox>
+   Write a draft of a "Q3 Sales Performance Report." Use this structure: summary, performance table, cause analysis, next-quarter plan. I'll fill in the numbers myself, so leave them blank as [ ].
+   </PromptBox>
+
+   <Aside type="caution" title="Have it leave the numbers blank">
+   AI can make up plausible-looking numbers. Enter the figures yourself and leave the structure and wording to the AI.
+   </Aside>
+
+5. **Sheets: organize a table with Ask Gemini**
+
+   Click **Ask Gemini** at the top right of the sheet to open the side panel and make your request.
+
+   <PromptBox>
+   From this table, calculate total sales by region and tell me which regions dropped compared to last month. Also explain which columns you based the calculations on.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Requesting table analysis from the Ask Gemini panel at the top right of Sheets" officialUrl="https://support.google.com/docs/answer/14356410" />
+
+6. **Check the results**
+
+   Compare the AI's summaries, drafts, and calculations against the original. In particular, check names, dates, amounts, and any promises in the wording.
+
+</Steps>
+
+## Quick reference
+
+### Features and locations by app (as of 2026-10-10, per official help)
+
+| App | Feature | Location / button |
+| --- | --- | --- |
+| Gmail | Thread summaries, questions, drafts | Ask Gemini side panel at the top right (varies by account) |
+| Gmail | Writing and polishing drafts | Help me write (Korean supported) |
+| Docs | Writing and polishing drafts | Help me write on the left > Create > Refine / Insert (Korean is not on the Help me write language list) |
+| Sheets | Organizing and analyzing tables | Ask Gemini at the top right |
+| Slides | Gemini collaboration features | See the [official help](https://support.google.com/docs/answer/14207419) |
+
+### Gemini coverage by edition (Google Workspace pricing page comparison table, as of 2026-10-10)
+
+| Edition | Gemini in Workspace apps | Gmail | Docs | Sheets |
+| --- | --- | --- | --- | --- |
+| Business Starter | Limited | Included | Not included | Not included |
+| Business Standard | Included | Included | Included | Included |
+| Business Plus | Included | Included | Included | Included |
+| Enterprise | Included | Included | Included | Included |
+
+In a separate row of the same comparison table, the Gemini assistant (web and mobile chat) is Basic access on Starter and Expanded access on Standard, Plus, and Enterprise (as of 2026-10-19). The pricing page says Starter, Standard, and Plus can be purchased for up to 300 users, and Enterprise is Contact sales. Annual commitments are shown as 16% off. The Korean pricing page states that "all prices are in USD ($)." Per-edition prices are calculated on screen by the page, so we couldn't read them from the original source, and we couldn't confirm Korean won (KRW) prices either. Check [Google Workspace pricing](https://workspace.google.com/pricing).
+
+### Privacy and administration
+
+| Item | Details |
+| --- | --- |
+| Model training | The Privacy Hub says your content is not reviewed by humans or used to train generative AI models outside your domain without permission |
+| Caution | The Gemini app help for personal Google accounts says parts of conversations may be seen by human reviewers and tells you not to enter confidential information (2026-10-10). Don't assume it has the same protections as a Workspace account; use your company Workspace account for work content |
+| Admin controls | For the Gemini app, service on/off is set under Generative AI > Gemini App in the Admin console. Gemini in Workspace apps has a separate setting (Gemini in Workspace apps) |
+| Conversation history | The Admin console has a "Gemini in Workspace conversation history settings" menu that admins manage (check the official documentation for details) |
+
+## Common sticking points
+
+### I don't see the Gemini button
+
+- **Cause**: It's not in your edition, your admin turned it off, or the screen differs by account type (personal/work).
+- **Fix**: Tell your admin which feature in which app you can't see. If it's a personal account, check your subscription status.
+
+### Korean output is awkward, or a feature doesn't support Korean
+
+- **Cause**: Supported languages differ by feature. For example, Korean isn't on the Help me write language list for Docs, and Gmail's Proofread supports only English and Spanish.
+- **Fix**: Check the [official language list](https://support.google.com/docs/answer/14925782), and if needed, specify the language and tone in the prompt (for example, "in polite Korean").
+
+### The summary missed something important
+
+- **Cause**: Attachments and context in a long thread may not be reflected in the summary.
+- **Fix**: Specify categories like "decided / undecided / my to-dos," and check the original for key emails.
+
+### I'm not sure whether I can use company confidential information
+
+- **Cause**: Each company has different rules about using AI.
+- **Fix**: Read the official privacy guidance (Privacy Hub) and check with your internal security team. Don't paste work material into the Gemini app on a personal account.
+
+### The on-screen wording differs from the description
+
+- **Cause**: Button names are written differently across help pages and change often.
+- **Fix**: Follow the suggested prompts in the side panel or the on-screen instructions.
+
+## Practical tips
+
+- **Be specific.** Include the audience, purpose, length, and tone. The prompting tips in [How to write Claude prompts](/en/claude/c04-prompting/) apply similarly.
+- **A draft is a draft.** Read it before you send it.
+- **If your work environment is Workspace, this approach is the closest to hand.** It's convenient because you don't have to paste things into a separate app, but to compare Gemini with other tools, see [Comparing Claude, ChatGPT, and Gemini](/en/chat/05-compare-assistants/).
+- **If you want AI to organize your email**, compare it with the Claude connector approach. [17. Morning briefing](/en/automation/17-morning-briefing/)
+
+## What to read next
+
+- [17. Get a morning briefing from Gmail and Calendar](/en/automation/17-morning-briefing/)
+- [20. Connecting AI to your work tools with connectors (MCP)](/en/automation/20-connectors-mcp/)
+- [C4. How to write prompts](/en/claude/c04-prompting/)

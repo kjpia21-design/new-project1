@@ -1,0 +1,334 @@
+---
+title: "Model division strategy: Opus plans, Sonnet builds (a real example from making this site)"
+description: "An advanced tutorial that covers official methods like the opusplan alias and the subagent model resolution order, and shows the real workflow used to build this site with Opus planning and Sonnet implementing"
+sidebar:
+  label: "C15. Model division strategy"
+level: advanced
+category: claude
+tools: ["Claude Code", "Claude"]
+duration: "30 min"
+prerequisites:
+  - "A Claude Code environment (terminal or cloud session)"
+  - "Basic subagent concepts (see C14)"
+lastVerified: 2026-10-31
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "Model configuration (Claude Code)"
+    url: "https://code.claude.com/docs/en/model-config"
+  - title: "Choosing the right model"
+    url: "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model"
+  - title: "Manage costs effectively (Claude Code)"
+    url: "https://code.claude.com/docs/en/costs"
+  - title: "Custom subagents"
+    url: "https://code.claude.com/docs/en/sub-agents"
+  - title: "Models overview"
+    url: "https://platform.claude.com/docs/en/about-claude/models/overview"
+  - title: "Escalate hard decisions with the advisor tool (Claude Code)"
+    url: "https://code.claude.com/docs/en/advisor"
+  - title: "Commands (Claude Code)"
+    url: "https://code.claude.com/docs/en/commands"
+  - title: "Orchestrate subagents at scale with dynamic workflows"
+    url: "https://code.claude.com/docs/en/workflows"
+  - title: "Claude Code CHANGELOG (v2.1.296)"
+    url: "https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md"
+  - title: "How do usage and length limits work?"
+    url: "https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import C15ModelSplit from '../../../../components/diagrams/C15ModelSplit.astro';
+
+<Summary>
+- You don't need the biggest model for every job. If you split the work, **Opus for the hard judgment calls (planning and review) and Sonnet for the bulk of the work (implementation)**, you save cost and usage.
+- The easiest way is `/model opusplan`. It switches automatically: Opus in plan mode, Sonnet during execution.
+- A subagent's model is decided by a fixed **four-step order**. If you switch to Opus with `/model`, subagents that inherit the model also become Opus.
+- On the API, Sonnet 5.5 costs half as much as Opus 5.5 (as of 2026-10-10, see the table below).
+- This site was built exactly this way. Check the case study below and the spec template you can follow along with.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Build a "big model plans, smaller model executes" setup with `opusplan` and subagent settings.
+- Predict which model a subagent will run on by following the resolution order.
+- Understand, in numbers, how model choice affects cost and usage.
+- Use this site's build as a reference to write a task spec for your own project.
+
+## Concepts to know first
+
+<C15ModelSplit />
+
+| Term | Meaning |
+| --- | --- |
+| **opusplan** | A special model alias that uses `opus` in plan mode and `sonnet` during execution. |
+| **Subagent** | A helper agent with its own context. You can set its model with `model` in its definition file. ([C14](/en/claude/c14-claude-code-features/)) |
+| **Inherit** | A subagent using the same model as the main conversation. |
+| **effort** | The level that sets how deeply the model thinks (low, medium, high, xhigh, max). |
+| **orchestrator / worker** | A model-combination pattern from the official docs. It refers to a structure that delegates bulk work to a lower-cost model (the worker). |
+
+### Model choice according to the official guide (as of 2026-10-10)
+
+| What you need | Recommended model |
+| --- | --- |
+| Top performance (agent sessions that run for hours, multi-step deep research) | Fable 5.1 |
+| Complex agentic coding, enterprise work | Opus 5.5 |
+| Speed and performance for everyday coding and agent work | Sonnet 5.5 |
+| Lowest latency and lowest price (real time, high volume, subagent tasks) | Haiku 5.5 |
+
+The official docs say to "start with Opus 5.5 for most workloads." They also say that adjusting effort is often a better lever than switching models. There are two starting strategies. If you prioritize efficiency, start with Haiku 5.5 and move up when it falls short. If you prioritize performance, start with Opus 5.5 and optimize by lowering effort or dropping to a smaller model.
+
+### Price differences (API, per 1M tokens, input/output, as of 2026-10-10)
+
+| Model | Input / Output |
+| --- | --- |
+| Fable 5.1 | $10 / $50 |
+| Opus 5.5 | $4 / $20 |
+| Sonnet 5.5 | $2 / $10 |
+| Haiku 5.5 | from $0.10 / from $0.50 |
+
+Sonnet costs half as much as Opus, and Fable costs 2.5 times as much as Opus. Subscription usage also varies with conversation length, features, model, and effort. See [C2. Plans and usage limits](/en/claude/c02-plans-limits/) for how limits are structured, [C1](/en/claude/c01-overview/) for model comparisons, and [C16](/en/claude/c16-api/) for API prices.
+
+The Claude Code cost guide recommends: "Sonnet handles most coding tasks well and costs less than Opus. Save Opus for complex architectural decisions or multi-step reasoning." For simple subagents, it suggests `model: haiku`.
+
+<Aside type="note" title="Aliases can change">
+`opusplan` uses the `opus` alias in plan mode and the `sonnet` alias during execution. According to the table in the Claude Code model configuration docs (2026-10-10), on the Anthropic API `opus` resolves to Opus 5.5 and `sonnet` resolves to Sonnet 5.5. On other providers such as Bedrock or Foundry the versions may differ, and aliases change over time. To pin a version, use the full model name or the `ANTHROPIC_DEFAULT_OPUS_MODEL` and `ANTHROPIC_DEFAULT_SONNET_MODEL` environment variables.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  'I set /model opusplan so Opus plans and Sonnet executes',
+  'I specified model in my subagent definitions',
+  '(Optional) I set the subagent model for all subagents with an environment variable',
+  'I checked /usage to see where my usage goes',
+  'I read this site\'s case study and wrote one task spec of my own',
+]} />
+
+<Steps>
+
+1. **The easiest division of labor: opusplan**
+
+   Type it in a Claude Code session, or pass it with `--model` at startup. You can also put `opusplan` in the `model` field of your settings file.
+
+   ```text
+   /model opusplan
+   ```
+
+   ```sh
+   claude --model opusplan
+   ```
+
+   Now in plan mode (`/plan`) Opus designs, and after you approve, Sonnet writes the code in the implementation phase. If you need a 1M-token context in both phases, use `opusplan[1m]`. Setting it through `/model` requires Claude Code v2.1.265 or later. On earlier versions, use the `--model` flag or the `model` setting.
+
+2. **Set a model for each subagent**
+
+   Put `model` in the frontmatter of the definition file. Use `haiku` for light work like search and log analysis, and `sonnet` for reviews.
+
+   ```markdown
+   ---
+   name: code-reviewer
+   description: Reviews code for quality and best practices
+   tools: Read, Glob, Grep
+   model: sonnet
+   ---
+
+   You are a code reviewer. When invoked, analyze the code and provide
+   specific, actionable feedback on quality, security, and best practices.
+   ```
+
+3. **Learn the subagent model resolution order**
+
+   Claude Code decides a subagent's model in this order.
+
+   1. The `model` parameter specified when it's invoked
+   2. The `model` frontmatter in the subagent definition (if `inherit`, the main conversation's model)
+   3. The `CLAUDE_CODE_SUBAGENT_MODEL` environment variable (when set to a model alias or ID)
+   4. The main conversation's model
+
+   <Aside type="caution" title="If you switch to Opus with /model, subagents can become Opus too">
+   A subagent that inherits the model follows the session model at the time it starts. If you switch to Opus and then delegate research or test runs, that work also runs on Opus. Switch models before delegating, or set `model` explicitly in the subagent definition.
+   </Aside>
+
+4. **One model for all subagents (optional)**
+
+   You can set it for everything with an environment variable in your settings file. Setting `FORCE` to `1` takes priority over models specified in definitions or at invocation, and applies to every subagent. `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` requires Claude Code v2.1.257 or later.
+
+   ```json
+   {
+     "env": {
+       "CLAUDE_CODE_SUBAGENT_MODEL": "haiku",
+       "CLAUDE_CODE_SUBAGENT_MODEL_FORCE": "1"
+     }
+   }
+   ```
+
+   Setting only `CLAUDE_CODE_SUBAGENT_MODEL` does not change the model of the built-in Explore and Plan subagents. You can see the model of a running subagent with `/tasks`.
+
+   **One model for workflow agents only**: Dynamic workflows (scripts that run dozens to hundreds of agents) can get very expensive because there are so many agents. If you set `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`, all workflow agents run on that model, while other subagents keep their own models (v2.1.296 or later).
+
+   ```json
+   {
+     "env": {
+       "CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL": "sonnet"
+     }
+   }
+   ```
+
+   This example assumes the value format (alias or model ID) is the same as `CLAUDE_CODE_SUBAGENT_MODEL`. The official environment variable docs don't describe this variable yet, so we only confirmed the description in the changelog (CHANGELOG).
+
+5. **Ask a higher model only at the hard moments: `/advisor` (optional)**
+
+   You keep the main model fast, and only get advice from a stronger model before planning, when the same error keeps repeating, or before declaring the work done. The advice comes from an advisor tool running on Anthropic's servers, and Claude decides when to call it.
+
+   ```text
+   /advisor opus
+   ```
+
+   - Typing just `/advisor` opens a picker, and `/advisor off` turns it off. The model you pick is saved in the `advisorModel` setting. To use it for this session only, start with `claude --advisor opus`.
+   - The advisor model must be the same tier as the main model or higher. For example, with a Sonnet 5.5 main model you can use Fable, Opus 5 or later, or Sonnet 5.5.
+   - It's an experimental feature and works only on the Anthropic API (not on Bedrock, Vertex, Foundry, and so on). Advisor calls are billed at the advisor model's rate and count toward your limits on subscription plans. Unlike `/model` or `opusplan`, which swap the whole model, this is used only at decision moments, so the official docs say it usually costs less than running a strong model throughout.
+
+6. **Check your usage**
+
+   `/usage` shows where usage goes by skill, subagent, and MCP. When using agent teams, we recommend Sonnet for teammates and keeping the team small. Plan-mode teammates reportedly use about 7 times the tokens of a standard session.
+
+   <ScreenshotPlaceholder caption="Checking where usage goes on the /usage screen" officialUrl="https://code.claude.com/docs/en/costs" />
+
+7. **How was this site built? A real case study**
+
+   Read the case below, then use the template in step 8 to write a spec for your own project. (The case is an honest account of how this site was built.)
+
+   **Setup.** In a single cloud session, **Opus 5.5 handled planning**, and **Sonnet 5.5 subagents did the implementation**. The subagent's model was set with the `model` parameter of the Agent tool. That's number 1 in the resolution order above.
+
+   **What Opus did.**
+
+   1. Clarified requirements by asking questions.
+   2. Wrote `docs/PLAN.md`.
+   3. Wrote a task spec for each step. (Per-step spec files such as `docs/specs/step1-skeleton.md` and `step2-samples.md`)
+   4. Launched the subagents.
+   5. Reviewed the results. Checked screenshots and verified facts.
+   6. Made small fixes itself.
+   7. Committed and opened PRs.
+
+   **What Sonnet did.**
+
+   | Step | Work assigned |
+   | --- | --- |
+   | Step 1 | Site implementation and official-docs research, run **in parallel by two agents** |
+   | Step 2 | Wrote the template and 2 samples |
+   | Step 3 | 4 agents split up and wrote 14 Claude tutorials |
+   | Step 4 | 4 agents each handled both research and writing for a topic area, producing 20 tutorials |
+   | Steps 5-6 | 3-4 agents checked against the official sources, corrected facts, and filled gaps |
+   | Step 7 | 1 site-structure agent, 3 product-specific agents, and 1 comparison/safety agent wrote 5 "Trending AI agents" tutorials (the comparison one ran after the product ones finished) |
+   | Step 8 | 1 structure agent and 5 writers wrote 10 "Deep dive for developers" tutorials. Example code went through syntax and type checks |
+   | Step 9 | 4 reviewers split up the sections and checked 51 tutorials for consistency (numbers, terms, links, tone, screens) |
+
+   **What the review actually caught.**
+
+   - **A bug where the home title appeared twice.** The cause was the condition that checks the home page id.
+   - **A gap between research findings and the real screen.** A research agent concluded "there are no cloud session credits," but the actual settings screen showed that item. We recorded this as an "item not yet reflected in the official docs." (You can see it in [C2](/en/claude/c02-plans-limits/).)
+   - **A gap between search summaries and the original text.** At first, one tutorial was written from search summaries because the official site was unreachable. When checked against the originals, important facts such as supported languages and commercial-use terms by plan were sometimes wrong. So until they were verified against the original, we kept a "being verified" notice on them.
+   - **Facts that diverged between subagents.** One tutorial said "Sonnet 5.5 also blocks `tool_choice` any/tool," but the reference tutorial (C16) table didn't list it. When the planner checked the official release notes directly, that tutorial turned out to be right, and we added Sonnet 5.5 to the reference table. Conversely, the same subagent also added "Sonnet 5.5 also blocks sampling parameters," which was about earlier-generation models, so we corrected it.
+
+   **Lessons.**
+
+   - The more concrete the spec, the better the subagent's results.
+   - The planning model handles fact-checking and final judgment. When subagents disagree, settle it with the official source, not by majority vote.
+   - Have subagents not commit; collect and commit on the planner side to avoid conflicts.
+   - Order dependent tasks. For example, run the comparison tutorial after the product tutorials finish. Run independent tasks in parallel.
+   - Split editable files so they don't overlap among parallel subagents.
+
+8. **Write your own task spec**
+
+   Here's a spec template that reflects those lessons. Swap the parts in parentheses for your own project, and either have an Opus planning session write the subagent spec file or fill it in yourself.
+
+   <PromptBox label="Task spec template (copy and fill in)">
+   **Task spec: (task name)**
+
+   **Read first**
+   - (Reference file paths: plan, template, finished sample)
+
+   **Goal**
+   - (What should be true when done, outcome-focused, within 3 lines)
+
+   **Scope**
+   - Files you may edit: (list of file paths)
+   - Files you must not touch: (everything else)
+
+   **Rules**
+   - Only write facts that are in (source file). Don't assert anything unconfirmed; mark it "needs verification."
+   - Do not git commit or push.
+
+   **Definition of done**
+   - (e.g., the build and tests pass)
+
+   **Report format**
+   1. List of files written or changed
+   2. Anything added beyond the source files, and its source
+   3. Parts where you avoided asserting because you couldn't confirm
+   4. Build and test results
+   </PromptBox>
+
+   After handing off the spec, don't just trust the result. Have the planning side verify the facts and open and check things directly.
+
+</Steps>
+
+## Quick reference
+
+| What you want to do | How |
+| --- | --- |
+| Opus plans, Sonnet executes | `/model opusplan` or `claude --model opusplan` |
+| Pin the model for one subagent | `model: sonnet` etc. in the definition file |
+| One model for all subagents | `CLAUDE_CODE_SUBAGENT_MODEL` + `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` |
+| One model for workflow agents only | `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL` (v2.1.296 or later) |
+| Get advice from a strong model only at hard moments | `/advisor opus`, `claude --advisor opus` |
+| Stop subagents from inheriting a big model | Switch models before delegating, or set `model` in the definition |
+| Check a running subagent's model | `/tasks` |
+| See where usage goes | `/usage` |
+| Make the Explore subagent lighter | Override it by defining a user subagent named `Explore` with `model: haiku` |
+
+The built-in Explore subagent runs on the main conversation's model by default. Only when the main conversation is Fable does it depend on how you're connected: with a subscription, Console, or an `ANTHROPIC_BASE_URL` gateway it runs on the `opus` alias model, while on Bedrock, Google Cloud, Foundry, and similar it runs on the main model as is (as of 2026-10-12).
+
+## Common sticking points
+
+### My light subagent uses a lot of usage
+
+- **Cause**: A subagent that inherits the model may be running on the main conversation's big model (for example, Opus).
+- **Fix**: Set `model: haiku` or `sonnet` explicitly in the definition, and check the actual model with `/tasks`. The built-in Explore needs separate setup.
+
+### I set `CLAUDE_CODE_SUBAGENT_MODEL` but it isn't applied
+
+- **Cause**: This variable acts as a default, so the model specified at invocation or in the definition's `model` takes priority. It doesn't affect the built-in Explore and Plan.
+- **Fix**: To force it everywhere, also set `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` (v2.1.257 or later).
+
+### I see a per-model limit message like "Opus limit"
+
+- **Cause**: You've hit the limit for a particular model family.
+- **Fix**: Switch to a different model family with `/model` and you can continue the work. Note that session and weekly limits are shared across all models, so switching models doesn't restore them.
+
+### Subagents are editing the same files
+
+- **Cause**: The specs may have overlapping scopes, or each agent may have committed on its own.
+- **Fix**: In the spec, list "files you may edit" separately for each agent, and have only the planner side commit.
+
+## Practical tips
+
+- **Try effort before switching models.** The official guide says adjusting effort is often better than swapping models.
+- **Opus for judgment, Sonnet for repetition.** Opus fits architecture decisions and final review, and Sonnet fits implementation with a clear spec.
+- **Make specs concrete.** The more you write file paths, editable scope, done criteria, and report format, the better the results.
+- **Have the planning model do the review itself.** On this site too, fact-checking and screen checks caught real bugs and errors.
+- **Parallelize early.** Split work that doesn't share files across agents and run them at the same time. Just keep in mind that parallel runs use that much more usage.
+- Average enterprise cost figures are in the official cost guide (about $13 per developer per active day, $150-250 per month, and 90% of users under $30 per active day). Your own usage may differ.
+
+## What to read next
+
+- [C14. Claude Code core features](/en/claude/c14-claude-code-features/) — subagent definitions and plan mode
+- [C13. Cloud sessions](/en/claude/c13-cloud-sessions/) — the environment this site was built in
+- [C16. Getting started with the Claude API](/en/claude/c16-api/) — model IDs and prices
+- [C1. Claude at a glance](/en/claude/c01-overview/) — comparing the 4 models
+- [Cut API costs with prompt caching, batching, and effort](/en/dev/02-cost-optimization/) — other ways to reduce cost on the API

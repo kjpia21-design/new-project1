@@ -1,24 +1,26 @@
 ---
 import LevelBadge from './LevelBadge.astro';
-import { categoryLabels, formatDate, type Level, type Category } from '../lib/tutorials';
+import { getCategoryLabel, formatDate, type Level, type Category } from '../lib/tutorials';
+import { getLang, t } from '../lib/i18n';
 interface Props {
   level?: Level; category?: Category; duration?: string;
   prerequisites?: string[]; tools?: string[]; lastVerified?: Date; status?: 'draft' | 'published';
 }
 const { level, category, duration, prerequisites = [], tools = [], lastVerified, status = 'draft' } = Astro.props;
+const lang = getLang(Astro);
 ---
-<aside class="meta not-content" aria-label="튜토리얼 정보">
+<aside class="meta not-content" aria-label={t(lang, 'meta.label')}>
   <div class="row">
     {level && <LevelBadge level={level} />}
-    {category && <span class="chip">{categoryLabels[category]}</span>}
-    {status === 'draft' && <span class="chip draft">준비 중</span>}
+    {category && <span class="chip">{getCategoryLabel(category, lang)}</span>}
+    {status === 'draft' && <span class="chip draft">{t(lang, 'meta.draft')}</span>}
   </div>
   <dl>
-    <div><dt>소요 시간</dt><dd>{duration ?? '미정'}</dd></div>
-    <div><dt>마지막 확인일</dt><dd>{lastVerified ? formatDate(lastVerified) : '아직 확인 전'}</dd></div>
-    {tools.length > 0 && <div><dt>사용 도구</dt><dd>{tools.join(', ')}</dd></div>}
+    <div><dt>{t(lang, 'meta.duration')}</dt><dd>{duration ?? t(lang, 'meta.tbd')}</dd></div>
+    <div><dt>{t(lang, 'meta.verified')}</dt><dd>{lastVerified ? formatDate(lastVerified, lang) : t(lang, 'sources.notYet')}</dd></div>
+    {tools.length > 0 && <div><dt>{t(lang, 'meta.tools')}</dt><dd>{tools.join(', ')}</dd></div>}
     {prerequisites.length > 0 && (
-      <div class="wide"><dt>준비물</dt><dd><ul>{prerequisites.map((p) => <li>{p}</li>)}</ul></dd></div>
+      <div class="wide"><dt>{t(lang, 'meta.prereq')}</dt><dd><ul>{prerequisites.map((p) => <li>{p}</li>)}</ul></dd></div>
     )}
   </dl>
 </aside>

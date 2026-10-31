@@ -8,8 +8,10 @@ category: claude
 tools: ["Claude", "Claude Code"]
 duration: "15분"
 prerequisites: ["Claude 계정 (무료 계정도 가능)"]
-lastVerified: 2026-10-26
+lastVerified: 2026-10-31
 sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
   - title: "Models overview"
     url: "https://platform.claude.com/docs/en/about-claude/models/overview"
   - title: "Claude Code Model configuration"
@@ -70,7 +72,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - 이전 세대(Fable 5, Opus 5, Opus 4.x, Sonnet 5, Sonnet 4.6, Haiku 4.5)도 아직 쓸 수 있어요. 다만 **Sonnet 4.5(`claude-sonnet-4-5-20250929`)는 2026-09-30에 지원 중단(deprecated)이 예고됐고 Claude API에서 2026-11-30에 퇴역해요.** 쓰고 있다면 Sonnet 5.5로 옮기세요(2026-10-11 기준, 공식 릴리스 노트와 Model deprecations 문서). Opus 4.1은 이미 퇴역했어요. 모델 개요 본문에 Claude Mythos 5.1이라는 이름도 나오지만 현재 모델 표에는 없어서, 이 문서에서는 다루지 않아요.
 
 <Aside type="caution" title="Fable은 기본값이 아니에요">
-Claude Code 문서는 "Fable 모델은 어떤 플랜·제공자에서도 기본값이 아니며 명시적으로 선택해야 한다"고 설명해요. Claude Code의 `default`는 Pro/Max/Team/Enterprise/Anthropic API에서 **Opus 5.5**예요. Fable은 플랜과 좌석에 따라 한도 적용 방식이 달라서, 자세한 내용은 [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/)를 보세요.
+Claude Code 문서는 "Fable 모델은 어떤 플랜·제공자에서도 기본값이 아니며 명시적으로 선택해야 한다"고 설명해요. Claude Code의 `default`는 Pro/Max/Ultra/Team/Enterprise/Anthropic API에서 **Opus 5.5**예요. Fable은 플랜과 좌석에 따라 한도 적용 방식이 달라서, 자세한 내용은 [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/)를 보세요.
 </Aside>
 
 <Aside type="note" title="모델 선택기는 내 화면이 기준이에요">

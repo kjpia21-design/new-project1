@@ -1,0 +1,242 @@
+---
+title: "Adding AI to Excel and Google Sheets: Copilot, Gemini, and Claude"
+description: "A reference on using Copilot in Excel, Gemini in Google Sheets, and the Claude add-in for Excel to clean up tables, write formulas, summarize, and trace errors, with tool differences, Korean-language support, and cautions"
+sidebar:
+  label: "6. Adding AI to Excel and Sheets"
+level: practical
+category: automation
+tools: ["Microsoft Copilot", "Excel", "Google Sheets", "Gemini", "Claude"]
+duration: "30 min"
+prerequisites:
+  - "An Excel or Google Sheets account (needs a subscription that includes AI features, or admin approval)"
+  - "A table of made-up practice data (don't use real customer or payroll information)"
+lastVerified: 2026-10-31
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "Get started with Copilot in Excel (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/excel/copilot/get-started-with-copilot-in-excel"
+  - title: "Get data insights with Copilot in Excel (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/office/identify-insights-with-copilot-in-excel-52d97339-86c0-431c-b46c-e7b07b2898dd"
+  - title: "Frequently asked questions about Copilot in Excel (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/excel/copilot/frequently-asked-questions-about-copilot-in-excel"
+  - title: "COPILOT Function (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/excel/functions/copilot-function"
+  - title: "Frequently asked questions about Copilot in Microsoft 365 subscriptions (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/microsoft-365-copilot/frequently-asked-questions-about-copilot-in-microsoft-365-subscriptions"
+  - title: "Collaborate with Gemini in Google Sheets (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/14356410?hl=en"
+  - title: "Use the AI function in Google Sheets (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/15877199?hl=en"
+  - title: "Supported languages for Google Workspace with Gemini (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/14925782?hl=en"
+  - title: "Use Claude for Excel (Claude Help)"
+    url: "https://claude.com/docs/office-agents/excel"
+  - title: "Create and edit files with Claude (Claude Help)"
+    url: "https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- In **Excel**, the **Copilot** icon at the bottom right opens a side pane. It has three modes, Edit, Plan, and Chat, and Edit is the default (as of 2026-10-14).
+- In **Google Sheets**, there's the **Ask Gemini** side panel at the top right, and the **`=AI()`** function you use inside a cell. Both are described as requiring an eligible Workspace or Google AI plan.
+- **Claude** has an add-in for Excel (Pro, Max, Ultra, Team, and Enterprise plans). Separately, the ability to create Excel files in a conversation is described as available to all users, including Free.
+- Excel's `=COPILOT()` function can no longer be used as of 2026-09-14. Don't follow old blog posts' instructions as-is.
+- With any tool, **check numbers and formulas yourself**. All three tools' official documentation warns about the possibility of errors.
+</Summary>
+
+<Aside type="caution" title="This tutorial doesn't cover prices">
+Microsoft 365 Copilot and Google Workspace pricing changes often, and the official pricing page (microsoft.com) blocked access during this check, so we couldn't read it. We also couldn't confirm Korean won (KRW) prices. Check each official pricing page directly before subscribing. Claude pricing is summarized in [C2. Plans and usage limits](/en/claude/c02-plans-limits/).
+</Aside>
+
+## What you'll be able to do
+
+- Know **which AI feature to open and where** in the spreadsheet you use (Excel or Google Sheets).
+- Ask questions about a table and add **formula columns like totals and ratios** with AI.
+- **Classify and summarize long text** such as reviews and surveys into columns.
+- Get complex formulas **explained** and **trace** the cause of errors.
+- Choose the right tool for the situation and build the habit of verifying results.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Copilot in Excel** | Microsoft's AI built into Excel. It handles requests using Excel features like tables, charts, PivotTables, and formulas, and leaves the results in an editable state. |
+| **Edit / Plan / Chat modes** | Edit changes the workbook directly. Plan shows a plan first and asks for approval. Chat only answers and doesn't change the workbook. |
+| **Gemini in Sheets** | A feature where you request tables, formulas, analysis, charts, and more from the Google Sheets side panel (Ask Gemini). |
+| **AI function (`=AI()`)** | A function you write directly in a Sheets cell. You can also write it as `=Gemini()`. It takes a prompt and an optional range and returns a text result. |
+| **Claude for Excel** | A Claude add-in you install in Excel. It answers with cell-level citations and changes values while preserving formula relationships. |
+| **Prompt injection** | An attack where instructions hidden in a file received from outside trick the AI. The Claude for Excel documentation warns about it directly. |
+
+<Aside type="note" title="Not confirmed (as of 2026-10-14)">
+A Claude add-on for Google Sheets showed up by name in search, but when we opened the official help page it said the page doesn't exist, so we couldn't confirm what it does. So for using Claude with Sheets, this tutorial covers only **creating and editing files in a conversation**. We couldn't confirm Claude's Sheets integration in the official documentation.
+</Aside>
+
+## Step-by-step
+
+Start with practice data. A made-up sales table of about 20 to 30 rows with columns for month, region, product, sales, and notes is enough.
+
+<Checklist items={[
+  'I checked that the AI feature (Copilot/Gemini/Claude) shows up in my account',
+  'I asked about a table and got a summary and outliers',
+  'I added one formula column with AI and checked it myself',
+  'I turned long text such as reviews into a classification column',
+  'I had AI explain a complex formula',
+  'I compared the changes with the original and saved',
+]} />
+
+<Steps>
+
+1. **Check that AI is turned on in your environment**
+
+   - **Excel**: Look for the Copilot icon at the bottom right. The official documentation says if you don't see it, it may not be included in your subscription or may be restricted by organization settings. The official FAQ says that on personal subscriptions (Personal, Family, Premium), Copilot in Excel works only on files with AutoSave on, that is, files saved to OneDrive.
+   - **Google Sheets**: Check whether **Ask Gemini** appears at the top right. It requires an eligible Google Workspace or Google AI plan, and some features are also described as available through a trial program (Workspace Experiments).
+   - **Claude**: The Excel add-in is for Pro, Max, Ultra, Team, and Enterprise plans. Installation is covered in step 6 below.
+
+   <ScreenshotPlaceholder caption="The Copilot icon at the bottom right of Excel and the opened side pane" officialUrl="https://support.microsoft.com/en-us/excel/copilot/get-started-with-copilot-in-excel" />
+
+2. **Ask about the table: summary and outliers**
+
+   Ask in the Copilot pane in Excel, or the Ask Gemini panel in Sheets. A tip in Microsoft's docs says the more directly you write column names, the more accurate it is. If you want the result in a specific form like a PivotTable, say so in the prompt.
+
+   <PromptBox>
+   Analyze the data in this sheet. Calculate total sales by region and tell me which regions have the highest and lowest sales. If there are outliers, tell me which rows they're in. Also explain which columns you based the calculations on.
+   </PromptBox>
+
+3. **Add a formula column**
+
+   Copilot in Excel creates new columns or rows from existing data and explains how each formula works. It fits totals, profit margins, periods, and summary rows well. The official documentation has examples like "add a column that calculates the profit margin for each product."
+
+   <PromptBox>
+   Using the sales column and the cost column, add a new column that calculates the profit margin (%) for each product. Also explain the formula you used.
+   </PromptBox>
+
+4. **Classify and summarize long text**
+
+   Copilot in Excel can summarize large amounts of text such as surveys and reviews, find themes and sentiment, and put them in a new column. It's described as letting you hover over the superscript numbers in the result to see the original data it's based on.
+
+   In Sheets, you can classify cell by cell with the `=AI()` function. The official example takes the form of a prompt plus a range, like `=AI("Categorize the customer inquiry as a compliment, exchange request, or return request.",C2)`. After entering the function in a cell, click **Generate and Insert**.
+
+   <PromptBox>
+   Read the customer reviews in column C and classify each as "Praise / Complaint / Question," putting the result in column D. Also summarize the top 3 complaint themes that come up most.
+   </PromptBox>
+
+   <Aside type="caution" title="The AI function may not show up depending on your account">
+   Google's AI function help says "an eligible Google Workspace or Google AI plan is required" (as of 2026-10-19). The body text used to say it was available only to beta program users, but that wording no longer appears in the body. However, the "AI function not available" troubleshooting guidance says possible causes include whether you've joined the Workspace Experiments program, your plan, admin settings, and language settings. Check for yourself whether it works in your account.
+   </Aside>
+
+5. **Get complex formulas explained**
+
+   AI is good at unpacking long formulas in files you've inherited. Select the cell and make your request, or type the cell address. The official example is "Explain the formula in cell D3."
+
+   <PromptBox>
+   Explain step by step what the formula in cell D3 does. And tell me if there are cases where it could produce an error.
+   </PromptBox>
+
+6. **Claude: install and use the Excel add-in**
+
+   Install Claude for Excel with **Get it now** on the Claude for Microsoft 365 listing in Microsoft AppSource, activate the add-in in Excel, and sign in with your Claude account. Supported environments are Excel on the web, Windows with a Microsoft 365 subscription (build 16.0.13127.20296 or later), and Mac (16.46 or later, build 21011600 or later). Excel 2016 and 2019 perpetual licenses, iPad, and Android aren't supported (as of 2026-10-14).
+
+   <FlowSteps title="Installing Claude for Excel" officialUrl="https://claude.com/docs/office-agents/excel" steps={[
+     { where: 'Microsoft AppSource', action: 'Click Get it now on the Claude for Microsoft 365 listing', result: 'The add-in is installed' },
+     { where: 'Excel', action: 'Activate the add-in (Mac: Tools > Add-ins, Windows: Home > Add-ins)', result: 'The side pane opens' },
+     { where: 'Side pane', action: 'Sign in with your Claude account', result: 'You can start chatting' },
+   ]} />
+
+   Your company admin can also deploy it from the Microsoft 365 Admin Center. In that case, you're told to allow Office Store access under Settings > Org Settings in the Admin Center.
+
+   <PromptBox>
+   Walk me through step by step how the sales figure in cell C42 is calculated. Also tell me which assumptions drive the gross margin forecast the most.
+   </PromptBox>
+
+   Claude for Excel attaches cell-level citations to its answers (click one to jump to that cell) and preserves formula relationships when it changes values. It warns before overwriting and asks for confirmation before risky actions.
+
+7. **Have Claude create the file itself (without the Excel add-in)**
+
+   If you ask in a Claude conversation, for example "Make me an Excel file for tracking monthly expenses," it creates an .xlsx file for you to download. The official documentation (version updated 2026-08-06) says all users on Free, Pro, Max, Ultra, Team, and Enterprise can use this on web, desktop, and mobile. On Free, Pro, and Max, turn on **Create and edit files** (formerly named Code execution and file creation) under Settings > Capabilities (as of 2026-10-26). The maximum size is 30 MB per file for both upload and download. You can also analyze uploaded CSV and TSV files, and files you create can be saved directly to Google Drive. To use one in Google Sheets, you'd save the .xlsx to Drive and open it as a sheet, but we couldn't confirm that conversion step itself in Claude's documentation.
+
+8. **Verify the results and save**
+
+   Go through the cells the AI changed one by one, and recompute totals with simple formulas like `SUM` to compare. The documentation says that once you save changes made by Copilot, they're visible to everyone with access to the file (including co-editors), so practice on a copy first with shared files. To undo, use Undo or view an earlier version.
+
+</Steps>
+
+## Quick reference
+
+### Comparing the tools at a glance (as of 2026-10-14, official help)
+
+| Item | Copilot in Excel | Gemini in Sheets | Claude for Excel |
+| --- | --- | --- | --- |
+| Where to open | Copilot icon at the bottom right | Ask Gemini at the top right | The add-in side pane in Excel |
+| Key features | Edit sheets, create formulas, charts, and PivotTables, insights, web search | Request tables, formulas, analysis, charts; tasks like pivots and formatting | Cell-cited answers, changing assumptions, error tracing, model building |
+| In-cell function | `=COPILOT()` ended 2026-09-14 | `=AI()` / `=Gemini()` (returns text only) | None |
+| Requirements | A subscription or license that includes Copilot | An eligible Workspace or Google AI plan | Pro, Max, Ultra, Team, or Enterprise plan |
+| Korean | Korean is on the prompt language list | Korean is in the supported languages for the side panel and AI function | We couldn't confirm Korean support in this documentation |
+| Main limits | Trained mainly on English; edits only in automatic calculation mode | `.xlsx` works best when converted to Sheets | No data tables, macros, or VBA |
+
+### Copilot in Excel modes by platform
+
+| Platform | Supported modes |
+| --- | --- |
+| Windows, Mac, web | Edit, Chat, Plan |
+| iPad | Chat, Plan (Edit is rolling out) |
+| iPhone | Chat (Edit is rolling out) |
+| Android | Chat |
+
+### Limits to know
+
+| Item | Details |
+| --- | --- |
+| Copilot editing conditions | Calculation options must be Automatic. Files checked out from SharePoint don't work on Windows or Mac. |
+| Copilot personal subscriptions | Works only on files saved to OneDrive with AutoSave on. AI features in Family and Premium are available only to the subscription owner. |
+| AI function | It can't see the whole sheet or Drive files. You have to pass the data you need as a range. It can't be undone, so you regenerate. You can't nest it inside other functions. It generates for at most 350 selected cells at a time. |
+| Claude for Excel | Using it for final customer deliverables without human review, or for audit calculations without verification, isn't recommended. |
+
+## Common sticking points
+
+### I don't see the Copilot icon
+
+- **Cause**: Your subscription may not include Copilot, it may be restricted by organization settings, or it may be due to your app version or account type.
+- **Fix**: Ask your admin or check your license in your Microsoft 365 account settings. On a personal subscription, also check that the file is autosaving to OneDrive. The official documentation says you can tell which experience you have from the "M365 Copilot (Premium)" or "(Basic)" label on screen.
+
+### `=COPILOT()` from an old article shows `#NAME?`
+
+- **Cause**: This function isn't available in Excel as of 2026-09-14. Values already calculated stay as a cache, but when recalculated they show a `#NAME?` error.
+- **Fix**: Ask for the same thing in plain sentences in the Copilot pane. The official documentation shows examples like "Summarize the comments in A2:A20."
+
+### Sheets shows "AI function not available"
+
+- **Cause**: Official help says it could be not being in the program, your plan not including it, admin settings, or language settings.
+- **Fix**: Ask your admin, and try the Ask Gemini side panel instead. Korean is on the official language list for both features.
+
+### The table the AI changed looks wrong
+
+- **Cause**: The question may have been vague, or accuracy may have dropped with a Korean prompt. Microsoft says Copilot is trained mainly on English material, so performance may be lower in other languages.
+- **Fix**: Write column names and ranges specifically, and start with "Show me the plan first" (Excel's Plan mode). If you don't like the result, undo it.
+
+### I'm not sure whether I should open an Excel file from outside in AI
+
+- **Cause**: Instructions hidden in an outside file can trick the AI (prompt injection). The Claude for Excel documentation warns about it directly.
+- **Fix**: Use it only with files you trust, start with a copy, and read carefully when the AI asks for confirmation on a risky action.
+
+## Practical tips
+
+- **Work on a copy first.** Especially with shared files, the AI's changes can be visible to others right away.
+- **Let AI calculate, and let a person check the math.** Verify AI-made formulas yourself with `SUM` and `AVERAGE`. The official documentation also says not to use it for sensitive decisions such as financial, legal, or medical ones.
+- **Put column names in your prompt.** The more precisely you say which column to calculate and how, the more accurate it is. The tips are the same as in [How to write prompts](/en/claude/c04-prompting/).
+- **Use only approved tools for company data.** Before uploading work files to a personal account, read [Using AI while keeping personal and company information safe](/en/basics/05-privacy-safety/).
+- **Turn repeated tasks into skills.** Claude can bundle repeated tasks into skills. See [C8. Skills](/en/claude/c08-skills/).
+
+## What to read next
+
+- [24. Working in Word, PowerPoint, and Outlook with Microsoft 365 Copilot](/en/automation/24-m365-copilot/) — Using the same Copilot in documents, presentations, and mail
+- [19. Gemini in Google Workspace](/en/automation/19-google-workspace-gemini/) — Gemini across Gmail, Docs, and Sheets
+- [3. Getting AI to analyze data](/en/chat/03-data-analysis/) — Uploading files to a conversational AI for analysis
+- [An AI usage guide for office, planning, and admin roles](/en/roles/office/) — Looking at repetitive work like spreadsheet cleanup from a job-role perspective

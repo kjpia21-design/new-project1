@@ -1,17 +1,19 @@
 ---
 import LevelBadge from './LevelBadge.astro';
 import { getRecentlyVerified, entryUrl, formatDate } from '../lib/tutorials';
+import { getLang, t } from '../lib/i18n';
 interface Props { limit?: number }
 const { limit = 5 } = Astro.props;
-const items = await getRecentlyVerified(limit);
+const lang = getLang(Astro);
+const items = await getRecentlyVerified(limit, lang);
 ---
 {items.length === 0 ? (
-  <p class="empty not-content">아직 확인을 마친 튜토리얼이 없어요. 내용을 공식 문서와 대조해 확인하면, 확인한 날짜 순서대로 여기에 나타나요.</p>
+  <p class="empty not-content">{t(lang, 'recent.empty')}</p>
 ) : (
   <ul class="updates not-content">
     {items.map((e) => (
       <li>
-        <time datetime={e.data.lastVerified!.toISOString().slice(0, 10)}>확인 {formatDate(e.data.lastVerified)}</time>
+        <time datetime={e.data.lastVerified!.toISOString().slice(0, 10)}>{lang === 'en' ? `${t(lang, 'recent.verified')} ${formatDate(e.data.lastVerified, lang)}` : `확인 ${formatDate(e.data.lastVerified, lang)}`}</time>
         {e.data.level && <LevelBadge level={e.data.level} />}
         <a href={entryUrl(e.id)}>{e.data.title}</a>
       </li>

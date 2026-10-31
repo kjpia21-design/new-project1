@@ -1,0 +1,192 @@
+---
+title: "Drafting and Polishing Reports and Proposals"
+description: "The step-by-step order for writing reports and proposals with AI: outline first, section drafts, source checks, tone adjustment, objection review, and exporting a file"
+sidebar:
+  label: "4. Writing reports and proposals"
+level: practical
+category: chat
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "30 min"
+prerequisites: ["An account for the chat AI you plan to use", "Material or notes for the report"]
+lastVerified: 2026-10-26
+sources:
+  - title: "Prompting best practices (Claude official prompting guide)"
+    url: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+  - title: "Get started with Claude"
+    url: "https://support.claude.com/en/articles/8114491-get-started-with-claude"
+  - title: "What are projects?"
+    url: "https://support.claude.com/en/articles/9517075-what-are-projects"
+  - title: "Enable and use web search"
+    url: "https://support.claude.com/en/articles/10684626-enable-and-use-web-search"
+  - title: "Use Research on Claude"
+    url: "https://support.claude.com/en/articles/11088861-use-research-on-claude"
+  - title: "Create and edit files with Claude"
+    url: "https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- Don't have the AI write the whole thing at once. Go in this order: **outline → section drafts → source check → tone adjustment → objection review.**
+- At the start, tell it the **reader, purpose, length, and format.**
+- The AI can get numbers, quotes, and proper nouns wrong, so **check them yourself.** Using web search or Research adds citations, which makes checking easier.
+- With its code execution and file creation feature, Claude can create .docx, .pptx, and PDF files (as of 2026-10-10).
+- The author is responsible for the final document. Use the AI's output as a draft and polish it into your own work.
+</Summary>
+
+## What you'll be able to do
+
+- Turn scattered notes into a report draft with a table of contents.
+- Rewrite the same content with a different tone and length for different readers.
+- Check a proposal for likely objections and missing evidence.
+- Get the finished version as a Word or PDF file.
+
+## Concepts first
+
+| Term | Meaning |
+| --- | --- |
+| **Outline** | The skeleton you set before writing the body: the table of contents and one key line per section. |
+| **Tone** | The voice and formality of the document (for example, concise style for executive reports, polite style for client proposals). |
+| **Source check** | Matching the numbers and claims in the draft against your material. |
+| **Project** | A Claude feature for saving your company template, writing style, and reference material and reusing them in every chat. |
+
+The official getting-started guide advises starting with a simple question, getting more specific over time, and refining with follow-up requests. That's a perfect fit for writing reports. For the basic prompt framework, see [Tutorial 1](/en/chat/01-prompt-basics/).
+
+## Step-by-step
+
+<Checklist items={[
+  'I set the reader, purpose, length, and format',
+  'I got an outline first and revised it',
+  'I got a draft for each section',
+  'I checked the numbers and claims against my material',
+  'I tried a different tone and ran an objection review',
+  'I exported a file and checked the formatting',
+]} />
+
+<Steps>
+
+1. **State your conditions and get an outline first**
+
+   Bad example:
+
+   <PromptBox>
+   Write a proposal for adopting a new product.
+   </PromptBox>
+
+   Good example:
+
+   <PromptBox>
+   I'm writing a proposal to adopt an internal work automation solution, to submit to the head of purchasing at a mid-sized manufacturer. The goal is to get budget approval for a 3-month pilot. Based on the notes below, first suggest only a table of contents and one key line per section. Don't write the body yet. Aim for about 3 pages.
+
+   [Paste notes]
+   </PromptBox>
+
+2. **Revise the outline**
+
+   Reorder, cut, and add. Setting the direction at this stage means fewer edits later.
+
+   <PromptBox>
+   Split section 2 into "Current situation" and "Problems," and add "Risks and responses" at the end. Show me the outline again.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="A conversation setting the direction by revising the outline" />
+
+3. **Get a draft for each section**
+
+   Having the AI write one section at a time improves quality and makes edits easier. Put the source material on top and your request below it.
+
+   <PromptBox>
+   [Paste material on the current situation]
+
+   Using only the material above as evidence, write the "Current situation" section. Keep it to 6 sentences or fewer, use only numbers that appear in the material, and put the source sentence in parentheses. Mark any fact that isn't in the material with [needs source].
+   </PromptBox>
+
+4. **Check the sources**
+
+   Check every [needs source] mark and every number. When you need outside facts, like market size or legal rules, you can turn on web search or Research to get citations. Claude's official help pages explain that web search responses include citations, and Research draws on both your connected material and the web to give answers with citations. Still, always open the citation links and check them yourself.
+
+   <PromptBox>
+   Pull every sentence in the draft that refers to outside statistics or laws and put them in a table. Use the columns Sentence / Why it needs checking / Type of official source where I can verify it.
+   </PromptBox>
+
+5. **Match the tone and length**
+
+   <PromptBox>
+   Shorten the same content into an executive summary. One page, conclusion first, highlight only 3 numbers, and explain jargon in plain words.
+   </PromptBox>
+
+6. **Run an objection review**
+
+   Have the AI play the opposing side to find weak spots.
+
+   <PromptBox>
+   You're the finance lead who reviews budgets. Read this proposal and give me 5 reasons you wouldn't approve it, strongest first. For each reason, suggest evidence I could add to address it.
+   </PromptBox>
+
+7. **Export to a file**
+
+   With code execution and file creation turned on, Claude can create .docx, .pptx, and PDF files (30MB per file). If you have a company template, upload it and ask, "Move this into this template." Open the result and check the line breaks, tables, and numbering by eye.
+
+   <PromptBox>
+   Create the final version as a Word document (.docx). Include a title, a table of contents, and one table, and use the default font.
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+| Step | What you do | Typical request |
+| --- | --- | --- |
+| 1 | Set conditions | Reader, purpose, length, format |
+| 2 | Outline | "Don't write the body; just the table of contents and one key line each" |
+| 3 | Section drafts | "Use only the material as evidence; if missing, [needs source]" |
+| 4 | Source check | Pull numbers and quotes into a table; open links yourself |
+| 5 | Tone adjustment | "One page for executives, conclusion first" |
+| 6 | Objections | "5 reasons you wouldn't approve it" |
+| 7 | Export | .docx / PDF (Claude: 30MB per file) |
+
+## Common sticking points
+
+### The writing is polished but has no substance
+
+- **Cause**: When you have it write without material, it fills in with generalities.
+- **Fix**: Paste in concrete source material and limit it with "use only the material as evidence."
+
+### It produces statistics or sources that don't exist
+
+- **Cause**: The AI can make up plausible-sounding content.
+- **Fix**: Have it attach a source sentence to every number, and keep only what you've verified yourself. Delete anything you couldn't verify, or leave it as [needs source].
+
+### The writing style differs from section to section
+
+- **Cause**: Writing sections separately makes the standard drift.
+- **Fix**: At the start, give style rules (for example, "formal, polite style; sentences under 25 words") and an example of a paragraph you like. A style you use repeatedly can be saved in Claude project instructions ([C5](/en/claude/c05-projects/)).
+
+### The exported file's formatting looks off
+
+- **Cause**: It was made without knowing your company template, or the tables are complex.
+- **Fix**: Upload the template first, or get just the body text, paste it into your company template, and polish the formatting yourself.
+
+### I can't see the file-creation menu or feature
+
+- **Cause**: Code execution and file creation may be turned off, or blocked by organization policy.
+- **Fix**: Check Settings > Capabilities, and if it's an organization account, ask your admin.
+
+## Practical tips
+
+- **Have it write the reader's questions in advance.** Asking for "5 questions this reader will ask" reveals missing evidence.
+- **Give length as a number.** "5 sentences" or "one page" is more precise than "short."
+- **Read the draft once in your own voice.** Reading aloud shows you the awkward sentences.
+- **Mask confidential information.** Before putting customer names or unit prices in a proposal draft, check the [cautions in Tutorial 3](/en/chat/03-data-analysis/).
+- **If the format is the same each time, use a project.** Save your company template and writing style so you don't have to explain them every time.
+
+## What to read next
+
+- [2. Summarizing meeting notes and long documents, and pulling out action items](/en/chat/02-summarize-documents/) — the material-organizing stage
+- [5. Comparing Claude, ChatGPT, and Gemini by task, and how to choose](/en/chat/05-compare-assistants/) — picking the right tool for document work
+- [C10. Web search and research](/en/claude/c10-research/) — finding source material

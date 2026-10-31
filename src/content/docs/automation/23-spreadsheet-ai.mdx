@@ -10,8 +10,10 @@ duration: "30분"
 prerequisites:
   - "Excel 또는 Google Sheets 계정 (AI 기능이 포함된 구독 또는 관리자 허용 필요)"
   - "연습용 가상 데이터가 든 표 (실제 고객·급여 정보는 쓰지 마세요)"
-lastVerified: 2026-10-26
+lastVerified: 2026-10-31
 sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
   - title: "Get started with Copilot in Excel (Microsoft Support)"
     url: "https://support.microsoft.com/en-us/excel/copilot/get-started-with-copilot-in-excel"
   - title: "Get data insights with Copilot in Excel (Microsoft Support)"
@@ -45,7 +47,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 <Summary>
 - **Excel**에서는 오른쪽 아래 **Copilot** 아이콘으로 사이드 창을 열어요. 편집(Edit)·계획(Plan)·채팅(Chat) 세 모드가 있고, 기본은 편집 모드예요(2026-10-14 기준).
 - **Google Sheets**에서는 오른쪽 위 **Ask Gemini** 사이드 패널과, 셀 안에서 쓰는 **`=AI()`** 함수가 있어요. 둘 다 자격 있는 Workspace 또는 Google AI 요금제가 필요하다고 안내돼요.
-- **Claude**는 Excel용 애드인(Pro·Max·Team·Enterprise 요금제)이 있어요. 별도로, 대화 속에서 Excel 파일을 만드는 기능은 Free를 포함한 모든 사용자에게 제공된다고 안내돼요.
+- **Claude**는 Excel용 애드인(Pro·Max·Ultra·Team·Enterprise 요금제)이 있어요. 별도로, 대화 속에서 Excel 파일을 만드는 기능은 Free를 포함한 모든 사용자에게 제공된다고 안내돼요.
 - Excel의 `=COPILOT()` 함수는 2026-09-14부터 더 이상 쓸 수 없어요. 옛 블로그의 설명을 그대로 따라 하지 마세요.
 - 어느 도구든 **숫자와 수식은 직접 검산**하세요. 세 도구 모두 공식 문서에서 오류 가능성을 안내해요.
 </Summary>
@@ -96,7 +98,7 @@ Claude의 Google Sheets 전용 애드온은 검색에서 이름이 보였지만,
 
    - **Excel**: 오른쪽 아래의 Copilot 아이콘을 찾아요. 안 보이면 구독에 포함되지 않았거나 조직 설정으로 제한됐을 수 있다고 공식 문서가 안내해요. 개인 구독(Personal·Family·Premium)에서는 Copilot in Excel이 AutoSave가 켜진, 즉 OneDrive에 저장된 파일에서만 동작한다고 공식 FAQ에 적혀 있어요.
    - **Google Sheets**: 오른쪽 위에 **Ask Gemini**가 보이는지 확인해요. 자격 있는 Google Workspace 또는 Google AI 요금제가 필요하고, 일부 기능은 시범 프로그램(Workspace Experiments)으로도 제공된다고 안내돼요.
-   - **Claude**: Excel 애드인은 Pro·Max·Team·Enterprise 요금제 대상이에요. 설치 절차는 아래 단계 6에서 다뤄요.
+   - **Claude**: Excel 애드인은 Pro·Max·Ultra·Team·Enterprise 요금제 대상이에요. 설치 절차는 아래 단계 6에서 다뤄요.
 
    <ScreenshotPlaceholder caption="Excel 오른쪽 아래의 Copilot 아이콘과 열린 사이드 창" officialUrl="https://support.microsoft.com/en-us/excel/copilot/get-started-with-copilot-in-excel" />
 
@@ -158,7 +160,7 @@ Claude의 Google Sheets 전용 애드온은 검색에서 이름이 보였지만,
 
 7. **파일 자체를 Claude에게 만들게 하기 (Excel 애드인 없이)**
 
-   Claude 대화에서 "월별 지출 추적용 엑셀 파일 만들어 줘"처럼 요청하면 .xlsx 파일을 만들어 내려받게 해 줘요. 이 기능은 Free·Pro·Max·Team·Enterprise 모든 사용자가 웹, 데스크톱, 모바일에서 쓸 수 있다고 공식 문서(2026-08-06 갱신본)에 적혀 있어요. Free·Pro·Max에서는 설정(Settings) > 기능(Capabilities)에서 **Create and edit files**(예전 이름은 Code execution and file creation)를 켜요(2026-10-26 기준). 파일당 최대 크기는 업로드·다운로드 모두 30MB예요. CSV·TSV 업로드 분석도 가능하고, 만든 파일은 Google Drive에 바로 저장할 수도 있다고 안내돼요. Google Sheets에서 쓰려면 Drive에 저장한 .xlsx를 시트로 열어 쓰는 방식이 되겠지만, 이 변환 절차 자체는 Claude 문서에서 확인하지 못했어요.
+   Claude 대화에서 "월별 지출 추적용 엑셀 파일 만들어 줘"처럼 요청하면 .xlsx 파일을 만들어 내려받게 해 줘요. 이 기능은 Free·Pro·Max·Ultra·Team·Enterprise 모든 사용자가 웹, 데스크톱, 모바일에서 쓸 수 있다고 공식 문서(2026-08-06 갱신본)에 적혀 있어요. Free·Pro·Max에서는 설정(Settings) > 기능(Capabilities)에서 **Create and edit files**(예전 이름은 Code execution and file creation)를 켜요(2026-10-26 기준). 파일당 최대 크기는 업로드·다운로드 모두 30MB예요. CSV·TSV 업로드 분석도 가능하고, 만든 파일은 Google Drive에 바로 저장할 수도 있다고 안내돼요. Google Sheets에서 쓰려면 Drive에 저장한 .xlsx를 시트로 열어 쓰는 방식이 되겠지만, 이 변환 절차 자체는 Claude 문서에서 확인하지 못했어요.
 
 8. **결과 검증하고 저장하기**
 
@@ -175,7 +177,7 @@ Claude의 Google Sheets 전용 애드온은 검색에서 이름이 보였지만,
 | 여는 곳 | 오른쪽 아래 Copilot 아이콘 | 오른쪽 위 Ask Gemini | Excel의 애드인 사이드 창 |
 | 대표 기능 | 시트 편집, 수식·차트·피벗 생성, 인사이트, 웹 검색 | 표·수식·분석·차트 요청, 피벗·서식 같은 작업 | 셀 근거가 있는 답변, 가정 변경, 오류 추적, 모델 생성 |
 | 셀 안 함수 | `=COPILOT()`는 2026-09-14부터 종료 | `=AI()` / `=Gemini()` (텍스트만 반환) | 없음 |
-| 필요 조건 | Copilot이 포함된 구독 또는 라이선스 | 자격 있는 Workspace 또는 Google AI 요금제 | Pro·Max·Team·Enterprise 요금제 |
+| 필요 조건 | Copilot이 포함된 구독 또는 라이선스 | 자격 있는 Workspace 또는 Google AI 요금제 | Pro·Max·Ultra·Team·Enterprise 요금제 |
 | 한국어 | 프롬프트 지원 언어 목록에 한국어 포함 | 사이드 패널과 AI 함수의 지원 언어에 한국어 포함 | 한국어 지원 여부를 이 문서에서 확인하지 못함 |
 | 주요 제한 | 영어 중심 학습, 자동 계산 모드에서만 편집 | `.xlsx`는 Sheets로 변환해야 가장 잘 동작 | 데이터 테이블, 매크로·VBA 미지원 |
 

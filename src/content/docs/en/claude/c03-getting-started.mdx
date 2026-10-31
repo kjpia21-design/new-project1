@@ -1,0 +1,195 @@
+---
+title: "Getting Started with the Claude App: Web, Desktop, and Mobile"
+description: "The differences between the web, desktop (Mac/Windows), and mobile (iOS/Android) apps, how to install and start each, and the news about Chat and Cowork merging"
+sidebar:
+  label: "C3. Getting started with the app"
+level: beginner
+category: claude
+tools: ["Claude"]
+duration: "15 min"
+prerequisites: ["Age 18 or older, living in a supported region", "An account you can sign up for with an email address or similar"]
+lastVerified: 2026-10-31
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "Get started with Claude"
+    url: "https://support.claude.com/en/articles/8114491-get-started-with-claude"
+  - title: "Install Claude Desktop"
+    url: "https://support.claude.com/en/articles/10065433-install-claude-desktop"
+  - title: "Install Claude for iOS"
+    url: "https://support.claude.com/en/articles/9266462-install-claude-for-ios"
+  - title: "Install Claude for Android"
+    url: "https://support.claude.com/en/articles/9612887-install-claude-for-android"
+  - title: "Claude Cowork and chat are one Claude"
+    url: "https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude"
+  - title: "Claude Code overview"
+    url: "https://code.claude.com/docs/en/overview"
+  - title: "Use Claude Code in the cloud"
+    url: "https://code.claude.com/docs/en/claude-code-on-the-web"
+  - title: "Claude release notes"
+    url: "https://support.claude.com/en/articles/12138966-release-notes"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- You can use Claude on **the web (claude.ai), the desktop app (Mac/Windows), and the mobile app (iOS/Android)**. It's available only to people 18 or older in supported regions.
+- The web works right away with no install; desktop is strong for local files, extensions, computer use, and Claude Code; mobile is strong for chatting on the go and checking on cloud tasks.
+- Log in with the same account and you can pick up where you left off on any device.
+- Since 2026-09-16, Cowork's capabilities are available **in any conversation**, and you can create designs, slides, and documents in any conversation too. It's rolling out in stages starting with Pro, Max, and Ultra, so timing varies by account. (As of 2026-10-11)
+</Summary>
+
+## What you'll be able to do
+
+- Choose the app (web, desktop, or mobile) that fits your situation.
+- Install each app and log in.
+- Find basic screen elements such as the "+" button and the model picker in the input box.
+- Understand what it means that Chat and Cowork are becoming one Claude.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Web (claude.ai)** | You open it in a browser. No install needed. |
+| **Desktop app** | An app you install on Mac or Windows. Linux is in beta. |
+| **Mobile app** | The iOS and Android app. The app is named "Claude by Anthropic." |
+| **Cowork** | A feature for handing off multi-step agent tasks. On desktop, it runs code in an isolated VM and reads and writes only the folders you connect. It needs a paid plan. |
+| **Code tab** | The place inside the desktop and mobile apps where you use Claude Code. It needs a paid subscription. |
+
+### Differences between the apps (as of 2026-10-19)
+
+| Category | Web | Desktop | Mobile |
+| --- | --- | --- | --- |
+| Install | Not needed (claude.ai) | claude.ai/download | App Store / Google Play |
+| Supported environments | Browser | macOS 13 (Ventura) or later, Windows 10 or later, Linux beta (Ubuntu 22.04+ / Debian 12+, x64 and arm64) | iOS and iPadOS 18.0 or later, Android 8.0 Oreo or later |
+| Chat | Yes | Yes (all plans) | Yes |
+| Strengths | Instant access anywhere | Local files, desktop extensions, Quick Entry shortcut, Cowork, computer use, Claude Code | Chatting on the go, starting and checking cloud tasks |
+| Claude Code and Cowork | Cloud sessions | Paid plan required | Start and check cloud sessions from the Code tab |
+
+- Desktop extensions connect things like local files, calendars, and email from the curated directory in Settings > Extensions.
+- On the Linux beta, you can't use computer use or dictation.
+- In the desktop Code tab, you can choose Local or Cloud, run several sessions in parallel, review visual diffs, and use scheduled tasks. For details, see [C12](/en/claude/c12-claude-code-overview/) and [C13](/en/claude/c13-cloud-sessions/).
+
+### Chat and Cowork merging (as of 2026-10-11)
+
+The official help says "Cowork and chat are one Claude." The main points:
+
+- Multi-step agent work (Cowork) and chat are **merged into one conversation**. The release notes (2026-09-16) say "Claude Cowork comes to every conversation," announcing a rollout of a new experience that lets you do what Cowork did in any conversation.
+- A same-day announcement says you can also **create designs, slides, and documents** in any conversation. This is a paid plan feature and is in beta. For Enterprise, it's off by default until an owner turns it on.
+- It's **rolling out in stages**, starting with Pro/Max/Ultra on web, desktop, and mobile, and Team/Enterprise after that. Enterprise gets at least 30 days' notice.
+- Once merged, **it can't be undone.**
+- Local file access, the built-in browser, and computer use work **only while Claude Desktop is open**.
+- Work you start in one place shows up in the others, and you can start cloud tasks from mobile.
+- In the merged experience, there's no web search toggle (it searches automatically when needed), and you start Research with `/deep-research` or the "+" button. Global instructions are in Settings > Your Claude under "Instructions for Claude" (in the older layout, Settings > Account; as of 2026-10-26).
+
+<Aside type="note" title="The rollout is gradual">
+The new experience is opening in stages starting with Pro, Max, and Ultra, so timing varies by account even on the same plan. Accounts that haven't received it yet still see Chat and Cowork separately in the input box. For other plans, the docs say only that it's "coming soon," and no date has been published officially. Enterprise admins are said to get at least 30 days' notice before changes (official help "Claude Cowork and chat are one Claude," confirmed 2026-10-13). If your screen differs from this description, check the official help for the latest. The official docs have no single table of which models appear in each app's model picker by plan, or of feature differences between mobile and web.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  'I signed up and logged in on the web',
+  'I installed the desktop app (optional)',
+  'I installed the mobile app and logged in with the same account (optional)',
+  'I found the "+" button and the model picker in the input box',
+  'I had my first conversation',
+]} />
+
+<Steps>
+
+1. **Sign up and log in on the web**
+
+   Go to claude.ai and sign up or log in. You must be 18 or older and in a supported region. The free plan also has usage limits, but the specific numbers and how they reset aren't in the official docs (the 5-hour session limit is described for paid plans).
+
+   <ScreenshotPlaceholder caption="The claude.ai login screen" />
+
+2. **Install the desktop app (optional)**
+
+   Download the version for your operating system from claude.ai/download, install it, and log in. Chat works on every plan, but Claude Code and Cowork need a paid plan.
+
+3. **Install the mobile app (optional)**
+
+   - iOS: Search for "Claude by Anthropic" in the App Store and get it (iOS and iPadOS 18.0 or later). If your organization uses Microsoft Intune with Enterprise, there's a separate "Claude for Intune" app, so check with your IT team first.
+   - Android: Search for "Claude by Anthropic" in Google Play and install it (Android 8.0 Oreo or later).
+   - If you can't find the app, you may be in an unsupported region, or on an unsupported device or OS version.
+   - Log in with the **same account** as on the web.
+
+4. **Get to know the screen**
+
+   Use the "+" button at the lower left of the input box, or `/`, to open extra features and commands. The current model is shown below the input box (web and desktop) or at the top of the screen (mobile), and you can tap it to change it. You adjust effort and extended thinking here too. For how to choose a model, see [C1](/en/claude/c01-overview/).
+
+   <ScreenshotPlaceholder caption="The + button and model picker in the input box" officialUrl="https://support.claude.com/en/articles/8114491-get-started-with-claude" />
+
+5. **Have your first conversation**
+
+   The official getting-started guide says to start with a simple question, be specific in your request, and refine with follow-up questions.
+
+   <PromptBox>
+   I work as [my job role]. This week I need to do [3 things to do]. Set priorities and make a table that spreads them out one per day.
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+| What you want to do | Recommended app |
+| --- | --- |
+| Ask a question right away with no install | Web |
+| Connect a folder on your PC and work on it | Desktop (Cowork; must be open) |
+| Connect local files, calendars, and email | Desktop extensions |
+| Computer use | Desktop (except Linux beta) |
+| Ask questions on the go, check on cloud tasks | Mobile |
+| Claude Code | Desktop Code tab, or the mobile Code tab (cloud) |
+
+| Item | Value |
+| --- | --- |
+| Requirements | Age 18 or older, supported region |
+| Desktop download | claude.ai/download |
+| Mobile app name | Claude by Anthropic |
+| Free plan limits | Numbers and reset method not published (paid plans have a 5-hour session limit; see [C2](/en/claude/c02-plans-limits/) for details) |
+
+## Common sticking points
+
+### I can't find the mobile app in the store
+
+- **Cause**: You may be in an unsupported region, or on an unsupported device or OS version.
+- **Fix**: Check that you have iOS and iPadOS 18.0 or later, or Android 8.0 or later.
+
+### I can't use the Code tab or Cowork on desktop
+
+- **Cause**: They need a paid plan.
+- **Fix**: Check your plan. You can compare plans in [C2](/en/claude/c02-plans-limits/).
+
+### I don't see the web search toggle
+
+- **Cause**: The merged experience has no web search toggle; it searches automatically when needed.
+- **Fix**: Just ask your question.
+
+### A task I started on my phone can't read local files
+
+- **Cause**: Local file access, the built-in browser, and computer use work only while Claude Desktop is open.
+- **Fix**: Keep the desktop app running, or run it as a cloud task.
+
+### Computer use doesn't work on Linux
+
+- **Cause**: The Linux desktop app is in beta and doesn't support computer use or dictation.
+- **Fix**: Use the Mac or Windows desktop app.
+
+## Practical tips
+
+- **Log in with the same account everywhere.** You can continue conversations when you switch devices.
+- **The web is enough at first.** Install desktop when you need to work with local files.
+- **Use mobile for checking in.** It's handy for starting cloud tasks and checking results.
+- **Set up your personal settings once.** Memory and instructions are covered in [C9](/en/claude/c09-memory-settings/).
+
+## Next tutorials
+
+- [C1. Claude at a glance](/en/claude/c01-overview/) — How to choose a model
+- [C4. How to write good prompts](/en/claude/c04-prompting/) — Starting your first conversation well
+- [C9. Memory and personal settings](/en/claude/c09-memory-settings/) — Setting Claude up for you

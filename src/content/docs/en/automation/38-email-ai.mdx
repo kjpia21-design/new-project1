@@ -1,0 +1,208 @@
+---
+title: "Organizing Your Inbox with AI: Gemini in Gmail, Copilot in Outlook, and Claude Connectors"
+description: "How to summarize long email threads, draft replies, and organize labels with Gemini in Gmail, Copilot in Outlook, and Claude's Gmail and Microsoft 365 connectors, including required plans and privacy cautions"
+sidebar:
+  label: "10. Inbox-organizing AI"
+level: practical
+category: automation
+tools: ["Gmail", "Gemini", "Outlook", "Microsoft 365 Copilot", "Claude"]
+duration: "30 min"
+prerequisites:
+  - "A Gmail or Outlook account (depending on the feature, a paid or work plan may be required)"
+  - "A made-up practice email thread (don't use emails with real customer information or confidential content)"
+lastVerified: 2026-10-26
+sources:
+  - title: "Catch up on email threads with AI Overview conversation summaries (Gmail Help)"
+    url: "https://support.google.com/mail/answer/16561387"
+  - title: "Collaborate with Gemini in Gmail (Gmail Help)"
+    url: "https://support.google.com/mail/answer/14199860"
+  - title: "Draft emails with Gemini in Gmail (Gmail Help)"
+    url: "https://support.google.com/mail/answer/13955415"
+  - title: "Supported languages for Google Workspace with Gemini (Gmail Help)"
+    url: "https://support.google.com/mail/answer/14925782"
+  - title: "Welcome to Copilot in Outlook (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/outlook/welcome-to-copilot-in-outlook"
+  - title: "Supported languages for Microsoft Copilot (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/microsoft-365-copilot/supported-languages-for-microsoft-365-copilot"
+  - title: "Use Google Workspace connectors (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/10166901-use-google-workspace-connectors"
+  - title: "Set up the Microsoft 365 connector (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12542951-set-up-the-microsoft-365-connector"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- Email AI falls into three broad jobs: **summaries** (shortening long threads), **reply drafts**, and **organizing** (search and labels). This tutorial compares two routes: AI inside the email service, and Claude connectors.
+- **Gmail**: **Summarize this email** (AI Overview) above a thread, **Help me write** in the compose window, and **Ask Gemini** at the top right. Summaries are described as available to all Gmail users, but drafting and Ask Gemini require an eligible Google Workspace or Google AI plan (as of 2026-10-15).
+- **Outlook**: **Draft** from the Copilot icon in a new email, and **Summary by Copilot** for thread summaries. What you see depends on your Copilot license or subscription.
+- **Claude connectors**: The Gmail connector searches, reads, drafts, and manages labels; the Microsoft 365 connector searches including Outlook. It asks for your approval before sending.
+- Email is full of personal information and confidential content. **Always read before sending**, and decide up front whether sensitive emails should be left to AI.
+</Summary>
+
+<Aside type="note" title="What we couldn't confirm (as of 2026-10-15)">
+We couldn't open the original sources for the specific plan names and prices that include Gemini features, Outlook Copilot's prices and auto-sorting features, or Gmail's AI Inbox (organizing to-dos in your inbox), so this article doesn't describe them. Korean support is based on the official supported-language lists; judge the actual quality of Korean by trying it yourself.
+</Aside>
+
+## What you'll be able to do
+
+- **Summarize a long email thread in a few lines**.
+- Write only your request to create a **reply draft**, then edit and send it.
+- Know **where the AI features are and what you need** in Gmail and Outlook.
+- Hand tasks like "find and summarize last week's emails from our partner" to a Claude connector, while building the safe habit of **approving before sending**.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Thread** | A group of emails connected under the same topic. |
+| **AI Overview** | The AI summary card Gmail shows above a thread. |
+| **Help me write** | A feature in Gmail's compose window that creates or polishes a draft from a prompt. |
+| **Copilot (Outlook)** | Microsoft's AI that helps with drafts and summaries inside Outlook. For details on accounts and licenses, see [24. M365 Copilot](/en/automation/24-m365-copilot/). |
+| **Connector** | A connection that lets Claude access services like your Gmail or Outlook to read or work in them. For details, see [C7. Connectors](/en/claude/c07-connectors/). |
+| **Smart features** | A setting you turn on in Gmail settings. It's described as turning off not just AI summaries but also AI writing and proofreading when it's off. |
+
+### Comparing the three routes
+
+| | Gemini in Gmail | Copilot in Outlook | Claude connectors |
+| --- | --- | --- | --- |
+| Summaries | AI Overview above the thread (Summarize this email), or ask Ask Gemini | Summary by Copilot above the thread (new Outlook) / Summarize (classic) | Ask in chat, "Summarize this thread" (searches and reads mail) |
+| Reply drafts | Help me write, Ask Gemini | Draft / Draft with Copilot, with length and tone controls | Writes email drafts, views the draft list |
+| Organizing | Ask Ask Gemini to delete multiple emails or add labels | (Not confirmed this time) | Manages labels and threads |
+| What you need | Summaries: a work, school, or personal Google account. Drafts and Ask Gemini: an eligible Workspace or Google AI plan | A subscription that includes Copilot, or a company license | Gmail: all users. Microsoft 365: all Claude plans, but requires a work Microsoft account and admin consent |
+| Korean | Korean is on the supported-language list (summaries, drafts, side panel) | Korean is on the Copilot supported-language list | Claude can converse in Korean |
+| Sending | You send it yourself | You send it yourself | Sending, replying, and forwarding ask for approval every time by default |
+
+<Aside type="caution" title="Some features on personal Google accounts are US-only">
+According to Gmail help, "Help me write" is available on personal Google accounts only in the US. Eligible Workspace and Google AI plans are described as available worldwide in multiple supported languages. Check for yourself whether it shows up in your account.
+</Aside>
+
+## Step-by-step
+
+The example is "a long email thread with a partner about coordinating schedules." Try it first with made-up practice emails.
+
+<Checklist items={[
+  'I started with practice emails and did not use real confidential emails',
+  'I tried an AI summary in the email service I use',
+  'I created a reply draft and edited the content myself',
+  '(Optional) I connected the Claude connector and started with read requests',
+  'I re-read the recipients and content before sending',
+]} />
+
+<Steps>
+
+1. **Gmail: summarize a thread**
+
+   Open Gmail on a computer and open a long thread. Click **Summarize this email** above the thread and an AI Overview appears. If there's a to-do with a deadline in the content, you can create an advance alert with **Remind me**, and the reminders you create can be seen in Google Tasks and Calendar. If you don't see the summary, check that **Smart features** is turned on in Gmail settings. If a summary is wrong, you can report it with Bad suggestion below the card.
+
+   <ScreenshotPlaceholder caption="Summarize this email and the AI Overview card above a Gmail thread" officialUrl="https://support.google.com/mail/answer/16561387" />
+
+2. **Gmail: create a reply draft**
+
+   Click **Compose** or reply to an email to open the compose window, type your request in the prompt box below (**Help me write**), and click **Create**. You can polish the draft with Formalize, Friendly, or Shorten, or give it new instructions like "mention the Friday deadline." The official documentation says the more specifically you state the recipient, purpose, and tone, the better.
+
+   <PromptBox>
+   Write a reply to Ms. Kim, our contact at the partner company. Agree to the meeting next Tuesday at 2 p.m., and say I'll send the pre-read materials by Monday. Polite and short, no more than 3 sentences.
+   </PromptBox>
+
+   Help me write can pull information from your other emails and Drive files (flight times, confirmation numbers, etc.) and work it into the draft. You can check which materials it used under **Sources**, so look to make sure no unintended information got in.
+
+3. **Gmail: hand organizing to Ask Gemini**
+
+   Click **Ask Gemini** at the top right to open the side panel, where you're told you can request summaries, drafts, search, schedule suggestions, and organizing such as deleting multiple emails or adding labels. This feature requires an eligible Workspace or Google AI plan. **For hard-to-undo requests like deleting, test on a small number of emails first.**
+
+4. **Outlook: thread summaries and reply drafts**
+
+   In new Outlook, click **Summary by Copilot** above the thread; in classic Outlook, click **Summarize**. For replies, go to Home > New Mail, pick the Copilot icon > **Draft** (**Draft with Copilot** in classic), type a prompt, and click **Generate**. Adjust the length and tone with **Make it shorter / Make it longer / Change Tone** (**Adjust** in classic), and **Retry** if you don't like it. The detailed process and account differences are in [24. Working with M365 Copilot](/en/automation/24-m365-copilot/).
+
+   <ScreenshotPlaceholder caption="Picking the Copilot icon > Draft in a new Outlook email" officialUrl="https://support.microsoft.com/en-us/outlook/welcome-to-copilot-in-outlook" />
+
+5. **Work with email through a Claude connector (optional)**
+
+   For Gmail, connect it from **+** > Connectors in the input box (on Team/Enterprise, an Owner has to turn it on first). The connection method and approval window are covered in detail in [C7. Connectors](/en/claude/c07-connectors/). For Outlook, the Microsoft 365 connector searches SharePoint, OneDrive, Outlook, and Teams. This connector is available on all Claude plans, but it requires an Entra tenant tied to a Microsoft Business plan, and personal Microsoft accounts like `@outlook.com` and `@hotmail.com` can't connect. Your company admin's consent is also needed, so for work email, talk to your admin first.
+
+   <FlowSteps title="Using the Gmail connector in Claude" officialUrl="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" steps={[
+     { where: 'Claude input box', action: 'Connect Gmail from + > Connectors', result: 'Sign in to Google and grant consent' },
+     { where: 'Claude chat', action: 'Start with read requests (search, summarize)', result: 'Source emails are cited' },
+     { where: 'Claude chat', action: 'Ask for a reply draft (leave it as a draft, don\'t send)', result: 'Check the draft' },
+     { where: 'Approval window', action: 'Read the recipients and content, then decide whether to approve', result: 'Sent only after you approve' },
+   ]} />
+
+   <PromptBox>
+   Find the emails I exchanged with Ms. Kim at our partner company over the past week and summarize the key points in 3 lines. Tell me separately if there are any questions I need to answer, and write a reply draft. Don't send it; just leave it as a draft.
+   </PromptBox>
+
+   According to the official documentation, Claude can see the metadata of attachments in Gmail but not their contents, and it can only see information you can already see. The data it pulls stays in that conversation, and is described as being deleted along with the conversation if you delete it.
+
+6. **Check before sending**
+
+   Check the recipients, CC, attachments, and any dates, amounts, and commitments with your own eyes. A draft made by AI may differ from the facts or have a different tone than you intended.
+
+</Steps>
+
+## Privacy and confidentiality cautions
+
+Email mixes in names, contact details, contract details, and customer information. Follow the points below. More detailed principles are in [Using AI while keeping personal and company information safe](/en/basics/05-privacy-safety/).
+
+- **For work email, company policy comes first.** First check whether there's an approved tool (Copilot on a company account, Gemini in Workspace, etc.).
+- Don't hand over emails containing national ID numbers (in Korea, resident registration numbers), bank or card numbers, or passwords to AI. If you really need help, mask them first and then ask.
+- With connectors, **start with read requests**, and allow sending, forwarding, and deleting only after reading the recipients and content in the approval window.
+- Gmail help tells you not to rely on Gemini output as professional advice on medical, legal, financial, and similar matters. For replies to emails about contracts or legal disputes, have a person make the final judgment.
+- When you pass a summary to someone else, check **that no information about people who weren't in the original got mixed in**.
+
+## Quick reference
+
+| What you want to do | Gmail | Outlook | Claude |
+| --- | --- | --- | --- |
+| Summarize a thread | Summarize this email above the thread | Summary by Copilot / Summarize | "Summarize this thread" |
+| Create a draft | Compose > Help me write > Create | New Mail > Copilot icon > Draft | "Leave it as a draft" |
+| Polish | Formalize, Friendly, Shorten | Make it shorter/longer, Change Tone, Retry | Ask for edits in chat |
+| Organize multiple emails | Ask Ask Gemini | (Not confirmed) | Ask for label and thread management |
+| If you don't see it | Check Smart features, plan, language | Check subscription, license, admin settings | Check connector connection and admin activation |
+
+## Common sticking points
+
+### I don't see Summarize this email
+
+- **Cause**: Smart features may be turned off in Gmail settings, the language may not be supported, or the thread may not be eligible for summarizing.
+- **Fix**: In settings, try turning on Smart features in Gmail, Chat, and Meet and Smart features in Google Workspace. It's described as turning off AI writing and proofreading too when they're off.
+
+### The Help me write button is missing
+
+- **Cause**: Personal Google accounts can use it only in the US, and otherwise an eligible Workspace or Google AI plan is required.
+- **Fix**: Check your account type and location, and if it's a work account, ask your admin.
+
+### There's no Copilot icon in Outlook
+
+- **Cause**: Your subscription or company license may not include Copilot, or it may be blocked by organization settings.
+- **Fix**: See the account and license tiers in [24. M365 Copilot](/en/automation/24-m365-copilot/), and ask your admin.
+
+### Claude won't connect to my Outlook email
+
+- **Cause**: The Microsoft 365 connector can't connect with a personal Microsoft account, and it needs Entra admin consent and (on Team/Enterprise) activation by a Claude Owner.
+- **Fix**: Pass the setup documentation to your company admin, and if it's a personal account, copy the email and paste it into the chat (masking sensitive information).
+
+### It can't read the contents of attachments
+
+- **Cause**: Claude's Gmail connector accesses only attachment metadata and can't read attachment contents.
+- **Fix**: Upload the attachments you need directly into the chat and make your request there.
+
+## Practical tips
+
+- **Specify a length for summaries.** Writing things like "in 3 lines" or "only the questions I need to answer" gets useful results.
+- **Put only facts in the draft, and handle the feelings yourself.** Write the dates, amounts, and commitments yourself, and leave only sentence polishing to the AI.
+- **Start small with organizing requests.** Test labeling or deleting on a small number of emails, then widen the scope.
+- **Save your prompts.** Saving requests you use often as [C8. Skills](/en/claude/c08-skills/) is convenient.
+
+## What to read next
+
+- [C7. Connecting Gmail, Calendar, Drive, and Notion with connectors](/en/claude/c07-connectors/) — Connecting and approving Claude connectors
+- [24. Working with Microsoft 365 Copilot](/en/automation/24-m365-copilot/) — Outlook, Word, PowerPoint
+- [37. Comparing online meeting AI](/en/automation/37-meeting-ai/) — Organizing after meetings
+- [An AI usage guide for office, planning, and admin roles](/en/roles/office/) — Recommended order by job role

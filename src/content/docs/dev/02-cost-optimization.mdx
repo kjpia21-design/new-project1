@@ -12,7 +12,7 @@ prerequisites:
   - "C15. 모델 분담 전략"
   - "1. 도구 사용으로 업무 봇 만들기 (도구가 있는 봇이면 도움이 돼요)"
   - "Python 3.10 이상, pip install anthropic"
-lastVerified: 2026-10-26
+lastVerified: 2026-10-31
 sources:
   - title: "Pricing"
     url: "https://platform.claude.com/docs/en/about-claude/pricing"
@@ -332,6 +332,10 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    사용하는 곳에서는 응답을 받은 직후에 `log_usage(response, model, task)`를 호출하면 돼요. 작업 이름(`task`)을 함께 남기면 "작업당 비용"으로 모아 볼 수 있어요.
 
    조직 전체의 사용량은 Console의 Usage와 Cost 화면이나 Usage and Cost Admin API에서 볼 수 있어요. 이 API는 `usage_report/messages`와 `cost_report` 엔드포인트가 있고 **Admin API 키**(`sk-ant-admin...`)가 필요해요. Admin API 키는 개인 계정으로는 만들 수 없는 조직용 키라서 조건을 공식 문서에서 확인하세요. Amazon Bedrock, Vertex AI, Foundry로 호출한 트래픽은 이 보고서에 나오지 않을 수 있어요.
+
+   <Aside type="tip" title="더 새로운 API가 있어요 (2026-10-31 기준)">
+   위 `usage_report`·`cost_report` 엔드포인트는 기존(레거시) Usage and Cost API예요. 모델·워크스페이스·API 키·사용자별로 쪼개 볼 수 있는 새 **Usage and Cost Analytics API(베타)**도 나와 있어요. 자세한 사용법은 [사용량·비용 분석 API로 팀 사용 현황 대시보드 만들기](/dev/11-usage-cost-api/)를 보세요.
+   </Aside>
 
    <ScreenshotPlaceholder caption="Console의 Usage와 Cost 화면" officialUrl="https://platform.claude.com/docs/en/manage-claude/usage-cost-api" officialLabel="Anthropic 문서에서 보기" />
 

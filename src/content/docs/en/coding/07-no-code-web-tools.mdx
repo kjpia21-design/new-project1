@@ -1,0 +1,219 @@
+---
+title: "Building Work Web Tools Without Coding: A Quote Calculator"
+description: "A hands-on exercise: build, verify, and share a work web tool like a quote calculator with Claude artifacts and Claude Code"
+sidebar:
+  label: "2. Building work web tools"
+level: practical
+category: coding
+tools: ["Claude", "Claude Code"]
+duration: "40 min"
+prerequisites:
+  - "A Claude account (with the artifacts feature available)"
+  - "(Optional) Claude Code installed — see Tutorial 6"
+  - "The calculation rules for one work tool you want to build (e.g., unit prices, discount rules)"
+lastVerified: 2026-10-31
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "What are artifacts and how do I use them? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them"
+  - title: "Publish and share artifacts (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/9547008-publish-and-share-artifacts"
+  - title: "Claude Code overview"
+    url: "https://code.claude.com/docs/en/overview"
+  - title: "Configuring a publishing source for your GitHub Pages site (GitHub official docs)"
+    url: "https://raw.githubusercontent.com/github/docs/main/content/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.md"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- **Small work tools** like quote calculators, schedule notices, and checklists can be built without coding, just by describing them in words.
+- The easiest route is a **Claude artifact** (a result that opens next to the chat). If you want it as a separate file or want to manage it in a folder, use **Claude Code** to make a file like `quote.html`.
+- Calculation tools **can be wrong even when they look convincing.** Always check them against 2 or 3 values you calculated by hand.
+- Before sharing, check who can view it and where the entered content is stored. Artifacts start out private.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Write your calculation rules in words and build a quote calculator artifact.
+- Verify the results with test values and have Claude fix anything that's wrong.
+- Build the same tool as a file with Claude Code and open it on your own computer.
+- Choose a sharing method (link, invitation, file transfer, web deployment) that fits your situation.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Artifact** | Something Claude made for you. It can be a document, slides, a dashboard, or a small interactive tool, and it opens beside the conversation. See [C6. Artifacts](/en/claude/c06-artifacts/) for details. |
+| **Static web page** | A web page that works from a single file with no server. That's plenty for a calculator or an info page. |
+| **Requirements** | A write-up of what the tool should do. Results get better when you write "the inputs are this, the calculation goes like this, the output looks like this". |
+| **Test values** | Inputs whose correct answers you already know. They're the standard for checking that the tool calculates correctly. |
+
+### Artifact or Claude Code: which should I choose?
+
+| | Artifact | Claude Code |
+| --- | --- | --- |
+| **Where** | Next to the Claude chat screen | A folder on your computer |
+| **Result** | Instant preview in chat; you edit by talking | A real file like `quote.html` |
+| **Sharing** | Sharing settings (link, invitation, etc.) | File transfer or web deployment ([Tutorial 8](/en/coding/08-cloud-github/)) |
+| **Best when** | You want to build quickly and show your team | You want to keep it as a file, track edit history, or publish at a web address |
+
+<Aside type="caution" title="This tool is for practice">
+If the quote amounts will be used in real contracts, have the responsible person review the calculation rules before use. Calculation logic made by AI can look fine but get rounding, VAT, or discount order wrong.
+</Aside>
+
+## Step-by-step guide
+
+The example task is a **"quote calculator that takes quantity and unit price and calculates the subtotal, discount, VAT, and total"**. Use the same order for other work tasks.
+
+<Checklist items={[
+  'I wrote out the calculation rules (unit price, discount conditions, VAT, rounding) as sentences',
+  'I built the calculator as an artifact',
+  'I compared the results against 2 or 3 test values I calculated by hand',
+  'I polished the screen and wording with follow-up requests',
+  '(Optional) I made a quote.html file with Claude Code',
+  'I checked who can see it and where it is stored, then shared it',
+]} />
+
+<Steps>
+
+1. **Write the calculation rules down first**
+
+   Before asking Claude, write the rules in a notepad. This step is half of the quality of the result.
+
+   - Inputs: item name, quantity, unit price
+   - Up to 5 items
+   - Discount: 5% off if the subtotal is 1,000,000 KRW or more (this is an example rule; replace it with your real rule)
+   - VAT: 10% of the amount after the discount
+   - Rounding: round down anything below 1 won
+
+   If you don't know a rule, write "I don't know" and let Claude ask you questions.
+
+2. **Build the calculator as an artifact**
+
+   Paste the requirements into a Claude chat. The artifacts feature requires "Cloud code execution and file creation" to be turned on under Settings > Capabilities (for Team and Enterprise, under Capabilities in the organization settings). If you don't see it, check there.
+
+   <PromptBox>
+   Build me a quote calculator. The inputs are item name, quantity, and unit price, with up to 5 rows. The calculation rules are as follows. (1) The subtotal is the sum of quantity x unit price. (2) If the subtotal is 1,000,000 KRW or more, apply a 5% discount. (3) VAT is 10% of the amount after the discount. (4) Round down anything below 1 won. On the screen, show the subtotal, discount amount, VAT, and total separately, and add thousands separators to the numbers. Make the screen in English. Before building, summarize the rules as you understand them.
+   </PromptBox>
+
+   The artifact opens on the right. It doesn't have to be perfect at first.
+
+   <ScreenshotPlaceholder caption="A quote calculator artifact opened next to the chat" officialUrl="https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them" />
+
+3. **Verify the calculation with test values**
+
+   Enter values whose correct answers you've worked out in advance, like the ones below.
+
+   | Input | Expected result |
+   | --- | --- |
+   | Quantity 10, unit price 50,000 | Subtotal 500,000 / Discount 0 / VAT 50,000 / Total 550,000 |
+   | Quantity 20, unit price 60,000 | Subtotal 1,200,000 / Discount 60,000 / VAT 114,000 / Total 1,254,000 |
+   | Quantity 3, unit price 33,333 | Subtotal 99,999 / Discount 0 / VAT 9,999 / Total 109,998 |
+
+   (VAT follows the round-down rule. The third row is 9,999.9, which is 10% of 99,999, with the 0.9 dropped.)
+
+   If a value differs, tell Claude exactly what input gave what result.
+
+   <PromptBox>
+   I entered quantity 20 and unit price 60,000 and the total came out as 1,260,000. My correct answer is subtotal 1,200,000, discount 60,000, VAT 114,000, total 1,254,000. Find which calculation is wrong and fix it, then tell me the results of re-checking with the three test values above.
+   </PromptBox>
+
+4. **Polish the screen and usability**
+
+   Once the calculation is right, make it look nice. Ask for just one or two things at a time.
+
+   <PromptBox>
+   Make the input fields look good on mobile screens too. If someone enters a non-numeric value, show a red notice. Add a "Reset" button at the very bottom. At the very top, add a small note saying "This calculator is for reference only."
+   </PromptBox>
+
+   If an error occurs, the artifact may show a hint like "Try fixing with Claude". Success isn't guaranteed, so if it doesn't get fixed, describe the situation in chat and ask again.
+
+5. **(Optional) Make a file with Claude Code**
+
+   If you want it as a file, open Claude Code in an empty folder as in Tutorial 6 and give it the same requirements.
+
+   <PromptBox>
+   Build the quote calculator as a single quote.html file. Don't connect to any outside services. The inputs are item name, quantity, and unit price (up to 5 rows), and the calculation rules are: (paste your rules here). After building it, check that the calculations are right with the test values below and tell me the results: (paste your test values here)
+   </PromptBox>
+
+   Double-click `quote.html` to open it in your browser. Leaving a CLAUDE.md in the folder that says "this folder is a quote calculator and these are the calculation rules" makes the next edit easier.
+
+6. **Check before sharing**
+
+   - **Artifact**: It starts out private. In the Share settings you can choose link sharing or email invitations, and the options vary by plan (email invitations are Pro or higher, in beta). On Team and Enterprise, sharing is by default limited to inside your organization. Permissions are split into Can view / Commenter / Can edit.
+   - **File**: If you send `quote.html` as is, the recipient opens it in a browser.
+   - **Publish at a web address**: You can use GitHub Pages. See [Tutorial 8](/en/coding/08-cloud-github/) for the steps. Before publishing, check that it doesn't include internal information like a price list.
+
+   <ScreenshotPlaceholder caption="The artifact sharing settings screen" officialUrl="https://support.claude.com/en/articles/9547008-publish-and-share-artifacts" />
+
+</Steps>
+
+## Quick reference
+
+### Work tool ideas and how to write requirements
+
+| Tool | Input | Output | Test value example |
+| --- | --- | --- | --- |
+| Quote calculator | Quantity, unit price | Subtotal, VAT, total | 10 x 50,000 = 500,000 |
+| Annual leave calculator | Hire date, reference date | Days earned | Compare with your company policy table |
+| Meeting time converter | Time, region | Local time in each region | 9 AM in Seoul = 9 AM in Tokyo |
+| Checklist | List of items | Completion rate | 2 of 5 = 40% |
+| Text character counter | Text | Character and byte counts | Check with a sentence of known length |
+
+### Artifact sharing and storage (as of 2026-10-26; may vary by plan)
+
+| Item | Details |
+| --- | --- |
+| Default state | Private |
+| Sharing | Link sharing on all plans; email invitations (beta) on Pro, Max, Ultra, Team, and Enterprise; on Team and Enterprise, by default only inside the organization (organization and group sharing on Team and Enterprise, groups on Enterprise) |
+| Permissions | Can view / Commenter (comment, and download files the artifact provides) / Can edit |
+| Artifacts that use Claude or connectors | Link sharing isn't available |
+| Storage | Personal and shared storage, 20 MB per artifact, text only. Check which storage it is before entering sensitive information |
+| Legacy publishing (Publish) | Applies only to artifacts from before 2026-09-16 (publishing on Free, Pro, and Max; Share & copy link on Team and Enterprise). Unpublishing is permanent: you can't publish again and the stored data is deleted |
+
+<Aside type="note" title="Good to know (as of 2026-10-26)">
+Artifacts made from the Docs, Slides, and Design templates have Export (Design exports as .zip, PDF, PowerPoint, and HTML), and legacy artifacts reportedly let you view, copy, and download the code from the top of the panel. However, the exact menu name for downloading a calculator you built as a single HTML file isn't written in the official help (support.claude.com, as of 2026-10-26). If you want it as a file, build it with Claude Code as in step 5, or follow the on-screen instructions. The wording on the sharing screen may differ by account.
+</Aside>
+
+## Common sticking points
+
+### The calculation results are slightly off
+
+- **Cause**: Most often, the rounding method (round down vs. round), the order of discount and VAT, or decimal handling is missing from the requirements.
+- **Fix**: Tell Claude the wrong input, the result, and the expected result as numbers. State the rules more clearly in sentences and have it re-check with the test values.
+
+### Something that worked broke while I was editing
+
+- **Cause**: You may have asked for too many changes at once.
+- **Fix**: Ask for one or two changes at a time. For artifacts, check on screen whether you can view earlier versions; in Claude Code, undo with `/rewind`.
+
+### I sent the link but the other person can't open it
+
+- **Cause**: Usually the recipient has to be logged in to Claude, and on Team and Enterprise, sharing is by default limited to inside the organization. Artifacts that use Claude or connectors can't be shared by link.
+- **Fix**: Check the sharing settings and the recipient's account. If you need to show it without a login, send the `quote.html` file or use web deployment.
+
+### Internal information ended up on a public page
+
+- **Cause**: You may have put a price list or customer names in as examples and shared it as is.
+- **Fix**: Stop sharing, change the content, and share again. Unpublishing a legacy-published artifact is permanent, so copy anything you need before you unpublish.
+
+## Practical tips
+
+- **Rules → test values → request, in that order.** You need values with known answers to notice what's wrong.
+- **Ask, "Before building, summarize the rules as you understand them."** That catches misunderstandings early.
+- **Don't enter real customer information or prices during practice.** Build with fake values, then swap in the real ones.
+- **Have a responsible person review any tool where the calculation carries responsibility.** That's especially true for quotes, payroll, and taxes.
+- **Don't make it bigger than it needs to be.** A tool that does one thing, like one calculator or one checklist, lasts longer.
+
+## Next tutorials
+
+- [8. Handing off GitHub repository work to a cloud session](/en/coding/08-cloud-github/) — publishing your page on the web
+- [C6. Artifacts](/en/claude/c06-artifacts/) — sharing artifacts and AI-powered apps
+- [6. Getting started with Claude Code](/en/coding/06-claude-code-start/) — the basics of building with files

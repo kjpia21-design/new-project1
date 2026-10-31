@@ -1,0 +1,545 @@
+---
+title: "Package Skills and Plugins and Roll Them Out to Your Team"
+description: "A reference covering SKILL.md design principles, plugin structure, marketplaces, quality checks with claude plugin eval, team rollout through repo and org settings, and the Anthropic directory submission portal"
+sidebar:
+  label: "6. Skills and plugins for teams"
+level: advanced
+category: dev
+tools: ["Claude Code", "Claude", "Git"]
+duration: "75 min"
+prerequisites:
+  - "C8. Skills (what a skill is, how to upload one to claude.ai)"
+  - "C14. Core Claude Code features (slash commands, hooks, MCP, plugin install commands)"
+  - "Claude Code 2.1.269 or later (to use claude plugin eval), git, and one GitHub repository"
+  - "(If you configure org settings) organization admin permissions"
+lastVerified: 2026-10-26
+sources:
+  - title: "Extend Claude with skills (Claude Code)"
+    url: "https://code.claude.com/docs/en/skills"
+  - title: "Plugins overview (Claude Code)"
+    url: "https://code.claude.com/docs/en/plugins"
+  - title: "Create a Claude Code plugin"
+    url: "https://code.claude.com/docs/en/plugins/create"
+  - title: "Create a marketplace"
+    url: "https://code.claude.com/docs/en/plugin-marketplaces"
+  - title: "Publish and distribute a plugin"
+    url: "https://code.claude.com/docs/en/plugins/publish"
+  - title: "Manage Claude Code plugins for your organization"
+    url: "https://code.claude.com/docs/en/plugins/org"
+  - title: "Test plugins with evals"
+    url: "https://code.claude.com/docs/en/plugin-evals"
+  - title: "Submit your plugin (Anthropic directory)"
+    url: "https://claude.com/docs/plugins/submit"
+  - title: "Connect Claude Code to tools via MCP"
+    url: "https://code.claude.com/docs/en/mcp"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- A skill you use alone can live in `~/.claude/skills/` or `.claude/skills/`. When you want to **hand out a versioned skill to multiple projects and people**, bundle it as a plugin.
+- A plugin puts skills, agents, hooks, and MCP servers in one folder and gives it a name through `.claude-plugin/plugin.json`. A marketplace (`marketplace.json`) is a catalog listing plugins, and a single git repository is all you need.
+- Before you distribute, run `claude plugin validate --strict` to check the format and `claude plugin eval` to check that **Claude actually uses the skill**. Evals call a model, so they cost money.
+- Team rollout works through the repository's `.claude/settings.json` (per project) or managed settings (per organization). To make a plugin public, use the submission portal at claude.ai/directory/manage.
+- Installed plugins **run code with your permissions**. Review them with that in mind, both when you build them and when you install them.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Design a `SKILL.md` that gets picked up reliably, and bundle it into a shared team plugin folder.
+- Check quality before release with `claude plugin validate` and `claude plugin eval`.
+- Build a team marketplace and have it install automatically for teammates through repo settings or managed settings.
+- Know the path and the prerequisites for submitting to the Anthropic directory.
+
+<Aside type="note" title="What this tutorial covers">
+This is for Claude Code (the terminal). The same plugin folder can also be installed in claude.ai and Cowork, but only some components load there (see the official "component support table" for which ones). To upload a single skill to claude.ai as a ZIP, see [C8. Skills](/en/claude/c08-skills/).
+</Aside>
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Skill** | A folder containing a `SKILL.md`. Claude loads it when needed based on its description, or you run it directly with `/name`. |
+| **Plugin** | A folder that bundles skills, agents, hooks, and MCP servers into one unit. It gets a name prefix, so you run it as `/plugin:skill`. |
+| **Marketplace** | A catalog listing plugins and where to fetch them. All it takes is a `.claude-plugin/marketplace.json` in a repository. It is not a hosted service like an app store. |
+| **Install scope** | user (you, all projects), project (everyone on the repository), local (you, this repository only). |
+| **Managed settings** | Settings an organization pushes to every device. Users can't change them. |
+
+### Which distribution method should you pick?
+
+| Method | Audience | What you need | Updates |
+| --- | --- | --- | --- |
+| Send a folder or ZIP | A few people | The plugin folder | No automatic updates (they use the copy they received) |
+| Team marketplace | Anyone with access to the repository | A git repository + `marketplace.json` | Users run `claude plugin update`, or turn on auto-update |
+| Org managed settings | The whole organization | Admin permissions | Controlled by policy |
+| Anthropic directory | Any claude.ai, Cowork, or Claude Code user | GitHub repository + paid claude.ai plan, plus review | New versions go live after review |
+
+<Aside type="caution" title="Plugins run code">
+For every enabled plugin, the skill names and descriptions are loaded into context each session, and any bundled MCP servers and hooks run too. Whatever a plugin does runs **with your permissions**. Before installing a third-party plugin, read its skill bodies, hook commands, and MCP server settings. The official docs say you can see the components and token cost in the `/plugin` detail view before installing (the official Anthropic marketplace shows an estimated context cost) and with `claude plugin details` after installing.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I wrote SKILL.md following the design principles',
+  'I created a plugin folder and plugin.json and loaded it with --plugin-dir',
+  'I passed claude plugin validate --strict',
+  'I created eval cases and ran them with a cost cap',
+  'I built a marketplace and installed from it locally',
+  'I pushed to GitHub and shared instructions with teammates through repo settings',
+  '(Optional) I looked into org managed settings or directory submission',
+]} />
+
+<Steps>
+
+1. **Design your SKILL.md**
+
+   Here is a summary of the principles from the Claude Code docs.
+
+   | Principle | Why |
+   | --- | --- |
+   | Put the key purpose at the very start of `description`, and include the words users actually say (trigger phrases) | The combined text of `description` and `when_to_use` is **cut off at 1,536 characters** in the skill list. Claude picks skills from that list, so a vague description won't get loaded. |
+   | The first line of the file must be `---` | Otherwise the frontmatter is treated as body text. Even if the YAML is invalid, the skill loads with empty fields and no error (a silent failure). |
+   | Keep `SKILL.md` under 500 lines and split long reference material into other files in the same folder | Once a skill loads, its body stays in context for the whole conversation, so every line is a recurring cost. Reference files are read only when needed. |
+   | Write "always do it this way," not "do this once" | Claude doesn't re-read the file in later turns. Rules that must keep applying belong in the style of standing instructions. |
+   | For skills with side effects (deploy, commit), set `disable-model-invocation: true` | They run only when the user calls them with `/name`. The description of such a skill isn't loaded into context either. |
+   | Limit `allowed-tools` to the commands you need, and where possible point to bundled scripts with `${CLAUDE_SKILL_DIR}` | Pre-approval lasts only for the turn in which the skill is invoked (it ends at the next user message). It does not block other tools. |
+   | Inject fresh info with `` !`command` ``, and add `\|\| true` at the end of commands that can fail | If a command fails, the whole skill invocation is aborted. Each command has a default 2-minute limit. |
+   | Include input and output examples, and add a rule against making things up | The format stays stable and hallucinations drop. |
+
+   Here is an example team PR description skill. Save it as `plugins/team-kit/skills/pr-description/SKILL.md`.
+
+   ```markdown
+   ---
+   name: pr-description
+   description: Summarizes changes as a PR description in the team format (summary, changes, how to test, risks). Use when asked to write a PR description, pull request body, or change summary.
+   ---
+
+   # Writing a PR description
+
+   When you receive a set of changes, write Markdown in the following order.
+
+   1. `## Summary` — one or two sentences
+   2. `## Changes` — a list by file or module
+   3. `## How to test` — reproducible commands
+   4. `## Risks` — write "None" if there are none
+
+   Do not invent facts that are not in the input (test results, issue numbers). Write "Needs confirmation" instead.
+   ```
+
+   Here is how to write a skill with side effects. It allows direct invocation only and pre-approves only the git commands it needs.
+
+   ```markdown
+   ---
+   name: release-notes
+   description: Drafts release notes from commits since the last tag. Use when asked for release notes or a changelog cleanup.
+   disable-model-invocation: true
+   allowed-tools: Bash(git log *)
+   ---
+
+   ## Commits since the last tag
+
+   !`git log --oneline "$(git describe --tags --abbrev=0)"..HEAD || true`
+
+   ## Instructions
+
+   Group the commits above into features, fixes, and other, and write a draft of the release notes. If there are no commits, answer "No changes".
+   ```
+
+   <Aside type="note">
+   The way the skill file name is written differs from document to document. For claude.ai uploads, the Help Center docs say `skill.md`; for Claude Code plugins, it is `SKILL.md`. In a plugin, use `SKILL.md`. For the details of the difference, see [C8](/en/claude/c08-skills/). Also, claude.ai frontmatter has limits of 64 characters for name and 200 for description, while the Claude Code list limit is the 1,536 characters mentioned above. If a skill will go to both, keep the description short.
+   </Aside>
+
+2. **Create the plugin folder**
+
+   Set it up as a single marketplace repository with several plugins under `plugins/`.
+
+   ```text
+   team-marketplace/
+   ├── .claude-plugin/
+   │   └── marketplace.json
+   └── plugins/
+       └── team-kit/
+           ├── .claude-plugin/
+           │   └── plugin.json
+           ├── skills/
+           │   ├── pr-description/SKILL.md
+           │   └── release-notes/SKILL.md
+           ├── .mcp.json            (optional: bundled MCP server)
+           └── evals/               (optional: claude plugin eval cases)
+   ```
+
+   <Aside type="caution" title="Only plugin.json goes inside `.claude-plugin/`">
+   Put `skills/`, `agents/`, `hooks/`, and `.mcp.json` at the plugin root. If you put them inside `.claude-plugin/`, they won't load.
+   </Aside>
+
+   This is `plugins/team-kit/.claude-plugin/plugin.json`.
+
+   ```json
+   {
+     "name": "team-kit",
+     "displayName": "Team Toolkit",
+     "description": "A set of skills for writing PR descriptions on our team",
+     "version": "1.0.0",
+     "author": { "name": "Platform Team" },
+     "repository": "https://github.com/your-org/team-marketplace",
+     "license": "MIT"
+   }
+   ```
+
+   - `name` is required. Use kebab-case with no spaces and **don't change it once you've picked it.** If the name changes, installs that people already have break. Change the display name through `displayName`.
+   - If you set `version`, **users don't get updates until you bump it.** Even if you push, `claude plugin update` answers "already at the latest version." Either bump it on every release, or in a git marketplace leave `version` out so the commit SHA is used as the version.
+   - Skills get the plugin name as a prefix, like `/team-kit:pr-description`.
+
+   **Bundling an MCP server (optional).** To ship the server you built in [5. Build your own MCP server](/en/dev/05-mcp-server/) along with the plugin, put it in `.mcp.json` at the plugin root. The official docs say to write file paths with `${CLAUDE_PLUGIN_ROOT}`. The `mcp` package the server needs must already be on the user's computer, so note that in your README.
+
+   ```json
+   {
+     "mcpServers": {
+       "inventory": {
+         "command": "python3",
+         "args": ["${CLAUDE_PLUGIN_ROOT}/server/server.py"]
+       }
+     }
+   }
+   ```
+
+   A bundled server runs in every session where the plugin is on, and its tool names take the form `mcp__plugin_<plugin>_<server>__<tool>`.
+
+3. **Validate it and try it locally**
+
+   Check the format first. `--strict` also treats warnings (unknown fields, missing metadata) as failures, which suits CI.
+
+   ```bash
+   claude plugin validate --strict ./team-marketplace/plugins/team-kit
+   claude plugin validate --strict ./team-marketplace
+   ```
+
+   Each should print `Validation passed`. Next, load it for a single session without installing.
+
+   ```bash
+   claude --plugin-dir ./team-marketplace/plugins/team-kit
+   ```
+
+   In the session, run `/team-kit:pr-description`, or ask in everyday language, like "Write a PR description for the change that renamed getUser to fetchUser." After you edit files, apply the changes with `/reload-plugins`. If it doesn't show up, check the **Errors** tab in `/plugin` and `claude plugin list`.
+
+   <PromptBox>
+   I renamed the getUser function to fetchUser and updated 3 call sites. Write a PR description for this change.
+   </PromptBox>
+
+   If it doesn't get picked up, call it directly with `/team-kit:pr-description` to tell apart "it doesn't load" from "it loads but the output is off." You can also check whether it's loaded with `/skills`.
+
+4. **Check quality with `claude plugin eval`**
+
+   Even with a valid format, Claude may not choose the skill, or the output may be off. `claude plugin eval` actually runs the plugin's test cases, scores them, and **compares against a baseline without the plugin**. It needs Claude Code 2.1.269 or later, and if git is installed it must be version 2.31 or later (as of 2026-10-19). With an older git, it stops before running any cases.
+
+   <Aside type="caution" title="Evals call a model, so they cost money">
+   Every run counts agent calls and grading calls against your account usage (or API charges). The default is 3 runs per case, plus the same number of baseline runs without the plugin, so one case is 6 runs. Start with `--ablation none` (skip the baseline, half the cost) and `--runs 1`, and always set a ceiling with `--max-cost-usd`. Only run it on plugins you trust. Evals load and run the plugin with your permissions.
+   </Aside>
+
+   Cases go in `evals/<case name>/` folders. `claude plugin eval init` can create them by asking you questions (in an interactive session), or you can write them by hand (`claude plugin eval init --bare name` gives you an empty template).
+
+   `evals/pr-from-diff/prompt.md`: put the run limits in the frontmatter and the sentence the user would type in the body. Write it **in everyday language without naming the skill**, so you can see "whether it gets picked up from a natural request."
+
+   ```markdown
+   ---
+   max_turns: 5
+   allowed_tools: [Skill]
+   ---
+
+   I renamed getUser to fetchUser and updated 3 call sites. Write a PR description for this change.
+   ```
+
+   `evals/pr-from-diff/graders/skill-fired.md`: checks whether the skill was actually invoked (`tool_used`).
+
+   ```markdown
+   ---
+   type: tool_used
+   tool: Skill
+   input_match: '"skill"\s*:\s*"(?:[\w-]+:)?pr-description"'
+   ---
+   ```
+
+   `evals/pr-from-diff/graders/format.md`: uses a regular expression (`regex`) to check that the response has the four headings in order. Regex grading gives the same result without any model call, so it's stable and free.
+
+   ```markdown
+   ---
+   type: regex
+   pattern: '## Summary[\s\S]*## Changes[\s\S]*## How to test[\s\S]*## Risks'
+   ---
+   ```
+
+   Run it from the plugin folder.
+
+   ```bash
+   cd team-marketplace/plugins/team-kit
+   claude plugin eval . --runs 1 --ablation none --max-cost-usd 2
+   ```
+
+   In the results table, look at `WITH` (score with the plugin), `W/OUT` (score without it), and `Δ` (the difference). The most common first finding the docs describe is "Δ near 0 and the `tool_used: Skill` grader fails." That means Claude doesn't pick the skill from natural phrasing, so fix the `description` and run again. A single run varies a lot, so confirm the effect of a change with the default count (3 runs).
+
+   In CI, skip the first-time trust prompt (`--trust-plugin`), save the results as JSON, and fail the job when the score is below a threshold. Pin the model so scores stay comparable.
+
+   ```bash
+   claude plugin eval . \
+     --trust-plugin \
+     --json results.json \
+     --threshold 0.8 \
+     --model claude-sonnet-5-5 \
+     --judge-model claude-haiku-5-5 \
+     --no-publish \
+     --max-cost-usd 20
+   ```
+
+   Exit code 0 means pass, 1 means a score below threshold or a load failure, and 2 means a partial run caused by hitting the cost ceiling or a rejected authentication. For lightweight checks that run on every change, keep only the `regex` and `tool_used` graders, which run without a judge, so costs don't grow. For general evaluation methods, see [8. Manage LLM output quality with evals](/en/dev/08-evals/).
+
+   <Aside type="note">
+   The file structure and grader options for the eval cases above follow the official docs (plugin-evals). While writing this tutorial we actually ran `claude plugin validate` and confirmed it passes, but we did not run `claude plugin eval` because of the cost. We have not included example scores.
+   </Aside>
+
+5. **Build a marketplace**
+
+   This is `.claude-plugin/marketplace.json` at the root of the marketplace repository. `name`, `owner`, and `plugins` are required.
+
+   ```json
+   {
+     "name": "team-marketplace",
+     "description": "Our team's plugins",
+     "owner": { "name": "Platform Team" },
+     "plugins": [
+       {
+         "name": "team-kit",
+         "source": "./plugins/team-kit",
+         "description": "A set of skills for writing PR descriptions"
+       }
+     ]
+   }
+   ```
+
+   - A relative `source` path is **relative to the marketplace root (the folder that contains `.claude-plugin/`)** and can't use `..`.
+   - Make the entry's `name` match the `name` in `plugin.json`. If they differ, you get a not-found error at install time.
+   - If the plugin lives in a different repository, use an object like `{ "source": "github", "repo": "your-org/team-kit" }` for `source`. There are also `git-subdir` (a subfolder in a monorepo), `url`, `archive` (zip), and `npm` sources.
+   - You can't use official marketplace names (for example, `claude-plugins-official`).
+
+   Install it locally to check.
+
+   ```bash
+   claude plugin marketplace add ./team-marketplace
+   claude plugin install team-kit@team-marketplace
+   claude plugin list
+   claude plugin details team-kit
+   ```
+
+   `details` shows the component list and an **estimate of the token cost added to every session**. In this example the standing cost was about 114 tokens (for one skill, run directly). The more skills you add, the bigger this number gets, so find unused skills with `/skill-doctor` and clean them up.
+
+   For a marketplace added by local path, edits take effect at the next session start or with `/reload-plugins`. With a hosted marketplace, users download a copy, so the `version` rule above applies.
+
+6. **Roll out to your team: per repository**
+
+   Push `team-marketplace` to GitHub. If the repository is private, the marketplace is private too, so only people who can clone the repository can install from it.
+
+   The instructions for teammates are two lines.
+
+   ```bash
+   claude plugin marketplace add your-org/team-marketplace
+   claude plugin install team-kit@team-marketplace
+   ```
+
+   On Claude Code 2.1.292 or later, one line works too: `claude plugin install team-kit --marketplace your-org/team-marketplace`. Inside a session, `/plugin install team-kit --marketplace your-org/team-marketplace` registers the marketplace and installs in one go (2.1.275 or later). To update, run `claude plugin update team-kit@team-marketplace`.
+
+   **Recommend it automatically from your team's code repository.** If you commit the following to `.claude/settings.json` in the code repository your team uses, you can declare marketplace registration and plugin activation inside the repository.
+
+   ```json
+   {
+     "extraKnownMarketplaces": {
+       "team-marketplace": {
+         "source": { "source": "github", "repo": "your-org/team-marketplace" }
+       }
+     },
+     "enabledPlugins": {
+       "team-kit@team-marketplace": true
+     }
+   }
+   ```
+
+   There are conditions and limits (from the official docs).
+
+   - `extraKnownMarketplaces` applies only **in folders where the teammate has accepted the workspace trust dialog**. In untrusted folders it is ignored silently.
+   - A plugin that is listed in the marketplace by a relative path loads as-is. If a plugin points to an external repository, each teammate has to run `claude plugin install team-kit@team-marketplace --scope project` once. Until then it shows as "enabled in project settings but isn't installed."
+   - With `claude -p` or in CI, installation happens in the background, so the plugin may be missing on the first turn. In that case set the environment variable `CLAUDE_CODE_SYNC_PLUGIN_INSTALL=1` to make it wait for installation.
+   - To install a private marketplace in CI, export a token with read access as `GH_TOKEN` and run `gh auth setup-git`. The default GitHub Actions token can only access the repository of that workflow. Keep the token in repository secrets.
+   - Cloud sessions (claude.ai/code) don't load plugins from the settings on your own computer.
+
+   Auto-update is a per-marketplace, user-side setting. Third-party marketplaces (including your team's) default to off, so teammates turn it on in `/plugin`, or you set it with `autoUpdate` in managed settings.
+
+   **Marking releases.** If other plugins depend on yours with a version range, you need git tags. Running `claude plugin tag --push` in the plugin folder creates and pushes a `{name}--v{version}` tag (check first with `--dry-run`).
+
+7. **Roll out to your team: org managed settings**
+
+   To enforce it across the whole organization, use managed settings. There are three delivery methods.
+
+   | Method | Description |
+   | --- | --- |
+   | Server-managed settings | Paste the JSON in the claude.ai admin console under Organization settings > Claude Code > Managed settings. You need Owner permissions. |
+   | MDM | Deploy through a macOS plist or the Windows registry. |
+   | Managed settings file | A `managed-settings.json` at a system path. |
+
+   This example registers a marketplace and force-installs a plugin (the official docs example, with our names swapped in).
+
+   ```json
+   {
+     "extraKnownMarketplaces": {
+       "team-marketplace": {
+         "source": { "source": "github", "repo": "your-org/team-marketplace" },
+         "autoUpdate": true
+       }
+     },
+     "enabledPlugins": {
+       "team-kit@team-marketplace": true
+     }
+   }
+   ```
+
+   Even if a user turns it off in their personal settings, managed settings take priority and it keeps loading. Conversely, setting `false` in `enabledPlugins` blocks it in every scope and hides it from the list. There are also keys for restrictions.
+
+   | Key | Role |
+   | --- | --- |
+   | `strictKnownMarketplaces` | The list of allowed marketplace sources. `[]` blocks everything, including the official marketplace. |
+   | `blockedMarketplaces` | A block list. It's checked before the allow list. |
+   | `disableSideloadFlags` | Blocks arbitrary loading such as `--plugin-dir` and `--plugin-url`. |
+   | `strictPluginOnlyCustomization` | Blocks skills, agents, hooks, and MCP servers that come from anywhere other than plugins or managed settings. |
+   | `syncClaudeAiPlugins` | If `false`, plugins synced from a claude.ai account are not downloaded. |
+
+   Things to watch out for when using several keys.
+
+   - If server-managed settings send even one policy key, then by default the plugin keys from MDM and files are ignored. To use both together, set `managedSourcesBehavior` to `"merge"`.
+   - If you use an allow list (`strictKnownMarketplaces`), plugins in `~/.claude/skills/` may not load. To keep them, add `{ "source": "skills-dir" }` to the list.
+   - An allow list doesn't register marketplaces for you. `extraKnownMarketplaces` does the registering, and the source being registered has to pass the allow list.
+   - Per-department policies aren't possible with server-managed settings (there is one per organization). Use per-department MDM files or gateway policies.
+   - You can see install and load activity through OpenTelemetry events (`claude_code.plugin_installed`, `claude_code.plugin_loaded`) and the Enterprise Analytics API.
+
+   When you turn on a plugin for member accounts under **Plugins & skills** in the claude.ai organization settings, that plugin is delivered to Claude Code as `<name>@synced`. This is a separate path from the managed-settings keys above. For sharing at the skill level, also see the sharing methods in [C8](/en/claude/c08-skills/).
+
+8. **(Optional) Submit to the Anthropic directory**
+
+   To let anyone install your plugin beyond your team, submit it through the developer portal. It goes through review, and once approved it reaches claude.ai and Cowork, and Claude Code users through account sync.
+
+   | Requirement | Details |
+   | --- | --- |
+   | GitHub repository | The repository that contains the plugin. You need to connect a GitHub account to claude.ai, and that account must be able to push to the repository. |
+   | Paid claude.ai plan | Pro/Max submit from their own account; on Team/Enterprise, the Owner submits. On Enterprise, you can grant Directory permission by role. |
+   | Policy compliance | You must follow the Anthropic Software Directory Terms and Policy. |
+   | Pre-check | Pass `claude plugin validate ./your-plugin --strict` and review the official pre-submission checklist. The portal's Validate step runs more checks than the CLI. |
+
+   Here is the submission flow (per the official docs as of 2026-10-11).
+
+   1. At [claude.ai/directory/manage](https://claude.ai/directory/manage), choose **Submit new** > **Plugin bundle**
+   2. In the Source step, enter the repository, the plugin folder (if it isn't the repository root), and the branch or tag to track, then click **Validate**
+   3. Fill in the Listing details (read from `plugin.json` and the README), Data handling (whether you collect, store, or transmit personal information), and Compliance steps
+   4. Click **Submit for review**
+
+   Also know what happens after review.
+
+   - Each version gets validation and a security scan, and once it passes it can be published. Versions that need a reviewer's check are put on hold. By default, publishing is done by Anthropic reviewers.
+   - After that, merging into the tracked branch scans and publishes the new commits. If you set `version` in `plugin.json`, bump it with each release.
+   - You can submit with a private repository. In that case the source is uploaded to Anthropic, scanned, and shown to reviewers. You must make it public before it is published.
+   - There is a limit of 10 submissions per 24 hours per organization.
+   - If the remote MCP server your plugin references is one you built yourself, you must also submit the server separately as an **MCP connector**.
+   - The official Anthropic marketplace (`claude-plugins-official`) does not accept submissions through this portal.
+
+   <Aside type="note">
+   The official docs don't say how long review takes. The reasons for a "hold," where a person has to review after the scan before the plugin goes public, are listed in the official pre-submission checklist (confirmed 2026-10-13). To see the status after submitting, check **Submissions** in the portal.
+   </Aside>
+
+</Steps>
+
+## Quick reference
+
+### Common `claude plugin` commands
+
+| Command | Purpose |
+| --- | --- |
+| `claude plugin init <name> [--with skills ...]` | Creates a plugin in `~/.claude/skills/<name>/` that loads automatically every session |
+| `claude --plugin-dir <path>` | Loads a plugin for one session only, without installing (apply edits with `/reload-plugins`) |
+| `claude plugin validate [--strict] <path>` | Checks the format of a plugin or marketplace |
+| `claude plugin eval [target]` | Runs the cases and gives you scores and the difference versus the baseline (Δ). It costs money |
+| `claude plugin marketplace add <source>` | Registers a marketplace (`owner/repo`, URL, path) |
+| `claude plugin install <name>@<marketplace>` | Installs (share with the repository using `--scope project`) |
+| `claude plugin update <name>@<marketplace>` | Updates to the new version (restart required) |
+| `claude plugin list` / `details <name>` | Shows installed plugins, and components and token cost |
+| `claude plugin disable` / `enable` / `uninstall` | Turn off / turn on / remove |
+| `claude plugin tag [--push]` | Creates a `{name}--v{version}` release tag |
+| `claude plugin marketplace remove <name>` | Removes a marketplace (its plugins are removed too) |
+
+### File location summary
+
+| File | Location |
+| --- | --- |
+| Plugin manifest | `<plugin>/.claude-plugin/plugin.json` |
+| Skill | `<plugin>/skills/<name>/SKILL.md` |
+| Agents, hooks, MCP | `<plugin>/agents/`, `hooks/hooks.json`, `.mcp.json` |
+| Marketplace | `<repository>/.claude-plugin/marketplace.json` |
+| Per-repository team settings | `<code repository>/.claude/settings.json` |
+| Eval cases | `<plugin>/evals/<case>/prompt.md` + `graders/*.md` |
+
+### Skill check commands (inside a session)
+
+| Command | What it checks |
+| --- | --- |
+| `/skills` | The list of loaded skills |
+| `/skill-doctor` | Context cost and invocation history per skill, and unused skills |
+| `/reload-plugins` | Applies edits made on disk |
+| `/plugin` | The Installed, Errors, and Marketplaces tabs |
+
+## Common sticking points
+
+### The plugin loads but I can't see the skill
+
+- **Cause**: You put `skills/` inside `.claude-plugin/`, or the `skills` path in the manifest doesn't point to a folder containing `SKILL.md`.
+- **Fix**: Move `skills/` to the plugin root and run `/reload-plugins`. The Errors tab in `/plugin` shows the cause.
+
+### I pushed, but teammates don't get the new version
+
+- **Cause**: You set `version` in `plugin.json` and didn't bump it. In that case `claude plugin update` answers "already at the latest version."
+- **Fix**: Bump `version` on every release, or in a git marketplace leave `version` out so the commit SHA is used as the version. Auto-update is also off by default for third-party marketplaces, so teammates need to turn it on or run `claude plugin update`.
+
+### I get `Plugin "…" not found in marketplace` when installing
+
+- **Cause**: The `name` in the marketplace entry differs from the `name` in `plugin.json`. Or the `source` path isn't relative to the marketplace root.
+- **Fix**: Make the two names match, and write `source` as a relative path starting from the root, like `./plugins/team-kit`. `claude plugin validate` catches `..` paths. A missing folder only produces an error at install time.
+
+### The skill exists but Claude doesn't use it automatically
+
+- **Cause**: The `description` is vague or the key purpose is at the end. Or `disable-model-invocation: true` is set.
+- **Fix**: Rewrite the beginning using the words users actually say, and confirm with the `tool_used: Skill` grader in `claude plugin eval`. Checking whether a direct `/name` call works will narrow down the cause.
+
+### I added the marketplace to repo settings, but it doesn't install for teammates
+
+- **Cause**: A teammate hasn't accepted the trust dialog for that folder, or the plugin points to an external repository so each person has to install it.
+- **Fix**: Tell them to accept the trust prompt, and for plugins from an external source, have them run `claude plugin install … --scope project` once.
+
+### `claude plugin eval` costs more than expected
+
+- **Cause**: It's the number of cases x 3 runs x 2 (baseline), plus the grading calls.
+- **Fix**: Cut it down with `--runs 1` and `--ablation none`, set a ceiling with `--max-cost-usd`, and switch graders to `regex` or `tool_used` wherever you can. If it hits the cost ceiling, you get exit code 2 and partial results.
+
+## Practical tips
+
+- **Start small and grow.** Begin with one skill, one case, and one teammate. The more skills you have, the higher the startup cost of every session.
+- **Evaluate skills before release, and watch usage after release.** Clean up unused skills with `/skill-doctor` and `claude plugin details`.
+- **Choose names carefully from the start.** You can't change a plugin name later. If you really must, move existing installs over with the marketplace's `renames`.
+- **Use an allow list for third-party marketplaces.** In an organization, consider a setup that allows only the company marketplace with `strictKnownMarketplaces`.
+- **Don't put secrets in plugins.** Keep API keys and tokens in users' environment variables or repository secrets, and use only `${VAR}` in code and `.mcp.json`.
+- **What the code examples were checked against.** The JSON and Markdown examples in this tutorial follow the official docs. On 2026-10-11 we verified their format with `claude plugin validate --strict`, and also confirmed adding a local marketplace and installing from it. We did not run `claude plugin eval`.
+
+## What to read next
+
+- [C8. Skills](/en/claude/c08-skills/) — Skill basics, claude.ai upload, and how to share
+- [5. Build your own MCP server and connect it to Claude](/en/dev/05-mcp-server/) — Build an MCP server to bundle into a plugin
+- [8. Manage LLM output quality with evals](/en/dev/08-evals/) — General quality management beyond plugin evals
+- [C14. Core Claude Code features](/en/claude/c14-claude-code-features/) — Hooks, subagents, and plugin install commands

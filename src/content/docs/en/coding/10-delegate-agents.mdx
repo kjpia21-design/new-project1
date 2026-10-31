@@ -1,0 +1,300 @@
+---
+title: "Delegating Recurring Work to Agents: Skills, Routines, and Subagents"
+description: "A scenario-based exercise: turn recurring work like a weekly report draft into a skill, run it automatically with a routine, and split up review with a subagent"
+sidebar:
+  label: "5. Delegating recurring work"
+level: advanced
+category: coding
+tools: ["Claude Code"]
+duration: "60 min"
+prerequisites:
+  - "A paid Claude plan (routines are on Pro, Max, Ultra, Team, and Enterprise)"
+  - "A GitHub account and one practice repository"
+  - "Experience with Tutorials 6 and 8 (or C12 and C13)"
+lastVerified: 2026-10-31
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "Automate work with scheduled tasks (formerly routines)"
+    url: "https://code.claude.com/docs/en/routines"
+  - title: "Extend Claude with skills (Claude Code)"
+    url: "https://code.claude.com/docs/en/skills"
+  - title: "Create custom subagents"
+    url: "https://code.claude.com/docs/en/sub-agents"
+  - title: "Claude Code overview"
+    url: "https://code.claude.com/docs/en/overview"
+  - title: "Use skills in Claude (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12512180-use-skills-in-claude"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- The order for delegating recurring work is **① do it by hand once → ② lock in the format with a skill → ③ split research and review with a subagent → ④ run it automatically with a routine**.
+- A **skill** is an instruction sheet (`SKILL.md`) that says "do it this way, in this format". A **subagent** is a helper agent with its own context and tool permissions. A **routine** is a feature that saves a prompt, repositories, and connectors and runs them automatically in the cloud.
+- Routines run autonomously while no one is watching. Keep the **prompt self-contained, and include only the connectors and repositories you need**.
+- Routines are currently a research preview (as of 2026-10-26). Behavior and limits may change.
+- The official docs now call this feature **scheduled tasks (formerly routines)**. This tutorial keeps saying "routines", but you may see either name on screen and in the docs. The address (claude.ai/code/routines) and `/schedule` (alias `/routines`) are unchanged.
+- The scenarios in this tutorial (weekly report, docs check) are **examples** made by this site. They aren't cases of the same name in the official docs.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Tell which recurring tasks are good to hand to an agent and which aren't.
+- Create a skill (`SKILL.md`) to lock in recurring instructions like a report format.
+- Create a subagent to separate drafting from review.
+- Create a scheduled routine, and go as far as a test run (Run now) and checking the run history.
+
+## Concepts to know first
+
+| Tool | One-line description | Analogy |
+| --- | --- | --- |
+| **Skill** | A folder holding instructions and examples. You write it in `SKILL.md` and call it with `/skill-name`, or Claude loads it automatically when it matches the description. See [C8](/en/claude/c08-skills/) for details | A work manual |
+| **Subagent** | A helper agent with its own context, system prompt, and tool permissions. It keeps long output to itself and returns only a summary. See [C14](/en/claude/c14-claude-code-features/) for details | A dedicated specialist |
+| **Routine** | Saves a prompt + repositories + connectors and runs them automatically in the cloud. It has schedule, API, and GitHub event triggers. See [C13](/en/claude/c13-cloud-sessions/) for details | A recurring-task alarm |
+
+The three tools complement each other. A skill handles **how**, a subagent handles **who**, and a routine handles **when**.
+
+### Which tasks are good to hand off?
+
+| Good to hand off | Be careful handing off |
+| --- | --- |
+| The input and result format are fixed | The criteria for judgment change every time |
+| A person can do the final review of the result | The result goes outside right away with no review |
+| You can undo mistakes (a branch, a draft) | You can't undo it (sending, payment, deletion) |
+| The material is in a repository or connector | The material is only in your head or on paper |
+
+<Aside type="caution" title="Routines run while no one is watching">
+You don't choose a permission mode when creating a routine. According to the official docs (as of 2026-10-26), sessions that run in Anthropic's cloud start in auto mode, where a classifier allows or blocks actions waiting for approval (if auto mode isn't available, they keep the permission mode they started with). So running shell commands and writes through connected connectors can proceed without a person's approval. However, if an action hits an ask rule or there are repeated blocks, the run stops and waits for an answer. So have it produce **reversible outputs (a branch and a draft)**, and design it so a person does the final send or merge. Commits and PRs made by a routine are recorded under your GitHub username.
+</Aside>
+
+## Step-by-step guide
+
+This scenario is **"Every Friday afternoon, gather the week's notes and make a weekly report draft"**. Assume you create a `notes/` folder in a practice repository and write what you did that week as notes by date (don't put in real work secrets).
+
+<Checklist items={[
+  'I picked one recurring task and wrote down the input, output, and success criteria',
+  'I ran it once by hand and checked the result with my own eyes',
+  'I created .claude/skills/weekly-report/SKILL.md',
+  '(Optional) I created a subagent file for review',
+  'I committed and pushed the skill and agent files to the repository',
+  'I created a scheduled routine and tested it with Run now',
+  'I opened the run history and checked the actual result',
+  'I left only the connectors and repositories I need',
+]} />
+
+<Steps>
+
+1. **Define the task**
+
+   Write down the following four things in sentences. This writing becomes the routine's prompt later.
+
+   - **Input**: This week's notes in the `notes/` folder (file names are dates, like `2026-10-05.md`)
+   - **Output**: One file, `drafts/weekly-YYYY-MM-DD.md` (using Friday's date)
+   - **Format**: What I did this week / Plans for next week / Blockers
+   - **Success criteria**: Don't make up anything that isn't in the notes, and mark unknown items as "needs confirmation"
+
+2. **Do it by hand once**
+
+   Before turning it into a routine, run it directly once in Claude Code (Tutorial 6) and see whether the result is usable. What you don't like here becomes the instructions to put in the skill.
+
+   <PromptBox>
+   Read this week's notes (Mon-Fri) in the notes folder and create a weekly report draft as drafts/weekly-2026-10-09.md. Use three parts: "What I did this week, Plans for next week, Blockers". Don't make up anything that isn't in the notes, and if you don't know, write "needs confirmation". Before writing, first show me a list of which notes you'll read.
+   </PromptBox>
+
+3. **Lock in the format with a skill**
+
+   Move the rules that came out of doing it by hand into a skill file. To use it with your team inside a project, put it in the repository at `.claude/skills/<name>/SKILL.md`. To use it yourself in all projects, put it at `~/.claude/skills/<name>/SKILL.md`.
+
+   <PromptBox>
+   Create the file .claude/skills/weekly-report/SKILL.md. In the frontmatter, set name to weekly-report and description to "Gathers this week's notes from the notes folder and creates a weekly report draft in the drafts folder. Use when the user asks for a weekly report or weekly summary." In the body, write up the input (dated notes in the notes folder), output (drafts/weekly-date.md), format (what I did this week, plans for next week, blockers), and rules (don't make up anything that isn't in the notes, mark unknowns as "needs confirmation", keep sentences short).
+   </PromptBox>
+
+   The resulting file looks like this.
+
+   ```md title=".claude/skills/weekly-report/SKILL.md"
+   ---
+   name: weekly-report
+   description: Gathers this week's notes from the notes folder and creates a weekly report draft in the drafts folder. Use when the user asks for a weekly report or weekly summary.
+   ---
+
+   # Create a weekly report draft
+
+   1. Read all notes dated this week (Mon-Fri) in the notes folder.
+   2. Write to drafts/weekly-YYYY-MM-DD.md (using Friday's date) in the format below.
+      - What I did this week
+      - Plans for next week
+      - Blockers
+   3. Rules
+      - Don't make up anything that isn't in the notes.
+      - Mark unknown items as "needs confirmation".
+      - Keep sentences short.
+   ```
+
+   You can call it directly in a session with `/weekly-report`, or when you ask for a report, Claude loads it automatically based on the description. The file name is written as `skill.md` in some docs and `SKILL.md` in others. The Claude Code docs use `SKILL.md`.
+
+   <Aside type="caution" title="Open and read skills made by others before using them">
+   Skills can include scripts and external connections. Install skills only from trusted sources, and read the included files before enabling them. Don't write API keys or passwords in a skill.
+   </Aside>
+
+4. **(Optional) Separate review with a subagent**
+
+   If you split the agent that writes the draft from the agent that reviews it, the review isn't contaminated by the long context of drafting. You define a subagent as a Markdown file in `.claude/agents/`, and the required fields are `name` and `description`.
+
+   ```md title=".claude/agents/report-reviewer.md"
+   ---
+   name: report-reviewer
+   description: Compares a weekly report draft against the original notes in the notes folder and finds unsupported content. Use for review after a draft is finished.
+   tools: Read, Glob, Grep
+   model: sonnet
+   ---
+
+   You are a report reviewer. Read the draft in the drafts folder and check whether each sentence is supported by the notes in the notes folder.
+   List any sentences without support, and do not modify any files.
+   ```
+
+   If you give it only read tools via `tools`, this agent can't change files. For `model` you can use `sonnet`, `opus`, `haiku`, `fable`, `inherit`, and so on. You can also ask Claude to create the agent for you. For reference, the `/agents` command in the current version only shows a guidance message, while v2.1.197 and below showed an interactive wizard.
+
+   <PromptBox>
+   Use the report-reviewer subagent to review the drafts/weekly-2026-10-09.md we just made. If any sentences aren't supported by the notes, tell me which ones.
+   </PromptBox>
+
+5. **Push it to the repository**
+
+   A routine clones the repository in the cloud and runs there. For the skill and subagent files to be visible to the cloud session, **they must be committed and pushed to the repository.** Ask Claude Code, "Commit the new `.claude` folder and `notes/` and push them," or use the approach from Tutorial 8. The official docs explain that routines use skills committed to the repository, and that skills in your computer's personal skills folder (`~/.claude/skills`) show up as "not found" in cloud scheduled tasks (desktop scheduled tasks do read them). For subagents, the cloud sessions docs say they "automatically recognize subagents defined in the repository's `.claude/agents/`", and routines run as cloud sessions. Even so, check that it works locally first, then look at the routine's run history to see whether they were actually used.
+
+6. **Create a scheduled routine**
+
+   At [claude.ai/code/routines](https://claude.ai/code/routines), click **New task** to open the **New scheduled task** window (depending on your account, the button may be **New routine** and open a full-page form). In the terminal, you can create one interactively with `/schedule` (for example, `/schedule daily PR review at 9am`). The fields on the web form are as follows.
+
+   - **Name**: Weekly report draft
+   - **Prompt**: A routine runs autonomously, so the prompt must be **self-contained with clear success criteria**.
+
+   <PromptBox label="Routine prompt example">
+   Use the weekly-report skill to create a weekly report draft in drafts/weekly-date.md from this week's notes (Mon-Fri) in the notes folder. The date is this week's Friday. Don't make up anything that isn't in the notes; mark it as "needs confirmation". After creating it, check once more whether each sentence in the draft is supported by the notes, and fix any unsupported sentences. At the end, summarize the changes so a PR can be created. Don't push directly to the main branch.
+   </PromptBox>
+
+   - **Repository**: One practice repository. The selected repository is cloned from the default branch on every run. Claude pushes to branches with the `claude/` prefix.
+   - **Environment**: **Default** (Trusted network) is enough.
+   - **Trigger**: Under Schedule, pick a preset like daily or weekly and enter the time in your own time zone. For a cadence that isn't a preset, after creating it choose **Custom** in the edit window and set it with a cron expression (times in cron expressions are UTC). **Runs at the top of the hour can start a few minutes late**, so we recommend offsetting the minute, such as 16:07 instead of 16:00. The minimum interval is 1 hour.
+   - **Connectors**: All connected connectors are included by default. Claude can use all the tools of an included connector, including writing, so **remove everything this routine doesn't need.**
+
+   Finally, click **Create**.
+
+   <FlowSteps title="Creating a routine and test-running it" officialUrl="https://code.claude.com/docs/en/routines#create-from-the-web" steps={[
+     { where: 'claude.ai/code/routines', action: 'Click New task (New routine, depending on your account)', result: 'The window or form for creating a scheduled task (routine) opens' },
+     { where: 'Form', action: 'Enter the name, prompt, repository, environment, trigger, and connectors, then click Create', result: 'The routine is created' },
+     { where: 'Routine detail screen', action: 'Click Run now', result: 'A new session is created and you can view the run history' },
+   ]} />
+
+   <ScreenshotPlaceholder caption="The routine creation form with the prompt, repository, and trigger filled in" officialUrl="https://code.claude.com/docs/en/routines#create-from-the-web" />
+
+7. **Test with Run now and check the run history**
+
+   On the routine detail screen, click **Run now** to run it once right away. Each run creates a new session, and if you open it you can see what Claude did, the changes, and whether a PR was created.
+
+   <Aside type="caution" title="Green doesn't mean success">
+   The green status in the run list only means "the session started and ended without an infrastructure error". It doesn't mean the prompt's task succeeded. Blocked network requests, missing connector tools, and failure of the task itself show up in the session history. For the first few runs, be sure to open the history and check the result.
+   </Aside>
+
+   If you like the result, reading and merging the PR for the branch it made is something a person does. If you don't like it, fix the prompt or skill under the routine's **Edit**. You can also pause it with the on/off switch on the routine screen.
+
+</Steps>
+
+## Quick reference
+
+### Comparing the three tools (as of 2026-10-26)
+
+| | Skill | Subagent | Routine |
+| --- | --- | --- | --- |
+| **File / location** | `.claude/skills/<name>/SKILL.md` or `~/.claude/skills/...` | `.claude/agents/<name>.md` | claude.ai/code/routines (saved to your account) |
+| **Role** | Method and format | Division of labor, review | When it runs automatically |
+| **Invocation** | `/name` or automatic | Claude delegates, or you specify | Schedule, API, GitHub event |
+| **Approval** | Follows the session's permission mode | Follows the session's permission mode | Runs autonomously. Cloud sessions start in auto mode |
+| **Status** | Generally available | Generally available | Research preview |
+
+### Routine triggers and limits
+
+| Item | Details |
+| --- | --- |
+| Triggers | Schedule (presets like hourly, daily, weekly; Custom cron; one-time), API (HTTP POST + bearer token), GitHub event (pull request, release) |
+| Minimum schedule interval | 1 hour |
+| Scheduled run limit | 100 per hour per account |
+| Run now / API runs | There are limits such as a shared 30 per hour per routine (see the official Usage and limits table) |
+| Overage charges for the hourly limit | None |
+| When you hit your subscription usage limit | Continues pay-as-you-go if extra usage (usage credits) is on; otherwise rejected until reset |
+| Ownership | Owned by your account. Not shared with teammates |
+
+### Similar ways to do it locally
+
+| Method | Where it runs | Characteristics |
+| --- | --- | --- |
+| Routine | Cloud | Runs even when your computer is off |
+| Desktop scheduled tasks | Your computer | Accesses local files and tools |
+| `/loop` | Inside a CLI session | Simple repetition within an open session |
+
+### Scenario ideas (suggestions from this site)
+
+| Task | Skill | Subagent | Trigger |
+| --- | --- | --- | --- |
+| Weekly report draft | Report format | Evidence-checking review | Every Friday |
+| Docs freshness check | Doc writing rules | Change impact research | Every Monday, or when a PR is merged |
+| Meeting notes cleanup | Meeting notes template | Action item verification | Manual run or API |
+| Pre-review of PRs | Team checklist | Separate security and style review | GitHub event (PR opened) |
+
+The official docs include routine examples such as a docs drift check (a routine that scans PRs weekly and opens a docs update PR) and custom code review (reviewing PRs against a team checklist when they're opened).
+
+## Common sticking points
+
+### The routine is green but no report was created
+
+- **Cause**: Green means it finished without an infrastructure error. The prompt may be vague, the files may not be in the repository, or the network may be blocked.
+- **Fix**: Open the run and read the session history. Write the input location, output location, and success criteria more specifically in the prompt.
+
+### The routine can't find the skill
+
+- **Cause**: The skill file may not have been committed and pushed to the repository, or it may be in a different repository. A routine clones the selected repository from the default branch.
+- **Fix**: Check that the skill is merged into the default branch. Name the skill explicitly in the prompt, and if that doesn't work, include the skill's contents directly in the prompt.
+
+### I typed `/schedule` and it says it's an unknown command
+
+- **Cause**: According to the official docs, it's hidden if you logged in with a Console API key or a cloud provider rather than a claude.ai subscription login. It can't be used inside a cloud session, and routines or cloud sessions may be turned off by organization policy (Team and Enterprise Owners turn them off with the "Scheduled tasks (Was Routines)" toggle in organization settings).
+- **Fix**: Log in to your claude.ai subscription account with `/login`. If that still doesn't work, create it on the web (claude.ai/code/routines), and if it's organization policy, contact your Owner.
+
+### It runs later than the scheduled time
+
+- **Cause**: If you schedule at the top of the hour, it can start a few minutes late.
+- **Fix**: Offset the minute when scheduling, such as 9:07 instead of 9:00.
+
+### It didn't run for a while and then turned off
+
+- **Cause**: If your GitHub connection breaks or expires, the routine skips runs. According to the official docs, it skips for up to 72 hours, after which the routine turns off.
+- **Fix**: Reconnect GitHub, and if it turned off, turn the routine back on.
+
+### My usage drops quickly
+
+- **Cause**: Routines use the same subscription usage as interactive sessions.
+- **Fix**: Reduce how often it runs (such as once a week), narrow the prompt's scope, and check your usage (Settings > Usage). See [C2](/en/claude/c02-plans-limits/) for how limits are structured.
+
+## Practical tips
+
+- **First by hand, then a skill, and a routine last.** If you reverse the order, it's hard to tell what went wrong.
+- **Always make the output a "draft" and a "branch".** Leave a place for a person to read and merge.
+- **Make the skill description specific.** Claude reads this description to decide when to use it. Keep each skill focused on one workflow.
+- **Give subagents only the tools they need.** For review, read tools are enough.
+- **Remember it's owned by your personal account.** Routines aren't shared with teammates, and commits and PRs are recorded under your name. For team work, check your team's policy first.
+- **Don't put secret values in prompts or skills.** Environment variables can be read by anyone who uses that environment.
+
+## Next tutorials
+
+- [C8. Skills](/en/claude/c08-skills/) — creating and sharing skills
+- [C13. Cloud sessions](/en/claude/c13-cloud-sessions/) — a reference on environments and routines
+- [C14. Claude Code core features](/en/claude/c14-claude-code-features/) — subagents, hooks, MCP
+- [Packaging skills and plugins and deploying to your team](/en/dev/06-plugins-skills-team/) — sharing the skills you made with your team
+- [Using personal AI agents safely](/en/agents/05-agent-safety/) — permissions and risks of autonomous agents

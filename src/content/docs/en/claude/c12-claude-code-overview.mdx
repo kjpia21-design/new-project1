@@ -1,0 +1,293 @@
+---
+title: "Claude Code overview: terminal, desktop, and web"
+description: "A reference for choosing where to use Claude Code, then following along from installation to your first task"
+sidebar:
+  label: "C12. Claude Code overview"
+level: practical
+category: claude
+tools: ["Claude Code"]
+duration: "30 min"
+prerequisites:
+  - "A paid Claude plan (Pro, Max, Ultra, Team, Enterprise) or an Anthropic Console account"
+  - "One code project folder to work in"
+  - "A terminal (macOS, Linux, WSL, Windows PowerShell or CMD)"
+lastVerified: 2026-10-31
+sources:
+  - title: "Use Claude Code with your Pro, Max, or Ultra plan"
+    url: "https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan"
+  - title: "Claude Code overview"
+    url: "https://code.claude.com/docs/en/overview"
+  - title: "Quickstart"
+    url: "https://code.claude.com/docs/en/quickstart"
+  - title: "Commands"
+    url: "https://code.claude.com/docs/en/commands"
+  - title: "Pricing"
+    url: "https://claude.com/pricing"
+  - title: "CLI reference"
+    url: "https://code.claude.com/docs/en/cli-reference"
+  - title: "Agent view"
+    url: "https://code.claude.com/docs/en/agent-view"
+  - title: "Model configuration"
+    url: "https://code.claude.com/docs/en/model-config"
+  - title: "Claude Code CHANGELOG (v2.1.251, 2.1.273, 2.1.284, 2.1.288, 2.1.290)"
+    url: "https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- Claude Code is an **agentic coding tool** that reads your codebase, edits files, runs commands, and integrates with your dev tools.
+- You can use it in the terminal (CLI), in IDEs (VS Code, JetBrains), in the Code tab of the desktop app, and on the web (claude.ai/code). They all run on the same engine, so CLAUDE.md, settings, and MCP servers work the same everywhere.
+- Installation is one line. On macOS/Linux/WSL it's `curl -fsSL https://claude.ai/install.sh | bash`, and on Windows PowerShell it's `irm https://claude.ai/install.ps1 | iex`.
+- After installing, run `claude` in your project folder, sign in, and ask for things in plain language.
+- It's available on paid plans from Pro up, and not on Free (as of 2026-10-10).
+</Summary>
+
+## What you'll be able to do
+
+- Pick the place that fits your situation: terminal, IDE, desktop app, or web.
+- Install Claude Code, sign in, and start your first conversation in your own project.
+- Try a first round of tasks: asking questions, making a small code change, and doing Git work.
+- Know how to move between surfaces and how to automate recurring work, so you can move on to the next steps (C13, C14).
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Claude Code** | An agentic coding tool that reads code, edits it, and even runs it. |
+| **Surface** | The environment where you use Claude Code. There's the terminal, IDE, desktop, and web. |
+| **CLAUDE.md** | A project instructions file. It works the same on every surface. Details are in [C14](/en/claude/c14-claude-code-features/). |
+| **Session** | A single conversation and work flow. You can continue it later or move it to another surface. |
+| **Permission mode** | A setting for how much Claude can do without approval. Change it during a session with `Shift+Tab`. |
+
+### Where should you use it?
+
+| Surface | Good for | Notes |
+| --- | --- | --- |
+| **Terminal (CLI)** | When you're comfortable in the terminal and want every feature | The most basic form. Also supports third-party providers (such as Bedrock). |
+| **VS Code (including Cursor)** | When you want to use it inside your editor | Install the `anthropic.claude-code` extension. |
+| **JetBrains** | When you use a JetBrains IDE | Uses a plugin, and you have to install the CLI separately. |
+| **Desktop app (Code tab)** | When the terminal feels unfamiliar and you want to review changes visually | No separate CLI install needed. Requires a paid subscription. |
+| **Web (claude.ai/code)** | When you want to start right away without installing, or from your phone | Works in desktop browsers and the iOS/Android Claude apps. Details are in [C13](/en/claude/c13-cloud-sessions/). |
+
+Most surfaces need a Claude subscription or an Anthropic Console account. The terminal, VS Code, and JetBrains also support third-party providers.
+
+<Aside type="note" title="Usage limit numbers">
+The specific Claude Code usage limits by plan aren't officially disclosed (the official Claude Code help for Pro/Max/Ultra, confirmed 2026-10-31). For how limits are structured, see [C2. Plans and usage limits](/en/claude/c02-plans-limits/), and check your own on the Settings > Usage screen.
+</Aside>
+
+## Step by step
+
+Here we'll follow along with the most basic way, the terminal. If you're using the desktop app, see the note after step 4.
+
+<Checklist items={[
+  'I ran the install command for my OS',
+  'I confirmed the install with claude --version in a new terminal',
+  'I ran claude in my project folder and signed in',
+  'I asked my first question about the project',
+  'I asked for a small code change and approved it',
+  '(Optional) I tried asking for Git work',
+]} />
+
+<Steps>
+
+1. **Install**
+
+   Open a terminal and run the command for your environment (the native install, which is the recommended method).
+
+   macOS, Linux, WSL:
+
+   ```sh
+   curl -fsSL https://claude.ai/install.sh | bash
+   ```
+
+   Windows PowerShell:
+
+   ```powershell
+   irm https://claude.ai/install.ps1 | iex
+   ```
+
+   Windows CMD:
+
+   ```batch
+   curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
+   ```
+
+   You may not see any progress while it installs. The native install updates itself automatically in the background. On native Windows, we recommend installing Git for Windows. Without it, PowerShell is used as the shell tool.
+
+   <ScreenshotPlaceholder caption="Running the install command in the terminal" officialUrl="https://code.claude.com/docs/en/quickstart" />
+
+2. **Check the install**
+
+   When the install finishes, open a **new terminal window** and check.
+
+   ```sh
+   claude --version
+   ```
+
+   If a version number appears, it worked. If you get "claude not found," it's most likely a PATH issue. Follow the official install troubleshooting doc. Mixing up PowerShell and CMD can cause a similar error.
+
+3. **Start in your project and sign in**
+
+   Go to the project folder you want to work in and run `claude`.
+
+   ```sh
+   cd /path/to/your/project
+   claude
+   ```
+
+   The first time, you'll see a sign-in prompt. Finish authenticating in your browser. Once you've signed in, you don't need to do it again. After sign-in, the version, current model, and working folder appear above the prompt. Use `/help` for the command list and `/resume` to continue a previous conversation.
+
+   <ScreenshotPlaceholder caption="The sign-in prompt and prompt screen when you first run claude" officialUrl="https://code.claude.com/docs/en/quickstart" />
+
+4. **Ask your first question**
+
+   Start with a question that doesn't touch the code. Claude reads whatever files it needs on its own.
+
+   <PromptBox>
+   Explain what this project does. Also tell me the technologies it uses, the folder structure, and which files are the entry points.
+   </PromptBox>
+
+   For a project instructions file, you can create CLAUDE.md with the `/init` command. Details are in [C14](/en/claude/c14-claude-code-features/).
+
+   **If you're using the desktop app**: Install the app (macOS Intel/Apple Silicon, Windows x64/ARM64), sign in, and click the **Code** tab to start. The app includes Claude Code, so you don't need to install the CLI separately. To move a terminal session into the app, use `/desktop`.
+
+5. **Ask for a small code change**
+
+   <PromptBox>
+   Add a function to the main file that prints hello world. Before changing anything, show me which file you'll edit and how.
+   </PromptBox>
+
+   When Claude shows the changes and asks for approval, read them and choose **Yes**. The permission mode decides what Claude can do without approval. Press `Shift+Tab` to change the session's permission mode. At first, stick with the default and check with your own eyes what you're approving.
+
+6. **Do Git work through conversation too**
+
+   <PromptBox>
+   Which files did I change? Look at the changes, write an appropriate commit message, and commit them.
+   </PromptBox>
+
+   You can follow up with requests like "Show me the last 5 commits" or "Create a feature/quickstart branch." For things that are a hassle to undo, like commits and pushes, double-check once more on the approval screen.
+
+</Steps>
+
+## Quick reference
+
+### Install methods (as of 2026-10-10)
+
+| Method | Command | Auto-updates |
+| --- | --- | --- |
+| Native (recommended) macOS/Linux/WSL | `curl -fsSL https://claude.ai/install.sh \| bash` | Yes |
+| Native Windows PowerShell | `irm https://claude.ai/install.ps1 \| iex` | Yes |
+| Homebrew | `brew install --cask claude-code` (`claude-code@latest` follows the latest channel) | No |
+| WinGet | `winget install Anthropic.ClaudeCode` | No |
+| Linux packages | apt, dnf, and apk also work (see the official docs) | See the official docs |
+
+### Commonly used commands
+
+| Command | Purpose |
+| --- | --- |
+| `claude` | Start interactive mode |
+| `claude "task"` | Start with a first request |
+| `claude -p "question"` | Ask once and exit |
+| `claude -c` | Continue the most recent conversation in the current folder |
+| `claude -r` | Pick a previous conversation to resume |
+| `/help` | Command list |
+| `/clear` | Clear the conversation history |
+| `/exit` or Ctrl+D twice | Exit |
+| `/login` | Switch accounts or re-authenticate |
+| `/init` | Generate CLAUDE.md |
+| `Shift+Tab` | Cycle through permission modes |
+| `/effort` | Adjust how deeply it thinks (effort). The value you choose is **saved per model** (v2.1.251 and later). Press `s` in the slider to apply it to this session only. `max` is session-only. |
+| `/rate-limit-options` | Shows ways to keep going when you hit a usage limit. Choose among waiting until the reset and continuing automatically, turning on extra usage (usage credits), or upgrading your plan. Requires a claude.ai subscription. |
+
+### Moving between surfaces
+
+| Method | Description |
+| --- | --- |
+| Remote Control | Control a local session on your computer from your phone or browser. |
+| `claude --teleport` | Bring a web or mobile session into the terminal. |
+| `/desktop` | Move a terminal session to the desktop app. Requires macOS or x64 Windows, and a subscription. |
+| `claude --cloud` | Start a cloud session from the terminal. |
+| Fork from the Claude app | A session started with `claude --remote-control` or `/remote-control` can be forked from the Claude app. The fork runs as a background session on your computer (v2.1.273 and later). |
+
+For the details of cloud sessions, see [C13. Claude Code cloud sessions](/en/claude/c13-cloud-sessions/).
+
+### Managing background sessions
+
+For background sessions started with `claude --bg "task"` or sessions visible in `claude agents` (agent view), use these commands from the shell. You can use **part of the name** instead of the session ID (`attach` and `logs` need v2.1.290 or later).
+
+| Command | What it does |
+| --- | --- |
+| `claude attach <ID or name>` | Opens the background session in this terminal now. By name, it opens only running sessions, so use the ID to bring back a stopped one. |
+| `claude logs <ID or name>` | Prints the session's recent output. |
+| `claude stop <ID>` | Stops the session. `claude kill` does the same. |
+| `claude respawn <ID>` | Restarts it with the conversation intact, whether it's running or stopped. With `--all`, it restarts all running sessions so they pick up a newer version of the binary. |
+| `claude rm <ID>` | Removes the session from the list. The conversation history stays on your computer and you can view it with `claude --resume`. |
+
+In agent view, `Ctrl+F` searches by name, you can filter by name or first prompt with something like `n:login`, and `Alt+↑`/`Alt+↓` jump between groups (v2.1.287-288 and later).
+
+### Three ways to automate recurring work
+
+| Method | Where it runs |
+| --- | --- |
+| Routines (cloud scheduled tasks) | Cloud |
+| Desktop scheduled tasks | Your computer |
+| `/loop` | Inside a CLI session |
+
+### Usage examples (CLI)
+
+```sh
+claude "write tests for the auth module, run them, and fix any failures"
+claude "commit my changes with a descriptive message"
+tail -200 app.log | claude -p "Summarize the cause of the errors in this log"
+```
+
+## Where people get stuck
+
+### I can't find `claude` after installing
+
+- **Cause**: The install folder may not be on your PATH yet, or you may still be using a terminal you opened before installing.
+- **Fix**: Open a new terminal window and run `claude --version` again. If that doesn't work, follow the PATH guidance in the official troubleshoot-install doc.
+
+### The install command gives a syntax error
+
+- **Cause**: You may have typed a PowerShell command in CMD or the other way around. For example, running the CMD `&&` command in PowerShell gives an error, and CMD doesn't recognize `irm`. If your prompt looks like `PS C:\`, you're in PowerShell.
+- **Fix**: Run the command that matches the shell you're in. If that still doesn't work, find the fix for your error message in the official install troubleshooting doc.
+
+### The sign-in prompt doesn't appear, or I skipped signing in
+
+- **Cause**: If the `ANTHROPIC_API_KEY` environment variable is set and you approve using that key, the sign-in step is skipped.
+- **Fix**: If you want to use your subscription account, run `/login` inside the session and switch accounts.
+
+### It doesn't work with a Free account
+
+- **Cause**: Claude Code is available on paid plans from Pro up (as of 2026-10-10). You can confirm this on the official pricing page.
+- **Fix**: Check your plan. There are also Console account and supported cloud provider routes. For pricing, see [C2](/en/claude/c02-plans-limits/).
+
+### I can't use the Bash tool on Windows
+
+- **Cause**: If native Windows doesn't have Git for Windows, Claude Code uses PowerShell as the shell tool.
+- **Fix**: We recommend installing Git for Windows. You don't need a WSL environment.
+
+## Practical tips
+
+- **Be specific in your requests.** "Fix the bug where a blank screen appears when login fails" works much better than "fix the bug."
+- **Have it explore first.** Before fixing, it helps to have it understand the structure first, like "Analyze the database schema."
+- **Break complex work into numbered steps.** It's easier to check results as you go than to hand over everything at once.
+- **Press `/`.** You'll see the commands and skills you can use. Autocomplete with Tab, and recall earlier commands with ↑.
+- **If you want to review changes visually**, try the Code tab in the desktop app or `/desktop`.
+- **Start with small tasks.** The habit of checking the results of a request with your own eyes keeps you safe.
+- **If you want to learn for free**, there are courses like Claude Code 101 at Claude Academy.
+
+## What to read next
+
+- [C13. Claude Code cloud sessions](/en/claude/c13-cloud-sessions/) — Handing off GitHub work without keeping your computer on
+- [C14. Claude Code key features](/en/claude/c14-claude-code-features/) — CLAUDE.md, slash commands, hooks, subagents, MCP
+- [C2. Plans and usage limits](/en/claude/c02-plans-limits/) — Understanding the limits Claude Code uses
+- [Getting started with Claude Code: a non-developer's first result](/en/coding/06-claude-code-start/) — Making your first result at a non-developer's level
+- [Claude Code headless mode and GitHub Actions automation](/en/dev/07-headless-ci/) — Running Claude Code without a human

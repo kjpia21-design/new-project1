@@ -1,0 +1,608 @@
+---
+title: "Automate On-Screen Work with the Computer and Browser Tool APIs"
+description: "Understand how the computer toolset (computer_toolset_20260801) and browser toolset (browser_toolset_20260801) are structured, and build a minimal agent loop in Python that runs only in an isolated environment. Includes safety rules and cost caps"
+sidebar:
+  label: "10. Computer and browser tools"
+level: advanced
+category: dev
+tools: ["Claude API", "Computer use", "Browser use", "Python", "anthropic SDK"]
+duration: "60 min"
+prerequisites:
+  - "You've finished C16. Getting started with the Claude API"
+  - "C11. Chrome and computer use (get a feel for it with the app features first)"
+  - "Python 3.10 or later, and an environment where you can use an isolated VM or container"
+lastVerified: 2026-10-26
+sources:
+  - title: "Computer use tool (computer_toolset_20260801)"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool"
+  - title: "Browser use tool (browser_toolset_20260801)"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/browser-use-tool"
+  - title: "Browser and computer use with the SDK toolsets"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/browser-use-sdk"
+  - title: "API and data retention"
+    url: "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention"
+  - title: "Models overview"
+    url: "https://platform.claude.com/docs/en/models/overview"
+  - title: "Claude Platform release notes"
+    url: "https://platform.claude.com/docs/en/release-notes/overview"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+
+<Summary>
+- The **computer toolset** (`computer_toolset_20260801`) lets Claude look at screenshots and request clicks and typing, and the **browser toolset** (`browser_toolset_20260801`) is tailored to work inside web pages. Both went GA on 2026-08-19 and work on the Claude API and Google Cloud without a beta header.
+- Both are **client tools**. **Your app runs** the screen or browser, and Claude only requests things like "click here." The loop you write carries out the request and returns the result (a screenshot).
+- **Run them only in an isolated VM or container.** Never attach them directly to your logged-in computer or work accounts. Text on a web page or screen can change what Claude does next (prompt injection).
+- Costs grow fast. The computer toolset definition alone is about 4,500 input tokens (about 6,600 for the browser toolset), a single screenshot is about 1,000 to 1,800 tokens, and these accumulate every turn as the conversation grows. **Be sure to put an iteration cap and a token cap in your code.**
+- The examples in this article follow the official docs, and on 2026-10-11 we verified only the syntax and SDK imports. We did not make real calls or run a real screen or browser. The basic example is a dry run that doesn't touch the screen.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Know the difference between the computer toolset and the browser toolset, and pick the one that fits the task.
+- Build a loop that sends a request, runs `tool_use` blocks, and returns `tool_result`, complete with caps and approval steps.
+- Understand how the SDK's browser toolset classes (beta) attach a URL policy and approval callbacks.
+- Design a safe setup with isolation, domain restrictions, human confirmation, and cost caps.
+
+## Concepts to know first
+
+What [C11. Chrome and computer use](/en/claude/c11-chrome-computer-use/) covered are features of the Claude app (Claude in Chrome, and computer use in Cowork). This article shows how to **build the same idea directly with the API**. Unlike the app features, you have to build the code that captures the screen and clicks, along with the safeguards, all yourself.
+
+| Term | Meaning |
+| --- | --- |
+| **Toolset** | A bundle of related tools. If you put one entry in `tools` (just `type`, no `name`), several member tools are turned on together. |
+| **Member tool** | An individual action inside a toolset. The computer toolset has 17 (`screenshot`, `left_click`, `type`, `key`, `scroll`, and so on), and the browser toolset has 31 (`navigate`, `read_page`, `find`, and so on). |
+| **Batch** | When Claude returns multiple member calls in a single turn. They run in order and stop at the first failure. |
+| **`toolset_name`** | Shows which toolset a call belongs to (`computer` or `browser`). You have to send it back as-is when you return the result. |
+| **Sandbox** | An isolated virtual environment that runs the screen or browser (a VM or container). |
+
+```text
+Claude model (Claude API)
+   │  ▲
+   │  │  tool_use (e.g. left_click)      tool_result (screenshot etc.)
+   ▼  │
+Your app (loop)  ── validate · approve · check caps ──▶  run the request
+   │  ▲
+   │  │  action                          screenshot
+   ▼  │
+Isolated VM · container (screen / browser)
+```
+
+The key point is that Claude doesn't touch the screen directly. Claude only makes requests, and **your app does all the validating, running, and returning of results.** That makes your app the place to put safeguards.
+
+### Computer toolset vs. browser toolset: which should you choose?
+
+| Item | Computer toolset | Browser toolset |
+| --- | --- | --- |
+| Target | The whole desktop (multiple apps) | Web pages inside a browser |
+| How it sees | Screenshots and coordinates | Both the accessibility tree (`read_page`, `find`) and screenshots/coordinates |
+| Members | 17 | 31 (27 on by default, 4 optional ones off by default) |
+| Status | GA (Claude API, Google Cloud). Beta on Bedrock and others | GA (Claude API, Google Cloud) |
+| Recommended for | Work in non-web apps | Work that stays within the web, and pages drawn with JavaScript |
+
+The official docs recommend the browser toolset for work that stays inside a web page and the computer toolset for work that needs the whole desktop. For light reading or finding sources, they say the web fetch and web search tools are better. You can also use both in one request.
+
+<Aside type="note" title="Compatibility (as of 2026-10-11)">
+- On the Claude API and Google Cloud, Opus 5.5, Sonnet 5.5, and Haiku 5.5 accept **only the computer toolset**. Sending the older `computer_20251124` (which needed a beta header) returns a 400 error. On Amazon Bedrock, these three models still accept `computer_20251124`.
+- Neither toolset can currently be used in **Claude Managed Agents.**
+- Models that support the browser toolset are `claude-fable-5-1`, `claude-mythos-5-1`, `claude-fable-5`, `claude-mythos-5`, `claude-opus-5-5`, `claude-opus-5`, `claude-sonnet-5-5`, `claude-sonnet-5`, `claude-opus-4-8`, and `claude-haiku-5-5`.
+- Data retention: both toolsets are ZDR-eligible (except for Covered Models). Screenshots and inputs are stored in your environment, and Anthropic processes them in real time during the call. However, Fable 5.1 is a Covered Model, so it requires 30-day retention (see [C16](/en/claude/c16-api/)).
+</Aside>
+
+## Safety rules first (required)
+
+<Aside type="danger" title="This tool has the same power as clicking yourself">
+Text written on a screen or web page can change what Claude does next (prompt injection). Follow the official docs' recommendations as they are.
+
+- Run it in a **dedicated VM or container** with minimal privileges. Use a fresh environment for each session, and don't put in credentials or mounted host folders.
+- **Don't give it access to sensitive data or logged-in accounts.** If you must log in, use a dedicated low-privilege account.
+- **Enforce a domain allow list** at the network layer. A URL check in code alone isn't enough: check again after redirects, and block private and loopback addresses.
+- **Have a person confirm actions with big consequences (payments, sending messages, accepting terms, deleting).** A single turn's batch can finish several steps at once, so inspect each call before running it.
+- Treat everything on screens and web pages (including window titles, tab titles, URLs, and the clipboard) as **untrusted input**, and don't run it as-is or pass it on elsewhere.
+- Run code that holds the API key **outside the browser/desktop container**.
+- If you put this in a service, tell end users about the risks and get their consent.
+
+Anthropic's classifier checks screenshots for prompt injection and nudges the model to verify where an instruction came from, but the official docs say the precautions above are still needed even with this safeguard in place. For the same cautions in the app, see [C11](/en/claude/c11-chrome-computer-use/).
+</Aside>
+
+<Aside type="caution" title="Watch your costs">
+- Toolset definitions: the computer toolset adds about 4,500 input tokens to every request with all default members on (about 410 fewer if you turn off `zoom`). The browser toolset is about 6,600 with just the default members, and turning on all 4 optional members adds about 880 (official pricing docs, as of 2026-10-12). Check exact values with the response's `usage` or the token counting endpoint.
+- Screenshots: each is about 1,000 to 1,800 input tokens, and they pile up in the conversation history and **get billed again every turn.**
+- The loop in the steps below includes `MAX_ITERATIONS`, a cumulative input token cap, and an output token cap. Never remove them.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I chose an isolated environment (VM or container) and decided not to connect to my logged-in computer',
+  'I created a working folder and virtual environment and installed anthropic',
+  'I confirmed that a single request returns a tool_use response',
+  'I ran the dry-run loop and saw the step and token caps work',
+  'I understand the structure of the browser toolset request and the SDK skeleton',
+  'I filled in every item of the safety checklist before connecting to a real environment',
+]} />
+
+<Steps>
+
+1. **Get set up**
+
+   ```bash
+   mkdir computer-use-lab && cd computer-use-lab
+   python3 -m venv .venv && source .venv/bin/activate
+   pip install anthropic
+   ```
+
+   Set `ANTHROPIC_API_KEY` as an environment variable like in C16, and don't write it in code. In this step, **we don't connect any screen.** Connecting a real screen comes only after you've filled in the checklist in the last step.
+
+2. **Check the toolset request**
+
+   Put one entry in `tools` that has only `type`. Don't send a beta header, `name`, or screen size (they'll be rejected if you do). This article uses `claude-opus-5-5`, the same as in C16. Settings that turn off `thinking` or force `tool_choice` to `any`/`tool` return a 400 error on Opus 5.5, so we don't use them.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   # The computer toolset needs no beta header, no name, and no screen size.
+   response = client.messages.create(
+       model="claude-opus-5-5",
+       max_tokens=2048,
+       tools=[{"type": "computer_toolset_20260801"}],
+       messages=[{"role": "user", "content": "Take a screenshot and tell me which windows are open."}],
+   )
+   print(response.stop_reason)  # "tool_use" if it needs the screen
+   for block in response.content:
+       if block.type == "tool_use":
+           print(block.toolset_name, block.name, block.input)  # e.g. computer screenshot {}
+   ```
+
+   If it needs the screen, `stop_reason` is `tool_use`, and a member name like `screenshot` arrives as `name`. Unlike the old approach, the action name is in `name`, not `input.action`.
+
+3. **Build an agent loop with caps (dry run)**
+
+   Based on the reference loop in the official docs (a structure that uses `max_iterations` to prevent runaway API costs), we added input validation and human approval. The `Desktop` class **only prints the actions without touching the screen.**
+
+   - Members not on the allow list (`ALLOWED`) are rejected. Turn off members you haven't implemented with `configs`. If Claude still calls one, return an `is_error` result.
+   - If coordinates are off screen or `wait` is too long, we reject with an error instead of silently correcting the value.
+   - `type` and `key` run only if a person approves. The input values are generated by the model, so we escape them with `ascii()` when showing them.
+   - If one call fails, the rest in the same turn are answered with the official text `Not executed: an earlier computer action in this turn failed.`
+   - Send `"toolset_name": "computer"` back in every `tool_result`. If you leave it out, the request is rejected.
+
+   ```python
+   """Computer toolset agent loop (dry run by default: it never touches the real screen).
+
+   To connect a real desktop, replace the Desktop class with an implementation for an isolated VM/container.
+   """
+   import base64
+   import sys
+
+   import anthropic
+
+   MODEL = "claude-opus-5-5"
+   MAX_ITERATIONS = 15            # Loop cap: prevents runaway runs
+   MAX_OUTPUT_TOKENS = 2048
+   INPUT_TOKEN_BUDGET = 400_000   # Cumulative input token cap (grows fast as screenshots pile up)
+   SCREEN_W, SCREEN_H = 1280, 800
+   NEEDS_APPROVAL = {"type", "key"}   # Members that need human approval
+   ALLOWED = {"screenshot", "left_click", "double_click", "scroll", "type", "key", "wait", "mouse_move"}
+   NOT_EXECUTED = "Not executed: an earlier computer action in this turn failed."
+
+   # zoom and hold_key aren't implemented in this example, so turn them off. Send the request without the beta namespace.
+   TOOLS = [
+       {
+           "type": "computer_toolset_20260801",
+           "configs": {"zoom": {"enabled": False}, "hold_key": {"enabled": False}},
+       }
+   ]
+
+   client = anthropic.Anthropic()
+
+   # 1x1 PNG placeholder: in the dry run, this image is the "screen".
+   BLANK_PNG = base64.b64encode(
+       base64.b64decode(
+           "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
+       )
+   ).decode()
+
+
+   class Desktop:
+       """Dry-run implementation. For the real thing, swap in something like xdotool inside an isolated VM."""
+
+       def screenshot(self, **_):
+           # A real implementation must resize to fit the model's image limit (long side 1568-2576px) yourself.
+           return [{"type": "image", "source": {"type": "base64", "media_type": "image/png", "data": BLANK_PNG}}]
+
+       def _log(self, name, **kw):
+           print(f"  [dry run] {name} {kw}")
+           return "OK"
+
+       def left_click(self, coordinate=None, text=None, **_):
+           return self._log("left_click", coordinate=coordinate)
+
+       def double_click(self, coordinate=None, text=None, **_):
+           return self._log("double_click", coordinate=coordinate)
+
+       def mouse_move(self, coordinate, **_):
+           return self._log("mouse_move", coordinate=coordinate)
+
+       def scroll(self, scroll_direction, scroll_amount, coordinate=None, **_):
+           return self._log("scroll", direction=scroll_direction, amount=scroll_amount)
+
+       def type(self, text, **_):
+           return self._log("type", chars=len(text))
+
+       def key(self, text, repeat=1, **_):
+           return self._log("key", key=text, repeat=repeat)
+
+       def wait(self, duration, **_):
+           return self._log("wait", duration=duration)
+
+
+   def validate(name: str, tool_input: dict) -> None:
+       """Don't trust model input; check it yourself. If it's wrong, raise -> it comes back as an is_error result."""
+       if name not in ALLOWED:
+           raise ValueError(f"Tool not allowed: {name}")
+       coord = tool_input.get("coordinate")
+       if coord is not None and not (0 <= coord[0] < SCREEN_W and 0 <= coord[1] < SCREEN_H):
+           raise ValueError("Coordinates are off screen")
+       if name == "wait" and tool_input.get("duration", 0) > 10:
+           raise ValueError("wait is limited to 10 seconds")
+       if name == "key" and tool_input.get("repeat", 1) > 5:
+           raise ValueError("repeat is limited to 5")
+       if name == "scroll" and tool_input.get("scroll_amount", 0) > 10:
+           raise ValueError("scroll_amount is limited to 10")
+
+
+   def approved(name: str, tool_input: dict) -> bool:
+       if name not in NEEDS_APPROVAL:
+           return True
+       # The input values are generated by the model, so show them escaped.
+       answer = input(f"  Approve? {name} {ascii(tool_input)} [y/N] ")
+       return answer.strip().lower() == "y"
+
+
+   def process_tool_calls(response, desktop) -> list[dict]:
+       results, failed = [], False
+       for block in response.content:
+           if block.type != "tool_use" or getattr(block, "toolset_name", None) != "computer":
+               continue
+           result = {"type": "tool_result", "tool_use_id": block.id, "toolset_name": "computer"}
+           if failed:  # After one failure, don't run the rest of the calls in the same turn
+               result.update(content=NOT_EXECUTED, is_error=True)
+           else:
+               try:
+                   validate(block.name, block.input)
+                   if not approved(block.name, block.input):
+                       raise PermissionError("The user declined")
+                   result["content"] = getattr(desktop, block.name)(**block.input)
+               except Exception as err:  # noqa: BLE001
+                   result.update(content=f"Error: {err}", is_error=True)
+                   failed = True
+           results.append(result)
+       return results
+
+
+   def run(task: str) -> None:
+       desktop = Desktop()
+       messages = [{"role": "user", "content": task}]
+       spent_input = 0
+       for step in range(1, MAX_ITERATIONS + 1):
+           response = client.messages.create(
+               model=MODEL, max_tokens=MAX_OUTPUT_TOKENS, tools=TOOLS, messages=messages
+           )
+           spent_input += response.usage.input_tokens
+           print(f"Step {step}: stop_reason={response.stop_reason}, cumulative input tokens {spent_input}")
+           if response.stop_reason == "refusal":
+               print("Refused: stopping the task.")
+               return
+           messages.append({"role": "assistant", "content": response.content})
+           results = process_tool_calls(response, desktop)
+           if not results:  # Done when there are no more computer calls
+               print("".join(b.text for b in response.content if b.type == "text"))
+               return
+           if spent_input > INPUT_TOKEN_BUDGET:
+               print("Stopping because the input token cap was exceeded.")
+               return
+           messages.append({"role": "user", "content": results})
+       print(f"Stopped because it reached the maximum of {MAX_ITERATIONS} steps.")
+
+
+   if __name__ == "__main__":
+       run(sys.argv[1] if len(sys.argv) > 1 else "Look at the screen and tell me which windows are open.")
+   ```
+
+   ```bash
+   python computer_loop.py "Look at the screen and tell me which windows are open."
+   ```
+
+   The dry run's screenshot is a blank 1-pixel image, so Claude will probably answer that "the screen is empty." The goal is to see **whether the shape of the loop and its caps work.**
+
+4. **Check the shape of tool_use and tool_result**
+
+   A single Claude call is a block like this (based on the before-and-after examples in the official docs).
+
+   ```json
+   {
+     "type": "tool_use",
+     "id": "toolu_01A9r5kQm2LxWc7vT3nZ4bJs",
+     "name": "left_click",
+     "toolset_name": "computer",
+     "input": { "coordinate": [500, 300] }
+   }
+   ```
+
+   You return the results for all of a turn's calls together in **one next user message.** Only `screenshot` and `zoom` need an image; for the rest, `OK` is enough.
+
+   ```json
+   {
+     "role": "user",
+     "content": [
+       {
+         "type": "tool_result",
+         "tool_use_id": "toolu_01A9r5kQm2LxWc7vT3nZ4bJs",
+         "toolset_name": "computer",
+         "content": [{ "type": "text", "text": "OK" }]
+       }
+     ]
+   }
+   ```
+
+   If even one `tool_use` has no matching result, you get an `invalid_request_error`. That's why the loop above always answers the remaining calls even after a failure.
+
+5. **Use the browser toolset**
+
+   For web work, the browser toolset is a better fit. The request has the same shape as the computer toolset, with only `type` different.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   response = client.messages.create(
+       model="claude-opus-5-5",
+       max_tokens=2048,
+       tools=[{"type": "browser_toolset_20260801"}],  # type only, no name
+       messages=[{"role": "user", "content": "Open example.com/docs and tell me how to get started."}],
+   )
+   print(response.stop_reason)
+   ```
+
+   The browser toolset has these characteristics.
+
+   - 27 members are on by default and 4 are off by default (`javascript_exec`, `file_upload`, `read_console`, `read_network`). You can turn on the off members with `configs`, but they can access a page's cookies and storage or upload files, so turn them on **only when truly necessary, and only in a session with no credentials.**
+   - It reads the page as an **accessibility tree** (`read_page`) and can click using element references like `ref_2`, which the official docs say often uses fewer input tokens than screenshots alone.
+   - Your app is the source of truth for tab state. For tab-related results, you have to return a `browser_state` block.
+   - Allow only `http` and `https` for `navigate` (reject schemes like `javascript:`, `file:`, and `data:`). Use a URL parser, not string prefix checks.
+   - If you want to receive only one call at a time, put `disable_parallel_tool_use: true` in `tool_choice` (this is a different setting from forcing with `any`/`tool`).
+
+   The Python and TypeScript SDKs have **browser and computer toolset classes (beta)** that handle this loop, the URL policy, and approval callbacks for you. If you implement only the per-member-tool methods in a subclass, the SDK takes care of call dispatch, `tool_result` creation, policy checks, and approval callbacks. The SDK doesn't include a browser, desktop, or driver, so you have to build the `backend` yourself (wrapping a library like Playwright works). Below is a skeleton trimmed down from the official quickstart.
+
+   ```python
+   """SDK browser toolset (beta) skeleton. backend is a browser wrapper you build yourself (e.g. Playwright)."""
+   import re
+   from urllib.parse import urlsplit
+
+   from anthropic import Anthropic
+   from anthropic.tools import ToolError
+   from anthropic.tools.browser import (
+       BetaAbstractBrowserToolset20260801,
+       BetaBrowserNavigateResult,
+       BetaBrowserState,
+       BetaConfirmContext,
+       BetaScreenshotResult,
+       BetaToolsetCallContext,
+       BetaURLContext,
+   )
+   from anthropic.types.beta import (
+       BetaBrowserLeftClickInput,
+       BetaBrowserNavigateInput,
+       BetaBrowserScreenshotInput,
+       BetaBrowserStateTabEntryParam,
+   )
+
+   ALLOWED_HOSTS = ("example.com", "iana.org")  # Only the hosts the task needs
+   SCHEME_PREFIX = re.compile(r"[a-z][a-z0-9+.-]*:", re.IGNORECASE)
+   MAX_TURNS = 10
+
+
+   def is_allowed(url: str) -> bool:
+       # This is just an example, not a production policy. Use it together with a network-layer allow list.
+       if url.lower() == "about:blank":
+           return True
+       with_scheme = url if SCHEME_PREFIX.match(url) else f"https://{url}"
+       try:
+           parts = urlsplit(with_scheme.replace("\\", "/"))
+       except ValueError:
+           return False
+       host = parts.hostname or ""
+       listed = any(host == h or host.endswith(f".{h}") for h in ALLOWED_HOSTS)
+       return parts.scheme in ("http", "https") and listed
+
+
+   def url_policy(context: BetaURLContext, url: str) -> None:
+       if not is_allowed(url):
+           raise ToolError(f"blocked: {url} is not on an allowed host")
+
+
+   def confirm(context: BetaConfirmContext) -> bool:
+       # Members with big consequences (JS execution, file upload) are off by default, and even if you turn them on, a person approves here.
+       if context.member in {"javascript_exec", "file_upload"}:
+           return input(f"Approve? {context.member} {ascii(context.input.to_dict())} [y/N] ").lower() == "y"
+       return True
+
+
+   class MyBrowser(BetaAbstractBrowserToolset20260801):
+       def __init__(self, backend, **options):
+           super().__init__(**options)
+           self.backend = backend
+
+       def _browser_state(self, context: BetaToolsetCallContext) -> BetaBrowserState:
+           return BetaBrowserState(
+               tabs=[
+                   BetaBrowserStateTabEntryParam(
+                       tab_id=tab.id, title=tab.title, url=tab.url, active=tab.id == self.backend.active
+                   )
+                   for tab in self.backend.tabs()
+               ],
+               state_changes=self.backend.drain_changes(),
+           )
+
+       def navigate(self, context: BetaToolsetCallContext, input: BetaBrowserNavigateInput) -> BetaBrowserNavigateResult:
+           page = self.backend.goto(input.url, input.tab_id)
+           return BetaBrowserNavigateResult(url=page.url, status=page.status, title=page.title)
+
+       def screenshot(self, context: BetaToolsetCallContext, input: BetaBrowserScreenshotInput) -> BetaScreenshotResult:
+           return BetaScreenshotResult(data=self.backend.png_base64(input.tab_id), media_type="image/png")
+
+       def left_click(self, context: BetaToolsetCallContext, input: BetaBrowserLeftClickInput) -> None:
+           self.backend.click(input.target, input.tab_id)
+
+       def close(self) -> None:
+           super().close()
+           if not self.backend.closed:
+               self.backend.close()
+
+
+   def run(backend, task: str) -> None:
+       client = Anthropic()
+       # Members you haven't implemented are passed to the API as "disabled".
+       with MyBrowser(backend, url_policy=url_policy, confirm=confirm) as browser:
+           runner = client.beta.messages.tool_runner(
+               model="claude-opus-5-5",
+               max_tokens=2048,
+               tools=[browser],
+               messages=[{"role": "user", "content": task}],
+               max_iterations=MAX_TURNS,
+           )
+           for message in runner:
+               print(message)
+   ```
+
+   - `url_policy` rejects `navigate` unless the host is allowed. The example's `is_allowed` is not for production, so use it together with a network-layer allow list.
+   - `confirm` asks a person before running members with big consequences. If you implement `type`, `key`, or `hold_key` in the computer toolset, `confirm` is required.
+   - Members you haven't implemented are passed to the API as disabled. The classes are in beta, so names and signatures may change; check the browser-toolset docs in the SDK repository before you update.
+   - The official repository (anthropics/claude-quickstarts) has a minimal example that controls Chromium over CDP. The official docs also state that this example is not production code. Partners such as Browser Use, Browserbase, Daytona, and E2B also offer SDK toolset integrations.
+
+6. **Check before connecting to a real environment**
+
+   When you switch the dry run to a real environment, fill in every item below.
+
+   - [ ] Is it an isolated VM/container created fresh for each session? (No credentials, no host mounts, no personal files)
+   - [ ] Are a domain allow list and private address blocking applied at the network layer?
+   - [ ] Are there no terminals, run dialogs, or launchers on the screen? (`type`/`key` input can turn straight into command execution)
+   - [ ] Is human approval required for actions with big consequences? Did you set the approval scope as "everything outside the allow list needs approval"?
+   - [ ] Are you resizing screenshots yourself to fit the model's image limit, and mapping coordinates back to the original screen size?
+   - [ ] Are there caps on iterations, cumulative tokens, and output tokens, and does it stop when `stop_reason` is `refusal`?
+   - [ ] Are you logging every action and result?
+   - [ ] Does the code holding the API key run outside the screen environment?
+
+   **Screenshot size**: According to the official docs, newer models accept a long side of up to 2576px and up to 4784 visual tokens, and older models accept a long side of up to 1568px and about 1.15MP. The API doesn't shrink large images for you; it returns an error. If you shrank the image, remember that ratio and map the coordinates Claude gives you back, like `x / scale`, before clicking. On macOS Retina displays, screenshots are 2x the logical resolution, so you need to correct for that separately.
+
+</Steps>
+
+## Quick reference
+
+### Computer toolset definition (as of 2026-10-11)
+
+| Item | Details |
+| --- | --- |
+| `type` | `computer_toolset_20260801` (required) |
+| `configs` | Per-member `enabled` (on by default, including `zoom`) and `defer_loading` |
+| `cache_control`, `allowed_callers` | Optional (`allowed_callers` accepts only `["direct"]`) |
+| Old fields that are rejected | `name`, `display_width_px`, `display_height_px`, `display_number`, `enable_zoom` |
+| Can't be used together with | A `computer_20251124` entry, a tool named `computer` |
+| Call shape | `tool_use` block: `name` = member, `toolset_name` = `computer`, no `action` field in `input` |
+| Results | Send `"toolset_name": "computer"` back with every `tool_result`. Only `screenshot` and `zoom` return images |
+| Documented batch rules | Run in order, stop at the first failure, the rest get `is_error: true` and the set text |
+
+### The 17 computer toolset members
+
+| Category | Members |
+| --- | --- |
+| Viewing | `screenshot`, `zoom` (zoom into a region), `cursor_position` |
+| Clicking | `left_click`, `right_click`, `middle_click`, `double_click`, `triple_click` |
+| Moving and dragging | `mouse_move`, `left_click_drag`, `left_mouse_down`, `left_mouse_up` |
+| Scrolling | `scroll` (`up`, `down`, `left`, `right`) |
+| Keyboard | `type`, `key` (`repeat` 1 to 100), `hold_key` (up to 300 seconds) |
+| Waiting | `wait` (up to 300 seconds) |
+
+### Browser toolset member summary (of 31)
+
+| Category | Members |
+| --- | --- |
+| Navigate and capture | `navigate`, `screenshot`, `zoom` |
+| Reading the page | `read_page`, `find`, `get_page_text` |
+| Pointer | `left_click`, `right_click`, `middle_click`, `double_click`, `triple_click`, `hover`, `left_click_drag`, `left_mouse_down`, `left_mouse_up`, `mouse_move`, `scroll`, `scroll_to` |
+| Keyboard and time | `type`, `key`, `hold_key`, `wait` |
+| Forms | `form_input`, `file_upload` (off by default) |
+| Diagnostics and scripting | `read_console`, `read_network`, `javascript_exec` (all off by default) |
+| Tabs | `new_tab`, `list_tabs`, `switch_tab`, `close_tab` |
+
+### Rough cost calculation (as of 2026-10-11, estimate)
+
+Assumptions: 4,500 tokens of definition overhead, one screenshot (about 1,800 tokens) piling up each turn, no caching or screenshot cleanup, and text, output, and thinking tokens ignored. The input for turn n is about 4,500 + 1,800 × n.
+
+| Iterations | Cumulative input tokens | Opus 5.5 ($4 / 1M) | Sonnet 5.5 ($2 / 1M) |
+| --- | --- | --- | --- |
+| 15 turns | About 280,000 | About $1.1 | About $0.6 |
+| 30 turns | About 970,000 | About $3.9 | About $1.9 |
+
+Actual costs may be higher or lower. Check with the response's `usage`, and you can estimate ahead of time with the token counting endpoint. Ways to reduce them include an iteration cap, cleaning up old screenshots, and using a smaller model. The official docs say not to clear old screenshots every turn but to clean them up in batches (for example, keep the last three and clean every 25 turns), and for the latest models they recommend server-side tool result clearing, because clearing on the client side can invalidate thinking blocks. For costs in general, see [2. Cost optimization](/en/dev/02-cost-optimization/).
+
+## Common sticking points
+
+### 400 error: does not support tool types: computer_20251124
+
+- **Cause**: On the Claude API and Google Cloud, Opus 5.5, Sonnet 5.5, and Haiku 5.5 don't accept the old computer tool.
+- **Fix**: Change `tools` to `{"type": "computer_toolset_20260801"}` and drop the beta header and beta namespace. You also need to change your loop to branch on the block's `name` and `toolset_name` instead of `input.action`.
+
+### invalid_request_error: a tool_use has no result, or toolset_name is wrong
+
+- **Cause**: You didn't give a `tool_result` for some of a turn's calls, or you left `toolset_name` out of a result. This happens often in code that handles only the first block when several calls arrive as a batch.
+- **Fix**: Go through every `tool_use` in the response, and answer calls that come after a failure with the set text.
+
+### I get an image size validation error
+
+- **Cause**: A screenshot or `zoom` image exceeded the model's image limit. The API doesn't shrink it for you.
+- **Fix**: Resize it yourself before sending and remember the ratio. If a request has more than 20 images, the side-length limit gets stricter.
+
+### Clicks land in the wrong place
+
+- **Cause**: Coordinates are in the pixel space of the screenshot you returned. You may not have corrected for resizing or Retina scaling.
+- **Fix**: Map the coordinates back by the ratio you shrank the screenshot by. Have it verify small text with `zoom` (if you've turned it on), and instruct it to work in a style like "check with a screenshot after each step."
+
+### The loop doesn't end or the cost suddenly jumps
+
+- **Cause**: There's no cap, and screenshots pile up in the conversation history. Claude may also repeat the same action.
+- **Fix**: Add `MAX_ITERATIONS` and a cumulative token cap, and stop if the same action keeps repeating. Log `usage` for every request.
+
+### Claude calls a member I haven't implemented
+
+- **Cause**: Even a disabled member can still be named by Claude.
+- **Fix**: Give members you won't use `enabled: false` in `configs`, and if a call still arrives, answer with an `is_error: true` result.
+
+### I get a 400 because of a legacy beta header
+
+- **Cause**: You're sending the `fine-grained-tool-streaming-2025-05-14` beta header along with the toolset entry.
+- **Fix**: Remove the header, and use `eager_input_streaming: true` on the tool definitions that need it.
+
+## Practical tips
+
+- **Go in the order dry run → isolated VM → expand.** First check only the loop without touching the screen, then try one real app in a disposable VM.
+- **Give short, specific instructions.** The official docs advise giving simple, explicit steps and checking the result with a screenshot at each step. Keyboard shortcuts are more reliable for dropdowns and scrollbars. Put instructions before the screenshot image.
+- **For the web, start with the browser toolset.** Reading through the accessibility tree often uses fewer input tokens than screenshots, and it's easier to apply a URL policy and domain allow list.
+- **If you want to see the reasoning.** These models omit thinking text by default. When debugging, set `thinking`'s `display` to `"summarized"` to see a summary.
+- **Compare smaller models first.** Run the same task with `claude-sonnet-5-5` and compare success rate and cost. For how to compare, see [8. Evals](/en/dev/08-evals/).
+- **Know the limits when you use it.** The official docs note that latency is slower than a person, that it can make mistakes with coordinates and tool choice, that scrolling and spreadsheet manipulation can be unreliable, and that work that needs perfect precision or involves sensitive information needs human supervision. Tasks where speed doesn't matter (gathering background information, automated testing) are a good fit.
+- **Follow the terms.** Don't use it for anything illegal or against the Acceptable Use Policy (AUP).
+- **If the app features are enough, use the app.** For personal tasks, Claude in Chrome or computer use in [C11](/en/claude/c11-chrome-computer-use/) is much simpler.
+
+## What to read next
+
+- [C11. Chrome and computer use](/en/claude/c11-chrome-computer-use/) — How to use the app features, and the user-side safety rules
+- [1. Build a work bot with tool use](/en/dev/01-tool-use/) — The basics of the `tool_use` and `tool_result` loop
+- [2. Reduce API costs](/en/dev/02-cost-optimization/) — Lower costs with caching, batch, and effort
+- [8. Manage quality with evals](/en/dev/08-evals/) — Measure the success rate of agent tasks

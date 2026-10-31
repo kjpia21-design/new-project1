@@ -1,9 +1,11 @@
 ---
-import { levelLabels, type Level } from '../lib/tutorials';
+import { getLevelLabel, type Level } from '../lib/tutorials';
+import { getLang } from '../lib/i18n';
 interface Props { level: Level }
 const { level } = Astro.props;
+const lang = getLang(Astro);
 ---
-<span class={`level-badge level-${level}`}>{levelLabels[level]}</span>
+<span class={`level-badge level-${level}`}>{getLevelLabel(level, lang)}</span>
 
 <style>
   .level-badge {

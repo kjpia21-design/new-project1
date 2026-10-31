@@ -1,0 +1,365 @@
+---
+title: "Build a Team Usage Dashboard with the Usage and Cost Analytics API"
+description: "An advanced tutorial on using the Usage and Cost Analytics API (beta) to pull tokens and costs by model, workspace, API key, and user into a CSV and a simple HTML dashboard, including how it differs from the older Usage and Cost API (legacy) and how data delays work"
+sidebar:
+  label: "11. Team usage dashboard with the usage and cost API"
+level: advanced
+category: dev
+tools: ["Claude API", "Usage and Cost Analytics API", "Python SDK"]
+duration: "60 min"
+prerequisites:
+  - "C16. Getting started with the Claude API (API key, first call)"
+  - "2. Cut API costs with prompt caching, batch, and effort (why you look at the cache read share)"
+  - "A Claude Console organization and the admin role (needed to create an Admin API key)"
+  - "Python 3.10 or later, pip install anthropic"
+lastVerified: 2026-10-31
+sources:
+  - title: "Usage and Cost Analytics API (beta)"
+    url: "https://platform.claude.com/docs/en/manage-claude/usage-cost-analytics-api"
+  - title: "Usage and Cost API (legacy)"
+    url: "https://platform.claude.com/docs/en/manage-claude/usage-cost-api"
+  - title: "Create an Admin API key"
+    url: "https://platform.claude.com/docs/en/manage-claude/admin-api-keys"
+  - title: "Claude Platform release notes"
+    url: "https://platform.claude.com/docs/en/release-notes/overview"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- Pull your whole organization's token usage and cost with the **Usage and Cost Analytics API**. The endpoints are `GET /v1/organizations/analytics/usage` (tokens and request counts) and `GET /v1/organizations/analytics/cost` (cost in USD).
+- This API is in **beta**. Every request sends the `anthropic-beta: analytics-usage-cost-2026-08-24` and `anthropic-version` headers. The SDK and the `ant` CLI add both headers for you.
+- Authentication uses an **Admin API key** (a Console key looks like `sk-ant-admin01-...`). A regular workspace key won't work. The Admin API isn't available on individual accounts, and keys are created by an organization member with the admin role.
+- The older `usage_report/messages` and `cost_report` became **legacy** but remain supported (2026-10-29 release notes). The official docs say to use the analytics API for anything new.
+- Data is usually refreshed within 4 hours and can take up to 24 hours. It's meant for **daily and monthly reports**, not real-time monitoring.
+- The code in this tutorial was run only against fake responses. We couldn't call it with a real Admin key (as of 2026-10-31).
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Choose which API (the analytics API, the legacy API, or the Enterprise analytics API) and which key suit your organization.
+- Pull a month of costs by model, date, and user (or service account) and turn them into a CSV and a one-page HTML file.
+- Calculate the cache read share from the usage response to check whether the caching from [Tutorial 2](/en/dev/02-cost-optimization/) is actually working.
+- Explain why numbers can look different from your invoice, because of data delay, the 31-day range limit, and after-the-fact corrections.
+
+This tutorial is for people who have finished [C16. Getting started with the Claude API](/en/claude/c16-api/). Per-call `usage` logging was covered in [Tutorial 2](/en/dev/02-cost-optimization/); here we cover how to see the **whole organization** at once.
+
+<Aside type="note" title="What the examples were checked against">
+The examples follow the request format in the official docs, and on 2026-10-31 we checked the Python syntax (`python3 -m py_compile`). Using fake objects that mimic the response shape, we confirmed that the CSV and HTML get created. We had no Admin API key, so we couldn't call the real API. The response field names follow the examples in the official docs, so the first time you run it, pull just a few rows and check the output first.
+</Aside>
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Admin API key** | A key for calling the APIs that manage your organization. Console keys start with `sk-ant-admin01-...`. A regular workspace key can't be used with these endpoints. |
+| **Row** | One line of the response. It consists of a time period (`starting_at`, `ending_at`), the grouping (`group`), and a metric (`usage` or `cost`). |
+| **`group_by[]`** | Decides what to split the data by. Options include model, workspace, API key, service tier, and `actor`, with up to 5 at a time. |
+| **`actor`** | The principal the request is attributed to: a user, a service account, a cloud identity, or, if none of those, the API key itself. Usage that can't be attributed has `actor: null`. |
+| **`time_bucket_width`** | Splits rows by time using one of `1m`, `1h`, or `1d`. If you don't set it, the whole period is summed into one lump. |
+| **`data_refreshed_at`** | A timestamp in the response. Usage after this time may be missing or only partly included. |
+
+### Which API should you use?
+
+| Your organization | API to use | Key |
+| --- | --- | --- |
+| Claude Console (Claude Platform) | Usage and Cost Analytics API (recommended). The older Usage and Cost API is legacy | An Admin API key or another Admin API credential (for example, an OAuth token with the `org:admin` scope) |
+| Claude Enterprise (claude.ai) | Usage and Cost Analytics API (recommended). The cost and usage endpoints of the Enterprise Analytics API are legacy | A key with the `read:analytics` scope. The primary owner of the parent Enterprise organization creates it in claude.ai, and the Analytics API must be activated first |
+
+The same endpoints, parameters, and response fields are used for both Console and Enterprise organizations. However, **dimensions that don't apply to your organization are `null` in every row**: for example, `api_key_id` applies only to Console organizations and `slack_channel_id` only to Enterprise organizations (as of 2026-10-31).
+
+<Aside type="note" title="What we couldn't confirm">
+We haven't listed the organization-level rate limit numbers for the analytics API because they aren't in the docs we read. The legacy docs say "sustained use supports polling once per minute," but we couldn't confirm whether the same value applies to the analytics API. Either way, the data is refreshed in units of several hours, so we think it's safest for a dashboard to pull data a few times a day and store it (this part is my own judgment, not what the docs say).
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I created an Admin API key in the Console and stored it in a secrets manager',
+  'I set the ANTHROPIC_ADMIN_KEY environment variable',
+  'I pulled a few rows of one day of usage with curl and checked the response shape',
+  'I pulled monthly cost by model and date and saved it as a CSV',
+  'I pulled the top-spending users and service accounts',
+  'I calculated the cache read share and compared it with the benchmarks in Tutorial 2',
+  'I decided when to pull data, allowing for data delay and later corrections',
+]} />
+
+<Steps>
+
+1. **Create an Admin API key**
+
+   Only a member with the **admin role** in a Claude Console organization can create one. On the Console's [Admin keys](https://platform.claude.com/settings/admin-keys) page, click **Create admin key**, set a name and an expiration (key expiration), and click **Add**. Console keys have no scope-selection step and can access every endpoint that takes an Admin API key. The secret value is shown **only once**, so save it to a secrets manager right away.
+
+   <FlowSteps title="Create an Admin API key (Console organization)" officialUrl="https://platform.claude.com/docs/en/manage-claude/admin-api-keys" steps={[
+     { where: 'Claude Console, signed in with the admin role', action: 'Open the Admin keys page' },
+     { where: 'Admin keys page', action: 'Click Create admin key, choose a name and expiration, click Add', result: 'The `sk-ant-admin01-...` secret is shown once' },
+     { where: 'Your secrets manager', action: 'Save the secret. Use it as a key dedicated to the collection service and rotate it regularly', result: 'Read it through the ANTHROPIC_ADMIN_KEY environment variable' },
+   ]} />
+
+   The official docs advise giving the service that collects this data a **dedicated key**, storing it in a secrets manager, and rotating it regularly. Setting an expiration forces rotation. They also say that where possible, you can use a Workload Identity Federation rule (`org:admin` scope) to get short-lived tokens. We don't cover that in this tutorial.
+
+   <Aside type="caution" title="An Admin key has organization-wide permissions">
+   Console keys have no scope selection, so even if you use one only to read usage, it carries the other admin permissions an Admin key has. Keep it only on the dashboard server, and don't write it in scripts or repositories. The Admin API isn't available on individual accounts. If you don't have an organization yet, first set one up on the Console's [Organization](https://platform.claude.com/settings/organization) page.
+   </Aside>
+
+2. **Check the response shape with curl**
+
+   Before writing code, pull a week of data by model and by day. Add `--globoff` so curl doesn't interpret the square brackets (`group_by[]`). This request follows the quickstart example in the official docs exactly.
+
+   ```bash
+   export ANTHROPIC_ADMIN_KEY="your-admin-key-here"
+   curl --globoff "https://api.anthropic.com/v1/organizations/analytics/usage?\
+   starting_at=2026-09-01T00:00:00Z&\
+   ending_at=2026-09-08T00:00:00Z&\
+   time_bucket_width=1d&\
+   group_by[]=model&\
+   limit=10" \
+     -H "anthropic-version: 2023-06-01" \
+     -H "anthropic-beta: analytics-usage-cost-2026-08-24" \
+     -H "x-api-key: $ANTHROPIC_ADMIN_KEY"
+   ```
+
+   The response consists of a `data` array, `has_more`, `next_page`, and `data_refreshed_at`. Each row in `data` has a `group` (all dimensions you didn't ask for are `null`) and `usage`, and `usage` contains `uncached_input_tokens`, `cache_creation` (`ephemeral_5m_input_tokens`, `ephemeral_1h_input_tokens`), `cache_read_input_tokens`, `output_tokens`, `total_tokens`, `server_tool_use.web_search_requests`, and `requests`. Rows come in descending order of `total_tokens`.
+
+   <ScreenshotPlaceholder caption="The Console's Usage and Cost screens (use them to cross-check the API numbers)" officialUrl="https://platform.claude.com/docs/en/manage-claude/usage-cost-analytics-api" officialLabel="View in Anthropic docs" />
+
+3. **Decide your date range**
+
+   Knowing the range rules first cuts down on errors (as of 2026-10-31).
+
+   - Timestamps are in RFC 3339 format with a UTC offset. `starting_at` is inclusive and `ending_at` is exclusive.
+   - `starting_at` must be after January 1, 2026 and within the last 365 days.
+   - A single request covers **at most 31 days**. For longer periods, split it into several requests.
+   - If you use `time_bucket_width`, `ending_at` is required. `1m` is at most 24 hours per request.
+   - Both ends are rounded down to a UTC bucket boundary. Without buckets, they're rounded down to the hour.
+
+4. **Pull monthly cost, top users, and cache read share, and create files**
+
+   The script below pulls three things and creates `daily_cost.csv` and `dashboard.html`.
+
+   - Cost by model and by day: the `cost` endpoint with `group_by=["model"]` and `time_bucket_width="1d"`
+   - Top-spending `actor`s: `group_by=["actor"]` with no buckets. Rows come in descending order of cost, so use only the first few.
+   - Cache read share by model: from the `usage` endpoint, divide cache read tokens by total input tokens.
+
+   The cost `amount` is a **decimal string in cents** (6 digits after the decimal point). `"41280.000000"` is $412.80, so divide by 100. `amount` is the figure after discounts and before credits are applied, and `list_amount` is based on list price. The SDK automatically fetches the remaining pages while you read through (`limit` is just the page size).
+
+   ```python
+   import csv
+   import html
+   import os
+   from collections import defaultdict
+   from decimal import Decimal
+   from itertools import islice
+
+   import anthropic
+
+   # Read the Admin API key separately, not a regular key.
+   client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_ADMIN_KEY"])
+
+   START = "2026-09-01T00:00:00Z"
+   END = "2026-10-01T00:00:00Z"  # At most 31 days at a time
+
+
+   def usd(cents: str) -> Decimal:
+       # The cost amount is a string in cents. "41280.000000" = $412.80
+       return Decimal(cents) / 100
+
+
+   def daily_cost_by_model():
+       rows = client.beta.organization.analytics.cost.list(
+           starting_at=START,
+           ending_at=END,
+           time_bucket_width="1d",
+           group_by=["model"],
+           limit=1000,
+       )
+       return [(r.starting_at, r.group.model or "(no model)", usd(r.cost.amount)) for r in rows]
+
+
+   def top_actors(n=10):
+       rows = client.beta.organization.analytics.cost.list(
+           starting_at=START, ending_at=END, group_by=["actor"], limit=25
+       )
+       out = []
+       for r in islice(rows, n):  # Rows come in descending order of cost, so take only the first n
+           a = r.group.actor
+           who = "(unattributed)" if a is None else (
+               getattr(a, "user_id", None) or getattr(a, "service_account_id", None) or str(a.type)
+           )
+           out.append((who, usd(r.cost.amount)))
+       return out
+
+
+   def cache_read_share():
+       rows = client.beta.organization.analytics.usage.list(
+           starting_at=START, ending_at=END, group_by=["model"], limit=100
+       )
+       out = []
+       for r in rows:
+           u = r.usage
+           total_in = (
+               u.uncached_input_tokens
+               + u.cache_creation.ephemeral_5m_input_tokens
+               + u.cache_creation.ephemeral_1h_input_tokens
+               + u.cache_read_input_tokens
+           )
+           share = u.cache_read_input_tokens / total_in if total_in else 0.0
+           out.append((r.group.model or "(no model)", total_in, share))
+       return out
+
+
+   def write_report(daily, actors, cache):
+       with open("daily_cost.csv", "w", newline="") as f:
+           w = csv.writer(f)
+           w.writerow(["date", "model", "cost_usd"])
+           for day, model, cost in sorted(daily, key=lambda x: (str(x[0]), x[1])):
+               w.writerow([str(day)[:10], model, f"{cost:.2f}"])
+
+       per_model = defaultdict(Decimal)
+       for _, model, cost in daily:
+           per_model[model] += cost
+       top = max(per_model.values(), default=Decimal(1)) or Decimal(1)
+
+       parts = ["<meta charset='utf-8'><h1>2026-09 Usage overview</h1><h2>Cost by model (USD)</h2><table>"]
+       for model, cost in sorted(per_model.items(), key=lambda kv: -kv[1]):
+           bar = int(300 * cost / top)
+           parts.append(
+               f"<tr><td>{html.escape(model)}</td><td>${cost:,.2f}</td>"
+               f"<td><div style='background:#c96442;height:12px;width:{bar}px'></div></td></tr>"
+           )
+       parts.append("</table><h2>Top-spending users and service accounts</h2><ol>")
+       parts += [f"<li>{html.escape(who)}: ${cost:,.2f}</li>" for who, cost in actors]
+       parts.append("</ol><h2>Cache read share of input</h2><ul>")
+       parts += [f"<li>{html.escape(m)}: {s:.0%} ({t:,} input tokens)</li>" for m, t, s in cache]
+       parts.append("</ul>")
+       with open("dashboard.html", "w", encoding="utf-8") as f:
+           f.write("".join(parts))
+
+
+   if __name__ == "__main__":
+       write_report(daily_cost_by_model(), top_actors(), cache_read_share())
+       print("Created daily_cost.csv and dashboard.html.")
+   ```
+
+   Run it like this. The first time, shrink `START` and `END` to 3 to 7 days.
+
+   ```bash
+   export ANTHROPIC_ADMIN_KEY="your-admin-key-here"
+   python3 usage_dashboard.py
+   ```
+
+   If the `actor` is a user, it comes out as `user_id`; if it's a service account, as `service_account_id` (per the official migration table). To turn these into names or emails, you'd need to separately add Admin API user and service account lookups, which this tutorial doesn't cover.
+
+5. **Read the results and turn them into cost savings**
+
+   Use `dashboard.html` and the CSV to check the following.
+
+   - Is the cost concentrated in one model? If so, see [C15](/en/claude/c15-model-division/) for whether simple tasks could run on a smaller model.
+   - Is there a model with a low cache read share? Check whether the fixed prefix breaks often, using the invalidation causes in [Tutorial 2](/en/dev/02-cost-optimization/). The official cost guide cited in Tutorial 2 has a figure that a median of 84% of input was read from cache in agent loops, but that is for agent loops, so it isn't a benchmark to compare directly with a whole organization.
+   - Are there service accounts or API keys among the top `actor`s? Look at the logs of the app involved for repeated calls or retry storms.
+
+   If you want to hand the analysis to Claude, first check that the CSV contains no personally identifying information, then ask like this.
+
+   <PromptBox>
+   The attached daily_cost.csv is our team's Claude API cost for September. The columns are date, model, and cost_usd. Please put these in a table: 1) the monthly total and share by model, 2) days when daily cost was more than 2x normal, and 3) three candidates for reducing cost. Don't guess about things you don't know; say you don't know.
+   </PromptBox>
+
+6. **Decide when to pull data**
+
+   Data is usually refreshed **within 4 hours** of use and can take up to 24 hours. Because of late-arriving events and settlement, values can change for **about 7 days after the month ends** (for example, October 1 values until around November 7). So it's safest to operate like this.
+
+   - Pull confirmed monthly reports only for **months that ended 7 or more days ago**.
+   - Label the month in progress as "provisional," and store the response's `data_refreshed_at` alongside it (it's visible in the curl response; the SDK example above returns only the rows, so it doesn't read this value separately).
+   - If you want to get repeatable results, set `ending_at` before the `data_refreshed_at` you've already seen.
+
+</Steps>
+
+## Migrating from the legacy API
+
+If you already use `usage_report/messages` and `cost_report`, there's no need to switch right away. The official release notes (2026-10-29) and docs say both endpoints are legacy but **still supported**. If you do migrate, the migration table in the official docs lists these differences.
+
+| Item | Legacy (Usage and Cost API) | Analytics API (beta) |
+| --- | --- | --- |
+| Beta header | None | `anthropic-beta: analytics-usage-cost-2026-08-24` required |
+| Data delay | Usually within 5 minutes | Usually within 4 hours, up to 24 hours |
+| Response shape | A list of time buckets (including empty buckets, oldest first) | A list of rows (sorted with `order_by`; combinations with no data have no row) |
+| Bucket parameter | `bucket_width` (default `1d`) | `time_bucket_width` (no default) |
+| `limit` | Number of time buckets | Number of rows (1 to 1,000, default 20) |
+| Period | No limit described | After 2026-01-01, last 365 days, 31 days per request |
+| Users and service accounts | `account_ids[]`, `service_account_ids[]` | `actor_ids[]`, `group_by[]=actor` |
+| Cost `description` | Present | None. Grouped by structured dimensions |
+| Default workspace | `workspace_id` is `null` | A real `wrkspc_` ID |
+
+The FAQ in the legacy docs says Priority Tier usage appears only in the usage endpoint, and code execution costs appear only in the cost endpoint. In the analytics API, code execution shows up as a usage row with `model: null`, and a request count field has been added.
+
+## Quick reference
+
+| Item | Value (as of 2026-10-31) |
+| --- | --- |
+| Usage endpoint | `GET https://api.anthropic.com/v1/organizations/analytics/usage` |
+| Cost endpoint | `GET https://api.anthropic.com/v1/organizations/analytics/cost` |
+| Required headers | `anthropic-version: 2023-06-01`, `anthropic-beta: analytics-usage-cost-2026-08-24` (automatic in the SDK) |
+| Authentication | Console: an Admin API key or an `org:admin` OAuth token (`authorization: Bearer`). Enterprise: a key with the `read:analytics` scope |
+| Usage `order_by` | `total_tokens` (default), `output_tokens`, `uncached_input_tokens`, `requests`, `time` |
+| Cost `order_by` | `amount` (default), `list_amount`, `time` |
+| Cost-only dimensions | `cost_type`, `token_type` (not counted toward the limit of 5, and `limit` doesn't apply to them either) |
+| `group_by[]` | Up to 5 |
+| Filters | Square-bracket notation like `models[]`, up to 100 values. Same filter is OR, different filters are AND |
+| Amount format | Decimal string in cents, 6 decimal places. `amount` is after discounts and before credits |
+| Period per request | Up to 31 days; `1m` buckets cover 24 hours |
+| Data refresh | Usually within 4 hours, up to 24 hours; can be corrected for about 7 days after month end |
+| Cloud platforms | Both endpoints work on Claude Platform on AWS, and also on Anthropic-managed Google Cloud, but authentication differs. See the official docs. |
+
+## Common sticking points
+
+### I get an authentication error
+
+- **Cause**: You used a regular workspace API key, or you're on an individual account where the Admin API isn't available. If you're on an Enterprise organization, it may not be a key with the `read:analytics` scope.
+- **Fix**: Use an Admin API key created by a Console organization admin. For Enterprise, create a key with the `read:analytics` scope on the API screen in your claude.ai organization settings (activate the Analytics API first). We couldn't confirm the error code numbers in the official docs.
+
+### The response is empty
+
+- **Cause**: Data for the requested range hasn't been aggregated yet. In that case `data_refreshed_at` is `null` and `data` is empty. Or you filtered by a dimension that doesn't apply to your organization and nothing matched.
+- **Fix**: Try again a few hours later, and remove the filters to check that everything comes back. A misspelled `models[]` value **matches nothing, without an error**.
+
+### I get a date range error
+
+- **Cause**: The range exceeds 31 days, is before 2026-01-01, is older than 365 days, or you used buckets and left out `ending_at`.
+- **Fix**: Split the range into pieces of 31 days or less, request each, and combine the results.
+
+### The totals differ from the invoice or the Console
+
+- **Cause**: Values are corrected for about 7 days after month end. `amount` is the figure before credits are applied. For Priority Tier committed requests, usage shows `service_tier: "priority"` but the token cost is recorded as 0 (the committed fee is billed separately and isn't in this data), and web search is at the standard rate.
+- **Fix**: Compare the final numbers only after 7 days have passed since the month ended. For billed amounts, the Console and your invoice are the reference.
+
+### A row's `workspace_id` or `api_key_id` is `null`
+
+- **Cause**: You didn't group by that dimension, the dimension doesn't apply to your organization, or the usage has no such value. For example, Console Playground usage isn't linked to an API key, so per the legacy docs `api_key_id` is `null`.
+- **Fix**: Check that you put that dimension in `group_by[]`. To tell whether a `null` is intended, try grouping by `actor` as well.
+
+### There's a service account I don't recognize (`svac_...`)
+
+- **Cause**: According to the legacy docs FAQ, usage from some Claude Managed Agents sessions is reported under a service account managed by Anthropic, and it doesn't appear in the list of service accounts you created.
+- **Fix**: If you use [Managed Agents](/en/dev/04-managed-agents/), check that tutorial and the official session observability docs.
+
+## Practical tips
+
+- **Store what you pull by date**, and overwrite the month in progress each time. It's safest to freeze only months that are finalized.
+- When you use model and tier in a dashboard, keep `group_by[]` to a minimum. Each added dimension multiplies the number of rows.
+- For per-user Claude Code cost, the official docs advise querying the cost endpoint with `products[]=claude_code&group_by[]=actor`. Console organizations can also see per-user activity and estimated cost through the Claude Code Analytics API. See the official docs for details.
+- If you already use an observability tool, check it before building your own. The legacy docs describe integrations with CloudZero, Datadog, Grafana Cloud, Harness, Honeycomb, Tempo, and Vantage.
+- For how to set spend limits, see the [spend limit notes in Tutorial 2](/en/dev/02-cost-optimization/) and [C16](/en/claude/c16-api/). This API is read-only and doesn't stop spending.
+- When you share a dashboard internally, remember that `actor` IDs point to individuals, and decide who gets to view it.
+
+## What to read next
+
+- [2. Cut API costs with prompt caching, batch, and effort](/en/dev/02-cost-optimization/) — How to reduce the cost problems you find in the dashboard
+- [C16. Getting started with the Claude API](/en/claude/c16-api/) — Tiers, spend limits, and per-model restrictions
+- [4. Run agents on a server with Managed Agents](/en/dev/04-managed-agents/) — How session usage shows up
+- [An AI guide for developers](/en/roles/developer/) — The overall flow of development work

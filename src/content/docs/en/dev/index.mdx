@@ -1,0 +1,41 @@
+---
+title: Advanced for Developers
+description: Tool use, the Agent SDK, MCP servers, CI automation, and evals. Eleven advanced, hands-on tutorials on working with Claude through code.
+sidebar:
+  label: Overview
+  order: 0
+---
+
+import TutorialGrid from '../../../../components/TutorialGrid.astro';
+
+This section is for people who want to go beyond using Claude in the app and **work with it directly through code and the API**. Across 11 tutorials, centered on runnable code, you'll build work bots, build your own agents, connect MCP servers, automate with CI, and manage output quality.
+
+## Who is this section for?
+
+- Developers, or power users who are comfortable reading code and using a terminal
+- People who have already tried Claude Code and the API at least once
+
+We don't repeat the basics. This section is written for **readers who have read [Claude Code core features (C14)](/en/claude/c14-claude-code-features/), [Dividing work among models (C15)](/en/claude/c15-model-division/), and [Getting started with the API (C16)](/en/claude/c16-api/)**. If you hit a term you don't know, go back to those lessons.
+
+## What you'll need
+
+- A Claude API key (manage it only through environment variables; never write it directly in code)
+- Python 3.10 or later
+- Node.js (needed for the TypeScript and JavaScript examples, MCP servers, and Claude Code)
+- A terminal and Git
+
+:::caution[Watch your costs]
+Repeated calls, agent loops, batches, and computer use examples can get expensive quickly. Follow the usage-cap guidance in each tutorial, and set a spending limit in the Console first.
+:::
+
+## Suggested learning order
+
+1. **API basics**: Tool use (01) → Cost optimization (02)
+2. **Agents**: Agent SDK (03) → Managed Agents (04)
+3. **Extending and deploying**: MCP servers (05) → Skills and plugins (06)
+4. **Automation and quality**: Headless mode and CI (07) → Evals (08)
+5. **Applications**: Internal document Q&A (09) → Computer and browser tools (10) → Usage and cost analytics API (11)
+
+## Tutorials in this section
+
+<TutorialGrid category="dev" />

@@ -1,0 +1,186 @@
+---
+title: "Studying and Organizing with Gemini Notebook (formerly NotebookLM)"
+description: "How to ask questions, and create summaries, Audio Overviews, and flashcards, in Google's NotebookLM (called Gemini Notebook in the official help pages), which answers using only your own PDFs, documents, and video transcripts"
+sidebar:
+  label: "6. Gemini Notebook (formerly NotebookLM)"
+level: practical
+category: chat
+tools: ["NotebookLM (Gemini Notebook)", "Google Drive"]
+duration: "25 min"
+prerequisites:
+  - "A Google account (a personal account, or a work or school account your admin has allowed)"
+  - "2 or 3 pieces of material to study or organize (PDFs, documents, web addresses, and so on; no personal information or confidential material)"
+lastVerified: 2026-10-26
+sources:
+  - title: "Learn about Gemini Notebook (Google official help)"
+    url: "https://support.google.com/gemininotebook/answer/16164461"
+  - title: "Create a notebook in Gemini Notebook"
+    url: "https://support.google.com/gemininotebook/answer/16206563"
+  - title: "Add or discover new sources for your notebook"
+    url: "https://support.google.com/gemininotebook/answer/16215270"
+  - title: "Use chat in Gemini Notebook"
+    url: "https://support.google.com/gemininotebook/answer/16179559"
+  - title: "Manage your Gemini Notebook usage limits"
+    url: "https://support.google.com/gemininotebook/answer/17670842"
+  - title: "Generate Audio Overview in Gemini Notebook"
+    url: "https://support.google.com/gemininotebook/answer/16212820"
+  - title: "Generate Flashcards or Quizzes in Gemini Notebook"
+    url: "https://support.google.com/gemininotebook/answer/16958963"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- NotebookLM is Google's AI research assistant that **answers based on the material (sources) you upload, and adds a citation to each answer.**
+- The official help pages now call this service **"Gemini Notebook"** (as of 2026-10-14). This guide uses the familiar name NotebookLM alongside it.
+- Once you upload material, you can chat, and create Audio Overviews, mind maps, reports, flashcards, and quizzes.
+- The free tier has standard usage limits, and up to 50 sources for free users (as of 2026-10-14). We couldn't confirm pricing in the official help pages.
+- An answer can be wrong even when it's based on your sources, so click the citations and check them against the original.
+</Summary>
+
+## What you'll be able to do
+
+- Collect several pieces of material in one notebook and ask questions based only on that material.
+- Build the habit of clicking an answer's citations to check where it appears in the original.
+- Create study materials with Audio Overviews, flashcards, and quizzes.
+- Know the usage limits and source restrictions so you don't get stuck.
+
+## Concepts first
+
+| Term | Meaning |
+| --- | --- |
+| **Notebook** | A collection of sources for one project. Notebooks are independent of each other, so you can't look at several notebooks at once. |
+| **Source** | Material you upload or import. The AI answers based on these sources. |
+| **Chat panel** | Where you see a summary of the sources and ask questions. |
+| **Studio panel** | Where you create outputs from your sources, such as notes, Audio Overviews, mind maps, reports, flashcards, and quizzes. |
+| **Citation** | The passage in a source attached to an answer. Hover to see the full quote, and click to jump to its location in the original. |
+
+<Aside type="note" title="Why are there two names? (as of 2026-10-14)">
+The official help pages (support.google.com) for the service this site calls NotebookLM refer to it as "Gemini Notebook" in their titles and text. If you go to the help page address under `/notebooklm/`, it redirects to `/gemininotebook/`. We couldn't confirm in the help pages we opened when the name changed, or the official relationship between the two names. Whichever name you see on screen, treat it as the same service and follow along.
+</Aside>
+
+<Aside type="note" title="What we couldn't confirm">
+We couldn't confirm in official documents whether there is a Korean interface, KRW pricing, or whether the mobile app is available in Korea. What we did confirm from the help pages is that more than 80 languages are supported, and that South Korea is on the list of supported countries and regions for the web service.
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I created a new notebook and uploaded sources',
+  'I selected only some of the sources and asked a question',
+  'I clicked an answer\'s citations and checked them against the original',
+  'I created an Audio Overview or a report',
+  'I reviewed with flashcards or a quiz',
+  'I checked my usage (Settings > Usage)',
+]} />
+
+<Steps>
+
+1. **Create a notebook and upload sources**
+
+   Sign in with your Google account, click Create new notebook, and choose Upload a source in the popup. The address is notebook.google.com (it appears in the official help's chat settings guide).
+
+   Sources can be PDF, Word (docx), text, Markdown, CSV, PowerPoint (pptx), Google Docs, Slides, and Sheets, images, audio files, web addresses, public YouTube addresses, and more. A single source can be up to 500,000 words or a 200MB uploaded file (as of 2026-10-14).
+
+   - Google Slides can have up to 100 slides, and Google Sheets up to 100k tokens.
+   - For web addresses, only the body text is imported, and pages that require a paid subscription don't work.
+   - YouTube works only for public videos with captions, and only the caption text is imported.
+   - Google Drive files sync automatically every few minutes. If you lose access, you can't use the source, but it still counts toward your source total.
+
+   <ScreenshotPlaceholder caption="The popup for uploading sources in a new notebook" officialUrl="https://support.google.com/gemininotebook/answer/16206563" />
+
+2. **Organize your material and ask questions**
+
+   If you have several sources, choose only the ones to use for your question in the Sources panel on the left. Putting a source's name in your question helps it find the right material more accurately.
+
+   <PromptBox label="Ask for a summary and specify the sources">
+   Based on 'Operating Systems Chapter 3 lecture notes' and 'Textbook summary', explain the difference between a process and a thread so that even a middle schooler could understand. If the two sources say different things, point that out separately.
+   </PromptBox>
+
+   The help pages say chat answers use only what's in your sources. So a creative request like "rewrite the ending of my novel" may come back as "I can't answer."
+
+3. **Check the original through citations**
+
+   Hover over a citation number in an answer to see the full quote, and click it to open the spot in the source where that sentence is. Be sure to click through for numbers, dates, and proper nouns. See also [how to fact-check](/en/basics/04-fact-checking/) for how to confirm them.
+
+4. **Change the chat style**
+
+   In the Chat panel's Configure Chat, choose a conversation style. Default is for general research, Learning Guide is for picking up concepts easily, and Custom lets you assign a role like "answer like a PhD student." You can also set the response length. Keep answers you like with Save to note.
+
+5. **Create an Audio Overview or report**
+
+   In the Studio panel, click Audio Overview. Choose a format from Deep Dive (the default, an in-depth conversation between two hosts), Brief (one host sums up the key points in under 2 minutes), Critique (constructive evaluation), or Debate, and set the focus with the language and prompt. Generation takes a few minutes, and you can create other outputs while it runs. Audio is AI-generated, so it may be inaccurate or have voice glitches. For reports, you can choose a FAQ, study guide, briefing document, and more, and export to Docs from the three-dot menu.
+
+   - Length options (Shorter, Default, Longer) are supported in English only, and so is interactive mode (as of 2026-10-14).
+   - Audio Overviews are described as supporting more than 80 languages, with the default language being your Google account's preferred language (as of 2026-10-26). The help pages don't say whether Korean is on the list, though. Check the language picker yourself.
+
+6. **Review with flashcards and quizzes**
+
+   In Studio, click Flashcards or Quizzes. From the pencil icon, you can set the difficulty (Easy, Medium, Hard) and a prompt. Mark each card "Got it!" or "Missed it!" and your progress is remembered, and "Only cards you missed" lets you practice just the ones you got wrong. You can download flashcards as a CSV.
+
+   <FlowSteps title="Review only the cards you missed" officialUrl="https://support.google.com/gemininotebook/answer/16958963" steps={[
+     { where: 'Studio panel', action: 'Open Flashcards and set the difficulty and prompt with the pencil icon', result: 'The cards are created in the background' },
+     { where: 'Flashcards screen', action: 'Mark each card Got it! or Missed it!' },
+     { where: 'Results screen', action: 'Select Only cards you missed', result: 'You practice only the cards you missed' },
+   ]} />
+
+</Steps>
+
+## Quick reference
+
+| Item | Details (as of 2026-10-14) |
+| --- | --- |
+| Source size | Up to 500,000 words per source, or a 200MB uploaded file |
+| Number of sources | Up to 50 for free users (we couldn't tell from the help text whether this is per notebook or per account) |
+| Usage limits | Based on compute. Refreshes every 5 hours, with a weekly limit. Free is standard, AI Plus 2x, AI Pro 4x, AI Ultra 5x or 20x that of AI Pro |
+| Checking usage | Settings > Usage |
+| When you hit the limit | Generate later to create it afterward (web only, can take a few hours) |
+| Audio Overview formats | Deep Dive, Brief, Critique, Debate |
+| Sharing | Viewer or Editor permission. Personal Gmail accounts can share with up to 50 people |
+| Copies | Sources and Studio outputs are copied; chat history and notes are not |
+| Data training | Says it isn't used for model training unless you send feedback |
+
+## Common sticking points
+
+### It says "I can't answer"
+
+- **Cause**: Your question may ask for information that isn't in the sources, may be vague, or the source content may have tripped a safety filter.
+- **Fix**: Make the question more specific and try including a source name. If the material you need is missing, add more sources.
+
+### A YouTube video or web page won't go in as a source
+
+- **Cause**: Videos with no captions, private videos, or videos uploaded less than 72 hours ago may not work. Websites with a paywall don't work.
+- **Fix**: Copy and paste the content (as a text source) or upload it as a file.
+
+### I hit the usage limit
+
+- **Cause**: The limit is based on compute, so complex requests, long chats, and audio or video generation use it up fast.
+- **Fix**: Wait for the 5-hour refresh or use Generate later. If you need more, consider upgrading your Google AI subscription.
+
+### Other people in a shared notebook can see my material
+
+- **Cause**: Viewers can see shared sources and notes too. The help pages say that Chat View links hide the material but don't remove the access permissions themselves.
+- **Fix**: Don't share sensitive material. Check permissions before sharing.
+
+## Practical tips
+
+- **Split notebooks by subject or project.** Notebooks can't see each other's contents.
+- With 5 or more sources, the automatic labeling feature can organize them by topic.
+- Rather than summarizing everything at once, select some of the sources and ask about those; the answers get more accurate. For the basics of summarizing long documents, see [Summarizing documents](/en/chat/02-summarize-documents/).
+- For company documents, check your personal-information and confidentiality standards and your company's security guidelines first. Work and school accounts can only use it if the admin allows it. General principles are in [Protecting your privacy](/en/basics/05-privacy-safety/).
+- If the material you upload is copyrighted, use only material you have the rights to. The help pages also advise against uploading material you don't have permission to use.
+
+## What to read next
+
+- [2. Summarizing long documents](/en/chat/02-summarize-documents/) — summarizing prompts that work without sources
+- [C5. Projects](/en/claude/c05-projects/) — how to collect material in Claude and reuse it
+- [C10. Research](/en/claude/c10-research/) — a research feature that also searches web material
+- [Using AI search well](/en/chat/22-ai-search/) — tools for finding evidence on the web
+- [Student guide](/en/roles/student/) — the order for using AI to study
+- [Office worker guide](/en/roles/office/) — the order for using AI to organize work documents

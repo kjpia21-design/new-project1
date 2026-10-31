@@ -1,15 +1,17 @@
 ---
 import Illustration from './Illustration.astro';
 import { url } from '../lib/tutorials';
+import { getLang, t } from '../lib/i18n';
+const lang = getLang(Astro);
 ---
-<a class="banner not-content" href={url('/agents/')}>
+<a class="banner not-content" href={url('/agents/', lang)}>
   <Illustration name="agents" size={72} />
   <div>
-    <p class="eyebrow">새로 나온 화제의 AI 에이전트</p>
+    <p class="eyebrow">{t(lang, 'agents.eyebrow')}</p>
     <p class="title">Meta Muse · Grok Bot · ChatGPT Dots</p>
-    <p class="desc">내 일을 알아서 챙겨 주는 개인 AI 에이전트가 무엇이고, 한국에서 쓸 수 있는지, 안전하게 쓰려면 어떻게 해야 하는지 정리했어요.</p>
+    <p class="desc">{t(lang, 'agents.desc')}</p>
   </div>
-  <span class="go">보러 가기 →</span>
+  <span class="go">{t(lang, 'banner.go')}</span>
 </a>
 
 <style>

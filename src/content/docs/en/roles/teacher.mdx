@@ -1,0 +1,120 @@
+---
+title: "AI Guide for Teachers, Instructors, and Education Staff"
+description: "How to use AI in education for lesson prep, assessment questions, and student feedback, and how to protect student privacy"
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- AI can help draft the things that eat up most of a teacher's or instructor's time: **lesson prep, writing questions, and writing feedback**.
+- The final judgment and grading always belong to you. Think of AI as a **teaching assistant who writes first drafts**.
+- The basic rule is **never to enter personal information** such as student names, grades, or counseling details.
+- If your school or organization has its own AI usage guidelines, those come first.
+</Summary>
+
+## Who this is for
+
+This guide suits people who create lessons and teaching materials themselves, such as elementary, middle, and high school teachers, instructors at cram schools and companies, and training staff.
+
+- You make lesson materials and worksheets and still run short of time after hours.
+- You want to write different feedback for each student, but it takes too much effort.
+- You're unsure whether it's okay to use AI and how far you can go with student information.
+
+## Top 5 ways AI helps
+
+### 1. Plan lessons and activity ideas
+
+Tell it your learning goals and class time, and you can get a lesson flow (introduction, development, wrap-up) and several activity candidates. Whichever of Claude, ChatGPT, or Gemini you already use is enough. For a comparison, see [Comparing by task](/en/chat/05-compare-assistants/).
+
+<PromptBox>
+I'm a teacher of [grade/audience]. The unit is [unit name] and the class is [minutes] minutes long. The learning objective is "[learning objective]". Plan a lesson flow split into a 5-minute introduction, development, and wrap-up, and suggest 3 activity ideas where students take part directly. Please list the materials needed too.
+</PromptBox>
+
+### 2. Write worksheets and explanations at the right level
+
+If you ask it to rewrite the same concept at different levels, you can quickly make materials for basic and advanced groups. The suggested tool is the same chat AI as above.
+
+<PromptBox>
+Explain the concept below so that a [grade/audience] student can understand it. Include one everyday analogy, and create 3 example problems with answers and worked solutions. Explain difficult words in parentheses.
+
+Concept: [concept to explain]
+</PromptBox>
+
+### 3. Create assessment questions and rubrics (scoring guides)
+
+It can draft multiple-choice and essay questions along with scoring criteria. But you must verify the answers and difficulty yourself. AI sometimes writes plausible wrong answers as if they were correct ([how to fact-check](/en/basics/04-fact-checking/)).
+
+<PromptBox>
+Create assessment questions for [grade/audience] on [subject] [unit]. Make 4 multiple-choice questions (4 options each, with the answer marked) and 1 essay question, and attach a 3-level (high, medium, low) scoring rubric for the essay question as a table. Also note which learning objective each question assesses.
+</PromptBox>
+
+### 4. Draft feedback, parent letters, and announcements
+
+It's good for first drafts of writing such as feedback sentences on student work, notices to parents, and class announcements. Enter **only a generalized version of the situation**, with no information that could identify an individual student.
+
+<PromptBox>
+I want to write feedback on a student's writing assignment. Write 2 things they did well, 2 things they could improve, and 1 thing to try next time, in a warm but specific tone. The student's grade is [grade], and this assignment's grading criteria are [criteria]. Below is an excerpt of the student's writing with names and similar details removed.
+
+[Excerpt of the writing]
+</PromptBox>
+
+### 5. Organize recordings and summarize materials
+
+You can turn recordings from lesson study groups or training sessions into text and pull out the key points. For how to convert them, see the [recording transcription tutorial](/en/media/14-transcribe-recordings/), and for summarizing tips, see [Summarizing long documents](/en/chat/02-summarize-documents/).
+
+<PromptBox>
+Below is a transcript of a teacher training session (or committee meeting). Organize the following in a table: a 5-line summary of the key points, 3 ideas we could try applying at our school (or organization), and action items by person in charge. Don't make up anything that wasn't said; write "not mentioned" instead.
+
+[Transcript]
+</PromptBox>
+
+## A day in the life
+
+<FlowSteps title="A day with classes" steps={[
+  { where: 'Right after arriving in the morning', action: 'Ask AI for today\'s lesson flow and a worksheet draft', result: 'A draft in 10 minutes' },
+  { where: 'Break between classes', action: 'Rewrite tomorrow\'s explanation materials by level', result: 'Basic and advanced versions' },
+  { where: 'After lunch', action: 'Get draft feedback sentences from writing with student names removed', result: 'A draft to polish in your own voice' },
+  { where: 'Before leaving', action: 'Create a draft of assessment questions and solve the answers yourself to verify them', result: 'A verified question set' },
+]} />
+
+The key is **not to use what AI makes as-is, but to read it and revise it yourself first**.
+
+## Recommended learning path
+
+1. [The first 30 minutes](/en/basics/01-first-30-minutes/): Get a feel for what AI is and how to talk with it.
+2. [From signing up to your first question](/en/basics/02-sign-up-first-question/): Create an account and have your first conversation.
+3. [Asking good questions](/en/basics/03-asking-well/): Habitually giving the grade, goal, and format shapes the quality of your materials.
+4. [How to fact-check](/en/basics/04-fact-checking/): Errors in teaching materials are a problem, so learn this early.
+5. [Using AI while protecting privacy](/en/basics/05-privacy-safety/): Essential, since your job involves student information.
+6. [Writing practical prompts](/en/chat/01-prompt-basics/): Use role, context, and format to stabilize your results.
+7. [Summarizing long documents](/en/chat/02-summarize-documents/): Read training materials and official notices quickly.
+8. [Drafting reports](/en/chat/04-write-reports/): Apply it to writing plans and result reports.
+9. [Transcribing recordings](/en/media/14-transcribe-recordings/): Organize lecture and meeting recordings.
+10. [Creating content with Canva](/en/media/12-canva-sns/): Helpful when making study posters and announcement images.
+
+### More: new tutorials that suit teachers
+
+- [Gemini Notebook (formerly NotebookLM)](/en/chat/21-notebooklm/): Ask questions based only on training materials or textbook PDFs, and create summaries and flashcards.
+- [Making presentations with AI](/en/media/25-ai-presentations/): Quickly draft lesson materials and training presentation slides.
+- [Can I use this AI output? Copyright and ethics basics](/en/basics/09-ai-copyright-ethics/): Learn the copyright and ethics standards to check when using AI output in lesson materials.
+
+## What to watch out for
+
+<Aside type="caution" title="Don't enter student personal information">
+The basic rule is not to enter student names, ID numbers, grades, counseling records, or health information into AI services. If you must, remove the name and generalize it, like "Student A". Follow your school or school district's guidelines if there are any. Detailed standards are in [Using AI while protecting personal and company information](/en/basics/05-privacy-safety/).
+</Aside>
+
+- **Fact-checking**: Questions, explanations of history and science, and quotations can be wrong. Check them against textbooks or official sources ([how to fact-check](/en/basics/04-fact-checking/)).
+- **Copyright**: If you paste in the full contents of a textbook or workbook and ask for something similar, you may run into copyright problems. Use materials you made yourself or materials you're permitted to use.
+- **Fairness of assessment**: Even if questions come from an AI draft, the final responsibility for setting and grading them rests with the teacher. Don't let AI alone decide a student's grades or behavioral evaluations.
+- **When students use AI**: For the ethics of students doing assignments with AI, see the [Guide for students and job seekers](/en/roles/student/) too. It helps in setting rules for your class.
+
+## Next steps
+
+- [Guide for students and job seekers](/en/roles/student/): Knowing how students use AI makes it easier to guide them.
+- [Guide for office, planning, and admin roles](/en/roles/office/): A good fit too if you handle a lot of official notices and reports.
+- [Collection of role guides](/en/roles/): Browse other roles.
+- [Ready-to-use prompt collection](/en/start/prompts/): Find more phrases to copy and use.

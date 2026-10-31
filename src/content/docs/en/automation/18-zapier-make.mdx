@@ -1,0 +1,225 @@
+---
+title: "Automating Email → Sheet → Notification with Zapier/Make"
+description: "A reference for building an automation with Zapier and Make that logs Gmail messages to a Google Sheet and sends a notification, including how the two tools differ and how to check free-plan limits"
+sidebar:
+  label: "3. Zapier/Make automation"
+level: practical
+category: automation
+tools: ["Zapier", "Make", "Gmail", "Google Sheets"]
+duration: "40 min"
+prerequisites:
+  - "A Zapier or Make account (free sign-up available; check the limits on the official pricing page)"
+  - "A Gmail account and a Google Sheet"
+lastVerified: 2026-10-26
+sources:
+  - title: "Zapier: Plans & Pricing"
+    url: "https://zapier.com/pricing"
+  - title: "Zapier: Gmail + Google Sheets integration page"
+    url: "https://zapier.com/apps/gmail/integrations/google-sheets"
+  - title: "Zapier: Add new labeled Gmail emails to rows in Google Sheets"
+    url: "https://zapier.com/apps/gmail/integrations/google-sheets/9991/add-new-labeled-gmail-emails-to-rows-in-google-sheets"
+  - title: "Zapier Help: How is task usage measured in Zapier?"
+    url: "https://help.zapier.com/hc/en-us/articles/8496196837261-How-is-task-usage-measured-in-Zapier"
+  - title: "Zapier Help: Get started with your free Zapier trial"
+    url: "https://help.zapier.com/hc/en-us/articles/8496197192461-Get-started-with-your-free-Zapier-trial"
+  - title: "Zapier Help: Can I change the language of my Zapier account?"
+    url: "https://help.zapier.com/hc/en-us/articles/35201074788877-Can-I-change-the-language-of-my-Zapier-account"
+  - title: "Make Help: Step 1. Plan your scenario"
+    url: "https://help.make.com/step-1-plan-your-scenario"
+  - title: "Make Help: Schedule a scenario"
+    url: "https://help.make.com/schedule-a-scenario"
+  - title: "Make Help: Credits"
+    url: "https://help.make.com/credits"
+  - title: "Make Help: Adjustments to plans and pricing"
+    url: "https://help.make.com/adjustments-to-plans-and-pricing"
+  - title: "Make Help: Cancel your subscription (Free plan: 1,000 credits per month)"
+    url: "https://help.make.com/cancel-your-subscription"
+  - title: "Make Apps Documentation: Gmail modules"
+    url: "https://apps.make.com/gmail-modules"
+  - title: "Make Apps Documentation: Google Sheets modules"
+    url: "https://apps.make.com/google-sheets-modules"
+  - title: "Make Apps Documentation: Slack modules"
+    url: "https://apps.make.com/slack-modules"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import AutomationTriggerAction from '../../../../components/diagrams/AutomationTriggerAction.astro';
+
+<Summary>
+- Automation tools let you create rules of the form **"When this happens (trigger) → do this (action)."** This tutorial builds the flow **new email in Gmail → add a row to a Google Sheet → notification**.
+- **Zapier** calls an automation a Zap, and **Make** calls it a scenario. You can start with either for free, but the limits and features differ (as of 2026-10-26).
+- Zapier's help pages say **the product is available in English only**. Make's official help says its Free plan has 1,000 credits per month. We couldn't confirm whether Make supports Korean.
+- Go in the order **test → check one item → turn it on**, and don't copy emails containing personal information into a sheet wholesale.
+</Summary>
+
+## What you'll be able to do
+
+- Understand automation terms like trigger, action, and scenario.
+- Build an automation in Zapier or Make that **automatically logs emails with a specific label to a Google Sheet**.
+- Know how to add a notification step and how to check the limits of a free plan.
+- Tell the two tools apart from the AI-agent approach (routines, etc.) and choose between them.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Trigger** | The event that starts an automation. Example: a new email arrives in Gmail |
+| **Action** | What the automation does. Example: add a row to a sheet, send a message |
+| **Zap** | One automation in Zapier. Made of 1 trigger + actions. |
+| **Scenario** | One automation in Make. Built by chaining modules together. |
+| **Module** | A single unit of an app's functionality in Make. It creates, changes, and deletes data. |
+| **Task / credit** | The unit of usage. Zapier uses tasks; Make uses credits (formerly called operations). |
+| **Polling** | A method where the tool periodically checks "anything new?" It doesn't react instantly, so there can be a delay up to the check interval. |
+
+<AutomationTriggerAction />
+
+### Zapier vs. Make: what's different (as of 2026-10-26)
+
+| Item | Zapier | Make |
+| --- | --- | --- |
+| Automation name | Zap | Scenario |
+| Interface language | Help pages say "available in English only" | We couldn't confirm Korean support |
+| Free plan | $0/month, 100 tasks/month, two-step Zaps, 15-minute check interval | 1,000 credits/month (per Make help). The minimum run interval varies by plan, so check on screen |
+| Usage counting | Checking for new data (polling) doesn't use tasks; a task is used only when an action succeeds | For regular apps, 1 operation = 1 credit (AI features can use more, such as by tokens) |
+| Branching and transformation | Built by adding steps (check the pricing page for plan limits) | Branch with a Router, transform data between modules |
+
+<Aside type="caution" title="Check prices and limits on the official pages">
+The Zapier free-plan figures (100 tasks/month, two-step Zaps, 15-minute check interval; Professional has multi-step Zaps and a 2-minute check interval) are values we confirmed on the [Zapier pricing page](https://zapier.com/pricing) as of 2026-10-26. The currency selector on that pricing page did not include Korean won (KRW); prices default to US dollars. Make uses credits instead of operations as its billing unit, and the [Make help](https://help.make.com/cancel-your-subscription) says that canceling a subscription switches you to the Free plan with 1,000 credits per month (document updated 2026-08-31). The make.com pricing page blocks automated access, so we couldn't open it; check current pricing and per-plan features directly on the [Make pricing page](https://www.make.com/en/pricing).
+</Aside>
+
+<Aside type="note" title="What we couldn't confirm">
+- Editor button names in both tools change often. The Zapier names (New Email, New Labeled Email, Create Spreadsheet Row) were checked on Zapier's official integration page. The Make module names (Gmail > Watch emails, Google Sheets > Add a Row) were checked in the Make app documentation (apps.make.com). If the names on your screen differ, **follow the on-screen instructions.**
+- Make's Slack message module is listed as Send a Message in the app documentation, but another table in the same document also shows Create a Message. Search the module list and pick it.
+- We couldn't confirm the minimum run interval for Make's free plan or whether it supports a Korean interface in the official documentation.
+- We couldn't confirm whether Korean messengers such as KakaoTalk can be integrated. Search each tool's app list.
+</Aside>
+
+## Step-by-step
+
+### Prep: create a label for sorting email and a sheet
+
+<Checklist items={[
+  'I created a dedicated automation label in Gmail and applied it to 1 test email',
+  'I created column names in the Google Sheet (received time, sender, subject, link)',
+  '(Zapier) I set up the trigger and action and tested each',
+  '(Make) I connected the modules and ran it once with Run once',
+  'I confirmed exactly one row was added to the sheet',
+  'I added a notification step and turned it on (on the Zapier free plan, check the two-step limit)',
+]} />
+
+<Steps>
+
+1. **Prepare the Gmail label and the sheet**
+
+   In Gmail, create a label like "automation-log." Having it process **only labeled emails** rather than all email reduces usage and accidents. In the first row of the Google Sheet, write the column names (received time, sender, subject, link).
+
+   <PromptBox label="When asking AI to design the sheet">
+   I want to log customer inquiry emails to a Google Sheet. Recommend column names. I don't want to copy personal information (phone numbers, addresses) into the sheet. I just want to keep a link that leads back to the email. Five columns or fewer.
+   </PromptBox>
+
+2. **Method A. Build it with Zapier**
+
+   Create a new Zap in Zapier and choose as follows. These names were checked on Zapier's official integration page.
+
+   - Trigger app: **Gmail**, event: **New Email** (when a new email arrives in the inbox) or **New Labeled Email** (emails with a label)
+   - Action app: **Google Sheets**, event: **Create Spreadsheet Row** (add a row to the sheet)
+
+   At each step, connect your account (sign in to Google), use the trigger's **Test Trigger** to pull in a sample email, then drag values like sender and subject into the action fields to match the columns. When you click the action's **Test step**, a row is actually created in the sheet. Finally, publish (Publish) the Zap to turn it on. This flow is based on Zapier's integration page and guidance; for button names, follow the on-screen instructions.
+
+   <ScreenshotPlaceholder caption="A Zap in Zapier connecting a Gmail trigger to a Google Sheets action" officialUrl="https://zapier.com/apps/gmail/integrations/google-sheets" />
+
+   <Aside type="note">
+   According to the pricing page, the Zapier free plan allows only **two-step Zaps**. Official help says new accounts automatically start a 14-day Pro trial with no card required, and when the trial ends it doesn't automatically convert to a paid plan but returns to the Free plan. However, it also says trials you start yourself from the Free plan, or Team trials, may convert to paid automatically when they end, so check the notice before you start. The limit is trigger + logging to the sheet; a three-step setup that adds a notification may require a paid plan. Check the pricing page.
+   </Aside>
+
+3. **Method B. Build it with Make**
+
+   Create a new scenario in Make and chain the modules together.
+
+   1. **Gmail > Watch emails**: The trigger module that starts when a new email arrives. Connect your Google account and set label/folder conditions.
+   2. **Google Sheets > Add a Row**: The module that adds a row at the bottom of the sheet. Pick the sheet and tab, and map each column to a value from the Gmail module (sender, subject, etc.).
+   3. (Optional) Add a notification module. Search the module list for the messenger or mail app you want.
+
+   If you only want to extract part of the email body, like an order number, you can insert a **Text Parser** (extracts values with regular expressions) in the middle, as in Make's official tutorial. To run it once, click **Run once**. Running with Run once ignores the schedule settings and runs only one time.
+
+   <ScreenshotPlaceholder caption="A Make scenario with Gmail and Google Sheets modules connected" officialUrl="https://help.make.com/create-your-first-scenario" />
+
+4. **Check with a single item first**
+
+   Run it with just 1 labeled test email. Check that **exactly one row** was added to the sheet. If the same email goes in twice or the columns are misaligned, fix it before turning it on.
+
+5. **Add a notification**
+
+   If piling up in the sheet isn't enough, add a notification. For example, send "A new inquiry came in: subject" to your team messenger. In the notification text, it's safer to include **only the subject and link, not the whole email body**.
+
+6. **Turn it on and monitor it**
+
+   In Zapier, turn the Zap on (publish it). In Make, turn the scenario on with its schedule (the default run interval is 15 minutes, and the minimum interval varies by plan). On the first day, open the run history (History/logs) and check for errors.
+
+</Steps>
+
+## Quick reference
+
+### Module name mapping for this example
+
+| Role | Zapier | Make |
+| --- | --- | --- |
+| New email trigger | Gmail > New Email / New Labeled Email | Gmail > Watch emails |
+| Log to the sheet | Google Sheets > Create Spreadsheet Row | Google Sheets > Add a Row |
+| Extract values (optional) | A separate transform step (check official help) | Text Parser module |
+| Testing | Test Trigger, Test step | Run once |
+| Turning on | Publish | Turn the schedule On |
+
+### What should you automate with
+
+| Situation | Right approach |
+| --- | --- |
+| Work that repeats on fixed rules (labeled email → sheet) | Zapier / Make |
+| Work that needs reading, judging, and summarizing (organize today's important emails) | The AI approach. [17. Morning briefing](/en/automation/17-morning-briefing/) |
+| AI used right inside a service | [16. Notion AI](/en/automation/16-notion-ai/), [19. Gemini](/en/automation/19-google-workspace-gemini/) |
+
+## Common sticking points
+
+### It doesn't pick up new email right away
+
+- **Cause**: Both tools check periodically (polling). Zapier's free plan checks every 15 minutes (Professional: 2 minutes). Make runs every 15 minutes by default, and the minimum interval varies by plan.
+- **Fix**: When testing, use the manual test buttons (Test Trigger, Run once). If you need real-time, check the check interval of higher plans on the pricing page.
+
+### I hit my limit / the Zap turned off
+
+- **Cause**: Zapier uses a task for each successful action, and the free plan has 100 tasks per month. According to Zapier help, you get an email notification when you reach the limit, and if pay-per-task is turned on, extra tasks are billed separately. If pay-per-task isn't available or is turned off, new Zap runs are held until the billing cycle changes (as of 2026-10-13). Also check the usage screen. Make uses 1 credit per regular app action.
+- **Fix**: Narrow the scope so only labeled emails are processed, and cut unnecessary steps. Check the usage screen regularly.
+
+### The same email goes into the sheet multiple times
+
+- **Cause**: The trigger condition is too broad (the entire inbox), or rows created during testing are still there.
+- **Fix**: Use a label condition, and either remove the label after processing or add a "processed" column to tell duplicates apart.
+
+### Columns are misaligned or values are empty
+
+- **Cause**: The fields mapped in the action are wrong, or the sample email used for testing doesn't have that value.
+- **Fix**: Reload the sample and check the fields, and decide the sheet column names first.
+
+### I get a Google connection (authentication) error
+
+- **Cause**: You may have signed in with a different account, missed the permission consent, or your company admin may have blocked connecting external apps.
+- **Fix**: Delete the connection and create it again; if it's a work account, ask your admin.
+
+## Practical tips
+
+- **Start small.** Get a two-step automation running reliably, then expand.
+- **Minimize personal information.** Don't move information like customer contact details or national ID numbers into a sheet or notification. The moment data passes through an external automation service, it goes through that service. For company data, check internal security rules first.
+- **Set naming rules.** Putting the purpose and owner in the Zap/scenario name makes it easy to find later.
+- **Turn on failure alerts.** Each tool has an error-notification setting. Follow the on-screen instructions for where it is.
+- **If you need an AI step**, both tools have AI features, but they can use more of your allowance (Make says AI features can use more credits). First consider whether rule-based is enough.
+
+## What to read next
+
+- [17. Get a morning briefing from Gmail and Calendar](/en/automation/17-morning-briefing/) — The approach where AI reads and organizes
+- [20. Connecting AI to your work tools with connectors (MCP)](/en/automation/20-connectors-mcp/) — The approach where AI uses tools directly instead of automation
+- [C13. Cloud sessions and routines](/en/claude/c13-cloud-sessions/) — Running AI agents on a schedule

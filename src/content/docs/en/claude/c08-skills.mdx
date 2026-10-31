@@ -1,0 +1,269 @@
+---
+title: "Using and building Skills"
+description: "A reference for turning on the Skills Claude loads when it needs them, building a simple skill yourself, and using it in claude.ai and Claude Code"
+sidebar:
+  label: "C8. Skills"
+level: practical
+category: claude
+tools: ["Claude", "Claude Code"]
+duration: "30 min"
+prerequisites:
+  - "A claude.ai account (Free/Pro/Max/Ultra/Team/Enterprise)"
+  - "Code execution and file creation turned on in Settings"
+  - "(If you follow the Claude Code example) A terminal with Claude Code installed and a git repository"
+lastVerified: 2026-10-31
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "Use skills in Claude"
+    url: "https://support.claude.com/en/articles/12512180-use-skills-in-claude"
+  - title: "How to create custom skills"
+    url: "https://support.claude.com/en/articles/12512198-how-to-create-custom-skills"
+  - title: "Extend Claude with skills (Claude Code)"
+    url: "https://code.claude.com/docs/en/skills"
+  - title: "Claude release notes"
+    url: "https://support.claude.com/en/articles/12138966-release-notes"
+  - title: "Claude Code changelog"
+    url: "https://code.claude.com/docs/en/changelog"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- A skill is a **folder of instructions, scripts, and resources**. Claude loads it dynamically when a specialized task calls for it.
+- Skills are available on Free/Pro/Max/Ultra/Team/Enterprise, and code execution must be turned on. They also work in Claude Code and the API.
+- For the built-in Excel, Word, PowerPoint, and PDF skills, Claude picks the right one automatically when your request fits.
+- The core file of a skill is a markdown file with frontmatter (`name`, `description`). The file name differs between docs: `skill.md` in some and `SKILL.md` in others. **The Claude Code docs use `SKILL.md`.**
+- Install skills only from sources you trust, and read the bundled files (especially scripts) before you enable a skill.
+</Summary>
+
+## What you'll be able to do
+
+- Know when the built-in skills kick in, and turn skills on and off.
+- Build a simple custom skill and upload it to claude.ai.
+- Create a skill with `SKILL.md` in Claude Code and run it with `/skill-name`.
+- Understand the security risks of skills and use them safely.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Skill** | A folder of instructions, scripts, and resources. Claude loads it dynamically when it's needed. |
+| **Built-in skills** | Skills from Anthropic for creating and handling Excel, Word, PowerPoint, and PDF files. |
+| **Custom skill** | A skill you build yourself. The folder name must match the skill name, and a markdown file is required. |
+| **frontmatter** | The YAML settings between the `---` lines at the top of the file. You put the name, description, and more here. |
+| **description** | What Claude uses to decide when to use the skill. The more specific it is, the more reliably the skill gets loaded. |
+| **`/skill-name`** | The command that calls a skill directly in Claude Code. Claude may also load it automatically when the description matches. |
+
+### Is the file called `skill.md` or `SKILL.md`?
+
+| Doc | Spelling |
+| --- | --- |
+| "How to create custom skills" in the claude.ai Help Center | `skill.md` (lowercase only) |
+| Claude Code docs | `SKILL.md` (uppercase) |
+
+The two docs spell it differently. This tutorial presents each doc's example as written and notes that **the Claude Code docs use `SKILL.md`**. When you build one yourself, `SKILL.md` (uppercase) seems the safer choice, but we couldn't confirm how claude.ai handles upper- and lowercase on upload. If the upload fails, switch to the Help Center spelling (`skill.md`).
+
+### Two sets of frontmatter rules
+
+| | claude.ai (Help Center) | Claude Code |
+| --- | --- | --- |
+| `name` | Required, up to 64 characters | Optional. Defaults to the folder name |
+| `description` | Required, up to 200 characters | Recommended. Put the key use first. The combined text of `description` and `when_to_use` is truncated at 1,536 characters in the skill list (as of 2026-10-26) |
+| Others | Optional `dependencies` (e.g., python>=3.8) | `when_to_use`, `argument-hint`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `context: fork`, `model`, `effort`, `paths`, `hooks`, and more |
+
+<Aside type="note" title="Numbers and menu names not in the official docs">
+- ZIP size limit for claude.ai skill uploads: the official help says only that "exceeding the size limit" can cause an upload to fail, and doesn't publish a number (confirmed 2026-10-13).
+- This tutorial doesn't cover building a skill through the "Create skill" conversation. For building a skill from a screen recording, we checked the conditions in the official help (as of 2026-10-13). It works only in Cowork on Claude for Mac, for Pro/Max/Team plans. It isn't available in chat, on Windows, on Free, or on Enterprise; it needs macOS Accessibility and Screen recording permissions, and recordings can run up to about 10 minutes.
+- The official help describes the upload menu as "+" button > "+ Create skill" > "Upload a skill" (confirmed 2026-10-13). If what you see on screen differs, go with the screen.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  'I turned on code execution and file creation in Settings',
+  'I made a request that uses a built-in skill',
+  'I created the skill folder and file',
+  'I zipped it, uploaded it to claude.ai, and turned it on',
+  'I tested that the skill loads for related requests',
+  '(Optional) I created and ran a SKILL.md skill in Claude Code',
+]} />
+
+<Steps>
+
+1. **Turn on code execution**
+
+   Go to Settings > Capabilities and turn on **Code execution and file creation** (in the newer layout, **Create and edit files**). Then go to Customize > Skills and flip the toggle for each skill on or off. On Team/Enterprise, an Owner has to turn on code execution and skills first under Organization settings > Plugins & skills (Policy tab).
+
+2. **Try a built-in skill**
+
+   With code execution on, Claude automatically picks the built-in skill that fits your request. Ask for a quarterly results deck and the PowerPoint skill gets used, for example.
+
+   <PromptBox>
+   Using the attached monthly sales table, make a 5-slide PowerPoint for our Q3 results presentation. On each slide, put one key-message line and either one table or one chart.
+   </PromptBox>
+
+3. **Create a custom skill folder**
+
+   Let's build a skill that summarizes meeting notes in the same format every time. Name the folder the same as the skill. The example below is for claude.ai. The Help Center doc uses `skill.md`, and `name` and `description` are required.
+
+   ```text
+   meeting-notes/
+   └── skill.md
+   ```
+
+   ```markdown
+   ---
+   name: meeting-notes
+   description: Organizes meeting notes into decisions, action items, and open questions. Use when asked to summarize meeting minutes.
+   ---
+
+   # Meeting notes summary
+
+   ## Instructions
+   When you receive meeting notes, organize them in this order.
+   1. One-line summary
+   2. Decisions (numbered list)
+   3. Action items (table of owner / due date / task)
+   4. Open questions
+
+   If the notes don't name an owner or a due date, don't make one up. Write "TBD" instead.
+   ```
+
+   A skill works best when it focuses on a single workflow. Putting input and output examples in the body makes it more reliable.
+
+4. **Zip it and upload**
+
+   The **skill folder must be at the root** of the ZIP. Files scattered at the ZIP root won't work.
+
+   ```text
+   meeting-notes.zip
+   └── meeting-notes/
+       └── skill.md
+   ```
+
+   In Customize > Skills, choose **+** > **Create skill** > **Upload a skill**, pick the ZIP, and then turn on the toggle in the list.
+
+   <ScreenshotPlaceholder caption="Uploading a ZIP in Customize > Skills and turning on the toggle" officialUrl="https://support.claude.com/en/articles/12512180-use-skills-in-claude" />
+
+5. **Test it and refine the description**
+
+   Send a few different related requests and check that the skill loads. If it doesn't, make the description more specific.
+
+   <PromptBox>
+   Here are today's team meeting notes. Please organize them. We decided to set the new product schedule for the end of November, Alex will deliver the design draft by next Friday, and we haven't reached a conclusion on the pricing policy.
+   </PromptBox>
+
+6. **Create a skill in Claude Code (optional)**
+
+   Claude Code uses file-based skills. Put a personal skill at `~/.claude/skills/<name>/SKILL.md` and a project skill at `.claude/skills/<name>/SKILL.md`. Follow the example from the official docs as is. It's a skill that summarizes your changes and flags risks.
+
+   ```markdown
+   ---
+   description: Summarizes uncommitted changes and flags anything risky. Use when the user asks what changed, wants a commit message, or asks to review their diff.
+   ---
+
+   ## Current changes
+
+   !`git diff HEAD`
+
+   ## Instructions
+
+   Summarize the changes above in two or three bullet points, then list any risks you notice such as missing error handling, hardcoded values, or tests that need updating. If the diff is empty, say there are no uncommitted changes.
+   ```
+
+   Save this as `~/.claude/skills/summarize-changes/SKILL.md`, then run `/summarize-changes` inside a git repository. For the `` !`git diff HEAD` `` line, Claude Code runs the command and swaps in the result before passing the text to Claude. You need to make some changes in the repository before running it, or there's nothing to summarize.
+
+   <Aside type="note" title="Notes on Claude Code skills">
+   - When names collide, precedence is enterprise > personal > project. Custom commands have been merged into skills.
+   - Skills and plugins you've turned on in claude.ai for the same account sync into logged-in terminal sessions and show up in `/skills`. Changes are checked about every 40 minutes while the session is idle (2.1.293; it used to be 10 minutes). To turn this off, put `syncClaudeAiSkills: false` in your settings (`syncClaudeAiPlugins: false` for plugins).
+   - In cloud sessions, a synced skill is named `anthropic-skills:<name>`. If the name isn't used anywhere else, you can call it by the bare name.
+   - Skill folders and command files you create locally under the `anthropic-skills` namespace aren't loaded (2.1.282).
+   - Personal skills don't apply in Cowork or cloud sessions (per the official docs).
+   </Aside>
+
+</Steps>
+
+## Quick reference
+
+### claude.ai skills at a glance
+
+| Item | Details |
+| --- | --- |
+| Availability | Free/Pro/Max/Ultra/Team/Enterprise (code execution required) |
+| Where to turn on | Settings > Capabilities > Code execution and file creation (new layout: Create and edit files), then Customize > Skills |
+| Required structure | Folder name = skill name, with `skill.md` inside (Help Center spelling) |
+| Required frontmatter | `name` (64 characters or fewer), `description` (200 characters or fewer) |
+| ZIP | Skill folder at the ZIP root |
+| Team/Enterprise | Owner turns it on under Plugins & skills (Policy tab) |
+
+### Where Claude Code skills live
+
+| Location | Path | Scope |
+| --- | --- | --- |
+| Personal | `~/.claude/skills/<name>/SKILL.md` | All projects on this computer |
+| Project | `.claude/skills/<name>/SKILL.md` | That repository (shared with your team if committed) |
+| Plugin | `<plugin>/skills/<name>/SKILL.md` | Wherever the plugin is enabled |
+| Enterprise | Managed settings directory | All users the organization deploys to |
+
+### Claude Code bundled skills
+
+`/doctor`, `/skill-doctor` (checks for unused skills and context cost), `/code-review`, `/batch`, `/debug`, `/loop`, `/claude-api`, `/verify`, `/run`
+
+### Sharing (Team/Enterprise)
+
+| Method | Details |
+| --- | --- |
+| Share with specific people | Enterprise can share with groups too. View-only, with updates applied automatically |
+| Publish to the organization library | Some organizations require review |
+
+If you've built a plugin, you can submit it to the Claude directory through the new developer portal starting 2026-09-25 (per the release notes; check the official guide for the detailed steps).
+
+## Where people get stuck
+
+### The uploaded ZIP isn't recognized
+
+- **Cause**: The structure inside the ZIP may be off. Files may be scattered at the root, or the folder name may differ from the skill name.
+- **Fix**: Re-zip it so that `my-skill.zip` contains a `my-skill/` folder with the files inside it. Also check the file name's capitalization (`skill.md`/`SKILL.md`).
+
+### The skill doesn't get loaded
+
+- **Cause**: The description may be vague or not match your request. Code execution or the toggle may also be off.
+- **Fix**: Write specifically "when to use it" in the description, and test with a variety of requests. Check your settings and toggles.
+
+### There's no Skills menu on Team/Enterprise
+
+- **Cause**: The Owner may not have turned on code execution and skills yet.
+- **Fix**: Ask the Owner to check Organization settings > Plugins & skills (Policy tab).
+
+### `/summarize-changes` prints nothing
+
+- **Cause**: With no uncommitted changes, the diff is empty.
+- **Fix**: Edit a file and run it again. The skill is written to reply that there are no changes when the diff is empty.
+
+### I'm not sure whether it's OK to use a skill someone else made
+
+- **Cause**: Skills can include or install third-party packages, so there's a risk of prompt injection or data leakage.
+- **Fix**: Install skills only from sources you trust, and read the bundled files (especially code, scripts, and instructions that connect to outside networks) before activating. Enterprise can use skill scanning.
+
+## Practical tips
+
+- **Put one workflow in each skill.** The narrower the scope, the better it gets loaded.
+- **Start with simple markdown.** You can add scripts later.
+- **Include input and output examples.** The output format becomes more stable. Following the agentskills.io spec is said to improve compatibility.
+- **Don't put API keys or passwords in a skill.** No hardcoding.
+- **Test after every change.** Check that it loads with several different requests.
+- **Pair it with good prompts.** Writing good instructions follows the same principles as [C4. Prompting well](/en/claude/c04-prompting/).
+
+## What to read next
+
+- [C14. Claude Code key features](/en/claude/c14-claude-code-features/) — CLAUDE.md, slash commands, hooks, and skills
+- [C7. Connectors](/en/claude/c07-connectors/) — Connecting outside services
+- [C12. Claude Code overview](/en/claude/c12-claude-code-overview/) — Installing Claude Code and your first task
+- [Packaging skills and plugins and distributing them to your team](/en/dev/06-plugins-skills-team/) — How to share the skills you build with your team
+- [Delegating recurring work to agents: skills, routines, and subagents](/en/coding/10-delegate-agents/) — An example of using skills in daily work

@@ -1,0 +1,275 @@
+---
+title: "Build Your First Web App with Claude Code, No Coding Needed (Vibe Coding)"
+description: "A hands-on exercise: describe a simple expense tracker web app in words, check it in the browser, refine it step by step, and keep it safe"
+sidebar:
+  label: "6. Your first web app, no coding needed"
+level: beginner
+category: coding
+tools: ["Claude Code"]
+duration: "60 min"
+prerequisites:
+  - "A paid Claude plan (Pro or higher) or a Console account"
+  - "Claude Code installed and logged in (see C12)"
+  - "One empty folder and a web browser"
+lastVerified: 2026-10-26
+sources:
+  - title: "Quickstart"
+    url: "https://code.claude.com/docs/en/quickstart"
+  - title: "Best practices for Claude Code"
+    url: "https://code.claude.com/docs/en/best-practices"
+  - title: "Configure permissions"
+    url: "https://code.claude.com/docs/en/permissions"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- This tutorial is the next step after [Tutorial 6](/en/coding/06-claude-code-start/). If Tutorial 6 was a "one-page page", here you build **a small expense tracker web app where you enter data and it gets saved**.
+- Installation and login are covered in [C12](/en/claude/c12-claude-code-overview/). This tutorial doesn't repeat them.
+- There are three tricks. **Skeleton first → one feature at a time → check with your own eyes every time.** Several small requests work much better than one big one.
+- You'll also learn safety habits: check the changes, never put in secrets (passwords, API keys), undo when needed, and don't touch anything outside your working folder.
+- Claude Code is available on paid plans (Pro or higher) ([C2](/en/claude/c02-plans-limits/), as of 2026-10-26).
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Describe the app you want in sentences and get **a working expense tracker web page**.
+- Open the result in your computer's browser and learn **how to test it yourself** to see if it works.
+- Get used to **refining it bit by bit**, repeating "change this for me".
+- Build **habits that reduce risk in advance** (exposing secrets, unintended changes).
+
+## Concepts to know first
+
+This approach is often called **vibe coding**. It's a way of working where you don't write code yourself; you describe what you want in words, look at the result, and ask for fixes (this site uses the term for convenience).
+
+| Term | What it means in this exercise |
+| --- | --- |
+| **Working folder** | The area Claude Code can read and write. You start with one empty folder. |
+| **Permission mode** | The range of actions Claude may take without asking. Change it with `Shift+Tab`. See [C14](/en/claude/c14-claude-code-features/) for descriptions of the modes. |
+| **Plan mode** | A mode that only proposes a plan without changing files. |
+| **Checkpoint** | A restore point Claude leaves before changing files. Open it with `/rewind`. |
+| **How to verify** | A way to see whether the result is right. In this exercise, it's "click through it yourself in the browser". |
+
+The official docs recommend **giving Claude a way to check its own work**. When there's a signal it can read the result from, like tests, a build, or a screenshot, the quality of the result improves. They also say, "if you can't verify it, don't ship it" (checked 2026-10-26). That's why the prompts in this tutorial include "after you build it, test it like this".
+
+<Aside type="note" title="The expense tracker in this exercise is for practice">
+It's a very simple app that stores data in the browser. It has no real bank connection, login, or multi-device sync. Don't enter real personal financial information; test only with **sample practice data**.
+</Aside>
+
+## Step-by-step guide
+
+The folder name `gaegebu` below is Korean for "household ledger". You can name your folder anything.
+
+<Checklist items={[
+  'I created an empty folder gaegebu and started claude in it',
+  'I got a plan first in plan mode and read it',
+  'I built the skeleton (input form + list) and opened it in the browser',
+  'I entered one expense myself to test it',
+  'I added the total and delete features one at a time',
+  'I confirmed the data remains after refreshing',
+  'I tried undoing on purpose once',
+  'I checked that I hadn\'t put any secrets in the folder',
+]} />
+
+<Steps>
+
+1. **Start in an empty folder**
+
+   Create an empty folder named `gaegebu` on your desktop or somewhere similar, open a terminal in that folder, and run `claude`. If the terminal is new to you, read [Tutorial 6](/en/coding/06-claude-code-start/) and [C12](/en/claude/c12-claude-code-overview/) first. Tutorial 6 also explains the permission mode shown on the start screen.
+
+   ```sh
+   cd ~/Desktop/gaegebu
+   claude
+   ```
+
+   At first, it's safest to stay in the mode that asks for confirmation on every edit. Press `Shift+Tab` to change modes; the current mode is shown at the bottom of the screen.
+
+2. **Say what you want to build first and get a plan**
+
+   Don't say everything you want at once; decide on a **minimal first version**. If you start in plan mode (press `Shift+Tab` to get to plan mode, or use `claude --permission-mode plan`), you can see the plan before any files change.
+
+   <PromptBox>
+   I want to make a simple expense tracker web page. I know nothing about coding. For the first version, just do this. (1) Fields to enter a date, item, and amount, plus an Add button (2) The entries I add stack up in a table below. Make it as a single index.html file only, and don't connect to the internet or use any outside services. First tell me, in plain language, which files you'll create and how.
+   </PromptBox>
+
+   There are three things to look for in the plan: that it's a single `index.html` file, that it doesn't connect to outside services, and that it includes only the features you mentioned. If not, ask for it to be fixed in plain words.
+
+3. **Approve and build the skeleton**
+
+   If the plan looks good, approve it to run. When the screen asking you to confirm changes appears, just look at **which file is being created**. If it's `index.html` in your folder, choose Yes. How to read the approval screen is in step 3 of [Tutorial 6](/en/coding/06-claude-code-start/).
+
+   <ScreenshotPlaceholder caption="The screen where Claude Code asks you to approve file changes" officialUrl="https://code.claude.com/docs/en/quickstart#step-4-make-your-first-code-change" />
+
+4. **Open it on your computer and click through it yourself**
+
+   Double-click `index.html` to open it in your browser. If it doesn't open or you're confused, ask Claude.
+
+   <PromptBox>
+   Tell me how to open the index.html you made in my computer's browser. Then write me just 3 tests I can try myself to see if it works. For example, something like "If I enter 1 entry and click Add, it should show up in the table".
+   </PromptBox>
+
+   **Enter things and click through it yourself**, following the list. Sample data like "Oct 1 / Lunch / 9000" is plenty. Even if you can't read code, you can read the screen. If there's a problem, describe it as you saw it, like "I clicked Add but nothing appeared in the table".
+
+   <Aside type="tip" title="If you want to open it by address instead of as a file">
+   How saving works on a page opened directly as a file can differ from browser to browser. If your data isn't being saved, ask, "Tell me how to open this page on my computer with a simple local server." When Claude tries to run a command, an approval screen appears, so read what the command is and then allow it. We couldn't confirm the exact behavior of this in the official documentation.
+   </Aside>
+
+5. **Add features one at a time**
+
+   Once the skeleton looks good, add features **one at a time**. If you ask for several at once, it's hard to find what went wrong. Try the requests below one by one, in order.
+
+   <PromptBox>
+   Make the entries I add stay saved in this browser so they don't disappear when I refresh. Don't send anything to an outside server. After you change it, also tell me how I should test it.
+   </PromptBox>
+
+   <PromptBox>
+   At the bottom of the table, show the overall total, and add a Delete button at the end of each row. Ask me once to confirm before deleting.
+   </PromptBox>
+
+   <PromptBox>
+   Allow only numbers in the amount field, and don't add an entry if the item or amount is empty. Also add one selector so I can enter income as well as expenses.
+   </PromptBox>
+
+   Each time you ask, refresh the browser (F5) and click through only the part that just changed. If you get stuck, use the sentence patterns in the [Quick reference](#quick-reference).
+
+6. **Polish it: look at the screen and say what you see**
+
+   Once the features work, polish the look. The more **specific** you are while looking at the screen, the better the result. Instead of "make it prettier", try something like the following.
+
+   <PromptBox>
+   Make the text a little bigger and give alternating rows of the table a light background color. Show income in blue text and expenses in red text. Make sure it doesn't overflow sideways on a phone screen. Summarize what changed in 3 lines or fewer.
+   </PromptBox>
+
+   You can also capture part of the screen, paste it in, and say, "Make it look like this." The official best practices also give an example of showing an image for screen changes and having it compare against the result.
+
+   <ScreenshotPlaceholder caption="An example of the finished expense tracker page (practice data)" />
+
+7. **Undo if you don't like it**
+
+   Try asking for a strange change on purpose, then undo it. In a session, press `Esc` twice or type `/rewind` and a menu opens for restoring the conversation and code to an earlier checkpoint. You can choose what to restore: the conversation only, the code only, or both (as of the official docs, 2026-10-26).
+
+   <FlowSteps title="When you don't like a change" officialUrl="https://code.claude.com/docs/en/best-practices" steps={[
+     { where: 'Browser', action: 'Refresh and click through it yourself', result: 'You spot a problem' },
+     { where: 'Claude Code session', action: 'Press Esc twice or type /rewind', result: 'A list of restore points' },
+     { where: 'Rewind menu', action: 'Choose a point before the problem started, then choose what to restore (conversation, code, or both)', result: 'The files go back to an earlier state' },
+     { where: 'Prompt', action: 'Ask again, more specifically', result: 'A fresh attempt' },
+   ]} />
+
+   <Aside type="caution" title="Limits of undoing">
+   Checkpoints only record what was changed by Claude's file-editing tools. Changes made by terminal commands or outside processes aren't recorded, and the official docs also say it doesn't replace Git. Copy important results into a separate folder. Using Git is covered in [Tutorial 8](/en/coding/08-cloud-github/).
+   </Aside>
+
+8. **Do a safety check and wrap up**
+
+   Once you're happy with the app, do the following check and finish. The detailed reasons are in [Using it safely](#using-it-safely) below.
+
+   <PromptBox>
+   Look through all the files in this folder and tell me the following. (1) Whether anything looks like passwords, API keys, or personal information (2) Whether any code sends data over the internet (3) A list of the files and what each one does. Don't change anything yet; just report.
+   </PromptBox>
+
+   To pick this up tomorrow, use `claude -c` (continue the most recent conversation) or `claude -r` (pick one) in the same folder. For how to create the guide note (CLAUDE.md), see step 7 of [Tutorial 6](/en/coding/06-claude-code-start/).
+
+</Steps>
+
+## Using it safely
+
+Not knowing code isn't what's dangerous; the most dangerous habit is **assuming "the AI must have handled it"** and moving on. Following the five habits below prevents most accidents.
+
+| Habit | Why and how |
+| --- | --- |
+| **Read the approval screen** | Look at which files are being created or changed and what command it's trying to run. If you don't know a command, first ask, "Explain what this command does." |
+| **Small requests, frequent checks** | Change just one or two things at a time and check in the browser. The official docs also say that if you've corrected the same problem more than twice, start fresh with `/clear` and ask more specifically. |
+| **Don't put in secrets** | Don't keep passwords, API keys, card or account numbers, or national ID numbers in the conversation or in files in the folder. Claude Code can read files in your working folder. |
+| **Go slowly with auto-approval** | Use edit auto-approval or auto mode only after you're comfortable, and only in folders where you can undo changes. How permissions are evaluated is explained below. |
+| **Check before publishing** | Anything you put on the web can be seen by anyone. Be sure it doesn't contain personal records. See [Tutorial 8](/en/coding/08-cloud-github/) for how to publish. |
+
+### Blocking files that shouldn't be read (optional)
+
+If the folder has a secret config file like `.env`, you can set a rule so Claude can't read it. In the official docs, permission rules are evaluated in the order `deny`, `ask`, `allow`, and **deny always takes priority**. `Read(./.env)` is the rule format that refers to reading the `.env` in the current folder. Write it like this in the project settings file `.claude/settings.json`.
+
+```json
+{
+  "permissions": {
+    "deny": ["Read(./.env)"]
+  }
+}
+```
+
+If you type `/permissions` in a session, you can see the current rules and which settings file each rule came from. However, the official docs explain that a Bash rule doesn't block other call forms of the same program. Rules are only a supplementary safeguard, so **the surest method is not to keep secrets in your working folder at all**. We couldn't confirm in official documentation whether this rule blocks in every case.
+
+<Aside type="caution" title="Be careful with 'Yes, and don't ask again'">
+If you choose this option, an allow rule is saved and the same kind of action runs afterward without asking. According to the official docs, when it's saved permanently it's recorded in `.claude/settings.local.json`. If it's a command you don't fully understand, allow it just this once.
+</Aside>
+
+## Quick reference
+
+### Prompt sentence patterns
+
+| Situation | Try saying this |
+| --- | --- |
+| Starting out | "For the first version, just do this: (1)… (2)…. As a single index.html file. Tell me the plan first." |
+| Adding a feature | "Add just one thing: [feature]. After you change it, also tell me how I can test it." |
+| Reporting an error | "When I [click X], [this should happen], but [this happened]. Find the cause and fix it." |
+| Changing the look | "Change [which part] to [how]. Leave everything else as is." |
+| When you don't understand | "Explain the change you just made as if to someone who doesn't know coding." |
+| Checking | "Just report whether there's any secret info or code that sends data outside. Don't change anything." |
+| Picking up later | `claude -c` in the same folder |
+
+### Frequently used keys and commands
+
+| Key / command | What it does |
+| --- | --- |
+| `Shift+Tab` | Change permission mode (including plan mode) |
+| `Esc` twice, `/rewind` | Menu for restoring a checkpoint |
+| `/clear` | Start a new conversation (files stay as they are) |
+| `/permissions` | View and manage permission rules |
+| `claude -c` / `claude -r` | Continue the most recent conversation / pick one to continue |
+
+## Common sticking points
+
+### More files appear every time I build
+
+- **Cause**: The request didn't set a scope.
+- **Fix**: State explicitly, "Only one index.html file." If extra files already exist, undo and ask again.
+
+### My entries disappear when I refresh
+
+- **Cause**: There may be no saving feature, or the browser may block saving on a page opened as a file (this can vary by browser).
+- **Fix**: Ask again, "Make it persist even after refreshing". If that still doesn't work, ask how to open it with a local server, as in the tip in step 4.
+
+### The more I fix, the weirder it gets
+
+- **Cause**: Failed attempts may have piled up in the conversation and left it confused.
+- **Fix**: As the official docs recommend, start fresh with `/clear` and ask by describing the current state and the result you want more specifically. Before that, you can also use `/rewind` to go back to a point where it worked well.
+
+### Approval questions come up too often
+
+- **Cause**: The confirm-first mode requires approval for every change.
+- **Fix**: Once you're comfortable, you can use edit auto-approval mode with `Shift+Tab`, but only where you can undo, such as an empty folder or a Git repository. Modes are explained in [C14](/en/claude/c14-claude-code-features/).
+
+### Claude sounds confident but the screen is different
+
+- **Cause**: Even when Claude says "done", it may have missed something.
+- **Fix**: Don't just trust the words; click through it yourself. The official docs also recommend asking for evidence like run results or screenshots instead of claims of success.
+
+## Practical tips
+
+- **Start small and grow it.** After the expense tracker, add one thing at a time, like a monthly view or totals by category.
+- **Describe the result you want with numbers and examples.** Instead of "the total should be right", say "if I enter 9000 and 3500, the total should be 12500". That makes it easy for both Claude and you to check.
+- **Don't explain the same thing twice.** Rules you'd keep telling it go in CLAUDE.md, which it reads again in the next session ([Tutorial 6](/en/coding/06-claude-code-start/), [C14](/en/claude/c14-claude-code-features/)).
+- **If you're worried about how much you're using**, see the usage guide in [C2](/en/claude/c02-plans-limits/) first.
+- **If you want to put what you made out into the world**, remove the personal records and then follow the GitHub Pages publishing exercise in [Tutorial 8](/en/coding/08-cloud-github/). Check costs and conditions there.
+
+## Next tutorials
+
+- [6. Getting started with Claude Code](/en/coding/06-claude-code-start/) — the step right before this one
+- [7. Building work web tools without coding](/en/coding/07-no-code-web-tools/) — a work calculator
+- [8. Handing off work to cloud sessions](/en/coding/08-cloud-github/) — Git and publishing on the web
+- [C14. Claude Code core features](/en/claude/c14-claude-code-features/) — permission modes, CLAUDE.md, undoing
+- [Office worker guide](/en/roles/office/) · [Solo business owner guide](/en/roles/solo-business/) · [Student guide](/en/roles/student/) — how to use it by role

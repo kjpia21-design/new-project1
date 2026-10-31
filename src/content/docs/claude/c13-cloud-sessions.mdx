@@ -8,11 +8,13 @@ category: claude
 tools: ["Claude Code", "GitHub"]
 duration: "40분"
 prerequisites:
-  - "Claude 유료 플랜 (Pro, Max, Team, 또는 Enterprise의 프리미엄·Chat + Claude Code 좌석)"
+  - "Claude 유료 플랜 (Pro, Max, Ultra, Team, 또는 Enterprise의 프리미엄·Chat + Claude Code 좌석)"
   - "GitHub 계정과 작업을 맡길 저장소 하나"
   - "(터미널 방식을 쓴다면) Claude Code가 설치된 터미널"
-lastVerified: 2026-10-26
+lastVerified: 2026-10-31
 sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
   - title: "Use Claude Code in the cloud"
     url: "https://code.claude.com/docs/en/claude-code-on-the-web"
   - title: "Configure cloud environments"
@@ -36,7 +38,7 @@ import CloudFlowDiagram from '../../../components/diagrams/CloudFlowDiagram.astr
 
 <Summary>
 - 클라우드 세션은 **내 컴퓨터가 아니라 클라우드에서 도는 Claude Code**예요. 노트북을 닫아도 계속 실행되고, 어느 기기에서나 확인하고 조종할 수 있어요.
-- Pro, Max, Team 플랜과 Enterprise의 프리미엄 또는 Chat + Claude Code 좌석에서 쓸 수 있어요.
+- Pro, Max, Ultra, Team 플랜과 Enterprise의 프리미엄 또는 Chat + Claude Code 좌석에서 쓸 수 있어요.
 - 시작 방법은 다섯 가지예요. 브라우저(claude.ai/code), 모바일 앱의 Code 탭, 데스크톱 앱의 Cloud 선택, 터미널 `claude --cloud "작업"`, 루틴.
 - 클라우드 VM 요금은 따로 없고 **플랜 사용량에 합산**돼요. 병렬로 많이 돌리면 그만큼 한도가 줄어요.
 - 환경(Environment)으로 네트워크·환경변수·설정 스크립트를 정하고, 루틴(Routines)으로 스케줄·API·GitHub 이벤트에 맞춰 자동 실행해요.
@@ -272,7 +274,7 @@ CLI에서의 이동은 **단방향**(클라우드 → 터미널)이에요. 터�
 | 항목 | 내용 |
 | --- | --- |
 | 트리거 | 스케줄(매시간·매일·평일·주간 또는 1회성), API(HTTP POST + 베어러 토큰), GitHub 이벤트(pull request, release) |
-| 사용 가능 플랜 | Pro, Max, Team, Enterprise |
+| 사용 가능 플랜 | Pro, Max, Ultra, Team, Enterprise |
 | 스케줄 최소 간격 | 1시간 |
 | 시간당 한도 | 스케줄 실행은 계정당 100회, Run now/API는 루틴당 30회 등. 이 한도에는 초과 과금(overage)이 없어요. |
 | 사용량 | 대화형 세션처럼 구독 사용량을 소모해요. 한도에 닿았을 때 추가 사용량(usage credits)이 켜져 있으면 초과분이 종량제로 계속 실행되고, 꺼져 있으면 리셋까지 거부돼요. |

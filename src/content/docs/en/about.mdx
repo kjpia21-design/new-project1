@@ -1,0 +1,36 @@
+---
+title: About
+description: About this site, how it is run, and how automatic checks keep it current
+---
+
+## What this site is
+
+**Keeping Up with the Latest AI Trends** is a site that explains new AI tools in plain language and offers step-by-step tutorials you can follow along. It was originally written in Korean. Tool names and menu names are given in English as they appear on screen.
+
+## How it's organized
+
+- **Levels**: Content is split into three levels (Beginner / Practical / Advanced) so you can start where you fit. The site is built with practical, hands-on users in mind first.
+- **Topics**: The site has the eight sections below, with 90 tutorials in total (as of 2026-10-31).
+  - **AI First Steps** (11 tutorials): A beginner section for people new to AI, from signing up and asking your first question to fact-checking, staying safe, and choosing a plan and a tool.
+  - **Mastering Claude** (21 tutorials): A special section that covers Claude from beginner to advanced, from models, plans, and app features to Claude Code and the API.
+  - **Trending AI Agents** (6 tutorials): Personal AI agents such as Meta Muse, Grok Bot, and ChatGPT Dots, focusing on whether you can use them in Korea and on safety rules.
+  - **Developer Deep Dives** (11 tutorials): Advanced guides for working with Claude through code and the API, including tool use, the Agent SDK, MCP servers, CI automation, evaluation, and the usage and cost analytics API.
+  - **Chat AI Fundamentals** (11 tutorials): Prompts, document summaries, data analysis, report writing, and choosing tools.
+  - **Coding & Agents** (9 tutorials): Claude Code, cloud sessions, Cursor, and delegating recurring tasks.
+  - **Images, Video & Voice** (10 tutorials): Image and video generation, Canva, organizing recordings, and speech synthesis.
+  - **Work Automation & Productivity** (11 tutorials): Notion AI, morning briefings, Zapier/Make, Gemini in Google Workspace, and connectors (MCP).
+- **Claude News**: Updates from Claude's official channels, collected newest first, with only the changes that matter to working professionals summarized in plain language.
+- **Tutorials**: Each one includes what you need to prepare, step-by-step instructions (a checklist), prompts you can copy, common sticking points, sources, and the date it was last verified.
+
+## How it's run
+
+All content is managed as Markdown files in a GitHub repository, and changes are published to this site automatically.
+
+## How it stays up to date
+
+AI tools change quickly, so two automatic checks keep the content current. Neither one publishes changes right away. Each proposes its edits as a pull request (PR) first, and the changes appear on the site only after the site's operator reviews and merges them.
+
+- **Weekday update check**: Every weekday, a routine checks Claude's official update channels (the API release notes, the Claude Code changelog, the Claude app release notes, and Anthropic News). If there's news, it opens a PR that updates [Claude News](/en/claude-news/) and the related tutorials.
+- **Monday full fact-check**: Every Monday, it re-checks the official documentation and changelogs for all the tools covered in the tutorials. If menu names, prices, or features have changed, it opens a PR with the fixes.
+
+You can see when each check was completed in each tutorial's **Last verified** date and on [Recent updates](/en/updates/).
