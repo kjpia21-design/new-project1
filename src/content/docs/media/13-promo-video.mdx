@@ -11,7 +11,7 @@ prerequisites:
   - "A Google account and a Google AI plan that supports video generation (check availability on the official page)"
   - "A Canva account"
   - "A one-line description of the product or service you're promoting"
-lastVerified: 2026-10-26
+lastVerified: 2026-11-01
 sources:
   - title: "Generate videos with Gemini Apps (Gemini Apps Help)"
     url: "https://support.google.com/gemini/answer/16126339"
@@ -53,13 +53,14 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 <Summary>
 - AI video works by making **short clips, a few seconds at a time**. The Gemini overview page says you can make 10-second videos in the Gemini app.
 - The practical way to make a promo video is: **storyboard (3-4 scenes) → generate a clip for each scene → stitch them together in an editing tool and add captions and a logo**.
-- Videos made in the Gemini app include an invisible **SynthID watermark**.
+- Videos made in the Gemini app include an invisible **SynthID watermark**. The Gemini pages we checked don't mention a visible watermark in the Gemini app either way, so we can't confirm one (the separate Flow tool is different; see [the Google video tools guide](/media/34-ai-video-generation/)).
+- For the Gemini app vs. Google Flow, credits, and watermark rules, see [Make Short AI Videos with Google's Video Tools](/media/34-ai-video-generation/).
 - **Don't use people's faces, voices, or other people's brands** without their consent and permission.
-- Plans, limits, and availability in Korea change often. This guide is accurate as of 2026-10-13, and where we couldn't confirm something, we point you to the official page.
+- Plans, limits, and availability in Korea change often. This guide was rechecked against Google's official pages on 2026-11-01, and where we couldn't confirm something, we point you to the official page.
 </Summary>
 
 <Aside type="caution" title="We haven't been able to verify the original Canva help pages">
-We checked the Gemini app video generation content against the originals of Google's official help and overview pages (as of 2026-10-10). On 2026-10-10, Canva's App Store listing (listed by developer Canva, US store) described Magic Video as a feature where you add clips and AI adds beats, effects, and text to stitch them into a video (labeled iPhone-only), but as of 2026-10-26 the description no longer mentions Magic Video and instead describes making videos with sound using Veo 3 and video editing features such as Beat Sync. Access was blocked to Canva's help pages (Magic Video, captions, and so on) and to OpenAI's product pages (Sora), so we couldn't open the originals, and those descriptions are based on official-site search results. Double-check Canva's clip lengths, limits, and menu locations on the official pages.
+We checked the Gemini app video generation content against the originals of Google's official help and overview pages (rechecked 2026-11-01). On 2026-10-10, Canva's App Store listing (listed by developer Canva, US store) described Magic Video as a feature where you add clips and AI adds beats, effects, and text to stitch them into a video (labeled iPhone-only), but as of 2026-10-26 the description no longer mentions Magic Video and instead describes making videos with sound using Veo 3 and video editing features such as Beat Sync. Access was blocked to Canva's help pages (Magic Video, captions, and so on) and to OpenAI's product pages (Sora), so we couldn't open the originals, and those descriptions are based on official-site search results. Double-check Canva's clip lengths, limits, and menu locations on the official pages.
 </Aside>
 
 
@@ -88,8 +89,8 @@ We checked the Gemini app video generation content against the originals of Goog
 | Availability in Korea | Korean and South Korea are on the Gemini app's supported list, and South Korea is also on the list of countries for Google AI Plus, Pro, and Ultra plans. However, it says video generation **requires a Google AI plan for personal accounts and isn't available to users under 18**. It also says features may differ by plan and region | Korean is on the supported list for captions, dubbing, and text-to-speech | Firefly describes its own model as "commercially safe," but beta features may be limited to personal use |
 | Limits | Limits are based on compute, refresh every 5 hours, and there's a weekly limit. The multipliers by plan are 2x for Plus, 4x for Pro, and 5x or 20x of Pro for Ultra (relative to the base limit). Limits may change | Monthly AI allowance by plan; Magic Video has an hourly limit | Check each service |
 
-<Aside type="note" title="Video model names may change (as of 2026-10-19)">
-Google's official help and overview pages call the Gemini app's video generation and editing model "Gemini Omni," and the overview page says Gemini Omni (model name Gemini Omni 1.1 Flash) replaces the earlier Veo 3.1 in the Gemini app. Some parts of the subscription page still say Veo 3.1. Model names and features change often, so rely on what's on screen and the official pages.
+<Aside type="note" title="Video model names may change (as of 2026-11-01)">
+Google's official help and overview pages call the Gemini app's video generation and editing model "Gemini Omni," and the overview page says Gemini Omni "will replace Veo in the Gemini app" and lists Gemini Omni 1.1 Flash as replacing the previous Veo 3.1 model. The subscription page is mixed: its FAQ still says Google AI Pro has a limited trial of Veo 3.1 Lite and Ultra has video generation with Veo 3.1, while its plan cards mention Gemini Omni Flash through Flow credits. We couldn't confirm from the text which model each plan gets in the Gemini app; check the plan page and the on-screen model name. Model names and features change often, so rely on what's on screen and the official pages.
 </Aside>
 
 <Aside type="note" title="Sora is reported to be unavailable">
@@ -121,7 +122,7 @@ The example is "a 15-second video announcing a new café menu item (vertical, fo
 
 2. **Generate a clip for each scene**
 
-   Create the video in the Gemini app. The official help page says to go to gemini.google.com on a computer, open the sidebar at the top left, click **Create video** (optionally pick a template), enter a prompt, and click **Submit**. To use an image or video as a reference, upload it with Add image / Add video (1 video, up to 5 images). Video can take a few minutes to generate, and you can't use the same chat while it's being made. If you need audio, you can reportedly ask for it to be generated too. **Only upload photos you have the right to use.** Make one prompt per scene. If you ask for several scenes at once, the results get messy.
+   Create the video in the Gemini app. The official help page says to go to gemini.google.com on a computer, open the sidebar at the top left, click **Create video** (optionally pick a template), enter a prompt, and click **Submit**. To use an image or video as a reference, upload it with Add image / Add video (1 video, up to 5 images). Video can take a few minutes to generate, and you can't use the same chat while it's being made. If you need audio, the help page says you can ask Gemini to generate it too. Choose the aspect ratio before creating (for text prompts the default is landscape; with an uploaded reference image or video it matches your upload), so pick vertical up front for Reels. **Only upload photos you have the right to use.** Make one prompt per scene. If you ask for several scenes at once, the results get messy.
 
    <PromptBox>
    A close-up looking slowly down from above at a cup of yuja cream latte on a wooden table. Natural light, warm tones. A bit of yuja zest drops onto the cream. No faces, text, or logos.
@@ -160,14 +161,14 @@ The example is "a 15-second video announcing a new café menu item (vertical, fo
 
 ## Quick reference
 
-### What to check by tool (as of 2026-10-10)
+### What to check by tool (rechecked 2026-11-01)
 
 | Item | Gemini app video | Canva |
 | --- | --- | --- |
-| Clip length | Up to 10-second videos (per the Gemini overview page) | Magic Media video is described as a short, silent clip |
+| Clip length | 10-second videos (per the Gemini overview page; scene extension lets you lengthen a video, but we found no stated maximum total length) | Magic Media video is described as a short, silent clip |
 | Limits | Compute-based limits, refresh every 5 hours, weekly limit | Monthly AI allowance. Magic Video has an hourly limit |
-| Watermark | Invisible SynthID (all Gemini app videos) | Check the official page |
-| Availability in Korea | Personal accounts need a Google AI plan and must be 18 or older. The plans list South Korea as a supported country | Some features are on the Korean supported list |
+| Watermark | Invisible SynthID (all Gemini app videos). No visible watermark is mentioned on the Gemini pages we checked (not confirmed either way) | Check the official page |
+| Availability in Korea | Personal accounts need a Google AI plan and must be 18 or older. The plans list South Korea as a supported country. Which plans include video generation is shown only as a feature table in icons, so we couldn't confirm plan by plan | Some features are on the Korean supported list |
 | Commercial use | The help page says to follow the Google Terms of Service and prohibited use policy, and not to create or share content that infringes others' rights, deceives, or harasses. The help page has no separate sentence that directly allows or prohibits commercial use (as of 2026-10-13). Read the terms yourself to decide whether commercial use is okay | AI output is owned by you (except Canva-licensed content), for lawful purposes, at your responsibility |
 
 ### Video prompt template
@@ -190,7 +191,7 @@ The example is "a 15-second video announcing a new café menu item (vertical, fo
 ### I hit my limit
 
 - **Cause**: Video generation uses up a lot of your compute-based limit.
-- **Fix**: Wait for the 5-hour refresh or compare higher plans. The monthly prices on the subscription page, as shown on the US site on 2026-10-10, start at $4.99 for Plus, $19.99 for Pro, and $99.99 for Ultra (check Korean pricing on the official page). Polish your prompts in advance to cut down on attempts.
+- **Fix**: Wait for the 5-hour refresh or compare higher plans. The monthly prices on the subscription page, as shown on the US site, start at $4.99 for Plus, $19.99 for Pro, and $99.99 for Ultra (5x limits; a $199.99 Ultra tier with 20x limits is also listed; check Korean pricing on the official page). On 2026-11-01 the subscription page showed the same $4.99 / $19.99 / $99.99 start prices. Polish your prompts in advance to cut down on attempts.
 
 ### The clips don't match each other's mood
 
@@ -212,6 +213,7 @@ The example is "a 15-second video announcing a new café menu item (vertical, fo
 
 ## What to read next
 
+- [Make Short AI Videos with Google's Video Tools](/media/34-ai-video-generation/) — Gemini app vs. Flow, credits, and watermark rules
 - [12. Make a Set of Social Media Content with Canva AI](/media/12-canva-sns/) — an image set to pair with your video
 - [15. AI Voice Narration](/media/15-voice-narration/) — a voice to lay over your video
 - [11. Business Image Generation](/media/11-business-images/) — make images for image-to-video
