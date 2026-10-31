@@ -1,0 +1,311 @@
+---
+title: "Getting Started with ChatGPT Dots"
+description: "A reference on creating Dots, OpenAI's always-on agent inside ChatGPT, connecting apps and your computer, and managing permissions and how to stop it"
+sidebar:
+  label: "4. ChatGPT Dots"
+level: practical
+category: agents
+tools: ["ChatGPT Dots", "ChatGPT"]
+duration: "25 min"
+prerequisites:
+  - "A ChatGPT Pro (from $100/month), Business Premium, or Enterprise account where an admin has turned on Dots"
+  - "18 or older (for Pro)"
+  - "The latest ChatGPT mobile app, the desktop app, or a desktop browser"
+lastVerified: 2026-10-26
+sources:
+  - title: "Meet dots (OpenAI developer docs)"
+    url: "https://learn.chatgpt.com/docs/dots"
+  - title: "Get started with your dot"
+    url: "https://learn.chatgpt.com/docs/dots/getting-started"
+  - title: "Message your dot"
+    url: "https://learn.chatgpt.com/docs/dots/channels"
+  - title: "Tasks and memory"
+    url: "https://learn.chatgpt.com/docs/dots/tasks-and-memory"
+  - title: "Connect computers and apps to your dot"
+    url: "https://learn.chatgpt.com/docs/dots/computers-and-apps"
+  - title: "Control your dot"
+    url: "https://learn.chatgpt.com/docs/dots/controls"
+  - title: "Manage dots permissions and capabilities (for admins)"
+    url: "https://learn.chatgpt.com/docs/enterprise/dots-admin-guide"
+  - title: "Codex pricing (ChatGPT Pro plan prices)"
+    url: "https://learn.chatgpt.com/docs/pricing"
+  - title: "ChatGPT app - Korea App Store"
+    url: "https://apps.apple.com/kr/app/chatgpt/id6448311069"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- **Dots** is an **always-on personal agent** inside ChatGPT. When you create one, it becomes your "dot," and it works on its own cloud computer and browser even when your computer is off.
+- Press reports say it was announced at DevDay on 2026-09-29 (the date comes from press coverage), the official docs describe a **gradual rollout**, and the enterprise admin docs add **Beta** to the setting name.
+- Eligible plans are **ChatGPT Pro** ($100, $200, $500/month), **Business Premium**, and **Enterprise** (off by default, an admin must turn it on). Pro requires **age 18 or older and excludes the EEA, UK, and Switzerland**.
+- **Korea** isn't on the official list of excluded regions, but we couldn't find an official statement confirming availability in Korea. You'll need to check in the app whether it shows up for your account. We also couldn't get official confirmation of Korean language support for Dots.
+- Actions like sending and payments go through **automatic review**, and you can set "ask, then act" with custom rules. At first, start with "only make drafts, don't send."
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Explain what Dots is and how it differs from chat, ChatGPT Work, and Codex.
+- Check whether you can use Dots on your account, and create your first dot.
+- Connect apps (plugins), Slack/Teams, and your own computer only as much as you need.
+- Know how to hand off tasks, schedule them, stop them, and delete them.
+
+This guide is based on OpenAI's developer docs (in English). openai.com and the Help Center block automated access, so we couldn't open them. What we confirmed and what we couldn't are separated below.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Dots** | The name of the product (feature). |
+| **dot** | One agent that you create. You can choose its name, shape, color, eyes, glasses, and accessories, and its handle takes the form `@name-dot`. |
+| **Cloud computer** | The dot's own computer and browser. Work continues even when your device is off. |
+| **Plugin** | A connection to an app such as Gmail, Google Drive, or GitHub. It can only use what you've connected and allowed. |
+| **Activity / Scheduled** | Screens on the dot profile in the desktop app. Activity shows delegated tasks, and Scheduled shows recurring tasks. |
+| **Custom rules** | A setting for how a given action is handled: "without asking," "when I say so," "ask first," or "hand off to me." |
+
+### What is it, and how is it different?
+
+Boiled down, the official docs say this: use **chat** when you need an answer or a draft, **ChatGPT Work** for one-off jobs (research, analysis, creating files), **Codex** for coding, and a **dot** for **things that need ongoing attention**. A dot tracks progress between conversations, decides its own next steps, contacts you first via ChatGPT, Slack, or Teams, and hands off tasks to Work or Codex when needed.
+
+### Who made it, and when?
+
+It was made by OpenAI, and several outlets reported it was revealed at DevDay on 2026-09-29 (based on press reports). The official docs carry no date and say only that it's "rolling out gradually." The enterprise admin docs label it "Use dots (Beta)." The underlying model, per the official docs, is GPT-6 Astra.
+
+### What it can do
+
+- **Take on responsibilities**: Hand it a long-running job like "keep an eye on preparations for this event," and it tracks decisions, deadlines, and things you're waiting on replies for.
+- **Wake itself up and continue**: You don't have to specify every follow-up; the dot decides when to rest and when to work again. When timing matters, you can schedule it with a time zone and a time span.
+- **Parallel work**: Background agents do several things at once, and you can keep chatting in the meantime.
+- **Calls**: Voice calls through the phone button on the conversation screen. You can type during a call too. Calls started by the dot are planned for after launch, and text messages are listed as "coming soon."
+- **Proactive research**: It looks over connected apps in read-only mode to find things it can help with. During this it can't send messages, edit content, or control the browser or computer.
+- **Delegate to Work and Codex**: It can create local tasks on your computer or run coding tasks in a Codex cloud environment you've set up in advance.
+
+## Can I use it in Korea?
+
+<Aside type="caution" title="This section is 'what we can confirm,' not a guarantee">
+Sources word this differently, so we've summarized them.
+
+| Source | Details |
+| --- | --- |
+| OpenAI developer docs (official) | Pro is 18 or older, **excluding the EEA, UK, and Switzerland**. Business Premium and Enterprise roll out worldwide in phases. Korea isn't mentioned separately. |
+| Korean press reports | Report that it's being rolled out in phases in Korea (based on press reports). |
+| English-language outlet summaries | Say only "applicable markets" apart from the excluded regions and don't mention Korea. |
+
+**In short**, Korea isn't on the official exclusion list, so if you're on an eligible plan, you may be able to use it. But we couldn't find an official statement confirming "available in Korea," and because the rollout is gradual, it may not show up right away even on an eligible plan. The Korean App Store listing for the ChatGPT app also had only "bug fixes and minor improvements" in its latest release notes, so it didn't serve as evidence for Dots.
+</Aside>
+
+**What about Korean?** The ChatGPT app is listed on the Korean App Store in Korean, and Korean is among the supported languages. But we couldn't confirm Korean support for **Dots itself** (conversation quality, voice calls, UI text) in the official docs. A user review quoted in Korean press said the Korean voice still sounds awkward. Try it yourself and judge.
+
+We don't explain how to sign up by faking a supported region with a VPN or similar. It could violate the terms of service, and if payment or account problems arise, you may have little protection. If it shows up on your account in Korea, use it; if not, wait for the rollout.
+
+### How much does it cost?
+
+The official docs have no separate pricing for Dots. It's included in the plans below.
+
+| Plan | Access |
+| --- | --- |
+| Pro 100 / 200 / 500 | 18 or older, excluding the EEA, UK, and Switzerland |
+| Business Premium | Rolling out worldwide in phases |
+| Enterprise | Rolling out worldwide in phases, **off by default**. A workspace admin must turn it on |
+
+- Pro pricing per OpenAI's official pricing page is **$100, $200, $500**/month (USD). In the in-app purchase list for the ChatGPT app on the Korean App Store, Pro 100 shows as ₩159,000, Pro 200 as ₩299,000, and Pro 500 as ₩790,000 (KRW, as of 2026-10-12; based on the store screen, so it may change).
+- **Conversations with your dot don't count against your ChatGPT usage limits.** But **Work and Codex tasks that the dot starts or manages count against those products' limits.**
+- The plan includes an allowance for deeper work, and limits are expanded in the first month after launch.
+- Plus and free plans aren't in the docs' access list. We didn't see any wording that says outright "not allowed."
+
+## Step by step
+
+<Checklist items={[
+  'I confirmed my plan, age, and region are eligible',
+  'I opened Dots in the ChatGPT app and created my first dot',
+  'I chose a name and a look',
+  'I connected only the apps I really need as plugins',
+  'I gave the instruction "show me a draft before sending"',
+  'I handed off my first responsibility and reviewed the result',
+  'I decided where to get notifications and set a schedule',
+  'I confirmed how to stop things with Pause, Activity, and Scheduled',
+]} />
+
+<Steps>
+
+1. **Check whether your account has Dots**
+
+   Look for the Dots menu in the ChatGPT mobile app (updated to the latest version), the desktop app, or a desktop browser. **Mobile web browsers aren't supported.** If you don't see it, your account isn't eligible or the rollout hasn't reached you yet. For Enterprise, an admin has to turn it on.
+
+   <ScreenshotPlaceholder caption="Opening Dots in the ChatGPT app" officialUrl="https://learn.chatgpt.com/docs/dots/getting-started" officialLabel="View in the official OpenAI docs" />
+
+2. **Create a dot**
+
+   Follow the app's prompts. You can change the name and look (color, eyes, glasses, accessories) later, so it's fine to go with the defaults. Once you set a name, the handle becomes something like `@name-dot`. Whether you start on your phone or desktop, you continue with the same dot.
+
+3. **Connect apps (plugins)**
+
+   Connect apps like email, calendar, and files as plugins. You can skip this and do it later. The **permissions for connected apps follow your existing ChatGPT app permissions as is**, so for example you can split email into "read-only, no sending."
+
+   <Aside type="caution" title="Connect only the minimum at first">
+   Connecting a messaging channel like Slack doesn't automatically connect your email or your own computer. Conversely, that means you have to open each one separately. Add them one at a time as you need them.
+   </Aside>
+
+4. **Hand off a responsibility in your first conversation**
+
+   The dot introduces itself first and suggests things it can help with based on your connected information. Start with an "ongoing job," like the example in the official docs.
+
+   <PromptBox>
+   Keep an eye on preparations for our team workshop. Read the plan I shared and the emails from the venue, and make a list of decisions to make, deadlines, and things we're waiting on replies for. Start with anything about the budget or anything that needs an answer this week. For replies, only draft them and don't send.
+   </PromptBox>
+
+   Check the result, ask it to fix anything missing, and only then widen the scope. A dot can make mistakes too.
+
+5. **Set notifications and a schedule**
+
+   You can split things up, such as getting routine progress notifications in ChatGPT and decisions that need your input in Slack. If something has to happen at set times, include a **time zone and a time span (or end date)** and ask it to "confirm the schedule."
+
+   <PromptBox>
+   For the next four weeks, check the workshop planning channel at 9 AM on weekdays (Eastern Time). If a deadline is at risk or you need a decision from me, message me in ChatGPT. Just record routine changes in the checklist. Tell me the saved schedule at the end.
+   </PromptBox>
+
+   Just adding a dot to a place like Slack doesn't start monitoring. You need to tell it which channels to watch and for what.
+
+6. **Call it from Slack or Teams (optional)**
+
+   On the dot profile, press **Add** to connect a contact method. In Slack, you can send a DM or add it to a channel and mention it. By default, a dot responds **only to you**. To make it respond to others, you have to give it instructions, and existing permissions and safeguards still apply. In companies, an admin must first grant the "Add dots to Slack" permission.
+
+7. **Connect your computer (optional)**
+
+   By default, a dot works with only its cloud computer. If you need your own files, code, or a logged-in browser, press dot profile > Computers > Your computer > **Allow access** in the **desktop app**. Only **one** computer can be connected at a time, and while it's in use the computer must be online with the ChatGPT app open. To disconnect, press Revoke access.
+
+   <Aside type="caution" title="Be careful with this permission">
+   Connecting your computer lets it work with local files and apps. It's a separate permission from the Codex or Work Sync connections. Don't connect a shared computer or a company-issued device.
+   </Aside>
+
+8. **When a website needs a login**
+
+   The dot's cloud browser is **separate from your own browser's logins**. When a login is needed, the dot sends a request, and when you open it and type into the **private input window**, the credentials are passed to the browser outside the conversation. If you'd rather do it yourself, press "Take over to sign in," log in, and press Done. Using a saved login requires confirmation every time. Some sites block cloud browsers, and in that case you can tell it to try using your connected computer.
+
+9. **Check progress and stop things**
+
+   In the desktop app, use **Activity** on the dot profile to see the progress, files, and results of delegated tasks, and **Scheduled** to review recurring tasks. If you need to view or operate the cloud computer yourself, press **Take over**, and to hand it back, press **Return control**. How to stop things is summarized in the "Quick reference" below.
+
+</Steps>
+
+## Quick reference
+
+### Where you can use it
+
+| Item | Details |
+| --- | --- |
+| Creating and chatting | ChatGPT mobile app (latest), desktop app, desktop browser. **Not on mobile web** |
+| Contact channels | ChatGPT (messages and calls), Slack, Microsoft Teams. Text messages "coming soon" |
+| Computer connection and Activity | Mainly the desktop app |
+
+### Connections are separate from each other
+
+| Connection | What it enables |
+| --- | --- |
+| Messaging channel | Talking to the dot there and receiving updates |
+| App (plugin) | Using that service's information and tools within the allowed scope |
+| My computer | Using local files, apps, and tasks while that computer is on |
+
+### Four ways to stop it
+
+| What you want to do | How |
+| --- | --- |
+| Stop the main task it's working on now | **Pause** (delegated tasks and schedules stay as they are). To resume, use Resume |
+| Stop a delegated task | Open the task in Activity and stop it |
+| End a recurring task | Disable or delete it in Scheduled |
+| Get rid of the dot | Delete (can't be undone) |
+
+Hanging up a call doesn't necessarily stop the work you handed off. And stopping doesn't undo actions that have already happened.
+
+### The four custom rules
+
+Create them in the desktop app and web under Settings > Personalization > Custom rules, and in the iOS and Android apps under Customize > Custom rules in the sidebar (as of 2026-10-26). App (plugin) permissions are managed separately from rules, in Open Plugins.
+
+| Rule | Behavior |
+| --- | --- |
+| Take action without asking | Acts without asking |
+| Take action when you say so | Acts only when I clearly tell it to. Otherwise asks right before acting |
+| Ask before taking action | Requests approval before acting |
+| Hand off to you | Hands it off to me |
+
+For example, you can set messages to customers to "Ask before taking action" and deleting shared project files to "Hand off to you." The docs say to tell it preferences like writing style through conversation rather than rules.
+
+### What enterprise admins control
+
+On Enterprise, admins control by role the use of Dots, adding to Slack, local computer access (separate consent), use of custom rules, cloud browser, network, and computer use, and use of password managers. For detailed settings, see the admin documentation.
+
+## What to watch for with payments, permissions, and privacy
+
+- **Writing a draft isn't permission to send.** The official docs also explain that a request to "write a draft" doesn't grant permission to send. Conversely, instructions with a clear scope (who, what, until when) can be used for later actions in the same scope, so keep the scope narrow.
+- **There's automatic review.** Before actions that affect your account or share information, it checks instructions, permissions, custom rules, and built-in safety requirements, and decides to proceed, ask for approval, or leave it for you to do yourself (for example, changing a password). However, the docs state that custom rules are only guidance the dot tries to follow, and that it can make mistakes.
+- **We couldn't confirm payment features.** We couldn't find a dedicated payment or purchase feature in the official Dots docs. We're not saying there isn't one. For anything involving payments, do it yourself or set it to "Ask before" or "Hand off to you." Saving passwords is also optional, so use it only when truly needed.
+- **Keep connections to a minimum.** Split app permissions, such as allowing read-only email, and disconnect plugins you don't use.
+- **Connecting your computer is optional.** Use just one, only when needed, and remember Revoke access.
+- **Information moving between channels.** A dot is the same dot even when you switch channels, so it shares notes. In exchange, it says it checks with you before telling others about something it heard in a private conversation. When adding it to a team channel, tell it first how much it's allowed to say.
+- **Data.** ChatGPT data controls apply to eligible conversations and tasks with your dot. OpenAI says it doesn't directly train models on proactive research and private notes. For detailed settings, check ChatGPT's data controls guidance.
+- **Verify before trusting results.** The docs themselves warn that a dot can make mistakes, and that a finished run doesn't mean the result you wanted was achieved. Review important results along with their sources.
+- A general checklist for granting permissions to agents is laid out separately in [5. Using Personal AI Agents Safely](/en/agents/05-agent-safety/).
+
+## Common sticking points
+
+### I don't see the Dots menu
+
+- **Cause**: Your plan isn't eligible (Plus, free, etc.), your region is excluded (EEA, UK, Switzerland), you're under 18, the rollout hasn't reached you, or on Enterprise the admin hasn't turned it on.
+- **Fix**: Update the app to the latest version, and use the app or a desktop browser, not mobile web. If you're on an eligible plan and still don't see it, wait a few days. On Enterprise, ask your admin for the Use dots permission.
+
+### I can't use files on my computer
+
+- **Cause**: The computer may be offline, the ChatGPT app may be closed, or you may not have connected it at all. In companies, an admin must separately allow local computer access.
+- **Fix**: Keep the desktop app open and check the status under Computers in the dot profile. An Offline label doesn't mean it's disconnected; it means it's temporarily unavailable.
+
+### The cloud browser is blocked on a certain site
+
+- **Cause**: Some websites block cloud browsers or require extra authentication.
+- **Fix**: Log in yourself with Take over, or ask it to try using your connected computer. Note that a login session from the cloud browser isn't moved over to your computer.
+
+### The work continues after I ended the conversation
+
+- **Cause**: Even if you end a call or conversation, the tasks you handed off may continue.
+- **Fix**: Stop the main task with Pause, delegated tasks in Activity, and recurring tasks in Scheduled.
+
+### It can't read my email or an app
+
+- **Cause**: The plugin may not be connected or the connection may have expired. If you only connected Slack, email isn't connected.
+- **Fix**: Open the reconnection request the dot sends and connect again.
+
+## Practical tips
+
+- **Start small.** Start with one responsibility and a few materials, look at the result, and then widen the scope.
+- **Make "draft only, don't send" a habit.** Have it send email, messages, and document shares only after you've checked.
+- **Tell it your notification criteria.** If you define changes worth a notification, like "only tell me when a deadline is at risk," notifications get less noisy.
+- **For schedules, give a time zone and a time span, and get confirmation.** Something like "weekdays at 9 AM Korea time, for 4 weeks." Ask the dot to read back what was saved.
+- **First-month limits.** Per the official docs, the allowance for deep work is expanded in the first month after launch. Limits may change afterward, so keep an eye on your usage.
+- **Always review the first results.** The first time you hand off a given responsibility, check the sources and anything missing yourself.
+
+## How it differs from other agents
+
+- **It lives inside ChatGPT.** It's not a separate app; it connects to your ChatGPT account, memory, plugins, Work, and Codex.
+- **The same dot in many places.** The same dot and memory are shared across ChatGPT, calls, Slack, and Teams.
+- **Its own computer plus your computer (optional).** The cloud computer is the default, and a local connection is optional and limited to one machine.
+- **Delegates to Work and Codex.** You can divide the work, with code going to Codex and file creation going to Work.
+- For a side-by-side comparison with other products, see [1. Personal AI Agents at a Glance](/en/agents/01-agents-compared/).
+
+## What this guide couldn't confirm
+
+- Official Korean-language guidance on openai.com and the Help Center (automated access is blocked)
+- An official statement confirming availability in Korea, and a help page on supported regions
+- The level of Korean conversation and voice support in Dots
+- Exact support status for Plus, standard Business, and Edu plans
+- Prices in KRW, and whether payment or purchase features exist
+- The exact launch date (not in the official docs)
+
+## What to read next
+
+- [1. Personal AI Agents at a Glance](/en/agents/01-agents-compared/): comparing Muse, Grok Bot, Dots, and Claude
+- [5. Using Personal AI Agents Safely](/en/agents/05-agent-safety/): a checklist for payment, email, and account permissions
+- [C13. Claude Code cloud sessions](/en/claude/c13-cloud-sessions/): compare with Claude's cloud automation

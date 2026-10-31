@@ -1,0 +1,269 @@
+---
+title: "Getting to Know Meta Muse"
+description: "A reference on what Meta's personal AI agent Muse is and what it can do, how it handles payments, permissions, and privacy, and what to know before it launches in Korea"
+sidebar:
+  label: "2. Meta Muse"
+level: practical
+category: agents
+tools: ["Meta Muse"]
+duration: "25 min"
+prerequisites:
+  - "(To try it) Be 18 or older and live in a region where Muse is available (such as the US). It isn't officially available in Korea yet."
+  - "A basic understanding of how AI agents differ from chat AI (optional)"
+lastVerified: 2026-10-26
+sources:
+  - title: "Introducing Muse: The World's First Personal AI Agent Built for Everyone (Meta Newsroom, 2026-09-08)"
+    url: "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/"
+  - title: "Muse official site"
+    url: "https://muse.ai"
+  - title: "How We Designed Muse (Meta)"
+    url: "https://introducing.muse.ai"
+  - title: "How We Built Safety Into Muse (Meta AI Research)"
+    url: "https://research.meta.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse"
+  - title: "Muse Supplemental Terms of Service"
+    url: "https://muse.ai/terms"
+  - title: "Muse Privacy"
+    url: "https://muse.ai/privacy"
+  - title: "Introducing Muse for Small Business (Meta Newsroom, 2026-09-29)"
+    url: "https://about.fb.com/news/2026/09/introducing-muse-small-business/"
+  - title: "The Biggest News From Connect 2026 (Meta Newsroom)"
+    url: "https://about.fb.com/news/2026/09/the-biggest-news-from-connect-2026/"
+  - title: "Muse: Meta's personal AI agent (ai.meta.com)"
+    url: "https://ai.meta.com/muse/"
+  - title: "About Muse subscriptions (Meta Help Center)"
+    url: "https://www.meta.com/help/subscriptions/1021145227643680/"
+status: published
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- **Muse is a personal AI agent that Meta released on 2026-09-08.** It doesn't stop at answering questions. It opens a browser, fills in forms, sends email, and even carries out bookings and purchases.
+- Each user gets a **dedicated cloud computer (Muse Secure VM)**, so it keeps working on schedules and events even after you close the app. For things like sending email or making purchases, it asks for **your approval first**.
+- **You can't use it in Korea yet.** The official announcement was a US rollout, and Meta's later official post mentions the US and Canada. A Korea launch date and Korean language support aren't officially confirmed. This site doesn't explain workarounds like signing up through a VPN.
+- Pricing is **free with usage limits** plus paid subscriptions. The Help Center lists $20/month (Power) and $100/month (Maximum) (as of 2026-10-10, in US dollars).
+- Payments use Stripe Link **one-time cards**. Be sure to check the terms, which place broad responsibility on the user, and the **AI training setting that is on by default**.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Explain what Muse is and how it differs from a chat AI.
+- Identify what Muse can do and which services it connects to, based on official materials.
+- Know where to be careful with payment integration, permissions, and privacy settings.
+- Decide what to check and prepare before a Korea launch.
+
+<Aside type="caution" title="It isn't officially available in Korea">
+This guide covers "what Muse is, what it can do, and what to know before a Korea launch." It isn't a step-by-step sign-up tutorial. We don't explain how to sign up from outside the officially supported regions. The terms prohibit use "where the service can't be provided under applicable law," and say Meta can suspend or terminate access for violating the terms.
+</Aside>
+
+## Concepts to know first
+
+### What is Muse?
+
+Meta describes Muse as a "personal AI agent." Unlike a chatbot that answers questions, **you state a goal and it makes a plan and carries it out directly**. Examples include opening a browser, filling out forms, negotiating, sending email, and booking travel. It keeps working after you close the app and notifies you again when things change or it needs your approval.
+
+It uses Meta's Muse Spark model (the safety post refers to Muse Spark 1.3). The names are easy to mix up, but **Muse Spark is the model name, and Muse is the agent service that uses this model**.
+
+### Who made it, and when?
+
+| Date | What happened | Source |
+| --- | --- | --- |
+| 2026-09-08 | Meta announced Muse. Rolled out in the US on iOS, Android, and muse.ai | Meta Newsroom |
+| 2026-09 (Connect 2026) | AI glasses support planned, voice mode, more connectors, a dedicated Muse email address planned | Meta Newsroom |
+| 2026-09-29 | Muse for Small Business announced (more connectors and skills). The post describes it as "available in the US and Canada" | Meta Newsroom |
+
+### Key terms
+
+| Term | Meaning |
+| --- | --- |
+| **Muse Secure VM** | A dedicated cloud computer given to each user. It's an isolated Linux machine with a full browser, and you can use it alongside Muse and step in at any time. |
+| **Sentinel** | A separate agent that runs on the same computer, isolated from Muse. It's the only party that authorizes connector actions and outbound network traffic, and it asks you when needed. |
+| **Connector** | A connection between Muse and external services such as email, calendar, Instagram, and Shopify. You set the access scope for each service. |
+| **Muse Spark** | The Meta model that powers Muse. |
+| **Link (Stripe)** | Muse's payment method. It issues a one-time card number for each payment. |
+| **Muse Confidential VM** | A plan to encrypt the entire VM with a key only you hold, so even Meta can't access it. It's planned for later this year and is **not available yet**. |
+
+### How is it different from a chat AI?
+
+Boiled down, Meta's explanation is this: a chatbot answers one question, while an agent **carries out multi-step work on its own and keeps running after you close the app.** That's convenient, but **the damage is bigger when it does something wrong.** We cover this difference in more detail in [Using Personal AI Agents Safely](/en/agents/05-agent-safety/).
+
+## What it can do
+
+Everything here comes from official Meta materials. Actual behavior may vary by region, account, and time.
+
+- **Hand off tasks**: Things like organizing and sending email, bookings, shopping, schedule management, and cutting costs. Give it a big goal (for example, selling a car for more, lowering a bill, or adjusting a workout plan to life changes) and it makes a plan and coordinates.
+- **Browser tasks**: Searching, browsing sites, filling out forms, and making purchases. You can also watch the screen and take over control yourself.
+- **Always-on**: Works on schedules and events even with the app closed, and notifies you "only when something is meaningfully new or needs your input." It sometimes sends proactive suggestions, which you can reduce or turn off.
+- **Memory**: It remembers what you've told it once and suggests things proactively. For example, it turns recipe Reels you saved on Instagram into a shopping list. You can read and edit the memory file (MEMORY.md) yourself, and you can ask it to "forget."
+- **Creating outputs**: It makes documents, PDFs, web pages, and interactive outputs (Artifacts) such as expense trackers or study guides.
+- **Goal tracking**: In the Goals tab you can see the goals and plans Muse is tracking, and in the Ideas tab you can get suggestions.
+- **Connected services**: It connects to email, calendar, Instagram, and more. Some services are named in official posts, as in the table below, and the full list appears in the Muse app settings. For services with an API or CLI, Muse can even build a custom connector itself.
+
+| Category | Connected services named in official posts (partial) |
+| --- | --- |
+| Small Business post (9/29) | Asana, Box, Canva, Dropbox, Figma, Granola, HighLevel, Intuit QuickBooks, Klaviyo, Lovable, Notion, Shopify, Slack, Stripe, Zoom, Facebook and Instagram business accounts |
+| Connect post (September) | Shopping sites like Walmart, Best Buy, Sephora, Ulta, and Wayfair, plus Instacart, GitHub, and Shop Pay and PayPal added as payment methods. Expedia is "coming soon" |
+
+## Platforms
+
+| Platform | Status |
+| --- | --- |
+| iOS and Android apps | Available (in supported regions only) |
+| Web (muse.ai) | Available (in supported regions only) |
+| Mac app | The official site says "chat on mobile, Mac, or WhatsApp" |
+| WhatsApp | You can talk to Muse inside WhatsApp, like sending messages |
+| AI glasses | "Coming soon" (support announced at Connect for the next few months) |
+
+We couldn't find a Windows app in the official materials.
+
+## Plans and pricing
+
+As of 2026-10-10. Prices are in US dollars and may vary by region and account.
+
+| Plan | Price | Included usage |
+| --- | --- | --- |
+| Free | Free | Has usage limits. When you hit the limit, upgrade to a subscription or wait until the limit resets. **The weekly limit figure hasn't been officially disclosed.** |
+| Power | $20/month | 500 million Muse tokens per week |
+| Maximum | $100/month | 3 billion Muse tokens per week |
+
+- The Power and Maximum prices and token figures were checked directly in the text of the Meta Help Center page "About Muse subscriptions" (as of 2026-10-12). You subscribe in the Muse mobile app or at muse.ai, and it auto-renews monthly. Prices can change, so recheck in the Help Center before signing up.
+- The same page says, in effect, that "Muse and Muse subscriptions are in limited testing and aren't available in all regions."
+- The terms say Meta can change or end the free offering and may sell **additional AI usage** separately. They say these credits can't be refunded or exchanged for cash.
+- Some outlets report free-limit figures, but they aren't from official sources, so we haven't included them here.
+
+## Can I use it in Korea?
+
+**Not right now.**
+
+- The official 2026-09-08 announcement says it's "rolling out in the US." The official 2026-09-29 Small Business post describes it as "available in the US and Canada."
+- Korea doesn't appear on any official page. No Korea launch date has been announced either. Korean media also report that the schedule is undecided (based on press reports).
+- The Meta Help Center only says Muse is "not available in all regions," and we couldn't find a list of supported countries.
+- **We couldn't confirm Korean language support from official materials either.** No official document states the supported languages, so we can't tell how well it works when you talk to it in Korean.
+- You must be 18 or older (or older if your country requires it).
+
+<Aside type="caution" title="We don't recommend signing up through a VPN">
+This site doesn't explain how to get around regional restrictions with a VPN or similar. Your account could be suspended for violating the terms, which could cause problems with the services you've connected to Muse and the tasks you've handed off. There's also the risk of linking your payment method and personal information to a foreign service. Waiting for a Korea launch is safer.
+</Aside>
+
+## Preparing before a Korea launch
+
+This is more of a checklist than something to follow along with. When launch news comes out, check the items below.
+
+<Checklist items={[
+  'I confirmed the Korea launch in an official announcement on Meta Newsroom (about.fb.com) or muse.ai',
+  'I confirmed Korean language support in the official help pages',
+  'I checked the plans, free limits, and Korean payment methods in the Help Center',
+  'I read the terms (Muse Supplemental Terms) and the privacy notice',
+  'I decided how to set the AI training option (Settings > Data controls)',
+  'I decided which services to give read-only access at first',
+  'I decided not to enable payment integration, or to turn it on only after setting a limit and approval method',
+]} />
+
+In supported regions, Meta suggested this example request in its Small Business post. You can't use it in Korea right away, but it gives you a feel for what handing work to an agent is like.
+
+<PromptBox>
+I'm underwater. What do I need to pay attention to from my email, calendar, news, etc? Can you take any of it off my plate?
+</PromptBox>
+
+The prompt above is the English example ("Prompt to try") that Meta presented in its official post, carried over as is. We haven't confirmed whether it works the same way in Korean.
+
+## Payments, permissions, and privacy: what to watch for
+
+### Payments
+
+- Muse pays through **Stripe Link**. A **one-time card number** is generated for each purchase, so your real card details aren't visible to the merchant or the agent.
+- Meta describes Muse as "the first AI agent covered by Link's buyer protection." It includes things like compensation for damaged or lost items, price drops, and fee-free returns, but **only for eligible purchases**. You'll need to check which purchases are eligible.
+- On sites where a payment method is already saved, Meta says Muse detects the checkout screen and **asks you to confirm the purchase details each time**.
+- The terms say not to take state-changing actions like financial transactions "without prior review and approval." They also say to be careful about granting permission in advance (pre-approval).
+- There's a clause saying **you're responsible** for purchases you approved by mistake and for consequences of Muse's wrong judgments. Meta's liability cap in the terms is set at $250 or the amount you paid in the last 12 months, whichever is greater.
+
+### Permissions
+
+| Safeguard | Details |
+| --- | --- |
+| Approval cards | Sensitive actions like sending email and purchases ask for approval first. Approval requests come as a separate window in the app, not in your conversation with Muse. |
+| Approval scope | You can choose just this once, always allow, or deny. Technical docs also describe allowing per session, task, or time period. |
+| Separate read and write | If the service supports it, you can grant "read-only" and "send as well" separately. For email, you can choose read-only access. |
+| Email protection | The email connector filters out one-time verification codes, password reset links, and login links. |
+| Activity log | You can see what Muse has done and plans to do in the activity log. You can change permissions or disconnect at any time. |
+| Credentials | Passwords go to a secure store that Muse can't see, and are entered into the browser only when needed. |
+
+By default, normal web browsing is allowed and it **stops at actions that are hard to undo**. You can make this stricter or looser. We recommend starting with the stricter setting.
+
+### Privacy
+
+- **AI training is on when you first start.** You can turn it off under Settings > Data controls, and the Muse privacy notice says turning it off also applies to earlier interactions. Even when it's on, Meta says it removes some personal information such as names, emails, phone numbers, and Social Security numbers and separates the data from your account.
+- Meta says it **doesn't share conversation and VM data with Meta's ad systems**. However, Meta also explains that because Muse's web browsing looks like your own activity, having it visit a shopping site, for example, can influence the ads that business shows.
+- Deletion: You can delete messages, side chats, and VM files, and "Reset Muse" erases all your Muse data. Muse may still remember what it learned even after deletion, so the guidance is to use the Forget feature.
+- Meta itself states that **the current architecture doesn't prevent Meta from accessing data when needed**. Muse Confidential VM, which cryptographically blocks that access, is planned for later this year and isn't available yet.
+- Meta acknowledges that Muse also makes mistakes and can be attacked through the data it reads (prompt injection). So it says it built a structure (Sentinel, isolation, approvals) that "assumes it can be attacked" and limits the damage. This structure is Meta's own description, and we didn't verify independent validation results in this guide.
+- Some media and communities have reported privacy controversies. We don't cover specific claims here because they haven't been verified.
+
+## How it differs from other agents
+
+These are Muse's characteristics as read from official materials. They describe differences in approach, not which is better.
+
+- It's **for general users**. It's built so you can use it like sending messages, without coding or setup, and you can even talk to it inside WhatsApp.
+- It highlights a **dedicated cloud computer per user and a separate Sentinel architecture**. The phrase "protections other agents don't offer" is Meta's claim, and we didn't verify it by direct comparison.
+- **Connections to Meta apps like Instagram and Facebook, and to shopping services** are presented as strengths.
+- The default is a **free-plus-usage-limit** model.
+
+For a table comparing it with other agents, see [Personal AI Agents at a Glance](/en/agents/01-agents-compared/). For handing browser tasks to Claude in a similar way, see [C11. Chrome and computer use](/en/claude/c11-chrome-computer-use/), and for running automatically in the cloud, see [C13. Cloud sessions](/en/claude/c13-cloud-sessions/).
+
+## Quick reference
+
+| Item | Details (as of 2026-10-10) |
+| --- | --- |
+| Made by | Meta |
+| Launch | 2026-09-08 (US) |
+| Officially confirmed regions | US, Canada |
+| Available in Korea | No (date undecided) |
+| Korean support | Can't be confirmed officially |
+| Age | 18 or older |
+| Platforms | iOS, Android, web (muse.ai), Mac app, WhatsApp. AI glasses planned |
+| Price | Free with limits / Power $20/month / Maximum $100/month (Help Center, may vary by region) |
+| Always-on | Yes (cloud VM) |
+| Payments | Stripe Link one-time cards. Approval before purchases. Shop Pay and PayPal announced as additions |
+| AI training | On by default. Can be turned off under Settings > Data controls |
+| Encrypted VM | Muse Confidential VM planned for later this year (not available) |
+| Liability | Under the terms, you're responsible for Muse's actions |
+
+## Common sticking points
+
+### Muse doesn't show up in the app store, or I can't sign up
+
+- **Cause**: Korea isn't an officially supported region.
+- **Fix**: Wait for the official launch. We don't recommend signing up through workarounds. It could violate the terms.
+
+### I want to check the plans, but they seem to differ by region
+
+- **Cause**: The Meta Help Center says Muse and subscriptions are in limited testing and benefits may vary by region and account.
+- **Fix**: Check what's shown during sign-up (onboarding) before you subscribe.
+
+### Can I trust numbers I saw in the news (download counts, free limits)?
+
+- **Cause**: Figures like download counts or free weekly tokens often come from a single outlet or a tester's report.
+- **Fix**: Treat figures without an official source as reference only. We haven't included them in this guide either.
+
+## Practical tips (for when you use it in a supported region)
+
+- Give it **read permissions first**. Add write permissions once you're comfortable.
+- **Turn on payments last.** Check the amount and the item on the purchase approval screen yourself every time.
+- **Keep connections to a minimum.** Connect only the services you need and disconnect ones you don't use.
+- **Open the activity log once in a while.** You can see what Muse has done and what it's about to do.
+- **Check the AI training setting** at the start. It's on by default.
+- **Don't stay logged in on a shared device.** It can access your dedicated VM and connected services.
+
+<Aside type="note" title="Another agent safety guide on this site">
+A general checklist for giving agents payment, email, and account permissions is covered separately in [Using Personal AI Agents Safely](/en/agents/05-agent-safety/).
+</Aside>
+
+## What to read next
+
+- [Personal AI Agents at a Glance](/en/agents/01-agents-compared/): comparing Muse, Grok Bot, Dots, and Claude
+- [Using Personal AI Agents Safely](/en/agents/05-agent-safety/): a payment and permissions checklist
+- [C11. Chrome and computer use](/en/claude/c11-chrome-computer-use/): handing browser tasks to Claude
+- [C13. Cloud sessions](/en/claude/c13-cloud-sessions/): Claude Code and routines that run in the cloud
