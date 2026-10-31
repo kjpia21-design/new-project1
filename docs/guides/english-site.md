@@ -7,6 +7,7 @@
 - 예전 영문 주소(`/en/...`)는 `astro.config.mjs`의 `legacyEnRedirects()`가 만든 리다이렉트 페이지로 같은 영문 페이지(`/...`)에 연결된다. 예전 한국어 주소(`/claude/...` 등)는 이제 영문 페이지다(헤더의 언어 전환으로 한국어판 이동).
 - 사이트 제목은 `title: { en, ko }`. hreflang(en/ko/x-default)은 Starlight가 자동 출력하고, `og:locale`은 `src/routeMiddleware.ts`가 en_US/ko_KR로 바꾼다.
 - 사이드바 라벨은 영어가 기본(`label`), 한국어는 `translations: { ko }`.
+- 편수는 TutorialCount 컴포넌트로 자동 표시 — 숫자를 직접 쓰지 않는다 (`<TutorialCount section="basics" />`, 섹션 생략 시 전체). frontmatter description에도 편수 숫자를 쓰지 않는다.
 
 ## 코드
 - `src/lib/i18n.ts`: `getLang(Astro)`(경로가 `/ko`·`/ko/...`이면 `'ko'`, 나머지 `'en'`), `t(lang, key)` 문구 사전, 날짜 포맷.
