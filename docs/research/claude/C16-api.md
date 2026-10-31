@@ -87,3 +87,11 @@ Platform 릴리스 노트를 직접 열어 확인한 항목(https://platform.cla
 - Files API·Agent Skills GA(08-19), 베타 헤더 불필요. 컴퓨터 툴셋 GA·브라우저 툴셋(08-19), SDK 클래스(10-07, 베타). 온디맨드 compaction(09-14, 베타). Managed Agents 동적 워크플로(10-09, 베타). Models API capabilities(10-01~06).
 - 출처 추가: 릴리스 노트, Model deprecations.
 - 미확인: Fable 5.1의 thinking 제약(릴리스 노트에 언급 없어 본문에 쓰지 않음). 각 기능의 상세 문서 본문은 열지 않음.
+
+## 2026-10-19 점검 반영
+- 모델 개요, rate limits, get-started, get-api-key, API 결제 도움말을 다시 읽음. 티어별 월 지출 상한(Start 500/Build 1,000/Scale 200,000 USD), Start 티어 Sonnet 5.5 한도, Create key 절차 변동 없음. 결제 도움말: 크레딧은 구매일로부터 1년 뒤 만료(연장 불가), 환불 불가, 최소/최대 구매 금액은 문서에 없음 -> 본문 반영.
+
+## 2026-10-26 점검 반영
+- 모델 개요·Model deprecations·get-started·get-api-key·rate-limits 재확인: 모델 ID/가격/1M 컨텍스트, Sonnet 4.5 폐기 예고(2026-11-30 퇴역, 대체 claude-sonnet-5-5), Opus 4.1·Opus 4·Sonnet 4 퇴역, 티어 Start/Build/Scale/Custom과 월 상한 $500/$1,000/$200,000, Start 티어 Sonnet 5.5 RPM 1,000/ITPM 2,000,000/OTPM 400,000, API 키 생성 경로(platform.claude.com/settings/keys, 키는 한 번만 표시) 변동 없음. 참고: 개인/서비스 계정/워크스페이스 키 유형은 이미 본문에 반영되어 있음.
+- 신규: API 버전 `2026-10-21`(2026-10-21 릴리스, 플랫폼 릴리스 노트·migration-2026-10-21). 새 SDK 메이저(Python 2.0.0, TS 1.0.0, C# 13.0.0, Go 2.0.0 `/v2`, Java 3.0.0, PHP 1.0.0, Ruby 2.0.0)와 ant CLI 2.0.0이 기본으로 2026-10-21을 보냄. 샘플링 파라미터(temperature/top_p/top_k)는 이 버전에서 400, assistant 메시지의 document 블록·user 메시지의 text citations도 400. SDK는 키를 `Authorization: Bearer`로 전송(API는 두 헤더 모두 수용). 본문에 반영(빠른 참조표, 문제 해결). 기존 "Python SDK v1.0(2026-08-20)" 서술은 이번에 원문으로 재확인하지 못해 유지하되 최신 상태를 앞에 붙임.
+- 기타 신규(본문 미반영): Sonnet 5.5 캐시 읽기 가격 $0.20 → $0.10/MTok(2026-10-07 릴리스 노트; 개요 페이지는 기본가의 5%로 표기), Opus 5.5 fast mode가 research preview를 벗어남(2026-10-15), Claude Tag API 베타.

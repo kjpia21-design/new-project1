@@ -52,3 +52,10 @@
 - 새로 확인: diff 뷰에 "Compare against"로 비교 브랜치 선택 가능. Team/Enterprise는 Quick setup이 꺼져 있으면 온보딩에서 환경 생성 폼이 나옴.
 - GitHub Pages 문서(docs.github.com 렌더링 페이지 접속 성공): "Visit site" 링크와 "최대 10분" 문구는 현재 페이지에서 찾을 수 없어 본문에서 제거. Pages는 GitHub Free는 공개 저장소만, Pro/Team/Enterprise는 공개·비공개 저장소 가능. admin 또는 maintainer 권한 필요. 항상 Actions 워크플로 실행으로 배포됨. github-pages 환경에는 기본 브랜치만 배포하도록 보호 규칙 추가를 권장.
 - manage-environments, changing-the-default-branch, re-run-workflows: 기존 서술과 일치(재실행 30일/50회, Re-run failed jobs 옵션도 있음).
+
+## 2026-10-26 재점검
+- web-quickstart, claude-code-on-the-web, permission-modes(클라우드 절), routines, GitHub Pages 게시 소스 문서 재열람. 나머지 GitHub·Astro 문서는 200 응답만 확인.
+- 변경: PR 만들기 설명을 현재 문서에 맞춤. Changes 카드의 Create PR(제목·설명 자동 생성), 초안은 Create PR 우클릭 > Create draft PR. 기존의 "GitHub 작성 화면으로 이동" 선택지는 현재 퀵스타트에 없어 삭제. 패널이 숨겨졌을 때 Show session rail 아이콘.
+- 변경 없음: 클라우드 세션 플랜(Pro·Max·Team, Enterprise는 프리미엄 좌석 또는 Chat + Claude Code 좌석), 권한 모드(Auto·Accept edits·Plan, Manual·Bypass 없음), GitHub 연결 2가지 방법, Default 환경(Trusted), VM 별도 요금 없음.
+- 참고: routines 문서 제목이 "Automate work with scheduled tasks"로 바뀜(예전 이름 routines). 출처 제목만 갱신.
+- GitHub Pages 비공개 저장소 플랜 조건("GitHub Free는 공개만")은 이번 문서에서 재확인되지 않음(문서는 "플랜이나 조직이 허용하는 경우"라고만 서술). 해당 문장의 날짜는 2026-10-19 기준으로 유지.

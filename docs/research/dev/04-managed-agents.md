@@ -63,3 +63,14 @@
 - 에이전트 도구 권한 정책(`always_allow`/`always_ask`/`auto`)의 기본값은 이번에 문서 원문으로 확인하지 못함. 본문은 정책 페이지를 안내만 하고 기본값을 단정하지 않음. (스킬 예제는 `auto` 정책을 쓰고 대기 중 호출을 사람이 승인해야 함을 설명.)
 - 동적 워크플로가 Opus 5.5 외 모델에서 어떻게 동작하는지, 워크플로 안에서 에이전트가 쓰는 정확한 프로그래밍 형식(스크립트 API)은 문서에서 확인하지 못함. 본문은 "에이전트가 작성한다"까지만 쓰고 형식은 단정하지 않음.
 - 스킬 문서는 `agents.create`의 `model`에 `claude-opus-5-5`, 퀵스타트도 같음. `claude-sonnet-5-5`를 Managed Agents 에이전트 모델로 쓰는 것은 퀵스타트에 직접 예시가 없음(스킬은 Sonnet 5.5를 워커 에이전트로 제안). 본문 예제에서 `ma_setup`은 Sonnet 5.5를 쓰므로 실행 확인 불가 항목으로 명시.
+
+## 2026-10-19 재검증
+- 공식 overview/quickstart/budgets/reference/workflow-runs/multiagent 페이지 재확인: 베타 헤더 `managed-agents-2026-04-01`, 런타임 $0.08/세션-시간, 속도 제한(300/1,200), 예산 센트 문자열, 한도(64/1,000/24시간/10) 모두 본문과 일치.
+- 변경 1: `multiagent_20261001` 타입을 쓰면 `subagents`와 `workflows`가 **기본으로 켜짐**(multiagent-orchestration 페이지). 본문 5단계에 한 줄 추가.
+- 변경 2: web_fetch는 세션 대화에 이미 나온 URL만 가져오고, 아니면 `url_not_in_prior_context`(릴리스 노트 2026-10-07). 트러블슈팅에 "원인 2"로 추가하고 릴리스 노트를 sources에 추가. (tools-web-restrictions 페이지에는 이 문장이 없어 릴리스 노트만 근거)
+
+## 2026-10-26 재검증
+- 재확인(일치): 베타 헤더, 런타임 $0.08/세션-시간, 속도 제한 300/1,200, 예산 센트 문자열, 한도(64/24시간), predefined_agents 최대 20, ZDR 비대상, web_fetch "이미 나온 URL만"(릴리스 노트 2026-10-07).
+- 변경 1: 릴리스 노트 2026-10-20 + tools-web-restrictions 페이지: 조직 Console > Capabilities의 웹 검색/가져오기 설정(끄기, 도메인 제한)이 세션의 web_search/web_fetch에도 적용됨. 트러블슈팅 "원인 3" 추가, sources에 해당 페이지 추가.
+- 변경 2('확인 못 함' 해소): permission-policies 페이지: 에이전트 도구 묶음 기본 `always_allow`, MCP 도구 묶음 기본 `always_ask`. 실전 팁 문장 갱신, sources 추가.
+- 참고: 2026-10-21 SDK 메이저 업(Python 2.0.0 등, API 버전 2026-10-21). 본문 예제는 설치본 Python 1.13.0 기준으로 검증했고 v2에서 재실행은 못 함. 변경 없음.

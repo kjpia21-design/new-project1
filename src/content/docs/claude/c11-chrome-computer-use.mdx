@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 유료 플랜 (Chrome 확장은 Pro·Max·Team·Enterprise, 컴퓨터 사용은 Pro·Max)"
   - "Google Chrome과 Chrome 웹 스토어에서 설치할 수 있는 환경"
   - "(컴퓨터 사용) macOS 또는 Windows의 Claude Desktop 앱"
-lastVerified: 2026-10-13
+lastVerified: 2026-10-26
 sources:
   - title: "Get started with Claude in Chrome"
     url: "https://support.claude.com/en/articles/12012173-get-started-with-claude-in-chrome"
@@ -38,7 +38,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
-- **Claude in Chrome**은 Chrome 안에서 Claude가 페이지를 읽고 클릭·입력·이동을 대신 해 주는 확장 프로그램이에요. 모든 유료 플랜에서 쓰고, Chrome 사이드 패널은 베타예요(2026-10-10 기준).
+- **Claude in Chrome**은 Chrome 안에서 Claude가 페이지를 읽고 클릭·입력·이동을 대신 해 주는 확장 프로그램이에요. 모든 유료 플랜에서 써요. Cowork 기반 새 사이드 패널은 단계적으로 롤아웃 중이에요(2026-10-26 기준, 도움말은 Claude in Chrome 자체를 베타로 표기하지 않아요).
 - **컴퓨터 사용(Computer use)**은 커넥터나 브라우저로 안 될 때 Claude가 내 컴퓨터 화면의 앱을 직접 조작하는 기능이에요. Pro와 Max에서 베타이고, Team·Enterprise는 현재 쓸 수 없다고 안내돼요(2026-10-10 기준).
 - 컴퓨터 사용은 macOS와 Windows의 Claude Desktop 앱 안(Cowork, Claude Code)에서 써요. Linux 데스크톱은 안 돼요.
 - 도구 우선순위는 **커넥터 → 브라우저 → 화면 조작**이에요. 화면 조작이 가장 느리고 오류 가능성이 높아요.
@@ -57,7 +57,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 | 용어 | 뜻 |
 | --- | --- |
 | **Claude in Chrome** | Chrome 확장 프로그램이에요. 페이지 읽기, 클릭, 입력, 이동, 양식 작성, 여러 탭 관리를 해요. Claude Cowork와 Claude Code에서 쓸 수 있어요. |
-| **사이드 패널** | Chrome 옆에 열리는 Claude 창이에요. 베타예요. Max·Team에서는 Cowork 세션으로 실행되고 Pro로 확대 중이라고 안내돼요. |
+| **사이드 패널** | Chrome 옆에 열리는 Claude 창이에요. 새 Cowork 기반 패널은 단계적으로 롤아웃 중이고, Enterprise는 소유자가 Claude in Chrome과 클라우드 Cowork를 켜야 새 패널을 쓸 수 있어요(2026-10-26 기준). 이전 방식은 패널의 점 세 개 메뉴에서 "Switch back to classic"으로 돌아갈 수 있어요. |
 | **컴퓨터 사용(Computer use)** | Claude가 화면을 보고 클릭·입력·앱 열기·이동을 직접 하는 기능이에요. 컴퓨터가 켜져 있으면 자리를 비워도 계속 작업해요. |
 | **Cowork** | Claude Desktop 안에서 작업을 맡기는 공간이에요. 컴퓨터 사용은 여기와 Claude Code에서 쓸 수 있어요. |
 | **권한 모드** | Claude가 동작하기 전에 얼마나 승인을 받을지 정하는 설정이에요. |
@@ -100,7 +100,7 @@ Chrome 확장이 사용량을 얼마나 쓰는지는 공식 시작 가이드에 
 
    <ScreenshotPlaceholder caption="Chrome 웹 스토어의 Claude 확장 설치와 퍼즐 아이콘 고정 화면" officialUrl="https://support.claude.com/en/articles/12012173-get-started-with-claude-in-chrome" />
 
-   Claude Desktop 앱에서 쓰려면 설정(Settings) > 커넥터(Connectors) > Claude in Chrome > 구성(Configure)에서 켜요. 대화마다 기본은 꺼져 있어요.
+   Claude Desktop 앱에서 쓰려면 설정(Settings) > Customize > Connectors에서 Claude in Chrome의 구성(Configure)으로 켜요(2026-10-26 기준 도움말 경로). 대화마다 기본은 꺼져 있어요.
 
 2. **사이드 패널에서 첫 작업 맡기기**
 
@@ -136,13 +136,13 @@ Chrome 확장이 사용량을 얼마나 쓰는지는 공식 시작 가이드에 
 
 5. **컴퓨터 사용 켜기 (선택, Pro/Max)**
 
-   Claude Desktop을 최신으로 업데이트한 뒤 설정(Settings) > General(Desktop app)에서 "Enable computer use"를 켜요. 그다음 Cowork 또는 Claude Code 세션에서 앱 관련 작업을 요청하면 Claude가 앱마다 접근 승인을 물어요.
+   Claude Desktop을 최신으로 업데이트한 뒤 설정(Settings) > Capabilities에서 "Enable computer use"를 켜요. Computer use 항목이 없으면 설정(Settings) > System의 This computer 아래에 있어요(2026-10-26 기준). 그다음 Cowork 또는 Claude Code 세션에서 앱 관련 작업을 요청하면 Claude가 앱마다 접근 승인을 물어요.
 
-   <ScreenshotPlaceholder caption="Settings > General의 Enable computer use 토글" officialUrl="https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork" />
+   <ScreenshotPlaceholder caption="Settings > Capabilities의 Enable computer use 토글" officialUrl="https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork" />
 
    <FlowSteps title="컴퓨터 사용 켜는 길" officialUrl="https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork" steps={[
      { where: 'Claude Desktop 앱', action: '최신 버전으로 업데이트' },
-     { where: '설정(Settings) > General (Desktop app)', action: 'Enable computer use 켜기' },
+     { where: '설정(Settings) > Capabilities (없으면 Settings > System)', action: 'Enable computer use 켜기' },
      { where: 'Cowork 또는 Claude Code 세션', action: '앱 관련 작업 요청', result: '앱마다 접근 승인을 물어요' },
    ]} />
 
@@ -164,10 +164,10 @@ Chrome 확장이 사용량을 얼마나 쓰는지는 공식 시작 가이드에 
 | --- | --- | --- |
 | 대상 | 웹 브라우저 안의 작업 | 내 컴퓨터의 앱 화면 |
 | 플랜 | 모든 유료 플랜 (Pro, Max, Team, Enterprise) | Pro, Max (Team·Enterprise 불가) |
-| 상태 | 사이드 패널은 베타 | 베타 |
+| 상태 | 새 사이드 패널은 단계적 롤아웃 | 베타 |
 | OS / 브라우저 | Chrome (문서마다 다른 점은 위 참고). 모바일 불가 | macOS, Windows의 Claude Desktop. Linux 데스크톱 불가. macOS 15 이상에서 백그라운드 작동 |
 | 쓰는 곳 | Cowork, Claude Code, Chrome 사이드 패널 | Claude Desktop의 Cowork, Claude Code |
-| 켜는 곳 | 확장 설치, Desktop에서는 Settings > Connectors | Settings > General > Enable computer use |
+| 켜는 곳 | 확장 설치, Desktop에서는 Settings > Customize > Connectors | Settings > Capabilities(또는 Settings > System) > Enable computer use |
 
 ### Claude in Chrome이 할 수 있는 일
 

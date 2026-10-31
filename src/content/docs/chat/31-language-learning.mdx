@@ -10,7 +10,7 @@ duration: "30분"
 prerequisites:
   - "AI 계정 하나 (Claude, Gemini, ChatGPT 중 아무거나)"
   - "음성 연습을 하려면 휴대폰 앱과 마이크 ([휴대폰에서 AI 쓰기](/basics/07-ai-on-phone/) 참고)"
-lastVerified: 2026-10-15
+lastVerified: 2026-10-26
 sources:
   - title: "Use voice mode (Claude 도움말)"
     url: "https://support.claude.com/en/articles/11101966-using-voice-mode"
@@ -63,7 +63,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | 어디서 | 모바일 앱, 데스크톱, 웹 | Android 폰·태블릿의 Gemini 앱. Gemini 웹 앱에서는 안 돼요 | ChatGPT 데스크톱 앱 |
 | 플랜 | Free, Pro, Max, Team, Enterprise 모두 | 공식 도움말에 플랜 조건이 적혀 있지 않아요 | Plus, Pro, Business, Edu, Enterprise (공식 문서 기준) |
 | 시작 방법 | 입력창의 음파(소리 물결) 아이콘 | 앱 아래쪽 **Live** | **Start voice chat** |
-| 언어 설정 | 설정(Settings) > 일반(General) > 음성(Voice) > 언어(Language). 영어 외 언어는 베타 | Live 지원 언어는 문서에서 확인하지 못했어요 | 확인하지 못했어요 |
+| 언어 설정 | 설정(Settings) > 기능(Capabilities) > 음성(Voice) > 말하는 언어(Spoken language). 여기에 Voice가 안 보이면 설정(Settings) > 일반(General) > 음성(Voice) > 언어(Language). 영어 외 언어는 베타 | Live 지원 언어는 문서에서 확인하지 못했어요 | 확인하지 못했어요 |
 | 대화 기록 | 대화 글 기록이 채팅 기록에 저장돼요 | 종료 후 대화 기록(transcript)을 볼 수 있어요 | 확인하지 못했어요 |
 
 <Aside type="note" title="확인되지 않은 점">
@@ -125,7 +125,7 @@ AI는 자연스러운 설명을 만들어 내지만, 문법 규칙을 잘못 말
 
    <FlowSteps title="음성으로 회화 연습 시작하기" officialUrl="https://support.claude.com/en/articles/11101966-using-voice-mode" steps={[
      { where: '앱 안 (Claude / Gemini)', action: 'Claude는 입력창 음파 아이콘, Gemini(Android)는 아래 Live 누르기', result: '처음이면 마이크 권한 허용' },
-     { where: 'Claude 설정', action: '설정 > 일반 > 음성 > 언어에서 연습할 언어 고르기', result: '앱 표시 언어와 따로 설정돼요' },
+     { where: 'Claude 설정', action: '설정 > 기능(Capabilities) > 음성(Voice) > 말하는 언어(Spoken language)에서 연습할 언어 고르기 (안 보이면 설정 > 일반 > 음성 > 언어)', result: '앱 표시 언어와 따로 설정돼요' },
      { where: '음성 대화 중', action: '"호텔 직원 역할로 영어 회화 연습해 줘"라고 말하기', result: '조용한 곳에서 또박또박 말해요' },
      { where: '대화 종료 후', action: '대화 기록에서 틀린 문장 확인하기', result: '글로 남는 기록으로 복습해요' },
    ]} />

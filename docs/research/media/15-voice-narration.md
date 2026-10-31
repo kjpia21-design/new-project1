@@ -44,3 +44,11 @@ Aside("확인 중인 튜토리얼"): 핵심 사실(가격·동의·메뉴 경로
 
 ## 7단계 재점검 (2026-10-12)
 - ElevenLabs 모델·가격·약관·정책·클로닝·라이브러리 문서, OpenAI custom-voices·TTS 재열람. 변경 없음(Starter $6/Creator $22/Pro $99, 글자 한도, 동의 규칙 동일). help.elevenlabs.io·canva.com은 미열람.
+
+## 재점검 (2026-10-19)
+- ElevenLabs pricing(Free $0 10k / Starter $6 30k / Creator $22 121k / Pro $99 600k; Scale $299, Business $990), models 문서(v4·v4 Turbo·v3·Multilingual v2·Flash v2.5, 글자 한도 10,000/5,000/10,000/40,000, v4 90개 이상 언어에 Korean), IVC·PVC 문서, 이용약관(무료는 비상업), 사용 정책을 다시 열었다. 본문과 충돌 없음. 가격 페이지의 Starter 첫 달 $1 프로모션은 'Until Oct 18'로 표시(프로모션은 계속 변동). help.elevenlabs.io(No-Go Voices 등)는 계속 403. 변경 없음, lastVerified만 갱신.
+
+## 재확인 2026-10-26
+- ElevenLabs 모델 문서(v4 90+언어 10,000자, v3 5,000자, Multilingual v2 10,000자, Flash v2.5 40,000자), 가격 페이지(Free $0/10k, Starter $6/30k, Creator $22/121k, Pro $99/600k; Starter·Creator 첫 달 할인 표시, 이월 최대 2개월), 이용약관(무료는 비상업), IVC·PVC 문서, Voice Library, 사용 정책, Playground TTS 문서를 다시 열어 본문과 일치 확인.
+- 변경: OpenAI custom voices 문서에 녹음 없이 텍스트 설명으로 만드는 prompt-to-voice(GPT-Live용)가 추가되어, 본문의 "동의 녹음 필요" 문장을 "녹음으로 만들 때"로 한정하고 prompt-to-voice 언급 추가.
+- 여전히 403: help.elevenlabs.io 3건(언어, PVC 타인 음성, No-Go Voices), canva.com TTS.

@@ -140,3 +140,9 @@
 | 외부 서비스 연동 | 예. 이메일, 캘린더, 인스타그램, Shopify, Slack, Notion, GitHub 등 커넥터와 커스텀 커넥터 | 공식 열람 |
 | 결제 기능 | 예. Stripe Link 일회용 카드(적격 구매 보호), Shop Pay와 PayPal 추가 발표. 구매 전 사람 승인 | 공식 열람 |
 | 확인 수준 | 공식 페이지 다수 직접 열람. 도움말센터 요금·지역 본문은 검색 요약 수준 | — |
+
+## 2026-10-19 재확인
+- 변경 없음. Newsroom 발표문은 미국 롤아웃만 언급(한국·언어 언급 없음, 9/30 업데이트 표기 있으나 내용 미상). 도움말센터: 무료/Power $20 5억 토큰/Maximum $100 30억 토큰, "limited testing, not available in all locations" 동일.
+
+## 2026-10-26 재확인
+- 변경 없음. Newsroom 발표문(2026-09-08, 9/30 업데이트 표기): "rolling out in the US on iOS, Android, and muse.ai, coming soon to AI glasses", 한국·언어 언급 없음, 요금 언급 없음(대부분 무료, 헤비 사용은 구독). Small Business 글(9/29, 10/8 업데이트): "available in the US and Canada", 커넥터 Asana·Canva·Shopify·Stripe·QuickBooks. 도움말센터: Power $20 주당 5억 토큰 / Maximum $100 주당 30억 토큰, limited testing 동일. muse.ai와 ai.meta.com/muse는 로그인 리디렉션/본문 없음으로 읽지 못함.

@@ -10,7 +10,7 @@ duration: "30분"
 prerequisites:
   - "Copilot이 포함된 Microsoft 365 구독 또는 회사의 Copilot 라이선스 (관리자 허용 필요할 수 있음)"
   - "연습용 가상 문서와 메일 스레드 (실제 고객·사내 기밀은 쓰지 마세요)"
-lastVerified: 2026-10-14
+lastVerified: 2026-10-26
 sources:
   - title: "Welcome to Copilot in Word (Microsoft Support)"
     url: "https://support.microsoft.com/en-us/word/welcome-to-copilot-in-word"
@@ -38,7 +38,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 <Summary>
 - **Word**: 오른쪽 아래(문서 모서리)의 Copilot 버튼으로 채팅 창을 열어 초안 작성, 다듬기, 요약을 해요. 기본은 편집(Edit) 모드예요.
-- **PowerPoint**: Copilot 창의 **Add Content > Agent Mode**로 프롬프트에서 발표 자료를 만들 수 있어요. Word 문서를 바탕으로 만드는 방법과 모범 사례도 공식 문서에 있어요.
+- **PowerPoint**: 오른쪽 아래 Copilot 아이콘으로 채팅 창을 열고 프롬프트로 발표 자료를 만들 수 있어요(2026-10-26 기준). Word 문서를 바탕으로 만드는 방법과 모범 사례도 공식 문서에 있어요.
 - **Outlook**: 새 메일에서 Copilot 아이콘으로 초안을 만들고, 스레드 맨 위 **Summary by Copilot**으로 긴 메일을 요약해요.
 - 화면에 Copilot이 보이는지는 **구독·라이선스·조직 설정**에 달려 있어요. 회사 계정은 Copilot Chat(기본), Copilot (Basic), Copilot (Premium) 같은 경험으로 나뉘어요(2026-10-14 기준).
 - 가격은 이번 확인에서 공식 요금제 페이지를 읽지 못해 적지 않았어요. 생성된 내용은 보내기 전에 꼭 읽고 고치세요.
@@ -111,22 +111,22 @@ Microsoft의 요금제 페이지(microsoft.com)는 이번 확인에서 접근이
 
 4. **PowerPoint: 발표 자료 초안 만들기**
 
-   새 프레젠테이션에서 오른쪽 아래의 Copilot 아이콘을 누르고, 채팅 창 입력란의 **Add Content**를 눌러 **Agent Mode**를 선택한 다음 프롬프트를 입력해요. Copilot이 대상, 스타일 같은 질문을 먼저 할 수 있고, 윤곽(outline)을 만든 뒤 대화로 고치다가 준비되면 슬라이드를 만들게 해요. 같은 페이지에 "Agent Mode에서 파일 참조는 곧 지원"이라는 문구도 있어서(2026-10-14 기준), 기존 Word 문서를 바탕으로 만들 때는 공식 문서의 안내를 먼저 보세요.
+   새 프레젠테이션에서 화면 오른쪽 아래의 Copilot 아이콘을 눌러 Copilot Chat을 열어요. 원하면 모델 선택기(model selector)에서 AI 모델을 고르고, 기본값 Auto로 둬도 돼요. 조직이 Brand Kit을 요구하면 Select brand에서 쓸 Brand Kit을 골라요(개인 계정이거나 조직에 없으면 건너뛰어요). 그다음 입력란에 만들고 싶은 발표 자료를 설명해요. Copilot이 대상, 발표 길이, 템플릿·디자인 방향, 이미지 종류 같은 질문을 먼저 할 수 있는데, 답하거나 건너뛰면 Copilot이 내용을 모아 선택한 템플릿으로 프레젠테이션을 만들어요(2026-10-26 기준 공식 문서). 2026-10-14 기준 문서에 있던 "Add Content > Agent Mode" 안내는 지금 이 문서에서 찾지 못했으니, 내 화면에 그 메뉴가 보이면 화면 안내를 따르세요.
 
-   <FlowSteps title="PowerPoint에서 Agent Mode로 시작하기" officialUrl="https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d" steps={[
+   <FlowSteps title="PowerPoint에서 Copilot으로 발표 자료 시작하기" officialUrl="https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d" steps={[
      { where: 'PowerPoint 새 프레젠테이션', action: '슬라이드 오른쪽 아래 Copilot 아이콘 누르기', result: 'Copilot 채팅 창' },
-     { where: '채팅 창 입력란', action: 'Add Content 누르고 Agent Mode 선택', result: '발표 자료 생성 모드' },
-     { where: '채팅 창', action: '프롬프트 입력 후 화살표 버튼', result: '질문 또는 윤곽 제안' },
-     { where: '채팅 창', action: '윤곽을 고치고 "슬라이드 만들어 줘" 요청', result: '슬라이드 초안' },
+     { where: '채팅 창', action: '(선택) 모델 선택기와 Brand Kit 고르기', result: '모델·브랜드 설정' },
+     { where: '채팅 창', action: '프롬프트 입력 후 화살표 버튼', result: 'Copilot의 확인 질문' },
+     { where: '채팅 창', action: '질문에 답하거나 건너뛰기', result: '슬라이드 초안' },
    ]} />
 
    <PromptBox>
    신입 사원 온보딩 발표 자료 초안을 만들어 줘. 대상은 입사 첫 주 직원 20명이고, 10분 분량이야. 회사 소개, 첫 주 일정, 자주 묻는 질문, 연락처 순서로 구성해 줘.
    </PromptBox>
 
-   기존 Word 문서로 만들 때의 모범 사례도 공식 문서에 있어요. Word 스타일(제목 등)로 문서를 정리하면 슬라이드 나누기가 좋아지고, 관련 이미지를 넣으면 반영을 시도하고, 회사 템플릿으로 시작하면 테마를 유지해요. 24MB보다 작은 Word 문서에서 가장 잘 동작해요. 프롬프트로 만들 때는 한 번에 한 가지 출력 언어만 지원해요.
+   기존 Word 문서로 만들 때의 모범 사례도 공식 문서에 있어요. Word 스타일(제목 등)로 문서를 정리하면 슬라이드 나누기가 좋아지고, 관련 이미지를 넣으면 반영을 시도하고, 회사 템플릿으로 시작하면 테마를 유지해요. 24MB보다 작은 Word 문서에서 가장 잘 동작해요.
 
-   <ScreenshotPlaceholder caption="PowerPoint Copilot 창에서 Agent Mode로 발표 자료를 만드는 화면" officialUrl="https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d" />
+   <ScreenshotPlaceholder caption="PowerPoint Copilot 창에서 발표 자료를 만드는 화면" officialUrl="https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d" />
 
 5. **Outlook: 긴 메일 스레드 요약하기**
 
@@ -154,7 +154,7 @@ Microsoft의 요금제 페이지(microsoft.com)는 이번 확인에서 접근이
 | Word | 선택 문장 다시 쓰기 | 문장 선택 후 Rewrite |
 | Word | 요약·질문만 하기 | Chat only |
 | Word | 다른 문서·메일·회의 참조 | 채팅 입력란에 `/` |
-| PowerPoint | 발표 자료 생성 | Copilot 아이콘 > Add Content > Agent Mode |
+| PowerPoint | 발표 자료 생성 | 오른쪽 아래 Copilot 아이콘 > 프롬프트 입력 |
 | Outlook (새) | 초안 | 툴바 Copilot 아이콘 > Draft |
 | Outlook (클래식) | 초안 | Copilot 아이콘 > Draft with Copilot |
 | Outlook (새) | 스레드 요약 | 스레드 위 Summary by Copilot |
@@ -193,7 +193,7 @@ Microsoft의 요금제 페이지(microsoft.com)는 이번 확인에서 접근이
 
 ### PowerPoint에서 파일을 참조해 만들 수 없어요
 
-- **원인**: 공식 문서에 Agent Mode의 파일 참조 지원이 "곧 제공" 문구로 적혀 있고, 기능이 순차 제공 중일 수 있어요.
+- **원인**: 2026-10-26 기준 공식 PowerPoint 문서는 Word 문서로 만드는 모범 사례(Word 스타일, 이미지, 템플릿, 24MB 미만)를 안내하지만 Agent Mode 파일 참조는 설명하지 않아요. 이전 문서에 있던 "곧 제공" 문구도 지금은 찾지 못했어요. 기능이 순차 제공 중일 수 있어요.
 - **해결**: 내 화면의 안내를 따르고, 필요하면 Word 요약을 먼저 받아 프롬프트에 붙여 넣어 윤곽을 만드세요. 공유 문서라면 Word 쪽의 미리보기·승인 기능도 활용하세요.
 
 ### 요약이 중요한 내용을 놓쳤어요

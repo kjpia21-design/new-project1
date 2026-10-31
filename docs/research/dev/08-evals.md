@@ -19,3 +19,8 @@
 - Console의 평가 도구(Evaluation Tool) 페이지(eval-tool)는 위 URL에서 해당 내용이 확인되지 않아(요약 결과가 develop-tests 내용만 돌려줌) 본문에서 다루지 않음.
 - 통계적 유의성 기준(표본 수 등)은 공식 문서에서 숫자로 확인하지 못함. 본문에서는 "작은 세트의 점수 변화는 잡음일 수 있다"는 일반 원칙으로만 서술하고 임계값은 제시하지 않음.
 - 예제 파이썬 스크립트는 `py_compile` 문법 검사만. API 키가 없어 실제 호출 불가.
+
+## 2026-10-26 재검증
+- models/overview(ID·가격·Opus 5.5 적응형 thinking 상시·기본 effort), develop-tests(채점 모델은 생성 모델과 다른 것 권장 주석), get-started, rate-limits 재확인: 본문과 일치. 변경 없음.
+- 참고: 2026-10-21부터 API 버전 2026-10-21은 `temperature`/`top_p`/`top_k`를 모든 모델에서 400으로 거부(release notes, migration 가이드). 본문 스크립트는 이 파라미터를 쓰지 않아 영향 없음.
+- 통계적 유의성 기준(표본 수)은 여전히 문서에 숫자로 없음.

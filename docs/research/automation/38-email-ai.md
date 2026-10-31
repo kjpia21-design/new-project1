@@ -21,3 +21,10 @@
 - Gemini 기능이 포함되는 구체 Google Workspace/Google AI 요금제 이름과 가격.
 - Outlook Copilot의 우선순위 메일함/분류 기능, 가격(24편과 동일하게 미확인).
 - Claude의 Outlook 단독 사용자용 연결 단계 문서(Connect Claude to Microsoft 365)는 열지 않음.
+
+## 2026-10-19 재확인
+- Gmail AI Overview(전 사용자, 지원 언어 한정, 스마트 기능 설정명), Help me write(개인 계정 미국만), Gemini in Gmail, 언어 목록(Korean O, Proofread X), Outlook Copilot(Draft/Summary by Copilot), Claude Google Workspace 커넥터, Microsoft 365 커넥터(전 플랜, 개인 MS 계정 불가, Entra 관리자 동의) 재확인. 변경 없음.
+
+## 2026-10-26 재확인
+- 재확인: Gmail 16561387(AI Overview 전 사용자, 일부 언어, Remind me, 스마트 기능 설정), 13955415(Help me write 절차·Formalize/Friendly/Shorten·Sources, 개인 계정 미국만), 14199860(Ask Gemini), 14925782(언어), Outlook Copilot 도움말(Draft/Summary by Copilot/Schedule with Copilot), MS 지원 언어(Korean, 2026-09 갱신), Claude Google Workspace 커넥터, Microsoft 365 커넥터(전 플랜, Entra 관리자 동의, 쓰기 도구는 별도 활성화·Mail.Send, 첨부 있는 메일 거부). 변경 없음, 본문 수정 없음.
+- 참고(미반영): M365 커넥터는 읽기 전용이 기본이고 메일 전송은 쓰기 도구를 켠 경우에만 가능(본문 "보내기 전 승인" 문구와 모순은 아님).

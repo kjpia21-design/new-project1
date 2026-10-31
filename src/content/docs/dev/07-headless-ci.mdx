@@ -12,7 +12,7 @@ prerequisites:
   - "C14. Claude Code 핵심 기능 (권한 모드, CLAUDE.md, 훅)"
   - "C16. API 시작하기 (API 키, 비용 개념)"
   - "GitHub 저장소 한 개와 그 저장소의 관리자(admin) 권한"
-lastVerified: 2026-10-13
+lastVerified: 2026-10-26
 sources:
   - title: "Run Claude Code programmatically (headless)"
     url: "https://code.claude.com/docs/en/headless"
@@ -125,7 +125,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
    ```
 
    <Aside type="caution" title="권한 모드를 비워 두지 마세요">
-   아무것도 정하지 않으면 시작 모드가 `auto`가 될 수 있다고 공식 문서가 안내해요. 무인 실행에서는 원하는 모드를 직접 적으세요. 사람이 답할 수 없는 환경에서 승인 대기를 아예 없애려면 `--permission-prompts none`을 쓸 수 있어요(Claude Code v2.1.259 이상).
+   공식 문서(2026-10-26 기준)에 따르면 Claude Code v2.1.302 이상의 `claude -p`는 아무것도 정하지 않으면 수동(Manual, 설정값 `default`) 모드로 시작해서, 승인이 필요한 호출은 허용 규칙이나 훅이 승인하지 않는 한 거부돼요. 더 낮은 버전에서는 다를 수 있으니 무인 실행에서는 원하는 모드를 직접 적으세요. 사람이 답할 수 없는 환경에서 승인 대기를 아예 없애려면 `--permission-prompts none`을 쓸 수 있어요(Claude Code v2.1.259 이상).
    </Aside>
 
 3. **CI용으로 `--bare` 붙이기**
@@ -201,7 +201,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
      { where: 'Actions 시크릿 화면', action: '시크릿을 추가하고 이름을 ANTHROPIC_API_KEY로 쓰기' },
    ]} />
 
-   조직 전체에 공유할 시크릿이라면 OAuth 토큰보다 **API 키**를 권장해요. OAuth 토큰은 `setup-token`을 실행한 사람의 구독에 묶이기 때문이에요.
+   조직 전체에 공유할 시크릿이라면 OAuth 토큰보다 **API 키**를 권장해요. OAuth 토큰은 `setup-token`을 실행한 사람의 구독에 묶이기 때문이에요. 오래 쓰는 시크릿을 아예 두고 싶지 않다면, 워크플로의 GitHub OIDC 토큰을 Console 서비스 계정으로 교환하는 워크로드 아이덴티티 연동(`anthropic_federation_rule_id` 등 입력, `id-token: write` 필요)도 공식 문서에 있어요(2026-10-19 기준). 설정은 공식 setup 가이드를 보세요.
 
 6. **PR 리뷰 워크플로 만들기**
 

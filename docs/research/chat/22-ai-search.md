@@ -34,3 +34,12 @@
 - https://learn.chatgpt.com/llms.txt , https://learn.chatgpt.com/docs/web-search.md , https://learn.chatgpt.com/docs/use-chatgpt
 - https://support.claude.com/en/articles/10684626-enable-and-use-web-search
 - https://support.claude.com/en/articles/11088861-use-research-on-claude
+
+## 2026-10-19 재확인
+- Perplexity 요금제 비교 도움말(11187416): Free(Standard)는 Pro Search 하루 3번, Research 한 달 1번. 본문의 "매우 제한적" 표현을 이 수치로 교체. Pro 월 가격은 여전히 미표시(Education Pro $10만 표시), 한국 제공 여부도 미확인.
+- Claude 웹 검색(10684626)·Research(11088861), Perplexity 나머지 3개 도움말, ChatGPT web-search.md(Work에서 + 메뉴 Deep research, 계정별 제공)는 본문과 일치. 변경 없음.
+
+## 재점검 (2026-10-26)
+- Claude 웹 검색 도움말(10684626): "Free 계정은 사용량 한도 안에서 웹 검색 가능, 5시간마다 리셋, 검색·웹 가져오기 모두 한도에 포함." 신규 확인 → 비교표 Claude "무료 이용" 칸을 "확인하세요"에서 이 내용으로 교체. 가격 페이지: Research는 Free 불가(Pro 이상).
+- Claude Research(11088861): Pro·Max·Team·Enterprise, 웹 검색 필수, 선택 모델과 무관하게 Opus 5.5(필요시 Opus 4.8) 사용. 본문과 일치. 모바일 Research는 커넥터를 건너뜀(본문 미언급).
+- Perplexity 4개 도움말: Standard Pro Search 3/일·Research 1/월, Research 2~4분 일치. Pro 월 가격은 여전히 미표시. learn.chatgpt.com web-search: Work > + 메뉴 Deep research 일치.

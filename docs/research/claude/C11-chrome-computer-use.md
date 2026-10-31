@@ -40,3 +40,11 @@
 ## 2026-10-11 업데이트 반영
 - Claude Code changelog: 2.1.260 Chrome이 조직 관리자 설정을 따름(관리자가 끄면 `--chrome`, `/chrome`, 브라우저 도구 사용 불가). 2.1.290 프로젝트 설정 파일로 Chrome을 켤 수 없고 `--chrome`, `/chrome`, 사용자 설정을 써야 함. 출처: https://code.claude.com/docs/en/changelog
 - 본문 나머지(지원센터 기반 내용)는 이번 변경과 충돌 없어 유지.
+
+## 2026-10-19 점검 반영
+- Chrome 도움말, Claude Code Chrome 문서, 컴퓨터 사용 도움말을 다시 읽음. Chrome 전용 vs Chrome/Edge(+기타 Chromium) 차이, 사이드 패널 베타, 컴퓨터 사용 Pro/Max 베타(Team/Enterprise 불가), macOS 15 백그라운드, Settings > General > Enable computer use 변동 없음. Claude Code 쪽 확장 최소 버전 1.0.36 (본문 미반영).
+
+## 2026-10-26 점검 반영
+- 컴퓨터 사용 도움말(14128542): 켜는 곳이 Settings > Capabilities(해당 섹션이 없으면 Settings > System의 This computer 아래)로 확인되어 본문의 "Settings > General"을 고침. Pro/Max 베타, Team·Enterprise 불가, macOS·Windows, macOS 15+ 백그라운드 기본은 변동 없음.
+- Chrome 시작 가이드(12012173): Chrome 전용, 유료 플랜, 데스크톱 앱 연결 경로 Settings > Customize > Connectors > Configure. 도움말은 Claude in Chrome 자체를 베타로 표기하지 않고 Cowork 기반 사이드 패널을 "단계적 롤아웃"으로 설명(Enterprise는 소유자가 켜야 함, 이전 방식은 "Switch back to classic"; 워크플로 녹화는 classic 패널 전용). 본문의 "사이드 패널은 베타" 표현을 이에 맞게 고침.
+- 권한 가이드(12902446)의 모드 이름(Manually approve / Automatically approve / Skip all approvals), 차단 범주 변동 없음. Claude Code 문서(chrome): 확장 1.0.36+, Chrome·Edge(그 외 Chromium 연결 설정), WSL 미지원, `/chrome`, `--chrome` 변동 없음. 안전 가이드(13364135) 변동 없음.

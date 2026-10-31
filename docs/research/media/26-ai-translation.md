@@ -27,3 +27,10 @@
 - DeepL: support.deepl.com 도움말 전부(403), 무료 버전 데이터 처리 정책 원문, 한국어 문서 번역 세부, 한국 가격.
 - 파파고: 무료/Plus 월 한도 숫자, Plus 가격, 품질 개선 동의 기본값, 서비스 개인정보 처리 세부.
 - Claude: 번역 품질 비교 수치(공식 근거 없음), 팀/Enterprise 데이터 정책 원문(이 글은 소비자 제품 기준).
+
+## 재점검 (2026-10-19)
+- DeepL pro·pro-data-security·document-translation·API 언어 페이지, 파파고 화면(papago.naver.com, 문서 번역 메뉴와 '품질 개선 동의' 링크 확인), Claude 파일 생성·민감 데이터 도움말을 다시 열었다. DeepL 요금제 표(Individual 300,000자·3파일·1용어집, Team 1,000,000자·20파일·5용어집, Business 무제한·100파일)는 동일. 파파고 도움말 글 본문과 DeepL 무료 한도·파일 크기는 이번에도 페이지 구조상 확인하지 못함. 변경 없음, lastVerified만 갱신.
+
+## 재확인 2026-10-26
+- DeepL 요금제(Free 1건·5MB·50,000자 / Individual 3건·30MB·300,000자 / Team 20건·30MB·1,000,000자 / Business 100건·100MB·무제한; 용어집 수), 보안 페이지, 문서 번역 FAQ, 지원 언어, 파파고 화면(품질 개선 동의 링크)·고객센터(PDF/DOCX/XLSX/PPTX/HWPX 20MB), Claude 프라이버시 도움말(시크릿 채팅 제외), 파일 생성 도움말을 다시 열어 본문과 일치 확인.
+- 추가: DeepL 문서 번역 FAQ에 무료 계정은 파일 5MB 또는 월 100,000자라는 문구가 있어 본문 표 아래에 한 문장 추가. 변경된 수치 없음. support.deepl.com은 미접속 유지.

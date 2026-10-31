@@ -21,3 +21,10 @@
 
 ## 본문 반영
 - 학습 방법은 공식 확인 사실이 아닌 "써 보는 방법"으로 프롬프트 예시로만 제시. 앱 기능 설명은 위 확인 범위만.
+
+## 재점검 (2026-10-19)
+- Claude 음성 모드(전 플랜, 베타, Settings > General > Voice > Language), Gemini Live(Android 앱 도움말, 웹 불가), ChatGPT Voice(Plus·Pro·Business·Edu·Enterprise, 데스크톱 앱 중심) 모두 본문과 일치. 변경 없음.
+
+## 재점검 (2026-10-26)
+- Claude 음성 모드(11101966): 신규 확인 — 말하는 언어는 설정 > 기능(Capabilities) > 음성(Voice) > 말하는 언어(Spoken language)이고, 안 보이면 설정 > 일반 > 음성 > 언어. 본문 표·FlowSteps에 반영. 전 플랜·베타·영어 외 언어 베타, 푸시투토크, 한도 포함, 대화 기록 저장 일치. (Fable은 음성 모드 불가 — 본문 미언급)
+- Gemini Live(15274899): Android 앱, 웹 불가, Gems 불가, 지원 언어 목록 없음 → 일치. 지원 언어(14579026): 한국어 포함. ChatGPT Voice(learn.chatgpt.com): 데스크톱 앱, Plus·Pro·Business·Edu·Enterprise, Start voice chat 일치.

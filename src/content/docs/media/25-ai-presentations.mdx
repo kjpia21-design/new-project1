@@ -10,7 +10,7 @@ duration: "40분"
 prerequisites:
   - "발표 주제와 청중, 발표 시간 (메모 수준이면 충분해요)"
   - "Gamma 계정(무료로 시작 가능) 또는 Claude 계정 또는 Copilot이 포함된 Microsoft 365"
-lastVerified: 2026-10-14
+lastVerified: 2026-10-26
 sources:
   - title: "Gamma 도움말 - How do I create a new presentation, document, or webpage in Gamma?"
     url: "https://help.gamma.app/en/articles/7838093-how-do-i-create-a-new-presentation-document-or-webpage-in-gamma"
@@ -41,10 +41,10 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- 세 도구 모두 **주제를 말하면 개요를 보여 주고, 승인하면 슬라이드를 만드는** 흐름이에요. 결과는 초안이니 사람이 고쳐야 해요.
+- 세 도구 모두 **주제를 말하면 AI가 (필요하면 질문한 뒤) 슬라이드를 만드는** 흐름이에요. Gamma는 계획을 보여 주고 승인을 받아요. 결과는 초안이니 사람이 고쳐야 해요.
 - **Gamma**는 발표 자료 전용 AI 서비스예요. **Claude**는 채팅에서 Slides 템플릿으로 만들고 PowerPoint로 내보내요. **Copilot**은 PowerPoint 안에서 바로 만들어요.
 - 회사 양식을 지켜야 하면 **양식 파일에서 시작**하는 Copilot이 편하고, 빠른 초안은 Gamma가 편해요.
-- AI 기능은 **크레딧·사용량**을 써요. Gamma 무료 플랜은 크레딧이 갱신되지 않아요 (2026-10-14 기준).
+- AI 기능은 **크레딧·사용량**을 써요. Gamma 무료 플랜은 크레딧이 갱신되지 않아요 (2026-10-19 기준).
 - 숫자·출처·고유명사는 AI가 틀릴 수 있어요. 발표 전에 꼭 직접 확인하세요.
 </Summary>
 
@@ -69,8 +69,8 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 | 비교 | Gamma | Claude Slides | PowerPoint의 Copilot |
 | --- | --- | --- | --- |
-| 시작하는 곳 | gamma.app 대시보드 | 채팅 또는 Artifacts 탭 | PowerPoint 안의 Copilot 창 |
-| 제작 흐름 | 질문 -> 계획 검토 -> 제작 (Plan 모드) | 채팅으로 요청하고 수정 요청 | 질문 -> 개요 -> 슬라이드 |
+| 시작하는 곳 | gamma.app 대시보드 | 채팅 또는 Artifacts 탭 | PowerPoint 안의 Copilot Chat |
+| 제작 흐름 | 질문 -> 계획 검토 -> 제작 (Plan 모드) | 채팅으로 요청하고 수정 요청 | 설명 입력 -> (청중·길이 등 질문, 건너뛰기 가능) -> 슬라이드 생성 |
 | 내보내기 | PDF, PNG, PPTX 등 | PowerPoint, PDF, Google Slides | 이미 PowerPoint 파일 |
 | 회사 양식 | 별도 테마 | 기존 덱을 올려 스타일을 따라 하게 요청 | 양식 파일에서 시작하면 테마 유지 |
 | 비용 구조 | 크레딧 (무료는 갱신 안 됨) | Claude 플랜 안에서 사용 (소모량 수치는 공개되지 않아요) | Copilot이 포함된 Microsoft 365 구독 (가격은 확인하지 못했어요) |
@@ -114,22 +114,22 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    **C. PowerPoint의 Copilot**: 아래 "가장 막히는 절차"를 따라가세요.
 
    <FlowSteps title="PowerPoint에서 Copilot으로 새 발표 자료 만들기" officialUrl="https://support.microsoft.com/en-us/PowerPoint/copilot/create-a-new-presentation-with-copilot-in-powerpoint" steps={[
-     { where: 'PowerPoint', action: '새 프레젠테이션을 열고 슬라이드 오른쪽 아래의 Copilot 아이콘 누르기', result: 'Copilot 창이 열려요' },
-     { where: 'Copilot 창 입력 상자', action: 'Add Content 버튼 > Agent Mode 고르기', result: '발표 자료 제작 모드가 켜져요' },
-     { where: '입력 상자', action: '만들고 싶은 발표를 설명하고 화살표 버튼으로 보내기', result: 'Copilot이 청중·스타일을 물어봐요 (건너뛰어도 돼요)' },
-     { where: '개요 확인', action: '대화로 개요를 고친 뒤 "슬라이드를 만들어 줘"라고 말하기', result: '슬라이드가 생성돼요' },
+     { where: 'PowerPoint', action: '새 프레젠테이션을 열고 화면 오른쪽 아래의 Copilot 아이콘으로 Copilot Chat 열기', result: 'Copilot Chat이 열려요' },
+     { where: 'Copilot Chat', action: '필요하면 모델 선택기에서 AI 모델 고르기(기본은 Auto). 조직이 Brand Kit을 요구하면 Select brand에서 고르기', result: 'Brand Kit을 고르면 입력 상자에 붙어요' },
+     { where: '입력 상자', action: '만들고 싶은 발표를 설명해서 보내기', result: 'Copilot이 청중·길이·템플릿·이미지 종류를 물어볼 수 있어요 (답하거나 건너뛰어 Copilot에게 맡겨도 돼요)' },
+     { where: 'Copilot', action: '자료를 모으고 선택한 템플릿으로 만들 때까지 기다리기', result: '슬라이드가 생성돼요' },
    ]} />
 
-   Copilot이 보이지 않으면 구독이나 조직 설정에 포함되지 않았을 수 있다고 안내돼요. 이 경우 관리자에게 문의하세요. Agent Mode에서 파일을 참조하는 기능은 "곧 제공"으로 안내돼 있었어요(2026-10-14 기준).
+   Copilot이 보이지 않으면 구독이나 조직 설정에 포함되지 않았을 수 있다고 안내돼요. 이 경우 관리자에게 문의하세요. 2026-10-26 기준 공식 도움말에는 이전에 있던 Add Content > Agent Mode 단계 설명이 없고, 모델 선택기(기본 Auto)와 Brand Kit 선택 단계가 안내돼요. 화면이 다르면 최신 도움말과 실제 화면을 따르세요.
 
-   <ScreenshotPlaceholder caption="Copilot 창에서 Add Content > Agent Mode를 고르는 화면" officialUrl="https://support.microsoft.com/en-us/PowerPoint/copilot/create-a-new-presentation-with-copilot-in-powerpoint" />
+   <ScreenshotPlaceholder caption="Copilot Chat에서 모델 선택기와 입력 상자로 발표 자료를 요청하는 화면" officialUrl="https://support.microsoft.com/en-us/PowerPoint/copilot/create-a-new-presentation-with-copilot-in-powerpoint" />
 
 4. **슬라이드를 직접 점검하기**
 
    - 숫자, 날짜, 법·규정 이름, 사람 이름이 맞는지 원문과 비교해요.
    - 한 슬라이드에 글이 너무 많으면 줄이거나 나눠 달라고 요청해요.
    - AI가 만든 이미지는 실제 상황과 다를 수 있어요. 사람 얼굴, 남의 로고가 나오면 바꾸세요.
-   - Copilot이 만든 AI 이미지는 발표자 노트에 "AI-generated" 출처가 표시된다고 안내돼요.
+   - Copilot이 만든 AI 이미지의 출처 표시는 2026-10-26 기준 이 도움말에서 확인되지 않아요(이전 확인 때는 발표자 노트에 "AI-generated"가 표시된다고 안내됐어요). 발표자 노트와 이미지를 직접 확인하세요.
 
 5. **내보내고 마무리하기**
 
@@ -143,12 +143,12 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 ## 빠른 참조표
 
-### Gamma 요금제 요약 (2026-10-14 기준, 공식 도움말에서 확인한 항목만)
+### Gamma 요금제 요약 (2026-10-19 기준, 공식 도움말에서 확인한 항목만)
 
 | 항목 | Free | Plus | Pro |
 | --- | --- | --- | --- |
-| AI 크레딧 | 갱신 안 됨 (추천 1건당 200, 계정에 최대 2,000) | 월 1,000 | 월 4,000 |
-| 한 번에 생성 슬라이드 | 최대 10장 | 최대 100장 | 이 글에서 확인하지 못함 |
+| AI 크레딧 | 갱신 안 됨 (가입 시 400, 추천 1건당 200, 추천으로는 계정에 최대 2,000) | 월 1,000 | 월 4,000 |
+| 한 번에 생성 슬라이드 | 최대 10장 | 최대 100장 | 최대 100장 |
 | 내보내기 배지 | "Made by Gamma" 표시 | 제거 | 제거 |
 | 가격 | 이 글에서 확인하지 않음 | 이 글에서 확인하지 않음 | 이 글에서 확인하지 않음 |
 
@@ -176,7 +176,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 ## 자주 막히는 지점
 
-### Copilot 아이콘이나 Agent Mode가 안 보여요
+### Copilot 아이콘이나 Brand Kit 선택이 안 보여요
 
 - **원인**: Microsoft 365 구독이나 조직 설정에 Copilot이 포함되지 않았거나, 기능이 아직 내 계정에 롤아웃되지 않았을 수 있어요.
 - **해결**: 공식 도움말의 "어떤 Copilot 라이선스가 있는지 확인" 안내를 따르거나 관리자에게 문의하세요. 대안으로 Gamma나 Claude로 먼저 초안을 만들 수 있어요.

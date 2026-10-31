@@ -43,3 +43,13 @@
 - 모든 출처 재열람 성공(WebFetch, first-project.md는 curl 200). 요금(Hobby 무료, Pro $20, Pro+ $60, Ultra $200, Teams $40/$120, Enterprise 문의, 인도 Start ₹649), 모드 4종, Rules(.mdc, 적용 4종), Privacy Mode, 색인(Instant Grep, 로컬) 모두 기존 서술과 일치.
 - 새로 확인: ignore-files 문서의 기본 제외 목록에 lock 파일 외 `.env*`, `.git/`, `node_modules/`, 바이너리·압축·이미지·미디어가 포함됨 -> 본문 반영. 계층형 .cursorignore(Settings > Indexing > Ignore Files)와 전역 ignore 목록 존재. models-and-pricing: Teams Premium은 Standard 대비 Agent 한도 5배.
 - 릴리스 노트(3.19~3.24)에서 Plan/Debug 모드·한국어 관련 변경 없음. 한국어 UI 지원 여부는 여전히 미확인.
+
+## 2026-10-19 재점검
+- 요금제 변경: cursor.com/pricing, cursor.com/help/account-and-billing/pricing, cursor.com/docs/models-and-pricing 기준으로 신규 가입 플랜이 Free $0 / Plus $8 / Premium $30 / Super $100 / Ultra $200 / Teams 좌석당 $30·$100·$200 / Enterprise 문의로 바뀜. 연 결제 Plus $80, Premium $300, Super $1,000, Ultra $2,000. 클라우드 에이전트는 Premium 이상(Plus 제외). 예전 Hobby(무료)·Pro $20·Pro+ $60·Ultra $200·Teams Standard $40·Teams Premium $120·인도 Start ₹649는 기존 구독자용(가격 도움말). 사용량은 주간 풀. 본문 요금제 표를 이에 맞게 수정.
+- 한국 가격/원화는 여전히 공식 페이지에 없음.
+- 재확인(변경 없음): Agent/Ask/Plan/Debug 모드, Shift+Tab, Cmd/Ctrl+I, Restore Checkpoint, Rules `.mdc` 필수, `.cursorignore` 동작, Privacy Mode, 색인 설명, 설치 형식(.dmg/.exe/apt·dnf), macOS 12+/Windows 10+. first-project.md는 WebFetch에서 404, curl은 시간 초과(미확정). 확장자 없는 first-project 페이지는 열려 File > Open Folder, Cmd/Ctrl+I를 확인함.
+
+## 2026-10-26 재점검
+- 열람: pricing 도움말, quickstart, agent, ask-mode, rules, data-use, release-notes(IDE 3.23~3.27), ignore-files, codebase-indexing, first-project.md. models-and-pricing·가격 문서는 curl로 새 요금 체계(Free/Plus $8/Premium $30/Super $100/Ultra $200, Teams $30·$100·$200, 레거시 Hobby·Pro·Pro+·Start) 재확인.
+- 본문과 일치하여 변경 없음: 요금제 표, 모드 4종(Agent·Ask·Plan·Debug), Cmd/Ctrl+I, Shift+Tab, Restore Checkpoint, Rules 4종 적용 방식(.mdc), File > Open Folder, 색인(로컬, 경로·코드 업로드 안 함), 기본 제외 목록.
+- 새로 확인(미반영): Rules 만들기는 채팅에서 /create-rule 또는 Customize > Rules > Add Rule. 3.26에서 + 메뉴 파일 항목 이름이 Attach로 바뀜. Instant Grep은 베타로 표기. Privacy Mode 기본값과 Teams 강제 여부는 data-use 페이지에 없음.

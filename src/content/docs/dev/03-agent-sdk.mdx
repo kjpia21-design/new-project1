@@ -11,7 +11,7 @@ prerequisites:
   - "C14. Claude Code 핵심 기능 (서브에이전트, 훅, 권한 모드 개념)"
   - "C16. Claude API 시작하기 (API 키 발급, ANTHROPIC_API_KEY 설정)"
   - "Python 3.10 이상 (또는 Node.js 18 이상)과 터미널"
-lastVerified: 2026-10-12
+lastVerified: 2026-10-26
 sources:
   - title: "Agent SDK overview"
     url: "https://code.claude.com/docs/en/agent-sdk/overview"
@@ -403,8 +403,8 @@ C14에서 본 서브에이전트, 훅, 권한 모드는 Claude Code 안에서 �
    `permission_mode="bypassPermissions"`는 대부분의 승인 확인을 건너뛰어요. `allowed_tools`로 도구를 나열해도 이 모드를 제한하지 못해요. 모든 도구가 승인돼요. 막고 싶은 건 `disallowed_tools`나 훅으로 막아야 하고, 쓴다면 컨테이너 같은 격리 환경 안에서만 쓰세요. 서브에이전트는 부모가 이 모드일 때만 같은 모드를 물려받아요.
    </Aside>
 
-   <Aside type="note" title="모드를 생략하면 auto 모드가 될 수 있어요">
-   공식 문서에 따르면 `permission_mode`를 생략하면 설정 파일의 `permissions.defaultMode`를, 없으면 내장 기본값(auto 모드일 수 있어요)을 써요. 넓은 허용 규칙(예: 도구 이름만 쓴 `Bash`)에 의존하는 앱이라면 `default`나 `dontAsk`를 **명시**하세요.
+   <Aside type="note" title="모드를 생략하면 default(수동 승인) 모드로 시작해요">
+   공식 문서(2026-10-26 기준)에 따르면 Claude Code v2.1.302 이상에서는 `permission_mode`를 생략해도, 설정 파일의 `permissions.defaultMode`가 없으면 `default` 모드로 시작해요. 이 모드에서 승인이 필요한 호출은 허용 규칙, 훅, `canUseTool` 콜백으로 승인하지 않으면 거부돼요. 거부가 잦으면 `allowed_tools`로 허용 규칙을 더하거나 `permission_mode="auto"`로 시작할 수 있어요. 더 낮은 버전이나 다른 환경은 동작이 다를 수 있으니 모드를 **명시**하는 편이 안전해요.
    </Aside>
 
 5. **서브에이전트로 일 나누기**

@@ -46,3 +46,9 @@
 ## 2026-10-12 점검 반영
 - Explore 서브에이전트 모델: 기본은 메인 대화의 모델. 메인이 Fable일 때만 구독·Console·`ANTHROPIC_BASE_URL` 게이트웨이에서 `opus` 별칭, Bedrock·Google Cloud·Foundry·Claude Platform on AWS·Claude apps gateway에서는 메인 모델 그대로. 이전 본문("구독·Console·게이트웨이에서 opus")을 수정. 출처: https://code.claude.com/docs/en/sub-agents
 - `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`은 workflows·sub-agents 문서에 여전히 설명 없음(CHANGELOG 2.1.296에만 있음). sub-agents 문서는 `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`가 워크플로 에이전트에도 적용된다고 적음.
+
+## 2026-10-19 점검 반영
+- model-config, 모델 개요, sub-agents, costs를 다시 읽음. opusplan, 모델 해석 표, 서브에이전트 모델 우선순위 변동 없음.
+
+## 2026-10-26 점검 반영
+- choosing-a-model(시작 전략 두 가지, Opus 5.5 권장 시작점), model-config(별칭, 최소 버전, 기본 모델 Opus 5.5), costs(Sonnet 위주·Opus 아껴 쓰기, 에이전트 팀 약 7배), advisor(실험 기능·Anthropic API 한정·페어링 표), 서브에이전트 모델 결정 순서(4단계) 모두 변동 없음. 가격 비율(Sonnet = Opus의 절반, Fable = 2.5배) 유지. 변경 없음.

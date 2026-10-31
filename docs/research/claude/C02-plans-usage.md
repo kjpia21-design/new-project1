@@ -62,3 +62,9 @@
 - Fable 5.1 최소 Claude Code 버전이 고객센터(v2.1.255)와 model-config 문서(v2.1.257)에서 다름. 본문에 병기.
 - "클라우드 세션 크레딧"은 릴리스 노트, Pro/Max·Team/Enterprise Claude Code 도움말, 사용량 한도 도움말, claude-code-on-the-web 어디에도 아직 설명 없음(2026-10-12 기준).
 - 가격 페이지에 Pro 포함 기능으로 Claude Dashboards(베타), Claude Science가, Team에 Claude Motion이 새로 보임(본문 미반영).
+
+## 2026-10-19 점검 반영
+- 가격 페이지, 추가 사용량, Fable 모델, 사용량 한도, Pro/Max Claude Code 도움말, claude-code-on-the-web를 다시 읽음. 가격·배수·좌석 수·Fable 50% 설명·최소 버전(v2.1.170/v2.1.255) 변동 없음. '클라우드 세션 크레딧'은 이번에도 공식 문서에서 찾지 못함. 추가 사용량 문서: 일본에서는 2026-09-10부터 구매 후 6개월 만료(한국 안내는 없음). 가격 페이지에 한국 언급 없음.
+
+## 2026-10-26 점검 반영
+- claude.com/pricing·Fable 안내(15424964)·추가 사용량(12429409) 재확인: 가격(Pro $17/$20, Max $100/$200, Team $20·$25/$100·$125, Enterprise $20) 변동 없음. 신규 반영: Enterprise 최소 20석, Free는 Sonnet·Haiku만. Fable: Free·Pro는 usage credits, Max·프리미엄 Team은 주간 한도의 50%까지(기존 서술 일치). 추가 사용량 대상은 도움말 본문상 Pro/Max 5x/Max 20x(Team 포함 서술은 Claude Code 문서 기준). "클라우드 세션 크레딧"은 두 문서 모두 언급 없음(변동 없음). 릴리스 노트 2026-10-21 Claude Duet(Pro/Max 연구 프리뷰)는 본문 미반영.

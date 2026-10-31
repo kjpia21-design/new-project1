@@ -26,3 +26,9 @@
 - [What are projects?](https://support.claude.com/en/articles/9517075-what-are-projects) — 확인일 2026-10-10
 - [How can I create and manage projects?](https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects) — 확인일 2026-10-10
 - [Chat search and memory](https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context) — 확인일 2026-10-10
+
+## 2026-10-19 점검 반영
+- 프로젝트 도움말 2종을 다시 읽음. 무료 5개, RAG 최대 10배, 공유(Team/Enterprise), 새 베타 Projects(일부 Pro/Max Claude Code 사용자, 대기자 명단) 변동 없음.
+
+## 2026-10-26 점검 반영
+- 프로젝트 도움말(9517075, 9519177) 재확인: 전 플랜 사용 가능, Free 최대 5개, RAG 유료 최대 10배, 공유 Team/Enterprise, 메뉴명 변동 없음. 새 베타 Projects는 Claude Code(일부 Pro/Max)부터, Chat·Cowork·Team·Enterprise는 이후 예정. 대기자 명단 언급은 이번 페이지에서 확인하지 못함(본문 유지). 변경 없음.

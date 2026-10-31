@@ -77,3 +77,7 @@
 - `model="claude-sonnet-5-5"` 같은 전체 모델 ID를 Agent SDK 옵션에 쓸 수 있는지: `AgentDefinition.model` 문서에 "전체 모델 ID" 허용이 명시됨. `ClaudeAgentOptions.model`은 `str | None`으로만 확인(전체 ID 허용은 일반적이나 실행 확인은 못 함).
 - 번들 CLI 버전과 SDK 최신 사이 신기능(예: `Workflow` 도구) 정확한 가용성은 변할 수 있음.
 - `permission_mode="dontAsk"`의 Python Literal 지원은 공식 레퍼런스에 명시(PermissionMode 목록). 실행 확인은 못 함.
+
+## 2026-10-26 재검증
+- overview/quickstart(Node 18+/Python 3.10+), python 레퍼런스(ResultMessage subtype, AgentDefinition 필드, camelCase), subagents(깊이 3, 동시 20), hosting(1 GiB/5 GiB, 시간당 약 $0.05, 토큰이 한 자릿수 이상 큼), hooks(SessionStart/End TS 전용, PreCompact 등), sessions 재확인: 본문과 일치. PyPI 최신 0.2.174(본문은 설치 검증 시점 0.2.165 기준이라고 명시, 변경 없음).
+- 변경('모순 해소'): permissions + permission-modes 페이지: Claude Code v2.1.302 이상에서는 모드를 생략하면 `default`(수동, 승인 필요한 호출은 거부)로 시작. 기존 본문의 "내장 기본값(auto 모드일 수 있어요)"를 고침. auto는 Bedrock/Vertex/Foundry 등에서 대화형 세션 기본일 뿐 `-p`/Agent SDK는 Manual.

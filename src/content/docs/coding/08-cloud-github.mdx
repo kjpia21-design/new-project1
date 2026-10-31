@@ -11,13 +11,13 @@ prerequisites:
   - "Claude 유료 플랜 (Pro, Max, Team, 또는 Enterprise의 해당 좌석)"
   - "GitHub 계정"
   - "웹 페이지(index.html)가 들어 있는 GitHub 저장소 하나 (6·7편에서 만든 파일을 올려도 돼요)"
-lastVerified: 2026-10-12
+lastVerified: 2026-10-26
 sources:
   - title: "Get started with Claude Code in the cloud"
     url: "https://code.claude.com/docs/en/web-quickstart"
   - title: "Use Claude Code in the cloud"
     url: "https://code.claude.com/docs/en/claude-code-on-the-web"
-  - title: "Automate work with routines"
+  - title: "Automate work with scheduled tasks (formerly routines)"
     url: "https://code.claude.com/docs/en/routines"
   - title: "Configuring a publishing source for your GitHub Pages site"
     url: "https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site"
@@ -130,12 +130,12 @@ import Coding08PagesFlow from '../../../components/diagrams/Coding08PagesFlow.as
    <FlowSteps title="diff 확인에서 PR 만들기까지" officialUrl="https://code.claude.com/docs/en/web-quickstart" steps={[
      { where: '작업이 끝난 세션', action: '+42 -18처럼 줄 수를 보여 주는 표시 누르기', result: 'diff 뷰가 열려요' },
      { where: 'diff 뷰', action: '왼쪽 파일 목록과 오른쪽 변경 내용 확인, 고칠 줄은 선택해 의견 입력 후 Enter', result: '코멘트가 다음 메시지와 함께 전달돼요' },
-     { where: 'diff 뷰 위쪽', action: 'Create PR 누르기', result: '전체 PR, 초안(draft), GitHub 작성 화면 중에서 고를 수 있어요' },
+     { where: '채팅 옆 패널의 Changes 카드', action: 'Create PR 누르기', result: '제목과 설명이 자동으로 만들어진 PR이 생겨요. 초안(draft)은 Create PR을 우클릭해 Create draft PR을 고른 뒤 버튼을 눌러요' },
    ]} />
 
 5. **PR 만들기**
 
-   diff가 괜찮으면 diff 뷰 위쪽의 **Create PR**을 눌러요. 전체 PR, 초안(draft), GitHub의 작성 화면으로 이동하는 방식 중에서 고를 수 있어요. 연습에서는 전체 PR이면 충분해요. PR을 만든 뒤에도 세션은 유지되니, 리뷰 코멘트나 오류 메시지를 붙여 넣고 이어서 고치게 할 수 있어요.
+   diff가 괜찮으면 채팅 옆 패널의 **Changes** 카드(패널이 숨겨져 있으면 세션 제목 표시줄의 Show session rail 아이콘으로 다시 열어요)에서 **Create PR**을 눌러요. 제목과 설명이 자동으로 만들어진 PR이 생겨요. 초안(draft)으로 열고 싶으면 Create PR을 우클릭해 **Create draft PR**을 고른 뒤 버튼을 눌러요(2026-10-26 기준). 연습에서는 일반 PR이면 충분해요. PR을 만든 뒤에도 세션은 유지되니, 리뷰 코멘트나 오류 메시지를 붙여 넣고 이어서 고치게 할 수 있어요.
 
 6. **GitHub에서 병합하기**
 
@@ -148,7 +148,7 @@ import Coding08PagesFlow from '../../../components/diagrams/Coding08PagesFlow.as
    - **Deploy from a branch**: 가장 단순한 방법이에요. 브랜치(`main`)와 폴더(`/ (root)`)를 고르고 Save를 눌러요. 저장소 최상위에 `index.html`이 있으면 돼요.
    - **GitHub Actions**: 빌드가 필요한 사이트(예: 이 사이트처럼 Astro로 만든 사이트)에 써요. 워크플로 파일이 필요하고, Astro의 경우 공식 문서가 `.github/workflows/deploy.yml`과 `astro.config.mjs`의 `site`·`base` 설정을 안내해요.
 
-   게시 소스를 정하면 배포가 실행돼요. GitHub Pages는 항상 GitHub Actions 워크플로 실행으로 배포되니, 저장소의 Actions 탭에서 실행 결과를 보고 성공하면 사이트 주소를 열어 봐요. 반영에 걸리는 시간은 공식 문서에 안내가 없어서, 바로 안 보이면 Actions 실행 결과부터 확인하세요(2026-10-12 기준).
+   게시 소스를 정하면 배포가 실행돼요. GitHub Pages는 항상 GitHub Actions 워크플로 실행으로 배포되니, 저장소의 Actions 탭에서 실행 결과를 보고 성공하면 사이트 주소를 열어 봐요. 반영에 걸리는 시간은 공식 문서에 안내가 없어서, 바로 안 보이면 Actions 실행 결과부터 확인하세요(2026-10-19 기준).
 
    <FlowSteps title="GitHub Pages 게시 소스 정하기" officialUrl="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-from-a-branch" steps={[
      { where: 'GitHub 저장소 이름 아래', action: 'Settings 누르기 (탭이 안 보이면 ... 드롭다운에서 Settings)' },
@@ -160,7 +160,7 @@ import Coding08PagesFlow from '../../../components/diagrams/Coding08PagesFlow.as
    <ScreenshotPlaceholder caption="Settings > Pages의 게시 소스 선택 화면" officialUrl="https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#publishing-from-a-branch" />
 
    <Aside type="caution" title="공개하면 누구나 볼 수 있어요">
-   GitHub Pages 사이트는 인터넷에 공개돼요. 비공개 저장소여도 사이트는 공개될 수 있으니(플랜이나 조직 설정에 따라 다름), 공개 전에 `index.html`과 README에 개인정보와 내부 자료가 없는지 확인하세요. GitHub 공식 문서에 따르면 GitHub Free는 공개 저장소에서만 Pages를 쓸 수 있고, 비공개 저장소는 GitHub Pro·Team·Enterprise에서 쓸 수 있어요(2026-10-12 기준).
+   GitHub Pages 사이트는 인터넷에 공개돼요. 비공개 저장소여도 사이트는 공개될 수 있으니(플랜이나 조직 설정에 따라 다름), 공개 전에 `index.html`과 README에 개인정보와 내부 자료가 없는지 확인하세요. GitHub 공식 문서에 따르면 GitHub Free는 공개 저장소에서만 Pages를 쓸 수 있고, 비공개 저장소는 GitHub Pro·Team·Enterprise에서 쓸 수 있어요(2026-10-19 기준).
    </Aside>
 
 8. **끝낸 뒤 정리하기**
@@ -182,7 +182,7 @@ import Coding08PagesFlow from '../../../components/diagrams/Coding08PagesFlow.as
 | 공개 | GitHub 저장소의 Settings > Pages | Source 선택 |
 | 배포 확인 | GitHub 저장소의 Actions 탭 | 실행 결과, Re-run |
 
-### 클라우드 세션의 권한 모드 (2026-10-12 기준)
+### 클라우드 세션의 권한 모드 (2026-10-26 기준)
 
 | 모드 | 동작 |
 | --- | --- |

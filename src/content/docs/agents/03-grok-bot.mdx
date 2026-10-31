@@ -8,10 +8,10 @@ category: agents
 tools: ["Grok Bot", "Cursor", "SuperGrok"]
 duration: "25분"
 prerequisites:
-  - "Cursor 유료 개인 플랜 또는 Teams, 혹은 SuperGrok 계열·X Premium+ 구독 중 하나"
+  - "The X Subscription의 Premium·Super·Ultra, 또는 (기존) Cursor 유료 개인 플랜·Teams, 혹은 SuperGrok 계열·X Premium+ 구독 중 하나"
   - "Bot이 일할 앱이나 웹사이트 계정 하나 (처음에는 문서 요약만 해도 돼요)"
   - "macOS·Windows·Linux 컴퓨터 또는 iPhone·Android 폰"
-lastVerified: 2026-10-13
+lastVerified: 2026-10-26
 sources:
   - title: "Introducing Grok Bot (xAI, 2026-08-11)"
     url: "https://x.ai/news/introducing-grok-bot"
@@ -52,7 +52,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 <Summary>
 - **Grok Bot**은 xAI(사이트 표기 SpaceXAI)가 2026-08-11 베타로 낸 **상시 작동 AI 에이전트**예요. 이름 붙인 Bot에게 문자 보내듯 일을 맡기면, Bot이 **자기 클라우드 컴퓨터**에서 내 앱에 로그인해 일하고 앱을 닫아도 계속해요.
 - X에서 @grok을 부르는 **챗봇과는 별개 제품**이에요.
-- 따로 파는 구독은 없어요. **Cursor 유료 개인 플랜·Teams에 포함**되거나, **SuperGrok·SuperGrok Plus·SuperGrok Heavy·X Premium+ 구독을 Cursor 계정에 연결**해서 써요. Grok Bot 전용 주간 사용량이 따로 있어요.
+- 따로 파는 구독은 없어요. **The X Subscription의 Premium·Super·Ultra에 포함**되거나(Plus·Free는 제외, 2026-10-19 기준), 기존(legacy) **Cursor 유료 개인 플랜·Teams에 포함**되거나, **SuperGrok·SuperGrok Plus·SuperGrok Heavy·X Premium+ 구독을 Cursor 계정에 연결**해서 써요. 주간 사용량은 매주 초기화돼요. The X Subscription에서는 Grok·Cursor와 같은 주간 사용량을 같이 쓴다고 Cursor 도움말이 설명해요(2026-10-26 기준).
 - 한국 App Store와 Google Play에 등록되어 있고, **앱 화면은 한국어를 지원**해요. 다만 **Bot이 한국어로 일하는 품질은 공식 확인이 없어요.**
 - **모든 Bot이 컴퓨터 한 대를 공유**해요. 로그인과 파일이 전부 같이 쓰이니, 승인 규칙과 최소 권한이 중요해요.
 </Summary>
@@ -108,7 +108,8 @@ X에서 글에 `@grok`을 달아 묻는 것은 별개 서비스예요. Grok Bot�
 
 | 내가 가진 것 | Grok Bot |
 | --- | --- |
-| Cursor Pro, Pro+, Ultra (개인 유료) | 포함. 위로 갈수록 주간 사용량이 커져요 |
+| The X Subscription의 Premium, Super, Ultra (개인·팀 좌석) | 포함. 같은 계정으로 로그인하고, Grok·Cursor와 **공유하는 주간 사용량**에서 차감돼요. Super와 Ultra가 더 커요. Plus와 Free는 포함되지 않아요 (2026-10-19 기준) |
+| (기존 legacy) Cursor Pro, Pro+, Ultra (개인 유료) | 포함. 위로 갈수록 주간 사용량이 커져요 |
 | Cursor Teams (self-serve) | 모든 구성원 포함 |
 | SuperGrok, SuperGrok Plus, SuperGrok Heavy | Cursor 계정에 **연결**해서 사용 |
 | X Premium+ | Cursor 계정에 **연결**해서 사용 |
@@ -116,9 +117,11 @@ X에서 글에 `@grok`을 달아 묻는 것은 별개 서비스예요. Grok Bot�
 | SuperGrok Lite | **포함되지 않음** |
 | Cursor Enterprise, Grok Enterprise | 담당자에게 문의 (대기자 명단/영업 문의) |
 
+2026-10-19 기준 Cursor 도움말은 Cursor 플랜을 "legacy"로 부르고, 새 고객은 The X Subscription으로 시작한다고 안내해요. 아래 규칙 중 Cursor·SuperGrok 연결에 관한 내용은 기존 플랜 기준이에요. The X Subscription에서는 주간 사용량을 다 쓰면 선불 크레딧으로 추가 사용량이 차감돼요.
+
 알아둘 규칙들이에요.
 
-- Grok Bot에는 **전용 주간 사용량**이 있어요. 일반 Grok·Cursor 사용량과 따로 계산돼서 Bot에 맡긴 일이 기존 한도를 깎지 않아요.
+- 주간 사용량은 매주 초기화돼요. **The X Subscription은 Grok·Cursor 앱과 같은 주간 사용량을 공유**하고 Grok Bot 전용 계량기는 따로 없다고 Cursor 도움말이 설명해요(2026-10-26 기준). 8월 xAI 공지는 "Grok와 Cursor 플랜과 별개의 자체 사용량"이라고 했지만, 현재 적용은 Cursor 도움말을 따르세요. 기존(legacy) Cursor 플랜은 플랜이 높을수록 주간 사용량이 커요.
 - 주간 사용량을 다 쓰면 **종량제(on-demand)** 사용량이 Cursor로 청구될 수 있어요. 한도를 미리 확인하세요.
 - Cursor 플랜과 SuperGrok 연결은 **합산되지 않아요.** 둘 다 있으면 사용량이 더 많은 쪽이 적용돼요.
 - SuperGrok이나 X Premium+ 연결은 **한 번 하면 해제하거나 다른 Cursor 계정으로 옮길 수 없어요.** 연결하기 전에 올바른 Cursor 계정으로 로그인했는지 꼭 확인하세요.
@@ -129,11 +132,11 @@ X에서 글에 `@grok`을 달아 묻는 것은 별개 서비스예요. Grok Bot�
 
 | 항목 | 확인된 내용 |
 | --- | --- |
-| 한국 앱 스토어 | **한국 App Store에 등록**돼 있어요. 무료 + 앱 내 구입, iOS 18.0 이상 |
+| 한국 앱 스토어 | **한국 App Store에 등록**돼 있어요. 무료 + 앱 내 구입, iOS 18.0 이상, 연령 등급 19+(2026-10-26 기준) |
 | 한국 Google Play | **한국어 설명으로 등록**돼 있어요 |
 | 데스크톱 | 공식 사이트에서 macOS·Windows·Linux 설치 파일을 내려받아요 |
 | 지역 제한 문구 | 설치와 로그인에 관한 국가 제한 문구는 공식 문서에서 찾지 못했어요 |
-| 앱 화면 언어 | **한국어 지원.** App Store 지원 언어 11개에 한국어가 포함돼요. 데스크톱 문서도 한국어를 언어 목록에 적어요 |
+| 앱 화면 언어 | **한국어 지원.** App Store 지원 언어 12개(2026-10-26 기준)에 한국어가 포함돼요. 데스크톱 문서도 한국어를 언어 목록에 적어요 |
 | Bot의 한국어 작업 품질 | **공식 확인이 없어요.** 한국어로 시켜도 되는지, 한국 사이트를 얼마나 잘 다루는지는 직접 시험해 봐야 해요 |
 | 한국에서의 청구·통화 | 한국 App Store의 앱 내 구입 목록에 **Pro ₩44,000, Pro+ ₩129,000, Ultra ₩449,000**이 표시돼요(2026-10-12 기준, 앱 내 구입 항목 이름 기준이라 구독 기간 등 세부 조건은 스토어 화면에서 확인하세요). SuperGrok·X Premium+의 한국 청구 조건은 확인하지 못했어요 |
 
@@ -178,13 +181,13 @@ X 계정으로 @bot을 부르는 기능은 영국, EU, 호주 등에서는 아�
 
    앱에서 Cursor 계정으로 로그인해요(조직이 SSO를 쓰면 조직 로그인으로). SuperGrok 구독으로 쓴다면 앱이 안내할 때 Grok 계정을 연결해요. 앞에서 말했듯 연결은 되돌릴 수 없으니 **올바른 Cursor 계정인지** 먼저 확인하세요.
 
-   처음 실행하면 Bot, 공유 컴퓨터, 루틴을 소개하고 쓰는 도구를 물어봐요. 이 답은 추천을 정하는 데만 쓰이고 도구를 연결하지는 않아요. 컴퓨터 준비는 몇 분 걸릴 수 있어요.
+   처음 실행하면 짧은 소개 화면이 나오고, 설정이 백그라운드에서 진행돼요. 공식 시작 문서(2026-10-26 기준)에 따르면 앱이 "Grok Bot"이라는 이름의 첫 Bot을 만들고 그 Bot과의 대화를 열어 줘요. 소개 화면에서 쓰는 도구를 묻는 경우 그 답은 추천을 정하는 데만 쓰이고 도구를 연결하지는 않아요. 컴퓨터 준비는 몇 분 걸릴 수 있어요.
 
-   <ScreenshotPlaceholder caption="처음 실행 후 'Meet a future teammate'에서 첫 Bot을 고르는 화면" officialUrl="https://docs.x.ai/grok-bot/get-started" officialLabel="Grok Bot 공식 문서에서 보기" />
+   <ScreenshotPlaceholder caption="처음 실행 후 첫 Bot과의 대화가 열린 화면" officialUrl="https://docs.x.ai/grok-bot/get-started" officialLabel="Grok Bot 공식 문서에서 보기" />
 
 4. **첫 Bot 만들기**
 
-   추천 팀원을 고르거나 직접 만들어요. 이름, **주된 일 하나**, 일하는 방식을 적으면 돼요. 한 Bot에 여러 역할을 몰아주기보다 역할별로 나누는 편이 맥락이 잘 쌓여요(공식 권고).
+   첫 Bot을 쓰거나, 앱이 안내하는 대로 추천 팀원을 고르거나 직접 만들어요. 이름, **주된 일 하나**, 일하는 방식을 적으면 돼요. 한 Bot에 여러 역할을 몰아주기보다 역할별로 나누는 편이 맥락이 잘 쌓여요(공식 권고).
 
    <PromptBox>
    이름: 모아

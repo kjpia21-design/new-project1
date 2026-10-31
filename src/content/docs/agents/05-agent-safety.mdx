@@ -28,11 +28,11 @@ sources:
   - title: "Plans and billing (Cursor 도움말)"
     url: "https://cursor.com/help/grok-bot/plans"
   - title: "Control your dot (OpenAI 개발자 문서)"
-    url: "https://developers.openai.com/codex/dots/controls"
+    url: "https://learn.chatgpt.com/docs/dots/controls"
   - title: "Tasks and memory (OpenAI 개발자 문서)"
-    url: "https://developers.openai.com/codex/dots/tasks-and-memory"
+    url: "https://learn.chatgpt.com/docs/dots/tasks-and-memory"
   - title: "Connect computers and apps to your dot"
-    url: "https://developers.openai.com/codex/dots/computers-and-apps"
+    url: "https://learn.chatgpt.com/docs/dots/computers-and-apps"
   - title: "Use connectors to extend Claude's capabilities"
     url: "https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities"
   - title: "Use Google Workspace connectors"
@@ -133,7 +133,7 @@ Muse는 공식적으로 미국(과 캐나다)에서만 제공돼요. 위 내용�
 
 되돌릴 수 없는 일(발송, 삭제, 권한 변경, 결제, 약관 동의)은 **항상 묻도록** 설정하세요.
 
-- **Dots**: 설정 > 개인 설정 > 권한 > Custom rules에서 "실행 전 확인"이나 "나에게 넘기기"를 고를 수 있어요. 규칙은 "dot이 따르려 하는 지침이며 실수할 수 있다"고 문서가 밝히고, 앱·컴퓨터 접근을 새로 주지는 않아요. 지침에 "초안을 보여 주고 보내지 마"라고 쓰면 초안 작성이 발송 권한으로 읽히지 않아요.
+- **Dots**: 설정(Settings) > 개인 설정(Personalization) > Custom rules(모바일은 Customize > Custom rules)에서 "실행 전 확인"이나 "나에게 넘기기"를 고를 수 있어요. 규칙은 "dot이 따르려 하는 지침이며 실수할 수 있다"고 문서가 밝히고, 앱·컴퓨터 접근을 새로 주지는 않아요. 지침에 "초안을 보여 주고 보내지 마"라고 쓰면 초안 작성이 발송 권한으로 읽히지 않아요.
 - **Grok Bot**: 승인 카드에서 **Always allow**는 신중히 고르세요. 문서상 Ask first가 Allow automatically보다 우선해요. 루틴이나 다른 Bot에서 시작된 작업의 승인은 약 10분 뒤 만료돼 실행되지 않아요.
 - **Muse**: 약관이 상태를 바꾸는 행동(메시지 발송, 금융 거래, 데이터 삭제, 설정 변경)은 사전 사람 검토 없이 하지 말라고 하고, 사전 승인을 주는 것도 신중하라고 해요.
 - **Claude in Chrome**: Manual은 매 동작 승인, Auto는 안전 검사를 하며 진행, Skip은 검사 없이 실행이에요. 처음에는 Manual로 시작하세요. 파일 다운로드와 민감 정보 입력은 "항상 허용"한 사이트에서도 물어요. [C11](/claude/c11-chrome-computer-use/)에 정리돼 있어요.
@@ -164,7 +164,7 @@ Grok Bot 문서에서는 전용 결제 수단과 지출 상한 기능을 확인�
 ### 6. 사용량·비용 한도 정하기
 
 - **Claude**: 설정(Settings) > 사용량(Usage)의 **추가 사용량(usage credits)** 항목에서 **월 지출 한도**를 정하거나 꺼 둘 수 있어요. 켜 두면 한도 도달 후 종량제로 이어서 쓰고, 루틴도 한도에 닿으면 추가 사용량이 켜져 있을 때 초과분이 종량제로 계속 실행돼요. 한도 구조는 [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/)를 보세요.
-- **Grok Bot**: Bot 전용 주간 사용량이 있고, 소진 시 on-demand(종량제) 사용량이 Cursor로 청구될 수 있어요(Teams는 기본 켜짐). 가입 후 청구 설정을 확인하세요.
+- **Grok Bot**: 주간 사용량이 매주 초기화되고(The X Subscription은 Grok·Cursor와 공유), 소진 시 선불 크레딧 또는 기존 Cursor 플랜의 on-demand(종량제) 사용량이 청구될 수 있어요(Teams는 기본 켜짐). 가입 후 청구 설정을 확인하세요.
 - **Dots**: dot과의 대화는 ChatGPT 사용 한도에 포함되지 않지만, dot이 시작·관리하는 Work/Codex 작업은 해당 제품 한도에 포함돼요.
 - **Muse**: 추가 AI 사용량 구매 옵션이 있을 수 있고, 크레딧은 환불·현금 교환이 안 된다고 약관에 있어요.
 

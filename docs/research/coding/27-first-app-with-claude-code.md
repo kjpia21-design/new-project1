@@ -31,3 +31,7 @@
 - https://code.claude.com/docs/en/quickstart — 2026-10-14
 - https://code.claude.com/docs/en/best-practices — 2026-10-14
 - https://code.claude.com/docs/en/permissions — 2026-10-14
+
+## 2026-10-26 재점검
+- quickstart, best-practices, permissions(저장 파일로 키워드 확인), checkpointing 재열람. 기존 서술과 일치: Pro 이상 또는 Console, Esc 두 번·/rewind 메뉴(대화만·코드만·둘 다), /permissions 규칙 출처 표시, Bash 규칙의 한계(인자 변형 우회). 변경 없음.
+- 새로 확인(미반영): 체크포인트는 세션당 최근 100개, 기본 약 30일 후 스냅샷 삭제(35편에 반영). best-practices에 /goal, Stop 훅 등 검증 장치 설명 추가됨.

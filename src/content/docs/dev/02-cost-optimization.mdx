@@ -12,7 +12,7 @@ prerequisites:
   - "C15. 모델 분담 전략"
   - "1. 도구 사용으로 업무 봇 만들기 (도구가 있는 봇이면 도움이 돼요)"
   - "Python 3.10 이상, pip install anthropic"
-lastVerified: 2026-10-13
+lastVerified: 2026-10-26
 sources:
   - title: "Pricing"
     url: "https://platform.claude.com/docs/en/about-claude/pricing"
@@ -248,8 +248,9 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
    공식 비용 가이드의 측정(내부·방향성 수치)은 이래요.
 
-   - 연구형 벤치마크에서 `low`는 정확도 1~3점을 내주고 비용을 3분의 1~2분의 1로 줄였고, `medium`은 기본 정확도에 비용 70~87%였어요.
+   - Fable 5로 잰 연구형 벤치마크에서 `low`는 정확도 1~3점을 내주고 비용을 3분의 1~2분의 1로 줄였고, `medium`은 기본 정확도에 비용 70~87%였어요.
    - 코딩 벤치마크(SWE-bench Pro)에서 `high` 대비 `medium`은 약 2.5점 낮고 비용은 약 70%, `low`는 약 8점 낮고 비용은 약 3분의 1, `xhigh`는 1.4점 높고 비용은 2.5배였어요.
+   - 다만 모델마다 달라요. 같은 가이드에서 Fable 5.1은 DeepResearch Bench II에서 `low`와 `high`의 점수가 거의 같았지만, Opus 5.5는 DRACO(연구 과제)에서 `low`가 `medium`보다 13.3점 낮았어요(2026-10-26 기준).
    - 일부 측정에서는 Opus 5.5를 `medium`으로 쓴 쪽이 Fable 5.1 기본 설정과 비슷한 정확도를 훨씬 낮은 "정답당 비용"으로 냈어요.
 
    내 작업에서도 같다는 보장은 없어요. 채팅·분류·대량 처리는 `low`로도 충분한 경우가 많고, 코딩·긴 에이전트 작업은 effort에 민감해요. **대표 샘플로 직접 재 보세요.**
@@ -332,7 +333,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
    조직 전체의 사용량은 Console의 Usage와 Cost 화면이나 Usage and Cost Admin API에서 볼 수 있어요. 이 API는 `usage_report/messages`와 `cost_report` 엔드포인트가 있고 **Admin API 키**(`sk-ant-admin...`)가 필요해요. Admin API 키는 개인 계정으로는 만들 수 없는 조직용 키라서 조건을 공식 문서에서 확인하세요. Amazon Bedrock, Vertex AI, Foundry로 호출한 트래픽은 이 보고서에 나오지 않을 수 있어요.
 
-   <ScreenshotPlaceholder caption="Console의 Usage와 Cost 화면" officialUrl="https://platform.claude.com/docs/en/build-with-claude/usage-cost-api" officialLabel="Anthropic 문서에서 보기" />
+   <ScreenshotPlaceholder caption="Console의 Usage와 Cost 화면" officialUrl="https://platform.claude.com/docs/en/manage-claude/usage-cost-api" officialLabel="Anthropic 문서에서 보기" />
 
    <Aside type="note" title="지출 한도 설정">
    조직 지출 상한은 사용 티어에 따라 정해져요(Start $500, Build $1,000, Scale $200,000, 월 기준, 2026-10-12 기준). 공식 rate limits 문서에 따르면 Console의 설정(Settings) > 결제(Billing)에서 **Spend limits** 섹션의 **Adjust limit**(없으면 **Set limit**)을 눌러 티어 상한 이하로 내 지출 한도를 정할 수 있어요. 내가 정한 한도에 닿으면 요청이 HTTP 400(`invalid_request_error`)으로 거절돼요. 지출 알림 설정 절차는 공식 rate limits 문서에 없어요(2026-10-13 확인). 티어 설명은 [C16](/claude/c16-api/)에서도 소개했어요.

@@ -60,3 +60,9 @@ Aside: "확인 중인 튜토리얼" 제거, 대신 "ChatGPT·Adobe 부분은 원
 
 ## 7단계 재점검 (2026-10-12)
 - Google·OpenAI(learn.chatgpt.com, developers.openai.com)·App Store 재열람. 본문과 충돌하는 변경 없음(모델명 Nano Banana 2/Pro/2.1, 연령, 한도 체계, 가격 Free/Go/Plus, 한국 인앱 가격 동일). 도움말에 Nano Banana 2 Lite 추가 언급. 미확인 항목(openai.com 정책·약관, Adobe)은 그대로.
+
+## 재점검 (2026-10-19)
+- Google(14286560, 13575153, gemini.google/overview/image-generation, blog.google 검증글), learn.chatgpt.com(image-generation, pricing), developers.openai.com content-provenance, 한국 App Store를 다시 열었다. 본문과 충돌 없음(Nano Banana 2/Lite/Pro/2.1, 연령 13/18, Images·Library·Redo with Pro 경로, Free $0/Go $8/Plus $20, 한국 인앱 Go ₩13,000·Plus ₩29,000). 참고: 한국 App Store에 Pro 100/200/500(₩159,000/₩299,000/₩790,000) 항목이 새로 보이나 본문은 Pro를 다루지 않아 변경 없음. openai.com 정책·약관, adobe.com은 계속 접근 불가. 본문 변경 없음, lastVerified만 갱신.
+
+## 재확인 2026-10-26
+- Gemini 이미지 도움말(14286560), 웹 앱 제공 국가(13575153), 소개 페이지, Google 검증 블로그, ChatGPT 이미지·Pricing 문서(Free $0/Go $8/Plus $20), OpenAI provenance 문서, 한국 App Store(Go ₩13,000, Plus ₩29,000)를 다시 열어 본문과 일치함을 확인. 변경 없음. 도움말에 Nano Banana 2 Lite(Flash-Lite 선택 시) 설명이 추가되어 있음(본문 영향 없음). openai.com·adobe.com 3건은 여전히 미확인.

@@ -38,3 +38,10 @@
 - Claude 가격 페이지, 업로드/한도/파일 생성 도움말, Gemini 요금제·한도·업로드·개인정보 페이지, learn.chatgpt.com 가격·문서, App Store 미국/한국 페이지를 다시 읽음. 가격·한도·메뉴 변동 없음.
 - 추가: ChatGPT Free는 이미지 생성 불가 (https://learn.chatgpt.com/docs/pricing). 본문 "무료 이용" 칸에 반영.
 - 여전히 못 찾음: ChatGPT 업로드·컨텍스트 한도, 개인 계정 학습 기본값, Gemini 파일 형식 생성 지원.
+
+## 재점검 (2026-10-19)
+- claude.com/pricing(Free $0, Pro $20/월·$17 연, Max $100부터, Team $25/$125 월·$20/$100 연, Enterprise 좌석 $20+API 요율, Free 프로젝트 최대 5개), Gemini 구독(Plus $4.99, Pro $19.99, Ultra $99.99부터; KRW 미표시), ChatGPT 가격(Go $8, Plus $20, Pro $100/$200/$500, Business $20/$25), 한국·미국 App Store 가격과 한국어 지원 모두 본문과 일치. 변경 없음. 참고: 가격 페이지의 Pro 목록에서 Research 문구는 사라졌으나 Research 도움말은 유료 플랜 제공으로 유지되어 본문 수정 안 함.
+
+## 재점검 (2026-10-26)
+- Claude 가격(Free $0·프로젝트 5개, Pro $20/$17, Max $100부터, Team $25/$20·$125/$100, Enterprise 좌석 $20+API 요율), 업로드·한도·파일 생성 도움말, Gemini 구독(Plus $4.99, Pro $19.99, Ultra $99.99부터; KRW 미표시)·한도(32K/128K/1M, 한국 포함)·업로드·개인정보(18개월/72시간), learn.chatgpt.com 가격(Go $8, Plus $20, Pro $100/$200/$500, Business $20/$25, 이미지 생성 Free 불가, Business 학습 안 함)·use-chatgpt·artifacts-viewer(업로드·컨텍스트 한도 여전히 미표시), App Store 미국($19.99/$8/$100/$200/$500)·한국(₩13,000/29,000/159,000/299,000/790,000, 한국어 포함)을 다시 읽음. 변경 없음.
+- 참고: 가격 페이지 Pro 항목에 Claude Science, Claude Dashboards(beta) 등이 새로 보이나 본문 주제와 무관해 반영 안 함.

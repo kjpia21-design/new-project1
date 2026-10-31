@@ -16,3 +16,12 @@
 - PowerPoint의 Designer 라이선스 요건(검색 요약에만 있고 원문 미열람) — 본문 미기재.
 - 한국어 UI 버튼 이름, 기능별 한국어 품질.
 - Word/Outlook 웹·모바일 세부 차이.
+
+## 2026-10-19 재확인
+- Word/PowerPoint/Outlook Copilot 도움말(버튼명, 편집 모드, Chat only, Agent Mode 파일 참조 "곧 지원", 24MB, Draft/Summary by Copilot), 개인 구독 FAQ(AutoSave, 소유자 전용, 끄기), 언어 목록(한국어 O), Learn 개요(Basic/Premium, ms.date 2026-10-14) 재확인. 본문과 모순 없음, 변경 없음.
+
+## 2026-10-26 재확인
+- 재확인: PowerPoint 새 프레젠테이션 도움말(Last updated: October 2026, curl로 원문 텍스트 확인), Word 시작 도움말, Outlook 도움말, 개인 구독 FAQ, Learn 개요(ms.date 2026-10-23).
+- 변경: PowerPoint 도움말에서 "Add Content > Agent Mode"와 "Agent Mode 파일 참조는 곧 지원" 문구가 사라짐. 현재 절차는 오른쪽 아래 Copilot 아이콘 > Copilot Chat > (모델 선택기, Brand Kit/Select brand/Manage kits/Publish Brand Kit) > 프롬프트 > 확인 질문 > 생성. "프롬프트로 만들 때 출력 언어 한 가지" 문구도 현재 문서에서 안 보임 → 본문 PowerPoint 단계·FlowSteps·참조표·문제 해결 수정. 24MB 미만 Word 문서 팁, Word 스타일·이미지·템플릿 모범 사례는 그대로.
+- 변동 없음: Word Copilot Dynamic Action Button, Edit/Chat only, 모델 선택기(OpenAI/Claude), 언어가 Word 인터페이스보다 적음; Outlook New Outlook Draft/Summary by Copilot/Schedule with Copilot, 클래식 Draft with Copilot/Summarize; 개인 구독(Personal/Family/Premium/Pro, AI 크레딧, Family·Premium 소유자만, Excel AutoSave); Learn 개요의 Copilot Chat (Basic)/M365 Copilot (Basic)/(Premium) 구분. 참고(미반영): Learn 개요에 사용량 기반 과금(Cowork, Code)과 앱 이름 "Microsoft Copilot" 변경 설명 추가됨.
+- 이번에 다시 읽지 않음: supported-languages 페이지.

@@ -24,3 +24,7 @@
 - 러너의 `tool_runner(..., output_config=...)` 전달은 공식 예제에서 직접 보지 못함(스킬에서는 `messages.create`의 GA 파라미터로 설명). 본문에 "문서에서 확인하지 못한 조합"으로 표기.
 - 공식 문서의 `tool_runner` 페이지가 승인 게이트에 수동 루프를 권하는지/러너 훅을 권하는지 문구가 자료마다 다름 -> 본문은 "도구 함수 안에서 게이트"로 중립적으로 서술.
 - `fallbacks` 파라미터(스킬은 Opus 5.5 코드에 기본 포함 권장)는 베타 헤더가 필요한 별도 기능이라 본문 예제에서는 생략하고 한 줄로 언급.
+
+## 2026-10-26 재검증
+- overview(도구 사용 시스템 프롬프트 286토큰, Opus 5.5/Sonnet 5.5는 any/tool 열 비어 있음), define-tools(Opus 5.5·Sonnet 5.5·Fable 5.1·Mythos 5.1에서 any/tool은 400), handle-tool-calls(tool_result 먼저, is_error), strict-tool-use(top-level strict, additionalProperties false), structured-outputs(GA, output_config.format), tool-runner(베타, @beta_tool, max_iterations, until_done) 재확인: 본문과 일치. 변경 없음.
+- 참고: 2026-10-21 SDK 메이저 업(Python 2.0.0, API 버전 2026-10-21). 본문 예제에 temperature/top_p/top_k 없음, 영향 없음. tool_runner에 output_config 전달 여부는 여전히 문서에서 직접 확인 못 함.

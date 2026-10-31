@@ -32,3 +32,11 @@
 
 ## 6단계 재점검 (2026-10-10)
 - 메모리 도움말(11817273)에 용량·개수 한도 기재 없음을 확인.
+
+## 2026-10-19 점검 반영
+- 메모리 도움말과 가져오기/내보내기 도움말을 다시 읽음. 가져오기 가능 플랜이 Free/Pro/Max/Team/Enterprise로 확인되어 본문 반영(기존엔 Enterprise 누락). 레거시 메모리 내보내기 기한(2026-09-09)은 가져오기/내보내기 문서에는 없고 메모리 도움말에만 있음.
+
+## 2026-10-26 점검 반영
+- 메모리 도움말(11817273)·가져오기/내보내기(12123587)를 다시 읽음: 메뉴 경로가 설정(Settings) > Your Claude로 바뀜. 메모리 토글 이름은 "Memory from chats"(예전 화면: 설정 > Memory의 "Generate memory from chats"), 저장 내용 보기·수정은 "Your memory" 옆 Manage > Topics, 가져오기는 Your Claude의 "Start import", 내보내기는 Your Claude > Manage 또는 Claude에게 그대로 써 달라고 요청. 구형 레이아웃은 Settings > Memory / Capabilities. 본문 경로를 새 이름 우선 + 예전 화면 병기로 고침(C9, C17 한 줄).
+- 신규 확인: "Include sensitive topics in memory"(Your Claude, 기본 꺼짐); 주민번호·금융계좌번호 등은 요청해도 저장 안 됨; 프로젝트 페이지의 "Use account memory"를 끄면 계정 메모리와 분리; Claude Duet(연구 프리뷰, Pro/Max)도 같은 검색·메모리 설정을 씀. 본문 미반영(참고).
+- 데이터 내보내기(9450526): Settings > Privacy > Export data, 링크 24시간 만료, iOS/Android 앱에서는 불가 — 변동 없음. 지침 위치: Settings > Your Claude의 "Instructions for Claude"(예전: Settings > Account) — C3·C9 본문 수정.

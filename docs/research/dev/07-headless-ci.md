@@ -46,3 +46,12 @@
 - CLI reference 직접 읽음: `--max-budget-usd`는 print 모드 전용, 클라이언트 쪽 비용 추정 기준(청구액과 다를 수 있고 초과 가능), 서브에이전트 비용 합산, `--continue/--resume` 시 이전 누적은 상한에 미포함, 상한 도달 시 새 서브에이전트 생성 실패·백그라운드 서브에이전트 중단(v2.1.217+). 위 '정확한 의미 미확인' 해소, 본문 반영.
 - `gh` 자동 인증 여부는 여전히 문서에 명시 없음(공식 예제는 gh를 쓰면서 GH_TOKEN 설정을 따로 보이지 않음). 본문은 명시적 GH_TOKEN 유지.
 - 나머지(--bare, 출력 형식, --permission-prompts none, claude-code-action@v1, checkout@v6, id-token: write, 보안 문서 항목) 변동 없음.
+
+## 2026-10-19 재검증
+- 변경: github-actions 문서에 워크로드 아이덴티티 연동(OIDC 토큰을 Console 서비스 계정으로 교환; `anthropic_federation_rule_id`, `anthropic_organization_id` 등, `id-token: write`)이 조직 설정 방법으로 안내됨. 본문 시크릿 단락에 한 문장 추가.
+- 확인 유지: `--bare`(향후 `-p` 기본값 예정), `--output-format`, `--json-schema`→`structured_output`, `--permission-prompts none`(v2.1.259+), `--max-budget-usd`(print 전용, v2.1.217+), 액션 v1 입력, `/install-github-app`, 보안 문서(allowed_non_write_users·PAT 경고). 참고: `--permission-mode`에 `manual`(= default 별칭, v2.1.200+)이 추가됐으나 본문에서 쓰지 않아 변경 없음.
+
+## 2026-10-26 재검증
+- headless(--bare, -p 권한 동작, --permission-prompts none v2.1.259+), cli-reference(--max-budget-usd), github-actions(/install-github-app, 워크로드 아이덴티티, id-token: write), claude-code-action raw 예제(claude-code-action@v1, checkout@v6, issue-triage의 allowed_non_write_users "*"), security.md(allowed_bots/allowed_non_write_users 경고, PAT 금지) 재확인.
+- 변경('모순 해소'): headless 페이지: Claude Code v2.1.302 이상에서 `claude -p`는 모드를 정하지 않으면 Manual(`default`)로 시작하고 승인 필요한 호출은 거부됨. 기존 본문의 "시작 모드가 auto가 될 수 있다"를 고침(Aside).
+- 여전히 미확인: `gh` CLI 자동 인증 여부, 액션 `v1` 태그의 세부 버전.

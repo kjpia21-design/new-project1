@@ -30,3 +30,8 @@
 - https://support.claude.com/en/articles/9547008-publish-and-share-artifacts — 동일
 - https://code.claude.com/docs/en/overview — 확인일 2026-10-10
 - https://raw.githubusercontent.com/github/docs/main/content/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.md (GitHub 공식 문서 원본 저장소) — 확인일 2026-10-10
+
+## 2026-10-26 재점검
+- support.claude.com 17153992, 9547008, code.claude.com overview 재열람. 기존 서술과 일치(Settings > Capabilities의 Cloud code execution and file creation, 20MB 텍스트 저장, 레거시 Publish는 2026-09-16 이전, 템플릿 Export, 이메일 초대 베타). 변경 없음.
+- 새로 확인(미반영): Dashboards(beta)·Motion(beta) 템플릿, Free에서도 아티팩트 사용 가능(Dashboards 제외), 공유 불가 유형에 Docs 문서와 외부 사이트 연결 아티팩트 명시. GitHub 문서 4곳(Pages 게시 소스 포함)은 200 응답 확인.
+- 여전히 확인 못 함: 직접 만든 계산기를 단일 HTML로 내려받는 정확한 메뉴.

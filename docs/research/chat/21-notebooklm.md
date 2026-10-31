@@ -33,3 +33,10 @@
 - https://support.google.com/gemininotebook/answer/17670842 (Usage limits)
 - https://support.google.com/gemininotebook/answer/16212820 (Audio Overview)
 - https://support.google.com/gemininotebook/answer/16958963 (Flashcards or Quizzes)
+
+## 재점검 (2026-10-19)
+- 7개 도움말 모두 다시 읽음. 이름(Gemini Notebook), 소스 50개/50만 단어/200MB, 사용량 배율·Settings > Usage, 오디오 개요 형식·길이(Longer 영어만), 플래시카드·퀴즈 기능, 한국 지원 국가 포함 모두 본문과 일치. 변경 없음.
+
+## 재점검 (2026-10-26)
+- 7개 도움말 다시 읽음(소스 50개/50만 단어/200MB, 사용량 5시간·주간, 배율 2x/4x/5x·20x, Settings > Usage, Generate later, 형식 4종, 플래시카드 "Only cards you missed", 한국 지원국 포함).
+- 신규 확인: 오디오 개요(16212820)는 "80개 이상 언어, 기본은 Google 계정 선호 언어"라고 안내. 본문 "한국어 오디오 개요 확인 못 함"을 "80개 이상 언어 지원, 한국어가 목록에 있는지는 도움말에 없음"으로 보정. 길이 선택·대화형 모드 영어 한정은 그대로.

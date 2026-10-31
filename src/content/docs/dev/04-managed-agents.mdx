@@ -11,7 +11,7 @@ prerequisites:
   - "C16. Claude API 시작하기 (API 키, ANTHROPIC_API_KEY, Python SDK 설치)"
   - "3. Claude Agent SDK로 나만의 에이전트 만들기 (에이전트·도구·권한 개념)"
   - "Python 3.10 이상과 터미널 (TypeScript 예제는 Node.js)"
-lastVerified: 2026-10-13
+lastVerified: 2026-10-26
 sources:
   - title: "Claude Managed Agents overview"
     url: "https://platform.claude.com/docs/en/managed-agents/overview"
@@ -33,6 +33,12 @@ sources:
     url: "https://code.claude.com/docs/en/agent-sdk/hosting"
   - title: "Models overview (모델 ID와 가격)"
     url: "https://platform.claude.com/docs/en/about-claude/models/overview"
+  - title: "Claude Platform release notes (web_fetch 제한)"
+    url: "https://platform.claude.com/docs/en/release-notes/overview"
+  - title: "Restrict web search and web fetch domains"
+    url: "https://platform.claude.com/docs/en/managed-agents/tools-web-restrictions"
+  - title: "Permission policies"
+    url: "https://platform.claude.com/docs/en/managed-agents/permission-policies"
 status: published
 ---
 
@@ -314,6 +320,7 @@ Managed Agents는 세션이 길게 이어지고 대화 기록, 샌드박스 상�
    - run의 에이전트는 모두 토큰을 써요. 작은 일에까지 run을 쓰게 하지 마세요.
    - 인라인 에이전트는 세션 에이전트와 같은 모델을 써요. 일부만 다른 모델로 돌리려면 에이전트를 따로 만들어 `workflows.predefined_agents`에 나열하세요(최대 20개).
    - `multiagent`가 설정된 에이전트는 다른 에이전트의 목록에 넣을 수 없어요(자기 자신 `{"type": "self"}`은 가능해요).
+   - `multiagent_20261001` 타입을 쓰면 `subagents`와 `workflows`가 **기본으로 켜져요**(2026-10-19 기준). 동적 워크플로가 필요 없다면 `{"workflows": {"type": "disabled"}}`로 꺼 두세요.
 
    `ma_workflow.py`로 저장해요.
 
@@ -445,6 +452,8 @@ run의 모델 요청은 조직의 Messages API 속도 제한에도 합산돼요.
 ### 웹 검색·가져오기가 아무 결과도 못 가져와요
 
 - **원인**: 환경이 `limited` 네트워킹인데 `allowed_hosts`에 호스트를 나열하지 않았어요. 이 목록은 웹 도구에도 적용돼요.
+- **원인 2**: 웹 가져오기(`web_fetch`)는 세션 대화에 이미 나온 URL만 가져와요(공식 릴리스 노트, 2026-10-19 기준). 그 밖의 URL은 `url_not_in_prior_context` 오류가 나요. 가져올 주소를 `user.message`에 적어 보내면 돼요.
+- **원인 3**: 조직 관리자가 Claude Console의 **Capabilities** 페이지에서 웹 검색이나 웹 가져오기를 끄거나 도메인을 제한했어요. 끄면 해당 도구 호출은 에이전트에게 오류 결과로 돌아가고 세션은 계속돼요. 조직 목록과 에이전트의 `allowed_domains`/`blocked_domains`를 모두 통과해야 하고, 리디렉션으로 이어진 URL도 마찬가지예요(공식 문서, 2026-10-26 기준).
 - **해결**: 필요한 사이트만 `allowed_hosts`에 넣거나, 웹 도구를 쓰지 않는 작업이라면 도구를 꺼 두세요. `unrestricted`는 샌드박스 전체의 외부 통신을 열기 때문에 비밀 값과 민감한 파일을 샌드박스에 두지 마세요.
 
 ### 에이전트 생성이나 `ant__` 이름 오류가 나요
@@ -461,7 +470,7 @@ run의 모델 요청은 조직의 Messages API 속도 제한에도 합산돼요.
 
 - **예산은 습관처럼.** 세션마다 `budget`을 달고, 작은 값(예: 2달러)에서 시작해 `usage.list_cost`를 보며 늘리세요. 이 예제의 `"200"`은 2달러예요. 예산은 한 세션의 상한이고, 크론 배포(scheduled deployments)에서는 실행마다 따로 적용돼요.
 - **툴셋은 필요한 것만.** 웹 도구가 필요 없으면 끄고, 필요하면 `allowed_hosts`와 `allowed_domains`로 사이트를 제한하세요.
-- **도구 권한도 설계하세요.** 에이전트의 도구는 권한 정책(`always_allow`, `always_ask`, `auto`)으로 승인 방식을 정해요. 정책별 기본 동작은 [공식 권한 정책 문서](https://platform.claude.com/docs/en/managed-agents/permission-policies)에서 확인하세요. 아무도 지켜보지 않는 실행이라면 승인이 필요한 호출을 거부하게 두는 쪽이 안전해요.
+- **도구 권한도 설계하세요.** 에이전트의 도구는 권한 정책(`always_allow`, `always_ask`, `auto`)으로 승인 방식을 정해요. 기본값은 에이전트 도구 묶음이 `always_allow`, MCP 도구 묶음이 `always_ask`예요(2026-10-26 기준, [공식 권한 정책 문서](https://platform.claude.com/docs/en/managed-agents/permission-policies)). `auto`는 서버가 호출마다 실행·거부·승인 대기를 판단해요. 아무도 지켜보지 않는 실행이라면 승인이 필요한 호출을 거부하게 두는 쪽이 안전해요.
 - **문서·웹에 숨은 지시를 경계하세요.** 에이전트가 읽는 문서나 웹 페이지에 "이 파일을 외부로 보내라" 같은 지시가 숨어 있을 수 있어요(프롬프트 인젝션). 샌드박스에 비밀 값을 두지 말고, MCP 서버 같은 외부 도구의 인증 정보는 공식 문서의 vault(보관소)에 맡기세요.
 - **Agent SDK와 같이 쓰는 법.** 개발 중에는 Agent SDK로 내 컴퓨터에서 빠르게 시험하고, 사람 없이 오래 도는 일이나 호스팅이 필요한 일은 Managed Agents로 옮기는 흐름이 자연스러워요([03편](/dev/03-agent-sdk/)).
 - **모델 분담.** 본 에이전트는 큰 모델, 단순 읽기 작업은 싼 모델 에이전트로 나누면 비용이 줄어요([C15](/claude/c15-model-division/)).

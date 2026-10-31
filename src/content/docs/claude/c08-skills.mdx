@@ -11,7 +11,7 @@ prerequisites:
   - "claude.ai 계정 (Free/Pro/Max/Team/Enterprise)"
   - "설정(Settings)에서 코드 실행 및 파일 생성 켜기"
   - "(Claude Code 예제를 따라 한다면) Claude Code가 설치된 터미널과 git 저장소"
-lastVerified: 2026-10-13
+lastVerified: 2026-10-26
 sources:
   - title: "Use skills in Claude"
     url: "https://support.claude.com/en/articles/12512180-use-skills-in-claude"
@@ -72,7 +72,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | | claude.ai (지원센터) | Claude Code |
 | --- | --- | --- |
 | `name` | 필수, 최대 64자 | 선택. 기본값은 폴더 이름 |
-| `description` | 필수, 최대 200자 | 권장. 핵심 용도를 앞에 쓰기 |
+| `description` | 필수, 최대 200자 | 권장. 핵심 용도를 앞에 쓰기. `description`과 `when_to_use`를 합친 글은 스킬 목록에서 1,536자까지만 보여요(2026-10-26 기준) |
 | 그 외 | 선택 `dependencies` (예: python>=3.8) | `when_to_use`, `argument-hint`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `context: fork`, `model`, `effort`, `paths`, `hooks` 등 |
 
 <Aside type="note" title="공식 문서에 없는 수치와 메뉴 이름">
@@ -96,7 +96,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 1. **코드 실행 켜기**
 
-   설정(Settings) > Capabilities에서 **Code execution and file creation**을 켜요. 그다음 Customize > Skills에서 스킬별로 토글을 켜고 꺼요. Team/Enterprise는 Owner가 조직 설정(Organization settings) > Plugins & skills(Policy 탭)에서 코드 실행과 스킬을 먼저 켜야 해요.
+   설정(Settings) > Capabilities에서 **Code execution and file creation**(새 화면 구성에서는 **Create and edit files**)을 켜요. 그다음 Customize > Skills에서 스킬별로 토글을 켜고 꺼요. Team/Enterprise는 Owner가 조직 설정(Organization settings) > Plugins & skills(Policy 탭)에서 코드 실행과 스킬을 먼저 켜야 해요.
 
 2. **내장 스킬 체험하기**
 
@@ -194,7 +194,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | 항목 | 내용 |
 | --- | --- |
 | 사용 가능 | Free/Pro/Max/Team/Enterprise (코드 실행 필요) |
-| 켜는 곳 | Settings > Capabilities > Code execution and file creation, 그다음 Customize > Skills |
+| 켜는 곳 | Settings > Capabilities > Code execution and file creation(새 화면: Create and edit files), 그다음 Customize > Skills |
 | 필수 구조 | 폴더 이름 = 스킬 이름, 안에 `skill.md`(지원센터 표기) |
 | 필수 frontmatter | `name`(64자 이하), `description`(200자 이하) |
 | ZIP | ZIP 루트에 스킬 폴더 |

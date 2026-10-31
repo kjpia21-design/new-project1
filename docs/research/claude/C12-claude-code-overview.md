@@ -42,3 +42,9 @@
 - `/rate-limit-options`: 한도 도달 시 대기 후 자동 계속, usage credits 추가, 업그레이드. claude.ai 구독 필요, 대기 행은 v2.1.234 이상(Commands).
 - `/effort` 모델별 저장(v2.1.251), `s`는 세션만(v2.1.257), `max`는 세션 전용(Model configuration).
 - 확인 못 함: 포크 방법의 화면 단계(앱 메뉴 이름)는 공식 문서에서 못 찾았다. Remote Control 문서 본문에서 "fork" 문구를 찾지 못했고 CHANGELOG 한 줄만 근거다.
+
+## 2026-10-19 점검 반영
+- quickstart·overview·model-config를 다시 읽음. 설치 명령, 자동 업데이트 여부, 지원 플랜(Pro/Max/Team/Enterprise 또는 Console) 변동 없음. 최신 CHANGELOG는 v2.1.303(2026-10-18).
+
+## 2026-10-26 점검 반영
+- Overview·Quickstart 재확인: 설치 명령(curl/irm/CMD), Homebrew `claude-code`(stable)/`claude-code@latest`, WinGet, apt/dnf/apk, 데스크톱(macOS, Windows x64/ARM64, Ubuntu/Debian 베타), `claude --version`, `/help` `/resume` `/login`, Shift+Tab, `claude -p/-c/-r` 변동 없음. Overview가 "Cloud scheduled tasks, formerly routines"로 표기 → 자동화 3종 표의 Routines에 "(클라우드 예약 작업)" 병기. 모델 설정 문서: 기본 모델 Opus 5.5, 최소 버전 Opus 5.5 v2.1.280 / Sonnet 5.5 v2.1.284 / Haiku 5.5 v2.1.293 / Fable 5.1 v2.1.257 변동 없음(문서 뒷부분 26,000자는 읽지 못함).
