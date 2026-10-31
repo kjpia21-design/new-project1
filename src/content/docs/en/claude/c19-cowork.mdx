@@ -8,11 +8,13 @@ category: claude
 tools: ["Claude Cowork", "Claude Desktop"]
 duration: "30 min"
 prerequisites:
-  - "A paid Claude plan (Cowork is on Pro, Max, Team, and Enterprise)"
+  - "A paid Claude plan (Cowork is on Pro, Max, Ultra, Team, and Enterprise)"
   - "(To use your computer's files and browser) the Claude Desktop app on macOS or Windows"
   - "It helps if you've read C3 (Getting started with the Claude app)"
-lastVerified: 2026-10-26
+lastVerified: 2026-10-31
 sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
   - title: "Get started with Claude Cowork"
     url: "https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork"
   - title: "Use Claude Cowork safely"
@@ -35,7 +37,7 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 
 <Summary>
 - **Cowork** brings Claude Code's agentic approach to **general work instead of coding**. You describe the outcome (what the result should look like), and Claude makes a plan, carries out multiple steps on its own, and hands back documents, spreadsheets, or organized files. You don't need a terminal.
-- You can use it on **paid plans (Pro, Max, Team, Enterprise)**. For work that uses folders, the browser, or apps on your computer, the **Claude Desktop app on macOS or Windows** has to be open (as of 2026-10-15).
+- You can use it on **paid plans (Pro, Max, Ultra, Team, Enterprise)**. For work that uses folders, the browser, or apps on your computer, the **Claude Desktop app on macOS or Windows** has to be open (as of 2026-10-15).
 - On Pro and Max, starting 2026-10-06, **new Cowork tasks run in the cloud**. They keep going even if you close your laptop, and you can follow along from your phone or the web. However, steps that access your folders work only while the desktop app is open.
 - Cowork and chat are **being merged into one Claude**. The timing varies by account, so if you still see a "Chat" / "Cowork" choice in the input box, you're on the earlier screen.
 - There are two approval modes: **Manual (default)** and **Auto**. Use Manual for anything involving money, sending messages, or important files, and the surest safety rule is to **not connect sensitive folders at all**.
@@ -73,16 +75,15 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 The official help says "Claude Cowork is now just Claude." When you ask a question, Claude decides on its own whether to give a quick answer or do a longer task. It's rolling out in stages starting with Pro and Max, and on Enterprise an admin has to turn on the beta setting. If you still see a "Chat" / "Cowork" choice in the input box, that's the earlier screen, and once you move to the new experience, it's noted that you can't go back. This article is written to work for both screens. If your screen is different, check the [official help](https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude).
 </Aside>
 
-### Where can you use it? (as of 2026-10-15)
+### Where can you use it? (as of 2026-10-31)
 
 | Device | Availability |
 | --- | --- |
-| Claude Desktop (macOS, Windows, Linux beta) | All paid plans. Windows needs the latest version. Linux is in beta and has extra requirements such as KVM (per the desktop install help, as of 2026-10-26). |
-| Web (claude.ai) | Pro, Max, Team. Enterprise if an admin has turned it on |
-| Mobile (iOS, Android) | Pro, Max, Team. Enterprise if an admin has turned it on |
-| Chrome side panel | Max and Team. Rolling out to Pro. Enterprise if an admin has turned it on |
+| Claude Desktop (macOS, Windows, Linux beta) | All paid plans. Linux is in beta. |
+| Web (claude.ai) and mobile (iOS, Android) | Pro, Max, Ultra, Team (beta on Team). Enterprise if an owner has turned it on |
+| Chrome side panel | All paid plans. On Enterprise, an owner has to turn on Claude in Chrome and Cowork in the cloud |
 
-The Linux desktop is listed as beta in the Cowork getting-started guide as of 2026-10-26 (computer use and dictation don't work on Linux). [C11](/en/claude/c11-chrome-computer-use/) notes that computer use works only on macOS and Windows. As for Cowork availability in Korea (for users in Korea), we only confirmed that Claude itself is available in Korea (South Korea is on Anthropic's supported countries list, confirmed 2026-10-15), and Anthropic's supported-countries policy page treats Cowork as subject to the same rules and doesn't list any Cowork-specific regional restrictions (confirmed 2026-10-19).
+As of 2026-10-31, the Cowork getting-started guide lists the desktop app as "Linux (beta)". The same guide says local file access, browser use, and computer use need the Claude Desktop app for macOS or Windows, so check the on-screen prompts and the official help for what works on Linux. [C11](/en/claude/c11-chrome-computer-use/) notes that computer use works only on macOS and Windows. As for Cowork availability in Korea (for users in Korea), we only confirmed that Claude itself is available in Korea (South Korea is on Anthropic's supported countries list, confirmed 2026-10-15), and Anthropic's supported-countries policy page treats Cowork as subject to the same rules and doesn't list any Cowork-specific regional restrictions (confirmed 2026-10-19).
 
 ## Step by step
 
@@ -208,8 +209,8 @@ Multi-step tasks use more of your usage than quick questions. If you hit your li
 - **Decide the scope of memory.** Cloud sessions carry over your chat memory. To run once without memory, turn Memory off from the "+" menu before you start. You can't change it after starting ([C9](/en/claude/c09-memory-settings/)).
 - **You can delete things.** You can delete a task at any time, and it's noted that it's removed from backend storage within 30 days.
 
-<Aside type="caution" title="Items we couldn't confirm (as of 2026-10-19)">
-We couldn't confirm in the official help articles we read this time the exact menu name and order for connecting folders, or whether the Linux desktop is supported. Defer to the on-screen prompts and the official help.
+<Aside type="caution" title="Items we couldn't confirm (as of 2026-10-31)">
+We couldn't confirm in the official help articles we read this time the exact menu name and order for connecting folders, or exactly which features work in the Linux beta. Defer to the on-screen prompts and the official help.
 </Aside>
 
 ## What to read next

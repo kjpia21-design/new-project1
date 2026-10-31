@@ -12,7 +12,7 @@ prerequisites:
   - "C15. Model division strategy"
   - "1. Build a work bot with tool use (helpful if your bot uses tools)"
   - "Python 3.10 or later, pip install anthropic"
-lastVerified: 2026-10-26
+lastVerified: 2026-10-31
 sources:
   - title: "Pricing"
     url: "https://platform.claude.com/docs/en/about-claude/pricing"
@@ -332,6 +332,10 @@ The official guide cites a case where internal measurements showed caching cutti
    Where you use it, just call `log_usage(response, model, task)` right after you get the response. If you also record a task name (`task`), you can roll things up into "cost per task."
 
    You can see usage for your whole organization on the Console's Usage and Cost pages or through the Usage and Cost Admin API. This API has `usage_report/messages` and `cost_report` endpoints and needs an **Admin API key** (`sk-ant-admin...`). Admin API keys are organization keys that you can't create on a personal account, so check the requirements in the official docs. Traffic you send through Amazon Bedrock, Vertex AI, or Foundry may not show up in these reports.
+
+   <Aside type="tip" title="There is a newer API (as of 2026-10-31)">
+   The `usage_report` and `cost_report` endpoints above belong to the older (legacy) Usage and Cost API. There is also a newer **Usage and Cost Analytics API (beta)** that breaks usage down by model, workspace, API key, and user. See [Build a Team Usage Dashboard with the Usage and Cost Analytics API](/en/dev/11-usage-cost-api/) for details.
+   </Aside>
 
    <ScreenshotPlaceholder caption="The Console's Usage and Cost pages" officialUrl="https://platform.claude.com/docs/en/manage-claude/usage-cost-api" officialLabel="View in the Anthropic docs" />
 

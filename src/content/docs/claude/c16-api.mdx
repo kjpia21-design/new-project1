@@ -9,10 +9,12 @@ tools: ["Claude API", "Claude Console"]
 duration: "40분"
 prerequisites:
   - "Claude Console 계정 (platform.claude.com)"
-  - "API 사용을 위한 결제 설정 (Pro/Max 구독과 별개예요)"
+  - "API 사용을 위한 결제 설정 (Pro/Max/Ultra 구독과 별개예요)"
   - "터미널, Python 3.10 이상 (Python 예제용)"
-lastVerified: 2026-10-26
+lastVerified: 2026-10-31
 sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
   - title: "How do I pay for my Claude API usage?"
     url: "https://support.claude.com/en/articles/8977456-how-do-i-pay-for-my-api-usage"
   - title: "Rate limits"
@@ -42,7 +44,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
-- Claude API는 **Claude Console(platform.claude.com)** 계정과 **API 키**로 써요. Claude Pro/Max 구독에는 API 사용이 포함되지 않고 **별도로 청구**돼요.
+- Claude API는 **Claude Console(platform.claude.com)** 계정과 **API 키**로 써요. Claude Pro/Max/Ultra 구독에는 API 사용이 포함되지 않고 **별도로 청구**돼요.
 - 키는 Console의 Settings > API keys에서 만들어요. `sk-ant-`로 시작하고, **만들 때 한 번만** 전체가 보여요.
 - 키를 환경변수 `ANTHROPIC_API_KEY`에 넣으면 SDK가 자동으로 읽어요. **키를 코드에 직접 적지 마세요.**
 - 모델 ID는 `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5`, `claude-fable-5-1`이에요.
@@ -267,7 +269,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 - **원인**: 키는 생성 시 한 번만 전체가 보여요.
 - **해결**: Console에서 새 키를 만들고, 옛 키는 삭제하세요.
 
-### Claude Pro/Max를 구독 중인데 API가 안 돼요
+### Claude Pro/Max/Ultra를 구독 중인데 API가 안 돼요
 
 - **원인**: 구독에는 Console API 사용이 포함되지 않고 별도로 청구돼요.
 - **해결**: Console에서 API용 결제 설정을 따로 하세요. 절차는 화면 안내를 따르세요.
@@ -306,7 +308,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 - **공유 용도는 서비스 계정 키.** 개인 키는 팀 서비스에 쓰지 마세요.
 - **키는 정기적으로 점검.** 만료일을 설정하고 쓰지 않는 키는 삭제하세요.
 - **베타 헤더는 이제 필요 없어요.** Files API(`/v1/files`)와 Agent Skills(`/v1/skills`)는 2026-08-19에 Claude API에서 정식(GA)이 되어 `files-api-2025-04-14`, `skills-2025-10-02` 베타 헤더가 필요 없어요. 헤더를 계속 보내도 동작하지만 Files API는 이전 응답 형식으로 돌아와요.
-- **Max·Team이라면 API 크레딧을 확인하세요.** 플랜에 월 API 크레딧이 포함돼요. 수령 방법은 [C2](/claude/c02-plans-limits/)를 보세요.
+- **Max·Ultra·Team이라면 API 크레딧을 확인하세요.** 플랜에 월 API 크레딧이 포함돼요. 수령 방법은 [C2](/claude/c02-plans-limits/)를 보세요.
 
 ## 다음 단계: 더 깊이 가려면
 

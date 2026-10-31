@@ -9,10 +9,12 @@ tools: ["Claude API", "Claude Console"]
 duration: "40 min"
 prerequisites:
   - "A Claude Console account (platform.claude.com)"
-  - "Billing set up for API use (separate from a Pro/Max subscription)"
+  - "Billing set up for API use (separate from a Pro/Max/Ultra subscription)"
   - "A terminal, and Python 3.10 or later (for the Python examples)"
-lastVerified: 2026-10-26
+lastVerified: 2026-10-31
 sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
   - title: "How do I pay for my Claude API usage?"
     url: "https://support.claude.com/en/articles/8977456-how-do-i-pay-for-my-api-usage"
   - title: "Rate limits"
@@ -42,7 +44,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 import FlowSteps from '../../../../components/FlowSteps.astro';
 
 <Summary>
-- The Claude API runs on a **Claude Console (platform.claude.com)** account and an **API key**. Claude Pro/Max subscriptions don't include API usage, which is **billed separately**.
+- The Claude API runs on a **Claude Console (platform.claude.com)** account and an **API key**. Claude Pro/Max/Ultra subscriptions don't include API usage, which is **billed separately**.
 - You create keys in the Console under Settings > API keys. They start with `sk-ant-`, and the full key is shown **only once, when you create it**.
 - If you put the key in the `ANTHROPIC_API_KEY` environment variable, the SDK reads it automatically. **Never write the key directly in your code.**
 - The model IDs are `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5`, and `claude-fable-5-1`.
@@ -267,7 +269,7 @@ If you only change `model` in an example, you can hit a 400 error for the reason
 - **Cause**: The full key is shown only once, when it's created.
 - **Fix**: Create a new key in the Console and delete the old one.
 
-### I subscribe to Claude Pro/Max but the API doesn't work
+### I subscribe to Claude Pro/Max/Ultra but the API doesn't work
 
 - **Cause**: Subscriptions don't include Console API usage, which is billed separately.
 - **Fix**: Set up billing for the API separately in the Console. Follow the on-screen instructions for the steps.
@@ -306,7 +308,7 @@ If you only change `model` in an example, you can hit a 400 error for the reason
 - **Use service account keys for shared use.** Don't use personal keys for team services.
 - **Review your keys regularly.** Set expiration dates and delete keys you don't use.
 - **Beta headers are no longer needed.** The Files API (`/v1/files`) and Agent Skills (`/v1/skills`) became generally available (GA) on the Claude API on 2026-08-19, so the `files-api-2025-04-14` and `skills-2025-10-02` beta headers are no longer needed. If you keep sending them it still works, but the Files API goes back to the earlier response format.
-- **If you're on Max or Team, check your API credits.** Your plan includes monthly API credits. See [C2](/en/claude/c02-plans-limits/) for how to claim them.
+- **If you're on Max, Ultra, or Team, check your API credits.** Your plan includes monthly API credits. See [C2](/en/claude/c02-plans-limits/) for how to claim them.
 
 ## Next steps: going deeper
 

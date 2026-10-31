@@ -10,8 +10,10 @@ duration: "30 min"
 prerequisites:
   - "An Excel or Google Sheets account (needs a subscription that includes AI features, or admin approval)"
   - "A table of made-up practice data (don't use real customer or payroll information)"
-lastVerified: 2026-10-26
+lastVerified: 2026-10-31
 sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
   - title: "Get started with Copilot in Excel (Microsoft Support)"
     url: "https://support.microsoft.com/en-us/excel/copilot/get-started-with-copilot-in-excel"
   - title: "Get data insights with Copilot in Excel (Microsoft Support)"
@@ -45,7 +47,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 <Summary>
 - In **Excel**, the **Copilot** icon at the bottom right opens a side pane. It has three modes, Edit, Plan, and Chat, and Edit is the default (as of 2026-10-14).
 - In **Google Sheets**, there's the **Ask Gemini** side panel at the top right, and the **`=AI()`** function you use inside a cell. Both are described as requiring an eligible Workspace or Google AI plan.
-- **Claude** has an add-in for Excel (Pro, Max, Team, and Enterprise plans). Separately, the ability to create Excel files in a conversation is described as available to all users, including Free.
+- **Claude** has an add-in for Excel (Pro, Max, Ultra, Team, and Enterprise plans). Separately, the ability to create Excel files in a conversation is described as available to all users, including Free.
 - Excel's `=COPILOT()` function can no longer be used as of 2026-09-14. Don't follow old blog posts' instructions as-is.
 - With any tool, **check numbers and formulas yourself**. All three tools' official documentation warns about the possibility of errors.
 </Summary>
@@ -96,7 +98,7 @@ Start with practice data. A made-up sales table of about 20 to 30 rows with colu
 
    - **Excel**: Look for the Copilot icon at the bottom right. The official documentation says if you don't see it, it may not be included in your subscription or may be restricted by organization settings. The official FAQ says that on personal subscriptions (Personal, Family, Premium), Copilot in Excel works only on files with AutoSave on, that is, files saved to OneDrive.
    - **Google Sheets**: Check whether **Ask Gemini** appears at the top right. It requires an eligible Google Workspace or Google AI plan, and some features are also described as available through a trial program (Workspace Experiments).
-   - **Claude**: The Excel add-in is for Pro, Max, Team, and Enterprise plans. Installation is covered in step 6 below.
+   - **Claude**: The Excel add-in is for Pro, Max, Ultra, Team, and Enterprise plans. Installation is covered in step 6 below.
 
    <ScreenshotPlaceholder caption="The Copilot icon at the bottom right of Excel and the opened side pane" officialUrl="https://support.microsoft.com/en-us/excel/copilot/get-started-with-copilot-in-excel" />
 
@@ -158,7 +160,7 @@ Start with practice data. A made-up sales table of about 20 to 30 rows with colu
 
 7. **Have Claude create the file itself (without the Excel add-in)**
 
-   If you ask in a Claude conversation, for example "Make me an Excel file for tracking monthly expenses," it creates an .xlsx file for you to download. The official documentation (version updated 2026-08-06) says all users on Free, Pro, Max, Team, and Enterprise can use this on web, desktop, and mobile. On Free, Pro, and Max, turn on **Create and edit files** (formerly named Code execution and file creation) under Settings > Capabilities (as of 2026-10-26). The maximum size is 30 MB per file for both upload and download. You can also analyze uploaded CSV and TSV files, and files you create can be saved directly to Google Drive. To use one in Google Sheets, you'd save the .xlsx to Drive and open it as a sheet, but we couldn't confirm that conversion step itself in Claude's documentation.
+   If you ask in a Claude conversation, for example "Make me an Excel file for tracking monthly expenses," it creates an .xlsx file for you to download. The official documentation (version updated 2026-08-06) says all users on Free, Pro, Max, Ultra, Team, and Enterprise can use this on web, desktop, and mobile. On Free, Pro, and Max, turn on **Create and edit files** (formerly named Code execution and file creation) under Settings > Capabilities (as of 2026-10-26). The maximum size is 30 MB per file for both upload and download. You can also analyze uploaded CSV and TSV files, and files you create can be saved directly to Google Drive. To use one in Google Sheets, you'd save the .xlsx to Drive and open it as a sheet, but we couldn't confirm that conversion step itself in Claude's documentation.
 
 8. **Verify the results and save**
 
@@ -175,7 +177,7 @@ Start with practice data. A made-up sales table of about 20 to 30 rows with colu
 | Where to open | Copilot icon at the bottom right | Ask Gemini at the top right | The add-in side pane in Excel |
 | Key features | Edit sheets, create formulas, charts, and PivotTables, insights, web search | Request tables, formulas, analysis, charts; tasks like pivots and formatting | Cell-cited answers, changing assumptions, error tracing, model building |
 | In-cell function | `=COPILOT()` ended 2026-09-14 | `=AI()` / `=Gemini()` (returns text only) | None |
-| Requirements | A subscription or license that includes Copilot | An eligible Workspace or Google AI plan | Pro, Max, Team, or Enterprise plan |
+| Requirements | A subscription or license that includes Copilot | An eligible Workspace or Google AI plan | Pro, Max, Ultra, Team, or Enterprise plan |
 | Korean | Korean is on the prompt language list | Korean is in the supported languages for the side panel and AI function | We couldn't confirm Korean support in this documentation |
 | Main limits | Trained mainly on English; edits only in automatic calculation mode | `.xlsx` works best when converted to Sheets | No data tables, macros, or VBA |
 

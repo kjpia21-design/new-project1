@@ -8,7 +8,7 @@ category: claude
 tools: ["Claude", "Claude Code"]
 duration: "15 min"
 prerequisites: ["A Claude account (a free account works)", "A browser where you can log in to claude.ai"]
-lastVerified: 2026-10-26
+lastVerified: 2026-10-31
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -18,7 +18,7 @@ sources:
     url: "https://support.claude.com/en/articles/11049741-what-is-the-max-plan"
   - title: "What is the Team plan?"
     url: "https://support.claude.com/en/articles/9266767-what-is-the-team-plan"
-  - title: "Use Claude Code with your Pro or Max plan"
+  - title: "Use Claude Code with your Pro, Max, or Ultra plan"
     url: "https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan"
   - title: "Use Claude Code with your Team or Enterprise plan"
     url: "https://support.claude.com/en/articles/11845131-use-claude-code-with-your-team-or-enterprise-plan"
@@ -34,7 +34,7 @@ sources:
     url: "https://code.claude.com/docs/en/claude-code-on-the-web"
   - title: "Automate work with routines"
     url: "https://code.claude.com/docs/en/routines"
-  - title: "API credits for Max and Team plans"
+  - title: "API credits for Max, Ultra, and Team plans"
     url: "https://platform.claude.com/docs/en/about-claude/api-credits-for-subscribers"
   - title: "Claude Apps release notes"
     url: "https://support.claude.com/en/articles/12138966-release-notes"
@@ -49,11 +49,12 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 import PlanFlowDiagram from '../../../../components/diagrams/PlanFlowDiagram.astro';
 
 <Summary>
-- Paid plans (Pro, Max, Team, Enterprise) have a **session limit that resets every 5 hours** and a **weekly limit that resets once a week**.
+- Paid plans (Pro, Max, Ultra, Team, Enterprise) have a **session limit that resets every 5 hours** and a **weekly limit that resets once a week**. Verified Ultra accounts have no 5-hour limit.
+- Individual plans are Free, Pro ($20/month, or $17/month billed annually), Max ($100/month, 5x Pro), and **Ultra ($200/month, 10x Pro weekly usage)**. The old "Max 20x" no longer exists. (as of 2026-10-31)
 - The Claude apps (web, desktop, mobile) and Claude Code **share the same limits.**
 - **Absolute numbers**, like how many messages or tokens you get, are not published officially. Check your own usage in Settings > Usage.
 - When you use up your limit, instead of stopping you can keep going on a pay-as-you-go basis with **extra usage (usage credits)**. You have to turn it on yourself.
-- Prices and limits change often, so read this document as **of 2026-10-10**. (Prices are US prices.)
+- Prices and limits change often, so read this document as **of 2026-10-31**. (Prices are US prices.)
 </Summary>
 
 ## What you'll be able to do
@@ -69,7 +70,7 @@ import PlanFlowDiagram from '../../../../components/diagrams/PlanFlowDiagram.ast
 
 | Term | Meaning |
 | --- | --- |
-| **Session limit** | A limit that resets every 5 hours. It applies to paid plans. |
+| **Session limit** | A limit that resets every 5 hours. It applies to paid plans, but verified Ultra accounts have no 5-hour limit. |
 | **Weekly limit** | A limit that resets once a week. It applies to all models, and the reset time is a fixed time set per account. Check the next reset in Settings > Usage. |
 | **Extra usage (usage credits)** | A feature that, instead of blocking you after you use up your limit, lets you keep going **pay as you go** at standard API rates. You top up in advance (prepaid). The official docs also call it "extra usage." |
 | **Seat** | The spot you give one member in Team or Enterprise. Usage differs by seat type (Standard or Premium). |
@@ -87,17 +88,19 @@ It depends on conversation length and complexity, the features you use, the mode
 ### Absolute numbers are not published
 
 <Aside type="note" title="How many can I use?">
-Specific numbers, such as how many messages or tokens per session, are not in the official docs. The official help says only that usage depends on conversation length and complexity, the features you use, the model, and the effort level you choose, without giving numbers (confirmed 2026-10-13). Treat any number you can't confirm in official documentation as unsupported. The only thing you can be sure of is your own usage as shown in Settings > Usage. Even the plan comparison gives only **relative multipliers**, like "at least 5x more per 5-hour session than Free."
+Specific numbers, such as how many messages or tokens per session, are not in the official docs. The official help says only that usage depends on conversation length and complexity, the features you use, the model, and the effort level you choose, without giving numbers (confirmed 2026-10-13). Treat any number you can't confirm in official documentation as unsupported. The only thing you can be sure of is your own usage as shown in Settings > Usage. Even the plan comparison gives only **relative multipliers**, like "5x Pro" or "10x Pro."
 </Aside>
 
-### Fable model limits work a little differently
+### Fable model limits (as of 2026-10-31)
 
-The limits for Fable models (see [C1](/en/claude/c01-overview/) for the model overview) are described differently in two places in the official docs, so we'll **cover both and suggest you check your actual screen**.
+How you can use Fable models (see [C1](/en/claude/c01-overview/) for the model overview) depends on your plan.
 
-- **The Pro/Max doc for Claude Code**: It says "the Max plan also has a separate weekly limit for Fable."
-- **The "Claude Fable models on your plan" doc**: Fable 5 and 5.1 are available on every paid plan except Free. Max, Team Premium seats, and Enterprise Premium seats include them in the plan, so you can use **up to 50% of your weekly limit on Fable at no extra cost**. That 50% isn't extra capacity but a cap within the same weekly limit, and Fable uses up your limit faster than other models. On Pro, Team Standard, and Enterprise Standard seats, Fable isn't included in the plan limit and can only be used with usage credits (pay as you go).
+- **Max, Ultra, Team Premium seats, Enterprise Premium seats**: Fable 5 and 5.1 are included in the plan, so you can use **up to 50% of your weekly limit on Fable at no extra cost**. That 50% isn't extra capacity but a cap within the same weekly limit, and Fable uses up your limit faster than other models. After that you can keep going with usage credits or switch to another model and stay within your plan limits. The pricing page also says "Fable included, up to half your weekly limit" for Max and Ultra.
+- **Pro, Team Standard, Enterprise Standard seats**: Fable isn't included in the plan limit and can only be used with usage credits (pay as you go). The Pro card on the pricing page says "Fable, paid with usage credits."
+- **Free**: Fable isn't available.
+- The Claude Code doc for Pro, Max, and Ultra says "Max and Ultra plans also have a separate weekly limit for Fable." Read it as a Fable-specific weekly limit that is shown separately from your overall weekly limit.
 
-It's hard to say which description is more recent. **Check what's actually shown in Settings > Usage.** Also, to use Fable in Claude Code you need v2.1.170 or later for Fable 5 and v2.1.255 or later for Fable 5.1. (The Claude Code Model configuration doc says Fable 5.1 needs v2.1.257 or later. As of 2026-10-12 the two docs disagree, so if you don't see it, update to the latest version.)
+What's shown can differ by account, so **check Settings > Usage on your screen.** Also, to use Fable in Claude Code you need v2.1.170 or later for Fable 5 and v2.1.255 or later for Fable 5.1. (The Claude Code Model configuration doc says Fable 5.1 needs v2.1.257 or later. As of 2026-10-12 the two docs disagreed, so if you don't see it, update to the latest version.)
 
 ### If you've seen an item called "cloud session credits"
 
@@ -135,11 +138,11 @@ The official docs say cloud sessions "count toward plan usage with no separate V
 
 2. **Pick the plan that fits you**
 
-   Compare plans in the [quick reference](#quick-reference) below. A sensible order is to start with Free, look at Pro if you hit the limit often, and look at Max if that's still not enough. If several people will use it together, look at Team.
+   Compare plans in the [quick reference](#quick-reference) below. A sensible order is to start with Free, look at Pro if you hit the limit often, look at Max if that's still not enough, and look at Ultra if you run long tasks all day. If several people will use it together, look at Team.
 
 3. **Turn on extra usage (usage credits) (optional)**
 
-   Turn it on only if you want to keep working after you hit your limit. It's available for Pro, Max 5x, Max 20x (and Team and seat-based Enterprise).
+   Turn it on only if you want to keep working after you hit your limit. It's available for Pro, Max, Ultra (and Team and seat-based Enterprise).
 
    1. Go to Settings > Usage > Usage credits and click Enable.
    2. Register a payment method.
@@ -153,7 +156,7 @@ The official docs say cloud sessions "count toward plan usage with no separate V
    In Claude Code, set it up with the `/usage-credits` command.
 
    <Aside type="tip" title="When does it kick in?">
-   For Pro, it applies after you use up both the 5-hour and weekly limits. For Max, it applies after you use up the 5-hour, weekly, and Fable weekly limits. Research mode and Project content also use credits once you go past your limit.
+   For Pro, it applies after you use up both the 5-hour and weekly limits. For Max, it applies after you use up the 5-hour, weekly, and Fable weekly limits. For Ultra, it applies after the weekly and Fable weekly limits (verified Ultra accounts have no 5-hour limit). Research mode and Project content also use credits once you go past your limit.
    </Aside>
 
 4. **Know what to do when you hit a limit**
@@ -167,7 +170,7 @@ The official docs say cloud sessions "count toward plan usage with no separate V
 
    - Wait for the reset (check the next reset in Settings > Usage)
    - Keep going with extra usage (usage credits)
-   - Upgrade one tier: Pro → Max 5x → Max 20x
+   - Upgrade one tier: Pro → Max → Ultra
    - Buy API credits in the Console and use those
 
 5. **Build habits that save usage**
@@ -184,37 +187,38 @@ I plan to use Claude for [document summaries / writing / coding / my kind of wor
 
 ## Quick reference
 
-### Plan comparison (as of 2026-10-10, in US dollars; may differ by region)
+### Plan comparison (as of 2026-10-31, in US dollars; may differ by region)
 
 | Plan | Price and usage | Main included features | Claude Code and cloud sessions |
 | --- | --- | --- | --- |
 | **Free** | $0<br />Specific limit numbers not published | Chat on web, desktop, and mobile; web search; file creation and code execution; memory; Artifacts; Claude Design/Slides/Docs; up to 5 Projects. Only Sonnet and Haiku models (per the pricing page) | No Claude Code<br />Cloud sessions not applicable |
-| **Pro** | $17/month billed annually ($200 upfront), $20/month billed monthly<br />At least 5x Free per 5-hour session | Claude Code, unlimited Projects, more models such as Opus, Claude in Chrome, Microsoft 365 integration, task handoff and scheduling, usage credits available | Includes Claude Code<br />Cloud sessions available |
-| **Max** | From $100/month (monthly billing only)<br />5x Pro (Max 5x, $100/month) or 20x Pro (Max 20x, $200/month) per 5-hour session | Higher output limits, early access to new features, priority access at busy times, $100 to $200 per month in Claude Platform API credits | Includes Claude Code<br />Cloud sessions available |
+| **Pro** | $17/month billed annually ($200 upfront), $20/month billed monthly<br />More usage than Free (every 5 hours and every week, per the pricing page) | Claude Code, unlimited Projects, more models such as Opus, Claude in Chrome, Microsoft 365 integration, task handoff and scheduling, usage credits available | Includes Claude Code<br />Cloud sessions available |
+| **Max** | $100/month (monthly billing)<br />5x Pro for both the 5-hour limit and the weekly limit | Fable included (up to 50% of the weekly limit), $100/month in Claude Platform API credits, early access to new features, priority access at busy times | Includes Claude Code<br />Cloud sessions available |
+| **Ultra** | $200/month (monthly billing)<br />10x Pro weekly usage; no 5-hour limit for verified accounts | Everything in Max, plus Fable included (up to 50% of the weekly limit) and $200/month in Claude Platform API credits | Includes Claude Code<br />Cloud sessions available |
 | **Team** (2 to 150 people, minimum 2) | Standard seat: $20/month billed annually, $25/month billed monthly<br />Premium seat: $100/month billed annually, $125/month billed monthly<br />Per session, Standard is 1.25x Pro and Premium is 6.25x Pro (per-member limits) | Cowork, Projects, central billing, SSO, admin connector controls, no model training on content by default, monthly pooled API credits (up to $500/month) | Includes Claude Code<br />Cloud sessions available |
 | **Enterprise** | $20/seat/month billed annually (minimum 20 seats) + usage billed at API rates<br />No fixed multiplier (usage-based) | Spend limits, role-based access, SCIM, audit logs, Compliance API, custom data retention, IP allowlisting, HIPAA readiness | Claude Code depends on seat type (Premium or Chat + Claude Code seats)<br />Cloud sessions available on the same seat types |
 
 - Enterprise can be started self-serve or through sales. Usage-based Enterprise (including self-serve) has no per-seat usage limit and is billed at API rates. Older Enterprise has Chat + Claude Code seats and Premium seats.
-- The monthly API credits included with Max and Team **can't be used** as usage credits, in Claude Code, or in the Claude apps. See "How to get your monthly API credits" below for how to claim them.
+- The monthly API credits included with Max, Ultra, and Team **can't be used** as usage credits, in Claude Code, or in the Claude apps. See "How to get your monthly API credits" below for how to claim them.
 
-### How to get your monthly API credits (Max, Team, as of 2026-10-11)
+### How to get your monthly API credits (Max, Ultra, Team, as of 2026-10-31)
 
-Since 2026-10-07, Max and Team plans include monthly API credits. They don't arrive automatically; you have to **link a Claude Console organization to your plan** to receive them.
+Since 2026-10-07, Max and Team plans (and the new Ultra plan) include monthly API credits. They don't arrive automatically; you have to **link a Claude Console organization to your plan** to receive them.
 
-1. In claude.ai, go to Settings > Billing (Max) or Organization settings > Billing (Team).
+1. In claude.ai, go to Settings > Billing (Max or Ultra) or Organization settings > Billing (Team).
 2. In the API credits section, choose the Console organization that will receive the credits, agree to the terms, and link it. If you don't have a Console organization, you can create one first at platform.claude.com or during the linking process.
 3. The credits show up in the Console under Settings > Billing > Promotional credits, with the amount and expiration date.
 
 | Plan | Monthly credits |
 | --- | --- |
-| Max 5x | $100 |
-| Max 20x | $200 |
+| Max | $100 |
+| Ultra | $200 |
 | Team Standard seat | $20 per seat |
 | Team Premium seat | $100 per seat |
 
 - On Team, all seats' credits are pooled into one balance, capped at $500 per month.
-- Required permissions: for Max, the subscriber themselves; for Team, the Primary Owner or Owner; and in the Console organization, one of Owner, Admin, or Billing.
-- New subscribers can receive them after 7 days. Free, Pro, and Enterprise are not eligible.
+- Required permissions: for Max and Ultra, the subscriber themselves; for Team, the Primary Owner or Owner; and in the Console organization, one of Owner, Admin, or Billing.
+- New subscribers can receive them after 7 days. Free, Pro, and Enterprise are not eligible (official API credits doc: Max, Ultra, Team).
 - One plan can be linked to only one Console organization, and you can't change it yourself (contact support). Choose the organization where you plan to use the credits.
 - These credits can be used for the Claude API, Managed Agents, the Agent SDK, and the Playground, but not for Claude Code, extra usage in the apps, or AWS, Bedrock, Google Cloud, or Foundry. They refresh every billing cycle, and unused credits don't roll over. Credits don't change your Claude or Claude Code usage limits.
 - If you're eligible but don't see them in settings, contact support.
@@ -226,8 +230,8 @@ Since 2026-10-07, Max and Team plans include monthly API credits. They don't arr
 | --- | --- | --- | --- |
 | Session limit | Every 5 hours | Paid plans | Settings > Usage |
 | Weekly limit | Once a week (fixed time per account) | All models | Settings > Usage |
-| Fable-related limits | See "Fable model limits" above | Varies by plan and seat | What's actually shown on the Settings > Usage screen |
-| Extra usage (usage credits) | Not applicable (prepaid balance) | Pro, Max 5x/20x, Team, seat-based Enterprise | Settings > Usage; Claude Code `/usage-credits` |
+| Fable-related limits | See "Fable model limits" above | Included on Max, Ultra, and Premium seats (up to 50% of the weekly limit); usage credits otherwise | What's actually shown on the Settings > Usage screen |
+| Extra usage (usage credits) | Not applicable (prepaid balance) | Pro, Max, Ultra, Team, seat-based Enterprise | Settings > Usage; Claude Code `/usage-credits` |
 
 ### Claude Code commands
 
@@ -252,17 +256,17 @@ Since 2026-10-07, Max and Team plans include monthly API credits. They don't arr
 
 ### I try to pick a Fable model and it asks for credits
 
-- **Cause**: On Pro, Team Standard, and Enterprise Standard seats, Fable is described as not included in the plan limit and available only with usage credits (pay as you go).
-- **Fix**: Check your plan and seat type, and check what's actually shown in Settings > Usage. If you're using Claude Code, check the version too (v2.1.170 or later for Fable 5, v2.1.255 or later for Fable 5.1).
+- **Cause**: On Pro, Team Standard, and Enterprise Standard seats, Fable is described as not included in the plan limit and available only with usage credits (pay as you go). Max, Ultra, and Premium seats can also be asked for credits once they pass 50% of the weekly limit.
+- **Fix**: Check your plan and seat type (or consider Max or Ultra), and check what's actually shown in Settings > Usage. If you're using Claude Code, check the version too (v2.1.170 or later for Fable 5, v2.1.255 or later for Fable 5.1).
 
 ### I can't turn on extra usage in the app
 
 - **Cause**: If you subscribed through the mobile app, you can only activate and buy on the web.
 - **Fix**: Do it on the web in claude.ai under Settings > Usage.
 
-### I bought credits but the API credits included with Max aren't going down
+### I bought credits but the API credits included with Max or Ultra aren't going down
 
-- **Cause**: The monthly API credits included with a subscription (Max, Team) are separate from usage credits, and can't be used in Claude Code or the Claude apps. Usage credits are billed separately from your subscription.
+- **Cause**: The monthly API credits included with a subscription (Max, Ultra, Team) are separate from usage credits, and can't be used in Claude Code or the Claude apps. Usage credits are billed separately from your subscription.
 - **Fix**: Manage the two separately. Credits generally don't expire. However, in Japan they are described as expiring 6 months after purchase starting 2026-09-10.
 
 ### I'm worried my teammates' heavy use drained my limit
@@ -277,7 +281,7 @@ Since 2026-10-07, Max and Team plans include monthly API credits. They don't arr
 - **Lower the effort.** For simple tasks, consider lowering the effort.
 - **Parallel work uses more of your limit.** Running several cloud sessions at once or running routines often drains it faster.
 - **Set a cap on credits first.** When you turn on usage credits, set a monthly spending limit and usage alerts first for peace of mind.
-- **Recheck prices on the official pages.** The prices in this document are US prices as of 2026-10-10.
+- **Recheck prices on the official pages.** The prices in this document are US prices as of 2026-10-31.
 
 ## Next tutorials
 

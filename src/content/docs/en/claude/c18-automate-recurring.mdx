@@ -8,11 +8,13 @@ category: claude
 tools: ["Claude", "Claude Code", "GitHub"]
 duration: "40 min"
 prerequisites:
-  - "A paid Claude plan (scheduled tasks and routines are on Pro, Max, Team, and Enterprise)"
+  - "A paid Claude plan (scheduled tasks and routines are on Pro, Max, Ultra, Team, and Enterprise)"
   - "It helps if you've read C13 (cloud session and routine basics)"
   - "One recurring task you want to automate (one you've done by hand at least once)"
-lastVerified: 2026-10-26
+lastVerified: 2026-10-31
 sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
   - title: "Automate work with routines"
     url: "https://code.claude.com/docs/en/routines"
   - title: "Run prompts on a schedule"
@@ -105,7 +107,7 @@ App scheduled tasks save a prompt in Claude (Cowork) and run it on a set schedul
 
 3. **Set it up for your chosen method**
 
-   **A. Claude app scheduled tasks.** According to the official help, in the new Claude experience (rolling out to Pro and Max), you can just say the task and its schedule in any conversation, like "Every Monday at 9am, summarize last week's team channel messages." After answering Claude's follow-up questions, check the proposed task name, schedule, and instructions and click **Schedule**. In the Cowork screen, go to **Scheduled** > **New task** in the left sidebar, choose Create with Claude or Set up manually, and set the name, prompt, approval mode, frequency (hourly, daily, weekdays, weekly, manual), model, and folder. You can see upcoming and past runs under Scheduled in the sidebar. Screens may differ depending on your account and app version.
+   **A. Claude app scheduled tasks.** According to the official help, in the new Claude experience (rolling out to Pro, Max, and Ultra), you can just say the task and its schedule in any conversation, like "Every Monday at 9am, summarize last week's team channel messages." After answering Claude's follow-up questions, check the proposed task name, schedule, and instructions and click **Schedule**. In the Cowork screen, go to **Scheduled** > **New task** in the left sidebar, choose Create with Claude or Set up manually, and set the name, prompt, approval mode, frequency (hourly, daily, weekdays, weekly, manual), model, and folder. You can see upcoming and past runs under Scheduled in the sidebar. Screens may differ depending on your account and app version.
 
    **B. Routines.** How to create them is in [Creating routines in C13](/en/claude/c13-cloud-sessions/). In short, create them from New task (New routine for some accounts) at claude.ai/code/routines, from Routines (choose Cloud) in the desktop app, or with `/schedule` in the CLI. All three are saved to the same account, so something created in one place shows up in the others. For example, say it like this.
 

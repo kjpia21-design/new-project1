@@ -8,11 +8,13 @@ category: claude
 tools: ["Claude", "Claude Code"]
 duration: "30 min"
 prerequisites:
-  - "A claude.ai account (Free/Pro/Max/Team/Enterprise)"
+  - "A claude.ai account (Free/Pro/Max/Ultra/Team/Enterprise)"
   - "Code execution and file creation turned on in Settings"
   - "(If you follow the Claude Code example) A terminal with Claude Code installed and a git repository"
-lastVerified: 2026-10-26
+lastVerified: 2026-10-31
 sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
   - title: "Use skills in Claude"
     url: "https://support.claude.com/en/articles/12512180-use-skills-in-claude"
   - title: "How to create custom skills"
@@ -34,7 +36,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 
 <Summary>
 - A skill is a **folder of instructions, scripts, and resources**. Claude loads it dynamically when a specialized task calls for it.
-- Skills are available on Free/Pro/Max/Team/Enterprise, and code execution must be turned on. They also work in Claude Code and the API.
+- Skills are available on Free/Pro/Max/Ultra/Team/Enterprise, and code execution must be turned on. They also work in Claude Code and the API.
 - For the built-in Excel, Word, PowerPoint, and PDF skills, Claude picks the right one automatically when your request fits.
 - The core file of a skill is a markdown file with frontmatter (`name`, `description`). The file name differs between docs: `skill.md` in some and `SKILL.md` in others. **The Claude Code docs use `SKILL.md`.**
 - Install skills only from sources you trust, and read the bundled files (especially scripts) before you enable a skill.
@@ -193,7 +195,7 @@ The two docs spell it differently. This tutorial presents each doc's example as 
 
 | Item | Details |
 | --- | --- |
-| Availability | Free/Pro/Max/Team/Enterprise (code execution required) |
+| Availability | Free/Pro/Max/Ultra/Team/Enterprise (code execution required) |
 | Where to turn on | Settings > Capabilities > Code execution and file creation (new layout: Create and edit files), then Customize > Skills |
 | Required structure | Folder name = skill name, with `skill.md` inside (Help Center spelling) |
 | Required frontmatter | `name` (64 characters or fewer), `description` (200 characters or fewer) |
