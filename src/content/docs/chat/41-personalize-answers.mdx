@@ -1,0 +1,198 @@
+---
+title: "Make AI Answer Your Way: Custom Instructions and Saved Preferences in Claude, ChatGPT and Gemini"
+description: "Where to set standing instructions so you stop repeating yourself, how Claude, ChatGPT and Gemini differ, what not to put in them, and how to test and turn them off"
+sidebar:
+  label: "12. Personalize AI answers"
+level: beginner
+category: chat
+status: published
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "25 min"
+prerequisites:
+  - "An account with at least one of Claude, ChatGPT, or Gemini (a personal account; Gemini's feature is not available on work, school or supervised accounts)"
+lastVerified: 2026-11-01
+sources:
+  - title: "Understanding Claude's personalization features (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/10185728-understanding-claude-s-personalization-features"
+  - title: "Use Claude's chat search and memory to build on previous context (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context"
+  - title: "What are skills? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12512176-what-are-skills"
+  - title: "Personalize ChatGPT (learn.chatgpt.com)"
+    url: "https://learn.chatgpt.com/docs/personalize"
+  - title: "Memories (learn.chatgpt.com)"
+    url: "https://learn.chatgpt.com/docs/customization/memories"
+  - title: "Get personalization in Gemini Apps (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/15637730"
+  - title: "Manage what Gemini remembers about you and customize responses (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/16598625"
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+<Summary>
+- If you keep typing "answer in short sentences" or "I'm a beginner," put it in **standing instructions** once. All three services have a place for them.
+- **Claude**: Settings > Your Claude > Instructions. **ChatGPT**: Settings > Personalization (custom instructions, base style and tone). **Gemini**: Settings & help > Personal Intelligence > Instructions for Gemini. Menu names change, so check your own screen. (as of 2026-11-01)
+- Write **preferences about how to answer**, not secrets. Don't put ID numbers, account numbers, health details or company confidential information in them.
+- Test with one ordinary question, and know where the off switch is. A specific request in the current chat can still override a standing preference.
+- The saved-facts "memory" features differ by service and plan. Claude's is covered in [C9](/claude/c09-memory-settings/); here we focus on instructions.
+</Summary>
+
+## What you'll be able to do
+
+- Say which of three kinds of setting (standing instructions, per-project instructions, memory) fits what you want.
+- Find the instructions screen in Claude, ChatGPT and Gemini.
+- Write a short, effective set of instructions and test it.
+- Turn instructions off or edit them when they stop helping, and avoid putting sensitive information in them.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Standing instructions** | A note you write once that the AI applies to your conversations from then on. Claude calls it "Instructions," ChatGPT "custom instructions," Gemini "Instructions for Gemini." |
+| **Project instructions** | Instructions that apply only inside one project (Claude). See [C5](/claude/c05-projects/). |
+| **Memory** | Facts or preferences the AI picks up from your conversations and reuses. It is separate from instructions, and it works differently in each service. |
+| **Tone / personality** | ChatGPT on the web lets you choose a personality under "Base style and tone." The official page says this changes style and tone, not capabilities. |
+
+### What each service's official page says
+
+| | Claude | ChatGPT | Gemini |
+| --- | --- | --- | --- |
+| Standing instructions | Settings > Your Claude > Instructions (older layout: Settings > Account > Instructions for Claude). Applied to all your conversations | Custom instructions, managed from Settings (the exact field label was not confirmed; see note below) | Settings & help > Personal Intelligence > Instructions for Gemini. Applied to every chat |
+| Tone setting | The official personalization page names skills for adjusting tone and format (below) | Settings > Personalization > Base style and tone (web) | Not a separate setting. The official page lists tone and style requests as example instructions |
+| Per-project | Project instructions | Not covered by the pages we read | Not covered by the pages we read |
+| Memory | Settings > Your Claude (see C9) | Settings > Personalization | Settings > Personal Intelligence > Memory (Google AI plan, 18+, US only for now) |
+| Who can use it | Accounts per the Claude page; project instructions availability is described inconsistently (see note) | Not confirmed | Instructions: "All users." Remembering facts: see conditions below |
+
+<Aside type="note" title="What we could and couldn't confirm (2026-11-01)">
+- **Claude**: The personalization page lists Instructions, Project instructions and Skills. It says Free users can create up to five projects, but another line says project instructions are "paid plans only." These two lines don't agree, so check what your plan allows. We did not find a separate current "styles" help page, so this tutorial does not describe a styles feature. Skills (which can adjust tone and format) are covered in [C8](/claude/c08-skills/).
+- **ChatGPT**: We used learn.chatgpt.com. Its page says custom instructions are for preferences you want followed across chats, and shows the web path Settings > Personalization > Base style and tone. The exact label of the custom instructions field, which plans have it, and the chat-level limits were not confirmed (help.openai.com is not reachable from our tools). Some of that page is written for Codex, so we only used the parts about ChatGPT.
+- **Gemini**: Anyone can add instructions. Having Gemini remember specific facts needs: over 18, a Google AI plan, a personal Google Account (not work, school or supervised), Memory turned on, and currently the US only, on the mobile app, gemini.google.com, Gemini in Chrome and Gemini on smartwatches.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  'I decided what I keep repeating (length, tone, my level, format)',
+  'I wrote 3 to 5 short instructions',
+  'I saved them in the service I use most',
+  'I tested with an ordinary question and one that should break the rule',
+  'I know where to turn them off or edit them',
+  'I checked that nothing sensitive is in them',
+]} />
+
+<Steps>
+
+1. **List what you keep repeating**
+
+   Look at your last few chats. What did you keep adding? Examples: "keep it short," "I'm new to this," "give the conclusion first," "use plain words." Those are good candidates. One-off requests are not.
+
+2. **Draft short instructions**
+
+   Claude's guide to writing prompts suggests saying what to do instead of what not to do, and giving the reason ([C4](/claude/c04-prompting/)). The same habit makes instructions work better. This wording is our example, not official wording.
+
+   <PromptBox>
+   I'm a beginner who is not familiar with technical terms. Explain in plain words and explain any new term the first time it appears. Give the conclusion in the first sentence, then the reasons. Keep answers under 10 lines unless I ask for more. If you are not sure about something, say so instead of guessing.
+   </PromptBox>
+
+3. **Save them in your service**
+
+   <FlowSteps title="Claude" steps={[
+     { where: 'Your initials (lower left)', action: 'Settings, then Your Claude', result: 'Instructions field' },
+     { where: 'Instructions', action: 'Paste your text and save', result: 'Applied to all your conversations' },
+   ]} officialUrl="https://support.claude.com/en/articles/10185728-understanding-claude-s-personalization-features" />
+
+   <FlowSteps title="ChatGPT (web)" steps={[
+     { where: 'Settings', action: 'Open Personalization', result: 'Base style and tone, and personalization controls' },
+     { where: 'Custom instructions', action: 'Add your text (look for it in Personalization; the label was not confirmed)', result: 'Followed across chats' },
+   ]} officialUrl="https://learn.chatgpt.com/docs/personalize" />
+
+   <FlowSteps title="Gemini" steps={[
+     { where: 'gemini.google.com: Menu > Settings & help', action: 'Open Personal Intelligence > Instructions for Gemini', result: 'List of instructions' },
+     { where: 'Instructions for Gemini', action: 'Tap Add +, enter text, tap Submit', result: 'Applied to every chat' },
+   ]} officialUrl="https://support.google.com/gemini/answer/16598625" />
+
+   On the Gemini mobile app, the official path starts from Menu, then your profile picture or initial, then Personal Intelligence, then Instructions for Gemini.
+
+4. **Test it**
+
+   Open a new chat and ask an ordinary question. Then ask one that should break the rule, to see that you can still override it.
+
+   <PromptBox>
+   Explain what a "mutual fund" is.
+   </PromptBox>
+
+   <PromptBox>
+   This time, ignore my usual short format. Give me a detailed explanation with an example, about one page long.
+   </PromptBox>
+
+5. **Edit or turn off when answers feel off**
+
+   If answers are stuck in a style you no longer want, edit or delete the instruction. Gemini's page describes editing or deleting each instruction (More > Edit or Delete) and an on/off switch for Instructions for Gemini. In Claude, you edit the Instructions text. For ChatGPT, the official page says you control which personalization features are enabled in settings.
+
+6. **Ask the AI to remember something in chat (optional)**
+
+   Gemini's page says you can say things like "Remember that I am vegetarian" when memory is available to you, and correct it the same way ("Actually, my daughter is 8, not 7"). Claude also accepts "remember this" requests (see [C9](/claude/c09-memory-settings/)).
+
+   <PromptBox>
+   Remember that I prefer answers in a table when I compare options.
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+| What you want | Use |
+| --- | --- |
+| Same style in every chat | Standing instructions |
+| Style or rules for one piece of work only | A line in the chat itself, or project instructions in Claude |
+| Remember facts about me | Memory (differs by service, plan and country) |
+| Change the voice (formal, friendly) | ChatGPT: Base style and tone. Gemini and Claude: say it in your instructions |
+| Stop all personalization | Turn off instructions and memory in the service's settings |
+| One private chat | See [Privacy settings](/basics/12-privacy-settings/) for temporary or incognito chats |
+
+## Where people get stuck
+
+### I can't find the setting
+
+- **Cause**: Menu names and layouts change, and some are only on web or only on certain accounts. Claude's own page mentions an older settings layout.
+- **Fix**: Search the Settings screen for "Personalization," "Instructions" or "Personal Intelligence," and compare with the official page linked in the sources.
+
+### The AI ignores my instruction
+
+- **Cause**: Gemini's page warns that instructions to forget or avoid topics don't always work perfectly. A request in the current chat can also point the other way.
+- **Fix**: Make the instruction short and specific, repeat the key point in the chat when it matters, and delete chats you want gone from your activity.
+
+### Answers got worse after I added a long list
+
+- **Cause**: Too many rules can conflict with each other. This is our experience-based advice, not an official figure.
+- **Fix**: Keep 3 to 5 lines and remove one at a time to find the one causing trouble.
+
+### Gemini doesn't remember facts about me
+
+- **Cause**: Remembering facts has conditions (Google AI plan, over 18, personal account, Memory on, US only for now).
+- **Fix**: Use Instructions for Gemini, which anyone can add.
+
+### I'm using a work or school account
+
+- **Cause**: Gemini's personalization is not available on work, school or supervised accounts. Your organization may also have its own rules.
+- **Fix**: Follow your organization's guidance. See [Using AI with personal and company information safely](/basics/05-privacy-safety/).
+
+## Practical tips
+
+- **Keep sensitive details out.** Instructions and memory are stored by the service and applied to many chats. Don't write ID numbers, bank details, passwords, health details or confidential company information in them. See [basics 5](/basics/05-privacy-safety/) and [basics 12](/basics/12-privacy-settings/).
+- **Describe how, not who.** "Explain simply and give the conclusion first" is safer than a long personal biography.
+- **Review every few weeks.** Preferences change; stale instructions quietly steer answers.
+- **Different tools, different places.** Setting one service doesn't change the others. If you use two, paste the same text into both.
+- **Facts still need checking.** Personalized answers can sound more confident for you. See [Can you trust AI answers?](/basics/04-fact-checking/).
+
+## What to read next
+
+- [C9. Memory and personal settings](/claude/c09-memory-settings/) — Claude's memory, incognito chats and import
+- [Compare the three assistants](/chat/05-compare-assistants/) — How Claude, ChatGPT and Gemini differ
+- [12. Privacy settings](/basics/12-privacy-settings/) — Stop your chats being used for training
+- [15. Follow-up questions](/basics/15-follow-up-questions/) — Fix an answer in the chat without changing settings

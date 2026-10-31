@@ -1,0 +1,11 @@
+---
+// 게시된(status: published) 튜토리얼 수를 숫자로만 출력한다. section이 없으면 전체.
+import { getLang } from '../lib/i18n';
+import { getTutorials, type Category } from '../lib/tutorials';
+interface Props { section?: Category }
+const { section } = Astro.props;
+const lang = getLang(Astro);
+const list = await getTutorials({ lang, category: section });
+const count = list.filter((e) => e.data.status === 'published').length;
+---
+{count}

@@ -1,0 +1,128 @@
+---
+title: AI Guide for Sales and Customer Support
+description: Customer emails, meeting notes, proposals, messenger summaries, and routine follow-ups. How sales and customer support staff can cut repetitive work with AI, and the order to learn it.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+## Who this is for
+
+This page suits people who spend the day talking and writing to customers, such as sales reps, account managers, and customer support staff.
+
+- Replying to emails and inquiries takes up much of the day.
+- Notes from customer meetings and calls need to be written up afterward.
+- Proposals and follow-ups are always similar, yet each one takes time.
+
+## Top 5 ways AI helps
+
+### 1. Summarize email threads and draft replies
+
+**What it can do**: Summarize a long thread and draft a reply in the tone you need.
+**Suggested tools**: See [Organizing Your Inbox with AI: Gemini in Gmail, Copilot in Outlook, and Claude Connectors](/automation/38-email-ai/).
+
+<PromptBox label="Reply draft">
+Below is an email thread with a customer. Do the following.
+1) Summarize the thread in 3 lines.
+2) List what the customer is asking for.
+3) Write a reply draft: polite but concise, within 5 sentences.
+Don't promise dates or prices that aren't in the thread. Mark them as [to be confirmed].
+
+[Paste thread]
+</PromptBox>
+
+### 2. Organize meeting notes and pull out to-dos
+
+**What it can do**: Extract decisions, owners, and deadlines into a table.
+**Suggested tools**: See [Summarizing meeting notes and long documents, and pulling out action items](/chat/02-summarize-documents/) and [Comparing Online Meeting AI](/automation/37-meeting-ai/).
+
+<PromptBox label="Organize meeting notes">
+Below are my notes from a customer meeting. Organize them in this format.
+1) The meeting's purpose in one line
+2) What the customer asked for
+3) Action items table: task, owner, deadline
+If an owner or deadline isn't in the notes, write "TBD" and don't make one up.
+
+[Paste notes]
+</PromptBox>
+
+### 3. Draft proposals and presentations
+
+**What it can do**: Set up an outline and write a draft, then turn it into slides.
+**Suggested tools**: See [Drafting and Polishing Reports and Proposals](/chat/04-write-reports/) and [Make Presentations with AI](/media/25-ai-presentations/).
+
+<PromptBox label="Outline a proposal">
+I'm going to write a proposal on [offering] for [customer type].
+Purpose: [what I want the customer to decide]
+First, suggest a table of contents and a key sentence for each section. Once I confirm, we'll draft section by section. Don't include any numbers that aren't in the materials I give you.
+Reference materials: [paste materials]
+</PromptBox>
+
+### 4. Catch up on team messages
+
+**What it can do**: Summarize conversations and search for answers inside your work messenger.
+**Suggested tools**: See [Adding AI to Your Work Messenger: Slack AI and Claude Tag](/automation/41-slack-ai/).
+
+<PromptBox label="Catch up on a thread">
+Below is a long team conversation. Summarize it in 5 lines, then list the decisions and the open questions separately.
+
+[Paste conversation]
+</PromptBox>
+
+### 5. Automate routine follow-ups
+
+**What it can do**: Connect email, sheets, and notifications so repeated steps run on their own.
+**Suggested tools**: See [Automating Email → Sheet → Notification with Zapier/Make](/automation/18-zapier-make/) and [Connecting Gmail and Calendar to AI for a Morning Briefing](/automation/17-morning-briefing/).
+
+<PromptBox label="Morning to-dos">
+Look at today's schedule and the emails that have come in since yesterday, and organize the following.
+1) The 3 things I must do today
+2) Emails that need a reply, and their priority
+Only read my email. Don't send or delete anything.
+</PromptBox>
+
+## A day in the life
+
+<FlowSteps title="A day in sales and support" steps={[
+  { where: 'Right after arriving', action: 'Check today\'s schedule and emails to reply to with a morning briefing', result: 'A day with priorities set' },
+  { where: 'Morning', action: 'Summarize email threads and draft replies, then edit them yourself', result: 'Replies ready to send' },
+  { where: 'After lunch', action: 'Turn customer meeting notes into an action-item table', result: 'Follow-ups with owners' },
+  { where: 'Afternoon', action: 'Draft a proposal and check numbers and facts yourself', result: 'A proposal ready for review' },
+  { where: 'Before leaving', action: 'Catch up on team messages and check for customer information in what you pasted', result: 'Ready for tomorrow' },
+]} />
+
+## Recommended learning path
+
+1. [Your first 30 minutes with AI](/basics/01-first-30-minutes/): Get a feel for talking to AI.
+2. [Asking good questions: the basics](/basics/03-asking-well/): How you ask shapes the result.
+3. [Using AI while protecting personal and company information](/basics/05-privacy-safety/): Set your standards before you paste in customer data.
+4. [Writing practical prompts](/chat/01-prompt-basics/): Structure your instructions.
+5. [Summarize meeting notes and long documents and pull out to-dos](/chat/02-summarize-documents/): Start with summarizing.
+6. [Organizing your inbox with AI](/automation/38-email-ai/): Handle email threads and replies.
+7. [Write and polish report and proposal drafts](/chat/04-write-reports/): Connect proposal writing into one flow.
+8. [Can you trust AI answers?](/basics/04-fact-checking/): Build a verification habit before you send.
+9. [Connect Gmail and Calendar to AI for a morning briefing](/automation/17-morning-briefing/): Hand off repetitive work.
+10. [Automating Email → Sheet → Notification with Zapier/Make](/automation/18-zapier-make/): Automate routine steps.
+
+### More
+
+- [Make presentations with AI](/media/25-ai-presentations/): Draft slides and polish them yourself.
+- [Adding AI to your work messenger](/automation/41-slack-ai/): Summaries and search inside Slack.
+- [AI translation in practice](/media/26-ai-translation/): Translate documents while protecting confidential information.
+
+## What to watch out for
+
+<Aside type="caution" title="Before you paste in customer information">
+- **Customer and company information**: Don't casually paste in customer lists, contracts, or personal details. Check your company's AI usage policy first, and mask names and contact details. See [Using AI while protecting personal and company information](/basics/05-privacy-safety/).
+- **Promises and numbers**: Check prices, dates, and terms in any draft against the original before sending. See [Can you trust AI answers?](/basics/04-fact-checking/).
+- **Send and delete permissions**: Grant read access first, and decide carefully about send and delete permissions. See [How to use personal AI agents safely](/agents/05-agent-safety/).
+- **Recordings**: Check consent and company rules before using meeting recording and summary features. See [Comparing Online Meeting AI](/automation/37-meeting-ai/).
+</Aside>
+
+## Next steps
+
+- If you also handle promotion and content, see the [Guide for marketers and content managers](/roles/marketer/).
+- If you run a small business yourself, the [Guide for solo business owners and small shops](/roles/solo-business/) fits too.
+- Find more prompts in the [Ready-to-use prompt collection](/start/prompts/).
+- You can see all the roles in [AI Guides by Role](/roles/).

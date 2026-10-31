@@ -1,0 +1,200 @@
+---
+title: "Get Better Answers with Follow-Up Questions"
+description: "Ten follow-up patterns for beginners: shorter, with an example, as a table, show your evidence, argue the other side. We mark which ideas come from official guides and which are this site's advice."
+sidebar:
+  label: "15. Follow-up questions"
+level: beginner
+category: basics
+status: published
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "20 min"
+prerequisites: ["You have asked an AI service a first question (tutorial 2)"]
+lastVerified: 2026-11-01
+sources:
+  - title: "Get started with Claude (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/8114491-get-started-with-claude"
+  - title: "Prompting best practices (Claude's official prompting guide)"
+    url: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+  - title: "Reduce hallucinations (Anthropic official docs)"
+    url: "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations"
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- The first answer is a draft. **Keep talking in the same chat** and change one thing at a time.
+- Claude's help page says to "refine your prompts or ask follow-up questions." Its prompting guide supports several patterns below: being specific about format, giving examples, explaining the reason, and asking for support for claims.
+- The patterns that are **our advice rather than an official statement**: asking for the opposite view, asking for a rank order, and asking what it is unsure about. They are marked in the table.
+- A follow-up can't make an answer true. For numbers, dates, health, money and law, check the original ([tutorial 4](/basics/04-fact-checking/)).
+- The examples are written to fit Claude, ChatGPT and Gemini, but we only checked Claude's official guides for the underlying advice.
+</Summary>
+
+## What you'll be able to do
+
+- Pick a follow-up that fits what is wrong with an answer (too long, too vague, wrong format, unsupported).
+- Use ten ready-made follow-up sentences.
+- Tell which advice comes from an official guide and which is this site's own.
+- Know when to start a new chat instead.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Follow-up** | A message you send after the first answer to adjust it. The AI sees the earlier conversation, so you don't need to start over. |
+| **One change at a time** | Ask for one adjustment per message so you can tell what helped. This is our advice. |
+| **Grounding** | Making an answer rest on given material or quoted support. The official hallucination page describes asking for quotes and support for each claim. |
+
+### Official advice vs. this site's advice
+
+| Pattern | Basis |
+| --- | --- |
+| Refine and ask follow-ups | Official: Claude's getting-started help ("Iterate: Don't hesitate to refine your prompts or ask follow-up questions") |
+| Be specific about format and length | Official: the prompting guide ("Be specific about the output format and constraints you want") |
+| Give an example of what you want | Official: the guide says examples are one of the most reliable ways to steer format, tone and structure |
+| Explain the reason | Official: the guide says giving context or motivation helps Claude deliver more targeted responses |
+| Say what to do, not what not to do | Official: the guide's formatting section |
+| Allow "I don't know"; ask for support | Official: the hallucination page |
+| Ask again and compare answers | Official: the hallucination page (run the same prompt several times and compare) |
+| Ask it to double-check its last answer | Official-adjacent: the guide suggests asking Claude to self-check; the hallucination page suggests follow-up prompts to verify. How reliable this is for you is not guaranteed |
+| Ask for the opposite view, rank order, "what are you unsure about" | This site's advice, not found as such in the official pages we read |
+
+<Aside type="note" title="Scope">
+We read Claude's official guides. We did not cross-check ChatGPT's or Gemini's guides for these patterns. Chat, retry and edit buttons also differ by service, and we did not verify them here, so this tutorial uses only plain text follow-ups that work anywhere.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  'I named what was wrong with the answer before replying',
+  'I changed one thing per follow-up',
+  'I tried at least three of the ten patterns',
+  'I asked for support on one factual claim and checked it',
+  'I know when to start a new chat',
+]} />
+
+<Steps>
+
+1. **Name what is wrong**
+
+   Too long? Too general? Wrong tone? The follow-up should answer that. "Make it better" gives the AI little to go on.
+
+2. **Shorter, or longer**
+
+   State the length as a number (our advice; the guide asks for specific constraints).
+
+   <PromptBox>
+   Shorten that to 5 lines. Keep the conclusion and the one most important reason.
+   </PromptBox>
+
+3. **Give an example**
+
+   Examples are one of the most reliable ways to steer format and tone, according to the official guide.
+
+   <PromptBox>
+   Add one concrete example from everyday life for the second point, in two sentences.
+   </PromptBox>
+
+4. **Change the format**
+
+   <PromptBox>
+   Put the options in a table with these columns: option, cost, pros, cons. Then add one line saying which fits a beginner.
+   </PromptBox>
+
+5. **Explain the reason you want a change**
+
+   The guide says giving the reason helps. For example, "I'll read this aloud" tells the AI why lists won't work.
+
+   <PromptBox>
+   Rewrite it in flowing sentences with no lists. I'm going to read it aloud at a meeting.
+   </PromptBox>
+
+6. **Ask for support**
+
+   The hallucination page describes asking for the sentence or quote that backs each claim, and dropping claims that have no support. Then open the original yourself.
+
+   <PromptBox>
+   For each claim in your answer, show the source or the sentence that supports it. If you can't find support, remove the claim and tell me which ones you removed.
+   </PromptBox>
+
+7. **Allow "I don't know"**
+
+   <PromptBox>
+   Which parts of your answer are you least sure about? Mark them, and don't guess where you don't know.
+   </PromptBox>
+
+8. **Ask for the other side (our advice)**
+
+   AI answers can lean toward agreeing with you. Asking directly for counterarguments gets you more to think about. This is our advice, not an official claim.
+
+   <PromptBox>
+   Now argue against your own recommendation. Give the three strongest reasons it might be wrong for someone in my situation.
+   </PromptBox>
+
+9. **Ask it to check its own answer, then compare**
+
+   The guides suggest self-checking and comparing repeated answers. Neither is a guarantee; they are ways to spot trouble.
+
+   <PromptBox>
+   Check your last answer once more. Tell me if any number, name or date might be wrong.
+   </PromptBox>
+
+10. **Know when to start a new chat**
+
+    If the conversation has drifted, restate the important conditions in a short summary, or start a new chat with that summary (see [tutorial 3](/basics/03-asking-well/)).
+
+    <PromptBox>
+    Let me restart. Here is what matters: [goal], [audience], [length], [conditions]. Please redo the answer from scratch using only this.
+    </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+| The answer is... | Follow-up |
+| --- | --- |
+| Too long | "Shorten to 5 lines, keep the conclusion" |
+| Too vague | "Add one concrete example" |
+| Hard to compare | "Put it in a table with these columns" |
+| Unsupported | "Show the source for each claim; remove those without support" |
+| Too agreeable | "Argue against your own recommendation" (our advice) |
+| Possibly wrong | "Which parts are you unsure about?" then check the original |
+| Off track | Restate the key conditions or start a new chat |
+
+## Where people get stuck
+
+### The AI changes its answer when I push back
+
+- **Cause**: It may apologize and change even when the first answer was fine. A changed answer does not show which one is right.
+- **Fix**: Ask for support and check official sources ([tutorial 4](/basics/04-fact-checking/)).
+
+### Each follow-up fixes one thing and breaks another
+
+- **Cause**: Too many instructions in one chat, or the earlier conditions got diluted.
+- **Fix**: Restate the full list of conditions in one message.
+
+### The answer keeps coming back the same
+
+- **Cause**: Your follow-up repeats the same request.
+- **Fix**: Say what specifically is missing, or add new information such as who it is for.
+
+### I asked for sources and got links that don't open
+
+- **Cause**: An AI can produce plausible but unreal references.
+- **Fix**: Search by title yourself. If you can't find it, don't rely on that claim.
+
+## Practical tips
+
+- **Save the follow-ups that worked** in a notes app and reuse them.
+- **Don't paste personal information** into follow-ups either ([tutorial 5](/basics/05-privacy-safety/)).
+- **Standing preferences belong in settings.** If you always ask for "shorter," set it once ([Make AI answer your way](/chat/41-personalize-answers/)).
+- **Stop when it is good enough.** More rounds don't always improve things.
+
+## What to read next
+
+- [3. Asking well](/basics/03-asking-well/) — Purpose, situation, shape, reason
+- [4. Can you trust AI answers?](/basics/04-fact-checking/) — Checking what matters
+- [C4. How to write good prompts](/claude/c04-prompting/) — The official guide in detail
+- [Make AI answer your way](/chat/41-personalize-answers/) — Save repeated preferences

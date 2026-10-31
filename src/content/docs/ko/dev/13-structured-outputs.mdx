@@ -1,0 +1,310 @@
+---
+title: "구조화 출력으로 Claude에게 정확한 JSON 받기"
+description: "output_config.format에 JSON 스키마(또는 Pydantic 모델)를 넣어 Claude의 답이 항상 파싱되게 하고, 도구 입력에는 strict tool use를 더해요. 공식 문서 기준 스키마 제한, 거부(refusal)·max_tokens 경우, 비용까지 정리해요"
+sidebar:
+  label: "13. 구조화 출력(정확한 JSON)"
+level: advanced
+category: dev
+tools: ["Claude API", "Structured outputs", "Strict tool use", "Python", "anthropic SDK", "Pydantic"]
+duration: "45분"
+prerequisites:
+  - "C16. Claude API 시작하기를 끝낸 상태 (API 키, 환경 변수 설정)"
+  - "Python 3.10 이상, pip install anthropic pydantic"
+  - "tool_use 루프(개발 1)에 대한 감"
+lastVerified: 2026-11-01
+sources:
+  - title: "Structured outputs"
+    url: "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+  - title: "Strict tool use"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- **구조화 출력(Structured outputs)**은 Claude의 답이 내가 준 JSON 스키마를 따르게 하는 기능이에요(제약된 디코딩 방식). 텍스트 블록의 답이 올바른 타입과 필수 필드를 갖춘 파싱 가능한 JSON이라서, 스키마 오류 때문에 "파싱 실패 → 재시도"를 돌릴 필요가 없어요.
+- 기능은 두 가지이고 따로 또는 함께 써요. **JSON 출력**(`output_config.format`, Claude가 *무엇을 말하는지*)과 **strict tool use**(도구 정의에 `strict: true`, Claude가 *내 함수를 어떻게 부르는지*)예요.
+- Python에서는 Pydantic 모델을 `client.messages.parse(..., output_format=Model)`에 넘기고 `response.parsed_output`을 읽어요. 아니면 `output_config={"format": {"type": "json_schema", "schema": ...}}`에 원본 스키마를 보내고 텍스트를 `json.loads`로 읽어요.
+- 절대 보장은 아니에요. **거부**(`stop_reason: "refusal"`)나 **중간 끊김**(`stop_reason: "max_tokens"`)이면 출력이 스키마와 안 맞을 수 있고, `enum` 값의 대소문자도 보장되지 않아요.
+- 알아둘 제한: 재귀 스키마 불가, API 자체는 `minimum`·`maxLength` 같은 제약 불가, 객체에 `additionalProperties: false` 필요, 인용(citations)·프리필(prefill)과 함께 쓸 수 없어요.
+- 공식 페이지 두 곳을 2026-11-01에 읽었고 Pydantic·문법 검사는 로컬에서 했지만 **실제 API 호출은 하지 못했어요**(테스트 환경에 `anthropic` 패키지와 API 키가 없었어요). 코드는 "문서대로"이지 끝까지 실행해 본 것이 아니에요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 자유 형식 이메일을 요청 한 번으로 검증된 Python 객체(또는 평범한 `dict`)로 바꾸기
+- Pydantic 모델과 원본 JSON 스키마, JSON 출력과 strict tool use 중 알맞은 것 고르기
+- API가 받아들이는 스키마를 쓰고, 흔한 "400"과 "too complex" 문제 풀기
+- 출력이 올바르지 않은 경우(거부, `max_tokens`) 처리하기
+
+## 먼저 알아둘 개념
+
+[개발 1](/ko/dev/01-tool-use/)에서 JSON 스키마로 도구를 정의하고 도구 루프를 짰어요. 구조화 출력은 같은 스키마 언어를 쓰지만 목적이 달라요. 돌아오는 데이터의 모양이 내 코드가 기대하는 모양인지 확실히 하는 거예요. [개발 12](/ko/dev/12-web-search-fetch-tools/)의 웹 검색은 서버 도구를 실행하는 기능이고, 여기서 다루는 것은 Claude 자신의 출력을 제약하는 기능이라 성격이 달라요.
+
+| 용어 | 뜻 |
+| --- | --- |
+| **JSON 출력** | `output_config.format`에 `type: "json_schema"`를 지정해요. 응답의 텍스트 콘텐츠 블록에 스키마와 맞는 JSON이 담겨 와요. |
+| **Strict tool use** | 도구 정의의 최상위(`name`, `description`, `input_schema` 옆)에 `"strict": true`를 넣어요. 그러면 `tool_use` 블록의 `input`이 `input_schema`를 따르고 도구 `name`도 항상 유효해요. |
+| **제약된 디코딩** | API가 스키마를 문법으로 컴파일해서 Claude가 낼 수 있는 토큰을 제한해요. |
+| **SDK 도우미** | Python의 Pydantic + `client.messages.parse()`, TypeScript의 Zod + `zodOutputFormat()`. 스키마를 만들고, 보내고, 검증하고, 타입이 있는 객체를 돌려줘요. |
+
+고르는 기준은 이래요. **최종 답을 데이터로** 받고 싶으면(항목 추출, 분류, 보고서) JSON 출력이에요. Claude가 **내 함수를 부르는데** 인자 타입이 정확해야 하면 strict tool use예요. 한 요청에 둘 다 쓸 수도 있어요.
+
+### 제공 범위 (공식 문서, 2026-11-01 기준)
+
+- Structured outputs 페이지는 이 기능이 모든 모델, Messages API, 나열된 모든 클라우드 플랫폼(Claude API, Amazon Bedrock, Microsoft Foundry 등)에서 쓸 수 있고 HIPAA 준비 대상이라고 설명해요.
+- 같은 페이지의 제공 범위 절에 따르면 Managed Agents에서는 **쓸 수 없어요**.
+- 데이터 보존 제로(ZDR): 가능하지만 Covered Models는 제외돼요. 프롬프트와 출력은 저장되지 않고, JSON 스키마만 마지막 사용 후 최대 24시간 캐시돼요.
+- 문서 예시는 `claude-opus-5-5`를 쓰고, 이 튜토리얼은 지원 모델 목록에 있는 `claude-sonnet-5-5`를 써요. 모델 이름은 바뀌니 복사하기 전에 페이지를 확인하세요.
+
+<Aside type="caution" title="스키마에 민감한 정보를 넣지 마세요">
+문서에 따르면 컴파일된 스키마는 메시지 내용과 따로 캐시돼요. HIPAA 대상이라면 **속성 이름, `enum` 값, `const` 값, `pattern` 정규식에 PHI를 넣으면 안 돼요**. 개인정보는 메시지에만 넣으세요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  'ANTHROPIC_API_KEY를 설정하고 anthropic, pydantic을 설치했어요',
+  'Pydantic 모델과 messages.parse()로 티켓을 추출했어요',
+  '같은 스키마를 원본 JSON 스키마로 보내고 텍스트를 파싱했어요',
+  '출력을 믿기 전에 stop_reason을 확인해요',
+  '지원하지 않는 스키마 기능이 무엇인지 알아요',
+  '도구에 strict: true를 언제 붙일지 알아요',
+]} />
+
+<Steps>
+
+1. **준비하기**
+
+   ```bash
+   mkdir structured-lab && cd structured-lab
+   python3 -m venv .venv && source .venv/bin/activate
+   pip install anthropic pydantic
+   ```
+
+   `ANTHROPIC_API_KEY`는 C16처럼 설정하세요. 상황은 이래요. 작은 가게가 고객 문의 메일을 받고, 메일마다 분류, 우선순위, 한 줄 요약, "사람이 봐야 하는지" 표시가 있는 티켓으로 바꾸고 싶어요.
+
+2. **Pydantic 모델 쓰기 (Python 권장 방법)**
+
+   공식 문서대로 Pydantic 모델을 `client.messages.parse()`의 `output_format`으로 넘겨요. SDK가 모델의 스키마를 변환해 `output_config.format`으로 보내고, 응답을 검증해서 파싱된 객체를 `parsed_output`에 돌려줘요.
+
+   ```python
+   from typing import Literal
+
+   import anthropic
+   from pydantic import BaseModel
+
+
+   class Ticket(BaseModel):
+       category: Literal["billing", "bug", "question", "other"]
+       priority: Literal["low", "normal", "urgent"]
+       summary: str
+       needs_human: bool
+
+
+   EMAIL = (
+       "Hi, I was charged twice for my March invoice and I need this fixed today "
+       "because our accountant closes the books tomorrow. - Dana"
+   )
+
+   client = anthropic.Anthropic()
+
+   response = client.messages.parse(
+       model="claude-sonnet-5-5",
+       max_tokens=1024,
+       messages=[{
+           "role": "user",
+           "content": f"Turn this support email into a ticket:\n\n{EMAIL}",
+       }],
+       output_format=Ticket,
+   )
+
+   if response.stop_reason in ("refusal", "max_tokens"):
+       raise RuntimeError(f"No usable output: {response.stop_reason}")
+
+   print(response.parsed_output)
+   ```
+
+   **실행한 것:** 이 파일은 `python -m py_compile`을 통과했고, 손으로 쓴 샘플(`category="billing"`, `priority="urgent"` 등)을 `Ticket` 모델로 로컬에서 검증했어요. **실행하지 못한 것:** API 호출 자체예요. `parse(..., output_format=...)`와 `parsed_output`은 공식 Python 예제를 따랐어요. 실제 호출 결과는 `category='billing' priority='urgent' ...` 같은 `Ticket` 객체일 텐데, Claude가 실제로 어떤 값을 줄지는 확인하지 못했어요.
+
+   <PromptBox>
+   Claude API로 들어오는 이메일을 구조화된 기록으로 바꾸고 싶어요. 샘플 메일 세 개와 필요한 항목은 이래요: [여기에 붙여넣기]. 단순한 타입(문자열, 불리언, 정수, 배열, 문자열 enum)만 써서 JSON 스키마를 제안해 주세요. 모든 필드를 required로 하고, 실제 메일에서 빠질 수 있는 필드가 무엇인지, "모름"을 어떻게 표현할지 설명해 주세요.
+   </PromptBox>
+
+3. **원본 JSON 스키마로 보내기**
+
+   스키마가 파일, OpenAPI 명세, 코드에서 오는 경우에 써요. 요청은 같고 스키마가 `output_config.format` 안에 들어가요. 아래 구조는 문서의 원본 스키마 예제를 따랐고, JSON은 첫 번째 텍스트 블록에서 읽어요.
+
+   ```python
+   import json
+
+   SCHEMA = {
+       "type": "object",
+       "properties": {
+           "category": {"type": "string", "enum": ["billing", "bug", "question", "other"]},
+           "priority": {"type": "string", "enum": ["low", "normal", "urgent"]},
+           "summary": {"type": "string"},
+           "needs_human": {"type": "boolean"},
+       },
+       "required": ["category", "priority", "summary", "needs_human"],
+       "additionalProperties": False,
+   }
+
+   response = client.messages.create(
+       model="claude-sonnet-5-5",
+       max_tokens=1024,
+       messages=[{
+           "role": "user",
+           "content": f"Turn this support email into a ticket:\n\n{EMAIL}",
+       }],
+       output_config={"format": {"type": "json_schema", "schema": SCHEMA}},
+   )
+
+   if response.stop_reason in ("refusal", "max_tokens"):
+       raise RuntimeError(f"No usable output: {response.stop_reason}")
+
+   text = next(b.text for b in response.content if b.type == "text")
+   ticket = json.loads(text)
+   print(ticket["priority"])
+   ```
+
+   문서에 따르면 SDK 도우미는 지원하지 않는 제약(예: `minimum`)을 필드 설명으로 옮겨 보내고, 내 코드에서는 원래 스키마로 계속 검증해 줘요. 원본 스키마는 쓴 그대로 전송되니 아래 지원 범위 안에서 쓰세요. 원본 스키마에도 그런 동작을 원하면 문서가 언급하는 `anthropic` 패키지의 `transform_schema()` 도우미를 쓸 수 있어요.
+
+4. **왜 멈췄는지 확인하기**
+
+   구조화 출력은 "대부분의 경우" 스키마 준수를 보장하고, 문서는 예외를 이렇게 적어요.
+
+   - **거부(refusal)**: `stop_reason: "refusal"`, HTTP 200이고, 생성된 토큰은 과금되며, 거부 메시지가 우선하므로 출력이 스키마와 안 맞을 수 있어요. 문서는 필드에 모델의 생각이나 단계별 추론을 요구하면 `reasoning_extraction` 거부가 날 수 있으니 짧은 설명을 요청하라고 덧붙여요.
+   - **토큰 한도**: `stop_reason: "max_tokens"`면 JSON이 잘렸을 수 있어요. `max_tokens`를 올려 다시 시도하세요.
+   - **enum 대소문자**: `enum`·`const` 문자열의 대소문자는 보장되지 않아요(문서 예: `"Conversation topic 3"` 대신 `"Conversation Topic 3"`이 올 수 있음). 대소문자를 무시하고 비교하고, 대소문자만 다른 값은 피하세요.
+
+   위 두 예제가 결과를 쓰기 전에 `stop_reason`을 확인하는 이유예요.
+
+5. **API가 받아들이는 스키마 쓰기**
+
+   빠른 참조표를 보세요. 가장 도움이 되는 습관 두 가지는 모든 객체에 `additionalProperties: false`를 붙이는 것, 가능하면 필드를 `required`로 하는 것이에요. 선택 필드는 복잡도(7단계)를 늘리고 출력 순서도 바꿔요. 스키마에 적은 순서와 상관없이 **필수 속성이 먼저, 선택 속성이 그다음**에 나와요.
+
+   공식 페이지는 "값이 없을 수 있는" 경우의 정해진 패턴을 제시하지 않아요. 유니온 타입(`anyOf`, 또는 `["string", "null"]` 같은 타입 배열)은 지원되지만 빠른 참조표의 유니온 16개 한도에 포함되니 아껴 쓰세요.
+
+6. **Claude가 내 함수를 부를 때는 strict tool use**
+
+   개발 1의 도구 루프가 있다면 도구 정의에 `"strict": true`를 더하세요. 문서 빠른 시작의 도구 모양은 이래요.
+
+   ```python
+   tools = [{
+       "name": "get_weather",
+       "description": "Get the current weather in a given location",
+       "strict": True,
+       "input_schema": {
+           "type": "object",
+           "properties": {
+               "location": {"type": "string", "description": "The city and state, e.g. San Francisco, CA"},
+               "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+           },
+           "required": ["location"],
+           "additionalProperties": False,
+       },
+   }]
+   ```
+
+   문서의 예에서 `strict: true`면 `passengers`는 항상 정수 `2`이고 `"two"`나 `"2"`가 오지 않아요. 여기서도 `additionalProperties: false`를 유지하세요. 컴퓨터 사용·브라우저 사용 도구 세트(`computer_toolset_20260801`, `browser_toolset_20260801`)는 `strict: true`를 받지 않고, 설정하면 요청이 거부돼요.
+
+   한 요청에 두 기능을 함께 쓰는 것은 지원돼요. JSON 출력은 Claude의 최종 답 형식을, strict tool use는 도구 매개변수를 검증해요. 함께 쓰는 요청은 직접 시험하지 못했어요.
+
+7. **제한과 첫 요청 지연 살피기**
+
+   - **새 스키마의 첫 요청은 느려요**(문법을 컴파일해요). 컴파일된 문법은 마지막 사용 후 24시간 캐시돼요. 스키마 구조(도구와 함께 쓰면 도구 집합)를 바꾸면 캐시가 무효화되고, `name`이나 `description`만 바꾸면 무효화되지 않아요.
+   - **추가 토큰**: Claude가 형식을 설명하는 시스템 프롬프트를 추가로 받아서 입력 토큰이 조금 늘어요. `output_config.format`을 바꾸면 그 대화의 [프롬프트 캐시](/ko/dev/02-cost-optimization/)가 무효화돼요.
+   - **복잡도 오류**: "Schema is too complex for compilation" 400은 스키마들의 합이 너무 크다는 뜻이에요. 문서가 권하는 순서는 핵심 도구만 strict로, 선택 매개변수 줄이기, 중첩 평탄화, 요청 나누기예요.
+
+</Steps>
+
+## 빠른 참조표
+
+### 스키마 지원 범위 (공식 문서, 2026-11-01 기준)
+
+| 지원 | 미지원 |
+| --- | --- |
+| object, array, string, integer, number, boolean, null | 재귀 스키마 |
+| `enum`(문자열·숫자·불리언·null만), `const` | `enum` 안의 복합 타입, 외부 `$ref` |
+| `anyOf`, `allOf` (`allOf`와 `$ref` 조합은 불가) | 숫자 제약(`minimum`, `maximum`, `multipleOf`) |
+| `$ref`, `$def`, `definitions` (내부만) | 문자열 제약(`minLength`, `maxLength`) |
+| `default`, `required`, `additionalProperties: false` | `false` 이외의 `additionalProperties` |
+| 문자열 형식: `date-time`, `time`, `date`, `duration`, `email`, `hostname`, `uri`, `ipv4`, `ipv6`, `uuid` | `minItems` 0·1 이외의 배열 제약 |
+| 배열 `minItems` 0 또는 1 | 정규식 역참조, lookahead/lookbehind, `\b`, 큰 범위의 `{n,m}` |
+
+지원하지 않는 기능을 쓰면 상세 내용이 담긴 400이 와요. 단순한 정규식 `pattern`(전체·부분 일치, `*`, `+`, `?`, 단순한 `{n,m}`, `[]`, `.`, `\d`, `\w`, `\s`, 그룹)은 지원돼요.
+
+### 요청당 한도 (공식 문서)
+
+| 한도 | 값 |
+| --- | --- |
+| 요청당 strict 도구 수 | 20 |
+| 선택(optional) 매개변수, 모든 strict 도구 스키마와 JSON 출력 스키마 합계 | 24 |
+| 유니온 타입 매개변수(`anyOf` 또는 `["string", "null"]` 같은 타입 배열) | 16 |
+| 컴파일 제한 시간 | 180초 |
+
+### 함께 쓸 수 있는 것 / 없는 것
+
+| 함께 쓸 수 있음 | 함께 쓸 수 없음 |
+| --- | --- |
+| 배치 처리(페이지 설명: 50% 할인) | **인용(citations)**: `output_config.format`과 함께 켜면 400 |
+| 토큰 세기, 스트리밍 | **메시지 프리필(prefilling)** |
+| 같은 요청의 strict tool use | |
+
+문법은 Claude의 직접 출력에만 적용되고 도구 호출, 도구 결과, 생각(thinking) 블록에는 적용되지 않아서, Claude는 구조화된 답 전에 자유롭게 생각할 수 있어요. 값마다 인용이 붙은 구조화 데이터는 Citations 페이지의 "Get structured data with citations" 절을, 인용 일반은 [개발 9](/ko/dev/09-rag-files-citations/)를 보세요.
+
+## 자주 막히는 지점
+
+### 지원하지 않는 스키마 기능이라는 400 오류
+
+- **원인**: 원본 스키마에 `minimum`, `maxLength`, 재귀 정의, `false`가 아닌 `additionalProperties`를 넣었어요.
+- **해결**: 제약을 빼고 내 코드에서 검증하거나, 제약을 설명으로 옮기고 검증까지 해 주는 SDK 도우미를 쓰세요.
+
+### JSON이 스키마와 안 맞아요
+
+- **원인**: `stop_reason`이 `refusal`이거나 `max_tokens`였어요.
+- **해결**: `stop_reason`을 먼저 확인하고, `max_tokens`를 올리고, 필드 안에 추론을 요구하는 요청은 바꿔 쓰세요.
+
+### 출력의 속성 순서가 달라요
+
+- **원인**: 필수 속성이 먼저 나오고 선택 속성이 뒤에 나와요.
+- **해결**: 모두 필수로 하거나, 파싱할 때 순서에 기대지 마세요.
+
+### "Schema is too complex for compilation"
+
+- **원인**: 선택·유니온 매개변수가 너무 많거나, 중첩이 깊거나, strict 도구가 너무 많아요.
+- **해결**: 7단계의 줄이는 순서를 따르세요.
+
+### enum 값의 대소문자가 달라요
+
+- **원인**: `enum`·`const` 문자열의 대소문자는 보장되지 않아요.
+- **해결**: 대소문자 무시 비교를 하고, `"urgent"`처럼 소문자 한 단어 값을 쓰세요.
+
+### 인용을 켰더니 요청이 실패해요
+
+- **원인**: 인용과 `output_config.format`은 함께 쓸 수 없어요.
+- **해결**: 둘 중 하나만 쓰거나, 문서의 "구조화 데이터 + 인용" 방식을 따르세요.
+
+## 실전 팁
+
+- 작은 스키마(필수 필드 3~6개)로 시작해서 키우세요. 평평한 쪽이 중첩보다 가벼워요.
+- 답이 정해진 집합이면(분류, 우선순위, 예/아니오/모름) `enum`을 쓰세요. 답을 일관되게 하는 가장 강한 방법이에요.
+- 뜻이 분명하지 않은 필드에는 설명(description)을 달아 주세요. 모델이 의미를 알 수 있는 곳이에요.
+- 구조화 출력은 *모양*을 고정할 뿐 *사실*을 보장하지 않아요. 형식이 맞는 티켓도 분류가 틀릴 수 있어요. 실제 예시로 점검하세요([개발 8](/ko/dev/08-evals/) 참고).
+- `stop_reason`을 기록해서 거부나 끊김이 얼마나 자주 나는지 보세요.
+- 스키마 이름·enum·패턴에 비밀 정보나 개인정보를 넣지 마세요.
+
+## 다음에 볼 튜토리얼
+
+- [1. 도구 사용(Tool use)으로 업무 봇 만들기](/ko/dev/01-tool-use/) — strict tool use가 붙는 도구 루프
+- [12. 웹 검색·웹 가져오기 도구](/ko/dev/12-web-search-fetch-tools/) — 서버 도구와 인용
+- [9. 사내 문서 Q&A](/ko/dev/09-rag-files-citations/) — 내 문서에 인용 붙이기
+- [8. 평가(evals)](/ko/dev/08-evals/) — 추출한 항목이 맞는지 측정하기
+- [2. 프롬프트 캐싱·배치·effort로 API 비용 줄이기](/ko/dev/02-cost-optimization/) — 캐싱과 배치
+- [C16. API 시작하기](/ko/claude/c16-api/)
+- [개발자 가이드](/ko/roles/developer/)

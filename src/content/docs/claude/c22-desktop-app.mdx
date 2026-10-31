@@ -1,0 +1,211 @@
+---
+title: "Get more out of the Claude desktop app: Quick Entry, voice, files, extensions, and links"
+description: "A reference on what the Claude desktop app (macOS and Windows) adds over the web, based on official help articles: install and requirements, Quick Entry on Mac, voice input, attaching files, desktop extensions, and claude:// links"
+sidebar:
+  label: "C22. Using the desktop app well"
+level: practical
+category: claude
+tools: ["Claude Desktop"]
+duration: "25 min"
+prerequisites:
+  - "A Claude account (chat in the desktop app works on every plan)"
+  - "A Mac or a Windows PC (Linux is in beta, see the notes below)"
+  - "It helps if you've read C3 (Getting started with the Claude app)"
+lastVerified: 2026-11-01
+sources:
+  - title: "Install Claude Desktop"
+    url: "https://support.claude.com/en/articles/10065433-install-claude-desktop"
+  - title: "Use quick entry with Claude Desktop on Mac"
+    url: "https://support.claude.com/en/articles/12626668-use-quick-entry-with-claude-desktop-on-mac"
+  - title: "Use voice mode"
+    url: "https://support.claude.com/en/articles/11101966-use-voice-mode"
+  - title: "Upload files to Claude"
+    url: "https://support.claude.com/en/articles/8241126-upload-files-to-claude"
+  - title: "Getting Started with Local MCP Servers on Claude Desktop"
+    url: "https://support.claude.com/en/articles/10949351-getting-started-with-local-mcp-servers-on-claude-desktop"
+  - title: "Open Claude Desktop with a link"
+    url: "https://support.claude.com/en/articles/14729294-open-claude-desktop-with-a-link"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- The desktop app runs **chat on every plan** (Free included). **Claude Code and Cowork need a paid plan**. It supports macOS 13 or later and Windows 10 or later; Linux is in beta (as of 2026-11-01).
+- **Quick Entry** is for Mac only. Double-tap the **Option** key from any app to type a message, attach a screenshot, or share an app window, without opening the main window. Windows doesn't have it, according to the official FAQ.
+- **Voice**: on the desktop, voice mode is the sound-wave button in the chat box (a beta on all plans). On Mac, Quick Entry also has a separate Caps Lock dictation shortcut.
+- **Files**: use the "+" button, drag and drop, or paste. Chats accept up to 20 files at 500 MB each.
+- **Desktop extensions** connect local files and apps, and **`claude://` links** open the app straight to a new chat, Code, or Cowork session.
+</Summary>
+
+## What you'll be able to do
+
+- Decide whether installing the desktop app is worth it for you, and install it.
+- On a Mac, open Claude from any app with Quick Entry and send screenshots and windows.
+- Use voice and file attachments in the desktop app.
+- Know where to find desktop extensions and what `claude://` links can do.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Claude Desktop** | The Claude app you install on your computer. It's separate from the website, but you sign in with the same account. |
+| **Quick Entry** | A Mac feature that opens a small input box over any app with a shortcut. Claude Desktop must be running, but it can be in the background. |
+| **Voice mode** | Spoken conversations with Claude. It's a beta feature on mobile, desktop, and the web. |
+| **Dictation** | Turning your speech into text in the input box, as opposed to voice mode where Claude also speaks back. |
+| **Desktop extension** | A one-click installable package (a local MCP server) that connects Claude to local files and apps on your computer. |
+| **Deep link** | A `claude://` address that opens Claude Desktop at a specific place. |
+
+### What the desktop app adds (official help, as of 2026-11-01)
+
+| Feature | Details |
+| --- | --- |
+| Plans | Chat: all plans. Claude Code and Claude Cowork: paid plans (Pro, Max, Ultra, Team, Enterprise) |
+| Systems | macOS 13 (Ventura) or higher, Windows 10 or higher, Linux (beta) on Ubuntu 22.04 LTS+ or Debian 12+ |
+| Quick Entry | Mac only (macOS 12 or later; voice dictation needs macOS 14 or later) |
+| Extensions | Settings > Desktop app > Manage next to Extensions (older layout: Settings > Extensions) |
+| Computer use, dictation | Not available on the Linux beta |
+
+This tutorial covers only what the official help articles above confirm. For Cowork and computer use, see [C19. Getting started with Cowork](/claude/c19-cowork/) and [C11. Claude in Chrome and computer use](/claude/c11-chrome-computer-use/). For the app comparison and installation basics, see [C3. Getting started with the Claude app](/claude/c03-getting-started/).
+
+<Aside type="note" title="Not confirmed in the official help">
+We could not find an official list of keyboard shortcuts for the main desktop window, a Windows equivalent of Quick Entry, or an article describing automatic updates on Mac and Windows. Those aren't covered here. The Settings layout has also changed: the help articles give both the new path (Settings > Desktop app) and an older layout (Settings > System, under This computer). If your screen differs, check the official help.
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I downloaded the app for my operating system and signed in',
+  '(Mac) I turned on the Quick Entry shortcut and tested it',
+  '(Mac) I granted the macOS permissions Quick Entry needs, only if I use that feature',
+  'I attached a file or a pasted image to a chat',
+  'I tried voice mode in the desktop app',
+  'I found where extensions are managed, and decided whether to install any',
+]} />
+
+<Steps>
+
+1. **Install and sign in**
+
+   Go to the Claude downloads page, download the macOS or Windows version, open the file to install, then launch Claude from the Applications folder (Mac) or the Start menu (Windows) and sign in. Chat works on all plans. Linux has separate steps (an apt repository or a .deb file) and extra requirements for Cowork; they're on the official install page.
+
+   <ScreenshotPlaceholder caption="Claude downloads page" officialUrl="https://support.claude.com/en/articles/10065433-install-claude-desktop" />
+
+2. **(Mac) Turn on Quick Entry**
+
+   When you first open the updated app, you'll see a prompt to enable Quick Entry shortcuts. Check **Turn on shortcut**, click **Continue**, and double-tap the **Option** key to test. Later you can manage it in **Settings > Desktop app** (older layout: **Settings > System**, under This computer).
+
+   <FlowSteps title="Using Quick Entry on Mac" officialUrl="https://support.claude.com/en/articles/12626668-use-quick-entry-with-claude-desktop-on-mac" steps={[
+     { where: 'Any app', action: 'Double-tap the Option key', result: 'A text box opens' },
+     { where: 'Text box', action: 'Type your message, or drag to take a screenshot, or click an app window', result: 'The screenshot or window content is attached' },
+     { where: 'Text box', action: 'Click the arrow or press Enter', result: 'A new chat starts in Claude' },
+   ]} />
+
+   Other details from the official article:
+
+   - The text box has a **New chat** option that shows your five most recent conversations.
+   - You can change the shortcut next to **Quick access shortcut**: Double-tap Option (default), Option + Space, or a custom shortcut.
+   - Screenshots and window sharing need the macOS **Screen recording** permission, Quick Entry needs **Accessibility**, and dictation needs **Speech recognition** (macOS 14 or later). You can review them in System Settings > Privacy & Security.
+   - Voice dictation is **off by default** because it takes over your Caps Lock key. Press Caps Lock once to start, again to stop, review the text, then click the arrow to send.
+
+   <Aside type="caution" title="Screenshots may contain private information">
+   A screenshot or shared window sends everything visible in it to Claude. Close or hide windows with passwords, banking, messages, or other people's personal information first. See [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/).
+   </Aside>
+
+3. **Attach files**
+
+   Click the "+" button at the lower left of the chat box and choose **Add files or photos**, or drag and drop files into the chat window. You can also paste images from the clipboard. The official file article lists supported documents (PDF, DOCX, CSV, TXT, HTML, ODT, RTF, EPUB, JSON, and XLSX, which needs code execution and file creation turned on) and images (JPEG, PNG, GIF, WebP). Chat limits are 500 MB per file and 20 files per chat; PDFs are limited to 1,000 pages. Files in a project's Files section are limited to 30 MB each. These details are as of 2026-11-01.
+
+   <PromptBox>
+   I attached a PDF. Summarize it in five bullet points, then list any dates, amounts, or deadlines in a table. If something is unclear in the file, say so instead of guessing.
+   </PromptBox>
+
+4. **Try voice mode**
+
+   In a new chat in the desktop app, click the **sound wave** symbol at the lower right of the chat window and start talking. Hands-free mode is the default, and push-to-talk is available for noisy places. Click **Stop** to leave voice mode. To change the voice, go to Settings > Capabilities and scroll to Voice settings (or Settings > General if Voice isn't there). The official page says voice conversations count toward your normal usage limits.
+
+5. **Look at desktop extensions**
+
+   In **Settings > Desktop app**, choose **Manage** next to **Extensions** (older layout: **Settings > Extensions**), click **Browse extensions**, and install an Anthropic-reviewed one if you need it. The official article says extensions can connect local files, calendars, email, and messaging apps, and that some need settings such as API keys. Install only what you need, and read what each extension can access before allowing it.
+
+6. **Use `claude://` links (optional)**
+
+   Claude Desktop responds to a `claude://` address. For example, `claude://claude.ai/new?q=Summarize%20this` opens a new chat with the prompt box prefilled so you can review and send it. There are also `claude://code/new` and `claude://cowork/new` links with optional `q`, `folder`, and `file` parameters. The official article says values must be URL-encoded, the prompt is truncated at roughly 14,000 characters, and any folder passed in a link is treated as untrusted, so the app always asks you to confirm it.
+
+</Steps>
+
+## Quick reference
+
+### Quick Entry on Mac
+
+| What you want | How |
+| --- | --- |
+| Open Quick Entry | Double-tap Option (default), or Option + Space or a custom shortcut |
+| Send a screenshot | Open Quick Entry, drag to select an area |
+| Share an app window | Open Quick Entry, click the window |
+| Dictate | Press Caps Lock (if enabled), press again to stop, click the arrow |
+| Turn it off | Settings > Desktop app: turn off the quick access shortcut, the voice shortcut, or both |
+
+### Deep link examples (from the official article)
+
+| Goal | Link |
+| --- | --- |
+| New chat with a prefilled prompt | `claude://claude.ai/new?q=Hello` |
+| New Code session | `claude://code/new` |
+| New Cowork session | `claude://cowork/new` |
+
+### Which app to use
+
+| You want to | Use |
+| --- | --- |
+| Ask a question quickly, from any app (Mac) | Desktop with Quick Entry |
+| Work on local files or computer use | Desktop, with [Cowork](/claude/c19-cowork/) or [computer use](/claude/c11-chrome-computer-use/) |
+| Chat without installing anything | The web, see [C3](/claude/c03-getting-started/) |
+
+## Common sticking points
+
+### Double-tapping Option does nothing
+
+- **Cause**: Quick Entry may be off, Claude Desktop may not be running, or you're not on a Mac. The FAQ says it's currently Mac-only and the app must be running (it can be in the background).
+- **Fix**: Open Claude Desktop, check **Settings > Desktop app**, and confirm the permissions in System Settings > Privacy & Security.
+
+### The shortcut conflicts with another app
+
+- **Cause**: Another app uses the same keys.
+- **Fix**: Change the **Quick access shortcut** to Option + Space or a custom shortcut.
+
+### Screenshots or window sharing don't work
+
+- **Cause**: The macOS Screen recording permission isn't granted.
+- **Fix**: Allow it in System Settings > Privacy & Security.
+
+### I can't find the Code tab or Cowork
+
+- **Cause**: They need a paid plan.
+- **Fix**: Check your plan in [C2. Plans and usage limits](/claude/c02-plans-limits/).
+
+### An uploaded file is rejected
+
+- **Cause**: The type or size isn't supported, or an XLSX file was uploaded without code execution and file creation turned on.
+- **Fix**: Check the supported types and limits above, and split large PDFs.
+
+## Practical tips
+
+- **Try the web first.** Install the desktop app when you want Quick Entry, local files, extensions, or Cowork. See [C3](/claude/c03-getting-started/).
+- **Check what you attach.** Screenshots and windows can show more than you meant to share.
+- **Install few extensions.** Each one can reach local data; review what it asks for.
+- **Keep the app updated.** Computer use and some features have required recent versions (see [C11](/claude/c11-chrome-computer-use/)).
+- **Set up personal preferences once.** Memory and instructions are in [C9](/claude/c09-memory-settings/).
+
+## What to read next
+
+- [C3. Getting started with the Claude app](/claude/c03-getting-started/) — The web, desktop, and mobile apps compared
+- [C19. Getting started with Cowork](/claude/c19-cowork/) — Hand off work on your computer's files
+- [C11. Claude in Chrome and computer use](/claude/c11-chrome-computer-use/) — Browser and computer use from the desktop app
+- [C9. Memory and personal settings](/claude/c09-memory-settings/) — Make Claude fit you
+- [An AI usage guide for office, planning, and admin roles](/roles/office/) — Daily workflows by job role

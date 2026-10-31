@@ -1,0 +1,257 @@
+---
+title: "Analyze CSV and Excel Data with Claude Code and Build a Report"
+description: "Hand a data file to Claude Code in plain words: it writes an analysis script, runs it, and produces charts and a summary report, with backups and checks so you can trust the numbers"
+sidebar:
+  label: "11. Analyzing data with Claude Code"
+level: practical
+category: coding
+tools: ["Claude Code"]
+duration: "45 min"
+prerequisites:
+  - "A paid Claude plan (Pro or higher) or a Console account"
+  - "Claude Code installed and logged in (see C12)"
+  - "A practice CSV or Excel file with made-up data (never real customer or payroll data)"
+lastVerified: 2026-10-31
+sources:
+  - title: "Best practices for Claude Code"
+    url: "https://code.claude.com/docs/en/best-practices"
+  - title: "Permission modes"
+    url: "https://code.claude.com/docs/en/permission-modes"
+  - title: "Checkpointing"
+    url: "https://code.claude.com/docs/en/checkpointing"
+  - title: "Run Claude Code programmatically (non-interactive mode)"
+    url: "https://code.claude.com/docs/en/headless"
+  - title: "Data usage"
+    url: "https://code.claude.com/docs/en/data-usage"
+  - title: "Common workflows"
+    url: "https://code.claude.com/docs/en/common-workflows"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- In a chat window, AI looks at your data once and answers ([Tutorial 3 in Chat](/chat/03-data-analysis/)). With Claude Code, the analysis becomes **a script file in your folder that you can run again next month**.
+- The flow is **copy the data → have it read and describe the file → agree on questions → it writes and runs a script → charts and a summary report are saved as new files → you check the numbers yourself**.
+- The official best practices say Claude works much better when it has **a check it can run** and when you **ask for evidence** (the command it ran and its output), not just "done" (checked 2026-10-31).
+- **The originals must stay untouched.** Commands that rename, move, or delete files aren't covered by `/rewind`, so back up the folder first ([Tutorial 8 in Coding](/coding/35-file-automation/) explains why).
+- We did not run this exercise in Claude Code for this page. The prompts and the sample file are examples made by this site, and what Claude produces on your computer will differ.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Ask Claude Code to **read a CSV and describe its structure** (columns, types, blanks, odd values) before any analysis.
+- Get a **reusable analysis script** that totals, groups, and compares your data, and a **chart image and a short report** saved as new files.
+- Check the results with **a cross-check you can run**, instead of trusting a confident summary.
+- Know when to use Claude Code and when a chat window or a spreadsheet's built-in AI is the better tool.
+
+## Concepts to know first
+
+| Term | What it means in this exercise |
+| --- | --- |
+| **Analysis script** | A small program file (for example, a Python file) that reads your data, calculates, and writes results. Claude writes it; you can run it again later. |
+| **Non-destructive analysis** | The script only **reads** the original file and writes results to **new files** such as `report.md` and `chart.png`. |
+| **Verification step** | A check that comes back pass or fail, such as "the group totals add up to the grand total". |
+| **Plan mode** | A mode where Claude investigates and proposes a plan without editing files. Switch with `Shift+Tab`. |
+| **Non-interactive mode (`claude -p`)** | Runs a single prompt and prints the answer, so you can use Claude Code inside a script. This tutorial mentions it only as an optional next step. |
+
+### Claude Code, chat, or spreadsheet AI?
+
+| Situation | A good fit |
+| --- | --- |
+| One file, a one-time question, you want to look at the answer right away | A chat AI with file upload ([Chat tutorial 3](/chat/03-data-analysis/)) |
+| Calculations inside a sheet you keep editing | The AI built into Excel or Google Sheets ([Tutorial 23](/automation/23-spreadsheet-ai/)) |
+| Many files in a folder, merging or renaming | [Coding tutorial 35](/coding/35-file-automation/) |
+| You want a **script and report you can rerun** on next month's file, kept next to the data | **Claude Code (this tutorial)** |
+
+<Aside type="note" title="What we couldn't confirm">
+The official Claude Code documentation we read doesn't say how Claude Code reads and writes Excel (.xlsx) files, and it doesn't list which analysis libraries are available. Claude decides the method and asks for approval before installing or running anything, so **results depend on your computer**. If an .xlsx file gives trouble, a safe workaround is to export the sheet as CSV from Excel and analyze that copy.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I copied the folder with the data to make a backup',
+  'I am working on a practice file with made-up data, not real personal or payroll data',
+  'I asked Claude to describe the file before any analysis',
+  'I wrote down the questions and what a correct answer would look like',
+  'I asked for the script and the results to be saved as new files, with the original untouched',
+  'I read the approval screen before allowing each command',
+  'I checked at least two numbers by hand in Excel or a calculator',
+  'I asked Claude for the command it ran and its output as evidence',
+]} />
+
+<Steps>
+
+1. **Back up and set up a practice folder**
+
+   Copy the whole folder that holds your data and paste the copy in another location (add `_backup` to the name). Then create a folder such as `analysis-practice` and **copy** one data file into it. For practice, use a small file you made up, for example a sales list with these columns:
+
+   ```csv
+   date,region,product,units,unit_price
+   2026-09-01,Seoul,Notebook,12,4500
+   2026-09-01,Busan,Pen,40,800
+   2026-09-02,Seoul,Pen,25,800
+   ```
+
+   Don't put real customer names, contact details, or payroll in the practice folder. According to the official data usage page (checked 2026-10-31), for Free, Pro, Max, and Ultra accounts the data-use setting for model improvement decides whether chats may be used for training and how long data is retained (5 years if allowed, 30 days if not), and the setting is at `claude.ai/settings/data-privacy-controls`. Team, Enterprise, and API accounts follow commercial terms. For the basics of sensitive data, see [Privacy and safety](/basics/05-privacy-safety/).
+
+2. **Start Claude Code in that folder in plan mode**
+
+   Open a terminal in the practice folder and run `claude`. Press `Shift+Tab` to switch to **plan mode**. According to the official permission modes docs (checked 2026-10-31), you can switch modes with `Shift+Tab` in the CLI, and plan mode investigates and proposes a plan without editing source until you approve. If you haven't used the terminal before, start with [Tutorial 6](/coding/06-claude-code-start/).
+
+   ```sh
+   cd ~/Desktop/analysis-practice
+   claude
+   ```
+
+3. **Have it describe the file first**
+
+   Don't ask for conclusions yet. Ask what is in the file. Odd values found here save you from wrong totals later.
+
+   <PromptBox>
+   Look at sales.csv in this folder and tell me: (1) the column names and what type of values each holds (2) how many rows there are (3) how many blank cells each column has (4) any values that look wrong, such as negative numbers, dates in different formats, or the same product spelled two ways. Don't change or create any files yet. If you would need to install a program to analyze this, tell me which one first.
+   </PromptBox>
+
+   If Claude asks to install a package (for example with `pip`), read the name on the approval screen. Installing adds a program to your computer, so allow it only if you understand what it is. If you don't, ask, "Explain what this command does."
+
+4. **Agree on the questions and the check**
+
+   Write 2 or 3 questions and how you will know the answer is right. Having Claude decide the check up front follows the official advice to give Claude something it can run that comes back pass or fail (checked 2026-10-31).
+
+   <PromptBox>
+   I want to answer these questions from sales.csv: (1) total sales (units x unit_price) per region and per product (2) which week had the highest sales (3) which three products grew the most from the first half to the second half of the data. Before writing any code, propose a short plan, and list two checks you will run on your own results, for example that the per-region totals add up to the grand total. Do not edit anything yet.
+   </PromptBox>
+
+   Read the plan. If something is wrong, say so in words, for example "weeks should start on Monday" or "ignore rows where units is 0".
+
+5. **Have it write and run the script, saving results as new files**
+
+   Press `Shift+Tab` to leave plan mode (or approve the plan when asked). Keep the default mode that asks before changes, so you see every file write and command.
+
+   <PromptBox>
+   Go ahead with the plan. Write the analysis as a script called analyze_sales.py that only reads sales.csv and never changes it. The script should save: (1) summary_by_region_product.csv (2) a bar chart of sales per region as sales_by_region.png (3) report.md with a short plain-language summary of the three answers and a list of the checks and their results. Run the script and then show me the exact command you ran and its output. If a check fails, stop and explain before fixing anything.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="The screen where Claude Code asks for approval to create a script file and run it" officialUrl="https://code.claude.com/docs/en/permission-modes" />
+
+   On the approval screen, look at three things: **(1) are the files being created inside your working folder, (2) is `sales.csv` only being read, not written, and (3) are there any `rm` or `mv` commands you didn't ask for**.
+
+6. **Check the results yourself**
+
+   Don't stop at "done". Open `report.md`, `summary_by_region_product.csv`, and `sales_by_region.png`. The official best practices note that "all tests pass" on its own tells you very little and that reading the command and its output is the useful evidence (checked 2026-10-31). Then do your own spot check:
+
+   - In Excel, filter one region and add up units x unit_price for a few rows by hand. Does it match the summary table?
+   - Does the number of rows Claude says it used match the row count from step 3?
+   - Does the chart's tallest bar match the biggest number in the summary table?
+
+   If anything differs, say exactly what you saw.
+
+   <PromptBox>
+   I added up the Seoul rows by hand and got 128,500, but your summary table says 131,000. Find the cause before changing anything. Show me the rows that went into the Seoul total and explain the difference. Then fix the script and rerun it, and show me the command and its output again.
+   </PromptBox>
+
+   <FlowSteps title="Order for a trustworthy analysis" officialUrl="https://code.claude.com/docs/en/best-practices" steps={[
+     { where: 'File Explorer / Finder', action: 'Copy the data folder as a backup and work on a copy', result: 'Your original data is safe' },
+     { where: 'Claude Code (plan mode)', action: 'Ask it to describe the file and propose a plan with two checks', result: 'Odd values and the method are visible before any code runs' },
+     { where: 'Claude Code', action: 'Ask for a script that only reads the original and saves results as new files', result: 'analyze_sales.py, a summary CSV, a chart, and report.md' },
+     { where: 'Approval screen', action: 'Read the file paths and commands, then allow', result: 'The script runs and prints its checks' },
+     { where: 'Excel / calculator', action: 'Recompute two numbers by hand and compare', result: 'You know the report is right, or you know what to ask next' },
+   ]} />
+
+7. **Make it reusable and keep it tidy**
+
+   When the results are right, ask for a short note so you can run it again next month:
+
+   <PromptBox>
+   Add a short README.md that explains how to run analyze_sales.py on a new sales.csv, which columns it expects, and what files it creates. Then list every file you created or changed in this folder, and tell me whether any original data file was modified.
+   </PromptBox>
+
+   If you reuse the same rules every time ("never modify the original data", "save results to the output folder"), put them in a guide note (CLAUDE.md), covered in [Tutorial 6](/coding/06-claude-code-start/) and [C14](/claude/c14-claude-code-features/).
+
+</Steps>
+
+## Using it safely
+
+| Habit | Why and how |
+| --- | --- |
+| **Back up before you start** | Files changed only by commands such as `rm` and `mv` aren't tracked by `/rewind`, according to the official checkpointing docs (checked 2026-10-31). Checkpoints also don't replace version control like Git. |
+| **Originals are read-only** | Say "never modify the original file" and check the approval screen for writes to it. |
+| **Practice data first** | Use made-up data until you trust the flow. Check your organization's rules before using internal data with an outside service. |
+| **Ask for evidence** | Ask for the command that was run and its output, not just a summary of success. |
+| **Verify by hand** | Recompute a few numbers yourself. A confident report can still contain a wrong number. |
+| **Be careful with auto-approval** | `acceptEdits` mode runs file edits and common file commands without asking. Use it only after a backup and after you trust the script. |
+
+## Quick reference
+
+### Request sentence patterns
+
+| Situation | Try saying this |
+| --- | --- |
+| Understand the file | "Describe the columns, types, blanks, and odd values in [file]. Don't change anything." |
+| Plan | "Propose a plan and two checks you'll run on your own results. Don't edit anything yet." |
+| Script and outputs | "Write [script name] that only reads [file] and saves [outputs] as new files. Run it and show me the command and output." |
+| Chart | "Make a [bar/line] chart of [what] and save it as [file name]. Label the axes and give it a title." |
+| Debugging a number | "My hand total is [x] but yours is [y]. Show the rows behind your number before fixing anything." |
+| Audit | "List every file you created or changed, and whether any original was modified." |
+
+### Frequently used keys and commands
+
+| Key / command | What it does |
+| --- | --- |
+| `Shift+Tab` | Change permission mode (including plan mode) |
+| `Esc` twice (empty input box), `/rewind` | Restore menu for changes made by Claude's editing tools |
+| `/clear` | Start a new conversation (files stay as they are) |
+
+### Optional: run it from a script
+
+Claude Code can run non-interactively with `-p`. The official docs show the form `claude -p "<prompt>"`, and say stdin and stdout work like any Unix tool (checked 2026-10-31). For example, a monthly job could pipe a small summary into a prompt. This is an advanced step: see the official non-interactive mode page first, and test on practice data. We did not run it for this page.
+
+## Common sticking points
+
+### The numbers don't match my spreadsheet
+
+- **Cause**: The script may treat blanks, text-formatted numbers, or duplicate rows differently from your sheet.
+- **Fix**: Ask for the rows behind the number and for the rules it used (for example, "how did you treat blank units?"). Fix the rule, rerun, and check again.
+
+### Claude wants to install a package
+
+- **Cause**: The analysis or chart needs a library that isn't on your computer.
+- **Fix**: Read the package name on the approval screen. Allow it only if you understand it and it is needed. If you're unsure, ask Claude to explain, or ask for a version that uses only what's already installed.
+
+### The .xlsx file doesn't open or sheets are missing
+
+- **Cause**: We couldn't confirm in the official docs how Claude Code handles Excel files.
+- **Fix**: Export the sheet you need as CSV and analyze the copy. Ask Claude to list the files it created so you know what is new.
+
+### Korean or other non-English text looks garbled in the CSV
+
+- **Cause**: It may be a file encoding issue. We couldn't confirm the cause in the official docs.
+- **Fix**: Describe exactly what looks wrong and ask Claude to save the output so it opens correctly in Excel. Keep the original unchanged.
+
+### The report keeps getting worse as we fix things
+
+- **Cause**: Failed attempts may have piled up in the conversation.
+- **Fix**: As the official best practices recommend, start fresh with `/clear` and describe the current state and the result you want more specifically.
+
+## Practical tips
+
+- **State the question before the method.** "Which region grew most?" works better than "analyze this".
+- **Keep results in an `output` folder** and say so in the prompt, so reruns don't mix with your data.
+- **One question at a time for new data.** Add the next question after the first check passes.
+- **Treat the report as a draft.** Claude can describe patterns, but deciding what they mean for your business is your job.
+- **If you're unsure about usage limits**, see [C2](/claude/c02-plans-limits/).
+
+## Next tutorials
+
+- [3. Handing Excel and CSV analysis to AI](/chat/03-data-analysis/) — the chat version, with file upload
+- [8. Automating repetitive file work](/coding/35-file-automation/) — merging files, renaming, backups and `/rewind` limits
+- [6. Getting started with Claude Code](/coding/06-claude-code-start/) — plan mode, approvals, CLAUDE.md
+- [10. Automate checks with hooks](/coding/37-claude-code-hooks/) — run a check automatically after Claude edits files
+- [23. Adding AI to Excel and Google Sheets](/automation/23-spreadsheet-ai/) — analysis inside the spreadsheet
+- [Office worker guide](/roles/office/) · [Marketer guide](/roles/marketer/) — how to use it by role
