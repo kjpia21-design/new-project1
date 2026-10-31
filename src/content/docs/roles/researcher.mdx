@@ -1,0 +1,128 @@
+---
+title: AI Guide for Researchers and Graduate Students
+description: Reading papers and documents, searching and checking sources, data analysis, drafting reports, and translation. How researchers and graduate students can use AI, and the order to learn it.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+## Who this is for
+
+This page suits researchers, graduate students, and anyone whose work is gathering information, reading it, and turning it into writing.
+
+- Reading piles of papers and documents takes more time than you can spare.
+- Searching for information and checking its sources is a job in itself.
+- Cleaning up data and drafting reports and translations keeps repeating.
+
+## Top 5 ways AI helps
+
+### 1. Read and summarize long documents
+
+**What it can do**: Summarize a long document and pull out key points, and then check them against the source.
+**Suggested tools**: A chat AI. See [Summarizing meeting notes and long documents, and pulling out action items](/chat/02-summarize-documents/). To ask questions about only your own materials, see [Studying and Organizing with Gemini Notebook (formerly NotebookLM)](/chat/21-notebooklm/).
+
+<PromptBox label="Summarize a document">
+Below is a document I'm reading. Organize it in this format.
+1) The document's purpose in one line
+2) Key points (numbered list)
+3) Terms I should look up
+4) Parts that are unclear or that I should check against the original
+Don't add anything that isn't in the document.
+
+[Paste document]
+</PromptBox>
+
+### 2. Search for information and check sources
+
+**What it can do**: Gather information with AI search and open the cited sources to check them yourself.
+**Suggested tools**: See [Using AI Search Well: Perplexity vs. ChatGPT Search vs. Claude Web Search](/chat/22-ai-search/) and [Research: web search and deep investigation](/claude/c10-research/).
+
+<PromptBox label="Search with sources">
+I want to find out about [topic].
+1) Give me an overview in 5 lines.
+2) Attach a source link to each claim.
+3) Separate what is well established from what is uncertain.
+I will open the links and check them myself.
+</PromptBox>
+
+### 3. Explore and analyze data
+
+**What it can do**: Upload a table to check blanks, duplicates, and odd values, then summarize it.
+**Suggested tools**: A chat AI that can analyze files. See [Handing Excel and CSV Data Analysis to AI](/chat/03-data-analysis/). For spreadsheets, there is also [Adding AI to Excel and Google Sheets](/automation/23-spreadsheet-ai/).
+
+<PromptBox label="Explore the data">
+The attached table is data about [what the data is].
+1) First check the column layout, blank cells, duplicates, and odd values.
+2) Summarize the totals and changes in a table.
+3) Tell me 3 notable points worth checking.
+Write down how you calculated things so I can verify them.
+</PromptBox>
+
+### 4. Draft reports and papers
+
+**What it can do**: Set up an outline, write a draft for each section, and adjust the tone for the reader.
+**Suggested tools**: A chat AI. Follow [Drafting and Polishing Reports and Proposals](/chat/04-write-reports/) for the full flow.
+
+<PromptBox label="Outline a report">
+I'm going to write a report on [topic] for [audience].
+Purpose: [share results / make a proposal]
+First, suggest a table of contents and a key sentence for each section. Once I confirm, we'll draft section by section. Don't include any numbers that aren't in the materials I give you.
+Reference materials: [paste materials]
+</PromptBox>
+
+### 5. Translate documents
+
+**What it can do**: Translate documents and review the result.
+**Suggested tools**: See [AI Translation in Practice: Translate Work Documents with DeepL, Papago, and Claude](/media/26-ai-translation/).
+
+<PromptBox label="Translate and review">
+Translate the text below into [language]. Keep names and technical terms as they are, and list any sentences you were unsure about at the end so I can check them.
+
+[Paste text]
+</PromptBox>
+
+## A day in the life
+
+<FlowSteps title="A researcher's day" steps={[
+  { where: 'Morning', action: 'Search for information on your topic and open the cited sources', result: 'A list of sources to read' },
+  { where: 'Late morning', action: 'Summarize long documents and mark the parts to check against the original', result: 'Reading notes' },
+  { where: 'After lunch', action: 'Explore the data table and write down how each number was calculated', result: 'Figures you can verify' },
+  { where: 'Afternoon', action: 'Outline a report and write section drafts, checking facts yourself', result: 'A draft ready for review' },
+  { where: 'Before leaving', action: 'Review translations and check for sensitive information', result: 'Ready for tomorrow' },
+]} />
+
+## Recommended learning path
+
+1. [Your first 30 minutes with AI](/basics/01-first-30-minutes/): Get a feel for talking to AI.
+2. [Asking good questions: the basics](/basics/03-asking-well/): How you ask shapes the result.
+3. [Can you trust AI answers?](/basics/04-fact-checking/): Build a verification habit first.
+4. [Using AI while protecting personal and company information](/basics/05-privacy-safety/): Set your standards before you use unpublished materials.
+5. [Writing practical prompts](/chat/01-prompt-basics/): Structure your instructions.
+6. [Summarize meeting notes and long documents and pull out to-dos](/chat/02-summarize-documents/): Start with summarizing.
+7. [Using AI search well](/chat/22-ai-search/): Learn how to search and verify sources.
+8. [Studying and organizing with Gemini Notebook](/chat/21-notebooklm/): Ask questions about only your own materials.
+9. [Let AI analyze your Excel and CSV data](/chat/03-data-analysis/): Take the load off number work.
+10. [Write and polish report and proposal drafts](/chat/04-write-reports/): Connect writing into one flow.
+
+### More
+
+- [Research: web search and deep investigation](/claude/c10-research/): Tell web search and the Research feature apart.
+- [AI translation in practice](/media/26-ai-translation/): Translate while protecting confidential documents and reviewing the results.
+- [Can you use AI output? Copyright and ethics basics](/basics/09-ai-copyright-ethics/): What to check before you publish.
+
+## What to watch out for
+
+<Aside type="caution" title="Before you rely on AI output">
+- **Facts and sources**: AI can be plausibly wrong. Open the cited sources and check them yourself. The method is in [Can you trust AI answers?](/basics/04-fact-checking/).
+- **Unpublished and confidential materials**: Don't casually paste in unpublished data, personal information, or confidential documents. See [Using AI while protecting personal and company information](/basics/05-privacy-safety/).
+- **Numbers**: Check any numbers AI calculates or summarizes against the original data.
+- **Copyright and ethics**: Keep track of your sources and check the rules before publishing. See [Can you use AI output? Copyright and ethics basics](/basics/09-ai-copyright-ethics/).
+</Aside>
+
+## Next steps
+
+- If you are still a student, see the [Guide for students and job seekers](/roles/student/).
+- If you write reports and manage documents, the [Guide for office, planning, and admin roles](/roles/office/) fits too.
+- Find more prompts in the [Ready-to-use prompt collection](/start/prompts/).
+- You can see all the roles in [AI Guides by Role](/roles/).
