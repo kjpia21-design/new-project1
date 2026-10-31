@@ -1,0 +1,252 @@
+---
+title: "Let Claude Search and Read the Web via the API: Web Search and Web Fetch Tools"
+description: "Add the web search and web fetch server tools to a Claude API request, restrict domains, cap cost with max_uses and max_content_tokens, show citations, and apply the October 2026 organization-level web fetch controls"
+sidebar:
+  label: "12. Web search and web fetch tools"
+level: advanced
+category: dev
+tools: ["Claude API", "Web search tool", "Web fetch tool", "Python", "anthropic SDK"]
+duration: "50 min"
+prerequisites:
+  - "You've finished C16. Getting started with the Claude API (API key, environment variable setup)"
+  - "Python 3.10 or later, pip install anthropic"
+  - "A feel for the tool_use loop (Dev 1) and for citations (Dev 9)"
+lastVerified: 2026-10-31
+sources:
+  - title: "Web search tool"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool"
+  - title: "Web fetch tool"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool"
+  - title: "Server tools (domain filtering)"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools"
+  - title: "Claude Platform release notes (October 20, 2026)"
+    url: "https://platform.claude.com/docs/en/release-notes/overview"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+<Summary>
+- **Web search** and **web fetch** are **server tools**: the API runs them for you, so unlike Dev 1 you don't write a loop that returns `tool_result`. You just add an entry to `tools`.
+- Web search finds pages and **always returns citations**. Web fetch reads the full content of a **specific URL** (text, HTML, PDF) and its citations are **off by default**.
+- Control the blast radius with `max_uses`, `allowed_domains` / `blocked_domains` (one or the other, not both), and for fetch `max_content_tokens`.
+- Cost (official docs, 2026-10-31): search is **$10 per 1,000 searches plus token costs**; fetch has **no extra charge** beyond tokens. Fetched pages become input tokens, so cap them.
+- New on October 20, 2026: org admins can **turn off web fetch, or set allowed/blocked domains for it, on the Console Capabilities page**.
+- We read the official pages on 2026-10-31 but **made no real API calls**. The code below follows the documented parameters and is not something we ran.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Add `web_search` and `web_fetch` to a Messages API request and pick the right tool version.
+- Limit which sites Claude can reach, and cap searches, fetches, and fetched tokens.
+- Read the response, show citations to users, and handle tool errors that arrive inside a 200 response.
+- Explain the safety rules (data exfiltration risk, URL validation) and where the organization-level switch lives.
+
+## Concepts to know first
+
+In [Dev 1](/dev/01-tool-use/) you wrote the loop yourself: Claude asks, your code runs the function, you send back a `tool_result`. Web search and web fetch are different. They are **server tools**: the API performs the search or fetch during your request and puts the results into the conversation. For citations in your own documents, see [Dev 9](/dev/09-rag-files-citations/). For driving a real browser (JavaScript pages, clicking), see [Dev 10](/dev/10-computer-browser-tools/).
+
+| Term | Meaning |
+| --- | --- |
+| **Server tool** | A tool Anthropic runs. You see `server_tool_use` and result blocks in the response. |
+| **Web search** | Claude searches the web and answers with cited sources. |
+| **Web fetch** | Claude retrieves the full text of a URL that already appeared in the conversation. |
+| **Dynamic filtering** | With `*_20260209` or later, Claude writes and runs code to trim results before they reach its context. Needs Claude 4.6 or later. |
+| **Domain filter** | `allowed_domains` or `blocked_domains` on the tool. |
+
+### Tool versions (official docs, 2026-10-31)
+
+| Tool | Versions | What was added |
+| --- | --- | --- |
+| Web search | `web_search_20250305` | Basic search |
+| | `web_search_20260209` | Dynamic filtering |
+| | `web_search_20260318` | `response_inclusion` control |
+| Web fetch | `web_fetch_20250910` | Basic fetch |
+| | `web_fetch_20260209` | Dynamic filtering |
+| | `web_fetch_20260309` | Cache bypass (`use_cache`) |
+| | `web_fetch_20260318` | `response_inclusion` control |
+
+On `web_search_20260209` and later, `allowed_callers` defaults to the code execution tool so dynamic filtering can run. The API sets up that code execution for you, with no extra charge beyond tokens. Models that can't do programmatic tool calling need `allowed_callers: ["direct"]`, or the API returns a 400 error. Dynamic filtering is **not** eligible for zero data retention (ZDR) or HIPAA.
+
+<Aside type="caution" title="Web fetch and untrusted input">
+The official docs warn that enabling web fetch where Claude handles untrusted input next to sensitive data creates a **data exfiltration risk**. Only use it in trusted environments or with non-sensitive data. To lower the risk, Claude can only fetch URLs that already appeared in the conversation (user messages, client tool results, earlier search or fetch results), not URLs that appear only in its own output. It also refuses URLs that look like they contain a credential. Some risk remains, so consider `max_uses`, `allowed_domains`, and the `url_sources` setting.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I set ANTHROPIC_API_KEY as an environment variable',
+  'I sent one request with the web search tool and read the citations',
+  'I limited the domains and set max_uses',
+  'I sent one request with the web fetch tool and a max_content_tokens cap',
+  'I know where an admin turns web search and fetch on or off',
+]} />
+
+<Steps>
+
+1. **Get set up**
+
+   ```bash
+   mkdir web-tools-lab && cd web-tools-lab
+   python3 -m venv .venv && source .venv/bin/activate
+   pip install anthropic
+   ```
+
+   Set `ANTHROPIC_API_KEY` as in C16. Web search is on for your organization unless an administrator turned it off in the Claude Console; if it's off, a request that includes the tool fails with a 400 `invalid_request_error`. Use a model that supports it. The docs list, among others, `claude-opus-5-5`, `claude-sonnet-5-5`, and `claude-haiku-5-5`. You can check a model's `capabilities.server_tools.web_search.supported` in the Models API.
+
+2. **Add web search**
+
+   One entry in `tools` is enough. Here we limit searches to 3 and restrict the sites. `allowed_domains` takes bare domains like `example.com` or `example.com/blog`, with no `https://`. Subdomains are included automatically.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   response = client.messages.create(
+       model="claude-opus-5-5",
+       max_tokens=2048,
+       messages=[{
+           "role": "user",
+           "content": "What changed in the Claude Platform release notes this week? Summarize in 3 bullets.",
+       }],
+       tools=[{
+           "type": "web_search_20260318",
+           "name": "web_search",
+           "max_uses": 3,
+           "allowed_domains": ["platform.claude.com"],
+       }],
+   )
+
+   for block in response.content:
+       if block.type == "text":
+           print(block.text)
+           for c in (getattr(block, "citations", None) or []):
+               print("  source:", c.title, c.url)
+   print("searches:", response.usage.server_tool_use.web_search_requests)
+   ```
+
+   We did not run this snippet. The block and field names (`text`, `citations`, `url`, `title`, `usage.server_tool_use.web_search_requests`) come from the example response in the official docs.
+
+   <PromptBox>
+   Search the web for the official pricing page of the tool I name, summarize the price in two sentences, and list the URL you used. If you can't find an official page, say so instead of guessing.
+   </PromptBox>
+
+3. **Read the response and show citations**
+
+   The response contains Claude's short note, a `server_tool_use` block (the query), a `web_search_tool_result` block (URL, title, `page_age`, and `encrypted_content`), and text blocks with `citations`. Each citation has `url`, `title`, `cited_text` (up to 150 characters), and `encrypted_index`.
+
+   Two rules matter in multi-turn use. Send the assistant content blocks back **exactly as received**, including `encrypted_content`; if it's missing or changed, the request fails with a 400. And when you show the output to end users, **include the citations to the original source**. The citation fields `cited_text`, `title`, and `url` don't count toward token usage.
+
+4. **Add web fetch for a specific page**
+
+   Fetch retrieves the full text of a URL. For PDFs it returns base64 data and processes it like an attached PDF. It does **not** support pages rendered dynamically with JavaScript.
+
+   ```python
+   response = client.messages.create(
+       model="claude-opus-5-5",
+       max_tokens=2048,
+       messages=[{
+           "role": "user",
+           "content": "Read https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool and list the error codes.",
+       }],
+       tools=[{
+           "type": "web_fetch_20260318",
+           "name": "web_fetch",
+           "max_uses": 2,
+           "allowed_domains": ["platform.claude.com"],
+           "max_content_tokens": 30000,
+           "citations": {"enabled": True},
+       }],
+   )
+   ```
+
+   We did not run this snippet either. `max_content_tokens` truncates large text content (it does not apply to PDFs and is approximate). There is no default `max_uses`, so set one. Citations are optional for fetch and **disabled by default**. Domain matching for fetch is on the domain only: an entry with a path never matches a fetch URL.
+
+   For rough budgeting the docs give: an average web page (10 kB) is about 2,500 tokens, a large documentation page (100 kB) about 25,000, and a research paper PDF (500 kB) about 125,000.
+
+5. **Combine search and fetch**
+
+   With both tools enabled and a request that names a page without a URL (such as "read the README of the anthropic-sdk-python repository"), Claude searches to find it, picks the best results, and fetches them. Keep `allowed_domains` tight in this setup, because search results can bring new URLs into the conversation.
+
+6. **Check the organization switch**
+
+   An organization admin can turn web search or web fetch off, or restrict domains, on the **Capabilities** page of the Claude Console. Request-level `allowed_domains` must be a **subset** of the organization-level allowed list, otherwise the API returns a validation error. If an org blocks a domain you list, you get a 400 naming the conflicting entries.
+
+</Steps>
+
+<FlowSteps title="Where an admin controls web fetch (as of 2026-10-31)" officialUrl="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool" steps={[
+  { where: 'Claude Console, Capabilities page', action: 'Turn web fetch on or off for the organization', result: 'With it off, a Messages API request that includes the tool fails with a 400 error' },
+  { where: 'Same page, with web fetch on', action: 'Set allowed or blocked domains for web fetch', result: 'Your request-level lists work together with these' },
+  { where: 'Your request', action: 'Optionally add allowed_domains or blocked_domains on the tool', result: 'Allowed list must be a subset of the org list' },
+]} />
+
+## What changed in October 2026
+
+The release notes for **October 20, 2026** say admins can now turn off web fetch for their organization on the Capabilities page, and, with it on, set allowed or blocked domains for web fetch there. The same entry says Claude Managed Agents sessions follow these settings: a URL, including one reached by a redirect, must pass both the organization's list and the agent's own `allowed_domains` / `blocked_domains`. Web search in Managed Agents follows the **Allow web search** setting (since October 6) and web search domain restrictions (since October 14). In Managed Agents the tools are on by default in the agent toolset and don't accept `max_uses`, `citations`, or `cache_control`.
+
+## Quick reference
+
+| Item | Web search | Web fetch |
+| --- | --- | --- |
+| Citations | Always on | Optional, off by default (`citations.enabled`) |
+| Usage cap | `max_uses` (error `max_uses_exceeded`) | `max_uses` (no default; failed fetches count) |
+| Domain rules | Subpaths supported | Domain only |
+| Size control | None documented | `max_content_tokens` (text only) |
+| Price | $10 per 1,000 searches plus tokens | No extra charge, tokens only |
+| ZDR | Eligible (not for Covered Models or dynamic filtering) | Eligible (same exclusions) |
+| HIPAA | Eligible (not dynamic filtering) | Not eligible |
+| Batch API | Allowed, same price, throttled per org | Allowed, same price |
+
+Domain filter rules from the Server tools page: no scheme, subdomains included, `*` only in the path (not in the domain), and never both `allowed_domains` and `blocked_domains`. Use ASCII-only domain names, because look-alike Unicode characters can bypass filters.
+
+Errors arrive **inside a 200 response**, as a single error object in `content`. Search codes: `too_many_requests`, `invalid_tool_input`, `max_uses_exceeded`, `query_too_long`, `request_too_large`, `unavailable`. Fetch adds `url_too_long` (over 250 characters), `url_not_allowed`, `url_not_in_prior_context`, `url_not_accessible`, `unsupported_content_type` (only text, HTML, PDF), and `content_too_large`. A search with no matches returns an empty `content` list, not an error.
+
+## Common sticking points
+
+### The request fails with 400 about web search or web fetch not being enabled
+
+- **Cause**: An org admin turned the capability off.
+- **Fix**: Ask the admin to check the Capabilities page in the Console.
+
+### 400 when I pass both domain lists
+
+- **Cause**: `allowed_domains` and `blocked_domains` can't be combined.
+- **Fix**: Choose one.
+
+### Fetch returns `url_not_in_prior_context`
+
+- **Cause**: The URL appeared only in Claude's own output, or only in a source your `url_sources` setting excludes.
+- **Fix**: Put the URL in a user message.
+
+### The stop reason is `pause_turn`
+
+- **Cause**: The API paused a long-running search turn.
+- **Fix**: Send the paused assistant message back unchanged in a new request to continue.
+
+### A multi-turn request fails after search
+
+- **Cause**: `encrypted_content` was dropped or edited.
+- **Fix**: Send assistant content blocks back exactly as received.
+
+## Practical tips
+
+- Start with `max_uses` of 3 to 5. The docs say simple factual queries typically use 1 to 3 searches and multi-entity research can use 10 or more.
+- Use a system prompt to steer whether Claude searches readily or answers directly; use `max_uses` as the hard limit.
+- Prefer dynamic filtering (`*_20260209` or later) on token-heavy tasks, but remember it isn't ZDR or HIPAA eligible.
+- Log `usage.server_tool_use` so search counts show up in your cost tracking ([Dev 11](/dev/11-usage-cost-api/)).
+- Pages needing JavaScript or clicks are a job for the browser tool, not fetch.
+
+## Next tutorials
+
+- [1. Build a work bot with tool use](/dev/01-tool-use/) — client tools and the loop
+- [9. Internal document Q&A](/dev/09-rag-files-citations/) — citations for your own files
+- [10. Computer and browser tools](/dev/10-computer-browser-tools/) — when a page needs a real browser
+- [11. Usage and cost API](/dev/11-usage-cost-api/) — track spending
+- [2. Cut API costs](/dev/02-cost-optimization/) — caching, batches, effort
+- [C16. Getting started with the Claude API](/claude/c16-api/)
+- [Developer guide](/roles/developer/)

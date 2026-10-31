@@ -1,0 +1,202 @@
+---
+title: "휴대폰 단축어로 AI 바로 부르기: iPhone 단축어·Siri와 Android 빠른 실행"
+description: "iPhone(단축어, Siri, 동작 버튼, 뒷면 탭)과 Android(어시스턴트, 위젯)에서 AI를 한 번의 터치나 한마디로 시작하는 방법, 공식 도움말로 확인된 범위만 정리했어요"
+sidebar:
+  label: "13. 휴대폰 단축어로 AI"
+level: beginner
+category: automation
+tools: ["단축어", "Siri", "Claude", "Gemini"]
+duration: "30분"
+prerequisites:
+  - "단축어 앱이 있는 iPhone 또는 Android 휴대폰"
+  - "설치하고 로그인한 AI 앱 ([7. 휴대폰에서 AI 쓰기](/ko/basics/07-ai-on-phone/))"
+lastVerified: 2026-10-31
+sources:
+  - title: "Apple Support: Shortcuts User Guide (welcome)"
+    url: "https://support.apple.com/guide/shortcuts/welcome/ios"
+  - title: "Apple Support: Run shortcuts with Siri"
+    url: "https://support.apple.com/guide/shortcuts/run-shortcuts-with-siri-apd07c25bb38/ios"
+  - title: "Apple Support: Run shortcuts with the Action button"
+    url: "https://support.apple.com/guide/shortcuts/run-shortcuts-with-the-action-button-apdfea15680b/ios"
+  - title: "Apple Support: Run shortcuts from Control Center"
+    url: "https://support.apple.com/guide/shortcuts/run-shortcuts-from-control-center-apd06a9201d4/ios"
+  - title: "Apple Support: Run shortcuts by tapping the back of your iPhone"
+    url: "https://support.apple.com/guide/shortcuts/run-shortcuts-tapping-iphone-apd897693606/ios"
+  - title: "Apple Support: Use Apple Intelligence in Shortcuts"
+    url: "https://support.apple.com/guide/shortcuts/use-apple-intelligence-in-shortcuts-tpg3vrvwmclv/ios"
+  - title: "Claude Help Center: Use Claude app intents, shortcuts, and widgets on iOS"
+    url: "https://support.claude.com/en/articles/10263469-use-claude-app-intents-shortcuts-and-widgets-on-ios"
+  - title: "Claude Help Center: Access Claude for iOS on your Lock Screen, Control Center, and Action button"
+    url: "https://support.claude.com/en/articles/10302511-access-claude-for-ios-on-your-lock-screen-control-center-and-action-button"
+  - title: "Claude Help Center: Use the Claude widget on Android"
+    url: "https://support.claude.com/en/articles/10534883-use-the-claude-widget-on-android"
+  - title: "Claude Help Center: Use Claude with Android apps"
+    url: "https://support.claude.com/en/articles/11869629-use-claude-with-android-apps"
+  - title: "Gemini Apps Help: Get started with the Gemini mobile app (Android)"
+    url: "https://support.google.com/gemini/answer/14554984"
+  - title: "Gemini Apps Help: Talk naturally with Gemini Live"
+    url: "https://support.google.com/gemini/answer/15274899"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- iPhone에서 **단축어(Shortcut)**는 단축어 앱에 저장해 두는 작은 레시피예요. **Siri에게 이름을 말하거나**, **동작 버튼**, **제어 센터**, **휴대폰 뒷면 탭**으로 실행할 수 있어요(Apple 안내서 iOS 27 버전 기준).
+- Apple 단축어에는 Apple Intelligence 모델(기기 내 또는 Private Cloud Compute)이나 확장 모델(Apple 문서에는 ChatGPT라고 나와요)을 부르는 **Use Model** 액션이 있어요. 지원 기기와 언어가 필요해요.
+- 공식 도움말로 확인된 AI 앱은 **Claude**예요. Anthropic 도움말에 따르면 **"Ask Claude"** 액션을 iOS 18 이상에서 Siri, Spotlight, 공유 메뉴, 단축어 앱으로 쓸 수 있어요. Android에는 Claude 홈 화면 위젯이 있고, Gemini를 휴대폰 어시스턴트로 쓸 수 있어요.
+- 다른 AI 앱의 단축어 지원은 공식 도움말에서 확인하지 못해서 이 튜토리얼에서는 뺐어요. 이렇게 보낸 메시지도 사용 한도에 포함돼요.
+</Summary>
+
+## 이 튜토리얼을 마치면
+
+- 잠금 화면, 동작 버튼, 말 한마디로 앱을 찾지 않고 AI 대화를 시작할 수 있어요.
+- iPhone에서 한 단계짜리 "Claude로 요약" 단축어를 만들 수 있어요.
+- Android에서 쓸 수 있는 빠른 실행 방법과, 확인하지 못한 부분을 알 수 있어요.
+- 개인적인 글을 실수로 AI에 보내는 일을 피할 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **단축어** | 단축어 앱에 저장한 단계 묶음이에요. 한 번 터치하거나 한마디로 실행돼요. |
+| **액션** | 단축어의 한 단계예요. 예: "Ask Claude". |
+| **앱 인텐트** | 앱이 Siri, Spotlight, 단축어에 내어 주는 기능이에요. 앱을 열지 않고도 쓸 수 있어요. |
+| **Siri** | Apple의 음성 비서예요. 단축어 이름을 말하면 그 단축어를 실행해요. |
+| **위젯 / 컨트롤** | 홈 화면, 잠금 화면, 제어 센터에 놓는 버튼이에요. |
+| **어시스턴트(Android)** | 전원 버튼을 길게 누르거나 "Hey Google"이라고 말할 때 응답하는 앱이에요. |
+
+### 어디서 되는지 (2026-10-31 기준)
+
+| 시작 방법 | iPhone | Android |
+| --- | --- | --- |
+| 말로 시작 | Siri에게 단축어 이름 말하기, 또는 Siri에게 "Ask Claude" 요청 | Gemini가 어시스턴트면 "Hey Google" (언어·국가에 따라 다름) |
+| 버튼으로 시작 | 동작 버튼 (iPhone 15 Pro 이상) | Gemini가 어시스턴트인 기기에서 전원 버튼 길게 누르기 |
+| 화면 요소 터치 | 제어 센터, 잠금 화면, 홈 화면 위젯 | 홈 화면 위젯 (Claude) |
+| 휴대폰 뒷면 탭 | 뒷면 탭 (설정 > 손쉬운 사용 > 터치) | 공식 도움말에서 확인하지 못했어요 |
+| 다른 단계와 연결 | 단축어 앱 | 공식 도움말에서 확인하지 못했어요 |
+
+<Aside type="note" title="확인하지 못한 것">
+- **ChatGPT 앱과 iPhone의 Gemini**: 이 앱들이 Siri나 단축어 액션을 제공한다는 공식 도움말을 찾지 못해서 설명하지 않아요. Apple 안내서는 확장 모델 선택지가 ChatGPT를 쓴다고만 말해요.
+- **Android의 Gemini 위젯·단축어**, 그리고 Claude 위젯과 어시스턴트로서의 Gemini 말고 Android에서 단축어처럼 자동화하는 방법은 확인할 공식 페이지를 찾지 못했어요.
+- **한국어 지원**: Apple은 Apple Intelligence가 모든 언어와 지역에서 쓸 수 있는 것은 아니라고 안내하고, Gemini의 "Hey Google"도 모든 언어에서 되는 것은 아니에요. 내 휴대폰 설정에서 확인하세요. 기능마다 한국어 지원 여부는 확인하지 못했어요.
+- 읽은 Apple 페이지는 안내서의 **iOS 27** 버전이에요. 내 iPhone이 더 낮은 iOS라면 Apple 페이지 위쪽의 버전 선택기를 쓰세요. 액션 이름이 다를 수 있어요.
+</Aside>
+
+## 따라 하기
+
+<Checklist items={[
+  'iPhone(iOS 18 이상)에 Claude 앱을 설치하고 로그인했어요',
+  'Ask Claude 액션을 쓰는 단축어를 만들었어요',
+  '단축어 앱에서 한 번 실행해서 결과를 읽어 봤어요',
+  '빠른 실행 방법을 추가했어요 (Siri 이름, 동작 버튼, 제어 센터, 뒷면 탭 중)',
+  '개인적인 내용에 쓰기 전에 무해한 글로 시험했어요',
+]} />
+
+<Steps>
+
+1. **"Ask Claude"로 단축어 만들기 (iPhone)**
+
+   Anthropic 도움말에 따르면 순서는 이래요. **단축어** 앱을 열고 **+** 로 새 단축어를 만든 뒤, **공유(Share)** 액션을 추가해 입력 유형을 고르고, **Ask Claude** 액션을 추가해요. Ask Claude에 "다음 글을 요약해 주세요:" 같은 프롬프트를 쓰고 **단축어 입력(Shortcut Input)**을 끼워 넣어요. 이름은 예를 들어 "Claude로 요약"이라고 짓고, 원하면 공유 시트에 추가해요. 그러면 어느 앱에서든 글을 선택하고 공유를 눌러 이 단축어를 고를 수 있어요. 단축어는 Claude 앱을 열었을 때 보이는 기본 모델을 사용해요.
+
+   <PromptBox label="Ask Claude 액션 안에 넣을 프롬프트">
+   다음 글을 3줄 요약해 주세요. 그리고 날짜나 마감이 있으면 따로 정리해 주세요. 글에 없는 내용은 덧붙이지 마세요.
+
+   (여기에 단축어 입력 변수를 끼워 넣기)
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Ask Claude 액션으로 요약 단축어 만들기" officialUrl="https://support.claude.com/en/articles/10263469-use-claude-app-intents-shortcuts-and-widgets-on-ios" />
+
+2. **실행 방법 고르기**
+
+   <FlowSteps title="iPhone에서 빠른 실행 추가하기" officialUrl="https://support.apple.com/guide/shortcuts/run-shortcuts-with-the-action-button-apdfea15680b/ios" steps={[
+     { where: 'Siri', action: '단축어 이름을 정확히 말하기', result: 'Siri가 실행해요. 잠긴 상태에서 앱을 여는 단축어면 잠금 해제를 요청해요' },
+     { where: '설정 > 동작 버튼 (iPhone 15 Pro 이상)', action: '"단축어"로 넘기고 단축어 선택을 눌러 내 단축어 고르기', result: '동작 버튼을 누르면 실행돼요' },
+     { where: '제어 센터', action: '컨트롤 추가 > 단축어 > 선택', result: '제어 센터에 버튼이 생겨요' },
+     { where: '설정 > 손쉬운 사용 > 터치 > 뒷면 탭', action: '두 번 탭 또는 세 번 탭을 고르고 내 단축어 선택', result: '휴대폰 뒷면을 탭하면 실행돼요' },
+   ]} />
+
+   단축어 이름이 Siri 기본 명령과 같으면 Apple 설명대로 Siri가 단축어를 우선 실행해요. "지금 몇 시야?"처럼 흔한 말은 피하세요.
+
+3. **만들지 않고 말로 Claude 부르기**
+
+   "Ask Claude" 인텐트는 단독으로도 쓸 수 있어요. Siri에게 "Ask Claude"라고 하면 메시지를 물어보고, Spotlight에 "Ask Claude"를 입력해도 돼요. Anthropic 도움말에는 잠금 화면, 제어 센터, 동작 버튼에 놓는 "Open Claude" 컨트롤과 홈 화면 Claude 위젯도 나와요.
+
+4. **Apple의 Use Model 액션 써 보기 (선택)**
+
+   단축어 앱에서 **Use Model** 액션을 추가하고 **On-Device**, **Cloud**, **Cloud Pro**, **Extension Model** 중에서 고를 수 있어요(Apple은 마지막이 ChatGPT를 쓴다고 안내해요). On-Device는 네트워크 없이 간단한 요청을 처리하고, Cloud와 Cloud Pro는 Apple의 Private Cloud Compute를 써요. **Follow Up** 체크를 켜면 모델의 답을 다음 단계로 넘기기 전에 다듬을 수 있어요. 단축어 갤러리의 Apple Intelligence 카테고리에 만들어진 예시가 있어요. Apple Intelligence를 쓸 수 있는 기기가 필요하고(iOS 27 기준 예: iPhone 15 Pro 이상) 사용 한도가 있을 수 있어요.
+
+5. **Android에서**
+
+   - **Claude 위젯** (Android 8.0 이상): 홈 화면의 빈 곳을 길게 누르고 **위젯**을 탭해 **Claude**를 찾아 화면에 끌어다 놓아요. 버튼으로 새 대화, 카메라 열기, 음성 받아쓰기를 시작해요.
+   - **Gemini를 어시스턴트로**: Google 앱이 기본 디지털 어시스턴트 앱이면(설정 > 앱 > 기본 앱 > 디지털 어시스턴트 앱) Google 안내대로 "Hey Google"(켜 둔 경우)이나 전원 버튼 길게 누르기, 모서리에서 위로 쓸기 같은 터치로 Gemini를 불러요. 기기에 따라 달라요.
+   - **Claude와 Android 앱**: Claude 대화 안에서 메시지·이메일 초안, 캘린더 일정, 알람·타이머를 만들 수 있어요. Claude가 미리보기를 보여 주고, 보내기나 확정은 내가 직접 해요.
+
+   <ScreenshotPlaceholder caption="Android 홈 화면에 Claude 위젯 추가하기" officialUrl="https://support.claude.com/en/articles/10534883-use-the-claude-widget-on-android" />
+
+6. **무해한 글로 먼저 시험하기**
+
+   공개된 뉴스 문단으로 단축어를 실행해 보세요. 결과가 원하는 곳에 나오는지 확인한 뒤에야 메일이나 문서에 쓰세요. 그 내용을 AI 서비스에 보내도 괜찮을 때만요.
+
+</Steps>
+
+## 한눈에 보기
+
+| 항목 | 설명이 있는 곳 | 메모 |
+| --- | --- | --- |
+| Ask Claude 액션 | Claude 고객센터 (iOS 18 이상) | Siri, Spotlight, 공유 메뉴, 단축어 앱 |
+| Open Claude 컨트롤 | Claude 고객센터 | 잠금 화면, 제어 센터, 동작 버튼 |
+| Claude 위젯 | Claude 고객센터 | iPhone 홈 화면, Android 8.0 이상 홈 화면 |
+| Siri·동작 버튼·뒷면 탭으로 단축어 실행 | Apple 단축어 안내서 | 동작 버튼은 iPhone 15 Pro 이상 |
+| Use Model 액션 | Apple 단축어 안내서 | Apple Intelligence 필요, 모든 언어·지역 지원은 아님 |
+| 어시스턴트로서의 Gemini | Gemini 앱 고객센터 | Android, "Hey Google" 또는 터치, 기기마다 다름 |
+
+모두 앱에서 대화할 때와 같은 한도를 써요. Anthropic은 "Ask Claude" 인텐트와 위젯으로 보낸 메시지가 전체 사용 한도에 포함된다고 안내해요([8. 무료 vs 유료 요금제](/ko/basics/08-free-vs-paid/) 참고).
+
+## 막힐 때
+
+### 단축어에 Ask Claude가 보이지 않아요
+
+- **원인**: Claude 앱이 없거나 로그인하지 않았거나, iOS가 18보다 낮아요(Anthropic 페이지에 이 기능은 iOS 18 이상이라고 나와요).
+- **해결**: iOS와 앱을 업데이트하고 Claude를 한 번 열어 본 뒤, 액션 목록에서 "Ask Claude"를 검색하세요.
+
+### Siri가 엉뚱한 걸 실행해요
+
+- **원인**: 단축어 이름이 다른 Siri 명령과 같거나, Siri가 다른 이름으로 알아들었어요.
+- **해결**: 짧고 흔하지 않은 말로 이름을 바꾸고 정확히 말하세요.
+
+### 동작 버튼 옵션이 안 보여요
+
+- **원인**: Apple 설명대로 지원 모델(iPhone 15 Pro 이상)에만 있어요.
+- **해결**: 제어 센터, 위젯, 뒷면 탭을 쓰세요.
+
+### 잠긴 상태에서 단축어가 멈춰요
+
+- **원인**: Apple 안내에 따르면 기기가 잠겨 있고 단축어가 앱을 열면 Siri가 먼저 잠금 해제를 요청해요.
+- **해결**: 휴대폰 잠금을 풀거나, 잠금이 풀린 화면에서 시작하세요.
+
+### "Hey Google"이나 전원 버튼으로 Gemini가 안 열려요
+
+- **원인**: Gemini가 어시스턴트가 아니거나, Google 앱이 기본 어시스턴트 앱이 아니거나, 내 언어·국가·기기에서 제공하지 않아요.
+- **해결**: 설정 > 앱 > 기본 앱 > 디지털 어시스턴트 앱을 확인하고, Google의 제공 범위 안내를 읽어 보세요.
+
+## 실무 팁
+
+- **보내기 전에 읽으세요.** 글을 선택해 AI에 보내면 그 글이 휴대폰 밖으로 나가요. 개인·금융·기밀 정보가 든 글은 빼세요([5. 개인정보·안전](/ko/basics/05-privacy-safety/)).
+- **일마다 단축어 하나씩.** "요약", "쉬운 말로 바꾸기", "답장 초안"처럼 나누면 하나로 다 하는 것보다 믿기 쉬워요.
+- **중요한 결과는 확인하세요.** 요약은 내용을 빠뜨리거나 지어낼 수 있어요([4. 사실 확인하는 법](/ko/basics/04-fact-checking/)).
+- **공공장소에서 개인적인 이야기를 말로 하지 마세요.** 주변 사람이 들을 수 있어요.
+- **한도를 지켜보세요.** 빠른 실행은 작은 요청을 쉽게 많이 보내게 하고, 전부 한도에 포함돼요.
+
+## 다음에 볼 튜토리얼
+
+- [7. 휴대폰에서 AI 쓰기](/ko/basics/07-ai-on-phone/) — 앱 설치와 음성 대화
+- [5. 개인정보·안전](/ko/basics/05-privacy-safety/) — AI에 보내면 안 되는 것
+- [12. n8n AI 워크플로](/ko/automation/42-n8n-ai/) — 휴대폰 없이 돌아가는 자동화
+- [3. Zapier/Make 자동화](/ko/automation/18-zapier-make/) — 규칙 기반 자동화
+- [사무·기획·관리직을 위한 AI 활용 가이드](/ko/roles/office/) — 직무별 추천 순서

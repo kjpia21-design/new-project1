@@ -1,0 +1,220 @@
+---
+title: "n8n으로 AI 자동화 워크플로 만들기: Claude로 Gmail 답장 초안 쓰기"
+description: "n8n Cloud와 셀프호스팅의 차이, 워크플로에 AI 모델을 연결하는 방법, 라벨 붙은 Gmail 메일에 Claude가 답장 초안을 쓰게 하는 따라 하기 예시"
+sidebar:
+  label: "12. n8n AI 워크플로"
+level: practical
+category: automation
+tools: ["n8n", "Claude", "Gmail"]
+duration: "60분"
+prerequisites:
+  - "n8n Cloud 무료 체험 또는 브라우저로 열 수 있는 셀프호스팅 n8n"
+  - "Gmail 계정 (실제 고객 메일 말고 연습용 라벨로 시험하세요)"
+  - "Anthropic API 키 (n8n Cloud Starter/Pro라면 Gateway credits로 대신할 수 있어요)"
+lastVerified: 2026-10-31
+sources:
+  - title: "n8n Docs: Choose how to use n8n"
+    url: "https://docs.n8n.io/choose-n8n/"
+  - title: "n8n Docs: Compare editions (self-hosted)"
+    url: "https://docs.n8n.io/deploy/host-n8n/community-edition-features.md"
+  - title: "n8n Docs: Try free then choose a plan"
+    url: "https://docs.n8n.io/deploy/use-n8n-cloud/start-your-free-trial.md"
+  - title: "n8n: Plans and Pricing"
+    url: "https://n8n.io/pricing/"
+  - title: "n8n Docs: Install options (self-hosted)"
+    url: "https://docs.n8n.io/deploy/host-n8n/install-options.md"
+  - title: "n8n Docs: Integrate AI"
+    url: "https://docs.n8n.io/build/integrate-ai.md"
+  - title: "n8n Docs: Build your first workflow"
+    url: "https://docs.n8n.io/build-your-first-workflow.md"
+  - title: "n8n Docs: Gmail Trigger node"
+    url: "https://docs.n8n.io/integrations/builtin/trigger-nodes/n8n-nodes-base.gmailtrigger.md"
+  - title: "n8n Docs: Basic LLM Chain node"
+    url: "https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.chainllm.md"
+  - title: "n8n Docs: Anthropic Chat Model node"
+    url: "https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.lmchatanthropic.md"
+  - title: "n8n Docs: Anthropic credentials"
+    url: "https://docs.n8n.io/integrations/builtin/credentials/anthropic.md"
+  - title: "n8n Docs: Gateway credits"
+    url: "https://docs.n8n.io/deploy/use-n8n-cloud/gateway-credits.md"
+  - title: "n8n Docs: Gmail node, Draft operations"
+    url: "https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.gmail/draft-operations.md"
+  - title: "n8n Docs: AI Agent node"
+    url: "https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.agent.md"
+  - title: "n8n Docs: Human-in-the-loop for tools"
+    url: "https://docs.n8n.io/build/integrate-ai/ai-examples/human-in-the-loop-for-tools.md"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- **n8n**은 AI 노드를 갖춘 워크플로 자동화 도구예요. n8n이 대신 운영해 주는 **n8n Cloud**(14일 무료 체험)와 내가 직접 서버를 돌리는 **셀프호스팅**(무료 Community 에디션은 거의 모든 기능 포함) 중에서 골라요.
+- n8n에서는 **노드**를 이어요. 트리거가 시작하고, AI 노드(예: Basic LLM Chain + Anthropic Chat Model)가 생각하고, 앱 노드(예: Gmail)가 실행해요. 어떤 모델 제공사를 꽂을지는 내가 정해요.
+- 이 튜토리얼은 **라벨 붙은 새 Gmail 메일 → Claude가 답장 작성 → Gmail 임시보관함에 저장(발송 안 함)** 흐름을 만들어요.
+- [Zapier/Make](/ko/automation/18-zapier-make/)와 비교하면 n8n은 통제할 수 있는 범위가 넓고 셀프호스팅도 되지만, 노드와 데이터 흐름을 이해해야 해요. 아래 가격은 2026-10-31 기준으로 확인한 값이에요.
+</Summary>
+
+## 이 튜토리얼을 마치면
+
+- 내 상황에 n8n Cloud와 셀프호스팅 중 무엇이 맞는지 정할 수 있어요.
+- n8n의 Basic LLM Chain과 AI Agent 차이를 설명할 수 있어요.
+- Anthropic Chat Model 노드로 Claude를 워크플로에 연결할 수 있어요.
+- 답장을 쓰기만 하고 보내지는 않는 작은 워크플로를 만들어 안전하게 시험할 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **워크플로(Workflow)** | n8n의 자동화 하나. 캔버스에서 노드를 이어서 만들어요. |
+| **노드(Node)** | 단계 하나. 트리거 노드가 워크플로를 시작하고, 나머지 노드가 일을 해요. |
+| **자격 증명(Credential)** | 노드가 서비스에 접속할 때 쓰는 저장된 로그인이나 API 키예요. |
+| **Basic LLM Chain** | 내가 정한 프롬프트를 모델에 보내 답을 받는 AI 노드예요. 단계가 고정돼 있어요. |
+| **AI Agent** | 채팅 모델과 도구를 갖고, 어떤 도구를 부를지 스스로 정하는 AI 노드예요. 공식 문서에 따르면 도구를 하나 이상 연결해야 해요. |
+| **하위 노드(Sub-node)** | AI 노드에 꽂는 노드예요. 모델을 제공하는 Anthropic Chat Model 같은 것이에요. |
+| **게시(Publish)** | 워크플로를 켜서 트리거가 저절로 돌게 하는 것이에요(Schedule Trigger 문서에 저장 후 게시하라고 나와요). |
+
+### n8n Cloud와 셀프호스팅 (2026-10-31 기준)
+
+| 항목 | n8n Cloud | 셀프호스팅 |
+| --- | --- | --- |
+| 운영 주체 | n8n이 호스팅·업데이트·확장 | 내가 서버를 마련하고 관리 |
+| 시작 방법 | 14일 무료 체험 가입 | Docker Compose, Docker, npm 등으로 설치 |
+| 비용 | 요금제: Starter, Pro, Enterprise | Community 에디션은 무료, Business·Enterprise는 유료 |
+| 필요한 지식 | 설정에는 필요 없음 | 서버, 컨테이너, 보안 지식 필요(n8n은 실수하면 데이터 손실과 중단이 생길 수 있다고 안내) |
+| 기능 | 요금제에 따라 다름 | Community에는 SSO, Projects, Git 버전 관리 등 일부 기능이 없음 |
+
+<Aside type="caution" title="가격과 한도는 가격 페이지에서 확인하세요">
+2026-10-31에 [n8n 가격 페이지](https://n8n.io/pricing/)에는 Starter가 월 20유로(워크플로 실행 2.5K), Pro가 월 50유로(실행 10K)로 적혀 있었어요(둘 다 "연간 결제 기준"). Business는 월 667유로(셀프호스팅 전용으로 표시), Enterprise는 영업팀 문의였어요. 월 단위 결제 가격은 페이지 텍스트에서 확인하지 못했어요. 공식 문서는 무료 체험이 Pro 기능을 쓰되 실행 1000회 제한이 있고, 체험이 끝날 때까지 업그레이드하지 않으면 인스턴스가 삭제된다고 안내해요(워크플로는 90일 안에 내려받을 수 있어요). 결정하기 전에 꼭 가격 페이지를 다시 확인하세요.
+</Aside>
+
+<Aside type="note" title="확인하지 못한 것">
+- n8n 화면이 한국어로 제공되는지는 문서에서 찾지 못했어요.
+- Anthropic Chat Model 노드에서 고를 수 있는 Claude 모델 목록. 노드 문서에는 "Claude"와 "Claude Instant"만 적혀 있는데 오래된 표기로 보여요. **화면에 나오는 목록에서 고르세요.**
+- Gateway credits의 현재 요금. n8n이 안내하는 서비스 가격 페이지는 열어 보지 않았어요.
+- Google(OAuth) 자격 증명의 자세한 설정. Gmail 계정에 맞춰 n8n의 Google 자격 증명 문서를 따르세요.
+- 이 워크플로는 공식 노드 문서를 바탕으로 조합했고 끝까지 실행해 보지는 않았어요. 내 계정에서 먼저 시험해 보세요.
+</Aside>
+
+## 따라 하기
+
+<Checklist items={[
+  'n8n Cloud 체험을 시작했거나 셀프호스팅 n8n을 열었어요',
+  'Gmail에 "ai-draft" 같은 라벨을 만들고 시험용 메일 1통을 넣었어요',
+  'Anthropic 자격 증명(API 키)을 만들었거나 Gateway credits를 골랐어요',
+  'Gmail Trigger → Basic LLM Chain → Gmail(초안 만들기)을 연결했어요',
+  '수동으로 시험 실행해서 Gmail의 초안을 읽어 봤어요',
+  '시험 결과가 괜찮은 뒤에만 워크플로를 게시했어요',
+]} />
+
+<Steps>
+
+1. **n8n을 어디서 돌릴지 정하기**
+
+   그냥 써 보려면 n8n Cloud의 14일 무료 체험으로 시작하세요. 셀프호스팅이라면 Docker로 설치할 때 Docker Compose를 권장해요(일반 Docker 페이지에는 "오래된 내용"이라고 표시돼 있어요). 기본 포트는 5678이라 브라우저에서 `http://localhost:5678`로 열어요. 공식 문서는 셀프호스팅을 경험 있는 사용자에게 권하고, 서버를 다뤄 본 적이 없으면 Cloud를 권해요.
+
+   <ScreenshotPlaceholder caption="Cloud와 셀프호스팅을 고르는 n8n 문서 페이지" officialUrl="https://docs.n8n.io/choose-n8n/" />
+
+2. **모델 연결 준비하기**
+
+   Anthropic 자격 증명은 API 키를 써요. Anthropic Console에서 **Settings > API Keys**를 열고 **+ Create Key**를 눌러 키를 복사한 뒤, n8n 자격 증명의 API Key 칸에 붙여 넣어요. n8n Cloud Starter나 Pro에서는 노드의 자격 증명 칸에서 **Use Gateway credits**를 고르면 선불 잔액으로 결제되고 Anthropic 계정이 필요 없어요. Gateway credits는 Cloud Enterprise와 셀프호스팅 n8n에서는 쓸 수 없어요. 키는 비밀번호처럼 다루고 채팅이나 공유 문서에 붙여 넣지 마세요.
+
+3. **트리거 추가: Gmail Trigger**
+
+   새 워크플로를 만들고 **Gmail Trigger**를 추가해 이벤트를 **Message Received**로 둬요. Google 자격 증명으로 로그인한 뒤 필터를 설정해요. **Label Names or IDs**로 시험용 라벨이 붙은 메일에만 반응하게 하세요. 이 노드는 고른 **Poll Time**마다 확인해서 바로 반응하지는 않아요. 기본값은 읽지 않은 메일만, 한 번에 최대 10통이에요.
+
+4. **AI 단계 추가: Basic LLM Chain + Anthropic Chat Model**
+
+   **Basic LLM Chain**을 추가하고 **Anthropic Chat Model** 하위 노드를 연결해요. 체인에서 프롬프트를 **Define below**로 두고 트리거의 메일 필드를 끼워 넣어요. Chat Messages의 **System** 메시지로 말투와 규칙을 정해요.
+
+   <PromptBox label="체인의 System 메시지">
+   너는 소규모 사업장 사장님의 답장 초안을 쓰는 비서야. 정중하고 짧게, 5문장 이내로 써. 메일에 있는 사실만 사용해. 가격, 납기일처럼 네가 알 수 없는 내용은 추측하지 말고 "[사장님 확인 필요]"라고 적어. 약속은 하지 마.
+   </PromptBox>
+
+   <Aside type="note">
+   AI가 스스로 정보를 찾거나 앱을 부르게 하려면 **AI Agent**를 쓰세요. "이걸 읽고 저걸 쓴다"처럼 정해진 작업이면 Basic LLM Chain이 더 간단하고 결과도 예측하기 쉬워요.
+   </Aside>
+
+5. **발송이 아니라 초안으로 저장하기**
+
+   **Gmail** 노드를 추가해 Resource를 **Draft**, Operation을 **Create**로 둬요. **Subject**, **Message**(체인의 출력), **To Email**을 채우고 이메일 형식을 골라요. 결과가 초안이라서 메일이 나가기 전에 항상 내가 먼저 읽게 돼요.
+
+   <FlowSteps title="만들 워크플로" officialUrl="https://docs.n8n.io/build-your-first-workflow.md" steps={[
+     { where: 'Gmail Trigger', action: '시험용 라벨이 붙은 새 메일이 도착해요', result: '제목, 보낸 사람, 본문이 다음 단계로 넘어가요' },
+     { where: 'Basic LLM Chain + Anthropic Chat Model', action: 'Claude가 프롬프트대로 짧은 답장을 써요', result: '답장 텍스트' },
+     { where: 'Gmail (Draft > Create)', action: '답장이 임시보관함에 저장돼요', result: '아무것도 발송되지 않아요' },
+   ]} />
+
+6. **시험하고 게시하기**
+
+   시험용 메일로 워크플로를 수동 실행하고, 각 노드의 출력을 열어 단계마다 무엇을 받았는지 확인하세요. Gmail에서 초안을 읽어 봐요. 괜찮으면 워크플로를 게시해 트리거가 저절로 돌게 해요. 다음 날 실행 목록에서 오류가 없는지 확인하세요.
+
+</Steps>
+
+## 한눈에 보기
+
+| 하고 싶은 일 | n8n에서 쓸 것 |
+| --- | --- |
+| 정해진 시각에 시작 | Schedule Trigger (워크플로 게시 필요) |
+| Gmail에 메일이 오면 시작 | Gmail Trigger (주기적으로 확인, 라벨 필터 설정) |
+| 프롬프트 하나 넣고 답 하나 받기 | Basic LLM Chain + 채팅 모델 하위 노드 |
+| AI가 도구를 고르게 하기 | AI Agent (도구를 하나 이상 연결) |
+| Claude 쓰기 | API 키를 넣은 Anthropic Chat Model, 또는 Cloud Starter/Pro의 Gateway credits |
+| 실행 전에 사람 확인받기 | AI Agent 도구의 사람 검토(승인/거부) |
+| 채팅으로 첫 워크플로 만들기 | n8n Assistant (프리뷰, Cloud Starter/Pro와 일부 셀프호스팅 에디션) |
+
+### n8n과 Zapier/Make 비교
+
+| 질문 | 더 맞는 것 |
+| --- | --- |
+| 설치 없이 클릭으로 시작하고 준비된 앱이 많았으면 좋겠어요 | [Zapier/Make](/ko/automation/18-zapier-make/) |
+| 내 서버에서 돌리거나 데이터 흐름을 노드 단위로 통제하고 싶어요 | n8n |
+| 워크플로 없이 AI가 내 메일을 읽고 대화로 처리하면 좋겠어요 | [커넥터(MCP)](/ko/automation/20-connectors-mcp/) |
+
+## 막힐 때
+
+### 워크플로가 저절로 시작되지 않아요
+
+- **원인**: 저장만 하고 게시하지 않았거나, 트리거가 일정 간격으로 확인하는데 기다리지 않았어요.
+- **해결**: 워크플로를 게시하고, 먼저 수동 시험으로 로직을 확인하세요.
+
+### AI 노드가 도구가 필요하다고 해요
+
+- **원인**: AI Agent를 추가했는데, 이 노드는 도구를 하나 이상 연결해야 해요.
+- **해결**: 도구를 연결하거나, 단순한 질문-답 단계라면 Basic LLM Chain을 쓰세요.
+
+### Anthropic 자격 증명이 실패해요
+
+- **원인**: 키를 잘못 복사했거나 삭제했거나, 계정에 쓸 수 있는 잔액이 없어요.
+- **해결**: Anthropic Console에서 새 키를 만들어 다시 붙여 넣으세요. Cloud Starter/Pro라면 Gateway credits를 써 보세요.
+
+### Gateway credits가 보이지 않아요
+
+- **원인**: n8n Cloud Starter와 Pro에만 있고, 체험 중에는 유료로 업그레이드하기 전까지 충전할 수 없어요.
+- **해결**: 내 API 키를 쓰거나 Cloud 요금제를 올리세요.
+
+### 같은 메일이 두 번 처리되거나 한꺼번에 너무 많이 처리돼요
+
+- **원인**: 필터가 너무 넓거나, 예전의 읽지 않은 메일이 라벨에 걸려요.
+- **해결**: 라벨이나 검색 필터를 좁히고, 처리한 메일에서는 라벨을 떼세요.
+
+## 실무 팁
+
+- **보내지 말고 초안으로.** 내 이름으로 나가는 글은 사람이 한 번 보고 나가야 해요. 보내기·삭제·기록 변경처럼 실제로 행동하는 에이전트 도구에는 실행 전에 사람이 승인하게 하는 기능이 n8n에 있어요.
+- **개인정보는 프롬프트에 넣지 마세요.** 메일 본문은 모델 제공사로 전달돼요. 연습용 메일로 시작하고 회사 규정을 먼저 확인하세요([5. 개인정보·안전](/ko/basics/05-privacy-safety/)).
+- **AI 단계는 하나로 시작하세요.** 메일 1통으로 트리거, AI, 동작이 되는 것을 확인한 뒤 단계를 늘리세요.
+- **비용을 지켜보세요.** API 호출은 제공사(또는 Gateway credits)에서 청구되고, Cloud 요금제에는 실행 횟수 한도가 있어요.
+- **셀프호스팅은 일이에요.** 업데이트, 백업, 보안은 내 몫이에요. n8n은 거의 매주 새 마이너 버전을 내요.
+
+## 다음에 볼 튜토리얼
+
+- [3. Zapier/Make 자동화](/ko/automation/18-zapier-make/) — 설치 없는 대안과 두 방식의 차이
+- [5. 커넥터(MCP) 연결](/ko/automation/20-connectors-mcp/) — Claude가 내 도구를 직접 쓰게 하기
+- [2. 아침 브리핑 받기](/ko/automation/17-morning-briefing/) — 매일 루틴을 AI 에이전트로 처리하기
+- [7. 휴대폰에서 AI 쓰기](/ko/basics/07-ai-on-phone/) — 책상을 떠나서 AI 쓰기
+- [사무·기획·관리직을 위한 AI 활용 가이드](/ko/roles/office/) — 직무별 추천 순서

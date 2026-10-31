@@ -1,0 +1,151 @@
+---
+title: "Asking AI About Health, Legal and Money Questions Safely"
+description: "How to use AI to understand health, legal, and money topics without treating it as a professional, with a practical checklist and when to contact a real person"
+sidebar:
+  label: "13. Sensitive questions"
+level: beginner
+category: basics
+status: published
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "15 min"
+prerequisites: ["Fact-checking basics (tutorial 4)"]
+lastVerified: 2026-10-31
+sources:
+  - title: "Anthropic Usage Policy (High-risk Use Case Requirements)"
+    url: "https://www.anthropic.com/legal/aup"
+  - title: "Gemini Apps Privacy Hub (Google)"
+    url: "https://support.google.com/gemini/answer/13594961"
+  - title: "Google Generative AI Prohibited Use Policy"
+    url: "https://policies.google.com/terms/generative-ai/use-policy"
+  - title: "Claude Help Center: Claude is providing incorrect or misleading responses"
+    url: "https://support.claude.com/en/articles/8525154-claude-is-providing-incorrect-or-misleading-responses-what-s-going-on"
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- AI is good for **understanding** a health, legal, or money topic and **preparing questions**. It is not a substitute for a doctor, lawyer, or tax or financial professional.
+- Google's Gemini notice says: "Don't rely on Gemini Apps for diagnosis, treatment, medical advice, or legal, financial, or other professional help."
+- Anthropic's usage policy lists medical, legal, and financial advice as **high-risk areas** where a qualified person should stay accountable.
+- Check anything that matters ([tutorial 4](/basics/04-fact-checking/)), and share as little personal information as you can ([tutorial 12](/basics/12-privacy-settings/)).
+- In an emergency, **call your local emergency number**. Don't ask a chatbot first.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Tell which questions AI can help with and which need a professional.
+- Ask in a way that gets useful, less risky answers.
+- Know when to stop chatting and contact a real person or an emergency service.
+
+## Concepts to know first
+
+AI can write fluent answers that are wrong ([tutorial 4](/basics/04-fact-checking/)). In health, law, and money, a wrong answer can cost you more, and the right answer depends on your exact facts, your location, and today's rules.
+
+What the official pages say (as of 2026-10-31):
+
+| Source | What it says |
+| --- | --- |
+| **Google (Gemini Apps Privacy Hub)** | "Don't rely on Gemini Apps for diagnosis, treatment, medical advice, or legal, financial, or other professional help. Its output is for informational purposes only." |
+| **Anthropic Usage Policy** | For high-risk uses (for example advising someone on their legal rights, diagnosing a condition or adjusting a treatment, or personalized recommendations on specific investments or taxes), a qualified person must review the output, and the affected person must be told AI was used. |
+| **Google Generative AI Prohibited Use Policy** | Bans automated decisions with a material detrimental impact on individual rights without human supervision in high-risk domains such as healthcare, finance, and legal. |
+| **Anthropic help page** | Claude can give incorrect or misleading answers. Carefully verify advice where being wrong would cause problems. |
+
+<Aside type="note" title="How to read these rules">
+Anthropic's high-risk requirements are aimed at people and businesses who use Claude to give advice or make decisions affecting others, not a ban on asking for general information. But the idea behind them is useful for you too: a qualified person should stand behind decisions that affect health, rights, or money.
+</Aside>
+
+<Aside type="caution" title="What I could not confirm">
+OpenAI's usage policy and help pages (openai.com, help.openai.com) were not accessible here, so I'm not quoting ChatGPT's own wording on medical, legal, or financial advice. The advice in this tutorial applies to ChatGPT the same way.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'Is this an emergency? If yes, I called the emergency number first',
+  'I used AI to understand and prepare, not to decide',
+  'I removed names, numbers, and ID details before pasting',
+  'I checked the key facts against an official source',
+  'For a final decision, I talked to a professional',
+]} />
+
+<Steps>
+
+1. **Rule out an emergency first**
+
+   If someone may be in danger, chest pain, severe bleeding, thoughts of self-harm, or a fire or crime in progress, call your local emergency number or go to emergency care. Don't type it into a chatbot first. The number depends on your country, so look it up before you need it.
+
+2. **Use AI for the "understanding" jobs**
+
+   Good uses: explaining a term on a test result or contract, listing questions to ask your doctor or lawyer, summarizing a long document, comparing general options, and drafting a letter you will review.
+
+   <PromptBox>
+   Explain "[term or clause]" in plain language for a non-expert. Give general information only. Then list five questions I should ask my [doctor / lawyer / accountant] about it.
+   </PromptBox>
+
+3. **Share only what's needed**
+
+   Leave out names, ID numbers, account numbers, and exact addresses. Replace them with placeholders. Health records and financial details are exactly the kind of information to be careful with. See [tutorial 5](/basics/05-privacy-safety/) and, for settings, [tutorial 12](/basics/12-privacy-settings/).
+
+4. **Tell it your uncertainty rules**
+
+   <PromptBox>
+   Answer as general information, not advice for my case. Say what you're unsure of, what depends on my country or region, and what could change the answer. If this needs a professional, say which kind.
+   </PromptBox>
+
+5. **Check the parts that matter**
+
+   Numbers (doses, deadlines, rates, amounts), laws, and citations must be checked against the original source: a public agency, official site, pharmacist's label, or the contract itself. Ask for sources and open them yourself ([tutorial 4](/basics/04-fact-checking/)).
+
+6. **Bring in a professional for decisions**
+
+   Treatment changes, signing or filing legal documents, large money moves, taxes, and disputes should involve a qualified person. Take your AI-prepared notes with you. If you tell them AI helped, they can check it faster.
+
+</Steps>
+
+## Quick reference
+
+| Question | AI is fine for | Do not rely on AI alone for |
+| --- | --- | --- |
+| Health | Explaining terms, preparing questions for a visit | Diagnosis, starting or stopping medication, changing doses |
+| Legal | Explaining concepts, summarizing a contract, drafting questions | Deciding your rights, filing deadlines, signing documents |
+| Money | Explaining terms, comparing general options, building a budget template | Buying or selling specific investments, tax filing, big loans |
+| Mental health | General information about coping and where to find help | Crisis support. Contact a person or a crisis line |
+
+## Common sticking points
+
+### The AI sounds very sure
+
+- **Cause**: Tone doesn't show accuracy.
+- **Fix**: Ask what it's unsure about, then check the key facts against an official source.
+
+### The AI refuses or adds lots of warnings
+
+- **Cause**: These are sensitive areas, and tools are designed to be cautious.
+- **Fix**: Ask for general information or for questions to bring to a professional. Don't try to trick it into giving personal advice.
+
+### I'm in a hurry and can't reach a professional
+
+- **Cause**: Appointments and replies take time.
+- **Fix**: Use official information lines or your local emergency number for urgent cases. Use AI only to prepare while you wait.
+
+### I got different answers from different AIs
+
+- **Cause**: Models differ, and the right answer may depend on your country.
+- **Fix**: Treat the disagreement as a sign to check an official source.
+
+## Practical tips
+
+- Add your country or region to the question. Laws and costs differ.
+- Ask "What would change this answer?" to expose missing facts.
+- Keep a short note of what you asked and what was confirmed, to show a professional.
+- If a message pressures you to pay or act immediately, see [tutorial 10 on AI scams](/basics/10-ai-scams-deepfakes/).
+
+## What to read next
+
+- [4. Can you trust AI answers? How to fact-check](/basics/04-fact-checking/) — Checking what matters
+- [12. Turn off AI training on your chats](/basics/12-privacy-settings/) — Privacy settings
+- [10. AI scams and deepfakes](/basics/10-ai-scams-deepfakes/) — Pressure and fake advice
+- [5. Using AI while protecting personal and company information](/basics/05-privacy-safety/) — What not to paste

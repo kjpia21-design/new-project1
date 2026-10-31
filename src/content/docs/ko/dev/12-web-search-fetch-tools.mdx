@@ -1,0 +1,252 @@
+---
+title: "API로 Claude에게 웹 검색·웹 페이지 읽기 맡기기"
+description: "Claude API 요청에 웹 검색·웹 가져오기(web fetch) 서버 도구를 붙이고, 도메인 제한·max_uses·max_content_tokens로 범위와 비용을 제한하고, 인용을 보여 주고, 2026년 10월에 추가된 조직 단위 web fetch 제어를 확인해요"
+sidebar:
+  label: "12. 웹 검색·웹 가져오기 도구"
+level: advanced
+category: dev
+tools: ["Claude API", "Web search tool", "Web fetch tool", "Python", "anthropic SDK"]
+duration: "50분"
+prerequisites:
+  - "C16. Claude API 시작하기를 끝낸 상태 (API 키, 환경 변수 설정)"
+  - "Python 3.10 이상, pip install anthropic"
+  - "tool_use 루프(개발 1)와 인용(개발 9)에 대한 감"
+lastVerified: 2026-10-31
+sources:
+  - title: "Web search tool"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool"
+  - title: "Web fetch tool"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool"
+  - title: "Server tools (domain filtering)"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/server-tools"
+  - title: "Claude Platform release notes (October 20, 2026)"
+    url: "https://platform.claude.com/docs/en/release-notes/overview"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- **웹 검색**과 **웹 가져오기(web fetch)**는 **서버 도구**예요. API가 대신 실행해 주므로, 개발 1처럼 `tool_result`를 돌려주는 루프를 직접 짤 필요 없이 `tools`에 항목만 추가하면 돼요.
+- 웹 검색은 페이지를 찾고 **인용을 항상 돌려줘요**. 웹 가져오기는 **특정 URL**의 전체 내용(텍스트·HTML·PDF)을 읽고, 인용은 **기본이 꺼져 있어요**.
+- 범위는 `max_uses`, `allowed_domains` / `blocked_domains`(둘 중 하나만), 그리고 가져오기는 `max_content_tokens`로 제한해요.
+- 비용(공식 문서, 2026-10-31): 검색은 **1,000회당 $10 + 토큰 비용**, 가져오기는 토큰 비용 외 **추가 요금 없음**. 가져온 페이지는 입력 토큰이 되니 상한을 두세요.
+- 2026-10-20 추가: 조직 관리자가 Console의 Capabilities 페이지에서 **web fetch를 끄거나 허용·차단 도메인을 설정**할 수 있어요.
+- 공식 페이지는 2026-10-31에 읽었지만 **실제 API 호출은 하지 못했어요.** 아래 코드는 문서에 나온 파라미터를 따랐고, 직접 실행해 본 것은 아니에요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- Messages API 요청에 `web_search`와 `web_fetch`를 붙이고 알맞은 도구 버전을 고르기
+- Claude가 갈 수 있는 사이트를 제한하고, 검색·가져오기 횟수와 가져오는 토큰에 상한 두기
+- 응답을 읽고 사용자에게 인용을 보여 주기, 200 응답 안에 담겨 오는 도구 오류 처리하기
+- 안전 수칙(데이터 유출 위험, URL 검증)과 조직 단위 스위치 위치 설명하기
+
+## 먼저 알아둘 개념
+
+[개발 1](/ko/dev/01-tool-use/)에서는 Claude가 요청하면 내 코드가 함수를 실행하고 `tool_result`를 돌려주는 루프를 직접 만들었어요. 웹 검색과 웹 가져오기는 달라요. **서버 도구**라서, API가 요청 도중 검색·가져오기를 수행하고 결과를 대화에 넣어 줘요. 내 문서의 인용은 [개발 9](/ko/dev/09-rag-files-citations/), 자바스크립트 페이지나 클릭이 필요한 실제 브라우저 작업은 [개발 10](/ko/dev/10-computer-browser-tools/)을 보세요.
+
+| 용어 | 뜻 |
+| --- | --- |
+| **서버 도구** | Anthropic이 실행하는 도구. 응답에 `server_tool_use`와 결과 블록이 보여요. |
+| **웹 검색** | Claude가 웹을 검색하고 출처를 달아 답해요. |
+| **웹 가져오기** | 대화에 이미 나온 URL의 전체 텍스트를 가져와요. |
+| **동적 필터링** | `*_20260209` 이후 버전에서 Claude가 코드를 써서 결과를 줄인 뒤 컨텍스트에 넣어요. Claude 4.6 이상 필요. |
+| **도메인 필터** | 도구에 붙이는 `allowed_domains` 또는 `blocked_domains` |
+
+### 도구 버전 (공식 문서, 2026-10-31)
+
+| 도구 | 버전 | 추가된 것 |
+| --- | --- | --- |
+| 웹 검색 | `web_search_20250305` | 기본 검색 |
+| | `web_search_20260209` | 동적 필터링 |
+| | `web_search_20260318` | `response_inclusion` 제어 |
+| 웹 가져오기 | `web_fetch_20250910` | 기본 가져오기 |
+| | `web_fetch_20260209` | 동적 필터링 |
+| | `web_fetch_20260309` | 캐시 우회(`use_cache`) |
+| | `web_fetch_20260318` | `response_inclusion` 제어 |
+
+`web_search_20260209` 이후에는 `allowed_callers` 기본값이 코드 실행 도구라서 동적 필터링이 돌아가요. 필요한 코드 실행은 API가 알아서 준비하고, 토큰 비용 외 추가 요금은 없어요. 프로그램 방식 도구 호출을 지원하지 않는 모델은 `allowed_callers: ["direct"]`를 써야 하고, 아니면 400 오류가 나요. 동적 필터링은 ZDR(데이터 무보존)과 HIPAA 대상이 **아니에요**.
+
+<Aside type="caution" title="웹 가져오기와 신뢰할 수 없는 입력">
+공식 문서는 민감한 데이터와 신뢰할 수 없는 입력이 함께 있는 환경에서 web fetch를 켜면 **데이터 유출 위험**이 있다고 경고해요. 신뢰할 수 있는 환경이나 민감하지 않은 데이터에서만 쓰세요. 위험을 줄이려고 Claude는 대화에 이미 나온 URL(사용자 메시지, 클라이언트 도구 결과, 앞선 검색·가져오기 결과)만 가져올 수 있고, Claude 자신의 출력에만 있는 URL은 가져오지 못해요. 자격 증명처럼 보이는 URL도 거부해요. 그래도 위험이 조금 남으니 `max_uses`, `allowed_domains`, `url_sources` 설정을 함께 고려하세요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  'ANTHROPIC_API_KEY를 환경 변수로 설정했다',
+  '웹 검색 도구로 요청을 한 번 보내고 인용을 확인했다',
+  '도메인을 제한하고 max_uses를 설정했다',
+  'max_content_tokens 상한을 둔 채 웹 가져오기 요청을 보냈다',
+  '관리자가 웹 검색·가져오기를 켜고 끄는 위치를 안다',
+]} />
+
+<Steps>
+
+1. **준비하기**
+
+   ```bash
+   mkdir web-tools-lab && cd web-tools-lab
+   python3 -m venv .venv && source .venv/bin/activate
+   pip install anthropic
+   ```
+
+   C16처럼 `ANTHROPIC_API_KEY`를 환경 변수로 설정하세요. 웹 검색은 관리자가 Claude Console에서 끄지 않은 한 조직에서 켜져 있어요. 꺼져 있으면 도구가 들어간 요청이 400 `invalid_request_error`로 실패해요. 지원하는 모델을 쓰세요. 문서에는 `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5` 등이 올라 있어요. Models API의 `capabilities.server_tools.web_search.supported` 값으로 모델별 지원 여부를 확인할 수 있어요.
+
+2. **웹 검색 붙이기**
+
+   `tools`에 항목 하나면 돼요. 여기서는 검색을 3회로 제한하고 사이트도 제한해요. `allowed_domains`에는 `https://` 없이 `example.com`이나 `example.com/blog` 같은 도메인을 넣고, 하위 도메인은 자동으로 포함돼요.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   response = client.messages.create(
+       model="claude-opus-5-5",
+       max_tokens=2048,
+       messages=[{
+           "role": "user",
+           "content": "이번 주 Claude Platform 릴리스 노트에서 바뀐 점을 세 줄로 요약해 줘.",
+       }],
+       tools=[{
+           "type": "web_search_20260318",
+           "name": "web_search",
+           "max_uses": 3,
+           "allowed_domains": ["platform.claude.com"],
+       }],
+   )
+
+   for block in response.content:
+       if block.type == "text":
+           print(block.text)
+           for c in (getattr(block, "citations", None) or []):
+               print("  출처:", c.title, c.url)
+   print("검색 횟수:", response.usage.server_tool_use.web_search_requests)
+   ```
+
+   이 코드는 실행해 보지 못했어요. 블록과 필드 이름(`text`, `citations`, `url`, `title`, `usage.server_tool_use.web_search_requests`)은 공식 문서의 응답 예시에서 가져왔어요.
+
+   <PromptBox>
+   내가 말하는 도구의 공식 가격 페이지를 웹에서 검색해서, 가격을 두 문장으로 요약하고 사용한 URL을 알려 줘. 공식 페이지를 못 찾으면 추측하지 말고 못 찾았다고 말해 줘.
+   </PromptBox>
+
+3. **응답 읽고 인용 보여 주기**
+
+   응답에는 Claude의 짧은 안내문, `server_tool_use` 블록(검색어), `web_search_tool_result` 블록(URL, 제목, `page_age`, `encrypted_content`), 그리고 `citations`가 달린 텍스트 블록이 들어 있어요. 인용 하나에는 `url`, `title`, `cited_text`(최대 150자), `encrypted_index`가 있어요.
+
+   여러 턴으로 이어 갈 때 규칙이 두 가지예요. 어시스턴트 콘텐츠 블록을 `encrypted_content`까지 **받은 그대로** 돌려보내세요. 빠지거나 바뀌면 400 오류가 나요. 그리고 최종 사용자에게 결과를 보여 줄 때는 **원 출처 인용을 포함**해야 해요. 인용 필드 `cited_text`, `title`, `url`은 토큰 사용량에 포함되지 않아요.
+
+4. **특정 페이지는 웹 가져오기로**
+
+   가져오기는 URL의 전체 텍스트를 읽어 와요. PDF는 base64로 돌려받아 첨부한 PDF처럼 처리돼요. 자바스크립트로 동적으로 그려지는 사이트는 **지원하지 않아요**.
+
+   ```python
+   response = client.messages.create(
+       model="claude-opus-5-5",
+       max_tokens=2048,
+       messages=[{
+           "role": "user",
+           "content": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool 를 읽고 오류 코드를 정리해 줘.",
+       }],
+       tools=[{
+           "type": "web_fetch_20260318",
+           "name": "web_fetch",
+           "max_uses": 2,
+           "allowed_domains": ["platform.claude.com"],
+           "max_content_tokens": 30000,
+           "citations": {"enabled": True},
+       }],
+   )
+   ```
+
+   이것도 실행해 보지 못했어요. `max_content_tokens`는 큰 텍스트를 잘라 줘요(PDF에는 적용되지 않고 대략적인 값이에요). `max_uses`는 기본 한도가 없으니 직접 정하세요. 가져오기의 인용은 선택 사항이고 **기본이 꺼져 있어요**. 가져오기의 도메인 매칭은 도메인만 봐요. 경로가 들어간 항목은 가져오기 URL과 일치하지 않아요.
+
+   예산을 잡을 때 문서의 대략값은 이래요. 평균 웹페이지(10 kB)는 약 2,500 토큰, 큰 문서 페이지(100 kB)는 약 25,000 토큰, 연구 논문 PDF(500 kB)는 약 125,000 토큰이에요.
+
+5. **검색과 가져오기 함께 쓰기**
+
+   두 도구를 모두 켜고 URL 없이 페이지 이름만 말하면(예: "anthropic-sdk-python 저장소의 README를 읽어 줘"), Claude가 검색으로 찾고 좋은 결과를 골라 가져와요. 검색 결과로 새 URL이 대화에 들어오니 이 구성에서는 `allowed_domains`를 좁게 잡으세요.
+
+6. **조직 단위 스위치 확인하기**
+
+   조직 관리자는 Claude Console의 **Capabilities** 페이지에서 웹 검색이나 웹 가져오기를 끄거나 도메인을 제한할 수 있어요. 요청의 `allowed_domains`는 조직 허용 목록의 **부분집합**이어야 하고, 아니면 검증 오류가 나요. 조직이 막은 도메인을 요청에 넣으면 충돌한 항목을 알려 주는 400 오류가 나요.
+
+</Steps>
+
+<FlowSteps title="관리자가 web fetch를 제어하는 곳 (2026-10-31 기준)" officialUrl="https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool" steps={[
+  { where: 'Claude Console의 Capabilities 페이지', action: '조직의 web fetch를 켜거나 끄기', result: '꺼져 있으면 도구가 든 Messages API 요청이 400 오류로 실패해요' },
+  { where: '같은 페이지, web fetch가 켜진 상태', action: 'web fetch의 허용·차단 도메인 설정', result: '요청에 넣은 목록과 함께 적용돼요' },
+  { where: '내 요청', action: '필요하면 도구에 allowed_domains 또는 blocked_domains 추가', result: '허용 목록은 조직 목록의 부분집합이어야 해요' },
+]} />
+
+## 2026년 10월에 바뀐 점
+
+**2026-10-20** 릴리스 노트에 따르면 조직 관리자가 이제 Capabilities 페이지에서 조직의 web fetch를 끌 수 있고, 켠 상태에서는 web fetch의 허용·차단 도메인도 설정할 수 있어요. 같은 항목에서 Claude Managed Agents 세션도 이 설정을 따른다고 해요. 리다이렉트로 도달한 URL을 포함해, URL은 조직 목록과 에이전트 도구의 `allowed_domains` / `blocked_domains`를 **둘 다** 통과해야 해요. Managed Agents의 웹 검색은 **Allow web search** 설정(10월 6일부터)과 웹 검색 도메인 제한(10월 14일부터)을 따라요. Managed Agents에서는 두 도구가 에이전트 툴셋에 기본으로 켜져 있고 `max_uses`, `citations`, `cache_control`은 쓸 수 없어요.
+
+## 빠른 참조표
+
+| 항목 | 웹 검색 | 웹 가져오기 |
+| --- | --- | --- |
+| 인용 | 항상 켜짐 | 선택, 기본 꺼짐(`citations.enabled`) |
+| 사용 상한 | `max_uses` (오류 `max_uses_exceeded`) | `max_uses` (기본 한도 없음, 실패한 가져오기도 횟수에 포함) |
+| 도메인 규칙 | 하위 경로 지원 | 도메인만 |
+| 크기 제어 | 문서에 없음 | `max_content_tokens` (텍스트만) |
+| 가격 | 1,000회당 $10 + 토큰 | 추가 요금 없음, 토큰만 |
+| ZDR | 가능 (Covered Models·동적 필터링 제외) | 가능 (같은 제외) |
+| HIPAA | 가능 (동적 필터링 제외) | 대상 아님 |
+| Batch API | 가능, 같은 가격, 조직별 제한 | 가능, 같은 가격 |
+
+Server tools 페이지의 도메인 규칙은 이래요. 스킴 없이 쓰기, 하위 도메인 자동 포함, `*`는 도메인이 아니라 경로에서만, `allowed_domains`와 `blocked_domains`는 동시에 쓰지 않기. 비슷하게 생긴 유니코드 문자로 필터를 우회할 수 있으니 ASCII 도메인만 쓰세요.
+
+오류는 **200 응답 안**에 `content`의 오류 객체 하나로 와요. 검색 코드는 `too_many_requests`, `invalid_tool_input`, `max_uses_exceeded`, `query_too_long`, `request_too_large`, `unavailable`이에요. 가져오기는 여기에 `url_too_long`(250자 초과), `url_not_allowed`, `url_not_in_prior_context`, `url_not_accessible`, `unsupported_content_type`(텍스트·HTML·PDF만), `content_too_large`가 더해져요. 검색 결과가 없으면 오류가 아니라 빈 `content` 목록이 와요.
+
+## 자주 막히는 지점
+
+### 웹 검색·가져오기가 켜져 있지 않다는 400 오류가 나요
+
+- **원인**: 조직 관리자가 기능을 껐어요.
+- **해결**: 관리자에게 Console의 Capabilities 페이지를 확인해 달라고 하세요.
+
+### 도메인 목록을 둘 다 넣으니 400이 나요
+
+- **원인**: `allowed_domains`와 `blocked_domains`는 함께 못 써요.
+- **해결**: 하나만 고르세요.
+
+### 가져오기가 `url_not_in_prior_context`를 돌려줘요
+
+- **원인**: URL이 Claude 자신의 출력에만 있거나, `url_sources` 설정이 제외한 출처에만 있어요.
+- **해결**: URL을 사용자 메시지에 넣으세요.
+
+### 중단 이유가 `pause_turn`이에요
+
+- **원인**: API가 오래 걸리는 검색 턴을 잠시 멈췄어요.
+- **해결**: 멈춘 어시스턴트 메시지를 그대로 새 요청에 실어 보내 이어 가세요.
+
+### 검색 뒤 다음 턴 요청이 실패해요
+
+- **원인**: `encrypted_content`가 빠졌거나 바뀌었어요.
+- **해결**: 어시스턴트 콘텐츠 블록을 받은 그대로 돌려보내세요.
+
+## 실전 팁
+
+- `max_uses`는 3~5로 시작하세요. 문서에 따르면 간단한 사실 질문은 보통 검색 1~3회, 여러 대상을 비교하는 조사는 10회 이상 쓸 수 있어요.
+- 시스템 프롬프트로 검색을 적극적으로 할지 바로 답할지 유도하고, 강한 제한은 `max_uses`로 거세요.
+- 토큰이 많이 드는 작업은 동적 필터링(`*_20260209` 이후)이 유리하지만 ZDR·HIPAA 대상이 아니라는 점을 기억하세요.
+- `usage.server_tool_use`를 기록해 검색 횟수가 비용 추적에 잡히게 하세요([개발 11](/ko/dev/11-usage-cost-api/)).
+- 자바스크립트나 클릭이 필요한 페이지는 가져오기가 아니라 브라우저 도구의 일이에요.
+
+## 다음에 볼 튜토리얼
+
+- [1. 업무용 봇 만들기: 도구 사용](/ko/dev/01-tool-use/) — 클라이언트 도구와 루프
+- [9. 사내 문서 Q&A](/ko/dev/09-rag-files-citations/) — 내 파일의 인용
+- [10. 컴퓨터·브라우저 도구](/ko/dev/10-computer-browser-tools/) — 실제 브라우저가 필요할 때
+- [11. 사용량·비용 API](/ko/dev/11-usage-cost-api/) — 지출 추적
+- [2. API 비용 줄이기](/ko/dev/02-cost-optimization/) — 캐싱, 배치, effort
+- [C16. Claude API 시작하기](/ko/claude/c16-api/)
+- [개발자 가이드](/ko/roles/developer/)

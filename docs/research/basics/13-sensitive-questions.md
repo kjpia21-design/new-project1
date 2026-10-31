@@ -1,0 +1,7 @@
+# basics/13 sensitive questions (N1, 2026-10-31)
+- Anthropic AUP (anthropic.com/legal/aup, curl): "High-risk Use Case Requirements": legal/medical/finance/credit/insurance/housing/employment/education/healthcare access are High-risk Areas; qualified person must meaningfully review before delivered as advice; individual told AI was used. Applies to users giving advice/decisions, not a ban on general info. Local law prevails.
+- Google Gemini Apps Privacy Hub 13594961: "Don't rely on Gemini Apps for diagnosis, treatment, medical advice, or legal, financial, or other professional help. Its output is for informational purposes only."
+- Google Generative AI Prohibited Use Policy (policies.google.com/terms/generative-ai/use-policy, last modified Dec 17, 2024): no automated decisions with material detrimental impact without human supervision in high-risk domains (employment, healthcare, finance, legal, housing, insurance, social welfare); no misleading claims of expertise in health/finance/law.
+- Claude help 8525154 (from basics/04): verify advice where wrong would cause problems.
+- Korea: nfa.go.kr page "119 구급신고 요령" (page exists under 구급서비스; body text not extracted, only title/menu confirmed). mohw.go.kr home: "자살예방상담전화 109", "보건복지상담센터 국번없이 129(무료)". 112 not confirmed from official source, so omitted. English page uses generic "local emergency number".
+- NOT confirmed: OpenAI usage policy wording (openai.com 403, help.openai.com 403).
