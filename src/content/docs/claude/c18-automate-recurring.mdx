@@ -1,16 +1,16 @@
 ---
-title: "반복 업무 자동 실행하기"
-description: "Claude 앱의 예약 작업, Claude Code 루틴·데스크톱 예약 작업·/loop 중 무엇을 언제 쓸지 고르고, 사람이 보지 않는 동안 안전하게 돌아가게 설계하는 방법"
+title: "Automating recurring work"
+description: "How to choose among scheduled tasks in the Claude app, Claude Code routines, desktop scheduled tasks, and /loop, and how to design them so they run safely while no one is watching"
 sidebar:
-  label: "C18. 반복 업무 자동화"
+  label: "C18. Automating recurring work"
 level: advanced
 category: claude
 tools: ["Claude", "Claude Code", "GitHub"]
-duration: "40분"
+duration: "40 min"
 prerequisites:
-  - "Claude 유료 플랜 (예약 작업과 루틴은 Pro, Max, Ultra, Team, Enterprise)"
-  - "C13(클라우드 세션과 루틴 기본)을 읽어 봤다면 더 수월해요"
-  - "자동으로 돌리고 싶은 반복 업무 하나 (한 번은 손으로 해 본 것)"
+  - "A paid Claude plan (scheduled tasks and routines are on Pro, Max, Ultra, Team, and Enterprise)"
+  - "It helps if you've read C13 (cloud session and routine basics)"
+  - "One recurring task you want to automate (one you've done by hand at least once)"
 lastVerified: 2026-10-31
 sources:
   - title: "Claude pricing"
@@ -33,212 +33,212 @@ import PromptBox from '../../../components/PromptBox.astro';
 import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
-- Claude에서 반복 작업을 자동으로 돌리는 공식 방법은 크게 **네 가지**예요. ① Claude 앱의 예약 작업, ② Claude Code 클라우드 **루틴**(공식 문서의 새 이름은 클라우드 예약 작업, 2026-10-26 기준), ③ Claude Code 데스크톱 **로컬 예약 작업**, ④ 세션 안에서 도는 **`/loop`**.
-- 고르는 기준은 **어디서 실행되나, 내 컴퓨터가 켜져 있어야 하나, 내 로컬 파일이 필요한가**예요. 컴퓨터를 꺼도 돌려야 하면 클라우드(루틴 또는 앱 예약 작업)를, 로컬 파일이 필요하면 데스크톱 작업을, 잠깐 상태를 확인하려면 `/loop`를 써요.
-- 자동 실행은 **사람이 보지 않는 동안** 돌아요. 프롬프트는 자기완결적으로, 결과는 되돌릴 수 있는 형태(초안·브랜치·PR)로, 마지막 확정은 사람이 하게 설계하세요.
-- 루틴은 **리서치 프리뷰**라 동작과 한도가 바뀔 수 있어요(2026-10-13 기준).
-- 루틴의 기본(만들기, 트리거, 환경)은 [C13](/claude/c13-cloud-sessions/)에 있어요. 이 글은 **무엇을 고를지, 어떻게 안전하게 설계할지, 어떻게 확인할지**에 집중해요.
+- There are broadly **four** official ways to run recurring work automatically in Claude: (1) scheduled tasks in the Claude app, (2) Claude Code cloud **routines** (the official docs' new name is cloud scheduled tasks, as of 2026-10-26), (3) Claude Code desktop **local scheduled tasks**, and (4) **`/loop`**, which runs inside a session.
+- The criteria for choosing are **where it runs, whether your computer has to be on, and whether it needs your local files**. If it has to run even when your computer is off, use the cloud (routines or app scheduled tasks); if it needs local files, use a desktop task; to check on something briefly, use `/loop`.
+- Automatic runs happen **while no one is watching**. Design prompts to be self-contained, results to be reversible (drafts, branches, PRs), and the final commit to be made by a person.
+- Routines are a **research preview**, so behavior and limits can change (as of 2026-10-13).
+- The basics of routines (creating them, triggers, environments) are in [C13](/claude/c13-cloud-sessions/). This article focuses on **what to choose, how to design safely, and how to verify**.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- 내 업무에 맞는 자동 실행 방식을 **비교표로 골라** 쓸 수 있어요.
-- 자동 실행용 프롬프트를 **자기완결적으로** 쓰고, 시험 실행과 실행 기록으로 확인할 수 있어요.
-- 한도와 만료 규칙을 알고 **조용히 멈추는 자동화**를 피할 수 있어요.
-- 이 사이트가 쓰는 "매일 아침 공식 소식 확인 → 수정안 PR" 같은 패턴을 내 업무에 옮길 수 있어요.
+- **Choose from a comparison table** the automation method that fits your work.
+- Write prompts for automatic runs **to be self-contained**, and verify them with a test run and the run history.
+- Know the limits and expiration rules so you can avoid **automations that stop silently**.
+- Carry over a pattern this site uses, like "check official news every morning → open a PR with proposed edits," to your own work.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-### 네 가지 방식 한눈에 비교
+### The four methods at a glance
 
-| | Claude 앱 예약 작업 | 루틴 (클라우드) | 데스크톱 예약 작업 | `/loop` |
+| | Claude app scheduled tasks | Routines (cloud) | Desktop scheduled tasks | `/loop` |
 | --- | --- | --- | --- | --- |
-| 실행 위치 | 원격(공식 도움말 기준) | Anthropic 관리 클라우드 | 내 컴퓨터 | 내 컴퓨터(열려 있는 세션) |
-| 내 컴퓨터가 켜져 있어야 하나 | 아니요 (단, 로컬 파일·앱이 필요한 작업은 로컬에서만 실행) | 아니요 | **예** (앱이 열려 있고 컴퓨터가 깨어 있어야 해요) | **예** |
-| 세션을 열어 둬야 하나 | 아니요 | 아니요 | 아니요 | **예** |
-| 로컬 파일 접근 | 폴더를 지정하면 가능(로컬 실행 시) | 없음(저장소를 새로 클론) | 있음 | 있음 |
-| 트리거 | 시간(매시간·매일·평일·매주·수동) | 스케줄, API, GitHub 이벤트 | 시간(수동·매시간·매일·평일·매주) | 간격 |
-| 최소 간격 | 프리셋 기준 매시간 | 1시간 | 1분 | 1분 |
-| 주 대상 | 업무 문서·리포트·요약 | 저장소 작업(코드·문서) | 로컬 코드·파일 작업 | 배포·PR 상태 확인 |
+| Where it runs | Remote (per the official help) | Anthropic-managed cloud | Your computer | Your computer (an open session) |
+| Does your computer need to be on? | No (but tasks that need local files or apps run only locally) | No | **Yes** (the app must be open and the computer awake) | **Yes** |
+| Does a session need to stay open? | No | No | No | **Yes** |
+| Local file access | Possible if you specify a folder (when running locally) | None (clones the repository fresh) | Yes | Yes |
+| Triggers | Time (hourly, daily, weekdays, weekly, manual) | Schedule, API, GitHub events | Time (manual, hourly, daily, weekdays, weekly) | Interval |
+| Minimum interval | Hourly (by preset) | 1 hour | 1 minute | 1 minute |
+| Main use | Work documents, reports, summaries | Repository work (code, docs) | Local code and file work | Checking deploy or PR status |
 
-위 표는 아래 공식 문서를 합쳐 정리했어요. Claude Code의 세 방식(루틴, 데스크톱, `/loop`)은 Run prompts on a schedule 문서의 비교표를, 앱 예약 작업은 Claude Cowork 도움말을 기준으로 했어요.
+The table above combines the official docs below. For Claude Code's three methods (routines, desktop, `/loop`) it follows the comparison table in the Run prompts on a schedule doc, and for app scheduled tasks it follows the Claude Cowork help.
 
-<Aside type="note" title="Claude 앱 예약 작업과 Claude Code는 다른 기능이에요">
-앱의 예약 작업은 Claude(Cowork)에서 프롬프트를 저장해 정해진 주기로 실행하고, 연결한 커넥터·스킬·플러그인을 쓸 수 있어요. 한 번 돌 때마다 별도 세션이 생겨요. 반면 루틴은 Claude Code 기능으로 **저장소와 환경**을 중심으로 돌아요. 문서·요약·리포트 업무는 앱 예약 작업, 코드·저장소 업무는 루틴이 자연스러워요.
+<Aside type="note" title="Claude app scheduled tasks and Claude Code are different features">
+App scheduled tasks save a prompt in Claude (Cowork) and run it on a set schedule, and can use the connectors, skills, and plugins you've connected. Each run creates a separate session. Routines, on the other hand, are a Claude Code feature that centers on **a repository and an environment**. For documents, summaries, and reports, app scheduled tasks are the natural fit; for code and repository work, routines are.
 </Aside>
 
-### 어느 걸 고를까요?
+### Which one should you pick?
 
-<FlowSteps title="고르는 순서" officialUrl="https://code.claude.com/docs/en/scheduled-tasks" steps={[
-  { where: '질문 1', action: '지금 열려 있는 세션에서 잠깐만 확인하면 되나요?', result: '예 → /loop' },
-  { where: '질문 2', action: '내 컴퓨터의 로컬 파일·도구가 꼭 필요한가요?', result: '예 → 데스크톱 예약 작업' },
-  { where: '질문 3', action: 'GitHub 저장소 작업이거나 API·GitHub 이벤트로도 시작해야 하나요?', result: '예 → 루틴' },
-  { where: '그 외', action: '메일·일정·문서를 모아 정리하는 업무인가요?', result: '앱 예약 작업' },
+<FlowSteps title="Order for choosing" officialUrl="https://code.claude.com/docs/en/scheduled-tasks" steps={[
+  { where: 'Question 1', action: 'Do you only need a quick check from a session that\'s open right now?', result: 'Yes → /loop' },
+  { where: 'Question 2', action: 'Do you absolutely need local files or tools on your computer?', result: 'Yes → desktop scheduled task' },
+  { where: 'Question 3', action: 'Is it GitHub repository work, or does it also need to start from the API or GitHub events?', result: 'Yes → routine' },
+  { where: 'Otherwise', action: 'Is it work that gathers and organizes email, calendar, and documents?', result: 'App scheduled task' },
 ]} />
 
-## 단계별 따라하기
+## Step by step
 
 <Checklist items={[
-  '자동으로 돌릴 업무를 하나 정하고 손으로 한 번 해 봤어요',
-  '위 비교표로 실행 방식을 골랐어요',
-  '자기완결적인 프롬프트를 썼어요',
-  '시험 실행(Run now 등)을 하고 실행 기록을 열어 봤어요',
-  '한도, 만료, 컴퓨터 상태 같은 조용히 멈출 조건을 점검했어요',
+  'I picked one task to automate and did it by hand once',
+  'I chose a run method using the comparison table above',
+  'I wrote a self-contained prompt',
+  'I did a test run (Run now, etc.) and opened the run history',
+  'I checked the conditions that cause silent stops, such as limits, expiration, and computer state',
 ]} />
 
 <Steps>
 
-1. **업무를 고르고 손으로 한 번 해 봐요**
+1. **Pick a task and do it by hand once**
 
-   자동화에 알맞은 일은 **반복되고, 결과가 분명하고, 사람이 매번 판단하지 않아도 되는 일**이에요. 먼저 대화에서 직접 해 보면서 "성공"이 무엇인지 말로 적어 보세요. 그 글이 그대로 자동 실행의 프롬프트가 돼요. 스킬로 형식을 고정하는 방법은 [C8](/claude/c08-skills/)을 참고하세요.
+   The jobs that suit automation are ones that **repeat, have a clear result, and don't need a person's judgment each time**. First do it directly in a conversation and write down in words what "success" is. That text becomes the prompt for the automatic run as is. To lock in a format with a skill, see [C8](/claude/c08-skills/).
 
-2. **자기완결적인 프롬프트를 써요**
+2. **Write a self-contained prompt**
 
-   자동 실행에는 대화가 없어서 되물을 사람이 없어요. 공식 문서도 프롬프트가 가장 중요하고, 무엇을 할지와 성공 기준을 명확히 쓰라고 안내해요. 아래 네 가지를 넣으세요.
+   An automatic run has no conversation, so there's no one to ask follow-up questions. The official docs also say the prompt matters most, and to state clearly what to do and what counts as success. Include these four things.
 
-   - **할 일**: 어디서 무엇을 확인하는지
-   - **산출물**: 어디에 어떤 형태로 남기는지
-   - **하지 말 것**: 건드리면 안 되는 것
-   - **끝났을 때 보고**: 한 줄 요약, 못 한 일은 이유와 함께
+   - **What to do**: where to check and what to check
+   - **Output**: where and in what form to leave it
+   - **What not to do**: what must not be touched
+   - **Report when done**: a one-line summary, with reasons for anything not done
 
    <PromptBox>
-   [확인할 대상, 예: 아래 공식 페이지 목록]의 최근 변경 사항을 확인해 주세요. 지난번 확인 이후 새로 바뀐 것만 골라서 [산출물 위치]에 [형식]으로 정리하세요. 출처 URL을 항목마다 붙이고, 확인하지 못한 내용은 추측하지 말고 "확인 못 함"으로 적으세요. [건드리면 안 되는 파일이나 항목]은 수정하지 마세요. 끝나면 무엇을 확인했고 무엇을 바꿨는지 세 줄로 요약해 주세요.
+   Please check recent changes on [what to check, e.g., the list of official pages below]. Pick out only what has changed since the last check, and organize it in [format] at [output location]. Attach the source URL to each item, and for anything you couldn't verify, don't guess; write "couldn't verify." Do not modify [files or items that must not be touched]. When you're done, summarize what you checked and what you changed in three lines.
    </PromptBox>
 
-3. **방식별로 만들어요**
+3. **Set it up for your chosen method**
 
-   **A. Claude 앱 예약 작업.** 공식 도움말 기준으로, 새 Claude 경험(Pro·Max·Ultra에 순차 적용)에서는 아무 대화에서 "매주 월요일 9시에 지난주 팀 채널 메시지를 요약해 줘"처럼 작업과 주기를 말하면 돼요. Claude가 되묻는 질문에 답한 뒤, 제안된 작업 이름·일정·지침을 확인하고 **Schedule**을 눌러요. Cowork 화면에서는 왼쪽 사이드바의 **Scheduled** > **New task**에서 Create with Claude 또는 Set up manually를 고르고, 이름·프롬프트·승인 방식·주기(매시간·매일·평일·매주·수동)·모델·폴더를 정해요. 예정된 실행과 지난 실행은 사이드바의 Scheduled에서 봐요. 화면 구성은 계정과 앱 버전에 따라 다를 수 있어요.
+   **A. Claude app scheduled tasks.** According to the official help, in the new Claude experience (rolling out to Pro, Max, and Ultra), you can just say the task and its schedule in any conversation, like "Every Monday at 9am, summarize last week's team channel messages." After answering Claude's follow-up questions, check the proposed task name, schedule, and instructions and click **Schedule**. In the Cowork screen, go to **Scheduled** > **New task** in the left sidebar, choose Create with Claude or Set up manually, and set the name, prompt, approval mode, frequency (hourly, daily, weekdays, weekly, manual), model, and folder. You can see upcoming and past runs under Scheduled in the sidebar. Screens may differ depending on your account and app version.
 
-   **B. 루틴.** 만드는 방법은 [C13의 루틴 만들기](/claude/c13-cloud-sessions/)에 있어요. 요점만 말하면, claude.ai/code/routines의 New task(일부 계정은 New routine), 데스크톱 앱의 Routines(Cloud 선택), 또는 CLI의 `/schedule`로 만들어요. 세 곳은 같은 계정에 저장돼서 어디서 만들어도 다른 곳에 보여요. 예를 들어 이렇게 말해요.
+   **B. Routines.** How to create them is in [Creating routines in C13](/claude/c13-cloud-sessions/). In short, create them from New task (New routine for some accounts) at claude.ai/code/routines, from Routines (choose Cloud) in the desktop app, or with `/schedule` in the CLI. All three are saved to the same account, so something created in one place shows up in the others. For example, say it like this.
 
    ```sh
    /schedule daily PR review at 9am
    /schedule in 2 weeks, open a cleanup PR that removes the feature flag
    ```
 
-   두 번째처럼 시점을 자연어로 말하면 1회성 실행도 돼요. 1회 실행은 돌고 나면 자동으로 꺼지고 Ran으로 표시돼요. 1시간보다 짧은 간격은 거부돼요.
+   If you state a point in time in natural language as in the second example, it becomes a one-time run. A one-time run turns itself off after it runs and shows as Ran. Intervals shorter than one hour are rejected.
 
-   **C. 데스크톱 로컬 예약 작업.** Code 탭의 Routines에서 New routine > **Local**을 골라 이름·설명·지침·주기와 작업 폴더를 정해요. 폴더가 필수예요. 실행마다 격리된 Git worktree를 쓰는 옵션이 있어요. 매 실행이 새 세션으로 열리고 알림이 와요.
+   **C. Desktop local scheduled tasks.** In Routines on the Code tab, choose New routine > **Local** and set the name, description, instructions, frequency, and working folder. The folder is required. There's an option to use an isolated Git worktree for each run. Each run opens as a new session and you get a notification.
 
-   **D. `/loop`.** 세션이 열려 있는 동안 반복해요.
+   **D. `/loop`.** It repeats while the session is open.
 
    ```sh
    /loop 5m check if the deployment finished and tell me what happened
    ```
 
-   간격을 생략하면 Claude가 1분~1시간 사이에서 매번 정해요. 한 번만 알림을 받고 싶으면 "오후 3시에 릴리스 브랜치 push하라고 알려 줘"처럼 자연어로 말하면 돼요.
+   If you omit the interval, Claude picks one each time between 1 minute and 1 hour. If you only want to be notified once, just say it in natural language, like "remind me at 3pm to push the release branch."
 
-4. **시험 실행하고 기록을 열어 봐요**
+4. **Do a test run and open the history**
 
-   루틴 상세 화면의 **Run now**로 바로 한 번 돌려 보세요. 각 실행은 새 세션으로 남고, 열면 Claude가 무엇을 했는지 볼 수 있어요. 목록의 초록색 상태는 "세션이 인프라 오류 없이 끝났다"는 뜻이지 **작업이 성공했다는 뜻이 아니에요.** 막힌 네트워크 요청, 없는 커넥터 도구, 작업 수준 실패는 기록 안에 나오니 꼭 열어 읽으세요. CLI에서는 `/schedule list`, `/schedule update`, `/schedule run`으로 관리하고, "왜 오늘 아침 리뷰가 아무것도 안 했지?"처럼 실행 기록을 물어볼 수도 있어요(공식 문서 기준 Claude Code v2.1.227 이상).
+   Use **Run now** on the routine's detail screen to run it once right away. Each run is kept as a new session, and when you open it you can see what Claude did. A green status in the list means "the session ended without an infrastructure error," **not that the task succeeded.** Blocked network requests, missing connector tools, and task-level failures show up inside the history, so be sure to open and read it. In the CLI, manage routines with `/schedule list`, `/schedule update`, and `/schedule run`, and you can also ask about run history, like "why didn't this morning's review do anything?" (Claude Code v2.1.227 or later, per the official docs).
 
-   데스크톱 작업은 처음에 Run now를 눌러 권한 요청을 모두 허용(always allow)해 두면 이후 실행이 멈추지 않아요.
+   For desktop tasks, click Run now the first time and allow all the permission requests (always allow), and later runs won't stall.
 
-5. **조용히 멈추는 조건을 점검해요**
+5. **Check the conditions that cause silent stops**
 
-   자동화는 알림 없이 멈출 수 있어요. 아래 표를 한 번 훑어보세요.
+   Automations can stop without any notification. Skim the table below once.
 
-   <PromptBox label="이 프롬프트로 자동화 설계를 점검받아 보세요">
-   내가 자동으로 돌리려는 업무는 [업무 설명]이고 실행 방식은 [방식]이에요. 이 업무가 사람이 보지 않는 동안 잘못 돌았을 때 생길 수 있는 문제 3가지, 그것을 막기 위해 프롬프트에 넣을 제한 문장, 그리고 실행 결과를 내가 확인할 방법을 알려 주세요.
+   <PromptBox label="Use this prompt to have your automation design reviewed">
+   The task I want to run automatically is [task description] and the run method is [method]. Tell me three problems that could happen if this task goes wrong while no one is watching, the restriction sentences I should put in the prompt to prevent them, and how I can check the results of the run.
    </PromptBox>
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-### 한도와 만료 (2026-10-13 기준, 바뀔 수 있어요)
+### Limits and expiration (as of 2026-10-13, subject to change)
 
-| 방식 | 알아둘 점 |
+| Method | Things to know |
 | --- | --- |
-| 루틴 | 스케줄 실행 계정당 시간당 100회(1회성 포함), Run now·API 실행은 루틴당 시간당 30회와 계정당 별도 한도. 이 한도에는 초과 과금(overage)이 없어요. 한도를 넘으면 스케줄 실행은 대기하고, Run now 등은 실패해요. |
-| 루틴 사용량 | 대화형 세션처럼 구독 사용량을 써요. 사용량 한도에 닿으면 추가 사용량(usage credits)이 켜져 있을 때만 이어서 돌고, 아니면 한도가 리셋될 때까지 거부돼요. |
-| 루틴 GitHub 연결 | 연결이 끊기거나 만료되면 최대 72시간 동안 실행을 건너뛰어요. 그 안에 다시 연결하면 자동으로 재개되고, 72시간이 지나면 꺼져서 직접 켜야 해요. |
-| 루틴 정지 | 구독이 일시중지된 동안은 보류돼요. 다시 활성화된 뒤 직접 켜야 해요. Team/Enterprise Owner가 조직 전체에서 끌 수도 있어요. |
-| `/loop`(세션 예약) | 반복 작업은 만든 지 **7일 뒤 마지막으로 한 번 실행되고 삭제**돼요. 세션당 최대 50개. Claude Code가 실행 중이고 대기 상태일 때만 돌고, 놓친 실행은 따라잡지 않고 한 번만 실행돼요. 정각 설정은 몇 분 늦어질 수 있어요. |
-| 데스크톱 | 앱이 열려 있고 컴퓨터가 깨어 있을 때만 실행돼요. 잠자는 동안 놓치면 깨어난 뒤 가장 최근 놓친 시각에 대해 **한 번만** 따라잡아 실행하고(최근 7일 이내), 오래된 것은 버려요. |
-| 앱 예약 작업 | 로컬 파일·앱이 필요한 작업은 로컬에서만 실행돼요. |
+| Routines | Scheduled runs: 100 per hour per account (including one-time runs); Run now and API runs: 30 per hour per routine, plus a separate per-account limit. There is no overage billing for these limits. If you exceed them, scheduled runs wait and Run now and similar actions fail. |
+| Routine usage | Uses your subscription usage like interactive sessions. When you hit your usage limit, runs continue only if additional usage (usage credits) is turned on; otherwise they're rejected until the limit resets. |
+| Routine GitHub connection | If the connection breaks or expires, runs are skipped for up to 72 hours. If you reconnect within that time, they resume automatically; after 72 hours they're turned off and you have to turn them back on yourself. |
+| Routine suspension | They're put on hold while a subscription is paused. After it's reactivated, you have to turn them back on yourself. A Team/Enterprise Owner can also turn them off for the whole organization. |
+| `/loop` (session scheduling) | A recurring task **runs one last time and is deleted 7 days after you create it**. Up to 50 per session. It runs only while Claude Code is running and idle, and missed runs aren't caught up; they run just once. On-the-hour settings can be delayed by a few minutes. |
+| Desktop | Runs only when the app is open and the computer is awake. If a run is missed while asleep, it **catches up just once** after waking, for the most recent missed time (within the last 7 days), and older ones are discarded. |
+| App scheduled tasks | Tasks that need local files or apps run only locally. |
 
-### 정각을 피하세요
+### Avoid the top of the hour
 
-루틴과 `/loop` 모두 정각(예: 9:00)에 맞추면 몇 분 늦게 시작할 수 있다고 공식 문서가 안내해요. 9:07처럼 몇 분 지난 시각을 잡으세요. 루틴의 시각은 내 시간대로 입력하면 자동 변환돼요.
+The official docs say that for both routines and `/loop`, setting a time right on the hour (for example, 9:00) can make it start a few minutes late. Pick a time a few minutes past, like 9:07. Enter routine times in your own time zone and they're converted automatically.
 
-### 이 중 C13과 겹치는 부분
+### What overlaps with C13
 
-| 내용 | 어디서 보나요 |
+| Topic | Where to look |
 | --- | --- |
-| 루틴 만들기 화면, 트리거 3종, API 호출 예시 | [C13](/claude/c13-cloud-sessions/) 루틴 요약 |
-| 환경(네트워크, 설정 스크립트, 비밀 값) | [C13](/claude/c13-cloud-sessions/) 환경 설정 |
-| 서브에이전트, 훅, MCP | [C14](/claude/c14-claude-code-features/) |
-| 스킬·서브에이전트·루틴을 엮는 실습 | [반복 업무를 에이전트에게 맡기기](/coding/10-delegate-agents/) |
-| 커넥터 연결 | [C7](/claude/c07-connectors/) |
+| The routine creation screen, the 3 triggers, API call examples | [C13](/claude/c13-cloud-sessions/) routine summary |
+| Environments (network, setup script, secrets) | [C13](/claude/c13-cloud-sessions/) environment settings |
+| Subagents, hooks, MCP | [C14](/claude/c14-claude-code-features/) |
+| A hands-on exercise combining skills, subagents, and routines | [Delegate recurring work to agents](/coding/10-delegate-agents/) |
+| Connecting connectors | [C7](/claude/c07-connectors/) |
 
-## 사례: 매일 아침 공식 소식 확인 → 수정안 PR
+## Case study: check official news every morning → open a PR with proposed edits
 
-이 사이트는 도구의 공식 문서와 변경 이력이 바뀌었는지 정기적으로 확인하고, 바뀌었으면 **수정안을 PR로 올리는** 루틴을 써요. 계정 정보와 구체적인 설정은 빼고, 어떤 패턴인지만 일반화해서 소개할게요.
+This site uses a routine that regularly checks whether tools' official docs and changelogs have changed, and if they have, **opens a PR with proposed edits**. I'll leave out account details and specific settings, and introduce only the general pattern.
 
-<FlowSteps title="공식 소식 확인 루틴의 흐름" officialUrl="https://code.claude.com/docs/en/routines" steps={[
-  { where: '스케줄 트리거', action: '매일 아침 정각이 아닌 시각에 시작', result: '새 클라우드 세션이 열려요' },
-  { where: '저장소 클론', action: '프롬프트에 적힌 공식 페이지를 하나씩 확인', result: '바뀐 점 목록' },
-  { where: '저장소 안', action: '관련 문서를 고치고 claude/ 접두사 브랜치에 push', result: '수정안 브랜치' },
-  { where: 'GitHub', action: 'PR 생성', result: '사람이 검토' },
-  { where: '사람', action: 'PR을 읽고 병합 여부 결정', result: '사이트에 반영' },
+<FlowSteps title="Flow of the official-news check routine" officialUrl="https://code.claude.com/docs/en/routines" steps={[
+  { where: 'Schedule trigger', action: 'Starts every morning at a time that\'s not on the hour', result: 'A new cloud session opens' },
+  { where: 'Repository clone', action: 'Check the official pages listed in the prompt, one by one', result: 'A list of what changed' },
+  { where: 'Inside the repository', action: 'Fix the related docs and push to a branch with the claude/ prefix', result: 'A proposed-edits branch' },
+  { where: 'GitHub', action: 'Create a PR', result: 'A person reviews it' },
+  { where: 'A person', action: 'Reads the PR and decides whether to merge', result: 'Reflected on the site' },
 ]} />
 
-이 설계에서 안전한 이유는 이래요.
+This design is safe for these reasons.
 
-- **되돌릴 수 있는 결과물만 만들어요.** 루틴은 `claude/` 접두사 브랜치로 push하고, 기본 브랜치에 바로 반영하지 않아요. 병합은 사람이 해요.
-- **프롬프트가 구체적이에요.** 어떤 페이지를 확인할지, 확인하지 못한 내용은 추측하지 말고 적지 말라는 규칙이 들어 있어요.
-- **저장소만 연결해요.** 불필요한 커넥터는 빼서 루틴이 닿을 수 있는 범위를 줄여요.
-- **확인은 PR에서 해요.** 루틴이 한 커밋과 PR은 내 GitHub 사용자로 남기 때문에, 병합 전에 내용을 읽어야 해요.
+- **It only produces reversible results.** The routine pushes to a branch with the `claude/` prefix and doesn't apply anything directly to the default branch. A person does the merge.
+- **The prompt is specific.** It includes which pages to check and a rule not to guess or write down anything it couldn't verify.
+- **Only the repository is connected.** Unneeded connectors are removed to narrow what the routine can reach.
+- **Verification happens in the PR.** The commits and PR the routine makes are recorded under your GitHub user, so you need to read the content before merging.
 
-<PromptBox label="공식 소식 확인 루틴 프롬프트 예시">
-이 저장소의 [확인 대상 문서 목록]이 근거로 삼는 공식 페이지 [URL 목록]을 확인하세요. 문서에 적힌 메뉴 이름, 가격, 한도, 기능 설명과 다른 부분이 있으면 해당 문서를 고치고, 고친 근거 URL을 문서 하단 출처에 반영하세요. 확인하지 못한 항목은 고치지 말고 PR 설명에 "확인 못 함"으로 적으세요. 새 브랜치로 push하고 PR을 만든 뒤, PR 설명에 바꾼 곳과 근거를 표로 정리하세요. 기본 브랜치에는 직접 반영하지 마세요.
+<PromptBox label="Example prompt for an official-news check routine">
+Check the official pages [list of URLs] that this repository's [list of docs to check] are based on. If anything differs from the menu names, prices, limits, or feature descriptions written in the docs, fix those docs, and reflect the supporting URL in the sources at the bottom of the doc. Don't fix items you couldn't verify; write them in the PR description as "couldn't verify." Push to a new branch and create a PR, and in the PR description lay out what changed and the evidence in a table. Do not apply anything directly to the default branch.
 </PromptBox>
 
-## 자주 막히는 지점
+## Common sticking points
 
-### `/schedule`이 "Unknown command"라고 나와요
+### `/schedule` says "Unknown command"
 
-- **원인**: `/schedule`은 claude.ai 구독 로그인이 필요해요. Console API 키나 Amazon Bedrock 같은 클라우드 제공자로 인증하면 보이지 않아요.
-- **해결**: claude.ai 계정으로 로그인했는지 확인하세요. 자세한 조건은 공식 Routines 문서의 Troubleshooting을 보세요.
+- **Cause**: `/schedule` requires a claude.ai subscription login. It doesn't appear if you authenticate with a Console API key or a cloud provider such as Amazon Bedrock.
+- **Fix**: Make sure you're logged in with a claude.ai account. For the exact conditions, see Troubleshooting in the official Routines docs.
 
-### "조직 정책으로 루틴이 꺼져 있다"고 나와요
+### It says "Routines are turned off by organization policy"
 
-- **원인**: Team/Enterprise에서는 Owner가 조직 설정(Organization settings) > Capabilities > Remote sessions의 "Scheduled tasks (Was Routines)" 토글로 조직 전체에서 루틴을 끌 수 있고, 그러면 기존 루틴도 멈추고 새로 만들 수 없어요.
-- **해결**: 조직 Owner에게 설정 확인을 요청하세요.
+- **Cause**: On Team/Enterprise, an Owner can turn off routines for the whole organization with the "Scheduled tasks (Was Routines)" toggle under Organization settings > Capabilities > Remote sessions, and then existing routines stop and you can't create new ones.
+- **Fix**: Ask your organization Owner to check the setting.
 
-### 루틴이 초록색인데 결과가 없어요
+### The routine is green but there's no result
 
-- **원인**: 초록 상태는 세션이 오류 없이 끝났다는 뜻일 뿐 작업 성공이 아니에요.
-- **해결**: 실행 기록을 열어 막힌 네트워크 요청이나 누락된 커넥터 도구를 확인하세요. 허용되지 않은 도메인은 환경의 네트워크 설정을 고쳐야 해요([C13](/claude/c13-cloud-sessions/)).
+- **Cause**: A green status only means the session ended without an error, not that the task succeeded.
+- **Fix**: Open the run history and check for blocked network requests or missing connector tools. For domains that aren't allowed, you need to fix the environment's network settings ([C13](/claude/c13-cloud-sessions/)).
 
-### 데스크톱 예약 작업이 아침에 안 돌았어요
+### The desktop scheduled task didn't run this morning
 
-- **원인**: 컴퓨터가 잠자고 있었거나 앱이 닫혀 있었을 수 있어요. 건너뛴 실행은 기록에 이유와 함께 남아요.
-- **해결**: 깨어난 뒤 한 번 따라잡기가 실행돼요. 시각이 중요하면 프롬프트에 "오후 5시가 넘었으면 건너뛰고 놓친 내용을 요약만 해 줘" 같은 조건을 넣으세요. 컴퓨터가 꺼져 있어도 돌아야 하면 루틴이나 앱 예약 작업으로 바꾸세요.
+- **Cause**: The computer may have been asleep or the app may have been closed. Skipped runs are recorded in the history with the reason.
+- **Fix**: A single catch-up run happens after waking. If the timing matters, put a condition in the prompt like "if it's past 5pm, skip it and just summarize what was missed." If it needs to run even when the computer is off, switch to a routine or an app scheduled task.
 
-### `/loop`가 일주일 뒤 사라졌어요
+### `/loop` disappeared after a week
 
-- **원인**: 세션 예약 반복 작업은 7일 뒤 만료돼요.
-- **해결**: 오래 가야 하는 작업은 루틴이나 데스크톱 예약 작업으로 옮기세요.
+- **Cause**: Session-scheduled recurring tasks expire after 7 days.
+- **Fix**: Move long-running tasks to a routine or a desktop scheduled task.
 
-## 실전 팁
+## Practical tips
 
-- **되돌릴 수 있는 결과물을 만들게 하세요.** 초안, 브랜치, PR까지만 자동으로 하고, 발송·병합·삭제 같은 확정은 사람이 하세요.
-- **권한과 연결을 최소로 하세요.** 루틴은 선택한 저장소, 환경의 네트워크와 변수, 포함한 커넥터가 닿는 범위에서 승인 없이 동작해요. 커넥터는 기본으로 전부 포함되니 필요한 것만 남기세요.
-- **개인정보를 넣지 마세요.** 환경변수와 프롬프트는 사람이 보지 않는 곳에서 반복 사용돼요. 비밀 값 처리는 [C13](/claude/c13-cloud-sessions/)의 환경 설정을 따르세요.
-- **빈도를 낮게 시작하세요.** 자동 실행은 사용량을 써요. 처음에는 주 1회 정도로 시작해서 결과와 사용량을 본 뒤 늘리세요.
-- **결과를 정기적으로 읽으세요.** 자동화가 조용히 엉뚱한 결과를 내도 알림이 없을 수 있어요. 주기적으로 실행 기록을 훑어보세요.
-- **API 트리거는 신중하게 쓰세요.** 토큰은 한 번만 보이고, 전달한 텍스트는 신뢰할 수 없는 데이터로 감싸져서 프롬프트가 명시적으로 참조해야 반영돼요. 토큰은 비밀로 보관하세요.
+- **Have it produce reversible results.** Automate only up to a draft, a branch, or a PR, and have a person do the final commit such as sending, merging, or deleting.
+- **Keep permissions and connections to a minimum.** Routines act without approval within what the selected repository, the environment's network and variables, and the included connectors can reach. Connectors are all included by default, so keep only what you need.
+- **Don't put in personal information.** Environment variables and prompts are reused repeatedly where no one is watching. For handling secrets, follow the environment settings in [C13](/claude/c13-cloud-sessions/).
+- **Start with a low frequency.** Automatic runs use up usage. Start at about once a week, look at the results and usage, and then increase.
+- **Read the results regularly.** Even if an automation quietly produces wrong results, there may be no notification. Skim the run history periodically.
+- **Use API triggers carefully.** The token is shown only once, and text you pass in is wrapped as untrusted data, so it takes effect only if the prompt explicitly references it. Keep the token secret.
 
-<Aside type="caution" title="가격·한도는 바뀌어요">
-루틴은 리서치 프리뷰라서 동작, 한도, API 형태가 바뀔 수 있어요. 이 글의 수치는 2026-10-13 기준이에요. 자주 확인되는 공식 문서는 출처 목록에 있어요.
+<Aside type="caution" title="Prices and limits change">
+Routines are a research preview, so behavior, limits, and the API shape can change. The figures in this article are as of 2026-10-13. The official docs that are checked often are in the sources list.
 </Aside>
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [C13. Claude Code 클라우드 세션: GitHub 연동, 환경, 루틴](/claude/c13-cloud-sessions/) — 루틴 만들기와 환경 설정
-- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — 훅, 서브에이전트, MCP로 자동화 확장
-- [C17. Claude로 업무 하루 굴리기](/claude/c17-workday-workflow/) — 하루 흐름 안에서 기능 조합하기
-- [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/) — 자동 실행이 쓰는 사용량 이해하기
-- [반복 업무를 에이전트에게 맡기기: 스킬, 루틴, 서브에이전트](/coding/10-delegate-agents/) — 실습형 튜토리얼
+- [C13. Claude Code cloud sessions: GitHub integration, environments, routines](/claude/c13-cloud-sessions/) — creating routines and environment settings
+- [C14. Claude Code core features](/claude/c14-claude-code-features/) — extending automation with hooks, subagents, and MCP
+- [C17. Running your workday with Claude](/claude/c17-workday-workflow/) — combining features within a day's flow
+- [C2. Plans and usage limits](/claude/c02-plans-limits/) — understanding the usage automatic runs consume
+- [Delegate recurring work to agents: skills, routines, subagents](/coding/10-delegate-agents/) — a hands-on tutorial

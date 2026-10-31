@@ -1,18 +1,18 @@
 ---
-title: "Gemini Notebook(구 NotebookLM)으로 내 자료 기반 공부·정리하기"
-description: "내 PDF·문서·영상 자막만 근거로 답하는 Google의 NotebookLM(공식 도움말 표기 Gemini Notebook)으로 질문하고, 요약·오디오 개요·플래시카드를 만드는 방법"
+title: "Studying and Organizing with Gemini Notebook (formerly NotebookLM)"
+description: "How to ask questions, and create summaries, Audio Overviews, and flashcards, in Google's NotebookLM (called Gemini Notebook in the official help pages), which answers using only your own PDFs, documents, and video transcripts"
 sidebar:
-  label: "6. Gemini Notebook(구 NotebookLM)"
+  label: "6. Gemini Notebook (formerly NotebookLM)"
 level: practical
 category: chat
 tools: ["NotebookLM (Gemini Notebook)", "Google Drive"]
-duration: "25분"
+duration: "25 min"
 prerequisites:
-  - "Google 계정 (개인 계정 또는 관리자가 허용한 업무·학교 계정)"
-  - "공부하거나 정리할 자료 2~3개 (PDF, 문서, 웹 주소 등. 개인정보와 기밀은 제외)"
+  - "A Google account (a personal account, or a work or school account your admin has allowed)"
+  - "2 or 3 pieces of material to study or organize (PDFs, documents, web addresses, and so on; no personal information or confidential material)"
 lastVerified: 2026-10-26
 sources:
-  - title: "Learn about Gemini Notebook (Google 공식 도움말)"
+  - title: "Learn about Gemini Notebook (Google official help)"
     url: "https://support.google.com/gemininotebook/answer/16164461"
   - title: "Create a notebook in Gemini Notebook"
     url: "https://support.google.com/gemininotebook/answer/16206563"
@@ -37,150 +37,150 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- NotebookLM은 **내가 올린 자료(소스)를 근거로 답하고, 답마다 인용을 달아 주는** Google의 AI 연구 보조예요.
-- 공식 도움말은 지금 이 서비스를 **"Gemini Notebook"** 이라고 적어요(2026-10-14 기준). 이 글은 익숙한 이름 NotebookLM을 같이 써요.
-- 자료를 올리면 채팅 질문, 오디오 개요, 마인드맵, 보고서, 플래시카드·퀴즈를 만들 수 있어요.
-- 무료는 표준 사용량 한도가 있고, 소스는 무료 사용자 기준 최대 50개예요(2026-10-14 기준). 가격은 공식 도움말에서 확인하지 못했어요.
-- 답이 소스에 근거해도 틀릴 수 있으니, 인용을 눌러 원문과 대조하세요.
+- NotebookLM is Google's AI research assistant that **answers based on the material (sources) you upload, and adds a citation to each answer.**
+- The official help pages now call this service **"Gemini Notebook"** (as of 2026-10-14). This guide uses the familiar name NotebookLM alongside it.
+- Once you upload material, you can chat, and create Audio Overviews, mind maps, reports, flashcards, and quizzes.
+- The free tier has standard usage limits, and up to 50 sources for free users (as of 2026-10-14). We couldn't confirm pricing in the official help pages.
+- An answer can be wrong even when it's based on your sources, so click the citations and check them against the original.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do
 
-- 자료 여러 개를 한 노트북에 모아 놓고, 그 자료만 근거로 질문할 수 있어요.
-- 답의 인용을 눌러 원문 위치를 확인하는 습관을 들일 수 있어요.
-- 오디오 개요, 플래시카드, 퀴즈로 공부용 결과물을 만들 수 있어요.
-- 사용량 한도와 소스 제한을 알고 막히지 않게 쓸 수 있어요.
+- Collect several pieces of material in one notebook and ask questions based only on that material.
+- Build the habit of clicking an answer's citations to check where it appears in the original.
+- Create study materials with Audio Overviews, flashcards, and quizzes.
+- Know the usage limits and source restrictions so you don't get stuck.
 
-## 먼저 알아둘 개념
+## Concepts first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **노트북(notebook)** | 한 프로젝트를 위한 소스 모음이에요. 노트북끼리는 서로 독립이라, 한 번에 여러 노트북을 함께 볼 수 없어요. |
-| **소스(source)** | 올리거나 가져온 자료예요. AI는 이 소스를 근거로 답해요. |
-| **Chat 패널** | 소스 요약을 보여 주고 질문하는 곳이에요. |
-| **Studio 패널** | 소스로 노트, 오디오 개요, 마인드맵, 보고서, 플래시카드, 퀴즈 등 결과물을 만드는 곳이에요. |
-| **인용(citation)** | 답에 붙는 소스 속 문장이에요. 마우스를 올리면 전체 인용문이, 누르면 원문 위치가 보여요. |
+| **Notebook** | A collection of sources for one project. Notebooks are independent of each other, so you can't look at several notebooks at once. |
+| **Source** | Material you upload or import. The AI answers based on these sources. |
+| **Chat panel** | Where you see a summary of the sources and ask questions. |
+| **Studio panel** | Where you create outputs from your sources, such as notes, Audio Overviews, mind maps, reports, flashcards, and quizzes. |
+| **Citation** | The passage in a source attached to an answer. Hover to see the full quote, and click to jump to its location in the original. |
 
-<Aside type="note" title="이름이 왜 두 개인가요? (2026-10-14 기준)">
-이 사이트에서 NotebookLM이라고 부르는 서비스의 공식 도움말(support.google.com)이 제목과 본문에서 "Gemini Notebook"이라고 표기해요. 도움말 주소도 `/notebooklm/`으로 들어가면 `/gemininotebook/`으로 이동해요. 이름이 바뀐 시점이나 두 이름의 공식 관계는 열어 본 도움말에서 확인하지 못했어요. 화면에서 어느 이름이 보이든 같은 서비스로 보고 따라 하면 돼요.
+<Aside type="note" title="Why are there two names? (as of 2026-10-14)">
+The official help pages (support.google.com) for the service this site calls NotebookLM refer to it as "Gemini Notebook" in their titles and text. If you go to the help page address under `/notebooklm/`, it redirects to `/gemininotebook/`. We couldn't confirm in the help pages we opened when the name changed, or the official relationship between the two names. Whichever name you see on screen, treat it as the same service and follow along.
 </Aside>
 
-<Aside type="note" title="확인하지 못한 점">
-한국어 화면 제공 여부, 한국 원화 가격, 모바일 앱의 한국 제공 여부는 공식 문서에서 확인하지 못했어요. 도움말에서 확인한 것은 지원 언어가 80개 이상이고, 웹 서비스의 지원 국가·지역 목록에 대한민국(South Korea)이 포함된다는 점이에요.
+<Aside type="note" title="What we couldn't confirm">
+We couldn't confirm in official documents whether there is a Korean interface, KRW pricing, or whether the mobile app is available in Korea. What we did confirm from the help pages is that more than 80 languages are supported, and that South Korea is on the list of supported countries and regions for the web service.
 </Aside>
 
-## 단계별 따라하기
+## Step-by-step
 
 <Checklist items={[
-  '새 노트북을 만들고 소스를 올렸어요',
-  '소스 중 일부만 선택해 질문해 봤어요',
-  '답의 인용을 눌러 원문과 대조했어요',
-  '오디오 개요나 보고서를 만들어 봤어요',
-  '플래시카드나 퀴즈로 복습했어요',
-  '사용량(Settings > Usage)을 확인했어요',
+  'I created a new notebook and uploaded sources',
+  'I selected only some of the sources and asked a question',
+  'I clicked an answer\'s citations and checked them against the original',
+  'I created an Audio Overview or a report',
+  'I reviewed with flashcards or a quiz',
+  'I checked my usage (Settings > Usage)',
 ]} />
 
 <Steps>
 
-1. **노트북 만들고 소스 올리기**
+1. **Create a notebook and upload sources**
 
-   Google 계정으로 접속해 새 노트북 만들기(Create new notebook)를 누르고, 팝업에서 소스 올리기(Upload a source)를 골라요. 주소는 notebook.google.com이에요(공식 도움말의 채팅 설정 안내에 나와요).
+   Sign in with your Google account, click Create new notebook, and choose Upload a source in the popup. The address is notebook.google.com (it appears in the official help's chat settings guide).
 
-   소스로 쓸 수 있는 것은 PDF, Word(docx), 텍스트, Markdown, CSV, PowerPoint(pptx), Google Docs·Slides·Sheets, 이미지, 오디오 파일, 웹 주소, 공개 YouTube 주소 등이에요. 소스 하나는 최대 50만 단어 또는 업로드 파일 200MB예요(2026-10-14 기준).
+   Sources can be PDF, Word (docx), text, Markdown, CSV, PowerPoint (pptx), Google Docs, Slides, and Sheets, images, audio files, web addresses, public YouTube addresses, and more. A single source can be up to 500,000 words or a 200MB uploaded file (as of 2026-10-14).
 
-   - Google Slides는 100장까지, Google Sheets는 100k 토큰까지예요.
-   - 웹 주소는 본문 텍스트만 가져오고, 유료 구독이 필요한 페이지는 안 돼요.
-   - YouTube는 자막이 있는 공개 영상만 되고, 자막 텍스트만 가져와요.
-   - Google Drive 파일은 몇 분마다 자동으로 동기화돼요. 접근 권한을 잃으면 소스를 못 쓰지만 개수에는 포함돼요.
+   - Google Slides can have up to 100 slides, and Google Sheets up to 100k tokens.
+   - For web addresses, only the body text is imported, and pages that require a paid subscription don't work.
+   - YouTube works only for public videos with captions, and only the caption text is imported.
+   - Google Drive files sync automatically every few minutes. If you lose access, you can't use the source, but it still counts toward your source total.
 
-   <ScreenshotPlaceholder caption="새 노트북에서 소스 올리기 팝업" officialUrl="https://support.google.com/gemininotebook/answer/16206563" />
+   <ScreenshotPlaceholder caption="The popup for uploading sources in a new notebook" officialUrl="https://support.google.com/gemininotebook/answer/16206563" />
 
-2. **자료를 정리해서 질문하기**
+2. **Organize your material and ask questions**
 
-   소스가 여러 개면 왼쪽 소스(Sources) 패널에서 질문에 쓸 소스만 골라요. 질문에 소스 이름을 넣으면 더 정확하게 찾아요.
+   If you have several sources, choose only the ones to use for your question in the Sources panel on the left. Putting a source's name in your question helps it find the right material more accurately.
 
-   <PromptBox label="소스를 지정해 요약 요청">
-   '운영체제 3장 강의안'과 '교재 요약본'을 기준으로, 프로세스와 스레드의 차이를 중학생도 이해할 수 있게 설명해 줘. 두 자료가 다르게 말하는 부분이 있으면 따로 알려 줘.
+   <PromptBox label="Ask for a summary and specify the sources">
+   Based on 'Operating Systems Chapter 3 lecture notes' and 'Textbook summary', explain the difference between a process and a thread so that even a middle schooler could understand. If the two sources say different things, point that out separately.
    </PromptBox>
 
-   채팅 답은 소스의 내용만 쓴다고 도움말은 안내해요. 그래서 "내 소설 결말을 다시 써 줘" 같은 창작 요청은 "답할 수 없다"고 나올 수 있어요.
+   The help pages say chat answers use only what's in your sources. So a creative request like "rewrite the ending of my novel" may come back as "I can't answer."
 
-3. **인용으로 원문 확인하기**
+3. **Check the original through citations**
 
-   답 속 인용 번호에 마우스를 올리면 인용문 전체가, 누르면 소스에서 그 문장이 있는 위치가 열려요. 숫자, 날짜, 고유명사는 꼭 한 번씩 눌러 보세요. 맞는지는 [팩트 체크 방법](/basics/04-fact-checking/)을 함께 참고하세요.
+   Hover over a citation number in an answer to see the full quote, and click it to open the spot in the source where that sentence is. Be sure to click through for numbers, dates, and proper nouns. See also [how to fact-check](/basics/04-fact-checking/) for how to confirm them.
 
-4. **채팅 스타일 바꾸기**
+4. **Change the chat style**
 
-   채팅(Chat) 패널의 설정(Configure Chat)에서 대화 스타일을 골라요. 기본(Default)은 일반 조사, 학습 가이드(Learning Guide)는 개념을 쉽게 익히는 용도, 사용자 지정(Custom)은 "박사과정 학생처럼 답해줘" 같은 역할 지정이에요. 응답 길이도 정할 수 있어요. 마음에 드는 답은 노트에 저장(Save to note)으로 보관해요.
+   In the Chat panel's Configure Chat, choose a conversation style. Default is for general research, Learning Guide is for picking up concepts easily, and Custom lets you assign a role like "answer like a PhD student." You can also set the response length. Keep answers you like with Save to note.
 
-5. **오디오 개요·보고서 만들기**
+5. **Create an Audio Overview or report**
 
-   Studio 패널에서 오디오 개요(Audio Overview)를 눌러요. 형식은 Deep Dive(기본, 두 진행자의 깊은 대화), Brief(한 명이 2분 이내로 핵심 정리), Critique(건설적 평가), Debate(토론) 중 고르고, 언어와 프롬프트로 초점을 정해요. 생성에 몇 분 걸리고, 만드는 동안 다른 결과물도 만들 수 있어요. 오디오는 AI가 만든 것이라 부정확하거나 음성에 결함이 있을 수 있어요. 보고서는 FAQ, 스터디 가이드, 브리핑 문서 등을 고를 수 있고, 점 세 개 메뉴에서 Docs로 내보낼 수 있어요.
+   In the Studio panel, click Audio Overview. Choose a format from Deep Dive (the default, an in-depth conversation between two hosts), Brief (one host sums up the key points in under 2 minutes), Critique (constructive evaluation), or Debate, and set the focus with the language and prompt. Generation takes a few minutes, and you can create other outputs while it runs. Audio is AI-generated, so it may be inaccurate or have voice glitches. For reports, you can choose a FAQ, study guide, briefing document, and more, and export to Docs from the three-dot menu.
 
-   - 길이 선택(Shorter, Default, Longer)은 영어만 지원하고, 대화형 모드도 영어만 지원해요(2026-10-14 기준).
-   - 오디오 개요는 80개 이상의 언어를 지원하고 기본 언어는 Google 계정의 선호 언어라고 안내돼요(2026-10-26 기준). 다만 한국어가 목록에 있는지는 도움말에 적혀 있지 않아요. 언어 선택 목록에서 직접 확인하세요.
+   - Length options (Shorter, Default, Longer) are supported in English only, and so is interactive mode (as of 2026-10-14).
+   - Audio Overviews are described as supporting more than 80 languages, with the default language being your Google account's preferred language (as of 2026-10-26). The help pages don't say whether Korean is on the list, though. Check the language picker yourself.
 
-6. **플래시카드·퀴즈로 복습하기**
+6. **Review with flashcards and quizzes**
 
-   Studio에서 플래시카드(Flashcards) 또는 퀴즈(Quizzes)를 눌러요. 연필 아이콘에서 난이도(쉬움, 보통, 어려움)와 프롬프트를 정할 수 있어요. 카드마다 "Got it!"과 "Missed it!"로 표시하면 진행 상황이 기억되고, "Only cards you missed"로 틀린 카드만 다시 연습해요. 플래시카드는 CSV로 내려받을 수 있어요.
+   In Studio, click Flashcards or Quizzes. From the pencil icon, you can set the difficulty (Easy, Medium, Hard) and a prompt. Mark each card "Got it!" or "Missed it!" and your progress is remembered, and "Only cards you missed" lets you practice just the ones you got wrong. You can download flashcards as a CSV.
 
-   <FlowSteps title="틀린 카드만 다시 복습하기" officialUrl="https://support.google.com/gemininotebook/answer/16958963" steps={[
-     { where: 'Studio 패널', action: '플래시카드(Flashcards) 열고 연필 아이콘으로 난이도·프롬프트 정하기', result: '카드가 백그라운드에서 만들어져요' },
-     { where: '플래시카드 화면', action: '카드마다 Got it! 또는 Missed it! 표시하기' },
-     { where: '결과 화면', action: 'Only cards you missed 선택', result: '못 맞힌 카드만 다시 연습해요' },
+   <FlowSteps title="Review only the cards you missed" officialUrl="https://support.google.com/gemininotebook/answer/16958963" steps={[
+     { where: 'Studio panel', action: 'Open Flashcards and set the difficulty and prompt with the pencil icon', result: 'The cards are created in the background' },
+     { where: 'Flashcards screen', action: 'Mark each card Got it! or Missed it!' },
+     { where: 'Results screen', action: 'Select Only cards you missed', result: 'You practice only the cards you missed' },
    ]} />
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-| 항목 | 내용 (2026-10-14 기준) |
+| Item | Details (as of 2026-10-14) |
 | --- | --- |
-| 소스 크기 | 소스 하나당 최대 50만 단어 또는 업로드 파일 200MB |
-| 소스 개수 | 무료 사용자는 최대 50개 (노트북당인지 계정당인지는 도움말 문구에서 확인하지 못함) |
-| 사용량 한도 | 연산량 기반. 5시간마다 갱신되고 주간 한도가 있어요. 무료는 표준, AI Plus 2배, AI Pro 4배, AI Ultra는 AI Pro의 5배 또는 20배 |
-| 사용량 확인 | Settings > Usage |
-| 한도 소진 시 | Generate later로 나중에 생성 (웹 전용, 몇 시간 걸릴 수 있음) |
-| 오디오 개요 형식 | Deep Dive, Brief, Critique, Debate |
-| 공유 | Viewer 또는 Editor 권한. 개인 Gmail 계정은 최대 50명에게 공유 |
-| 복사본 | 소스와 Studio 결과물은 복사되고, 채팅 기록과 노트는 복사되지 않음 |
-| 데이터 학습 | 피드백을 보내지 않는 한 모델 학습에 쓰이지 않는다고 안내 |
+| Source size | Up to 500,000 words per source, or a 200MB uploaded file |
+| Number of sources | Up to 50 for free users (we couldn't tell from the help text whether this is per notebook or per account) |
+| Usage limits | Based on compute. Refreshes every 5 hours, with a weekly limit. Free is standard, AI Plus 2x, AI Pro 4x, AI Ultra 5x or 20x that of AI Pro |
+| Checking usage | Settings > Usage |
+| When you hit the limit | Generate later to create it afterward (web only, can take a few hours) |
+| Audio Overview formats | Deep Dive, Brief, Critique, Debate |
+| Sharing | Viewer or Editor permission. Personal Gmail accounts can share with up to 50 people |
+| Copies | Sources and Studio outputs are copied; chat history and notes are not |
+| Data training | Says it isn't used for model training unless you send feedback |
 
-## 자주 막히는 지점
+## Common sticking points
 
-### "답할 수 없다"고 나와요
+### It says "I can't answer"
 
-- **원인**: 질문이 소스에 없는 정보를 묻거나, 표현이 모호하거나, 소스 내용이 안전 필터에 걸렸을 수 있어요.
-- **해결**: 질문을 구체적으로 바꾸고, 소스 이름을 넣어 보세요. 필요한 자료가 빠졌다면 소스를 더 추가하세요.
+- **Cause**: Your question may ask for information that isn't in the sources, may be vague, or the source content may have tripped a safety filter.
+- **Fix**: Make the question more specific and try including a source name. If the material you need is missing, add more sources.
 
-### YouTube 영상이나 웹페이지가 소스로 안 들어가요
+### A YouTube video or web page won't go in as a source
 
-- **원인**: 자막이 없거나 비공개 영상, 올린 지 72시간 안 된 영상은 안 될 수 있어요. 웹은 유료 구독 벽이 있으면 안 돼요.
-- **해결**: 내용을 복사해 붙여넣기(텍스트 소스)나 파일로 올려요.
+- **Cause**: Videos with no captions, private videos, or videos uploaded less than 72 hours ago may not work. Websites with a paywall don't work.
+- **Fix**: Copy and paste the content (as a text source) or upload it as a file.
 
-### 사용량 한도에 걸렸어요
+### I hit the usage limit
 
-- **원인**: 연산량 기반 한도라 복잡한 요청과 긴 채팅, 오디오·비디오 생성이 한도를 빨리 써요.
-- **해결**: 5시간 뒤 갱신을 기다리거나 Generate later를 쓰세요. 더 필요하면 Google AI 구독 업그레이드를 검토하세요.
+- **Cause**: The limit is based on compute, so complex requests, long chats, and audio or video generation use it up fast.
+- **Fix**: Wait for the 5-hour refresh or use Generate later. If you need more, consider upgrading your Google AI subscription.
 
-### 공유 노트북에 다른 사람이 들어와 자료를 봐요
+### Other people in a shared notebook can see my material
 
-- **원인**: Viewer도 공유된 소스와 노트를 볼 수 있어요. 채팅 화면 링크(Chat View)는 자료를 숨기지만 접근 권한 자체를 없애지는 않는다고 도움말이 안내해요.
-- **해결**: 민감한 자료는 공유하지 마세요. 공유 전에 권한을 확인하세요.
+- **Cause**: Viewers can see shared sources and notes too. The help pages say that Chat View links hide the material but don't remove the access permissions themselves.
+- **Fix**: Don't share sensitive material. Check permissions before sharing.
 
-## 실전 팁
+## Practical tips
 
-- 노트북은 **과목·프로젝트별로 나누세요.** 노트북끼리는 서로의 내용을 못 봐요.
-- 소스가 5개 이상이면 자동 라벨 기능으로 주제별 정리가 가능해요.
-- 한 번에 다 요약하지 말고 소스 일부를 골라 물으면 답이 더 정확해져요. 긴 문서 요약의 기본기는 [문서 요약하기](/chat/02-summarize-documents/)를 참고하세요.
-- 회사 문서는 개인정보·기밀 기준과 회사 보안 지침을 먼저 확인하세요. 업무·학교 계정은 관리자가 허용해야 써요. 일반 원칙은 [개인정보 지키기](/basics/05-privacy-safety/)에 있어요.
-- 업로드한 자료에 저작권이 있다면 권리가 있는 자료만 쓰세요. 도움말도 권한 없는 자료 업로드를 피하라고 안내해요.
+- **Split notebooks by subject or project.** Notebooks can't see each other's contents.
+- With 5 or more sources, the automatic labeling feature can organize them by topic.
+- Rather than summarizing everything at once, select some of the sources and ask about those; the answers get more accurate. For the basics of summarizing long documents, see [Summarizing documents](/chat/02-summarize-documents/).
+- For company documents, check your personal-information and confidentiality standards and your company's security guidelines first. Work and school accounts can only use it if the admin allows it. General principles are in [Protecting your privacy](/basics/05-privacy-safety/).
+- If the material you upload is copyrighted, use only material you have the rights to. The help pages also advise against uploading material you don't have permission to use.
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [2. 긴 문서 요약하기](/chat/02-summarize-documents/) — 소스 없이도 쓰는 요약 프롬프트
-- [C5. 프로젝트](/claude/c05-projects/) — Claude에서 자료를 모아 두고 반복해서 쓰는 방법
-- [C10. 리서치](/claude/c10-research/) — 웹 자료까지 찾아 주는 조사 기능
-- [AI 검색 제대로 쓰기](/chat/22-ai-search/) — 웹에서 근거를 찾는 쪽의 도구들
-- [학생 가이드](/roles/student/) — 공부에 AI를 쓰는 순서
-- [사무직 가이드](/roles/office/) — 업무 문서 정리에 AI를 쓰는 순서
+- [2. Summarizing long documents](/chat/02-summarize-documents/) — summarizing prompts that work without sources
+- [C5. Projects](/claude/c05-projects/) — how to collect material in Claude and reuse it
+- [C10. Research](/claude/c10-research/) — a research feature that also searches web material
+- [Using AI search well](/chat/22-ai-search/) — tools for finding evidence on the web
+- [Student guide](/roles/student/) — the order for using AI to study
+- [Office worker guide](/roles/office/) — the order for using AI to organize work documents

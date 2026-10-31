@@ -2,18 +2,42 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightLinksValidator from 'starlight-links-validator';
+import fs from 'node:fs';
+import path from 'node:path';
+
+// 예전 영문 주소(/en/...)는 영어가 루트(/)로 옮겨 오면서 사라졌다. 옛 링크가 깨지지 않게 같은 페이지로 보낸다.
+function legacyEnRedirects() {
+  const root = 'src/content/docs';
+  /** @type {Record<string, string>} */
+  const out = { '/en': '/' };
+  const walk = (dir) => {
+    for (const name of fs.readdirSync(dir)) {
+      const full = path.join(dir, name);
+      const rel = path.relative(root, full);
+      if (rel === 'ko' || rel.startsWith('ko' + path.sep)) continue;
+      if (fs.statSync(full).isDirectory()) { walk(full); continue; }
+      if (!/\.mdx?$/.test(name) || name === '404.mdx') continue;
+      const slug = rel.replace(/\.mdx?$/, '').split(path.sep).join('/').replace(/(^|\/)index$/, '');
+      if (!slug) continue;
+      out[`/en/${slug}`] = `/${slug}/`;
+    }
+  };
+  walk(root);
+  return out;
+}
 
 export default defineConfig({
   site: 'https://ai-trend-catchup.com',
+  redirects: legacyEnRedirects(),
   integrations: [
     starlight({
-      title: { ko: '최신 AI 트렌드 따라 잡기', en: 'Catch Up on AI Trends' },
+      title: { en: 'Catch Up on AI Trends', ko: '최신 AI 트렌드 따라 잡기' },
       description:
-        '최신 AI 도구를 쉽게 설명하고, 단계별로 따라 할 수 있는 한국어 튜토리얼 사이트입니다.',
+        'Step-by-step tutorials that explain the latest AI tools in plain language. 최신 AI 도구를 쉽게 설명하는 단계별 튜토리얼 사이트예요.',
       defaultLocale: 'root',
       locales: {
-        root: { label: '한국어', lang: 'ko' },
-        en: { label: 'English', lang: 'en' },
+        root: { label: 'English', lang: 'en' },
+        ko: { label: '한국어', lang: 'ko' },
       },
       favicon: '/favicon.svg',
       head: [
@@ -38,57 +62,57 @@ export default defineConfig({
       plugins: [starlightLinksValidator()],
       sidebar: [
         {
-          label: '시작하기', translations: { en: 'Getting Started' },
+          label: 'Getting Started', translations: { ko: '시작하기' },
           items: [
-            { label: '입문자 시작점', translations: { en: 'Beginner start' }, slug: 'start/beginner' },
-            { label: '실무자 시작점', translations: { en: 'Practitioner start' }, slug: 'start/practical' },
-            { label: '고급 사용자 시작점', translations: { en: 'Advanced start' }, slug: 'start/advanced' },
-            { label: '직무별로 찾기', translations: { en: 'Find by job role' }, slug: 'roles' },
+            { label: 'Beginner start', translations: { ko: '입문자 시작점' }, slug: 'start/beginner' },
+            { label: 'Practitioner start', translations: { ko: '실무자 시작점' }, slug: 'start/practical' },
+            { label: 'Advanced start', translations: { ko: '고급 사용자 시작점' }, slug: 'start/advanced' },
+            { label: 'Find by job role', translations: { ko: '직무별로 찾기' }, slug: 'roles' },
           ],
         },
-        { label: 'AI 첫걸음', translations: { en: 'AI First Steps' }, collapsed: true, items: [{ autogenerate: { directory: 'basics' } }] },
+        { label: 'AI First Steps', translations: { ko: 'AI 첫걸음' }, collapsed: true, items: [{ autogenerate: { directory: 'basics' } }] },
         {
-          label: 'Claude 완전 정복', translations: { en: 'Mastering Claude' },
+          label: 'Mastering Claude', translations: { ko: 'Claude 완전 정복' },
           collapsed: true,
           items: [
-            { label: 'Claude 최신 소식', translations: { en: 'Claude news' }, slug: 'claude-news' },
+            { label: 'Claude news', translations: { ko: 'Claude 최신 소식' }, slug: 'claude-news' },
             { autogenerate: { directory: 'claude' } },
           ],
         },
         {
-          label: '분야별 튜토리얼', translations: { en: 'Tutorials by Topic' },
+          label: 'Tutorials by Topic', translations: { ko: '분야별 튜토리얼' },
           collapsed: true,
           items: [
-            { label: '대화형 AI 기본기', translations: { en: 'Chat AI Basics' }, collapsed: true, items: [{ autogenerate: { directory: 'chat' } }] },
-            { label: '코딩·에이전트', translations: { en: 'Coding & Agents' }, collapsed: true, items: [{ autogenerate: { directory: 'coding' } }] },
-            { label: '이미지·영상·음성', translations: { en: 'Image, Video & Voice' }, collapsed: true, items: [{ autogenerate: { directory: 'media' } }] },
-            { label: '업무 자동화·생산성', translations: { en: 'Automation & Productivity' }, collapsed: true, items: [{ autogenerate: { directory: 'automation' } }] },
-            { label: '화제의 AI 에이전트', translations: { en: 'Trending AI Agents' }, collapsed: true, items: [{ autogenerate: { directory: 'agents' } }] },
-            { label: '개발자 심화', translations: { en: 'Advanced for Developers' }, collapsed: true, items: [{ autogenerate: { directory: 'dev' } }] },
+            { label: 'Chat AI Basics', translations: { ko: '대화형 AI 기본기' }, collapsed: true, items: [{ autogenerate: { directory: 'chat' } }] },
+            { label: 'Coding & Agents', translations: { ko: '코딩·에이전트' }, collapsed: true, items: [{ autogenerate: { directory: 'coding' } }] },
+            { label: 'Image, Video & Voice', translations: { ko: '이미지·영상·음성' }, collapsed: true, items: [{ autogenerate: { directory: 'media' } }] },
+            { label: 'Automation & Productivity', translations: { ko: '업무 자동화·생산성' }, collapsed: true, items: [{ autogenerate: { directory: 'automation' } }] },
+            { label: 'Trending AI Agents', translations: { ko: '화제의 AI 에이전트' }, collapsed: true, items: [{ autogenerate: { directory: 'agents' } }] },
+            { label: 'Advanced for Developers', translations: { ko: '개발자 심화' }, collapsed: true, items: [{ autogenerate: { directory: 'dev' } }] },
           ],
         },
         {
-          label: '직무별 AI 활용', translations: { en: 'AI by Job Role' },
+          label: 'AI by Job Role', translations: { ko: '직무별 AI 활용' },
           collapsed: true,
           items: [
-            { label: '직무별 가이드 소개', translations: { en: 'Guides by job role: overview' }, slug: 'roles' },
-            { label: '마케터·콘텐츠', translations: { en: 'Marketers & Content' }, slug: 'roles/marketer' },
-            { label: '사무·기획·관리직', translations: { en: 'Office, Planning & Management' }, slug: 'roles/office' },
-            { label: '교사·강사', translations: { en: 'Teachers & Instructors' }, slug: 'roles/teacher' },
-            { label: '학생·취업 준비생', translations: { en: 'Students & Job Seekers' }, slug: 'roles/student' },
-            { label: '개발자', translations: { en: 'Developers' }, slug: 'roles/developer' },
-            { label: '1인 사업자·소상공인', translations: { en: 'Solo Business Owners' }, slug: 'roles/solo-business' },
+            { label: 'Guides by job role: overview', translations: { ko: '직무별 가이드 소개' }, slug: 'roles' },
+            { label: 'Marketers & Content', translations: { ko: '마케터·콘텐츠' }, slug: 'roles/marketer' },
+            { label: 'Office, Planning & Management', translations: { ko: '사무·기획·관리직' }, slug: 'roles/office' },
+            { label: 'Teachers & Instructors', translations: { ko: '교사·강사' }, slug: 'roles/teacher' },
+            { label: 'Students & Job Seekers', translations: { ko: '학생·취업 준비생' }, slug: 'roles/student' },
+            { label: 'Developers', translations: { ko: '개발자' }, slug: 'roles/developer' },
+            { label: 'Solo Business Owners', translations: { ko: '1인 사업자·소상공인' }, slug: 'roles/solo-business' },
           ],
         },
         {
-          label: '참고 자료', translations: { en: 'Reference' },
+          label: 'Reference', translations: { ko: '참고 자료' },
           collapsed: true,
           items: [
-            { label: '바로 쓰는 프롬프트 모음', translations: { en: 'Ready-to-use prompts' }, slug: 'start/prompts' },
-            { label: 'AI 용어 사전', translations: { en: 'AI glossary' }, slug: 'start/glossary' },
-            { label: '전체 튜토리얼', translations: { en: 'All tutorials' }, slug: 'tutorials' },
-            { label: '최근 업데이트', translations: { en: 'Recent updates' }, slug: 'updates' },
-            { label: '소개', translations: { en: 'About' }, slug: 'about' },
+            { label: 'Ready-to-use prompts', translations: { ko: '바로 쓰는 프롬프트 모음' }, slug: 'start/prompts' },
+            { label: 'AI glossary', translations: { ko: 'AI 용어 사전' }, slug: 'start/glossary' },
+            { label: 'All tutorials', translations: { ko: '전체 튜토리얼' }, slug: 'tutorials' },
+            { label: 'Recent updates', translations: { ko: '최근 업데이트' }, slug: 'updates' },
+            { label: 'About', translations: { ko: '소개' }, slug: 'about' },
           ],
         },
       ],

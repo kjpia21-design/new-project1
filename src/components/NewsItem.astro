@@ -13,8 +13,8 @@ const { date, channel, href, sourceLabel, tutorial, tutorialLabel } = Astro.prop
 const lang = getLang(Astro);
 const tone = { API: 'blue', 'Claude Code': 'purple', 'Claude 앱': 'green', 'Claude app': 'green', 뉴스: 'yellow', News: 'yellow' }[channel];
 const channelLabel = lang === 'en' ? ({ 'Claude 앱': 'Claude app', 뉴스: 'News' } as Record<string, string>)[channel] ?? channel : channel;
-// 이미 /en/ 로 시작하는 경로는 그대로 두고, 아니면 현재 언어 접두사를 붙인다.
-const tutorialHref = tutorial ? (tutorial.startsWith('/en/') ? url(tutorial) : url(tutorial, lang)) : undefined;
+// 이미 /ko/ 로 시작하는 경로는 그대로 두고, 아니면 현재 언어 접두사를 붙인다.
+const tutorialHref = tutorial ? (tutorial.startsWith('/ko/') ? url(tutorial) : url(tutorial, lang)) : undefined;
 ---
 <article class="news not-content">
   <header>

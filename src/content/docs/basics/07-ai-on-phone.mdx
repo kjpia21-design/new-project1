@@ -1,13 +1,13 @@
 ---
-title: "휴대폰에서 AI 쓰기: 앱 설치와 음성 대화"
-description: "Claude·ChatGPT·Gemini 앱을 휴대폰에 설치하는 방법, 필요한 OS 버전, 말로 대화하는 음성 기능을 처음 쓰는 분 눈높이로 안내해요"
+title: "Using AI on Your Phone: Installing the App and Voice Conversations"
+description: "How to install the Claude, ChatGPT, and Gemini apps on your phone, the OS versions they need, and the voice feature for talking out loud, explained for first-timers"
 sidebar:
-  label: "7. 휴대폰에서 AI 쓰기"
+  label: "7. AI on your phone"
 level: beginner
 category: basics
 tools: ["Claude", "ChatGPT", "Gemini"]
-duration: "20분"
-prerequisites: ["스마트폰 (iPhone 또는 Android)", "앱 스토어에 로그인된 계정", "[2편](/basics/02-sign-up-first-question/)에서 만든 AI 계정 (없으면 앱에서 새로 가입해도 돼요)"]
+duration: "20 min"
+prerequisites: ["A smartphone (iPhone or Android)", "An account logged in to the app store", "The AI account you made in [tutorial 2](/basics/02-sign-up-first-question/) (if you don't have one, you can sign up in the app)"]
 lastVerified: 2026-10-26
 sources:
   - title: "Get started with Claude"
@@ -18,9 +18,9 @@ sources:
     url: "https://support.claude.com/en/articles/9612887-install-claude-for-android"
   - title: "Using voice mode (Claude)"
     url: "https://support.claude.com/en/articles/11101966-using-voice-mode"
-  - title: "ChatGPT - App Store 한국 등록 페이지 (OpenAI OpCo, LLC)"
+  - title: "ChatGPT - App Store Korea listing (OpenAI OpCo, LLC)"
     url: "https://apps.apple.com/kr/app/chatgpt/id6448311069"
-  - title: "ChatGPT Voice (OpenAI, ChatGPT 문서)"
+  - title: "ChatGPT Voice (OpenAI, ChatGPT docs)"
     url: "https://learn.chatgpt.com/docs/features/voice"
   - title: "Gemini mobile app availability (Google)"
     url: "https://support.google.com/gemini/answer/14579026"
@@ -36,149 +36,149 @@ import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- AI는 컴퓨터가 없어도 **휴대폰 앱**으로 바로 쓸 수 있어요. 앱 스토어(App Store 또는 Google Play)에서 받아 로그인하면 끝이에요.
-- 앱마다 **휴대폰 OS 버전 조건**이 있어요. Claude는 iOS 18.0 이상 또는 Android 8.0 이상, ChatGPT iOS 앱은 iOS 18.0 이상, Gemini Android 앱은 Android 9 이상이에요. (2026-10-11 기준)
-- **음성 대화**는 타자 대신 말로 주고받는 기능이에요. Claude는 휴대폰 앱에서 무료 플랜도 쓸 수 있고, Gemini는 하단의 Live 버튼으로 시작해요.
-- 음성 대화도 **사용량 한도에 포함**돼요. 말로 길게 얘기하면 한도가 빨리 줄 수 있어요.
+- You can use AI right away on a **phone app** without a computer. Download it from the app store (App Store or Google Play), log in, and you're done.
+- Each app has an **OS version requirement**. Claude needs iOS 18.0 or later or Android 8.0 or later, the ChatGPT iOS app needs iOS 18.0 or later, and the Gemini Android app needs Android 9 or later. (As of 2026-10-11)
+- **Voice conversation** lets you talk back and forth instead of typing. Claude's voice mode works in the phone app even on the free plan, and Gemini starts from the Live button at the bottom.
+- Voice conversations also **count toward your usage limit**. Long spoken conversations can use up your limit quickly.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- 내 휴대폰에서 AI 앱을 설치할 수 있는지 확인하고, 설치할 수 있어요.
-- 컴퓨터에서 쓰던 계정으로 앱에 로그인해 대화를 이어갈 수 있어요.
-- 말로 AI와 대화하는 음성 기능을 켜고 끌 수 있어요.
-- 길에서, 요리하면서처럼 손이 바쁠 때 AI를 쓰는 방법을 알 수 있어요.
+- Check whether you can install the AI apps on your phone, and install them.
+- Log in to the app with the account you used on your computer and pick up your conversations.
+- Turn the voice feature, for talking with the AI out loud, on and off.
+- Know how to use AI when your hands are busy, like when you're out walking or cooking.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **앱 스토어** | 앱을 내려받는 곳이에요. iPhone은 App Store, Android는 Google Play예요. |
-| **OS 버전** | 휴대폰의 운영체제 버전이에요. 너무 오래된 휴대폰은 앱 설치 버튼이 안 보일 수 있어요. |
-| **음성 대화** | 글자 대신 말로 질문하고 목소리로 답을 듣는 기능이에요. |
-| **받아쓰기(음성 입력)** | 내 말을 글자로 바꿔 입력창에 넣어 줄 뿐, AI가 소리로 답하지는 않아요. 음성 대화와 달라요. |
-| **베타** | 아직 다듬는 중인 기능이에요. 어색하거나 바뀔 수 있어요. |
+| **App store** | Where you download apps. On iPhone it's the App Store; on Android it's Google Play. |
+| **OS version** | The version of your phone's operating system. On a very old phone, you may not see the install button. |
+| **Voice conversation** | A feature where you ask questions out loud and hear the answers spoken, instead of typing. |
+| **Dictation (voice input)** | Only turns your speech into text in the input box. The AI doesn't answer out loud. It's different from voice conversation. |
+| **Beta** | A feature that's still being polished. It may feel rough or change. |
 
-### 내 휴대폰에서 설치할 수 있나요? (2026-10-11 기준)
+### Can I install it on my phone? (as of 2026-10-11)
 
-| 서비스 | 앱 이름 | iPhone | Android |
+| Service | App name | iPhone | Android |
 | --- | --- | --- | --- |
-| Claude | Claude by Anthropic | iOS·iPadOS 18.0 이상 | Android 8.0 Oreo 이상 |
-| ChatGPT | ChatGPT | iOS·iPadOS 18.0 이상 (한국 App Store 등록 정보) | 공식 문서에서 버전을 찾지 못했어요. Google Play 앱 정보에서 확인하세요 |
-| Gemini | Gemini | iOS·iPadOS 18.2 이상 (한국 App Store 등록 정보, 2026-10-26 기준). 공식 도움말에는 버전이 없어요 | Android 9 이상, 메모리(RAM) 2GB 이상. Android Go는 지원하지 않아요 |
+| Claude | Claude by Anthropic | iOS / iPadOS 18.0 or later | Android 8.0 Oreo or later |
+| ChatGPT | ChatGPT | iOS / iPadOS 18.0 or later (from the Korean App Store listing) | We couldn't find the version in official documentation. Check the app info on Google Play |
+| Gemini | Gemini | iOS / iPadOS 18.2 or later (from the Korean App Store listing, as of 2026-10-26). The official help page doesn't list a version | Android 9 or later, 2 GB or more of memory (RAM). Android Go isn't supported |
 
-- 내 iPhone 버전은 설정 > 일반 > 정보에서, Android는 설정 > 휴대전화 정보에서 볼 수 있어요. 메뉴 이름은 기종마다 조금씩 달라요.
-- 조건에 못 미치면 앱 대신 **휴대폰 브라우저로 웹 사이트**(claude.ai 등)를 열어도 돼요.
-- 나이 조건과 지원 국가는 서비스마다 달라요. Claude는 만 18세 이상과 지원 지역이 조건이에요([C3](/claude/c03-getting-started/)). Gemini 모바일 앱은 13세 이상(또는 해당 국가의 적용 연령)이고 150개국 넘게 제공돼요.
+- You can see your iPhone's version under Settings > General > About, and on Android under Settings > About phone. Menu names vary a little by model.
+- If your phone doesn't meet the requirements, you can **open the website in your phone's browser** (such as claude.ai) instead of using the app.
+- Age requirements and supported countries differ by service. Claude requires you to be 18 or older and in a supported region ([C3](/claude/c03-getting-started/)). The Gemini mobile app is for ages 13 and up (or the applicable age in your country) and is offered in more than 150 countries.
 
-## 단계별 따라하기
+## Step-by-step guide
 
 <Checklist items={[
-  '휴대폰 OS 버전을 확인했어요',
-  '앱 스토어에서 공식 앱을 받았어요',
-  '컴퓨터에서 쓰던 계정으로 로그인했어요',
-  '마이크 권한을 허용했어요',
-  '음성 대화를 한 번 해 봤어요',
+  'I checked my phone\'s OS version',
+  'I downloaded the official app from the app store',
+  'I logged in with the account I used on my computer',
+  'I allowed microphone permission',
+  'I tried one voice conversation',
 ]} />
 
 <Steps>
 
-1. **OS 버전 확인하기**
+1. **Check your OS version**
 
-   위 표를 보고 내 휴대폰이 조건을 넘는지 확인해요. 조건이 안 되면 브라우저로 웹 사이트를 쓰세요.
+   Use the table above to see whether your phone meets the requirements. If it doesn't, use the website in a browser.
 
-2. **공식 앱 찾아서 설치하기**
+2. **Find and install the official app**
 
-   App Store 또는 Google Play 검색창에 서비스 이름을 쓰고, **개발사 이름**을 꼭 확인하세요.
+   Type the service name into the App Store or Google Play search box, and be sure to check the **developer name**.
 
-   - Claude: 앱 이름 "Claude by Anthropic", 개발사 Anthropic
-   - ChatGPT: 개발사 OpenAI (한국 App Store 등록 정보 기준 OpenAI OpCo, LLC)
-   - Gemini: 개발사 Google
+   - Claude: app name "Claude by Anthropic," developer Anthropic
+   - ChatGPT: developer OpenAI (OpenAI OpCo, LLC in the Korean App Store listing)
+   - Gemini: developer Google
 
-   이름만 비슷한 가짜 앱이 있을 수 있어요. 개발사가 다르거나 앱 안에서 별도 결제를 먼저 요구하면 설치하지 마세요.
+   There can be fake apps with similar names. If the developer is different, or the app asks for a separate payment right away, don't install it.
 
-   <ScreenshotPlaceholder caption="앱 스토어에서 Claude 앱을 찾아 설치하는 화면" officialUrl="https://support.claude.com/en/articles/9266462-install-claude-for-ios" officialLabel="Anthropic 도움말에서 보기 (iPhone)" />
+   <ScreenshotPlaceholder caption="Finding and installing the Claude app in the app store" officialUrl="https://support.claude.com/en/articles/9266462-install-claude-for-ios" officialLabel="See it in the Anthropic Help Center (iPhone)" />
 
-3. **로그인하기**
+3. **Log in**
 
-   [2편](/basics/02-sign-up-first-question/)에서 만든 계정으로 로그인해요. 같은 계정이면 컴퓨터에서 하던 대화를 휴대폰에서도 볼 수 있어요. 인증 문자나 메일이 오면 그대로 입력하면 돼요.
+   Log in with the account you made in [tutorial 2](/basics/02-sign-up-first-question/). With the same account, you can see on your phone the conversations you had on your computer. If a verification text or email arrives, just enter it.
 
-4. **마이크 권한 허용하기**
+4. **Allow microphone permission**
 
-   음성 대화를 처음 켤 때 "마이크를 사용하게 허용할까요?"라고 물어요. **허용**을 눌러야 말이 들려요. 실수로 막았다면 휴대폰 설정에서 해당 앱의 마이크 권한을 켜면 돼요.
+   The first time you turn on voice conversation, it asks "Allow access to the microphone?" You need to tap **Allow** for it to hear you. If you blocked it by mistake, turn on that app's microphone permission in your phone's settings.
 
-5. **음성 대화 시작하기**
+5. **Start a voice conversation**
 
-   서비스마다 위치가 달라요.
+   The location differs by service.
 
-   - **Claude**: 입력창에서 마이크 아이콘 옆의 **음파(소리 물결) 아이콘**을 눌러요. 목소리를 고르고 말을 시작하세요.
-   - **Gemini(Android)**: 앱 아래쪽의 **Live**를 눌러요. 화면을 잠금 해제한 상태여야 해요.
-   - **ChatGPT**: 아래 안내를 먼저 읽어 주세요.
+   - **Claude**: In the input box, tap the **sound-wave icon** next to the microphone icon. Pick a voice and start talking.
+   - **Gemini (Android)**: Tap **Live** at the bottom of the app. Your screen needs to be unlocked.
+   - **ChatGPT**: Please read the note below first.
 
-   <ScreenshotPlaceholder caption="Claude 앱 입력창의 음파 아이콘" officialUrl="https://support.claude.com/en/articles/11101966-using-voice-mode" officialLabel="Anthropic 도움말에서 보기" />
+   <ScreenshotPlaceholder caption="The sound-wave icon in the Claude app's input box" officialUrl="https://support.claude.com/en/articles/11101966-using-voice-mode" officialLabel="See it in the Anthropic Help Center" />
 
-   <ScreenshotPlaceholder caption="Gemini 앱 아래쪽의 Live 버튼" officialUrl="https://support.google.com/gemini/answer/15274899" officialLabel="Google 도움말에서 보기" />
+   <ScreenshotPlaceholder caption="The Live button at the bottom of the Gemini app" officialUrl="https://support.google.com/gemini/answer/15274899" officialLabel="See it in Google Help" />
 
-6. **말로 첫 질문 해 보기**
+6. **Ask your first question out loud**
 
-   <PromptBox label="처음 해 볼 만한 말">
-   오늘 저녁에 냉장고에 있는 두부, 달걀, 대파로 만들 수 있는 요리를 세 가지만 알려 주세요.
+   <PromptBox label="Something to try first">
+   Give me just three dishes I can make tonight with the tofu, eggs, and green onions in my fridge.
    </PromptBox>
 
-   끝낼 때는 화면의 종료 버튼을 눌러요. 끝난 대화는 대화 목록에 글로 남는지 앱에서 확인해 보세요.
+   When you're done, tap the end button on the screen. Check in the app whether the finished conversation stays in your conversation list as text.
 
 </Steps>
 
-<Aside type="caution" title="ChatGPT 음성은 확인한 범위가 달라요 (2026-10-11 기준)">
-OpenAI의 ChatGPT 문서에서 열어 볼 수 있었던 음성 안내(ChatGPT Voice)는 **데스크톱 앱 기준**이고, Plus·Pro·Business·Edu·Enterprise 플랜에서 제공된다고 적혀 있어요. 이 문서는 휴대폰에 대해서는 데스크톱과 짝지은 iOS의 Codex를 통한 사용만 안내하고(2026-10-19 기준), ChatGPT 앱의 음성 대화 위치와 무료 플랜 이용 여부는 확인하지 못했어요. 앱 안의 안내와 OpenAI 도움말을 확인하세요.
+<Aside type="caution" title="What we confirmed about ChatGPT voice is limited (as of 2026-10-11)">
+The voice guide we could open in OpenAI's ChatGPT docs (ChatGPT Voice) is **for the desktop app**, and says it's available on the Plus, Pro, Business, Edu, and Enterprise plans. For phones, that document only covers use through Codex on iOS paired with the desktop (as of 2026-10-19). We couldn't confirm where the voice conversation is in the ChatGPT app or whether the free plan can use it. Check the in-app instructions and OpenAI's help pages.
 </Aside>
 
-## 빠른 참조표
+## Quick reference
 
-| 항목 | Claude | Gemini | ChatGPT |
+| Item | Claude | Gemini | ChatGPT |
 | --- | --- | --- | --- |
-| 음성 시작 | 입력창의 음파 아이콘 | 앱 아래 Live | 데스크톱 앱 기준 "Start voice chat"만 확인 |
-| 무료로 가능? | 가능 (Free 포함 모든 플랜) | 로그인한 계정으로 사용. Google 도움말의 요구 조건에 유료 요금제는 적혀 있지 않아요 | 문서상 Plus 이상 (데스크톱 기준) |
-| 한국어 | 음성 언어는 설정(Settings) > 기능(Capabilities)의 음성(Voice) > 말하는 언어(Spoken language)에서 고름(없으면 설정 > 일반(General) > 음성 > 언어(Language), 2026-10-26 기준). 한국어가 목록에 있는지는 공식 문서에 적혀 있지 않아요 | 앱 지원 언어 목록에 한국어(Korean) 포함. Live 지원 언어는 따로 확인하세요 | 확인하지 못함 |
-| 사용량 | 일반 사용량 한도에 포함 | 요금제 한도 적용 ([8편](/basics/08-free-vs-paid/)) | 작업과 함께 플랜의 사용량 한도를 나눠 써요 (OpenAI 요금 문서) |
-| 기타 | 베타. Fable 모델은 음성에서 쓸 수 없어요 | 잠금 화면에서는 시작할 수 없어요 | - |
+| Starting voice | The sound-wave icon in the input box | Live at the bottom of the app | Only "Start voice chat" on the desktop app confirmed |
+| Possible for free? | Yes (all plans, including Free) | Used with a logged-in account. Google's help page doesn't list a paid plan among the requirements | Plus or higher per the docs (desktop) |
+| Korean | Voice language is chosen under Settings > Capabilities > Voice > Spoken language (if you don't see it, Settings > General > Voice > Language, as of 2026-10-26). The official docs don't say whether Korean is in the list | Korean is among the app's supported languages. Check Live's supported languages separately | Not confirmed |
+| Usage | Counts toward the normal usage limit | Plan limits apply ([tutorial 8](/basics/08-free-vs-paid/)) | Shares the plan's usage limit with other tasks (OpenAI pricing docs) |
+| Other | Beta. The Fable model can't be used in voice | Can't be started from the lock screen | - |
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 앱 스토어에 앱이 안 보여요
+### I can't find the app in the app store
 
-- **원인**: 휴대폰 OS 버전이 낮거나, 지원하지 않는 지역·기기일 수 있어요.
-- **해결**: 위 표로 버전을 확인하고, 안 되면 브라우저로 웹 사이트를 쓰세요.
+- **Cause**: Your phone's OS version may be too low, or the region or device may not be supported.
+- **Fix**: Check the version with the table above, and if it doesn't work, use the website in a browser.
 
-### 말을 해도 AI가 못 들어요
+### The AI can't hear me when I talk
 
-- **원인**: 마이크 권한을 막았거나, 다른 앱이 마이크를 쓰고 있을 수 있어요.
-- **해결**: 휴대폰 설정에서 해당 앱의 마이크를 허용하고, 다른 통화·녹음 앱을 닫아 보세요.
+- **Cause**: You may have blocked microphone permission, or another app may be using the microphone.
+- **Fix**: Allow the app's microphone in your phone's settings, and try closing other calling or recording apps.
 
-### 한국어로 말했는데 엉뚱하게 알아들어요
+### I spoke in Korean but it understood something else
 
-- **원인**: Claude의 음성 언어는 앱 표시 언어와 따로 설정돼요. 공식 도움말은 "앱의 표시 언어를 바꿔도 음성 언어는 바뀌지 않는다"고 해요. 비영어권 음성은 베타예요.
-- **해결**: Claude는 설정 > 기능(Capabilities) > 음성 > 말하는 언어(Spoken language)를 확인하세요. 이 항목이 없으면 설정 > 일반 > 음성 > 언어에 있어요. 조용한 곳에서 또박또박 말하고, 중요한 내용은 글로 한 번 더 확인하세요.
+- **Cause**: Claude's voice language is set separately from the app's display language. The official help page says "changing the app's display language doesn't change the voice language." Voice in non-English languages is in beta.
+- **Fix**: In Claude, check Settings > Capabilities > Voice > Spoken language. If that item isn't there, look under Settings > General > Voice > Language. Speak clearly in a quiet place, and double-check important content in writing.
 
-### 음성으로 대화했더니 한도가 빨리 줄어요
+### My limit drops fast when I use voice
 
-- **원인**: Claude의 음성 대화는 요금제의 일반 사용량 한도에 포함돼요. 배터리도 글자 대화보다 더 써요.
-- **해결**: 긴 작업은 글자로, 짧은 질문은 음성으로 나눠 쓰세요. 한도는 [C2](/claude/c02-plans-limits/)에서 볼 수 있어요.
+- **Cause**: Claude's voice conversations count toward your plan's normal usage limit. They also use more battery than text conversations.
+- **Fix**: Split it up: long tasks in text, short questions by voice. You can read about limits in [C2](/claude/c02-plans-limits/).
 
-### 잠금 화면에서 Gemini Live가 안 켜져요
+### Gemini Live won't start from the lock screen
 
-- **원인**: Gemini Live는 잠금 화면에서 시작할 수 없어요.
-- **해결**: 휴대폰을 먼저 잠금 해제하세요.
+- **Cause**: Gemini Live can't be started from the lock screen.
+- **Fix**: Unlock your phone first.
 
-## 실전 팁
+## Practical tips
 
-- **말로 얘기하고 글로 정리하세요.** 길에서 떠오른 생각을 음성으로 말한 뒤, 나중에 대화 기록을 글로 다시 보면 좋아요.
-- **개인정보는 말하지 마세요.** 주변 사람이 들을 수 있어요. 안전 수칙은 [5편](/basics/05-privacy-safety/)을 보세요.
-- **같은 계정으로 로그인하세요.** 기기를 바꿔도 대화를 이어 갈 수 있어요.
-- **먼저 웹으로 써 봐도 괜찮아요.** 앱은 언제든 나중에 설치할 수 있어요.
+- **Talk it out, then write it up.** Say a thought that came to you while out and about, then look back at the conversation history as text later.
+- **Don't say personal information out loud.** People nearby can hear you. See [tutorial 5](/basics/05-privacy-safety/) for safety rules.
+- **Log in with the same account.** You can pick up your conversations even if you switch devices.
+- **It's fine to use the web first.** You can install the app any time later.
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [8. 무료로 어디까지? 요금제 고르기 기초](/basics/08-free-vs-paid/) — 한도와 요금
-- [C3. Claude 앱 시작하기](/claude/c03-getting-started/) — 웹·데스크톱·모바일 자세히
-- [1. 실무 프롬프트 작성법](/chat/01-prompt-basics/) — 말로 해도 쓰이는 질문 틀
+- [8. How far does free go? Choosing a plan](/basics/08-free-vs-paid/) — Limits and pricing
+- [C3. Getting started with the Claude app](/claude/c03-getting-started/) — Web, desktop, and mobile in detail
+- [1. Writing prompts for work](/chat/01-prompt-basics/) — A question framework that works when you speak, too

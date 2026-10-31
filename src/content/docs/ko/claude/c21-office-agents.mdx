@@ -1,0 +1,224 @@
+---
+title: "Claude for M365로 Excel·PowerPoint 안에서 Claude 쓰기"
+description: "Excel과 PowerPoint 안에 Claude 애드인을 설치하고, 수식 설명·오류 추적·슬라이드 생성과 수정을 맡기는 방법과 플랜·지원 버전·한계·안전 수칙을 공식 문서 기준으로 정리했어요"
+sidebar:
+  label: "C21. Excel·PowerPoint"
+level: practical
+category: claude
+tools: ["Claude for Excel", "Claude for PowerPoint", "Microsoft 365"]
+duration: "30분"
+prerequisites:
+  - "Claude 유료 플랜 (Pro, Max, Ultra, Team, Enterprise)"
+  - "Microsoft 365 구독의 Excel 또는 PowerPoint (웹, Windows, Mac). 2016·2019 영구 라이선스는 안 돼요"
+  - "신뢰할 수 있는 연습용 파일 (복사본 권장)"
+lastVerified: 2026-10-31
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "Claude for M365 overview"
+    url: "https://claude.com/docs/office-agents"
+  - title: "Use Claude for Excel"
+    url: "https://claude.com/docs/office-agents/excel"
+  - title: "Use Claude for PowerPoint"
+    url: "https://claude.com/docs/office-agents/powerpoint"
+  - title: "Work across M365 apps"
+    url: "https://claude.com/docs/office-agents/work-across-apps"
+  - title: "Connectors and Skills (Claude for M365)"
+    url: "https://claude.com/docs/office-agents/connectors-and-skills"
+  - title: "Performance and limits (Claude for M365)"
+    url: "https://claude.com/docs/office-agents/performance"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- **Claude for M365**는 Excel, PowerPoint, Word, Outlook 안에 설치하는 **Claude 애드인**이에요. 열어 둔 파일이나 메일을 보며 대화하고, 읽고, 고치고, 앱 사이에서 작업을 옮겨 줘요. 이 글은 Excel과 PowerPoint를 중심으로 다뤄요(2026-10-31 기준).
+- **Pro, Max, Ultra, Team, Enterprise** 플랜에서 일반 제공(GA)이에요. 무료 플랜은 대상으로 적혀 있지 않아요. 사용량은 기존 Claude 계정의 한도를 같이 써요.
+- 설치는 **Microsoft AppSource에서 "Get it now" > 오피스 앱에서 애드인 켜기 > Claude 계정으로 로그인**이에요. 웹, Windows(Microsoft 365), Mac에서 돼요. iPad, Android, 2016·2019 영구 라이선스는 안 돼요.
+- Excel은 **셀 단위 인용이 붙은 설명, 수식 관계를 유지한 값 수정, 오류 원인 추적**에, PowerPoint는 **템플릿을 지킨 슬라이드 생성, 특정 슬라이드만 수정, 네이티브 차트 변환**에 강점이 있다고 안내돼요.
+- **신뢰할 수 있는 파일에서만** 쓰세요. 외부 파일에 숨은 지시(프롬프트 인젝션)가 있을 수 있고, 매크로·VBA·데이터 테이블은 안 되며, 결과는 사람이 검토해야 해요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 내 플랜과 오피스 버전에서 Claude 애드인을 쓸 수 있는지 확인하고 설치할 수 있어요.
+- Excel에서 복잡한 수식을 설명받고, 오류 원인을 추적하고, 가정을 바꿔 결과 변화를 볼 수 있어요.
+- PowerPoint에서 초안 덱을 만들고, 특정 슬라이드만 고치고, 글머리표를 차트와 도식으로 바꿀 수 있어요.
+- 엑셀 숫자를 슬라이드로 옮기는 식의 앱 간 작업과 안전 수칙을 알 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **애드인(add-in)** | 오피스 앱 옆 사이드바로 붙는 확장 프로그램이에요. Claude 앱과는 별개의 설치물이고 로그인은 Claude 계정으로 해요. |
+| **Claude for M365** | Excel, PowerPoint, Word, Outlook용 애드인 묶음의 이름이에요. AppSource 목록 이름은 "Claude for Microsoft 365"예요. |
+| **셀 단위 인용** | Excel에서 Claude의 답에 붙는 링크예요. 눌러서 근거가 된 셀로 이동할 수 있어요. |
+| **지시사항(Instructions)** | 애드인 사이드바 설정(Settings)에 적어 두는 상시 선호예요. 앱마다 따로 저장돼요. |
+| **앱 간 작업** | 한 대화에서 열려 있는 Excel, PowerPoint, Word, Outlook을 오가며 읽고 쓰는 기능이에요. 설정에서 "Let Claude work across files"를 켜야 해요. |
+
+### 어디서 무엇을 쓰나요?
+
+| 하고 싶은 일 | 알맞은 곳 | 자세히 |
+| --- | --- | --- |
+| 열려 있는 엑셀 파일 안에서 수식·오류·모델 작업 | 이 글의 Claude for Excel | 이 글 |
+| 열려 있는 덱을 템플릿에 맞게 만들기·고치기 | 이 글의 Claude for PowerPoint | 이 글 |
+| 파일을 새로 만들어 받기(앱 설치 없이) | Claude 채팅의 파일 생성, 내장 스킬 | [C8](/ko/claude/c08-skills/) |
+| 내 폴더의 여러 파일을 정리하는 긴 작업 | Cowork | [C19](/ko/claude/c19-cowork/) |
+| 화면 시안·프로토타입 | Claude Design | [C20](/ko/claude/c20-claude-design/) |
+| Microsoft 자체 AI(Copilot) | Copilot | [자동화 23](/ko/automation/23-spreadsheet-ai/), [자동화 24](/ko/automation/24-m365-copilot/) |
+
+Word에는 변경 내용 추적(tracked changes)과 코멘트 기반 편집, Outlook에는 받은편지함 분류, 내 말투로 답장 초안, 스레드 요약, 회의 시간 찾기가 있다고 개요 문서가 소개해요. 이 글은 두 앱의 세부 사용법은 다루지 않아요.
+
+<Aside type="caution" title="Windows 업데이트 후 대화 기록이 사라질 수 있어요 (2026-10-31 기준)">
+공식 문서에는 2026년 9월과 10월 Microsoft 365 업데이트 뒤 Windows에서 일부 사용자의 **채팅 기록과 업로드한 스킬이 보이지 않는** 문제가 경고로 올라 있어요. Anthropic이 Microsoft와 해결 중이라고 안내돼요. 중요한 대화 내용은 따로 복사해 두고, 해결 방법은 공식 데이터 저장 문서의 해당 항목을 확인하세요.
+</Aside>
+
+<Aside type="note" title="확인되지 않은 점">
+한국어 화면·한국어 프롬프트 지원 범위, 플랜별 사용량 수치, 한국에서의 제공 여부 문구는 이번에 읽은 공식 문서에서 확인하지 못했어요. 한국어로도 대화는 해 보되, 결과는 직접 확인하세요. 모델 목록은 계정과 조직 설정에 따라 달라서 사이트에서 고정해 적지 않았어요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '내 플랜(Pro, Max, Ultra, Team, Enterprise)과 오피스 버전을 확인했어요',
+  'AppSource에서 Claude 애드인을 설치하고 로그인했어요',
+  '연습용 파일의 복사본을 준비했어요',
+  'Excel에서 설명, 값 변경, 오류 추적을 한 번씩 해 봤어요',
+  'PowerPoint에서 슬라이드 생성과 부분 수정을 해 봤어요',
+  '결과를 직접 검토하고 외부 파일에는 쓰지 않기로 했어요',
+]} />
+
+<Steps>
+
+1. **지원 버전 확인하기**
+
+   공식 문서가 밝힌 지원 범위예요(2026-10-31 기준).
+
+   | 앱 | 지원 | 지원하지 않음 |
+   | --- | --- | --- |
+   | Excel | 웹, Windows(Microsoft 365, 빌드 16.0.13127.20296 이상), Mac(16.46 이상, 빌드 21011600 이상) | Excel 2016·2019 영구/볼륨 라이선스, iPad, Android, SharedRuntime 기준보다 오래된 빌드 |
+   | PowerPoint | 웹, Windows(Microsoft 365, 빌드 16.0.13127.20296 이상), Mac(16.46 이상) | PowerPoint 2016·2019 영구/볼륨 라이선스, iPad, Android, 오래된 빌드 |
+
+2. **애드인 설치하고 로그인하기**
+
+   Microsoft AppSource의 "Claude for Microsoft 365" 목록에서 "Get it now"로 설치해요. 그다음 Excel이나 PowerPoint를 열어 애드인을 켜고 Claude 계정으로 로그인해요. 켜는 위치는 Mac은 도구(Tools) > 추가 기능(Add-ins), Windows는 홈(Home) > 추가 기능(Add-ins)이라고 안내돼요. 조직에서 쓴다면 관리자가 Microsoft 365 관리 센터(Admin Center)에서 배포할 수 있고, 처음에 Microsoft Graph 동의가 필요해요. 이 부분은 IT 담당자와 상의하세요.
+
+   <ScreenshotPlaceholder caption="Excel 홈 탭의 추가 기능(Add-ins)에서 Claude를 켜고 사이드바가 열린 화면" officialUrl="https://claude.com/docs/office-agents/excel" />
+
+3. **Excel: 이해하기 → 바꾸기 → 오류 잡기**
+
+   연습용 복사본을 열고 시트와 범위를 이름으로 지정해 요청하세요. 공식 문서는 큰 파일에서는 필요한 시트나 범위만 말하거나 필요한 시트만 새 통합 문서로 복사하라고 해요.
+
+   <PromptBox>
+   '월별매출' 시트의 C42 셀 값이 어떻게 계산되는지 단계별로 설명해 주세요. 근거가 된 셀은 인용으로 표시해 주세요.
+   </PromptBox>
+
+   <PromptBox>
+   '가정' 시트의 성장률을 5%에서 10%로 바꾸고, 연결된 계산이 어떻게 달라지는지 요약해 주세요. 수식은 지우지 말고 값만 바꿔 주세요.
+   </PromptBox>
+
+   <PromptBox>
+   '요약' 시트의 #REF! 오류의 원인이 되는 셀을 찾아서 알려 주고, 고치는 방법을 먼저 제안해 주세요. 제가 확인하기 전에는 수정하지 마세요.
+   </PromptBox>
+
+   Claude는 값을 바꿀 때 수식 관계를 유지해서 아래쪽 셀이 다시 계산되도록 하고, 기존 데이터를 덮어쓰기 전에 경고해요. 정렬, 필터, 피벗 테이블 편집, 조건부 서식, 데이터 유효성 드롭다운 같은 기본 작업도 직접 요청할 수 있다고 안내돼요.
+
+4. **PowerPoint: 템플릿을 먼저 적용하고 시작하기**
+
+   공식 모범 사례는 **템플릿을 먼저 적용한 다음** 내용을 만들게 하라는 거예요. Claude는 슬라이드 마스터, 레이아웃, 글꼴, 색 구성을 읽고 그에 맞춰 만들고 고쳐요.
+
+   <PromptBox>
+   이 덱의 템플릿으로 '지역 도서관 이용 현황' 보고서 6장짜리 초안을 만들어 주세요. 1장은 요약, 2~5장은 이용자 수·시간대·연령대·프로그램 참여, 6장은 제안이에요. 숫자는 지금 비워 두고 [여기에 숫자] 표시를 넣어 주세요.
+   </PromptBox>
+
+   <PromptBox>
+   슬라이드 3의 텍스트를 줄여 주세요. 너무 빽빽해요. 핵심 세 가지만 남기고 나머지는 발표자 노트에 옮겨 주세요.
+   </PromptBox>
+
+   특정 슬라이드를 선택한 뒤 말하면 덱 전체를 다시 만들지 않고 그 부분만 고쳐요. 글머리표를 프로세스 도식이나 편집 가능한 네이티브 차트로 바꿀 수도 있어요(이미지가 아니라 직접 편집 가능).
+
+   <FlowSteps title="PowerPoint에서 첫 덱 만들기" officialUrl="https://claude.com/docs/office-agents/powerpoint" steps={[
+     { where: 'PowerPoint', action: '회사 템플릿이 적용된 빈 덱을 열기' },
+     { where: 'Claude 사이드바', action: '목표와 장 구성을 적어 초안을 요청', result: '템플릿의 레이아웃·글꼴·색으로 슬라이드가 생겨요' },
+     { where: '슬라이드 선택', action: '"이 슬라이드만 줄여 줘"처럼 부분 수정 요청' },
+     { where: '사람의 검토', action: '브랜드 지침과 내용을 직접 확인한 뒤 확정' },
+   ]} />
+
+5. **(선택) 앱을 넘나드는 작업**
+
+   각 앱에 애드인을 설치하고 한 번씩 켠 뒤, 각 애드인 설정에서 "Let Claude work across files"를 켜요. Pro와 Max는 기본으로 켜져 있고 Team과 Enterprise는 기본으로 꺼져 있어요. 이 설정은 기기별이라 쓰려는 각 기기에서 켜야 하고, Claude 계정으로 직접 로그인할 때만 돼요(Bedrock 등 제3자 플랫폼 연결에서는 지원되지 않아요).
+
+   <PromptBox>
+   열려 있는 엑셀 파일의 '분기요약' 시트에서 매출과 영업이익 숫자를 가져와, 열려 있는 덱의 슬라이드 4에 표와 막대 차트로 넣어 주세요. 숫자가 바뀐 부분은 따로 알려 주세요.
+   </PromptBox>
+
+6. **설정에서 상시 지시사항 적어 두기**
+
+   사이드바 설정(Settings)의 지시사항(Instructions)에 늘 지켜 줄 규칙을 적어요. Excel이라면 "숫자는 천 단위 구분 기호를 써 줘", "열 제목은 굵게" 같은 서식 규칙과 통화·지역 선호를, PowerPoint라면 "글머리표는 한 줄로", "강조는 파란색 계열" 같은 브랜드 규칙을 적을 수 있다고 안내돼요. 앱마다 따로 저장돼서 Excel에 적은 규칙이 PowerPoint에는 적용되지 않아요.
+
+</Steps>
+
+## 빠른 참조표
+
+| 항목 | 내용 (2026-10-31 기준) |
+| --- | --- |
+| 제공 플랜 | Pro, Max, Ultra, Team, Enterprise (Excel·PowerPoint 모두 GA) |
+| 설치 | Microsoft AppSource "Claude for Microsoft 365" > Get it now |
+| 사용량 | 기존 Claude 계정과 같은 한도 |
+| 커넥터·스킬 | 사이드바 입력창 아래 + 버튼 > Connectors. 설정에서 켠 스킬이 모든 애드인에 적용되고 `/`로 직접 호출(예: PowerPoint의 `/deck-check`) |
+| 긴 대화 | 길어지면 자동으로 압축되어 새 대화로 이어짐 |
+| Excel 미지원 | 데이터 테이블, 매크로·VBA |
+| 처리 시간 한도 | 코드 실행 단계 90초, 그 외 단계 데스크톱 5분·웹 2분, Word 텍스트 편집 30초 |
+| Excel 읽기 한도 | Claude가 한 번에 읽는 데이터 있는 셀 2,000개. 큰 시트는 여러 단계로 읽음 |
+| 데이터 | 입출력은 30일 안에 백엔드에서 삭제(예외 있음). 채팅 기록은 브라우저 로컬(IndexedDB)에 저장되고 기기 간 동기화 안 됨 |
+| 조직 정책 | Excel 애드인은 조직의 사용자 지정 데이터 보존 설정을 상속하지 않고 Enterprise 감사 로그에 포함되지 않음. Compliance API 켠 Enterprise는 세션이 포함됨 |
+
+## 자주 막히는 지점
+
+### 애드인이 안 보여요
+
+- **원인**: 플랜이나 오피스 버전이 대상이 아닐 수 있어요. 조직에서 Office 스토어 접근을 막았거나, 관리자가 아직 배포하지 않았을 수도 있어요.
+- **해결**: 위 지원 버전 표와 내 플랜을 확인하세요. 조직 계정이면 IT 담당자에게 AppSource 배포(또는 사용자 지정 매니페스트 배포)를 요청하세요.
+
+### 작업이 멈추거나 오피스가 느려져요
+
+- **원인**: 큰 범위, 많은 도형, 무거운 수식이 있으면 앱이 느려지거나 응답하지 않을 수 있어요. 단계마다 정해진 대기 시간이 지나면 시간 초과가 나요. 시간 초과가 나도 오피스가 이미 시작한 단계는 계속 돌 수 있어요.
+- **해결**: 작업 중에는 클릭·입력·매크로·데이터 새로 고침을 하지 마세요. 시트와 범위를 이름으로 지정하고, 큰 변경은 작은 요청으로 나누고, 시간 초과 뒤에는 저장하고 기다렸다가 더 작은 단계로 요청하세요.
+
+### 큰 파일에서 단계가 끝나지 않았다고 나와요
+
+- **원인**: 공식 문서는 큰 파일일수록 완료되지 않은 단계로 끝나는 세션이 많다고 설명해요. 이것이 Office 충돌, 강제 종료, 새로 고침을 알아채는 방식이에요.
+- **해결**: 작업 전에 저장하고, 필요한 범위만 복사해서 작은 파일로 시도하세요.
+
+### 대화 기록이나 스킬이 사라졌어요
+
+- **원인**: 위 Windows 업데이트 경고와 같은 문제일 수 있어요. 채팅 기록은 원래 이 브라우저 안에만 저장되고 기기 간에 동기화되지 않아요.
+- **해결**: 공식 데이터 저장 문서의 안내를 확인하고, 중요한 내용은 별도로 보관하세요.
+
+### 매크로나 데이터 테이블은 안 돼요
+
+- **원인**: Excel 애드인이 데이터 테이블과 매크로·VBA를 지원하지 않아요.
+- **해결**: 해당 부분은 직접 작업하세요.
+
+## 실전 팁
+
+- **신뢰하는 파일에서만 쓰세요.** 외부에서 받은 템플릿, 거래처 파일, 데이터 가져오기에는 Claude를 속이는 숨은 지시가 있을 수 있어요. 공식 문서는 시험에서 민감 정보 추출, 데이터 변조, 파괴적 동작이 유도되는 상황이 확인됐다고 경고해요. 위험한 작업은 실행 전에 확인을 요청하니 확인 창을 꼼꼼히 읽으세요.
+- **복사본으로 시작하세요.** 넓은 범위를 고치게 하기 전에 신뢰하는 복사본에서 먼저 하라고 권해요.
+- **구체적으로 말하세요.** "정리해 줘"보다 "C열의 날짜를 YYYY-MM-DD로 통일해 줘"처럼 시트, 범위, 슬라이드 번호를 써서 요청하세요.
+- **사람의 검토가 필수예요.** 공식 문서는 최종 고객 납품물, 감사에 중요한 계산, 민감·규제 데이터가 든 모델은 검증이나 적절한 통제 없이 쓰지 말라고 해요. PowerPoint도 디자인과 서사 흐름에 대한 판단을 대신하지 않는다고 적혀 있어요.
+- **개인정보를 조심하세요.** 애드인은 파일에서 읽은 내용과 첨부 파일을 Anthropic으로 보내요. 채팅 기록을 지워도 Anthropic 쪽에 남은 사본은 지워지지 않아요. 주민등록번호, 계좌, 고객 개인정보가 든 파일은 쓰기 전에 조직 정책을 확인하세요.
+- **Microsoft Copilot과 구분하세요.** 이 애드인은 Anthropic의 Claude 애드인이고 Microsoft 365 Copilot과는 다른 제품이에요. Copilot 쪽 사용법은 [자동화 24](/ko/automation/24-m365-copilot/)에서 다뤄요.
+
+## 다음에 볼 튜토리얼
+
+- [C8. 스킬](/ko/claude/c08-skills/) — 애드인에서도 적용되는 스킬과 내장 Excel·PowerPoint 스킬
+- [C19. Cowork 시작하기](/ko/claude/c19-cowork/) — 내 폴더의 여러 파일을 정리하는 긴 작업
+- [C20. Claude Design](/ko/claude/c20-claude-design/) — 시안과 프로토타입을 만들어 PPTX로 내보내기
+- [엑셀·구글 시트에 AI 붙이기](/ko/automation/23-spreadsheet-ai/) — Copilot·Gemini·Claude 비교
+- [직장인(사무직) 가이드](/ko/roles/office/) — 업무에 AI를 붙이는 방법

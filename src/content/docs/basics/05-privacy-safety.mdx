@@ -1,25 +1,25 @@
 ---
-title: "개인정보·회사 정보 안전하게 지키며 쓰기"
-description: "AI에 무엇을 붙여넣으면 안 되는지, Claude·ChatGPT·Gemini의 학습·기록 설정을 어디서 끄는지 초보자 눈높이로 정리했어요"
+title: "Using AI While Protecting Personal and Company Information"
+description: "What you shouldn't paste into AI, and where to turn off training and history settings in Claude, ChatGPT, and Gemini, explained at a beginner's level"
 sidebar:
-  label: "5. 개인정보·안전"
+  label: "5. Privacy and safety"
 level: beginner
 category: basics
 status: published
 tools: ["Claude", "ChatGPT", "Gemini"]
-duration: "20분"
-prerequisites: ["Claude, ChatGPT, Gemini 중 하나 이상의 계정"]
+duration: "20 min"
+prerequisites: ["An account with at least one of Claude, ChatGPT, or Gemini"]
 lastVerified: 2026-10-26
 sources:
-  - title: "Claude 지원센터: 대화에 민감한 정보를 입력해도 되나요?"
+  - title: "Claude Help Center: Can I enter sensitive information in my chats?"
     url: "https://support.claude.com/en/articles/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations"
-  - title: "Claude 지원센터: 채팅 검색과 메모리"
+  - title: "Claude Help Center: Chat search and memory"
     url: "https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context"
-  - title: "Claude 요금제 페이지 (모델 학습 항목)"
+  - title: "Claude pricing page (model training item)"
     url: "https://claude.com/pricing"
-  - title: "Gemini 앱 개인정보 보호 허브 (Keep Activity, 사람 검토, 보관 기간)"
+  - title: "Gemini Apps Privacy Hub (Keep Activity, human review, retention period)"
     url: "https://support.google.com/gemini/answer/13594961"
-  - title: "ChatGPT 문서 (Data controls, 임시 채팅 단축키)"
+  - title: "ChatGPT docs (Data controls, temporary chat shortcut)"
     url: "https://learn.chatgpt.com/llms-full.txt"
 ---
 
@@ -30,135 +30,135 @@ import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- AI 채팅창에 쓴 내용은 **서비스 회사의 서버로 전달**돼요. 남에게 보여 주기 싫은 정보는 처음부터 넣지 마세요.
-- **넣지 말 것**: 주민등록번호·계좌·카드번호, 비밀번호, 고객 개인정보, 회사 기밀, 계약서 원문.
-- 서비스마다 "내 대화를 AI 개선에 써도 되는지" 설정이 있어요. 한 번 확인해 두면 마음이 편해요.
-- 민감한 내용을 꼭 물어야 하면 **가리고(마스킹) 바꿔서** 물어보세요.
-- 회사 업무에 쓸 때는 **회사 규정이 우선**이에요.
+- Whatever you type into an AI chat is **sent to the service company's servers**. Don't enter information you wouldn't want others to see in the first place.
+- **Don't enter**: national ID numbers (in Korea, the resident registration number), bank account and card numbers, passwords, customers' personal information, company secrets, or the full text of contracts.
+- Each service has a setting for "whether my conversations can be used to improve the AI." Checking it once gives you peace of mind.
+- If you must ask about something sensitive, **mask and swap out the details** first.
+- When using AI for company work, **company policy comes first**.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- AI에 넣어도 되는 정보와 안 되는 정보를 구분할 수 있어요.
-- Claude, ChatGPT, Gemini의 대화 저장·학습 설정이 어디 있는지 알 수 있어요.
-- 민감한 내용을 가려서 안전하게 질문할 수 있어요.
+- Tell apart what you can and can't enter into AI.
+- Know where the conversation-saving and training settings are in Claude, ChatGPT, and Gemini.
+- Mask sensitive details so you can ask safely.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 쉬운 뜻 |
+| Term | Plain meaning |
 | --- | --- |
-| **학습(모델 개선)** | 내 대화가 AI를 더 똑똑하게 만드는 데 쓰이는 것이에요. 서비스와 계정 종류에 따라 기본값이 달라요. |
-| **대화 기록** | 내 계정에 저장돼 나중에 다시 볼 수 있는 대화예요. |
-| **임시·시크릿 채팅** | 기록을 남기지 않거나 학습에 쓰지 않도록 만든 일회용 대화예요. |
-| **마스킹** | 이름·번호를 "김OO", "010-XXXX-XXXX"처럼 가리는 일이에요. |
+| **Training (model improvement)** | Your conversations being used to make the AI smarter. The default differs by service and account type. |
+| **Chat history** | Conversations saved to your account that you can look at again later. |
+| **Temporary / incognito chat** | A throwaway conversation designed not to keep a record or not to be used for training. |
+| **Masking** | Hiding names and numbers, like "Kim OO" or "010-XXXX-XXXX." |
 
-세 서비스의 설정은 이렇게 달라요. (확인일 2026-10-11, 계정 종류와 지역에 따라 다를 수 있어요.)
+The three services' settings differ as follows. (Checked 2026-10-11; may differ by account type and region.)
 
-| 서비스 | 기본 동작 (개인 계정) | 끄는 곳 | 기록 안 남기는 방법 |
+| Service | Default behavior (personal account) | Where to turn it off | How to avoid leaving a record |
 | --- | --- | --- | --- |
-| **Claude** | 대화를 Claude 개선에 쓰는 것은 "모델 개선(Model Improvement)" 설정에서 내가 허용한 경우예요. 요금제 페이지는 Free/Pro/Max를 "Opt-out"으로 표시해요. | 설정(Settings)의 개인정보 설정(claude.ai/settings/data-privacy-controls) | 시크릿(incognito) 채팅. 모델 개선에 쓰이지 않아요. |
-| **ChatGPT** | 개인 계정 기본값은 공식 문서에서 찾지 못했어요. 직접 확인이 필요해요. | 설정(Settings) > 데이터 제어(Data controls) | 임시 채팅(Temporary chat) 기능이 있어요. |
-| **Gemini** | Keep Activity가 켜져 있으면 일부 대화를 사람이 검토해 서비스 개선에 써요. 기본 보관 18개월이에요. | Gemini 앱 활동(Gemini Apps Activity)에서 Keep Activity 끄기, 자동 삭제 기간 변경 | 임시 채팅은 AI 학습에 쓰이지 않고 72시간 보관돼요. |
+| **Claude** | Your conversations are used to improve Claude only if you've allowed it in the "Model Improvement" setting. The pricing page marks Free/Pro/Max as "Opt-out." | Privacy settings under Settings (claude.ai/settings/data-privacy-controls) | Incognito chat. It isn't used for model improvement. |
+| **ChatGPT** | We couldn't find the personal-account default in the official docs. You'll need to check it yourself. | Settings > Data controls | There's a Temporary chat feature. |
+| **Gemini** | When Keep Activity is on, some conversations are reviewed by people and used to improve the service. Default retention is 18 months. | Turn off Keep Activity in Gemini Apps Activity, and change the auto-delete period | Temporary chats aren't used for AI training and are kept for 72 hours. |
 
-<Aside type="caution" title="확인하지 못한 점">
-ChatGPT 개인 계정의 학습 기본값과 임시 채팅의 상세 처리 방식은 공식 문서에서 찾지 못했어요. ChatGPT 설정의 Data controls 화면 설명을 직접 읽어 보세요. 또 Gemini는 Keep Activity를 꺼도 응답을 만들고 서비스를 보호하는 데 대화가 쓰이며, 사람이 검토한 대화는 삭제해도 최대 3년 보관될 수 있다고 안내해요.
+<Aside type="caution" title="What we couldn't confirm">
+We couldn't find in official documentation the training default for personal ChatGPT accounts or the details of how temporary chats are handled. Please read the description on ChatGPT's Data controls screen yourself. Also, for Gemini, even with Keep Activity off, conversations are still used to generate responses and protect the service, and conversations reviewed by people may be kept for up to 3 years even if you delete them.
 </Aside>
 
-## 단계별 따라하기
+## Step-by-step guide
 
 <Checklist items={[
-  '넣으면 안 되는 정보 목록을 읽었어요',
-  '쓰는 서비스의 학습·기록 설정을 열어 봤어요',
-  '민감한 대화는 임시·시크릿 채팅으로 해 봤어요',
-  '회사 AI 사용 규정을 확인했어요',
+  'I read the list of information not to enter',
+  'I opened the training and history settings of the service I use',
+  'I tried a sensitive conversation in a temporary or incognito chat',
+  'I checked my company\'s AI usage policy',
 ]} />
 
 <Steps>
 
-1. **넣으면 안 되는 정보를 기억하세요**
+1. **Remember what not to enter**
 
-   - 주민등록번호, 여권·운전면허 번호
-   - 계좌번호, 카드번호, 보안카드·OTP
-   - 비밀번호, 인증 코드
-   - 고객 이름·연락처·주문 내역 같은 **남의 개인정보**
-   - 회사 내부 자료: 미공개 매출, 계약서 원문, 소스 코드, 인사 정보
-   - 병원 기록처럼 민감한 건강 정보
+   - National ID numbers (in Korea, the resident registration number), passport and driver's license numbers
+   - Bank account numbers, card numbers, security cards and OTPs
+   - Passwords and verification codes
+   - **Other people's personal information**, such as customer names, contact details, and order history
+   - Internal company materials: unreleased sales figures, full contract text, source code, HR information
+   - Sensitive health information such as medical records
 
-   Claude 공식 안내도 금융 정보, 건강 기록, 비밀번호, 기밀 문서는 조심하라고 해요.
+   Claude's official guidance also says to be careful with financial information, health records, passwords, and confidential documents.
 
-2. **쓰는 서비스의 설정 화면을 열어 보세요**
+2. **Open the settings screen of the service you use**
 
-   Claude는 설정의 개인정보 메뉴에서 모델 개선을 켜고 끌 수 있어요. ChatGPT는 설정의 데이터 제어(Data controls), Gemini는 Gemini 앱 활동에서 조절해요.
+   In Claude, you can turn model improvement on or off in the privacy menu under Settings. In ChatGPT, use Data controls in Settings; in Gemini, use Gemini Apps Activity.
 
-   <ScreenshotPlaceholder caption="Claude의 개인정보 설정에서 모델 개선을 켜고 끄는 화면" officialUrl="https://support.claude.com/en/articles/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations" officialLabel="Claude 도움말에서 보기" />
+   <ScreenshotPlaceholder caption="Turning model improvement on or off in Claude's privacy settings" officialUrl="https://support.claude.com/en/articles/8325621-i-would-like-to-input-sensitive-data-into-my-chats-with-claude-who-can-view-my-conversations" officialLabel="See it in the Claude Help Center" />
 
-   <ScreenshotPlaceholder caption="Gemini 앱 활동에서 Keep Activity와 자동 삭제 기간을 조절하는 화면" officialUrl="https://support.google.com/gemini/answer/13594961" officialLabel="Google 도움말에서 보기" />
+   <ScreenshotPlaceholder caption="Adjusting Keep Activity and the auto-delete period in Gemini Apps Activity" officialUrl="https://support.google.com/gemini/answer/13594961" officialLabel="See it in Google Help" />
 
-3. **기록을 남기고 싶지 않으면 임시 채팅을 쓰세요**
+3. **If you don't want a record, use a temporary chat**
 
-   Claude는 새 채팅 오른쪽 위의 유령 아이콘으로 시크릿 채팅을 시작해요. 기록과 메모리에 저장되지 않아요. Gemini와 ChatGPT에도 임시 채팅이 있어요. 버튼 위치는 화면 업데이트에 따라 달라질 수 있으니 각 서비스 도움말에서 확인하세요.
+   In Claude, start an incognito chat with the ghost icon at the top right of a new chat. It isn't saved to your history or memory. Gemini and ChatGPT also have temporary chats. Button locations can change with screen updates, so check each service's help pages.
 
-4. **민감한 내용은 가려서 물어보세요**
+4. **Mask sensitive details when you ask**
 
    <PromptBox>
-   아래 문구는 실제 정보를 가린 예시야. 이 상황에서 내가 어떻게 답장하면 좋을지 정중한 문장으로 써줘.
-   상황: 거래처 A사 담당자 김OO 님이 대금 지급을 2주 미뤄 달라고 요청함. 금액은 [금액]. 우리 쪽 입장은 1주까지는 가능.
+   The text below is an example with the real details hidden. Write a polite reply I could send in this situation.
+   Situation: Mr. Kim OO, the contact at client company A, asked to postpone payment by two weeks. The amount is [amount]. On our side, we can do one week at most.
    </PromptBox>
 
-   이름, 금액, 계좌, 주소는 `[ ]`나 가명으로 바꿔 물어보고, 답을 받은 뒤 내 컴퓨터에서 진짜 정보를 채워 넣으세요.
+   Swap names, amounts, account numbers, and addresses for `[ ]` placeholders or pseudonyms when you ask, then fill in the real details on your own computer after you get the answer.
 
-5. **회사 업무라면 규정부터 확인하세요**
+5. **For company work, check the policy first**
 
-   회사마다 "외부 AI 서비스 사용 금지", "승인된 도구만 사용" 같은 규정이 있을 수 있어요. 규정을 모르면 보안 담당자나 팀장에게 먼저 물어보세요. 유료 팀·기업용 플랜은 별도 데이터 정책이 적용돼요. 예를 들어 Claude 요금제 페이지는 Team/Enterprise를 "기본적으로 학습 없음"으로, ChatGPT 요금 문서는 Business를 "비즈니스 데이터 학습 없음(기본)"으로 안내해요(2026-10-11 확인). 그래도 우선은 회사 지침을 따르세요.
+   Companies may have rules like "no external AI services" or "only approved tools." If you don't know the policy, ask your security officer or team lead first. Paid team and enterprise plans have separate data policies. For example, Claude's pricing page lists Team/Enterprise as "no training by default," and ChatGPT's pricing docs list Business as "no training on business data (default)" (checked 2026-10-11). Even so, follow your company's guidelines first.
 
-6. **대화가 쌓이는 기능도 알아 두세요**
+6. **Know about features that accumulate conversations**
 
-   Claude의 메모리는 대화에서 알게 된 내용을 저장해 다음 대화에 활용해요. 신분증 번호와 금융 계좌번호는 저장하지 않는다고 안내돼요. 저장 내용은 설정(Settings) > Your Claude에서 보고 지울 수 있어요(예전 화면은 Memory, 2026-10-26 기준). 새 채팅의 + 버튼에서 그 대화만 메모리를 끌 수도 있어요. 자세한 내용은 [C9](/claude/c09-memory-settings/)에서 봐요.
+   Claude's memory saves what it learns from your conversations and uses it in later ones. It's described as not saving ID numbers or financial account numbers. You can view and delete what's saved under Settings > Your Claude (the older screen was called Memory, as of 2026-10-26). You can also turn memory off for just one conversation from the + button in a new chat. See [C9](/claude/c09-memory-settings/) for details.
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-| 정보 | 넣어도 될까요? | 대안 |
+| Information | Okay to enter? | Alternative |
 | --- | --- | --- |
-| 주민번호·계좌·카드번호 | 넣지 마세요 | 빼고 설명하기 |
-| 비밀번호·인증 코드 | 넣지 마세요 | 절대 공유 금지 |
-| 고객 이름·연락처 | 넣지 마세요 | 가명·마스킹 |
-| 회사 기밀·계약서 원문 | 규정 확인 전에는 넣지 마세요 | 핵심만 요약해서 일반화 |
-| 일반 지식 질문, 공개 자료 | 괜찮아요 | - |
-| 내 이메일 초안(개인 정보 뺀 것) | 대체로 괜찮아요 | 이름은 가리기 |
+| National ID, account, and card numbers | Don't enter | Describe it without them |
+| Passwords and verification codes | Don't enter | Never share |
+| Customer names and contact details | Don't enter | Pseudonyms or masking |
+| Company secrets and full contract text | Don't enter until you've checked policy | Summarize and generalize the key points |
+| General knowledge questions, public material | Fine | - |
+| My own email drafts (without personal details) | Generally fine | Mask names |
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 이미 민감한 정보를 붙여넣었어요
+### I already pasted sensitive information
 
-- **원인**: 급하게 붙여넣다 보면 생겨요.
-- **해결**: 해당 대화를 삭제하세요. 다만 삭제해도 이미 처리된 내용이 완전히 사라진다고 단정할 수 없어요. 비밀번호라면 바로 바꾸고, 회사 정보라면 보안 담당자에게 알리세요. Claude는 대화를 지워도 메모리가 남을 수 있어 메모리도 따로 지워야 해요.
+- **Cause**: It happens when you paste in a hurry.
+- **Fix**: Delete that conversation. Even so, you can't be sure that what's already been processed is completely gone. If it was a password, change it right away; if it was company information, tell your security officer. In Claude, memory may remain even after you delete a conversation, so delete the memory separately too.
 
-### 설정에서 학습 항목이 안 보여요
+### I can't find the training option in settings
 
-- **원인**: 계정 종류(개인·팀·기업)나 앱 버전, 지역에 따라 화면이 달라요.
-- **해결**: 각 서비스의 공식 도움말 링크를 열어 최신 메뉴 이름을 확인하세요. 회사 계정이면 관리자가 정해 둔 정책일 수 있어요.
+- **Cause**: The screen differs depending on account type (personal, team, enterprise), app version, and region.
+- **Fix**: Open each service's official help link and check the latest menu names. For a company account, it may be a policy set by your administrator.
 
-### 시크릿 채팅인데 이전 대화를 기억하지 못해요
+### In incognito chat, it doesn't remember earlier conversations
 
-- **원인**: 정상이에요. 기록과 메모리에 저장되지 않는 기능이라서요.
-- **해결**: 필요한 배경은 그 대화 안에서 다시 적어 주세요.
+- **Cause**: That's normal. The feature is designed not to be saved to history or memory.
+- **Fix**: Restate any background you need within that conversation.
 
-### AI가 만든 답에 다른 사람 정보가 섞여 있을까 걱정돼요
+### I worry the AI's answer might mix in other people's information
 
-- **원인**: AI는 틀린 내용을 그럴듯하게 말할 수 있어요.
-- **해결**: 사실 확인은 [4편](/basics/04-fact-checking/)을 보세요.
+- **Cause**: AI can state wrong content plausibly.
+- **Fix**: See [tutorial 4](/basics/04-fact-checking/) for fact-checking.
 
-## 실전 팁
+## Practical tips
 
-- **"이 글을 남에게 보여 줘도 괜찮은가?"** 를 붙여넣기 전에 한 번 자문해 보세요.
-- 처음 쓰는 서비스는 가입 직후 **설정부터** 열어 보세요.
-- 파일을 올릴 때도 같은 기준이에요. 이름·번호가 든 표는 열을 지우고 올리세요.
-- 공용 PC에서는 쓰고 나서 로그아웃하세요.
+- Before pasting, ask yourself once: **"Would it be okay to show this text to other people?"**
+- With a service you're using for the first time, open **the settings first** right after signing up.
+- The same standard applies when uploading files. If a table has names or numbers, delete those columns before uploading.
+- On a shared PC, log out after you finish.
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [생활 속 AI 활용 10가지](/basics/06-everyday-uses/) — 안전한 예시로 연습하기
-- [C9. 메모리와 개인 설정](/claude/c09-memory-settings/) — Claude 메모리 끄고 지우기
-- [Claude·ChatGPT·Gemini 비교](/chat/05-compare-assistants/) — 학습 정책 차이 한눈에 보기
+- [10 everyday uses for AI](/basics/06-everyday-uses/) — Practice with safe examples
+- [C9. Memory and personal settings](/claude/c09-memory-settings/) — Turning off and deleting Claude's memory
+- [Comparing Claude, ChatGPT, and Gemini](/chat/05-compare-assistants/) — Training policy differences at a glance

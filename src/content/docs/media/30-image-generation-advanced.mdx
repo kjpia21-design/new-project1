@@ -1,28 +1,28 @@
 ---
-title: "이미지 생성 심화: Gemini·ChatGPT로 원하는 이미지 뽑기"
-description: "프롬프트 구조, 비율·스타일 지정, 일관된 캐릭터, 부분 수정, 참고 이미지 활용과 상업 이용 확인법을 공식 문서 기준으로 정리한 심화편"
+title: "Advanced Image Generation: Get the Images You Want from Gemini and ChatGPT"
+description: "An advanced guide, based on official docs, to prompt structure, aspect ratio and style, consistent characters, partial edits, reference images, and checking commercial use"
 sidebar:
-  label: "8. 이미지 생성 심화"
+  label: "8. Advanced image generation"
 level: practical
 category: media
 tools: ["Gemini 앱", "ChatGPT", "Midjourney"]
-duration: "40분"
+duration: "40 min"
 prerequisites:
-  - "11편(업무용 이미지 생성)을 한 번 따라 해 본 경험"
-  - "Google 계정(Gemini) 또는 OpenAI 계정(ChatGPT)"
+  - "Experience following Tutorial 11 (Business Image Generation) at least once"
+  - "A Google account (Gemini) or an OpenAI account (ChatGPT)"
 lastVerified: 2026-10-26
 sources:
   - title: "Generate & edit images with Gemini Apps (Gemini Apps Help)"
     url: "https://support.google.com/gemini/answer/14286560"
-  - title: "Nano Banana 이미지 생성 소개 및 FAQ (Gemini)"
+  - title: "Nano Banana image generation overview and FAQ (Gemini)"
     url: "https://gemini.google/overview/image-generation/"
   - title: "Image generation (ChatGPT Learn, OpenAI)"
     url: "https://learn.chatgpt.com/docs/image-generation"
-  - title: "Generative AI Additional Terms of Service (Google, 2023-08-09판. 2024-05-22부터 Google 서비스 약관에 통합되어 파트너 계약이 없으면 적용되지 않는다고 안내됨, 2026-10-19 확인)"
+  - title: "Generative AI Additional Terms of Service (Google, 2023-08-09 version. Merged into the Google Terms of Service from 2024-05-22 and described as not applying without a partner agreement; checked 2026-10-19)"
     url: "https://policies.google.com/terms/generative-ai"
-  - title: "Midjourney 공식 사이트(소개 페이지만 열람)"
+  - title: "Midjourney official site (only the overview page was viewed)"
     url: "https://www.midjourney.com/"
-  - title: "Midjourney Docs - 원문 미확인(docs.midjourney.com 접근 차단)"
+  - title: "Midjourney Docs - original not verified (docs.midjourney.com access blocked)"
     url: "https://docs.midjourney.com/"
 status: published
 ---
@@ -35,196 +35,196 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
-- 11편이 "한 장 만들기"였다면, 이 편은 **프롬프트를 구조화하고, 고치고, 시리즈로 이어 가는 법**을 다뤄요.
-- 좋은 요청문은 **용도 → 주제·행동 → 장면 → 구도·스타일·비율 → 제외할 것** 순서로 쓰면 안정적이에요.
-- 수정은 **"바꿀 것 하나 + 그대로 둘 것"**을 함께 말하는 게 핵심이에요(부분 수정, 참고 이미지 번호 지정).
-- 글자는 짧게, 정확한 문구를 따옴표로 지정하고, 중요한 문구는 마지막에 직접 검수하세요.
-- **Midjourney 공식 문서(docs.midjourney.com)는 접속이 막혀 열지 못했어요.** 사용법과 상업 이용 조건은 단정하지 않고 확인 방법만 안내해요(2026-10-14 기준).
+- If Tutorial 11 was about "making one image," this tutorial covers **structuring prompts, fixing results, and carrying on as a series**.
+- A good request is stable when you write it in this order: **purpose → subject and action → scene → composition, style, and aspect ratio → what to exclude**.
+- The key to edits is to say **"one thing to change + what to keep"** together (partial edits, numbering your reference images).
+- Keep text short, specify exact wording in quotes, and proofread important text yourself at the end.
+- **Access to the Midjourney official docs (docs.midjourney.com) was blocked, so we couldn't open them.** We don't assert how to use it or its commercial-use terms; we only explain how to check (as of 2026-10-14).
 </Summary>
 
-<Aside type="caution" title="Midjourney는 공식 문서 원문을 확인하지 못했어요">
-docs.midjourney.com은 접속이 차단되어(403) 열 수 없었고, 우회하지 않았어요. 공식 사이트(midjourney.com)의 소개 페이지만 열었어요. 그래서 Midjourney의 명령어, 요금제, 한국어 지원, 상업 이용 조건은 이 글에서 설명하지 않아요. 쓰기 전에 공식 문서와 이용약관을 직접 읽어 보세요. Gemini와 ChatGPT 내용은 Google과 OpenAI의 공식 문서 원문으로 확인했어요.
+<Aside type="caution" title="We couldn't verify the original Midjourney docs">
+docs.midjourney.com was blocked (403) and couldn't be opened, and we didn't work around it. We only opened the overview page on the official site (midjourney.com). So this guide doesn't explain Midjourney's commands, plans, Korean support, or commercial-use terms. Read the official docs and terms of service yourself before using it. We checked the Gemini and ChatGPT content against the originals of Google's and OpenAI's official docs.
 </Aside>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- 목적에 맞게 프롬프트를 5단 구조로 쓸 수 있어요.
-- 비율·스타일·구도를 지정하고, 마음에 안 드는 부분만 골라 고칠 수 있어요.
-- 같은 캐릭터나 같은 톤으로 이미지 시리즈를 만들 수 있어요.
-- 도구를 바꿔도 통하는 기본 원리와, 상업 이용 전 확인할 항목을 알 수 있어요.
+- Write prompts in a 5-part structure that fits your purpose.
+- Specify aspect ratio, style, and composition, and fix only the parts you don't like.
+- Make a series of images with the same character or the same tone.
+- Know the basic principles that work even when you switch tools, and the items to check before commercial use.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **프롬프트 구조** | 용도, 주제·행동, 장면, 구도·스타일·비율, 제외할 것을 나눠 쓰는 방식이에요. |
-| **비율(aspect ratio)** | 가로:세로 비율(예: 16:9, 2:3)이에요. Gemini 소개 페이지는 요청문에 "2:3 aspect ratio"처럼 적는 예시를 보여 줘요. |
-| **부분 수정** | 이미지 전체를 다시 만들지 않고 일부만 바꾸는 방식이에요. Gemini는 Nano Banana 2의 기능으로 "Local edits"를 소개해요. ChatGPT 문서는 이미지의 특정 영역을 고르고 바꿀 내용을 적을 수 있다고 안내해요. |
-| **참고 이미지** | 편집하거나 스타일을 따라 하게 하려고 올리는 이미지예요. 올릴 땐 권리가 있는 이미지만 쓰세요. |
-| **캐릭터 일관성** | 여러 장에서 같은 인물·캐릭터의 모습을 유지하는 기능이에요. Gemini 도움말이 Nano Banana 2의 기능으로 소개해요. |
+| **Prompt structure** | A way of writing that separates purpose, subject and action, scene, composition/style/aspect ratio, and what to exclude. |
+| **Aspect ratio** | The width:height ratio (for example, 16:9, 2:3). The Gemini overview page shows an example of writing something like "2:3 aspect ratio" in the request. |
+| **Partial edit** | Changing only part of an image without regenerating the whole thing. Gemini introduces "Local edits" as a Nano Banana 2 feature. ChatGPT's docs say you can select a specific area of an image and describe what to change. |
+| **Reference image** | An image you upload to edit or to have the tool imitate its style. Only use images you have the rights to. |
+| **Character consistency** | The ability to keep the same person or character looking the same across several images. Gemini's help page introduces it as a Nano Banana 2 feature. |
 
-### 도구별로 확인된 것
+### What's confirmed for each tool
 
-| | Gemini 앱 | ChatGPT | Midjourney |
+| | Gemini app | ChatGPT | Midjourney |
 | --- | --- | --- | --- |
-| 시작 경로 | 컴퓨터에서 gemini.google.com → 왼쪽 위 Open Sidebar → Images(소개 페이지는 도구 메뉴의 Create images도 안내) | 웹 채팅에서 이미지를 요청하고 참고 이미지를 첨부 | 공식 문서를 열지 못해 확인하지 못했어요 |
-| 비율·스타일 | 요청문에 스타일(photorealistic, watercolor 등)과 비율을 적으라고 안내 | 프레이밍, 크기, 조명, 색, 재질을 필요할 때 적으라고 안내 | 확인하지 못했어요 |
-| 부분 수정 | Library에서 이미지 선택 → Chat에서 요청. 기기의 이미지를 올려 편집도 가능 | 영역을 골라 그 부분의 변경을 설명 | 확인하지 못했어요 |
-| 여러 참고 이미지 | 여러 장을 올려 합성 가능. Nano Banana 2 Lite는 다중 참고·다중 편집용이 아니라고 안내 | 순서로 구분(Image 1, Image 2)하고 관계를 설명 | 확인하지 못했어요 |
-| 한도·요금 | 일일 한도가 있고 숫자는 도움말에 없어요. Google AI 요금제는 다운로드 2K, 없으면 1K | 웹의 이미지 사용 가능 여부와 한도는 요금제·워크스페이스 설정에 따라 달라요 | 확인하지 못했어요 |
+| How to start | On a computer, gemini.google.com → Open Sidebar at the top left → Images (the overview page also mentions Create images in the tools menu) | Ask for an image in web chat and attach reference images | We couldn't open the official docs, so we couldn't confirm |
+| Aspect ratio and style | Says to write the style (photorealistic, watercolor, etc.) and aspect ratio in your request | Says to specify framing, size, lighting, color, and materials as needed | We couldn't confirm |
+| Partial edits | Choose an image in Library → ask in Chat. You can also upload an image from your device to edit | Select an area and describe the change for that part | We couldn't confirm |
+| Multiple reference images | You can upload several and combine them. Says Nano Banana 2 Lite isn't meant for multi-reference or multi-edit | Distinguish them by order (Image 1, Image 2) and explain how they relate | We couldn't confirm |
+| Limits and pricing | There's a daily limit, and the help page has no numbers. Downloads are 2K with a Google AI plan and 1K without | Image availability and limits on the web depend on your plan and workspace settings | We couldn't confirm |
 
-모델 이름은 Gemini 도움말(Nano Banana 2, Pro, 2 Lite)과 소개 페이지(Nano Banana 2.1)가 달라요. 화면에 보이는 모델 이름을 따르세요. 나이 조건 등 기본 사항은 [11편](/media/11-business-images/)을 참고하세요.
+Model names differ between the Gemini help page (Nano Banana 2, Pro, 2 Lite) and the overview page (Nano Banana 2.1). Follow the model name you see on screen. For basics such as age requirements, see [Tutorial 11](/media/11-business-images/).
 
-## 단계별 따라하기
+## Step by step
 
-예제는 "동네 베이커리 SNS용 마스코트 캐릭터 시리즈 3장"이에요.
+The example is "a series of 3 mascot character images for a neighborhood bakery's social media."
 
 <Checklist items={[
-  '프롬프트를 5단 구조로 나눠 적었어요',
-  '비율과 스타일을 지정해 첫 이미지를 만들었어요',
-  '바꿀 것 하나만 골라 부분 수정을 해 봤어요',
-  '캐릭터 설명을 고정해 두 번째·세 번째 이미지를 만들었어요',
-  '상업 이용과 권리 점검표를 확인했어요',
+  'I wrote the prompt in a 5-part structure',
+  'I specified aspect ratio and style and made the first image',
+  'I tried a partial edit by choosing just one thing to change',
+  'I fixed the character description and made the second and third images',
+  'I reviewed the commercial-use and rights checklist',
 ]} />
 
 <Steps>
 
-1. **프롬프트를 5단으로 쓰기**
+1. **Write the prompt in 5 parts**
 
-   Gemini 소개 페이지는 "만들어 줘 + 주제 + 행동 + 장면"에서 시작해 구체적으로 늘리고, 구도·스타일·품질·비율을 함께 생각하라고 안내해요. ChatGPT 문서는 용도·대상, 주인공과 상황, 배경·구도·스타일, 조명·색, 제외할 것을 짚어 줘요. 둘을 합치면 아래 5단이 돼요.
+   The Gemini overview page says to start from "create + subject + action + scene," then add detail, while thinking about composition, style, quality, and aspect ratio. ChatGPT's docs point to purpose and audience, the main subject and situation, background/composition/style, lighting and color, and what to exclude. Combine the two and you get the 5 parts below.
 
-   | 단 | 내용 | 예시 |
+   | Part | Content | Example |
    | --- | --- | --- |
-   | 1. 용도 | 어디에 쓰나 | 빵집 인스타그램 소개 이미지 |
-   | 2. 주제·행동 | 누가 무엇을 하나 | 곰 모양 빵 마스코트가 빵을 굽는 모습 |
-   | 3. 장면 | 배경·분위기 | 아침 햇살이 드는 작은 베이커리 |
-   | 4. 구도·스타일·비율 | 어떻게 보이나 | 귀여운 플랫 일러스트, 1:1, 마스코트는 가운데 |
-   | 5. 제외 | 넣지 않을 것 | 글자, 로고, 실제 브랜드 없음 |
+   | 1. Purpose | Where will it be used? | An intro image for a bakery's Instagram |
+   | 2. Subject and action | Who is doing what? | A bear-shaped bread mascot baking bread |
+   | 3. Scene | Background and mood | A small bakery in morning sunlight |
+   | 4. Composition, style, ratio | How does it look? | Cute flat illustration, 1:1, mascot in the center |
+   | 5. Exclusions | What to leave out | No text, logos, or real brands |
 
    <PromptBox>
-   빵집 인스타그램 소개용 이미지를 만들어 줘. 곰 모양 빵 마스코트가 앞치마를 두르고 오븐에서 빵을 꺼내는 모습이야. 배경은 아침 햇살이 드는 작은 베이커리. 부드러운 플랫 일러스트 스타일, 따뜻한 베이지와 갈색 계열, 1:1 비율, 마스코트는 가운데에 크게. 글자와 로고는 넣지 마. 기존 캐릭터를 닮지 않은 원본 디자인으로 해 줘.
+   Create an intro image for a bakery's Instagram. A bear-shaped bread mascot wearing an apron is taking bread out of an oven. The background is a small bakery in morning sunlight. Soft flat illustration style in warm beige and brown tones, 1:1 aspect ratio, with the mascot large in the center. Don't include any text or logos. Make it an original design that doesn't resemble any existing character.
    </PromptBox>
 
-   <ScreenshotPlaceholder caption="Gemini 앱에서 5단 프롬프트로 이미지를 만든 화면" officialUrl="https://support.google.com/gemini/answer/14286560" />
+   <ScreenshotPlaceholder caption="An image made with a 5-part prompt in the Gemini app" officialUrl="https://support.google.com/gemini/answer/14286560" />
 
-2. **막연한 표현을 구체적인 말로 바꾸기**
+2. **Replace vague phrases with specific ones**
 
-   ChatGPT 문서는 "아름다운 조명" 같은 막연한 반응 대신 빛이 어디서 오는지처럼 구체적인 시각 표현을 쓰라고 안내해요. 꼭 지켜야 할 조건은 반복해서 적으라고도 해요.
+   ChatGPT's docs say to use concrete visual language, such as where the light comes from, rather than vague reactions like "beautiful lighting." They also say to repeat any conditions that must be kept.
 
-   | 막연한 말 | 구체적인 말 |
+   | Vague | Specific |
    | --- | --- |
-   | 예쁘게 | 부드러운 아침 햇살이 왼쪽 창에서 들어오는 |
-   | 귀엽게 | 둥근 윤곽선, 큰 눈, 단순한 색 면 |
-   | 고급스럽게 | 절제된 색, 여백 많은 구도, 무광 질감 |
+   | Pretty | Soft morning sunlight coming in from a window on the left |
+   | Cute | Rounded outlines, big eyes, simple blocks of color |
+   | Premium | Restrained colors, a composition with lots of white space, a matte texture |
 
-3. **한 번에 하나만 부분 수정하기**
+3. **Do partial edits one at a time**
 
-   ChatGPT 문서는 작고 구체적인 수정을 한 요소씩 하라고 안내해요. 편집할 때는 **무엇을 바꾸고 무엇을 그대로 둘지**를 정확히 말해야 한다고 해요.
+   ChatGPT's docs say to make small, specific edits one element at a time. They say that when editing, you need to state exactly **what to change and what to leave alone**.
 
    <PromptBox>
-   첨부한 이미지를 수정해 줘. 마스코트가 든 빵만 크루아상으로 바꿔 줘. 마스코트의 얼굴, 앞치마, 배경, 조명, 색감, 크롭은 그대로 유지하고, 글자나 로고는 추가하지 마.
+   Edit the attached image. Change only the bread the mascot is holding to a croissant. Keep the mascot's face, apron, background, lighting, colors, and crop exactly the same, and don't add any text or logos.
    </PromptBox>
 
-   <FlowSteps title="Gemini에서 만든 이미지 일부 고치기" officialUrl="https://support.google.com/gemini/answer/14286560" steps={[
-     { where: 'gemini.google.com 왼쪽 위', action: 'Open Sidebar → Library 누르기', result: '만든 이미지 목록' },
-     { where: '고칠 이미지', action: '이미지를 누르고 아래의 Chat 누르기', result: '이미지에 이어 요청하는 입력창' },
-     { where: '아래 입력창', action: '바꿀 것 하나와 그대로 둘 것을 적고 Submit 누르기', result: '수정된 이미지' },
+   <FlowSteps title="Fix part of an image made in Gemini" officialUrl="https://support.google.com/gemini/answer/14286560" steps={[
+     { where: 'Top left of gemini.google.com', action: 'Click Open Sidebar → Library', result: 'A list of your generated images' },
+     { where: 'The image to fix', action: 'Click the image, then click Chat below', result: 'An input box to continue the request on that image' },
+     { where: 'The input box below', action: 'Write one thing to change and what to keep, then click Submit', result: 'The edited image' },
    ]} />
 
-4. **같은 캐릭터로 시리즈 만들기**
+4. **Make a series with the same character**
 
-   Gemini 도움말은 Nano Banana 2가 여러 이미지에서 인물·캐릭터의 모습을 유지하는 기능을 가지고 있다고 안내해요. 효과를 높이려면 아래처럼 하세요.
+   Gemini's help page says Nano Banana 2 has the ability to keep a person or character looking the same across several images. To get better results, do the following.
 
-   - 첫 이미지가 마음에 들면 **그 캐릭터의 특징을 글로 적어 저장**해요(색, 옷, 소품, 얼굴 특징).
-   - 다음 요청에 같은 설명을 **그대로 붙이고** 장면만 바꿔요.
-   - 필요하면 첫 이미지를 참고 이미지로 올려요. ChatGPT 문서는 여러 참고 이미지를 쓸 때 "이미지 1은 편집할 사진, 이미지 2는 스타일 참고"처럼 순서와 역할을 설명하라고 안내해요.
-   - 같은 캐릭터가 얼마나 유지되는지는 공식 문서에 수치가 없어요. 결과를 직접 보고 어긋나면 설명을 더 구체적으로 고치세요.
-
-   <PromptBox>
-   이미지 1은 우리 빵집 마스코트야. 이미지 1의 얼굴, 베이지색 몸, 갈색 앞치마, 작은 빵 모자를 그대로 유지해 줘. 이번에는 마스코트가 카운터 뒤에서 손님에게 빵 봉투를 건네는 장면으로 만들어 줘. 1:1 비율, 같은 플랫 일러스트 스타일, 글자와 로고는 넣지 마.
-   </PromptBox>
-
-5. **이미지 속 글자와 정보 이미지 다루기**
-
-   ChatGPT 문서는 이미지 속 글자를 짧게 하고, 문구를 따옴표로 정확히 지정하며, 글꼴 느낌·크기·색·위치를 적고, 다른 글자는 넣지 말라고 명시하라고 안내해요. Gemini 도움말은 Nano Banana 2가 글자 표현이 나아졌고 Pro는 글자나 인포그래픽에서 더 세밀하다고 소개해요. 그래도 ChatGPT 문서는 글자가 많거나 인쇄용인 결과물은 **모든 단어를 직접 검수**하고 필요하면 디자인 도구에서 마무리하라고 해요.
+   - When you like the first image, **write down that character's features and save them** (color, clothing, props, facial features).
+   - In the next request, **paste the same description as is** and change only the scene.
+   - If needed, upload the first image as a reference image. ChatGPT's docs say that when you use several reference images, you should explain their order and roles, like "Image 1 is the photo to edit, Image 2 is a style reference."
+   - The official docs give no numbers for how well the same character is kept. Look at the results yourself, and if they drift, make the description more specific.
 
    <PromptBox>
-   이미지 맨 위 가운데에 “오늘의 갓 구운 빵”이라는 문구만 굵은 흰색 고딕체로 한 줄로 넣어 줘. 다른 글자는 추가하지 말고 이미지의 나머지는 바꾸지 마.
+   Image 1 is our bakery's mascot. Keep Image 1's face, beige body, brown apron, and small bread hat exactly as they are. This time, make a scene where the mascot is behind the counter handing a customer a bag of bread. 1:1 aspect ratio, the same flat illustration style, and no text or logos.
    </PromptBox>
 
-   한글 문구는 맞춤법과 글자 모양이 정확한지 눈으로 확인하세요. 한국어 글자 정확도에 대한 별도 수치는 공식 문서에서 찾지 못했어요.
+5. **Handle text in images and informational images**
 
-6. **상업 이용 전 점검하기**
+   ChatGPT's docs say to keep text in images short, specify the wording exactly in quotes, describe the font feel, size, color, and position, and state that no other text should be added. Gemini's help page says Nano Banana 2 has improved text rendering and Pro is more detailed for text and infographics. Even so, ChatGPT's docs say that for results with a lot of text or for print, you should **proofread every word yourself** and finish in a design tool if needed.
 
-   아래는 공식 문서에서 **확인된 문구만** 정리한 거예요.
+   <PromptBox>
+   Add only the phrase "Fresh-baked today" in bold white sans-serif on a single line at the top center of the image. Don't add any other text, and don't change anything else in the image.
+   </PromptBox>
 
-   | 도구 | 확인된 내용 | 확인하지 못한 내용 |
+   For Korean text, check by eye that the spelling and letter shapes are correct. We couldn't find separate figures for Korean text accuracy in the official docs.
+
+6. **Check before commercial use**
+
+   The table below lists **only wording confirmed** in the official docs.
+
+   | Tool | What's confirmed | What we couldn't confirm |
    | --- | --- | --- |
-   | Gemini 앱 | 도움말은 Google 서비스 약관과 금지된 사용 정책(Prohibited Use Policy)을 따르고, 타인의 저작권·개인정보 권리를 침해하지 말며, 결과물을 쓰거나 게시하기 전에 직접 판단하라고 안내해요. 업무·학교 계정은 약관이 다를 수 있어요 | 결과물의 소유·상업 이용을 직접 밝히는 문장은 열어 본 도움말과 소개 페이지에서 찾지 못했어요 |
-   | ChatGPT | 문서는 OpenAI 크레딧 표기가 필요 없고, 실존 인물은 허락을 확인하며, 조직 지침과 OpenAI 사용 정책을 따르라고 안내해요 | 이용약관의 출력물 소유 조항은 openai.com이 막혀 확인하지 못했어요 |
-   | Midjourney | 확인하지 못했어요 | 요금제별 상업 이용 조건, 결과물 공개 여부 등 모두 공식 문서에서 확인하지 못했어요 |
+   | Gemini app | The help page says to follow the Google Terms of Service and Prohibited Use Policy, not to infringe others' copyright or privacy rights, and to use your own judgment before using or publishing results. Work and school accounts may have different terms | We couldn't find a sentence that directly states ownership or commercial use of the output in the help page and overview page we opened |
+   | ChatGPT | The docs say OpenAI credit isn't required, to confirm permission for real people, and to follow your organization's guidelines and OpenAI's usage policies | We couldn't confirm the output ownership clause in the terms of use because openai.com is blocked |
+   | Midjourney | We couldn't confirm | We couldn't confirm anything in the official docs, including commercial-use terms by plan and whether outputs are public |
 
-   <Aside type="caution" title="약관은 요금제·계정 종류에 따라 달라질 수 있어요">
-   회사 업무에 쓰거나 광고로 돈을 쓰기 전에는 쓰는 도구의 **현재 약관과 요금제별 조건**을 직접 읽으세요. 소유권을 약관이 정해도 저작권 보호 여부는 나라마다 달라요. 저작권·윤리 일반은 [AI 결과물 저작권·윤리 기초(basics/09)](/basics/09-ai-copyright-ethics/)에서 정리하고 있어요.
+   <Aside type="caution" title="Terms can differ by plan and account type">
+   Before using images for company work or spending money on ads, read the tool's **current terms and plan-specific conditions** yourself. Even when the terms assign ownership, whether copyright protection applies differs by country. For general copyright and ethics, see [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/).
    </Aside>
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-### 수정 요청 문장 틀
+### Edit request sentence templates
 
-| 상황 | 문장 |
+| Situation | Sentence |
 | --- | --- |
-| 한 가지만 바꾸기 | "○○만 △△로 바꾸고, □□는 그대로 유지해 줘" |
-| 분위기 조정 | "더 밝게", "채도를 낮춰", "배경을 단순하게" |
-| 스타일 유지하며 바꾸기 | "구도는 그대로 두고 스타일만 수채화로" |
-| 여러 참고 이미지 | "이미지 1은 편집할 사진, 이미지 2는 스타일 참고. 1의 구도와 물체를 유지해 줘" |
-| 글자 | "문구는 ‘○○’만, 굵은 흰색 고딕, 위쪽 가운데, 다른 글자는 넣지 마" |
+| Change just one thing | "Change only ○○ to △△, and keep □□ the same" |
+| Adjust the mood | "Make it brighter," "reduce the saturation," "simplify the background" |
+| Change while keeping the style | "Keep the composition and change only the style to watercolor" |
+| Multiple reference images | "Image 1 is the photo to edit, Image 2 is a style reference. Keep Image 1's composition and objects" |
+| Text | "Only the phrase '○○', in bold white sans-serif, top center, no other text" |
 
-### 도구 선택 가이드
+### Tool selection guide
 
-| 하고 싶은 일 | 추천 |
+| What you want to do | Recommendation |
 | --- | --- |
-| 무료로 빠르게 여러 번 시도 | Gemini 앱(일일 한도 확인) |
-| 대화하면서 참고 이미지로 고치기 | ChatGPT 또는 Gemini |
-| 글자를 얹는 최종 편집 | [Canva 편(12편)](/media/12-canva-sns/) |
-| Midjourney | 공식 문서를 직접 열어 확인 |
+| Try many times quickly and for free | Gemini app (check the daily limit) |
+| Refine with reference images while chatting | ChatGPT or Gemini |
+| Final editing with text added | [The Canva tutorial (Tutorial 12)](/media/12-canva-sns/) |
+| Midjourney | Open the official docs and check yourself |
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 수정할 때마다 다른 그림이 되어 버려요
+### Every edit turns into a different picture
 
-- **원인**: 한 번에 여러 요소를 바꾸거나 유지할 것을 말하지 않았어요.
-- **해결**: 한 번에 하나만 바꾸고, 그대로 둘 요소(얼굴, 배경, 조명, 크롭)를 나열하세요. ChatGPT 문서도 이 방식을 안내해요.
+- **Cause**: You changed several elements at once, or didn't say what to keep.
+- **Fix**: Change only one thing at a time and list the elements to keep (face, background, lighting, crop). ChatGPT's docs recommend this approach too.
 
-### 캐릭터가 장마다 달라져요
+### The character looks different in every image
 
-- **원인**: 설명이 매번 달라지거나 참고 이미지가 없어요.
-- **해결**: 캐릭터 설명을 저장해 두고 그대로 붙이세요. 첫 이미지를 참고 이미지로 올리고 "이미지 1의 ○○를 유지"라고 적으세요. 그래도 어긋나면 Nano Banana Pro로 다시 만들기(Redo with Pro)를 시도해 볼 수 있어요(Google AI 요금제 필요, Nano Banana 2 일일 한도에 이르면 불가).
+- **Cause**: The description changes each time, or there's no reference image.
+- **Fix**: Save the character description and paste it as is. Upload the first image as a reference and write "keep ○○ from Image 1." If it still drifts, you can try Redo with Pro using Nano Banana Pro (requires a Google AI plan, and isn't available once you reach the Nano Banana 2 daily limit).
 
-### 한글 문구가 틀려요
+### The Korean text is wrong
 
-- **원인**: 글자 렌더링이 완벽하지 않을 수 있어요.
-- **해결**: 문구를 짧게 하고 따옴표로 지정하세요. 그래도 틀리면 이미지에서는 글자를 빼고 Canva 등에서 올리세요.
+- **Cause**: Text rendering may not be perfect.
+- **Fix**: Keep the text short and specify it in quotes. If it's still wrong, leave the text out of the image and add it in Canva or similar.
 
-### 이미지가 기존 브랜드나 작가 느낌이에요
+### The image feels like an existing brand or artist
 
-- **원인**: 프롬프트에 특정 브랜드나 작가를 연상시키는 표현이 있어요.
-- **해결**: 작가·브랜드 이름을 빼고 "원본 디자인"을 요청하세요. ChatGPT 문서도 특정 브랜드·작가 모방 대신 일반적이거나 원본 느낌의 표현을 요청하라고 해요.
+- **Cause**: The prompt has wording that evokes a specific brand or artist.
+- **Fix**: Remove artist and brand names and ask for an "original design." ChatGPT's docs also say to ask for generic or original-feeling work instead of imitating a specific brand or artist.
 
-## 실전 팁
+## Practical tips
 
-- **프롬프트를 파일로 관리하세요.** 캐릭터 설명, 스타일 문장, 제외 목록을 저장해 두면 시리즈가 쉬워요.
-- **먼저 작게 시도하세요.** 구도가 맞으면 그 뒤에 디테일을 올리세요.
-- **비율은 처음에 말하세요.** 나중에 바꾸면 구도가 틀어질 수 있어요.
-- **사람 얼굴이 필요하면 허락부터** 받으세요. ChatGPT 문서도 실존 인물은 허락 확인을 안내해요.
-- **AI 생성 표시 정책**은 회사에서 정하세요. Gemini는 보이지 않는 SynthID 워터마크와 보이는 워터마크를 쓴다고 소개해요. 표시를 일부러 지우지 마세요.
+- **Manage your prompts as files.** Saving character descriptions, style sentences, and exclusion lists makes a series easy.
+- **Try small first.** Once the composition is right, then raise the detail.
+- **State the aspect ratio up front.** Changing it later can throw off the composition.
+- **If you need a human face, get permission first.** ChatGPT's docs also say to confirm permission for real people.
+- **Have your company set a policy on AI-generation labeling.** Gemini describes using an invisible SynthID watermark and a visible watermark. Don't deliberately remove the marks.
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [11. 업무용 이미지 생성](/media/11-business-images/) — 기본 흐름과 AI 생성 표시 확인
-- [12. Canva AI로 SNS 콘텐츠 한 세트 만들기](/media/12-canva-sns/) — 글자와 규격 편집
-- [C4. 프롬프트 작성법](/claude/c04-prompting/) — 요청문 공통 원리
-- [AI 결과물 저작권·윤리 기초](/basics/09-ai-copyright-ethics/) — 상업 이용 전 법적·윤리적 점검
-- [마케터를 위한 가이드](/roles/marketer/) · [1인 사업자를 위한 가이드](/roles/solo-business/)
+- [11. Business Image Generation](/media/11-business-images/) — the basic flow and checking AI-generation marks
+- [12. Make a Set of Social Media Content with Canva AI](/media/12-canva-sns/) — editing text and formats
+- [C4. How to write prompts](/claude/c04-prompting/) — the common principles for writing requests
+- [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/) — legal and ethical checks before commercial use
+- [AI Guide for Marketers and Content Managers](/roles/marketer/) · [AI Guide for Solo Business Owners and Small Shops](/roles/solo-business/)

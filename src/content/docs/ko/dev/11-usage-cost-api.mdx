@@ -1,0 +1,365 @@
+---
+title: "사용량·비용 분석 API로 팀 사용 현황 대시보드 만들기"
+description: "Usage and Cost Analytics API(베타)로 모델·워크스페이스·API 키·사용자별 토큰과 비용을 가져와 CSV와 간단한 HTML 대시보드로 만들고, 기존 Usage and Cost API(레거시)와 다른 점과 데이터 지연을 정리한 고급 튜토리얼"
+sidebar:
+  label: "11. 사용량·비용 분석 API로 팀 사용 현황 대시보드 만들기"
+level: advanced
+category: dev
+tools: ["Claude API", "Usage and Cost Analytics API", "Python SDK"]
+duration: "60분"
+prerequisites:
+  - "C16. Claude API 시작하기 (API 키, 첫 호출)"
+  - "2. 프롬프트 캐싱·배치·effort로 API 비용 줄이기 (캐시 읽기 비율을 왜 보는지)"
+  - "Claude Console 조직과 admin 역할 (Admin API 키를 만들 때 필요해요)"
+  - "Python 3.10 이상, pip install anthropic"
+lastVerified: 2026-10-31
+sources:
+  - title: "Usage and Cost Analytics API (베타)"
+    url: "https://platform.claude.com/docs/en/manage-claude/usage-cost-analytics-api"
+  - title: "Usage and Cost API (레거시)"
+    url: "https://platform.claude.com/docs/en/manage-claude/usage-cost-api"
+  - title: "Create an Admin API key"
+    url: "https://platform.claude.com/docs/en/manage-claude/admin-api-keys"
+  - title: "Claude Platform release notes"
+    url: "https://platform.claude.com/docs/en/release-notes/overview"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- 조직 전체의 토큰 사용량과 비용은 **Usage and Cost Analytics API**로 가져와요. 엔드포인트는 `GET /v1/organizations/analytics/usage`(토큰·요청 수)와 `GET /v1/organizations/analytics/cost`(USD 비용)예요.
+- 이 API는 **베타**예요. 요청마다 `anthropic-beta: analytics-usage-cost-2026-08-24`와 `anthropic-version` 헤더를 보내요. SDK와 `ant` CLI는 두 헤더를 대신 붙여 줘요.
+- 인증은 **Admin API 키**(Console 키는 `sk-ant-admin01-...`)예요. 일반 워크스페이스 키로는 안 돼요. Admin API는 개인 계정에서는 쓸 수 없고, 키는 admin 역할의 조직 구성원이 만들어요.
+- 기존 `usage_report/messages`와 `cost_report`는 **레거시**로 바뀌었지만 계속 지원돼요(2026-10-29 릴리스 노트). 새로 만든다면 분석 API를 쓰라고 공식 문서가 안내해요.
+- 데이터는 보통 4시간 안에 갱신되고 최대 24시간 걸릴 수 있어요. 실시간 모니터링 용도가 아니라 **일·월 단위 리포트** 용도예요.
+- 이 편의 코드는 가짜 응답으로만 돌려 봤어요. 실제 Admin 키로 호출해 보지는 못했어요(2026-10-31 기준).
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 어떤 API(분석 API, 레거시 API, Enterprise 분석 API)와 어떤 키가 내 조직에 맞는지 고를 수 있어요.
+- 한 달치 비용을 모델·날짜·사용자(또는 서비스 계정)별로 가져와 CSV와 HTML 한 장으로 만들 수 있어요.
+- 사용량 응답에서 캐시 읽기 비율을 계산해 [02편](/ko/dev/02-cost-optimization/)의 캐싱이 실제로 효과를 내는지 확인할 수 있어요.
+- 데이터 지연, 31일 범위 제한, 사후 수정 때문에 숫자가 청구서와 다르게 보이는 경우를 설명할 수 있어요.
+
+이 튜토리얼은 [C16. Claude API 시작하기](/ko/claude/c16-api/)를 끝낸 분을 대상으로 해요. 개별 호출의 `usage` 로그는 [02편](/ko/dev/02-cost-optimization/)에서 다뤘고, 여기서는 **조직 전체**를 한 번에 보는 방법을 다뤄요.
+
+<Aside type="note" title="예제 검증 범위">
+예제는 공식 문서의 요청 형식을 따랐고 2026-10-31에 Python 문법을 검사했어요(`python3 -m py_compile`). 응답 모양을 흉내 낸 가짜 객체로 CSV와 HTML이 만들어지는 것까지는 확인했어요. Admin API 키가 없어 실제 API를 호출해 보지는 못했어요. 응답 필드 이름은 공식 문서의 예시를 따랐으니, 처음 실행할 때는 몇 건만 가져와 출력부터 확인하세요.
+</Aside>
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **Admin API 키** | 조직을 관리하는 API들을 부르는 키예요. Console 키는 `sk-ant-admin01-...`로 시작해요. 일반 워크스페이스 키는 이 엔드포인트에 쓸 수 없어요. |
+| **행(row)** | 응답의 한 줄이에요. 기간(`starting_at`, `ending_at`), 묶은 기준(`group`), 지표(`usage` 또는 `cost`)로 이뤄져요. |
+| **`group_by[]`** | 어떤 기준으로 나눠 볼지 정해요. 모델, 워크스페이스, API 키, 서비스 티어, `actor` 등이 있고 한 번에 최대 5개예요. |
+| **`actor`** | 요청이 귀속된 주체예요. 사용자, 서비스 계정, 클라우드 신원, 이 중 어느 것도 아니면 API 키 자체예요. 귀속할 수 없는 사용량은 `actor: null`이에요. |
+| **`time_bucket_width`** | `1m`, `1h`, `1d` 중 하나로 행을 시간 단위로 나눠요. 설정하지 않으면 기간 전체가 한 덩어리로 합산돼요. |
+| **`data_refreshed_at`** | 응답에 들어 있는 시각이에요. 이 시각 이후의 사용량은 빠졌거나 일부만 들어 있을 수 있어요. |
+
+### 어떤 API를 써야 하나요
+
+| 내 조직 | 쓸 API | 키 |
+| --- | --- | --- |
+| Claude Console(Claude Platform) | Usage and Cost Analytics API(권장). 기존 Usage and Cost API는 레거시 | Admin API 키 또는 다른 Admin API 인증(예: `org:admin` 범위 OAuth 토큰) |
+| Claude Enterprise(claude.ai) | Usage and Cost Analytics API(권장). Enterprise Analytics API의 비용·사용량 엔드포인트는 레거시 | `read:analytics` 범위 키. Enterprise 상위 조직의 primary owner가 claude.ai에서 만들고, 먼저 Analytics API를 활성화해야 해요 |
+
+같은 엔드포인트, 파라미터, 응답 필드가 Console과 Enterprise 조직 모두에 쓰여요. 다만 `api_key_id`는 Console 조직에만, `slack_channel_id`는 Enterprise 조직에만 해당하는 식으로 **조직에 해당하지 않는 차원은 모든 행에서 `null`**이에요. (2026-10-31 기준)
+
+<Aside type="note" title="확인되지 않은 점">
+분석 API의 조직 단위 요청 제한(rate limit) 수치는 이 편에서 읽은 문서에 없어서 적지 않았어요. 레거시 문서는 "지속 사용은 분당 1회 폴링을 지원한다"고 안내하지만, 분석 API에도 같은 값이 적용되는지는 확인하지 못했어요. 어느 쪽이든 데이터가 몇 시간 단위로 갱신되니 대시보드는 하루 몇 번 가져와 저장해 두는 방식이 안전하다고 생각해요(이 부분은 문서 내용이 아니라 제 판단이에요).
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  'Console에서 Admin API 키를 만들어 비밀 관리 도구에 저장했어요',
+  'ANTHROPIC_ADMIN_KEY 환경변수를 설정했어요',
+  'curl로 하루치 사용량 몇 줄을 가져와 응답 모양을 확인했어요',
+  '월 비용을 모델·날짜별로 가져와 CSV로 저장했어요',
+  '비용 상위 사용자와 서비스 계정을 뽑았어요',
+  '캐시 읽기 비율을 계산해 02편의 기준과 비교했어요',
+  '데이터 지연과 사후 수정을 고려해 가져오는 시점을 정했어요',
+]} />
+
+<Steps>
+
+1. **Admin API 키 만들기**
+
+   Claude Console 조직의 **admin 역할** 구성원만 만들 수 있어요. Console의 [Admin keys](https://platform.claude.com/settings/admin-keys) 페이지에서 **Create admin key**를 누르고, 이름과 만료 기간(key expiration)을 정한 뒤 **Add**를 눌러요. Console 키에는 범위(scope)를 고르는 단계가 없고, Admin API 키를 받는 모든 엔드포인트에 접근할 수 있어요. 비밀값은 **한 번만** 보이니 바로 비밀 관리 도구에 저장하세요.
+
+   <FlowSteps title="Admin API 키 만들기 (Console 조직)" officialUrl="https://platform.claude.com/docs/en/manage-claude/admin-api-keys" steps={[
+     { where: 'Claude Console, admin 역할로 로그인', action: 'Admin keys 페이지 열기' },
+     { where: 'Admin keys 페이지', action: 'Create admin key, 이름과 만료 기간 선택, Add', result: '`sk-ant-admin01-...` 비밀값이 한 번 표시돼요' },
+     { where: '내 비밀 관리 도구', action: '비밀값 저장. 수집 서비스 전용 키로 쓰고 주기적으로 교체', result: '환경변수 ANTHROPIC_ADMIN_KEY로 읽어요' },
+   ]} />
+
+   공식 문서는 이 데이터를 모으는 서비스에는 **전용 키**를 주고, 비밀 관리 도구에 보관하고, 주기적으로 교체하라고 안내해요. 만료 기간을 정해 두면 교체가 강제돼요. 가능하면 Workload Identity Federation 규칙(`org:admin` 범위)으로 수명이 짧은 토큰을 받는 방법도 있다고 해요. 이 편에서는 다루지 않아요.
+
+   <Aside type="caution" title="Admin 키는 조직 전체 권한이에요">
+   Console 키에는 범위 선택이 없어서, 사용량만 읽는 용도로도 Admin 키가 가진 다른 관리 권한이 함께 따라와요. 대시보드 서버에만 두고, 스크립트나 저장소에 적지 마세요. 개인 계정에서는 Admin API를 쓸 수 없어요. 조직이 없다면 먼저 Console의 [Organization](https://platform.claude.com/settings/organization) 페이지에서 조직을 설정해야 해요.
+   </Aside>
+
+2. **curl로 응답 모양 확인하기**
+
+   코드를 쓰기 전에 한 주 분량을 모델별·일별로 받아 봐요. 대괄호(`group_by[]`)를 curl이 해석하지 않도록 `--globoff`를 붙여요. 이 요청은 공식 문서의 빠른 시작 예제를 그대로 따랐어요.
+
+   ```bash
+   export ANTHROPIC_ADMIN_KEY="your-admin-key-here"
+   curl --globoff "https://api.anthropic.com/v1/organizations/analytics/usage?\
+   starting_at=2026-09-01T00:00:00Z&\
+   ending_at=2026-09-08T00:00:00Z&\
+   time_bucket_width=1d&\
+   group_by[]=model&\
+   limit=10" \
+     -H "anthropic-version: 2023-06-01" \
+     -H "anthropic-beta: analytics-usage-cost-2026-08-24" \
+     -H "x-api-key: $ANTHROPIC_ADMIN_KEY"
+   ```
+
+   응답은 `data` 배열, `has_more`, `next_page`, `data_refreshed_at`로 이뤄져요. `data`의 각 행에는 `group`(요청하지 않은 차원은 전부 `null`)과 `usage`가 들어 있고, `usage`에는 `uncached_input_tokens`, `cache_creation`(`ephemeral_5m_input_tokens`, `ephemeral_1h_input_tokens`), `cache_read_input_tokens`, `output_tokens`, `total_tokens`, `server_tool_use.web_search_requests`, `requests`가 있어요. 행은 `total_tokens`가 큰 순서로 와요.
+
+   <ScreenshotPlaceholder caption="Console의 Usage와 Cost 화면 (API 숫자와 대조할 때 쓰세요)" officialUrl="https://platform.claude.com/docs/en/manage-claude/usage-cost-analytics-api" officialLabel="Anthropic 문서에서 보기" />
+
+3. **날짜 범위 정하기**
+
+   범위 규칙을 먼저 알아 두면 오류를 줄여요. (2026-10-31 기준)
+
+   - 시각은 UTC 오프셋이 있는 RFC 3339 형식이에요. `starting_at`은 포함, `ending_at`은 제외예요.
+   - `starting_at`은 2026년 1월 1일 이후이고 최근 365일 안이어야 해요.
+   - 한 요청은 **최대 31일**이에요. 더 긴 기간은 여러 번 나눠 요청해요.
+   - `time_bucket_width`를 쓰면 `ending_at`이 필요해요. `1m`은 한 요청에 최대 24시간이에요.
+   - 양 끝은 UTC 버킷 경계로 내림돼요. 버킷을 안 쓰면 시 단위로 내림돼요.
+
+4. **월 비용·상위 사용자·캐시 읽기 비율 가져와 파일 만들기**
+
+   아래 스크립트는 세 가지를 가져와 `daily_cost.csv`와 `dashboard.html`을 만들어요.
+
+   - 모델별·일별 비용: `cost` 엔드포인트에 `group_by=["model"]`, `time_bucket_width="1d"`
+   - 비용 상위 `actor`: 버킷 없이 `group_by=["actor"]`. 행이 비용 큰 순으로 오니 앞의 몇 개만 써요.
+   - 모델별 캐시 읽기 비율: `usage` 엔드포인트에서 캐시 읽기 토큰을 전체 입력 토큰으로 나눠요.
+
+   비용의 `amount`는 **센트 단위 10진수 문자열**(소수점 아래 6자리)이에요. `"41280.000000"`은 $412.80이라서 100으로 나눠요. `amount`는 할인 후, 크레딧 적용 전 금액이고 `list_amount`는 정가 기준이에요. SDK는 나머지 페이지를 읽는 동안 자동으로 가져와 줘요(`limit`은 한 페이지 크기일 뿐이에요).
+
+   ```python
+   import csv
+   import html
+   import os
+   from collections import defaultdict
+   from decimal import Decimal
+   from itertools import islice
+
+   import anthropic
+
+   # 일반 키가 아니라 Admin API 키를 따로 읽어요.
+   client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_ADMIN_KEY"])
+
+   START = "2026-09-01T00:00:00Z"
+   END = "2026-10-01T00:00:00Z"  # 한 번에 최대 31일
+
+
+   def usd(cents: str) -> Decimal:
+       # 비용 amount는 센트 단위 문자열이에요. "41280.000000" = $412.80
+       return Decimal(cents) / 100
+
+
+   def daily_cost_by_model():
+       rows = client.beta.organization.analytics.cost.list(
+           starting_at=START,
+           ending_at=END,
+           time_bucket_width="1d",
+           group_by=["model"],
+           limit=1000,
+       )
+       return [(r.starting_at, r.group.model or "(모델 없음)", usd(r.cost.amount)) for r in rows]
+
+
+   def top_actors(n=10):
+       rows = client.beta.organization.analytics.cost.list(
+           starting_at=START, ending_at=END, group_by=["actor"], limit=25
+       )
+       out = []
+       for r in islice(rows, n):  # 비용이 큰 순서로 오니 앞에서 n개만 써요
+           a = r.group.actor
+           who = "(귀속 불명)" if a is None else (
+               getattr(a, "user_id", None) or getattr(a, "service_account_id", None) or str(a.type)
+           )
+           out.append((who, usd(r.cost.amount)))
+       return out
+
+
+   def cache_read_share():
+       rows = client.beta.organization.analytics.usage.list(
+           starting_at=START, ending_at=END, group_by=["model"], limit=100
+       )
+       out = []
+       for r in rows:
+           u = r.usage
+           total_in = (
+               u.uncached_input_tokens
+               + u.cache_creation.ephemeral_5m_input_tokens
+               + u.cache_creation.ephemeral_1h_input_tokens
+               + u.cache_read_input_tokens
+           )
+           share = u.cache_read_input_tokens / total_in if total_in else 0.0
+           out.append((r.group.model or "(모델 없음)", total_in, share))
+       return out
+
+
+   def write_report(daily, actors, cache):
+       with open("daily_cost.csv", "w", newline="") as f:
+           w = csv.writer(f)
+           w.writerow(["date", "model", "cost_usd"])
+           for day, model, cost in sorted(daily, key=lambda x: (str(x[0]), x[1])):
+               w.writerow([str(day)[:10], model, f"{cost:.2f}"])
+
+       per_model = defaultdict(Decimal)
+       for _, model, cost in daily:
+           per_model[model] += cost
+       top = max(per_model.values(), default=Decimal(1)) or Decimal(1)
+
+       parts = ["<meta charset='utf-8'><h1>2026-09 사용 현황</h1><h2>모델별 비용(USD)</h2><table>"]
+       for model, cost in sorted(per_model.items(), key=lambda kv: -kv[1]):
+           bar = int(300 * cost / top)
+           parts.append(
+               f"<tr><td>{html.escape(model)}</td><td>${cost:,.2f}</td>"
+               f"<td><div style='background:#c96442;height:12px;width:{bar}px'></div></td></tr>"
+           )
+       parts.append("</table><h2>비용 상위 사용자·서비스 계정</h2><ol>")
+       parts += [f"<li>{html.escape(who)}: ${cost:,.2f}</li>" for who, cost in actors]
+       parts.append("</ol><h2>입력 중 캐시 읽기 비율</h2><ul>")
+       parts += [f"<li>{html.escape(m)}: {s:.0%} (입력 {t:,} 토큰)</li>" for m, t, s in cache]
+       parts.append("</ul>")
+       with open("dashboard.html", "w", encoding="utf-8") as f:
+           f.write("".join(parts))
+
+
+   if __name__ == "__main__":
+       write_report(daily_cost_by_model(), top_actors(), cache_read_share())
+       print("daily_cost.csv, dashboard.html 을 만들었어요.")
+   ```
+
+   실행은 이렇게 해요. 처음에는 `START`와 `END`를 3~7일로 줄여서 돌려 보세요.
+
+   ```bash
+   export ANTHROPIC_ADMIN_KEY="your-admin-key-here"
+   python3 usage_dashboard.py
+   ```
+
+   `actor`가 사용자라면 `user_id`로, 서비스 계정이라면 `service_account_id`로 나와요(공식 마이그레이션 표 기준). 이름이나 이메일로 바꾸려면 Admin API의 사용자·서비스 계정 조회를 별도로 붙여야 하는데, 이 편에서는 다루지 않아요.
+
+5. **결과를 읽고 비용 절감으로 연결하기**
+
+   `dashboard.html`과 CSV로 다음을 확인해 보세요.
+
+   - 비용이 한 모델에 쏠려 있나요? 쏠려 있다면 단순 작업을 작은 모델로 돌릴 수 있는지 [C15](/ko/claude/c15-model-division/)를 보세요.
+   - 캐시 읽기 비율이 낮은 모델이 있나요? 고정 접두사가 자주 깨지는지 [02편](/ko/dev/02-cost-optimization/)의 무효화 원인을 점검하세요. 02편의 공식 비용 가이드에는 에이전트 루프에서 입력의 중앙값 84%가 캐시에서 읽혔다는 수치가 있지만, 이는 에이전트 루프 기준이라 조직 전체와 직접 비교하는 기준은 아니에요.
+   - 상위 `actor`에 서비스 계정이나 API 키가 있나요? 반복 호출이나 재시도 폭주가 없는지 해당 앱의 로그를 보세요.
+
+   분석을 Claude에게 맡기고 싶다면 CSV에서 개인 식별 정보가 들어가지 않았는지 먼저 확인하고 이렇게 요청해 보세요.
+
+   <PromptBox>
+   첨부한 daily_cost.csv는 우리 팀 9월 Claude API 비용이야. 열은 date, model, cost_usd야. 1) 모델별 월 합계와 비중, 2) 일별 비용이 평소의 2배를 넘은 날, 3) 비용을 줄일 수 있는 후보 3가지를 표로 정리해 줘. 모르는 건 추측하지 말고 모른다고 써 줘.
+   </PromptBox>
+
+6. **가져오는 시점 정하기**
+
+   데이터는 보통 사용 후 **4시간 안에** 갱신되고 최대 24시간 걸릴 수 있어요. 값은 늦게 도착한 이벤트와 정산 때문에 **달이 끝나고 약 7일**까지 바뀔 수 있어요(예: 10월 1일 값은 11월 7일경까지). 그래서 이렇게 운영하는 것이 안전해요.
+
+   - 월간 확정 리포트는 **달이 끝난 지 7일 이상 지난 달**만 가져와요.
+   - 진행 중인 달은 "잠정 값"이라고 표시하고, 응답의 `data_refreshed_at`을 함께 저장해요(curl 응답에는 보여요. 위 SDK 예제는 행만 돌려줘서 이 값을 따로 읽지 않아요).
+   - 같은 결과를 반복해서 얻고 싶다면 이미 본 `data_refreshed_at` 이전으로 `ending_at`을 잡으세요.
+
+</Steps>
+
+## 레거시 API에서 옮길 때
+
+이미 `usage_report/messages`와 `cost_report`를 쓰고 있다면 당장 바꿀 필요는 없어요. 공식 릴리스 노트(2026-10-29)와 문서는 두 엔드포인트가 레거시이지만 **계속 지원된다**고 해요. 옮긴다면 공식 문서의 마이그레이션 표에서 다음이 달라져요.
+
+| 항목 | 레거시 (Usage and Cost API) | 분석 API (베타) |
+| --- | --- | --- |
+| 베타 헤더 | 없음 | `anthropic-beta: analytics-usage-cost-2026-08-24` 필수 |
+| 데이터 지연 | 보통 5분 안 | 보통 4시간 안, 최대 24시간 |
+| 응답 모양 | 시간 버킷 목록(빈 버킷 포함, 오래된 순) | 행 목록(`order_by`로 정렬, 데이터 없는 조합은 행 없음) |
+| 버킷 파라미터 | `bucket_width` (기본 `1d`) | `time_bucket_width` (기본 없음) |
+| `limit` | 시간 버킷 수 | 행 수 (1~1,000, 기본 20) |
+| 기간 | 제한 설명 없음 | 2026-01-01 이후, 최근 365일, 요청당 31일 |
+| 사용자·서비스 계정 | `account_ids[]`, `service_account_ids[]` | `actor_ids[]`, `group_by[]=actor` |
+| 비용 `description` | 있음 | 없음. 구조화된 차원으로 묶음 |
+| 기본 워크스페이스 | `workspace_id`가 `null` | 실제 `wrkspc_` ID |
+
+레거시 문서의 FAQ에는 Priority Tier 사용량은 사용량 엔드포인트에서만 보이고, 코드 실행 비용은 비용 엔드포인트에서만 보인다는 설명이 있어요. 분석 API에서는 코드 실행이 `model: null`인 사용량 행으로 나오고 요청 수 필드가 더해졌다고 해요.
+
+## 빠른 참조표
+
+| 항목 | 값 (2026-10-31 기준) |
+| --- | --- |
+| 사용량 엔드포인트 | `GET https://api.anthropic.com/v1/organizations/analytics/usage` |
+| 비용 엔드포인트 | `GET https://api.anthropic.com/v1/organizations/analytics/cost` |
+| 필수 헤더 | `anthropic-version: 2023-06-01`, `anthropic-beta: analytics-usage-cost-2026-08-24` (SDK는 자동) |
+| 인증 | Console: Admin API 키 또는 `org:admin` OAuth 토큰(`authorization: Bearer`). Enterprise: `read:analytics` 범위 키 |
+| 사용량 `order_by` | `total_tokens`(기본), `output_tokens`, `uncached_input_tokens`, `requests`, `time` |
+| 비용 `order_by` | `amount`(기본), `list_amount`, `time` |
+| 비용 전용 차원 | `cost_type`, `token_type` (5개 제한에 포함되지 않고, `limit`도 적용되지 않아요) |
+| `group_by[]` | 최대 5개 |
+| 필터 | `models[]`처럼 대괄호 표기, 값은 최대 100개. 같은 필터는 OR, 다른 필터끼리는 AND |
+| 금액 형식 | 센트 단위 10진수 문자열, 소수 6자리. `amount`는 할인 후·크레딧 적용 전 |
+| 한 요청 기간 | 최대 31일, `1m` 버킷은 24시간 |
+| 데이터 갱신 | 보통 4시간 안, 최대 24시간, 월 종료 후 약 7일까지 수정 가능 |
+| 클라우드 플랫폼 | Claude Platform on AWS에서 두 엔드포인트를 쓸 수 있고, Google Cloud의 Anthropic 관리형에서도 쓸 수 있지만 인증 방식이 달라요. 공식 문서를 보세요. |
+
+## 자주 막히는 지점
+
+### 인증 오류가 나요
+
+- **원인**: 일반 워크스페이스 API 키를 썼거나, 개인 계정이라 Admin API를 쓸 수 없어요. Enterprise 조직이라면 `read:analytics` 범위 키가 아닐 수 있어요.
+- **해결**: Console 조직의 admin이 만든 Admin API 키를 쓰세요. Enterprise는 claude.ai 조직 설정의 API 화면에서 `read:analytics` 범위 키를 만들어요(Analytics API 활성화 선행). 오류 코드 번호는 공식 문서에서 확인하지 못했어요.
+
+### 응답이 비어 있어요
+
+- **원인**: 요청 범위의 데이터가 아직 집계되지 않았어요. 이때 `data_refreshed_at`은 `null`이고 `data`는 비어 있어요. 또는 조직에 해당하지 않는 차원으로 필터링해서 아무것도 맞지 않았어요.
+- **해결**: 몇 시간 뒤 다시 시도하고, 필터를 빼서 전체가 나오는지 확인하세요. 철자가 틀린 `models[]` 값은 오류 없이 **아무것도 매칭하지 않아요**.
+
+### 기간 오류가 나요
+
+- **원인**: 31일을 넘기거나, 2026-01-01 이전이거나, 365일보다 오래되었거나, 버킷을 쓰면서 `ending_at`을 뺐어요.
+- **해결**: 기간을 31일 이하로 나눠 여러 번 요청하고 결과를 합치세요.
+
+### 합계가 청구서나 Console과 달라요
+
+- **원인**: 값은 월말 후 약 7일까지 수정돼요. `amount`는 크레딧 적용 전 금액이에요. Priority Tier 약정 요청은 사용량에는 `service_tier: "priority"`로 보이지만 토큰 비용은 0으로 잡히고(약정 요금은 따로 청구되며 이 데이터에 없어요), 웹 검색은 표준 요금이에요.
+- **해결**: 확정 숫자는 달이 끝난 지 7일 지난 뒤에 비교하세요. 청구 기준 금액은 Console과 청구서가 기준이에요.
+
+### 어떤 행의 `workspace_id`나 `api_key_id`가 `null`이에요
+
+- **원인**: 그 차원으로 묶지 않았거나, 조직에 해당하지 않는 차원이거나, 해당 값이 없는 사용량이에요. 예를 들어 Console 플레이그라운드 사용은 API 키와 연결되지 않아 레거시 문서 기준 `api_key_id`가 `null`이에요.
+- **해결**: `group_by[]`에 그 차원을 넣었는지 확인하세요. 의도한 `null`인지 구분하려면 `actor`로도 묶어 보세요.
+
+### 처음 보는 서비스 계정(`svac_...`)이 있어요
+
+- **원인**: 레거시 문서 FAQ에 따르면 일부 Claude Managed Agents 세션의 사용량은 Anthropic이 관리하는 서비스 계정으로 보고되고, 내가 만든 서비스 계정 목록에는 나오지 않아요.
+- **해결**: [Managed Agents](/ko/dev/04-managed-agents/)를 쓰고 있다면 해당 편과 공식 세션 관측 문서를 확인하세요.
+
+## 실전 팁
+
+- 가져온 결과는 **날짜별로 저장**해 두고, 진행 중인 달은 매번 덮어쓰세요. 확정된 달만 고정하는 식이 안전해요.
+- 대시보드에 모델·티어를 쓸 때는 `group_by[]`를 최소로 하세요. 차원이 늘면 행 수가 곱으로 늘어요.
+- 사용자별 Claude Code 비용은 비용 엔드포인트에 `products[]=claude_code&group_by[]=actor`로 물어보라고 공식 문서가 안내해요. Console 조직은 Claude Code Analytics API로 사용자별 활동과 추정 비용도 볼 수 있어요. 자세한 내용은 공식 문서를 보세요.
+- 이미 쓰는 관측 도구가 있다면 직접 만들기 전에 확인하세요. 레거시 문서는 CloudZero, Datadog, Grafana Cloud, Harness, Honeycomb, Tempo, Vantage 연동을 안내해요.
+- 지출 상한을 정하는 방법은 [02편의 지출 한도 안내](/ko/dev/02-cost-optimization/)와 [C16](/ko/claude/c16-api/)에 있어요. 이 API는 읽기용이라 지출을 막아 주지는 않아요.
+- 사내에 대시보드를 공유할 때는 `actor` ID가 개인을 가리킨다는 점을 생각하고, 보는 사람의 범위를 정하세요.
+
+## 다음에 볼 튜토리얼
+
+- [2. 프롬프트 캐싱·배치·effort로 API 비용 줄이기](/ko/dev/02-cost-optimization/) — 대시보드에서 찾은 비용 문제를 줄이는 방법
+- [C16. Claude API 시작하기](/ko/claude/c16-api/) — 티어와 지출 상한, 모델별 제한
+- [4. Managed Agents로 서버에서 에이전트 돌리기](/ko/dev/04-managed-agents/) — 세션 사용량이 어떻게 나오는지
+- [개발자를 위한 AI 활용 가이드](/ko/roles/developer/) — 개발 업무 전체 흐름

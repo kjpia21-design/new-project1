@@ -1,0 +1,299 @@
+---
+title: "OpenAI Codex 시작하기: 코딩 에이전트 비교 관점에서"
+description: "OpenAI의 코딩 에이전트 Codex의 제공 형태·플랜·설치·승인 설정을 공식 문서로 확인하고, Claude Code·Cursor와 사실만 표로 비교하는 실습"
+sidebar:
+  label: "9. OpenAI Codex 시작하기"
+level: practical
+category: coding
+tools: ["OpenAI Codex", "Claude Code", "Cursor"]
+duration: "40분"
+prerequisites:
+  - "ChatGPT 계정 (무료 플랜도 있지만 제공 범위는 플랜마다 달라요)"
+  - "터미널을 열 수 있는 컴퓨터와 연습용 프로젝트 폴더 (복사본 권장)"
+  - "Git을 쓰고 있으면 좋아요 (작업 전후 되돌리기용)"
+lastVerified: 2026-10-31
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "Codex CLI"
+    url: "https://learn.chatgpt.com/docs/codex/cli"
+  - title: "Codex IDE extension"
+    url: "https://learn.chatgpt.com/docs/codex/ide"
+  - title: "ChatGPT desktop app (Codex)"
+    url: "https://learn.chatgpt.com/docs/app"
+  - title: "Codex Cloud"
+    url: "https://learn.chatgpt.com/docs/cloud"
+  - title: "Authentication (Codex)"
+    url: "https://learn.chatgpt.com/docs/auth"
+  - title: "Codex Pricing"
+    url: "https://learn.chatgpt.com/docs/pricing"
+  - title: "Agent approvals & security (Codex)"
+    url: "https://learn.chatgpt.com/docs/agent-approvals-security"
+  - title: "Custom instructions with AGENTS.md (Codex)"
+    url: "https://learn.chatgpt.com/docs/agent-configuration/agents-md"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- **Codex**는 OpenAI의 코딩 에이전트예요. 공식 문서 기준(2026-10-26)으로 **터미널(CLI), 에디터 확장(IDE), 데스크톱 앱, 클라우드** 네 가지 방식으로 쓸 수 있어요.
+- 로그인은 **ChatGPT 계정** 또는 **API 키**예요. 클라우드는 ChatGPT 로그인이 필요해요. 플랜은 Free·Go·Plus·Pro 등이 있고, 클라우드 연동과 CLI·IDE 확장은 Plus 카드에 적혀 있어요.
+- 기본 안전장치는 **샌드박스(접근 범위 제한)와 승인 정책**이에요. 로컬에서는 네트워크가 꺼져 있고, 작업 폴더 밖 편집은 승인을 물어요.
+- Claude Code([6편](/ko/coding/06-claude-code-start/))·Cursor([9편](/ko/coding/09-cursor/))와는 **사실만 표로 비교**해요. 어느 쪽이 더 낫다는 순위는 쓰지 않아요.
+- 한국 제공 여부, 한국어 지원, 원화 가격은 확인한 문서에 없었어요. 가입 화면에서 직접 확인하세요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- Codex가 어떤 형태로 제공되는지, 내 상황에 어느 형태가 맞는지 고를 수 있어요.
+- 공식 방법으로 Codex CLI를 설치하고 ChatGPT 계정으로 로그인해 첫 작업을 맡길 수 있어요.
+- 승인 정책과 샌드박스를 읽고, 안전한 설정으로 시작할 수 있어요.
+- Claude Code·Cursor와 비교할 때 **무엇을 기준으로 따져야 하는지** 알게 돼요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **Codex** | OpenAI의 코딩 에이전트예요. 코드를 읽고, 수정하고, 명령을 실행해요. 제공 형태가 여러 가지예요. |
+| **Codex CLI** | 터미널에서 `codex`를 실행해서 쓰는 형태예요. |
+| **IDE 확장** | VS Code 같은 에디터 안에서 쓰는 형태예요. 열린 파일과 선택 영역을 프롬프트에 가져올 수 있어요. |
+| **데스크톱 앱** | 공식 문서에는 "ChatGPT desktop app"으로 소개되고, 시작할 때 ChatGPT와 Codex 중 고르는 구조예요. |
+| **Codex Cloud** | 클라우드의 격리된 작업 공간에서 작업을 돌리고, 결과를 검토해 커밋이나 PR(풀 리퀘스트)로 가져오는 형태예요. |
+| **샌드박스** | Codex가 접근할 수 있는 범위를 기술적으로 제한하는 장치예요. |
+| **승인 정책** | Codex가 어떤 행동 전에 나에게 물어야 하는지 정하는 규칙이에요. |
+| **AGENTS.md** | Codex가 작업 전에 읽는 프로젝트 지침 파일이에요. |
+
+### 제공 형태 한눈에 보기 (2026-10-26 공식 문서 기준)
+
+| 형태 | 시작 방법 | 로그인 |
+| --- | --- | --- |
+| **CLI** | 설치 후 프로젝트 폴더에서 `codex` 실행 | ChatGPT 계정 또는 API 키 |
+| **IDE 확장** | VS Code, Cursor, Windsurf는 Codex 확장. Xcode와 JetBrains는 각자의 통합 기능 | ChatGPT 계정 또는 API 키 |
+| **데스크톱 앱** | 공식 문서의 안내로 macOS·Windows·Linux용 앱을 내려받아요. Linux는 별도 설치 안내가 있어요 | ChatGPT 계정 또는 API 키 |
+| **클라우드** | ChatGPT 웹·모바일·데스크톱 앱에서 환경(Environment)을 만들고 작업 시작 | ChatGPT 계정만 |
+
+### 플랜 (달러, 2026-10-26 공식 가격 페이지 기준)
+
+공식 문서는 "ChatGPT Work와 Codex는 사용량을 공유한다"고 안내해요. 가격은 자주 바뀌니 가입 전 공식 페이지를 다시 보세요.
+
+| 플랜 | 가격 | 문서에 적힌 Codex 관련 내용 |
+| --- | --- | --- |
+| Free | $0/월 | 빠른 코딩 작업 체험. 데스크톱 앱에서 GPT-6 Luna(롤아웃에 따라 다름) |
+| Go | $8/월 | 가벼운 코딩 작업 |
+| Plus | $20/월 | 웹·CLI·IDE 확장·iOS의 Codex, 자동 코드 리뷰와 Slack 같은 클라우드 연동, ChatGPT 크레딧으로 사용량 확장 |
+| Pro | $100부터 ($100, $200, $500) | Plus의 모든 것. Ultrafast 모드는 Pro $500에서. Pro 플랜은 현재 5시간 제한이 없다고 안내돼요 |
+| API Key | 사용량 과금 | CLI·SDK·IDE 확장에서 사용. 클라우드 기능(GitHub 코드 리뷰, Slack 등)은 없음 |
+| Business | 사용자당 월 $20 (2명 이상, 연간 결제. 월 결제는 $25) | 팀용 워크스페이스, 크레딧으로 사용량 확장 |
+| Enterprise & Edu | 영업 문의 | 관리 기능, 감사 로그 등 |
+
+사용량 한도는 모델, 작업 크기, 로컬/클라우드 여부에 따라 달라요. 공식 문서는 Plus와 Standard Business의 로컬 메시지를 5시간 단위로 모델별 범위(예: 15-160)로 추정해 보여 주지만, 고정 한도가 아니니 사용량 대시보드에서 확인하라고 안내해요. 공식 문서에는 GPT-5.5가 ChatGPT 로그인 Codex에서 2026-10-14에 종료됐다는 공지도 있어요. 모델 이름과 제공 범위는 자주 바뀌니 앱에서 보이는 선택지를 기준으로 하세요.
+
+<Aside type="note" title="확인되지 않은 점">
+**한국에서의 제공 여부, 한국어 화면 지원, 원화 가격과 부가세**는 확인한 공식 페이지에 없었어요. 공식 가격 페이지(2026-10-26 확인)에는 Codex를 Free·Go·Plus·Pro·Business·Edu·Enterprise 모든 플랜에서 쓸 수 있다고 적혀 있어요. 다만 Free·Go의 한도 수치는 없고, 클라우드 문서에도 어느 플랜에서 되는지는 적혀 있지 않아서 클라우드가 Free·Go에서 제공되는지는 확인하지 못했어요. 가입 화면과 공식 요금 페이지에서 직접 확인해 주세요. 모델의 성능 차이는 이 편에서 다루지 않아요.
+</Aside>
+
+### Claude Code·Cursor와 사실 비교
+
+아래 표는 각 도구의 공식 문서에서 확인된 사실만 정리한 거예요. **품질이나 속도의 순위는 쓰지 않았어요.** 사실 확인 날짜가 다르니 요금 등은 공식 페이지에서 다시 보세요.
+
+| | Codex (OpenAI) | Claude Code (Anthropic) | Cursor |
+| --- | --- | --- | --- |
+| **제공 형태** | CLI, IDE 확장, 데스크톱 앱, 클라우드 | 터미널, IDE 확장, 데스크톱 앱, 웹 ([C12](/ko/claude/c12-claude-code-overview/)) | 코드 편집기(데스크톱 앱), 터미널용 CLI도 있음 ([9편](/ko/coding/09-cursor/)) |
+| **계정·플랜** | ChatGPT 계정(Free~Pro, Business 등) 또는 API 키 | Claude Pro·Max·Ultra 등 유료 플랜 또는 Console 계정 ([C2](/ko/claude/c02-plans-limits/)) | 무료 Free, 유료 Plus 월 $8부터 (2026-10-26 기준, [9편](/ko/coding/09-cursor/)) |
+| **프로젝트 지침 파일** | AGENTS.md | CLAUDE.md ([C14](/ko/claude/c14-claude-code-features/)) | Rules(`.cursor/rules`), AGENTS.md도 사용 가능 |
+| **작업 되돌리기** | 공식 문서가 작업 전후 Git 체크포인트를 권장 | 체크포인트와 `/rewind` (명령으로 바뀐 파일은 제외) | Restore Checkpoint |
+| **클라우드에서 작업** | Codex Cloud (ChatGPT 로그인 필요) | 클라우드 세션 ([C13](/ko/claude/c13-cloud-sessions/)) | Premium(월 $30) 이상에 클라우드 에이전트 |
+| **서로의 도구와 함께** | Codex IDE 확장을 Cursor에 설치 가능 | VS Code 확장을 Cursor에도 설치 가능 | 위 두 확장의 설치 대상 |
+
+도구를 고를 때는 순위보다 **내가 이미 쓰는 구독(ChatGPT인지 Claude인지), 일하는 화면(터미널·에디터·앱), 회사의 데이터 정책**을 기준으로 삼는 편이 현실적이에요.
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '내 상황에 맞는 제공 형태(CLI, IDE, 앱, 클라우드)를 골랐어요',
+  '연습용 프로젝트 폴더를 복사본으로 준비하고 Git으로 시작 상태를 저장했어요',
+  'Codex CLI를 설치하고 ChatGPT로 로그인했어요',
+  '"Tell me about this project"로 첫 질문을 했어요',
+  '/permissions로 현재 권한을 확인하고 읽기 전용으로 바꿔 봤어요',
+  '작은 수정을 맡기고 변경을 검토했어요',
+  'AGENTS.md로 프로젝트 지침을 만들었어요',
+  'Codex 쪽 요금과 한도 화면을 확인했어요',
+]} />
+
+<Steps>
+
+1. **어떤 형태로 쓸지 고르기**
+
+   | 이런 경우 | 고려할 형태 |
+   | --- | --- |
+   | 터미널이 익숙하고 스크립트·CI에서도 쓰고 싶다 | CLI (`codex exec`로 비대화형 실행) |
+   | 에디터에서 열린 파일을 보며 쓰고 싶다 | IDE 확장 |
+   | 설치형 앱 화면에서 파일과 프로젝트를 다루고 싶다 | 데스크톱 앱 |
+   | 내 컴퓨터를 켜 두지 않아도 작업을 돌리고 싶다 | 클라우드 (환경 설정이 필요해요) |
+
+   이 편의 실습은 **CLI**로 진행해요. 다른 형태도 로그인과 승인의 개념은 같아요.
+
+2. **연습용 폴더와 Git 저장점 만들기**
+
+   공식 CLI·IDE 문서는 모두 **작업 전후에 Git 체크포인트를 만들어 변경을 되돌릴 수 있게 하라**고 안내해요. 회사 저장소 원본이 아니라 복사본에서 연습하고, Git이 있다면 시작 상태를 커밋해 두세요. Git이 처음이라면 폴더를 통째로 복사해 두는 방법도 있어요.
+
+3. **Codex CLI 설치하기**
+
+   공식 CLI 페이지(2026-10-15 확인)는 다음 네 가지 설치 방법을 안내해요. 하나만 고르세요. 윈도우는 새 PowerShell 창에서 시작하라고 안내해요.
+
+   | 방법 | 명령 |
+   | --- | --- |
+   | macOS·Linux | `curl -fsSL https://chatgpt.com/codex/install.sh \| sh` |
+   | Windows (PowerShell) | `powershell -ExecutionPolicy ByPass -c "irm https://chatgpt.com/codex/install.ps1 \| iex"` |
+   | npm | `npm install -g @openai/codex` |
+   | Homebrew | `brew install --cask codex` |
+
+   <Aside type="caution" title="인터넷에서 받은 스크립트를 바로 실행하는 명령이에요">
+   `curl ... | sh`나 `irm ... | iex` 방식은 내려받은 스크립트를 바로 실행해요. 주소가 공식 문서에 적힌 것과 **글자 하나까지 같은지** 확인하고, 회사 컴퓨터라면 설치 정책을 먼저 확인하세요. 꺼리는 경우 npm이나 Homebrew를 쓸 수 있어요.
+   </Aside>
+
+   업데이트는 설치할 때와 같은 명령을 다시 실행하거나(Homebrew는 `brew upgrade --cask codex`) 하라고 안내돼 있어요.
+
+4. **로그인하고 첫 질문하기**
+
+   연습용 폴더로 이동해 `codex`를 실행하면 처음에 **Sign in with ChatGPT** 등 로그인 방법을 고르는 화면이 나와요. ChatGPT 구독으로 쓸지, API 키로 쓸지에 따라 과금과 데이터 정책이 달라져요. 인증 문서에는 베타인 기기 코드(Device Code) 로그인(`codex login --device-auth`)도 있는데, 먼저 ChatGPT 보안 설정(워크스페이스는 관리자 권한 설정)에서 켜야 해요(2026-10-26 기준). 공식 인증 문서는 ChatGPT 로그인 시 Codex 사용이 ChatGPT 워크스페이스 권한과 보존·거주 설정을 따르고, API 키 로그인 시에는 API 조직의 보존·데이터 공유 설정을 따른다고 설명해요.
+
+   ```sh
+   cd ~/연습용프로젝트
+   codex
+   ```
+
+   로그인이 끝나면 공식 문서가 제안하는 첫 질문부터 해 보세요. 영어로 적혀 있지만 한국어로 물어도 돼요. 한국어 답변의 품질은 이 편에서 평가하지 않아요.
+
+   <PromptBox>
+   이 프로젝트가 무엇을 하는지 코딩을 모르는 사람이 이해할 수 있게 설명해 줘. 주요 폴더와 시작 파일을 표로 정리하고, 확실하지 않은 부분은 추측이라고 표시해 줘. 아직 아무것도 수정하지 마.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Codex CLI 첫 실행과 로그인 선택 화면" officialUrl="https://learn.chatgpt.com/docs/codex/cli" />
+
+5. **승인과 샌드박스 이해하고 설정하기**
+
+   공식 승인·보안 문서(2026-10-26 확인)에 따르면 기본 상태는 이래요.
+
+   - 에이전트는 **네트워크 접근이 꺼진** 상태로 시작해요.
+   - 로컬에서는 OS 수준의 샌드박스가 접근을 (보통 현재 작업 공간으로) 제한해요.
+   - `Auto` 프리셋(`--sandbox workspace-write --ask-for-approval on-request`)에서는 작업 폴더 안의 읽기·편집·명령 실행은 자동이고, **작업 폴더 밖 편집이나 네트워크가 필요한 명령은 승인**을 물어요.
+   - 변경 없이 대화나 계획만 하려면 `/permissions` 명령으로 `read-only` 모드로 바꿀 수 있어요.
+
+   처음에는 `/permissions`로 현재 상태를 확인하고, 코드를 이해하는 단계에서는 읽기 전용으로 두세요. 시작할 때부터 지정하려면 아래처럼 해요.
+
+   ```sh
+   codex --sandbox read-only --ask-for-approval on-request
+   ```
+
+   <Aside type="caution" title="오래된 설정 주의">
+   공식 문서에 따르면 `approval_policy = "untrusted"` 설정은 더 이상 지원되지 않고, 남아 있으면 프로그램 시작을 막을 수 있어요. 예전 글을 보고 설정 파일을 만졌다면 확인하세요.
+   </Aside>
+
+   Claude Code의 권한 모드와 비교하고 싶다면 [C14](/ko/claude/c14-claude-code-features/)를 보세요. 이름과 구조는 다르지만 "무엇을 묻지 않고 해도 되는가를 정한다"는 목적은 비슷해요.
+
+6. **작은 수정을 맡기고 검토하기**
+
+   작고 확인 가능한 수정부터 맡기세요. 이 단계에서 승인을 묻는 화면이 나오면 어떤 파일이 바뀌는지 읽고 허용하세요.
+
+   <PromptBox>
+   README의 설치 방법 문단에서 오타와 어색한 문장만 고쳐 줘. 그 밖의 파일은 수정하지 마. 끝나면 바꾼 파일과 바꾼 이유를 목록으로 알려 줘.
+   </PromptBox>
+
+   끝나면 Git의 변경 내역(diff)이나 파일을 직접 열어 확인하세요. 마음에 들지 않으면 2단계에서 저장한 상태로 돌아가면 돼요. 공식 문서에는 Codex가 Claude Code의 `/rewind`처럼 파일을 되돌리는 기능이 있는지 이번 확인 범위에서 나오지 않았어요. 그래서 Git 저장점이 중요해요.
+
+7. **AGENTS.md로 프로젝트 지침 남기기**
+
+   공식 문서에 따르면 Codex는 작업 전에 AGENTS.md를 읽어요. 전역 지침(Codex 홈 폴더의 `~/.codex/AGENTS.md`)과 프로젝트 폴더의 AGENTS.md를 루트에서부터 합치고, 현재 폴더에 가까운 파일이 뒤에 붙어 우선해요. 합친 크기는 기본 32 KiB까지예요.
+
+   <PromptBox>
+   이 프로젝트 루트에 AGENTS.md를 만들어 줘. 내용은 (1) 설명과 주석은 한국어로 쓴다 (2) 요청하지 않은 파일은 수정하지 않는다 (3) 작업이 끝나면 바꾼 파일 목록을 정리한다는 규칙 3개만 짧게 넣어 줘.
+   </PromptBox>
+
+   같은 AGENTS.md를 Cursor도 읽을 수 있다고 [9편](/ko/coding/09-cursor/)에서 확인했어요. 한 파일로 여러 도구에 같은 규칙을 주고 싶을 때 쓸 수 있는 점이에요. Claude Code의 CLAUDE.md는 별도 파일이니 [C14](/ko/claude/c14-claude-code-features/)를 참고하세요.
+
+8. **(선택) 클라우드에서 작업 맡기기**
+
+   클라우드는 격리된 환경에서 작업을 돌려서, 내 컴퓨터를 켜 두지 않아도 되는 방식이에요. 환경을 만드는 부분이 가장 헷갈려서 순서를 정리했어요. 공식 클라우드 문서(2026-10-26 확인)를 기준으로 해요.
+
+   <FlowSteps title="Codex Cloud 처음 시작하기" officialUrl="https://learn.chatgpt.com/docs/cloud" steps={[
+     { where: 'ChatGPT 웹·모바일·데스크톱 앱', action: 'ChatGPT 계정으로 로그인', result: '클라우드는 ChatGPT 로그인이 필요해요' },
+     { where: '웹·데스크톱 앱', action: 'Work in > Cloud를 고르고 Select environment 열기', result: '기존 환경을 고르거나 새 환경 만들기' },
+     { where: '환경 만들기 화면', action: 'GitHub 저장소를 고르고 Get started 선택 (필요하면 GitHub 연결)', result: 'Codex가 저장소를 살펴 의존성을 설치하고 테스트' },
+     { where: '설정 검토 화면', action: '설정과 테스트 결과를 검토하고 저장한 뒤 Publish', result: 'Environment published 표시' },
+     { where: '작업 입력', action: 'Start a new task로 작업을 보내고 결과 검토', result: '변경과 테스트 결과를 보고 커밋 또는 PR로 이어가요' },
+   ]} />
+
+   클라우드 작업에는 GitHub 저장소 접근 권한을 줘요. 개인 저장소나 회사 코드라면 권한 범위와 회사 정책을 먼저 확인하세요. 네트워크 설정, 비밀 값 처리는 공식 문서의 환경 설정 항목을 따로 읽어야 해요. 이 편에서는 클라우드를 직접 실행해 보지 않았어요.
+
+</Steps>
+
+## 빠른 참조표
+
+### 시작할 때 자주 쓰는 명령 (공식 CLI 문서·승인 문서 기준)
+
+| 명령 | 하는 일 |
+| --- | --- |
+| `codex` | 현재 폴더에서 Codex 시작 |
+| `/permissions` | 현재 권한(승인 정책, 샌드박스) 확인과 변경. 읽기 전용 전환 |
+| `codex resume` | 이전 대화 다시 열기 |
+| `codex --search` | 라이브 웹 검색을 켠 실행 |
+| `codex --image` | 이미지(오류 화면 등)를 첫 프롬프트에 첨부 |
+| `codex exec` | 스크립트·CI에서 쓰는 비대화형 실행 |
+| `codex cloud` | CLI에서 클라우드 대화를 보고 작업을 보냄 |
+
+### 사용량과 비용 점검 순서
+
+1. 내 로그인 방식이 ChatGPT인지 API 키인지 확인해요.
+2. ChatGPT 로그인이면 공식 가격 페이지에서 내 플랜의 Codex 포함 범위를 봐요.
+3. 사용량 한도는 앱의 사용량 대시보드에서 확인해요(공식 문서가 안내하는 방법이에요).
+4. API 키라면 API 가격으로 과금되고 클라우드 기능은 쓸 수 없어요.
+
+## 자주 막히는 지점
+
+### 설치 후 `codex`를 찾을 수 없다고 나와요
+
+- **원인**: 설치 위치가 PATH에 없거나, 설치한 터미널 창을 다시 열지 않았을 수 있어요.
+- **해결**: 터미널을 새로 열어 다시 시도하세요. 그래도 안 되면 다른 설치 방법(npm, Homebrew)을 쓰거나 공식 CLI 문서를 다시 확인하세요. 이 편에서는 설치 오류별 해결법을 확인하지 못했어요.
+
+### 시작하자마자 설정 오류가 나요
+
+- **원인**: 예전 글을 따라 `approval_policy = "untrusted"`를 설정 파일에 넣었을 수 있어요.
+- **해결**: 5단계의 주의를 보고 해당 설정을 제거하세요. 대신 읽기 전용이면 `--sandbox read-only --ask-for-approval on-request`를 쓰라고 공식 문서가 안내해요.
+
+### 작업 중 네트워크나 설치가 안 돼요
+
+- **원인**: 로컬 기본 샌드박스는 네트워크가 꺼져 있어요.
+- **해결**: 승인을 묻는 화면이면 필요한 이유를 읽고 판단하세요. 계속 쓰려면 설정으로 켤 수 있지만, 안전을 위해 꼭 필요한 작업에서만 켜세요.
+
+### 클라우드 메뉴가 보이지 않아요
+
+- **원인**: 클라우드는 ChatGPT 로그인이 필요하고, 플랜별 제공 범위가 달라요. Free·Go에서의 제공 여부는 확인하지 못했어요.
+- **해결**: ChatGPT 로그인 상태와 내 플랜의 가격 페이지 항목을 확인하세요.
+
+### 사용량이 생각보다 빨리 줄어요
+
+- **원인**: 공식 문서에 따르면 모델, 작업 크기, 컨텍스트, 도구 사용, 클라우드 실행 여부가 모두 영향을 줘요. 프롬프트 길이만으로는 예측하기 어려워요.
+- **해결**: 작업을 작게 쪼개고 사용량 대시보드를 보세요.
+
+## 실전 팁
+
+- **비교는 같은 과제로 하세요.** 도구를 고르고 싶다면 연습용 저장소에서 같은 작은 과제(예: 오타 수정, 함수 설명)를 각 도구에 맡기고, 변경 내역의 읽기 쉬움, 승인 과정, 비용을 내 기준으로 비교해 보세요. 이 사이트는 우열을 판정하지 않아요.
+- **먼저 읽기 전용으로.** 낯선 코드는 읽기 전용에서 이해하고, 수정은 그다음에 맡기는 순서가 안전해요.
+- **비밀 정보는 두지 마세요.** 비밀번호, API 키는 대화에도 폴더에도 두지 않는 게 기본이에요. 회사 코드를 외부 서비스에 올려도 되는지는 회사 정책이 먼저예요. [개인정보와 안전](/ko/basics/05-privacy-safety/)을 참고하세요.
+- **로그인 방식에 따라 데이터 정책이 달라져요.** ChatGPT 로그인과 API 키는 적용되는 정책이 달라서, 업무 용도라면 관리자에게 확인하세요.
+- **코드를 몰라도 시작하려면** Claude Code로 만드는 [27편](/ko/coding/27-first-app-with-claude-code/)이나 [7편](/ko/coding/07-no-code-web-tools/)이 더 쉬울 수 있어요. 이 편은 코드를 읽을 수 있는 분께 맞춰 썼어요.
+
+## 다음에 볼 튜토리얼
+
+- [6. Claude Code 시작하기](/ko/coding/06-claude-code-start/) — 같은 터미널형 에이전트를 Claude로
+- [9. Cursor로 코드 이해하고 고치기](/ko/coding/09-cursor/) — 에디터형 도구
+- [28. GitHub Copilot 시작하기](/ko/coding/28-github-copilot/) — VS Code에서 쓰는 또 다른 도구
+- [C14. Claude Code 핵심 기능](/ko/claude/c14-claude-code-features/) — 권한 모드, CLAUDE.md
+- [개발자 가이드](/ko/roles/developer/) · [학생 가이드](/ko/roles/student/) — 직무별 활용법

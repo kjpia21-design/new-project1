@@ -1,0 +1,229 @@
+---
+title: "커넥터(MCP)로 AI와 업무 도구 연결하기"
+description: "여러 AI 도구에 공통인 MCP(Model Context Protocol) 개념과 업무 시나리오, 도구별 연결 방식(Claude·ChatGPT·Gemini CLI·Notion)과 보안 원칙을 정리한 참고서"
+sidebar:
+  label: "5. 커넥터(MCP) 연결"
+level: practical
+category: automation
+tools: ["Claude", "MCP", "ChatGPT", "Gemini CLI", "Notion"]
+duration: "35분"
+prerequisites:
+  - "사용 중인 AI 도구의 계정 (Claude, ChatGPT 등)"
+  - "연결해 볼 업무 서비스 계정 (Gmail, Notion 등)"
+lastVerified: 2026-10-26
+sources:
+  - title: "What is the Model Context Protocol (MCP)?"
+    url: "https://modelcontextprotocol.io/docs/2026-07-28/getting-started/intro"
+  - title: "MCP Architecture (specification 2025-06-18)"
+    url: "https://modelcontextprotocol.io/specification/2025-06-18/architecture"
+  - title: "MCP Specification (2025-03-26)"
+    url: "https://modelcontextprotocol.io/specification/2025-03-26"
+  - title: "MCP Security Best Practices"
+    url: "https://modelcontextprotocol.io/docs/tutorials/security/security_best_practices"
+  - title: "Use connectors to extend Claude's capabilities"
+    url: "https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities"
+  - title: "Get started with custom connectors using remote MCP"
+    url: "https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp"
+  - title: "Connect Claude Code to tools via MCP"
+    url: "https://code.claude.com/docs/en/mcp"
+  - title: "Plugins (OpenAI, ChatGPT 문서)"
+    url: "https://learn.chatgpt.com/docs/plugins"
+  - title: "Plugin controls (OpenAI, ChatGPT 관리자 문서)"
+    url: "https://learn.chatgpt.com/docs/enterprise/apps-and-connectors"
+  - title: "Connect and test your plugin (OpenAI 개발자 문서)"
+    url: "https://developers.openai.com/plugins/deploy/connect-chatgpt"
+  - title: "Build an MCP server (OpenAI 개발자 문서)"
+    url: "https://developers.openai.com/plugins/build/mcp-server"
+  - title: "Moving your custom GPT workflows to plugins (OpenAI, ChatGPT 문서)"
+    url: "https://learn.chatgpt.com/docs/migrate-custom-gpts"
+  - title: "MCP servers with Gemini CLI"
+    url: "https://geminicli.com/docs/tools/mcp-server/"
+  - title: "Get started with Notion Agent"
+    url: "https://www.notion.com/help/notion-agent"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import AutomationMcpMap from '../../../../components/diagrams/AutomationMcpMap.astro';
+
+<Summary>
+- **MCP(Model Context Protocol)**는 AI 앱을 외부 시스템에 연결하는 **오픈소스 공통 규격**이에요. 공식 문서는 USB-C 포트에 비유해요.
+- AI 도구마다 부르는 이름은 달라도(커넥터, 앱, MCP 서버) 구조는 같아요. **AI 앱 ↔ MCP 서버 ↔ 업무 서비스**.
+- 위험은 대개 **쓰기 권한**과 **믿을 수 없는 서버/글**에서 와요. 읽기부터 시작하고, 쓰기는 승인하고, 신뢰하는 서버만 연결하세요.
+- Claude 커넥터의 클릭 절차는 [C7. 커넥터](/ko/claude/c07-connectors/)에 있어요. 이 편은 도구를 가리지 않는 개념과 업무 시나리오에 집중해요.
+</Summary>
+
+<Aside type="note" title="ChatGPT 화면 이름은 바뀌었어요">
+OpenAI의 현재 문서(learn.chatgpt.com, developers.openai.com, 2026-10-26 확인)는 예전의 "앱·커넥터"를 **플러그인(Plugins)**으로 안내해요. 플러그인에는 스킬과 MCP 서버를 담을 수 있어요. 이 편에서 예전 이름인 "개발자 모드"는 현재 문서에서 찾지 못했어요. 화면 문구와 플랜 조건은 바뀔 수 있으니 실제 화면과 OpenAI 도움말을 함께 확인하세요.
+</Aside>
+
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- MCP가 무엇이고 "커넥터"와 어떤 관계인지 한 문장으로 설명할 수 있어요.
+- 내가 쓰는 AI 도구에서 연결을 찾을 때 **무엇을 확인해야 하는지** 알 수 있어요.
+- 업무 시나리오 3가지(브리핑, 노트 정리, 일정 조율)를 읽기부터 안전하게 설계할 수 있어요.
+- 연결 전에 점검할 보안 체크리스트를 쓸 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **MCP** | Model Context Protocol. AI 애플리케이션을 외부 시스템(파일, 데이터베이스, 업무 도구 등)에 연결하는 오픈소스 표준이에요. |
+| **호스트(host)와 클라이언트** | 사용자가 쓰는 AI 앱이 호스트이고, 그 안에서 서버와 통신하는 부분이 클라이언트예요. |
+| **MCP 서버** | 어떤 서비스의 기능을 MCP 규격으로 내놓는 프로그램이나 주소예요. 서비스마다 서버가 있어요. |
+| **도구(tools)** | 서버가 제공하는, AI가 호출할 수 있는 함수예요. 예: 메일 검색, 일정 만들기 |
+| **리소스(resources)·프롬프트** | 맥락으로 쓰는 데이터와 미리 만든 지시문 템플릿이에요. |
+| **커넥터(Connector)** | 제품마다 쓰는 이름이에요. Claude에서는 커넥터, ChatGPT에서는 플러그인(안에 MCP 서버를 담음)으로 안내돼요. OpenAI 관리자 문서는 "앱"과 "MCP 서버"를 같은 뜻으로 쓴다고 밝혀요. |
+| **원격 MCP 서버** | 인터넷 주소(URL)로 접속하는 서버예요. 내 컴퓨터에서 도는 로컬 서버와 구분해요. |
+
+<AutomationMcpMap />
+
+**자동화 서비스와의 차이**: [18편의 Zapier/Make](/ko/automation/18-zapier-make/)는 사람이 미리 정한 규칙을 실행해요. MCP는 AI가 상황을 보고 어떤 도구를 부를지 **스스로 고른다**는 점이 달라요. 그만큼 승인과 권한 관리가 중요해요.
+
+### 도구별 연결 방식 비교 (2026-10-26 기준)
+
+| 도구 | 부르는 이름 | 연결하는 곳 | 확인한 사실 |
+| --- | --- | --- | --- |
+| **Claude** (claude.ai) | 커넥터 | 입력창 + > Connectors, 설정(Customize) > Connectors | 커스텀 커넥터는 원격 MCP 서버. 절차는 [C7](/ko/claude/c07-connectors/) |
+| **Claude Code** | MCP 서버 | 명령 `claude mcp add`, 인증은 `/mcp` | claude.ai 커넥터는 로그인하면 `/mcp`에 표시 |
+| **ChatGPT** | 플러그인(Plugins), 직접 만든 MCP 서버는 Add custom MCP server | chatgpt.com의 Plugins 화면에서 플러그인을 설치하거나, 더하기(+) 버튼 > Add custom MCP server | OpenAI 문서 기준: 플러그인은 웹·데스크톱·모바일의 Chat과 Work에서 쓰고, 설치 후 새 채팅에서 `@`로 선택해요. 커스텀 MCP 서버는 공개 HTTPS 주소(보통 `/mcp` 경로) 또는 Secure MCP Tunnel로 연결하고, 인증을 설정한 뒤 위험 경고에서 "I understand and want to continue"를 눌러야 해요. 계정·워크스페이스 정책이 적용돼요. 관리자는 Workspace apps에서 사용 가능 여부와 Action control·App permissions를 정해요 |
+| **Gemini CLI** | MCP 서버 | 설정 파일 `settings.json`의 `mcpServers` 또는 `gemini mcp add` | 원격은 `url`/`httpUrl`/`headers`, 도구는 `includeTools`/`excludeTools`로 거르고 `excludeTools`가 우선 |
+| **Notion Agent** | 연결(Connections) | All sources > MCP servers > Add MCP server, 또는 Settings > Connections > Discover | Notion 공식 도움말로 확인. MCP 서버를 연결하면 All sources 목록에 MCP servers로 나타나요 |
+
+<Aside type="note" title="확인하지 못한 점">
+- Gemini CLI 공식 문서 페이지에는 "무료(unpaid) 등급과 Google One 사용자의 Gemini CLI는 2026년 6월 18일에 Antigravity CLI로 대체됐다"는 안내가 붙어 있어요(2026-10-26 기준). 위 표의 Gemini CLI 설정은 그 문서의 내용이고, 내 계정에서 어느 CLI를 쓰는지는 공식 안내를 확인하세요.
+- Gemini 앱이나 Google Workspace 안의 Gemini가 MCP 서버를 직접 연결하는지는 확인하지 못했어요. Workspace 안의 Gemini 사용은 [19편](/ko/automation/19-google-workspace-gemini/)을 보세요.
+- MCP 스펙은 날짜별 버전(2025-03-26, 2025-06-18, 2026-07-28 등)이 여럿이에요. 이 편은 개념과 보안 원칙 위주로 썼고, 세부 규격은 최신 공식 문서를 확인하세요.
+- ChatGPT에서 커스텀 MCP 서버를 연결할 수 있는 요금제 목록은 OpenAI 문서에서 찾지 못했어요. 문서는 계정과 워크스페이스 정책이 적용된다고 안내하고, 관리자 문서는 MCP 서버 연결을 Workspace apps와 Permissions & roles에서 역할별로 정한다고만 설명해요. 내 플랜의 조건은 OpenAI 도움말(help.openai.com)에서 확인하세요.
+- Notion은 Business·Enterprise 플랜에서 에이전트 사용 허용량이 포함된다고 안내해요. 연결 자체의 플랜 조건은 Notion 도움말에서 확인하세요.
+</Aside>
+
+## 단계별 따라하기
+
+여기서는 도구에 상관없이 쓰는 **안전한 연결 순서**를 따라 해요. 클릭 절차는 도구 문서를 보세요.
+
+<Checklist items={[
+  '내 AI 도구가 MCP/커넥터를 지원하는지, 내 플랜에서 되는지 확인했어요',
+  '연결하려는 서버가 믿을 수 있는 곳인지 확인했어요',
+  '읽기 전용 요청 하나로 연결을 시험했어요',
+  '쓰기 도구는 끄거나 승인 모드로 두었어요',
+  '업무 시나리오 하나를 실제로 돌려 봤어요',
+  '안 쓰는 연결을 해제했어요',
+]} />
+
+<Steps>
+
+1. **내 도구와 플랜에서 되는지 확인하기**
+
+   MCP 지원은 도구와 플랜마다 달라요. 예를 들어 ChatGPT에서 직접 만든 MCP 서버를 연결하는 일은 OpenAI 문서 기준 계정·워크스페이스 정책의 영향을 받고, 조직 관리자가 권한을 줘야 할 수 있어요. Claude의 Team/Enterprise도 조직 Owner가 먼저 커넥터를 켜요. 막혔다면 관리자에게 문의하세요.
+
+2. **서버를 믿을 수 있는지 판단하기**
+
+   공식 서비스가 제공하는 서버(예: Notion이 운영하는 주소)를 우선 쓰세요. Claude 공식 도움말은 커스텀 커넥터를 Anthropic이 검증하지 않는다고 안내해요. MCP 공식 규격(2025-03-26)도 도구의 설명 같은 정보는 **신뢰된 서버가 아니면 믿지 말라**고 말해요. 출처가 불분명한 서버는 연결하지 마세요.
+
+3. **읽기 전용으로 연결 시험하기**
+
+   연결 직후에는 데이터를 바꾸지 않는 요청으로 확인해요.
+
+   <PromptBox>
+   방금 연결한 서비스에서 최근 항목 3개를 보여 줘. 읽기만 하고, 아무것도 수정·삭제·전송하지 마.
+   </PromptBox>
+
+4. **쓰기는 승인 앞에서 멈추기**
+
+   MCP 규격은 호스트가 도구 호출 전에 사용자의 명시적 동의를 받아야 한다고 정해요. Claude의 Gmail 커넥터는 메일 전송·답장·전달 전에 기본적으로 승인을 물어요. 승인 창을 습관으로 누르지 말고 받는 사람, 내용, 대상 파일을 읽으세요. 필요 없는 쓰기 도구는 아예 끄는 게 더 안전해요.
+
+   <ScreenshotPlaceholder caption="AI 앱이 쓰기 도구를 호출하기 전에 승인을 묻는 화면" officialUrl="https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities" />
+
+5. **업무 시나리오 돌려 보기**
+
+   아래 시나리오 중 하나를 골라요. 모두 **읽기 → 정리 → 사람이 확인** 순서예요.
+
+   <PromptBox label="시나리오 1: 회의 노트 정리 (Notion 연결)">
+   Notion에서 이번 주 "회의록" 페이지들을 찾아서 결정 사항과 담당자별 할 일을 표로 정리해 줘. 페이지를 수정하지는 말고 정리 결과만 보여 줘.
+   </PromptBox>
+
+   <PromptBox label="시나리오 2: 일정 조율 (Calendar 연결)">
+   다음 주 내 캘린더에서 1시간 이상 비는 시간을 요일별로 찾아 줘. 일정은 만들지 말고 후보만 알려 줘.
+   </PromptBox>
+
+   <PromptBox label="시나리오 3: 자료 찾기 (Drive 연결)">
+   Drive에서 "2026 사업계획"이 제목에 들어간 문서를 찾아 최근 수정 순으로 보여 주고, 각각 한 줄로 내용을 설명해 줘. 공유 설정은 바꾸지 마.
+   </PromptBox>
+
+   아침마다 반복하고 싶다면 [17. 아침 브리핑](/ko/automation/17-morning-briefing/)처럼 루틴으로 만들 수 있어요.
+
+6. **쓰지 않는 연결 정리하기**
+
+   연결은 필요할 때만 켜 두세요. Claude는 대화마다 커넥터를 켜고 끌 수 있고, 공식 안내는 사용하지 않는 서비스의 연결 해제를 권해요.
+
+</Steps>
+
+## 빠른 참조표
+
+### 연결 전 보안 체크리스트
+
+| 점검 | 이유 |
+| --- | --- |
+| 서버 운영 주체가 믿을 만한가 | 커스텀 서버는 검증되지 않을 수 있음 |
+| 필요한 도구만 켰나 | 도구가 많을수록 사고 범위가 넓어짐 |
+| 쓰기 도구에 승인이 걸려 있나 | 규격이 호출 전 사용자 동의를 요구하지만, 구현은 호스트 몫 |
+| 읽어 오는 글이 믿을 만한가 | 메일·웹 글에 숨은 지시(프롬프트 인젝션) 가능 |
+| 어떤 계정·권한으로 연결했나 | 서비스에서 내 권한 그대로 동작 |
+| 회사 규정을 확인했나 | 업무 데이터가 외부 서버를 거칠 수 있음 |
+
+### 읽기/쓰기 구분
+
+| 구분 | 예시 | 권장 |
+| --- | --- | --- |
+| 읽기 | 검색, 요약, 비는 시간 찾기 | 먼저 시작 |
+| 초안 | 메일 초안 저장, 문서 초안 | 사람이 확인 후 사용 |
+| 쓰기·파괴 | 전송, 삭제, 공유 변경 | 승인 필수, 가능하면 끄기 |
+
+## 자주 막히는 지점
+
+### 연결 메뉴가 안 보여요
+
+- **원인**: 플랜이 지원하지 않거나 조직 관리자가 막았거나 베타 기능일 수 있어요. ChatGPT는 OpenAI 관리자 문서가 워크스페이스 설정에서 플러그인 사용 권한과 앱 권한을 따로 관리한다고 안내해요.
+- **해결**: 공식 도움말에서 내 플랜의 조건을 확인하고 관리자에게 문의하세요.
+
+### 서버 주소를 넣었는데 연결되지 않아요
+
+- **원인**: Claude의 커스텀 커넥터는 Anthropic 클라우드에서 접속하므로 서버가 공용 인터넷에서 접근 가능해야 해요. 사내망·로컬 주소는 안 돼요. 인증 방식이 안 맞을 수도 있어요.
+- **해결**: 주소와 인증 방식을 확인하세요. 로컬 서버는 Claude Code나 Gemini CLI 같은 로컬 도구에서 쓰는 방법을 보세요.
+
+### AI가 엉뚱한 도구를 불러요
+
+- **원인**: 연결한 도구가 너무 많아 AI가 헷갈리거나, 지시가 모호해요.
+- **해결**: 필요한 도구만 켜고, 요청에 "Notion에서만 찾아 줘"처럼 대상을 적으세요. Gemini CLI는 `includeTools`/`excludeTools`로 도구를 거를 수 있어요.
+
+### 연결이 갑자기 끊겼어요
+
+- **원인**: 인증 만료나 꼬임일 수 있어요.
+- **해결**: 연결을 해제하고 다시 연결하세요(Claude 공식 안내).
+
+### 외부 글을 읽은 뒤 AI가 이상한 일을 하려고 해요
+
+- **원인**: 읽어 온 글 안에 AI를 조종하는 문구가 있을 수 있어요(프롬프트 인젝션).
+- **해결**: 쓰기 승인을 거절하고, 해당 서비스의 원문을 직접 확인하세요. 필요 없는 쓰기 도구는 꺼 두세요.
+
+## 실전 팁
+
+- **업무 하나에 연결 하나로 시작하세요.** 연결이 늘수록 점검할 것이 늘어요.
+- **프롬프트에 "읽기만"을 습관처럼 쓰세요.** 쓰기 승인 창에만 기대지 마세요.
+- **같은 서비스를 여러 도구에 연결할 때** 각 도구에서 독립적으로 승인과 권한을 확인하세요.
+- **로컬 서버는 신중히.** 내 컴퓨터에서 도는 서버는 내 파일과 환경에 접근할 수 있어요. 출처를 모르는 서버 실행 명령은 복사해 실행하지 마세요.
+- Claude Code에서 MCP를 쓰는 방법은 [C14. Claude Code 핵심 기능](/ko/claude/c14-claude-code-features/)을 보세요.
+
+## 다음에 볼 튜토리얼
+
+- [C7. 커넥터](/ko/claude/c07-connectors/) — Claude 커넥터의 클릭 절차와 문제 해결
+- [17. Gmail·캘린더 아침 브리핑 받기](/ko/automation/17-morning-briefing/) — 커넥터 + 루틴 실습
+- [16. Notion AI로 문서 정리하기](/ko/automation/16-notion-ai/) — Notion 연결 실습
+- [MCP 서버 직접 만들어 Claude에 연결하기](/ko/dev/05-mcp-server/) — 내 서비스를 MCP 서버로 만들고 싶다면
+- [개인 AI 에이전트 안전하게 쓰는 법](/ko/agents/05-agent-safety/) — 연결한 에이전트에 권한을 어디까지 줄지

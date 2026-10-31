@@ -1,41 +1,41 @@
 ---
-title: 개발자 심화
-description: 도구 사용, Agent SDK, MCP 서버, CI 자동화, 평가까지. Claude를 코드로 다루는 고급 실전 튜토리얼 11편.
+title: Advanced for Developers
+description: Tool use, the Agent SDK, MCP servers, CI automation, and evals. Eleven advanced, hands-on tutorials on working with Claude through code.
 sidebar:
-  label: 분야 소개
+  label: Overview
   order: 0
 ---
 
 import TutorialGrid from '../../../components/TutorialGrid.astro';
 
-Claude를 앱에서 쓰는 단계를 넘어, **코드와 API로 직접 다루고 싶은 분**을 위한 섹션이에요. 업무 봇 만들기, 에이전트 직접 만들기, MCP 서버 연결, CI 자동화, 결과 품질 관리까지 실행 가능한 코드를 중심으로 11편으로 정리해요.
+This section is for people who want to go beyond using Claude in the app and **work with it directly through code and the API**. Across 11 tutorials, centered on runnable code, you'll build work bots, build your own agents, connect MCP servers, automate with CI, and manage output quality.
 
-## 누구를 위한 섹션인가요?
+## Who is this section for?
 
-- 개발자이거나, 코드를 읽고 터미널을 쓰는 데 거부감이 없는 파워 유저
-- Claude Code와 API를 이미 한 번 써 본 분
+- Developers, or power users who are comfortable reading code and using a terminal
+- People who have already tried Claude Code and the API at least once
 
-기초 설명은 반복하지 않아요. 이 섹션은 **[Claude Code 핵심 기능(C14)](/claude/c14-claude-code-features/), [모델 분담(C15)](/claude/c15-model-division/), [API 시작하기(C16)](/claude/c16-api/)를 읽은 독자**를 기준으로 쓰여요. 모르는 용어가 나오면 해당 편으로 돌아가세요.
+We don't repeat the basics. This section is written for **readers who have read [Claude Code core features (C14)](/claude/c14-claude-code-features/), [Dividing work among models (C15)](/claude/c15-model-division/), and [Getting started with the API (C16)](/claude/c16-api/)**. If you hit a term you don't know, go back to those lessons.
 
-## 준비물
+## What you'll need
 
-- Claude API 키 (환경변수로만 관리해요. 코드에 직접 쓰지 않아요)
-- Python 3.10 이상
-- Node.js (TypeScript·JavaScript 예제와 MCP 서버, Claude Code에 필요해요)
-- 터미널과 Git
+- A Claude API key (manage it only through environment variables; never write it directly in code)
+- Python 3.10 or later
+- Node.js (needed for the TypeScript and JavaScript examples, MCP servers, and Claude Code)
+- A terminal and Git
 
-:::caution[비용에 주의하세요]
-반복 호출, 에이전트 루프, 배치, 컴퓨터 사용 예제는 비용이 빠르게 커질 수 있어요. 각 편의 사용량 상한 안내를 따르고, 콘솔에서 지출 한도를 먼저 설정해 두세요.
+:::caution[Watch your costs]
+Repeated calls, agent loops, batches, and computer use examples can get expensive quickly. Follow the usage-cap guidance in each tutorial, and set a spending limit in the Console first.
 :::
 
-## 추천 학습 순서
+## Suggested learning order
 
-1. **API 기본기**: 도구 사용(01) → 비용 최적화(02)
-2. **에이전트**: Agent SDK(03) → Managed Agents(04)
-3. **확장과 배포**: MCP 서버(05) → 스킬·플러그인(06)
-4. **자동화와 품질**: 헤드리스·CI(07) → 평가(08)
-5. **응용**: 사내 문서 Q&A(09) → 컴퓨터·브라우저 도구(10) → 사용량·비용 분석 API(11)
+1. **API basics**: Tool use (01) → Cost optimization (02)
+2. **Agents**: Agent SDK (03) → Managed Agents (04)
+3. **Extending and deploying**: MCP servers (05) → Skills and plugins (06)
+4. **Automation and quality**: Headless mode and CI (07) → Evals (08)
+5. **Applications**: Internal document Q&A (09) → Computer and browser tools (10) → Usage and cost analytics API (11)
 
-## 이 섹션의 튜토리얼
+## Tutorials in this section
 
 <TutorialGrid category="dev" />

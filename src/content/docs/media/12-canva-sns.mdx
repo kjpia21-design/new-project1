@@ -1,46 +1,46 @@
 ---
-title: "Canva AI로 SNS 콘텐츠 한 세트 만들기"
-description: "Canva의 브랜드 키트, Magic Design, Magic Media로 인스타그램 게시물 한 세트를 만들고 상업 이용 조건을 점검하는 방법"
+title: "Make a Set of Social Media Content with Canva AI"
+description: "How to build a set of Instagram posts with Canva's Brand Kit, Magic Design, and Magic Media, and check commercial-use terms"
 sidebar:
-  label: "2. Canva AI로 SNS 만들기"
+  label: "2. Make social media content with Canva AI"
 level: practical
 category: media
 tools: ["Canva"]
-duration: "40분"
+duration: "40 min"
 prerequisites:
-  - "Canva 계정 (무료로 시작 가능, AI 사용량은 플랜별로 달라요)"
-  - "로고와 브랜드 색상 (있으면 좋아요)"
+  - "A Canva account (you can start free; AI usage varies by plan)"
+  - "Your logo and brand colors (nice to have)"
 lastVerified: 2026-10-26
 sources:
-  - title: "Use Magic Media to create photos, graphics, and videos (Canva Help) - 원문 미확인, 검색 결과 기준"
+  - title: "Use Magic Media to create photos, graphics, and videos (Canva Help) - original not verified, based on search results"
     url: "https://www.canva.com/help/using-magic-media/"
-  - title: "Understanding your AI usage (Canva Help) - 원문 미확인, 검색 결과 기준"
+  - title: "Understanding your AI usage (Canva Help) - original not verified, based on search results"
     url: "https://www.canva.com/help/ai-access/"
-  - title: "Set the quality of Canva AI-generated content (Canva Help) - 원문 미확인, 검색 결과 기준"
+  - title: "Set the quality of Canva AI-generated content (Canva Help) - original not verified, based on search results"
     url: "https://www.canva.com/help/canva-ai-quality-tiers-standard-premium-ultra/"
-  - title: "Use Magic Design to generate design templates (Canva Help) - 원문 미확인, 검색 결과 기준"
+  - title: "Use Magic Design to generate design templates (Canva Help) - original not verified, based on search results"
     url: "https://www.canva.com/help/use-magic-design/"
-  - title: "Set up Brand Kits (Canva Help) - 원문 미확인, 검색 결과 기준"
+  - title: "Set up Brand Kits (Canva Help) - original not verified, based on search results"
     url: "https://www.canva.com/help/brand-kit/"
-  - title: "Setting up and using Brand Kit color palettes (Canva Help) - 원문 미확인, 검색 결과 기준"
+  - title: "Setting up and using Brand Kit color palettes (Canva Help) - original not verified, based on search results"
     url: "https://www.canva.com/help/color-palettes/"
-  - title: "Get started with Canva AI (Canva Help) - 원문 미확인, 검색 결과 기준"
+  - title: "Get started with Canva AI (Canva Help) - original not verified, based on search results"
     url: "https://www.canva.com/help/using-canva-ai/"
-  - title: "How to use Magic Studio safely and legally (Canva Help) - 원문 미확인, 검색 결과 기준"
+  - title: "How to use Magic Studio safely and legally (Canva Help) - original not verified, based on search results"
     url: "https://www.canva.com/help/using-magic-studio-safely-and-legally/"
-  - title: "Copyright ownership of designs made in Canva (Canva Help) - 원문 미확인, 검색 결과 기준"
+  - title: "Copyright ownership of designs made in Canva (Canva Help) - original not verified, based on search results"
     url: "https://www.canva.com/help/copyright-design-ownership/"
-  - title: "Canva AI Product Terms - 원문 미확인, 검색 결과 기준"
+  - title: "Canva AI Product Terms - original not verified, based on search results"
     url: "https://www.canva.com/policies/ai-product-terms/"
-  - title: "Use Canva to design digital and physical products for sale (Canva Help) - 원문 미확인, 검색 결과 기준"
+  - title: "Use Canva to design digital and physical products for sale (Canva Help) - original not verified, based on search results"
     url: "https://www.canva.com/help/using-canva-to-create-products-for-sale/"
-  - title: "list-brand-kits (Canva Developers, 개발자 문서)"
+  - title: "list-brand-kits (Canva Developers, developer docs)"
     url: "https://www.canva.dev/docs/apps/mcp/tools/list-brand-kits/"
-  - title: "Brand templates (Canva Connect APIs, 개발자 문서)"
+  - title: "Brand templates (Canva Connect APIs, developer docs)"
     url: "https://www.canva.dev/docs/connect/api-reference/brand-templates/"
-  - title: "Canva AI Photo & Video Editor (App Store, 개발사 Canva 등록 정보, 미국 스토어 2026-10-10 확인)"
+  - title: "Canva AI Photo & Video Editor (App Store, listing by developer Canva, US store checked 2026-10-10)"
     url: "https://apps.apple.com/us/app/canva-ai-photo-video-editor/id897446215"
-  - title: "Canva: AI Photo & Video Editor (Google Play, 개발사 Canva 등록 정보, 2026-10-10 확인)"
+  - title: "Canva: AI Photo & Video Editor (Google Play, listing by developer Canva, checked 2026-10-10)"
     url: "https://play.google.com/store/apps/details?id=com.canva.editor"
 status: published
 ---
@@ -52,164 +52,164 @@ import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- Canva는 디자인 편집 도구 안에 AI(Magic Design, Magic Media 등)가 들어 있어서 **이미지 생성 + 글자 + 레이아웃**을 한 곳에서 끝낼 수 있어요.
-- 먼저 **브랜드 키트**(로고·색·글꼴)를 만들어 두면 SNS 한 세트의 통일감이 쉬워져요.
-- AI 기능은 **월간 AI 사용 허용량**을 쓰고 플랜별로 달라요. 잔여량은 Settings > Billing에서 확인해요.
-- Canva 약관은 AI 출력을 합법적 목적에 쓸 수 있다고 하지만 **사용자 책임**이에요. 식별 가능한 인물·캐릭터·브랜드는 권리자 허락이 필요해요.
-- 이 글은 2026-10-10 기준이에요. 메뉴 이름은 화면 안내를 우선하세요.
+- Canva has AI built into its design editor (Magic Design, Magic Media, and more), so you can finish **image generation + text + layout** in one place.
+- If you set up a **Brand Kit** (logo, colors, fonts) first, it's easy to keep a whole social media set consistent.
+- AI features use a **monthly AI usage allowance** that varies by plan. Check what's left under Settings > Billing.
+- Canva's terms say you can use AI output for lawful purposes, but that's **your responsibility**. Identifiable people, characters, and brands need permission from the rights holder.
+- This guide is accurate as of 2026-10-10. If a menu name differs, follow what's on screen.
 </Summary>
 
-<Aside type="caution" title="Canva 도움말 원문은 열지 못해 일부만 확인했어요">
-Canva 도움말과 약관(canva.com)은 2026-10-10에도 자동 접근이 막혀 원문을 열지 못했어요. 브랜드 키트의 제공 플랜은 Canva 개발자 문서와 앱 스토어 등록 정보로 확인했지만, Magic Media·Magic Design 메뉴 이름, 무료 AI 허용량, 상업 이용 조건은 공식 사이트 검색 결과를 바탕으로 썼어요. 이 부분은 꼭 Canva 공식 페이지에서 다시 확인하세요.
+<Aside type="caution" title="We couldn't open the original Canva help pages, so we only verified part of this">
+Automated access to Canva's help pages and terms (canva.com) was still blocked on 2026-10-10, so we couldn't open the originals. We confirmed which plans include Brand Kit using Canva's developer docs and app store listings, but the Magic Media and Magic Design menu names, the free AI allowance, and the commercial-use terms are based on official-site search results. Be sure to double-check these on Canva's official pages.
 </Aside>
 
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- 브랜드 키트(Pro 이상 플랜 기능)를 만들어 로고·색·글꼴을 고정할 수 있어요.
-- Magic Design과 Magic Media로 인스타그램 게시물 3장 + 스토리 1장을 만들 수 있어요.
-- AI 사용량을 확인하고 아껴 쓸 수 있어요.
-- 상업 이용 전 확인할 항목(소유권, 인물·브랜드 허락)을 점검할 수 있어요.
+- Create a Brand Kit (a Pro-or-higher plan feature) to lock in your logo, colors, and fonts.
+- Make 3 Instagram posts and 1 story with Magic Design and Magic Media.
+- Check and conserve your AI usage.
+- Review the items to confirm before commercial use (ownership, permission for people and brands).
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **Canva AI** | Canva 안의 AI 기능 묶음이에요. 한국어를 포함한 여러 언어를 지원하지만, 기능에 따라 지원 언어가 더 적을 수 있다고 안내돼요. |
-| **Magic Design** | 설명을 입력하면 디자인 템플릿을 만들어 주는 기능이에요. |
-| **Magic Media** | 설명으로 이미지·그래픽·짧은 영상을 만드는 기능이에요. 프리미엄 AI 도구로 분류돼 월간 AI 사용량을 써요. |
-| **브랜드 키트(Brand Kit)** | 로고, 색상 팔레트, 글꼴을 모아 두는 곳이에요. |
-| **AI 사용 허용량** | 플랜별로 정해진 월간 AI 사용 한도예요. 매달 초기화되며 Standard·Premium·Ultra 도구가 하나의 허용량을 나눠 써요. |
+| **Canva AI** | The bundle of AI features inside Canva. It supports several languages including Korean, though some features may support fewer languages. |
+| **Magic Design** | A feature that generates design templates from a description you enter. |
+| **Magic Media** | A feature that creates images, graphics, and short videos from a description. It's classified as a premium AI tool and uses your monthly AI usage. |
+| **Brand Kit** | A place to keep your logo, color palette, and fonts together. |
+| **AI usage allowance** | The monthly AI usage limit set by plan. It resets every month, and Standard, Premium, and Ultra tools share a single allowance. |
 
-### 이미지 생성 도구와 어떻게 다른가요
+### How is this different from image generation tools?
 
-[11편](/media/11-business-images/)의 Gemini 앱은 **이미지 한 장**을 만드는 데 강하고, Canva는 **글자·레이아웃·여러 규격**을 한 번에 다루는 데 편해요. 이미지는 Gemini에서 만들고 Canva에 올려 쓰는 조합도 흔해요.
+The Gemini app in [Tutorial 11](/media/11-business-images/) is strong at making **a single image**, while Canva is convenient for handling **text, layout, and multiple formats** all at once. A common combination is to create images in Gemini and upload them to Canva.
 
-## 단계별 따라하기
+## Step by step
 
-예제는 "소규모 카페 신메뉴 출시 안내" SNS 세트(피드 3장 + 스토리 1장)예요.
+The example is a social media set (3 feed posts + 1 story) announcing "a new menu item at a small café."
 
 <Checklist items={[
-  '브랜드 키트에 로고·색·글꼴을 넣었어요',
-  'Magic Design으로 첫 디자인을 만들었어요',
-  'Magic Media로 이미지를 만들어 넣었어요',
-  '피드 3장 + 스토리 1장으로 확장했어요',
-  '내보내기 전 권리·표시 점검을 했어요',
+  'I added my logo, colors, and fonts to the Brand Kit',
+  'I made my first design with Magic Design',
+  'I created an image with Magic Media and added it',
+  'I expanded it into 3 feed posts + 1 story',
+  'I checked rights and labeling before exporting',
 ]} />
 
 <Steps>
 
-1. **AI 사용량 확인하기**
+1. **Check your AI usage**
 
-   프로필 아이콘 > 설정(Settings) > 결제(Billing)에서 **AI 사용량(AI usage)** 과 남은 양을 볼 수 있다고 안내돼요. 무료 플랜의 허용량 숫자는 공식 페이지에서 확인하지 못했으니 화면에서 확인하세요.
+   Under profile icon > Settings > Billing, you can reportedly see your **AI usage** and how much is left. We couldn't confirm the free plan's allowance from the official pages, so check it on screen.
 
-   <ScreenshotPlaceholder caption="Settings > Billing 화면의 AI 사용량 표시" />
+   <ScreenshotPlaceholder caption="AI usage shown on the Settings > Billing screen" />
 
-2. **브랜드 키트 만들기**
+2. **Create a Brand Kit**
 
-   홈 화면 사이드 패널의 **Brand**에서 **Create new Brand Kit**을 골라 로고, 색상, 글꼴을 넣어요. 플랜 조건은 아래 "브랜드 키트 자세히"를 먼저 보세요.
+   In the **Brand** section of the home screen side panel, choose **Create new Brand Kit** and add your logo, colors, and fonts. See "Brand Kit in detail" below first for plan requirements.
 
-3. **Magic Design으로 첫 디자인 만들기**
+3. **Make your first design with Magic Design**
 
-   Canva AI에 만들고 싶은 디자인을 설명해요. 브랜드 키트에 브랜드 템플릿이 있으면 Canva AI가 참고해 온브랜드 디자인을 만들 수 있다고 안내돼요.
-
-   <PromptBox>
-   카페 신메뉴 '유자 크림 라떼' 출시를 알리는 인스타그램 피드 게시물을 만들어 줘. 정사각형. 따뜻한 베이지와 갈색 톤. 제목은 "유자 크림 라떼 출시", 부제는 "10월 한 달, 첫 잔 1,000원 할인". 사진을 넣을 자리를 비워 줘.
-   </PromptBox>
-
-4. **Magic Media로 이미지 만들기**
-
-   사이드 패널의 **Magic Media**에서 이미지 탭을 열고 설명을 입력해 생성해요. 옵션은 아래 "Magic Media 사용 메모"에 있어요.
+   Describe the design you want to Canva AI. If your Brand Kit has brand templates, Canva AI reportedly can use them as a reference to make an on-brand design.
 
    <PromptBox>
-   나무 테이블 위에 놓인 유자 크림 라떼 한 잔, 옆에 유자 한 조각. 자연광, 따뜻한 톤, 위에서 내려다본 구도. 사람과 로고는 없음.
+   Create an Instagram feed post announcing the launch of our new café menu item, the "Yuja Cream Latte." Square format. Warm beige and brown tones. The title is "Yuja Cream Latte Now Available" and the subtitle is "All October: $1 off your first cup." Leave a spot for a photo.
    </PromptBox>
 
-   <ScreenshotPlaceholder caption="Magic Media 이미지 탭에서 설명을 입력하고 결과를 고르는 화면" />
+4. **Create an image with Magic Media**
 
-5. **한 세트로 확장하기**
+   Open the image tab in **Magic Media** in the side panel, enter a description, and generate. The options are listed under "Magic Media usage notes" below.
 
-   같은 브랜드 색과 글꼴로 피드 3장(신메뉴 소개, 가격·혜택, 매장 안내)과 스토리 1장을 만들어요. 기존 디자인을 복사해서 내용만 바꾸면 통일감이 유지돼요. 다른 규격(스토리 세로형 등)으로 바꾸는 크기 조절 기능의 위치는 화면 안내를 따르세요.
+   <PromptBox>
+   A cup of yuja cream latte on a wooden table, with a slice of yuja citrus next to it. Natural light, warm tones, shot from directly above. No people and no logos.
+   </PromptBox>
 
-6. **내보내기 전 점검**
+   <ScreenshotPlaceholder caption="Entering a description in the Magic Media image tab and choosing a result" />
 
-   - 이미지에 식별 가능한 인물, 남의 로고, 캐릭터가 없나요?
-   - 이름·가격·기간 같은 사실 정보를 사람이 확인했나요? (AI가 만든 글은 틀릴 수 있어요)
-   - 광고에 필요한 표시(가격, 기간, 조건)가 들어갔나요?
+5. **Expand it into a set**
 
-   확인 후 공유 또는 다운로드로 내보내요.
+   Make 3 feed posts (new menu intro, price and offer, store info) and 1 story using the same brand colors and fonts. If you copy an existing design and change only the content, the set stays consistent. For where to find the resize feature that converts to other formats (such as vertical story), follow the on-screen guidance.
+
+6. **Check before you export**
+
+   - Are there any identifiable people, other people's logos, or characters in the images?
+   - Did a person verify factual details like names, prices, and dates? (AI-written text can be wrong)
+   - Does the post include the disclosures an ad needs (price, dates, conditions)?
+
+   After checking, export via Share or Download.
 
 </Steps>
 
-### 브랜드 키트 자세히
+### Brand Kit in detail
 
-홈 화면 사이드 패널에서 **Brand**를 선택하고 브랜드 키트 드롭다운에서 **Create new Brand Kit**을 골라 이름을 정한 뒤, 로고를 올리고 색상 팔레트와 글꼴을 추가해요. Canva 개발자 문서(2026-10-13 확인)는 브랜드 키트가 Canva Pro, Business, Enterprise 플랜 사용자에게 제공된다고 안내하고, Google Play의 개발사 등록 정보도 로고·글꼴·색을 저장하는 Brand를 Canva Pro 기능 항목에 넣어요. 무료 계정은 이 대상에 들어 있지 않으니, 무료라면 화면에서 Brand 메뉴가 보이는지 먼저 확인하세요. 팀의 브랜드 색상 편집은 소유자·관리자·브랜드 디자이너만 할 수 있어요.
+In the home screen side panel, select **Brand**, choose **Create new Brand Kit** from the Brand Kit dropdown, name it, upload your logo, and add a color palette and fonts. Canva's developer docs (checked 2026-10-13) say Brand Kit is available to Canva Pro, Business, and Enterprise users, and the developer's Google Play listing also includes Brand, which stores logos, fonts, and colors, among the Canva Pro features. Free accounts aren't listed as eligible, so if you're on the free plan, first check whether the Brand menu appears on your screen. Only owners, admins, and brand designers can edit a team's brand colors.
 
-### Magic Media 사용 메모
+### Magic Media usage notes
 
-편집기 사이드 패널에서 **Magic Media**를 열어요(안 보이면 앱(Apps)에서 검색). 이미지 탭에서 설명을 입력하고 스타일(사진·디지털 아트·파인 아트)과 레이아웃(정사각·가로·세로)을 고른 뒤 **Generate images**를 눌러요. 마음에 드는 결과는 More 메뉴에서 **Generate more like this**로 비슷한 이미지를 더 만들 수 있고, 클릭하면 디자인에 들어가요.
+Open **Magic Media** in the editor side panel (if you don't see it, search for it in Apps). In the image tab, enter a description, choose a style (photo, digital art, fine art) and layout (square, landscape, portrait), and click **Generate images**. For a result you like, you can use **Generate more like this** in the More menu to create similar images, and clicking one adds it to your design.
 
 
-## 빠른 참조표
+## Quick reference
 
-### Magic Media 옵션
+### Magic Media options
 
-| 항목 | 내용 (Canva 도움말 기준) |
+| Item | Details (per Canva Help) |
 | --- | --- |
-| 이미지 스타일 | 사진, 디지털 아트, 파인 아트 (참고 이미지 업로드도 가능) |
-| 그래픽 스타일 | 심플, 아티스틱, 디테일 |
-| 레이아웃 | 정사각, 가로, 세로 |
-| 변형 만들기 | More > Generate more like this |
-| 영상 | Magic Media의 영상은 짧고 소리가 없는 클립이라는 안내가 있어요. Magic Video는 별도 기능이에요 |
+| Image styles | Photo, digital art, fine art (you can also upload a reference image) |
+| Graphic styles | Simple, artistic, detailed |
+| Layout | Square, landscape, portrait |
+| Making variations | More > Generate more like this |
+| Video | Magic Media video is reportedly a short, silent clip. Magic Video is a separate feature |
 
-### 소유권과 상업 이용 (Canva AI 약관 요약)
+### Ownership and commercial use (summary of Canva AI terms)
 
-| 항목 | 내용 |
+| Item | Details |
 | --- | --- |
-| 출력의 소유 | 사용자가 소유. 단, Canva 라이브러리 콘텐츠를 수정·포함한 경우는 라이선스 |
-| 비슷한 결과 | 다른 사용자도 비슷한 결과를 받을 수 있어요 |
-| 사용 범위 | 합법적인 목적이면 가능하되 **사용자 책임**. 상업적 사용 전 전문가 조언 권장 |
-| 인물·캐릭터·브랜드 | 식별 가능한 것은 권리자 허락이 필요하고 Canva가 줄 수 없어요 |
-| 저작권 보호 | 많은 나라(미국 포함)에서 AI 생성물은 저작권 보호가 제한될 수 있어요 |
-| 판매용 제품 | AI 생성 이미지는 Canva 콘텐츠 라이선스 계약 대상이 아니며 AI 약관을 따라요. AI로 편집한 사진은 독창적 디자인의 일부로만 판매 가능하다고 안내돼요 |
-| 면책(IP indemnity) | 엔터프라이즈 고객 대상 AI 면책이 안내돼요. 개인·Pro 플랜은 확인하지 못했으니 약관을 보세요 |
+| Ownership of output | You own it. However, if you modified or included Canva library content, a license applies |
+| Similar results | Other users may receive similar results |
+| Scope of use | Allowed for lawful purposes, but it's **your responsibility**. Getting professional advice before commercial use is recommended |
+| People, characters, brands | Identifiable ones require permission from the rights holder, which Canva can't give |
+| Copyright protection | In many countries (including the US), copyright protection for AI-generated works may be limited |
+| Products for sale | AI-generated images aren't covered by the Canva Content License Agreement and follow the AI terms. Photos edited with AI can reportedly be sold only as part of an original design |
+| Indemnity (IP indemnity) | AI indemnity is described for enterprise customers. We couldn't confirm it for personal and Pro plans, so see the terms |
 
-<Aside type="caution" title="초상권과 브랜드">
-실존 인물처럼 보이는 얼굴, 유명 캐릭터, 다른 회사의 상표가 나오면 쓰지 마세요. 직원이나 손님 사진을 AI로 편집해 홍보에 쓰려면 본인의 동의를 먼저 받으세요.
+<Aside type="caution" title="Likeness rights and brands">
+Don't use faces that look like real people, famous characters, or other companies' trademarks. If you want to edit photos of employees or customers with AI and use them in promotion, get the person's consent first.
 </Aside>
 
-## 자주 막히는 지점
+## Common sticking points
 
-### Magic Media가 안 보여요
+### I can't find Magic Media
 
-- **원인**: 메뉴 위치가 바뀌었거나 플랜에서 지원하지 않을 수 있어요.
-- **해결**: 편집기의 앱(Apps)에서 Magic Media를 검색하세요. 없으면 화면 안내와 도움말을 확인하세요.
+- **Cause**: The menu location may have changed, or your plan may not support it.
+- **Fix**: Search for Magic Media in Apps in the editor. If it isn't there, check the on-screen guidance and the help pages.
 
-### AI 기능이 잠겨요 (한도 소진)
+### AI features are locked (usage limit reached)
 
-- **원인**: 월간 AI 허용량을 다 쓰면 사용 가능한 등급이 막혀요. 매달 초기화돼요.
-- **해결**: Settings > Billing에서 잔여량을 보고, 초기화를 기다리거나 플랜을 비교하세요.
+- **Cause**: When you use up your monthly AI allowance, the tiers you can use get blocked. It resets every month.
+- **Fix**: Check what's left under Settings > Billing, then wait for the reset or compare plans.
 
-### 한글 글꼴이 마음에 안 들어요
+### I don't like the Korean fonts
 
-- **원인**: 기본 글꼴이 한글 디자인에 어울리지 않을 수 있어요.
-- **해결**: 브랜드 키트에 쓸 글꼴을 지정하세요. 한글 글꼴 사용 가능 범위는 플랜별로 다르니 화면에서 확인하세요.
+- **Cause**: The default font may not suit Korean designs.
+- **Fix**: Set the fonts to use in your Brand Kit. The range of Korean fonts available differs by plan, so check on screen.
 
-### 이미지 속 글자가 깨져요
+### The text in the image is garbled
 
-- **원인**: AI 이미지의 글자는 정확하지 않을 수 있어요.
-- **해결**: 이미지에는 글자를 넣지 말라고 요청하고, 글자는 Canva 텍스트로 올리세요.
+- **Cause**: Text in AI images may not be accurate.
+- **Fix**: Ask for no text in the image, and add the text using Canva's text tool.
 
-## 실전 팁
+## Practical tips
 
-- **브랜드 키트를 먼저 만드세요.** 매번 색을 고르는 시간이 줄어요.
-- **하나의 이미지 스타일을 정해 두세요.** 세트의 통일감이 커져요.
-- **AI 허용량을 아끼려면** 설명을 구체적으로 쓰고 마음에 든 결과에서 변형을 만드세요.
-- **사실 정보는 사람이 확인하세요.** 가격과 기간 오타는 광고 분쟁이 돼요.
-- **팀이면 브랜드 컨트롤**로 허용된 색과 글꼴만 쓰게 제한할 수 있다고 안내돼요.
+- **Create your Brand Kit first.** It cuts down the time you spend picking colors each time.
+- **Pick one image style and stick with it.** The set will feel much more unified.
+- **To conserve your AI allowance**, write specific descriptions and create variations from results you like.
+- **Have a person verify factual details.** Typos in prices and dates can turn into advertising disputes.
+- **If you're on a team**, Brand Controls reportedly let you restrict people to approved colors and fonts.
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [11. 업무용 이미지 생성](/media/11-business-images/) — 이미지를 Gemini에서 먼저 만들기
-- [13. 짧은 홍보 영상 만들기](/media/13-promo-video/) — SNS 세트를 영상으로
-- [C4. 프롬프트 작성법](/claude/c04-prompting/) — 설명문을 잘 쓰는 법
+- [11. Business Image Generation](/media/11-business-images/) — create your images in Gemini first
+- [13. Make a Short Promo Video](/media/13-promo-video/) — turn your social media set into video
+- [C4. How to write prompts](/claude/c04-prompting/) — how to write good descriptions

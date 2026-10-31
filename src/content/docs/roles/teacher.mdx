@@ -1,6 +1,6 @@
 ---
-title: "교사·강사·교육 담당자를 위한 AI 활용 가이드"
-description: "수업 준비, 평가 문항, 학생 피드백까지 교육 현장에서 AI를 쓰는 방법과 학생 개인정보를 지키는 요령"
+title: "AI Guide for Teachers, Instructors, and Education Staff"
+description: "How to use AI in education for lesson prep, assessment questions, and student feedback, and how to protect student privacy"
 ---
 
 import { Aside } from '@astrojs/starlight/components';
@@ -9,112 +9,112 @@ import PromptBox from '../../../components/PromptBox.astro';
 import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
-- 교사·강사의 시간을 가장 많이 잡아먹는 **수업 준비, 문항 만들기, 피드백 쓰기**를 AI가 초안으로 도와줘요.
-- 최종 판단과 평가는 항상 선생님 몫이에요. AI는 **초안 담당 조교**라고 생각하세요.
-- 학생 이름·성적·상담 내용 같은 **개인정보는 넣지 않는 것**이 기본 원칙이에요.
-- 학교·기관이 정한 AI 사용 지침이 있다면 그것이 먼저예요.
+- AI can help draft the things that eat up most of a teacher's or instructor's time: **lesson prep, writing questions, and writing feedback**.
+- The final judgment and grading always belong to you. Think of AI as a **teaching assistant who writes first drafts**.
+- The basic rule is **never to enter personal information** such as student names, grades, or counseling details.
+- If your school or organization has its own AI usage guidelines, those come first.
 </Summary>
 
-## 이런 분께
+## Who this is for
 
-초·중·고 교사, 학원·기업 강사, 교육 담당자처럼 수업과 교육 자료를 직접 만드는 분께 맞는 가이드예요.
+This guide suits people who create lessons and teaching materials themselves, such as elementary, middle, and high school teachers, instructors at cram schools and companies, and training staff.
 
-- 수업 자료와 활동지를 만드느라 퇴근 후에도 시간이 모자라요.
-- 학생마다 다른 피드백을 쓰고 싶은데 손이 너무 많이 가요.
-- AI를 써도 되는지, 학생 정보는 어디까지 괜찮은지 불안해요.
+- You make lesson materials and worksheets and still run short of time after hours.
+- You want to write different feedback for each student, but it takes too much effort.
+- You're unsure whether it's okay to use AI and how far you can go with student information.
 
-## AI가 특히 도움 되는 일 TOP 5
+## Top 5 ways AI helps
 
-### 1. 수업 계획·활동 아이디어 짜기
+### 1. Plan lessons and activity ideas
 
-학습 목표와 시간을 알려 주면 수업 흐름(도입·전개·정리)과 활동 후보를 여러 개 받을 수 있어요. 추천 도구는 Claude, ChatGPT, Gemini 중 쓰던 것이면 충분해요. 비교는 [업무별 비교](/chat/05-compare-assistants/)를 참고하세요.
-
-<PromptBox>
-[학년/대상]을 가르치는 교사야. 단원은 [단원명], 수업 시간은 [분]분이야. 학습 목표는 "[학습 목표]"야. 도입 5분, 전개, 정리로 나눈 수업 흐름을 짜 주고, 학생이 직접 참여하는 활동 아이디어를 3가지 제안해 줘. 준비물도 함께 적어 줘.
-</PromptBox>
-
-### 2. 활동지·설명 자료를 눈높이에 맞게 쓰기
-
-같은 개념을 수준별로 다시 써 달라고 하면 기초반·심화반 자료를 빠르게 만들 수 있어요. 추천 도구는 위와 같은 대화형 AI예요.
+Tell it your learning goals and class time, and you can get a lesson flow (introduction, development, wrap-up) and several activity candidates. Whichever of Claude, ChatGPT, or Gemini you already use is enough. For a comparison, see [Comparing by task](/chat/05-compare-assistants/).
 
 <PromptBox>
-아래 개념을 [학년/대상] 학생이 이해할 수 있게 설명해 줘. 일상 속 비유를 하나 넣고, 예시 문제 3개와 정답 및 풀이를 만들어 줘. 어려운 단어는 괄호로 풀어 줘.
-
-개념: [설명할 개념]
+I'm a teacher of [grade/audience]. The unit is [unit name] and the class is [minutes] minutes long. The learning objective is "[learning objective]". Plan a lesson flow split into a 5-minute introduction, development, and wrap-up, and suggest 3 activity ideas where students take part directly. Please list the materials needed too.
 </PromptBox>
 
-### 3. 평가 문항·루브릭(채점 기준표) 만들기
+### 2. Write worksheets and explanations at the right level
 
-객관식·서술형 문항 초안과 채점 기준을 만들 수 있어요. 다만 정답과 난이도는 반드시 직접 검증해야 해요. AI는 그럴듯한 오답을 정답처럼 쓰기도 해서요([사실 확인법](/basics/04-fact-checking/)).
+If you ask it to rewrite the same concept at different levels, you can quickly make materials for basic and advanced groups. The suggested tool is the same chat AI as above.
 
 <PromptBox>
-[과목] [단원]에서 [학년/대상] 대상 평가 문항을 만들어 줘. 객관식 4문항(보기 4개, 정답 표시)과 서술형 1문항을 만들고, 서술형에는 상·중·하 3단계 채점 기준표를 표로 붙여 줘. 각 문항이 어떤 학습 목표를 보는지도 적어 줘.
+Explain the concept below so that a [grade/audience] student can understand it. Include one everyday analogy, and create 3 example problems with answers and worked solutions. Explain difficult words in parentheses.
+
+Concept: [concept to explain]
 </PromptBox>
 
-### 4. 피드백·가정통신문·안내문 초안 쓰기
+### 3. Create assessment questions and rubrics (scoring guides)
 
-학생 글에 대한 피드백 문장, 학부모 안내문, 수업 공지 같은 글쓰기 초안에 좋아요. 학생 개인을 식별할 정보 없이 **상황만 일반화해서** 입력하세요.
+It can draft multiple-choice and essay questions along with scoring criteria. But you must verify the answers and difficulty yourself. AI sometimes writes plausible wrong answers as if they were correct ([how to fact-check](/basics/04-fact-checking/)).
 
 <PromptBox>
-학생이 제출한 글쓰기 과제에 대한 피드백을 쓰고 싶어. 잘한 점 2가지, 고치면 좋은 점 2가지, 다음에 시도해 볼 한 가지를 따뜻하지만 구체적인 말투로 써 줘. 학생 학년은 [학년]이고, 이번 과제의 평가 기준은 [기준]이야. 아래는 학생 글에서 이름 등을 지운 부분이야.
-
-[글 일부]
+Create assessment questions for [grade/audience] on [subject] [unit]. Make 4 multiple-choice questions (4 options each, with the answer marked) and 1 essay question, and attach a 3-level (high, medium, low) scoring rubric for the essay question as a table. Also note which learning objective each question assesses.
 </PromptBox>
 
-### 5. 강의·회의 녹음 정리와 자료 요약
+### 4. Draft feedback, parent letters, and announcements
 
-수업 연구 모임이나 연수 녹음을 글로 옮기고 핵심만 뽑을 수 있어요. 변환 방법은 [녹음 받아쓰기 튜토리얼](/media/14-transcribe-recordings/)을, 요약 요령은 [긴 문서 요약](/chat/02-summarize-documents/)을 보세요.
+It's good for first drafts of writing such as feedback sentences on student work, notices to parents, and class announcements. Enter **only a generalized version of the situation**, with no information that could identify an individual student.
 
 <PromptBox>
-아래는 교사 연수(또는 협의회) 내용을 받아 적은 글이야. 핵심 내용 5줄 요약, 우리 학교(기관)에 적용해 볼 만한 아이디어 3가지, 담당자별 할 일을 표로 정리해 줘. 말하지 않은 내용은 지어내지 말고 "언급 없음"이라고 써 줘.
+I want to write feedback on a student's writing assignment. Write 2 things they did well, 2 things they could improve, and 1 thing to try next time, in a warm but specific tone. The student's grade is [grade], and this assignment's grading criteria are [criteria]. Below is an excerpt of the student's writing with names and similar details removed.
 
-[받아쓴 글]
+[Excerpt of the writing]
 </PromptBox>
 
-## 실전 하루 시나리오
+### 5. Organize recordings and summarize materials
 
-<FlowSteps title="수업이 있는 하루" steps={[
-  { where: '아침 출근 직후', action: '오늘 수업 흐름과 활동지 초안을 AI에게 요청', result: '10분 안에 초안 확보' },
-  { where: '수업 사이 쉬는 시간', action: '내일 쓸 설명 자료를 수준별로 다시 쓰기', result: '기초·심화 두 버전' },
-  { where: '점심 이후', action: '학생 이름을 지운 글로 피드백 문장 초안 받기', result: '내 말투로 다듬을 초안' },
-  { where: '퇴근 전', action: '평가 문항 초안을 만들고 정답을 직접 풀어 검증', result: '검증된 문항 세트' },
+You can turn recordings from lesson study groups or training sessions into text and pull out the key points. For how to convert them, see the [recording transcription tutorial](/media/14-transcribe-recordings/), and for summarizing tips, see [Summarizing long documents](/chat/02-summarize-documents/).
+
+<PromptBox>
+Below is a transcript of a teacher training session (or committee meeting). Organize the following in a table: a 5-line summary of the key points, 3 ideas we could try applying at our school (or organization), and action items by person in charge. Don't make up anything that wasn't said; write "not mentioned" instead.
+
+[Transcript]
+</PromptBox>
+
+## A day in the life
+
+<FlowSteps title="A day with classes" steps={[
+  { where: 'Right after arriving in the morning', action: 'Ask AI for today\'s lesson flow and a worksheet draft', result: 'A draft in 10 minutes' },
+  { where: 'Break between classes', action: 'Rewrite tomorrow\'s explanation materials by level', result: 'Basic and advanced versions' },
+  { where: 'After lunch', action: 'Get draft feedback sentences from writing with student names removed', result: 'A draft to polish in your own voice' },
+  { where: 'Before leaving', action: 'Create a draft of assessment questions and solve the answers yourself to verify them', result: 'A verified question set' },
 ]} />
 
-핵심은 AI가 만든 결과를 **그대로 쓰지 않고 선생님이 읽고 고친 뒤에 쓰는 것**이에요.
+The key is **not to use what AI makes as-is, but to read it and revise it yourself first**.
 
-## 추천 학습 경로
+## Recommended learning path
 
-1. [첫 30분](/basics/01-first-30-minutes/): AI가 무엇이고 어떻게 대화하는지 감을 잡아요.
-2. [가입부터 첫 질문까지](/basics/02-sign-up-first-question/): 계정을 만들고 첫 대화를 해 봐요.
-3. [질문 잘하는 법](/basics/03-asking-well/): 학년·목표·형식을 알려 주는 습관이 수업 자료 품질을 좌우해요.
-4. [사실 확인하는 법](/basics/04-fact-checking/): 교육 자료는 틀리면 곤란하니 일찍 익혀야 해요.
-5. [개인정보 지키며 쓰기](/basics/05-privacy-safety/): 학생 정보를 다루는 직업이라 꼭 필요해요.
-6. [실무 프롬프트 작성법](/chat/01-prompt-basics/): 역할·맥락·형식을 넣는 법으로 결과를 안정시켜요.
-7. [긴 문서 요약](/chat/02-summarize-documents/): 연수 자료와 공문을 빠르게 읽어요.
-8. [보고서 초안 쓰기](/chat/04-write-reports/): 계획서·결과 보고서 작성에 응용해요.
-9. [녹음 받아쓰기](/media/14-transcribe-recordings/): 강의·협의 녹음을 정리해요.
-10. [Canva로 콘텐츠 만들기](/media/12-canva-sns/): 학습 포스터·안내 이미지를 만들 때 도움이 돼요.
+1. [The first 30 minutes](/basics/01-first-30-minutes/): Get a feel for what AI is and how to talk with it.
+2. [From signing up to your first question](/basics/02-sign-up-first-question/): Create an account and have your first conversation.
+3. [Asking good questions](/basics/03-asking-well/): Habitually giving the grade, goal, and format shapes the quality of your materials.
+4. [How to fact-check](/basics/04-fact-checking/): Errors in teaching materials are a problem, so learn this early.
+5. [Using AI while protecting privacy](/basics/05-privacy-safety/): Essential, since your job involves student information.
+6. [Writing practical prompts](/chat/01-prompt-basics/): Use role, context, and format to stabilize your results.
+7. [Summarizing long documents](/chat/02-summarize-documents/): Read training materials and official notices quickly.
+8. [Drafting reports](/chat/04-write-reports/): Apply it to writing plans and result reports.
+9. [Transcribing recordings](/media/14-transcribe-recordings/): Organize lecture and meeting recordings.
+10. [Creating content with Canva](/media/12-canva-sns/): Helpful when making study posters and announcement images.
 
-### 더 보기: 교사에게 어울리는 새 편
+### More: new tutorials that suit teachers
 
-- [Gemini Notebook(구 NotebookLM)](/chat/21-notebooklm/): 연수 자료나 교재 PDF만 근거로 질문하고 요약·플래시카드를 만들어요.
-- [AI로 발표 자료 만들기](/media/25-ai-presentations/): 수업 자료와 연수 발표 슬라이드 초안을 빠르게 만들어요.
-- [AI 결과물, 써도 될까? 저작권·윤리 기초](/basics/09-ai-copyright-ethics/): 수업 자료에 AI 결과물을 쓸 때 확인할 저작권·윤리 기준을 배워요.
+- [Gemini Notebook (formerly NotebookLM)](/chat/21-notebooklm/): Ask questions based only on training materials or textbook PDFs, and create summaries and flashcards.
+- [Making presentations with AI](/media/25-ai-presentations/): Quickly draft lesson materials and training presentation slides.
+- [Can I use this AI output? Copyright and ethics basics](/basics/09-ai-copyright-ethics/): Learn the copyright and ethics standards to check when using AI output in lesson materials.
 
-## 주의할 점
+## What to watch out for
 
-<Aside type="caution" title="학생 개인정보는 넣지 마세요">
-학생 이름, 학번, 성적, 상담 기록, 건강 정보는 AI 서비스에 입력하지 않는 것이 기본이에요. 꼭 필요하면 이름을 지우고 "A 학생"처럼 일반화하세요. 학교나 교육청의 지침이 있다면 따르세요. 자세한 기준은 [개인정보·회사 정보 안전하게 지키며 쓰기](/basics/05-privacy-safety/)에 있어요.
+<Aside type="caution" title="Don't enter student personal information">
+The basic rule is not to enter student names, ID numbers, grades, counseling records, or health information into AI services. If you must, remove the name and generalize it, like "Student A". Follow your school or school district's guidelines if there are any. Detailed standards are in [Using AI while protecting personal and company information](/basics/05-privacy-safety/).
 </Aside>
 
-- **사실 확인**: 문항, 역사·과학 설명, 인용문은 틀릴 수 있어요. 교과서나 공식 자료로 확인하세요([사실 확인법](/basics/04-fact-checking/)).
-- **저작권**: 교재·문제집 내용을 통째로 넣어 비슷하게 만들어 달라고 하면 저작권 문제가 생길 수 있어요. 직접 만든 자료나 사용이 허락된 자료를 쓰세요.
-- **평가의 공정성**: AI 초안으로 만든 문항이라도 최종 출제와 채점 책임은 교사에게 있어요. 학생의 성적이나 생활 평가를 AI가 단독으로 결정하게 하지 마세요.
-- **학생에게 AI를 쓰게 할 때**: 학생이 AI로 과제를 하는 경우의 윤리는 [학생·취업 준비생 가이드](/roles/student/)를 함께 보면 수업 규칙을 정하는 데 도움이 돼요.
+- **Fact-checking**: Questions, explanations of history and science, and quotations can be wrong. Check them against textbooks or official sources ([how to fact-check](/basics/04-fact-checking/)).
+- **Copyright**: If you paste in the full contents of a textbook or workbook and ask for something similar, you may run into copyright problems. Use materials you made yourself or materials you're permitted to use.
+- **Fairness of assessment**: Even if questions come from an AI draft, the final responsibility for setting and grading them rests with the teacher. Don't let AI alone decide a student's grades or behavioral evaluations.
+- **When students use AI**: For the ethics of students doing assignments with AI, see the [Guide for students and job seekers](/roles/student/) too. It helps in setting rules for your class.
 
-## 다음 단계
+## Next steps
 
-- [학생·취업 준비생 가이드](/roles/student/): 학생이 AI를 어떻게 쓰는지 알면 지도하기 쉬워요.
-- [사무·기획·관리직 가이드](/roles/office/): 공문·보고서 업무가 많다면 이쪽도 좋아요.
-- [직무별 가이드 모음](/roles/): 다른 직무도 둘러봐요.
-- [바로 쓰는 프롬프트 모음](/start/prompts/): 복사해 쓰는 문구를 더 찾아보세요.
+- [Guide for students and job seekers](/roles/student/): Knowing how students use AI makes it easier to guide them.
+- [Guide for office, planning, and admin roles](/roles/office/): A good fit too if you handle a lot of official notices and reports.
+- [Collection of role guides](/roles/): Browse other roles.
+- [Ready-to-use prompt collection](/start/prompts/): Find more phrases to copy and use.

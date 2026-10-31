@@ -1,6 +1,6 @@
 ---
-title: "개발자를 위한 AI 활용 가이드"
-description: "코드 이해, 디버깅, 테스트, 리뷰, 자동화까지 개발 업무에서 AI 도구를 쓰는 방법과 보안·검증 요령"
+title: "AI Guide for Developers"
+description: "How to use AI tools in development work, from understanding code, debugging, testing, and review to automation, plus security and verification tips"
 ---
 
 import { Aside } from '@astrojs/starlight/components';
@@ -9,111 +9,111 @@ import PromptBox from '../../../components/PromptBox.astro';
 import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
-- 개발자에게 AI는 **코드 이해, 버그 원인 찾기, 테스트·문서 작성, 리뷰** 같은 반복 작업을 줄여 주는 도구예요.
-- 코드를 직접 다루는 도구로는 Claude Code, Cursor 등이 있고, 질문과 설계 상담은 대화형 AI로도 충분해요.
-- AI가 만든 코드는 **내가 읽고, 실행하고, 테스트한 뒤에** 반영해야 해요.
-- 비밀키·고객 데이터·사내 코드는 입력 범위를 정하고 시작하세요.
+- For developers, AI is a tool that cuts down repetitive work like **understanding code, finding the cause of bugs, writing tests and docs, and review**.
+- Tools that work directly with your code include Claude Code and Cursor, while a chat AI is enough for questions and design discussions.
+- Code that AI produces should go in only **after you've read it, run it, and tested it**.
+- Before you start, decide what you will and won't enter: secret keys, customer data, and internal code.
 </Summary>
 
-## 이런 분께
+## Who this is for
 
-웹·앱·서버 개발자, 사이드 프로젝트를 하는 분, 팀에 AI 도구를 도입하려는 분께 맞는 가이드예요.
+This guide suits web, app, and server developers, people with side projects, and people who want to introduce AI tools to their team.
 
-- 처음 보는 코드베이스를 빨리 파악해야 해요.
-- 반복되는 테스트, 문서, 리뷰 작업이 많아요.
-- AI가 준 코드를 어디까지 믿고 써야 할지 기준이 필요해요.
+- You need to get up to speed on a codebase you've never seen before.
+- You have a lot of repetitive testing, documentation, and review work.
+- You need a standard for how far to trust the code AI gives you.
 
-## AI가 특히 도움 되는 일 TOP 5
+## Top 5 ways AI helps
 
-### 1. 처음 보는 코드 이해하기
+### 1. Understand code you've never seen
 
-파일 구조와 함수의 역할을 설명해 달라고 하면 온보딩 시간이 줄어요. 저장소 전체를 읽는 작업은 Claude Code나 Cursor 같은 코딩 도구가 잘 맞아요([Cursor로 기존 코드 이해하고 고치기](/coding/09-cursor/)).
+Asking it to explain the file structure and what each function does shortens onboarding time. For work that involves reading an entire repository, coding tools like Claude Code and Cursor are a good fit ([Understand and fix existing code with Cursor](/coding/09-cursor/)).
 
 <PromptBox>
-이 저장소의 구조를 파악하고 싶어. 주요 디렉터리의 역할, 진입점, 데이터가 흐르는 순서를 설명해 줘. 그리고 [기능명]을 수정하려면 어느 파일부터 읽어야 하는지 순서대로 알려 줘. 확실하지 않은 부분은 추측이라고 표시해 줘.
+I want to understand the structure of this repository. Explain the role of the main directories, the entry points, and the order in which data flows. Then tell me, in order, which files I should read first to modify [feature name]. Mark anything you're not sure about as a guess.
 </PromptBox>
 
-### 2. 버그 원인 좁히기
+### 2. Narrow down the cause of a bug
 
-에러 메시지와 재현 방법을 주면 원인 후보를 우선순위로 받을 수 있어요. 비밀키와 개인정보는 지우고 붙여 넣으세요.
+Give it the error message and how to reproduce it, and you can get candidate causes ranked by priority. Remove secret keys and personal information before pasting.
 
 <PromptBox>
-아래 에러가 발생해. 환경은 [언어/프레임워크/버전]이고, 재현 방법은 [재현 순서]야. 가능한 원인을 가능성이 높은 순서로 3가지 알려 주고, 각각 어떻게 확인하면 되는지 명령이나 로그 위치를 알려 줘. 바로 고치지 말고 원인 확인부터 하자.
+I'm getting the error below. My environment is [language/framework/version], and the steps to reproduce are [reproduction steps]. Give me 3 possible causes in order of likelihood, and for each one, tell me how to check it, with the command or log location. Don't fix it right away; let's confirm the cause first.
 
-[에러 메시지와 관련 코드]
+[Error message and related code]
 </PromptBox>
 
-### 3. 테스트 코드와 문서 작성
+### 3. Write test code and documentation
 
-기존 함수에 대한 단위 테스트, 경계 조건, README, 주석 초안을 빠르게 만들 수 있어요. 생성된 테스트가 **실제로 실패할 수 있는지**도 확인하세요.
+You can quickly draft unit tests for existing functions, edge cases, a README, and comments. Also check that the generated tests **can actually fail**.
 
 <PromptBox>
-아래 함수에 대한 단위 테스트를 [테스트 프레임워크]로 작성해 줘. 정상 케이스, 경계값, 잘못된 입력 케이스를 나누어 쓰고, 각 테스트가 무엇을 검증하는지 한 줄 주석으로 적어 줘. 구현을 바꾸지는 마.
+Write unit tests for the function below using [test framework]. Separate normal cases, boundary values, and invalid-input cases, and add a one-line comment for each test saying what it verifies. Don't change the implementation.
 
-[함수 코드]
+[Function code]
 </PromptBox>
 
-### 4. 코드 리뷰 보조
+### 4. Assist with code review
 
-PR 변경 내용에서 놓치기 쉬운 버그, 예외 처리, 가독성 문제를 한 번 더 점검받을 수 있어요. 사람 리뷰를 대체하지 말고 **첫 번째 점검**으로 쓰세요.
+You can get another check on bugs, error handling, and readability issues that are easy to miss in a PR's changes. Use it as a **first pass** rather than a replacement for human review.
 
 <PromptBox>
-아래 변경 내용을 리뷰해 줘. 버그 가능성, 예외 처리 누락, 보안 문제, 성능 문제, 가독성 순으로 문제를 찾고, 각 항목에 심각도(높음/중간/낮음)와 수정 제안을 붙여 줘. 문제가 없으면 없다고 말해 줘. 억지로 지적하지 마.
+Review the changes below. Look for problems in this order: potential bugs, missing error handling, security issues, performance issues, readability. Give each item a severity (high/medium/low) and a suggested fix. If there are no problems, say so. Don't nitpick just to have something to say.
 
 [diff]
 </PromptBox>
 
-### 5. 반복 작업 자동화와 에이전트 만들기
+### 5. Automate repetitive work and build agents
 
-정해진 점검이나 배포 보조 같은 반복 업무는 스킬, 루틴, CI에 맡길 수 있어요. 개념은 [반복 업무를 에이전트에게 맡기기](/coding/10-delegate-agents/)에서, API로 직접 만드는 방법은 [도구 사용으로 업무 봇 만들기](/dev/01-tool-use/)에서 다뤄요.
+Repetitive work like scheduled checks or deployment assistance can be handed off to skills, routines, and CI. The concepts are covered in [Delegate recurring tasks to agents](/coding/10-delegate-agents/), and how to build one yourself with the API is covered in [Build a work bot with tool use](/dev/01-tool-use/).
 
 <PromptBox>
-매주 반복하는 [작업명]을 자동화하려고 해. 현재 수동 절차는 [절차]야. 이를 자동화할 수 있는 단계로 나누고, 사람이 반드시 확인해야 하는 승인 지점을 표시해 줘. 실패했을 때 되돌리는 방법도 같이 제안해 줘.
+I want to automate [task name], which I repeat every week. My current manual process is [process]. Break it into steps that can be automated, and mark the approval points where a person must confirm. Also suggest how to roll back if it fails.
 </PromptBox>
 
-## 실전 하루 시나리오
+## A day in the life
 
-<FlowSteps title="기능 하나를 추가하는 하루" steps={[
-  { where: '아침', action: '관련 코드를 AI에게 설명받고 읽을 순서 정하기', result: '수정 범위 파악' },
-  { where: '오전', action: '계획 먼저 받고 작은 단위로 구현 요청', result: '확인 가능한 작은 변경' },
-  { where: '오후', action: '테스트 작성 후 직접 실행, 실패 시 원인 좁히기', result: '통과한 테스트' },
-  { where: '퇴근 전', action: 'diff를 AI로 1차 리뷰한 뒤 PR 설명 초안 작성', result: '사람 리뷰 준비 완료' },
+<FlowSteps title="A day adding one feature" steps={[
+  { where: 'Morning', action: 'Have AI explain the related code and decide the order to read it', result: 'Understand the scope of changes' },
+  { where: 'Late morning', action: 'Get a plan first, then request implementation in small pieces', result: 'Small changes you can verify' },
+  { where: 'Afternoon', action: 'Write tests and run them yourself; if they fail, narrow down the cause', result: 'Passing tests' },
+  { where: 'Before leaving', action: 'Do a first review of the diff with AI, then draft the PR description', result: 'Ready for human review' },
 ]} />
 
-## 추천 학습 경로
+## Recommended learning path
 
-1. [첫 30분](/basics/01-first-30-minutes/): AI의 기본 동작과 한계를 짚어요.
-2. [질문 잘하는 법](/basics/03-asking-well/): 맥락을 주는 습관은 코드 질문에도 그대로 통해요.
-3. [개인정보·회사 정보 지키기](/basics/05-privacy-safety/): 코드와 비밀키를 어디까지 넣을지 기준을 세워요.
-4. [Claude Code 개요](/claude/c12-claude-code-overview/): 설치와 기본 개념을 알아요.
-5. [Claude Code 시작하기](/coding/06-claude-code-start/): 계획 모드와 승인 흐름을 실습해요.
-6. [Claude Code 핵심 기능](/claude/c14-claude-code-features/): CLAUDE.md, 훅, 서브에이전트 등으로 작업 방식을 다듬어요.
-7. [클라우드 세션으로 GitHub 작업 맡기기](/coding/08-cloud-github/): 저장소 작업을 원격에서 맡겨 봐요.
-8. [Cursor로 기존 코드 이해하고 고치기](/coding/09-cursor/): 에디터 안에서 쓰는 방식을 비교해요.
-9. [Claude API 시작하기](/claude/c16-api/): 직접 만들 준비로 키 발급과 첫 호출을 해요.
-10. [평가로 결과 품질 관리하기](/dev/08-evals/): 만든 기능의 품질을 숫자로 확인해요.
+1. [The first 30 minutes](/basics/01-first-30-minutes/): Cover how AI basically works and where its limits are.
+2. [Asking good questions](/basics/03-asking-well/): The habit of giving context works just as well for code questions.
+3. [Protecting personal and company information](/basics/05-privacy-safety/): Set standards for how far you'll enter code and secret keys.
+4. [Claude Code overview](/claude/c12-claude-code-overview/): Learn the installation and basic concepts.
+5. [Getting started with Claude Code](/coding/06-claude-code-start/): Practice plan mode and the approval flow.
+6. [Claude Code core features](/claude/c14-claude-code-features/): Refine how you work with CLAUDE.md, hooks, subagents, and more.
+7. [Hand off GitHub work with cloud sessions](/coding/08-cloud-github/): Try delegating repository work remotely.
+8. [Understand and fix existing code with Cursor](/coding/09-cursor/): Compare working inside an editor.
+9. [Getting started with the Claude API](/claude/c16-api/): Get an API key and make your first call to prepare to build things yourself.
+10. [Manage output quality with evals](/dev/08-evals/): Check the quality of what you've built with numbers.
 
-더 깊이 들어가려면 [개발자 심화](/dev/) 섹션에 에이전트 SDK, MCP 서버, 헤드리스·CI 같은 주제가 있어요.
+To go deeper, the [Developer Deep Dives](/dev/) section has topics like the Agent SDK, MCP servers, and headless mode and CI.
 
-### 더 보기: 개발자에게 어울리는 새 편
+### More: new tutorials that suit developers
 
-- [GitHub Copilot 시작하기](/coding/28-github-copilot/): VS Code에서 자동완성, 채팅, 에이전트 사용법을 익혀요.
-- [코딩 몰라도 Claude Code로 첫 웹앱 만들기](/coding/27-first-app-with-claude-code/): 비개발 동료에게 안내할 때 쓰기 좋은 쉬운 실습이에요.
+- [Getting started with GitHub Copilot](/coding/28-github-copilot/): Learn autocomplete, chat, and agent use in VS Code.
+- [Build your first web app with Claude Code, no coding required](/coding/27-first-app-with-claude-code/): An easy hands-on tutorial that's good for guiding non-developer colleagues.
 
-## 주의할 점
+## What to watch out for
 
-<Aside type="caution" title="비밀키와 고객 데이터는 입력하지 마세요">
-API 키, 비밀번호, 토큰, 고객 개인정보는 프롬프트와 코드 붙여넣기에 넣지 마세요. 회사 코드는 소속 조직의 AI 사용 정책을 먼저 확인하세요. 기준은 [개인정보·회사 정보 안전하게 지키며 쓰기](/basics/05-privacy-safety/)에 있어요.
+<Aside type="caution" title="Don't enter secret keys or customer data">
+Don't put API keys, passwords, tokens, or customer personal information into prompts or pasted code. For company code, check your organization's AI usage policy first. The standards are in [Using AI while protecting personal and company information](/basics/05-privacy-safety/).
 </Aside>
 
-- **검증**: AI는 존재하지 않는 함수나 오래된 사용법을 자신 있게 쓸 수 있어요. 실행과 테스트로 확인하세요([사실 확인법](/basics/04-fact-checking/)).
-- **권한**: 코드를 직접 실행하고 수정하는 도구는 승인 단위를 작게 두고, 삭제·배포·결제 같은 되돌리기 어려운 작업은 사람이 확인하세요([에이전트 안전하게 쓰기](/agents/05-agent-safety/)).
-- **라이선스**: 생성된 코드가 기존 오픈소스와 비슷할 수 있어요. 조직의 라이선스 정책에 맞게 검토하세요.
-- **이해하고 반영하기**: 이해하지 못한 코드를 그대로 병합하지 마세요. 나중에 고칠 사람은 결국 나예요.
+- **Verification**: AI can confidently write functions that don't exist or outdated usage. Confirm by running and testing ([how to fact-check](/basics/04-fact-checking/)).
+- **Permissions**: For tools that run and modify code directly, keep approval units small, and have a person confirm hard-to-undo actions like deletion, deployment, and payments ([Using agents safely](/agents/05-agent-safety/)).
+- **Licensing**: Generated code can resemble existing open-source code. Review it according to your organization's licensing policy.
+- **Understand it before you merge it**: Don't merge code you don't understand. The person who has to fix it later is ultimately you.
 
-## 다음 단계
+## Next steps
 
-- [마케터·콘텐츠 담당 가이드](/roles/marketer/), [사무·기획·관리직 가이드](/roles/office/): 협업하는 직무의 AI 활용을 알면 소통이 쉬워요.
-- [1인 사업자·소상공인 가이드](/roles/solo-business/): 작은 도구를 만들어 주는 개발자에게 도움이 돼요.
-- [직무별 가이드 모음](/roles/): 다른 직무도 둘러봐요.
-- [바로 쓰는 프롬프트 모음](/start/prompts/): 복사해 쓰는 문구를 더 찾아보세요.
+- [Guide for marketers and content managers](/roles/marketer/), [Guide for office, planning, and admin roles](/roles/office/): Knowing how the roles you collaborate with use AI makes communication easier.
+- [Guide for solo business owners and small shops](/roles/solo-business/): Helpful for developers who build small tools for others.
+- [Collection of role guides](/roles/): Browse other roles.
+- [Ready-to-use prompt collection](/start/prompts/): Find more phrases to copy and use.

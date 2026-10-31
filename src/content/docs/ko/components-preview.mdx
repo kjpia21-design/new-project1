@@ -1,0 +1,43 @@
+---
+title: 컴포넌트 미리보기
+description: 튜토리얼 컴포넌트를 한 곳에서 확인하는 개발용 페이지 (배포에서는 제외됨)
+draft: true
+level: practical
+category: chat
+tools: ['Claude']
+duration: '20분'
+prerequisites: ['Claude 계정', '업무 문서 하나']
+lastVerified: 2026-01-01
+status: draft
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import TutorialMeta from '../../../components/TutorialMeta.astro';
+
+개발용 미리보기 페이지예요. `draft: true`라서 배포 빌드에는 포함되지 않아요.
+
+## 진행 체크리스트
+
+<Checklist items={['첫 번째 단계를 끝냈어요', '프롬프트를 붙여넣어 봤어요', '결과를 확인했어요']} />
+
+## 단계별 따라하기
+
+<Steps>
+
+1. 먼저 새 대화를 시작해요.
+
+   <PromptBox>
+   당신은 10년 차 기획자입니다. 아래 회의 내용을 세 줄로 요약하고, 할 일을 담당자별로 표로 정리해 주세요.
+   </PromptBox>
+
+2. 결과를 확인해요.
+
+   <ScreenshotPlaceholder caption="요약 결과가 표시된 대화 화면" />
+
+</Steps>
+
+<Aside type="tip">팁 상자는 Starlight 기본 Aside를 그대로 써요.</Aside>
+<Aside type="caution">주의 상자도 마찬가지예요.</Aside>

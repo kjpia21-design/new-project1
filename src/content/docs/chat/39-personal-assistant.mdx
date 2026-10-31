@@ -1,33 +1,33 @@
 ---
-title: "AI를 개인 비서처럼: 일정·할 일·여행 계획 짜기"
-description: "할 일을 쏟아내서 우선순위로 정리하고, 주간 시간표와 여행 계획을 만든 뒤, Claude·Gemini·ChatGPT에서 캘린더 반영과 반복 브리핑까지 가는 방법을 입문자 눈높이로 정리했어요"
+title: "AI as Your Personal Assistant: Planning Your Schedule, To-Dos, and Trips"
+description: "Dump your to-dos and sort them by priority, build a weekly schedule and a trip plan, then go on to calendar sync and recurring briefings in Claude, Gemini, and ChatGPT, explained at a beginner's level"
 sidebar:
-  label: "10. 개인 비서처럼 쓰기"
+  label: "10. Using AI like a personal assistant"
 level: beginner
 category: chat
 tools: ["Claude", "Gemini", "ChatGPT"]
-duration: "30분"
+duration: "30 min"
 prerequisites:
-  - "Claude, Gemini, ChatGPT 중 하나 이상의 계정"
-  - "캘린더 반영은 Google 계정과 Google Calendar가 있으면 따라 하기 쉬워요 (없어도 1~3단계, 5~6단계는 가능해요)"
+  - "An account for at least one of Claude, Gemini, or ChatGPT"
+  - "For calendar sync, a Google account with Google Calendar makes it easier to follow along (steps 1 to 3 and 5 to 6 still work without one)"
 lastVerified: 2026-10-26
 status: published
 sources:
-  - title: "Claude 지원센터: Google Workspace 커넥터 사용하기"
+  - title: "Claude Help Center: Use Google Workspace connectors"
     url: "https://support.claude.com/en/articles/10166901-use-google-workspace-connectors"
-  - title: "Claude 지원센터: 채팅 검색과 메모리"
+  - title: "Claude Help Center: Use Claude's chat search and memory"
     url: "https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context"
-  - title: "Gemini 앱 고객센터: Gemini 앱에서 캘린더 일정 생성 및 관리하기"
-    url: "https://support.google.com/gemini/answer/15305236?hl=ko"
-  - title: "Gemini 앱 고객센터: Gemini에서 연결된 앱 사용 및 관리하기"
-    url: "https://support.google.com/gemini/answer/13695044?hl=ko"
-  - title: "Gemini 앱 고객센터: Gemini 앱에서 작업 예약하기"
-    url: "https://support.google.com/gemini/answer/16316416?hl=ko"
-  - title: "ChatGPT 문서: Scheduled tasks (예약된 작업)"
+  - title: "Gemini Apps Help: Create and manage Calendar events in the Gemini app"
+    url: "https://support.google.com/gemini/answer/15305236?hl=en"
+  - title: "Gemini Apps Help: Use and manage connected apps in Gemini"
+    url: "https://support.google.com/gemini/answer/13695044?hl=en"
+  - title: "Gemini Apps Help: Schedule actions in the Gemini app"
+    url: "https://support.google.com/gemini/answer/16316416?hl=en"
+  - title: "ChatGPT docs: Scheduled tasks"
     url: "https://learn.chatgpt.com/docs/automations.md"
-  - title: "ChatGPT 문서: Personalize ChatGPT"
+  - title: "ChatGPT docs: Personalize ChatGPT"
     url: "https://learn.chatgpt.com/docs/personalize.md"
-  - title: "ChatGPT 문서: Plugins"
+  - title: "ChatGPT docs: Plugins"
     url: "https://learn.chatgpt.com/docs/plugins.md"
 ---
 
@@ -39,243 +39,243 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- AI 비서의 핵심은 **내 상황(고정 일정, 하루에 쓸 수 있는 시간, 피하고 싶은 것)을 한 번 알려 주는 것**이에요. 그러면 계획이 훨씬 내 현실에 맞아요.
-- 채팅만으로도 충분히 쓸 수 있어요. **캘린더 연결은 선택**이에요. 연결하면 일정 확인과 추가를 대화로 할 수 있어요(2026-10-15 기준 공식 도움말 확인).
-- Gemini는 캘린더에 일정을 **만들고 찾고 수정**할 수 있지만, 일정에 **참석자를 초대하거나 위치·설명을 고치는 일은 못 한다**고 도움말에 적혀 있어요.
-- Claude의 Gmail·Google Calendar·Drive 커넥터는 모든 사용자에게 열려 있다고 안내돼요. Claude가 대신 하는 작업은 기본적으로 매번 내 승인을 받아요.
-- 여행 일정의 영업시간·요금·예약 가능 여부는 AI가 틀릴 수 있어요. **공식 사이트에서 직접 확인**하세요.
-- 연결한 앱의 내용은 AI가 읽어요. 주민등록번호·여권번호·카드번호는 대화에 넣지 마세요.
+- The key to an AI assistant is **telling it about your situation once: your fixed commitments, how much time you have per day, and what you want to avoid.** Then its plans fit your real life much better.
+- Chat alone is enough. **Connecting your calendar is optional.** Once connected, you can check and add events by conversation (confirmed in the official help pages as of 2026-10-15).
+- The Gemini help pages say it can **create, find, and edit** calendar events, but **can't invite attendees or edit the location or description.**
+- Claude's Gmail, Google Calendar, and Drive connectors are described as available to all users. By default, Claude asks for your approval each time before it does something on your behalf.
+- The AI can get opening hours, prices, and booking availability wrong in a trip itinerary. **Check them directly on official sites.**
+- The AI reads the content of connected apps. Don't put national ID numbers, passport numbers, or card numbers into the conversation.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do
 
-- 머릿속의 할 일을 쏟아내고 **오늘 할 3가지**로 줄일 수 있어요.
-- 고정 일정을 알려 주고 **현실적인 주간 시간표**를 받을 수 있어요.
-- 제약 조건이 있는 **여행 계획**(예비안과 확인 목록 포함)을 짤 수 있어요.
-- 캘린더를 연결해 **대화로 일정을 확인하고 추가**할 수 있어요.
-- 매일 아침 요약 같은 **반복 브리핑**을 예약할 수 있는 서비스와 조건을 알 수 있어요.
+- Dump the to-dos in your head and narrow them to **your 3 things for today.**
+- Tell the AI your fixed commitments and get a **realistic weekly schedule.**
+- Plan a **trip with constraints** (including a backup plan and a checklist).
+- Connect your calendar and **check and add events by conversation.**
+- Learn which services and conditions let you schedule **recurring briefings** such as a morning summary.
 
-## 먼저 알아둘 개념
+## Concepts first
 
-| 용어 | 쉬운 뜻 |
+| Term | Plain meaning |
 | --- | --- |
-| **비서 설정(역할 지시)** | "너는 내 일정 비서야"처럼 역할과 규칙을 처음에 알려 주는 문장이에요. 자세한 요령은 [실무 프롬프트 작성법](/chat/01-prompt-basics/)에 있어요. |
-| **커넥터·연결된 앱** | AI가 내 Gmail, 캘린더 같은 서비스를 읽거나 쓸 수 있게 이어 주는 기능이에요. 서비스마다 이름이 달라요. |
-| **메모리** | AI가 이전 대화의 내용을 기억해 다음 대화에 쓰는 기능이에요. 서비스별 설정이 있어요. |
-| **예약된 작업** | 정해 둔 시간에 AI가 알아서 작업을 하고 결과를 알려 주는 기능이에요. 서비스와 계정에 따라 쓸 수 있는지가 달라요. |
+| **Assistant setup (role instruction)** | A passage at the start that gives the role and rules, like "You're my scheduling assistant." For details, see [Writing work prompts](/chat/01-prompt-basics/). |
+| **Connectors / connected apps** | A feature that lets the AI read or write your services, like Gmail and your calendar. Names differ by service. |
+| **Memory** | A feature where the AI remembers content from earlier conversations and uses it in later ones. Each service has its own settings. |
+| **Scheduled tasks** | A feature where the AI does a task on its own at a set time and tells you the result. Whether you can use it depends on the service and account. |
 
-<Aside type="note" title="이 글이 겹치지 않게 한 것">
-[생활 속 AI 활용 10가지](/basics/06-everyday-uses/)에는 "일정·할 일 정리하기"와 "여행 계획 짜기"가 한 줄씩 있어요. 이 글은 그 다음 단계로, 제약 조건 넣기·시간표 만들기·캘린더 연결·반복 브리핑 같은 **심화 사례**를 다뤄요.
+<Aside type="note" title="How this guide avoids overlap">
+[10 everyday uses for AI](/basics/06-everyday-uses/) has one line each for "organizing schedules and to-dos" and "planning a trip." This guide is the next step, covering **deeper examples** such as adding constraints, building a schedule, connecting a calendar, and recurring briefings.
 </Aside>
 
-<Aside type="note" title="이 글에서 확인하지 못한 점">
-- **ChatGPT의 Google Calendar 연동**: 확인한 공식 문서(Plugins)에는 Gmail과 Google Drive 플러그인이 예로 나와요. Google Calendar는 이 문서에서 확인하지 못했어요.
-- **ChatGPT 예약된 작업의 요금제 조건**: 공식 문서에는 "해당되는 플랜(eligible plans)", "워크스페이스에서 활성화된 경우"라고만 나와 있어서 어느 요금제에서 쓰는지는 확인하지 못했어요.
-- 항공권·숙소·식당을 **AI가 대신 예약**해 주는 기능은 이 글에서 확인하지 않았어요. 계획 초안과 확인 목록을 만드는 데까지만 다뤄요.
-- 화면의 메뉴 이름은 계정, 기기, 시기에 따라 달라요. 아래 경로는 도움말에 적힌 예시예요.
+<Aside type="note" title="What we couldn't confirm in this guide">
+- **ChatGPT's Google Calendar integration**: The official docs we checked (Plugins) give Gmail and Google Drive plugins as examples. We couldn't confirm Google Calendar in this document.
+- **Plan requirements for ChatGPT scheduled tasks**: The official docs only say "eligible plans" and "if enabled in your workspace," so we couldn't confirm which plans can use it.
+- We didn't verify any feature where **the AI books** flights, lodging, or restaurants for you. This guide only covers drafting plans and checklists.
+- On-screen menu names vary by account, device, and time. The paths below are examples from the help pages.
 </Aside>
 
-## 단계별 따라하기
+## Step-by-step
 
 <Checklist items={[
-  '내 상황(고정 일정, 쓸 수 있는 시간)을 한 번 정리해서 비서 설정을 만들었어요',
-  '할 일을 쏟아내고 오늘 할 3가지를 골랐어요',
-  '이번 주 시간표를 받아서 무리한 곳을 고쳤어요',
-  '캘린더에 반영할 방법(직접 입력 또는 연결)을 정했어요',
-  '여행 계획의 영업시간·예약 여부를 공식 사이트에서 확인했어요',
-  '연결한 앱과 메모리 설정을 한 번 점검했어요',
+  'I organized my situation (fixed commitments, available time) once and made an assistant setup',
+  'I dumped my to-dos and picked 3 for today',
+  'I got this week\'s schedule and fixed the overloaded spots',
+  'I decided how to get it into my calendar (enter it myself, or connect)',
+  'I checked the trip plan\'s opening hours and reservations on official sites',
+  'I reviewed my connected apps and memory settings once',
 ]} />
 
 <Steps>
 
-1. **내 상황을 알려 주는 비서 설정부터 만드세요**
+1. **Start by creating an assistant setup that tells it your situation**
 
-   비서에게 처음 필요한 것은 내 사정이에요. 아래 문구를 내 상황으로 고쳐서 대화 첫머리에 붙여 넣으세요. 이름, 주소, 연락처 같은 개인정보는 넣지 않아도 돼요. 자주 쓸 거라면 메모 앱에 저장해 두세요.
+   The first thing an assistant needs is your circumstances. Adapt the text below to your situation and paste it at the start of the chat. You don't need to include personal information like your name, address, or contact details. If you'll use it often, save it in a notes app.
 
-   <PromptBox label="비서 설정 (대화 첫머리에 붙여넣기)">
-   지금부터 너는 내 개인 일정 비서야. 아래 규칙을 지켜줘.
+   <PromptBox label="Assistant setup (paste at the start of a chat)">
+   From now on, you're my personal scheduling assistant. Follow the rules below.
 
-   - 평일 근무 시간은 [오전 9시~오후 6시]이고, 저녁 [8시] 이후에는 일정을 잡지 마.
-   - 하루에 꼭 해야 하는 일은 [3개]를 넘기지 마.
-   - 이동 시간과 휴식 시간을 [30분]씩 넣어줘.
-   - 내가 알려주지 않은 사실(날짜, 가격, 영업시간)은 지어내지 말고 "확인 필요"라고 표시해줘.
-   - 답은 표나 목록으로 간단하게 줘.
-   알겠으면 "네"라고만 답하고, 내 일정을 기다려줘.
+   - My weekday working hours are [9 a.m. to 6 p.m.], and don't schedule anything after [8] p.m.
+   - Don't give me more than [3] must-do tasks per day.
+   - Build in [30] minutes each for travel and breaks.
+   - For facts I haven't told you (dates, prices, opening hours), don't make them up. Mark them "needs confirmation."
+   - Keep answers short, in tables or lists.
+   If you understand, reply only "Yes" and wait for my schedule.
    </PromptBox>
 
-   같은 규칙을 계속 쓰고 싶다면 서비스의 개인화 기능을 쓸 수 있어요. Claude는 [프로젝트](/claude/c05-projects/)에 지침을 저장하고, ChatGPT는 웹의 설정(Settings) > 개인 맞춤 설정(Personalization)에서 기본 스타일과 사용자 지정 지침을 정할 수 있다고 공식 문서가 안내해요. 다만 이 글에서 직접 확인한 것은 ChatGPT 설정 경로뿐이고, 화면은 바뀔 수 있어요.
+   If you want to keep using the same rules, you can use each service's personalization features. The official docs say that in Claude you can save instructions in a [project](/claude/c05-projects/), and in ChatGPT you can set a default style and custom instructions in Settings > Personalization on the web. Note that the only thing we confirmed directly in this guide is ChatGPT's settings path, and screens may change.
 
-2. **머릿속 할 일을 쏟아내고 "오늘의 3가지"로 줄이세요**
+2. **Dump your to-dos and narrow them to "today's 3"**
 
-   정리하기 전에 일단 다 적는 것이 중요해요. 순서도 문장도 엉망이어도 괜찮아요.
+   It's important to write everything down before organizing. It's fine if the order and wording are a mess.
 
-   <PromptBox label="할 일 쏟아내기 → 우선순위">
-   아래는 지금 머릿속에 있는 할 일이야. 순서 없이 막 적었어.
+   <PromptBox label="Dump to-dos → priorities">
+   Below are the to-dos I have in my head right now. I just wrote them down in no order.
 
-   [할 일을 줄바꿈으로 막 적기]
+   [Write your to-dos freely, one per line]
 
-   다음 순서로 정리해줘.
-   1. 마감이 있는 것, 남에게 영향을 주는 것, 미뤄도 되는 것으로 나눠줘.
-   2. 각 일에 대해 걸리는 시간을 대략 추정해줘. 추정이 어려우면 물어봐줘.
-   3. 오늘 할 3가지만 골라서 이유를 한 줄씩 적어줘.
-   4. 나머지는 이번 주 안에 할 것과 나중에 할 것으로 나눠줘.
+   Organize them in this order.
+   1. Split them into ones with deadlines, ones that affect other people, and ones that can wait.
+   2. Roughly estimate how long each takes. If an estimate is hard, ask me.
+   3. Pick only 3 for today, with a one-line reason each.
+   4. Split the rest into things to do this week and things for later.
    </PromptBox>
 
-   AI가 고른 3가지는 **제안**일 뿐이에요. 내가 보기에 순서가 틀렸다면 "2번과 3번을 바꿔줘"라고 말하면 돼요.
+   The 3 the AI picks are only a **suggestion.** If you think the order is wrong, just say, "Swap 2 and 3."
 
-3. **고정 일정을 알려 주고 이번 주 시간표를 받으세요**
+3. **Tell it your fixed commitments and get this week's schedule**
 
-   병원, 회의, 아이 하원처럼 옮길 수 없는 일정을 먼저 알려 주면 AI는 빈 시간에 나머지를 넣어요.
+   If you first tell it about commitments you can't move, like a doctor's appointment, a meeting, or a child's pickup, the AI fits everything else into the free time.
 
-   <PromptBox label="주간 시간표 만들기">
-   이번 주 고정 일정이야.
-   - 월요일 [10:00~11:00 팀 회의]
-   - 수요일 [15:00 병원]
-   - 금요일 [오후 6시 이후는 약속]
+   <PromptBox label="Build a weekly schedule">
+   Here are my fixed commitments this week.
+   - Monday [10:00 to 11:00 team meeting]
+   - Wednesday [3:00 p.m. doctor's appointment]
+   - Friday [plans after 6 p.m.]
 
-   위 단계에서 정리한 이번 주 할 일을 이 일정을 피해서 요일별 시간표로 만들어줘. 아침이 집중이 잘 되는 편이라 어려운 일은 오전에 넣어줘. 시간표 아래에 "무리한 부분" 있으면 알려주고, 일이 밀리면 어떤 것을 먼저 미룰지 제안해줘.
+   Take this week's to-dos from the step above and build a day-by-day schedule that avoids these commitments. I focus better in the morning, so put difficult tasks in the morning. Below the schedule, tell me about any "overloaded parts," and suggest which tasks to push back first if things slip.
    </PromptBox>
 
-   받은 시간표는 그대로 믿지 말고 한 번 훑어보세요. "이 일이 한 시간이면 되겠어?" 같은 생각이 들면 시간을 고쳐 달라고 하세요.
+   Don't just trust the schedule you get; skim it once. If you think, "Will this really take one hour?", ask it to fix the time.
 
-4. **캘린더에 반영하세요: 직접 입력하거나, 연결해서 대화로 하거나**
+4. **Get it into your calendar: enter it yourself, or connect and do it by conversation**
 
-   가장 간단한 방법은 AI가 만든 시간표를 보면서 **내가 캘린더에 직접 넣는 것**이에요. 연결 없이도 되고, 개인정보 걱정도 적어요. 대화로 하고 싶다면 서비스별로 이렇게 달라요.
+   The simplest way is to **enter it into your calendar yourself** while looking at the schedule the AI made. It works with no connection and carries fewer privacy concerns. If you want to do it by conversation, it differs by service.
 
-   | 서비스 | 확인한 내용 (2026-10-15 기준) |
+   | Service | What we confirmed (as of 2026-10-15) |
    | --- | --- |
-   | **Claude** | Gmail, Google Calendar, Google Drive 커넥터가 모든 사용자에게 제공된다고 안내돼요. 캘린더에서 일정 보기, 만들기·수정·삭제, 공통 가능 시간 찾기, 반복 일정 설정이 가능하다고 해요. Claude가 대신 하는 작업은 기본적으로 내 승인을 받는다고 안내돼요. 연결 방법은 [커넥터 편](/claude/c07-connectors/)에 있어요. |
-   | **Gemini** | Google Calendar 등에서 일정을 만들고 찾고 수정해 달라고 요청할 수 있어요. 활동 기록 보관(Keep Activity)을 켜고 Google Workspace를 연결해야 해요. 프롬프트에 `@Google Calendar`를 넣어 캘린더를 지정할 수 있어요. 참석자 초대와 위치·설명 수정은 못 해요. |
-   | **ChatGPT** | 웹과 데스크톱의 플러그인(Plugins) 탭에서 플러그인을 설치해 쓸 수 있다고 안내돼요. 공식 문서의 예시는 Gmail과 Google Drive 플러그인이에요. Google Calendar는 **확인하지 못했어요.** |
+   | **Claude** | Gmail, Google Calendar, and Google Drive connectors are described as available to all users. It says you can view, create, edit, and delete events, find mutual free time, and set up recurring events in the calendar. By default, Claude asks for your approval for actions it takes on your behalf. For how to connect, see [the connectors tutorial](/claude/c07-connectors/). |
+   | **Gemini** | You can ask it to create, find, and edit events in Google Calendar and elsewhere. You need to turn on Keep Activity and connect Google Workspace. You can specify the calendar by putting `@Google Calendar` in your prompt. It can't invite attendees or edit the location or description. |
+   | **ChatGPT** | It's described as letting you install plugins from the Plugins tab on web and desktop. The official docs' examples are the Gmail and Google Drive plugins. We **couldn't confirm** Google Calendar. |
 
-   <FlowSteps title="Gemini에서 캘린더에 일정 추가하기 (도움말 기준)" officialUrl="https://support.google.com/gemini/answer/15305236?hl=ko" steps={[
-     { where: 'Gemini 설정', action: '활동 기록 보관(Keep Activity) 켜기', result: '꺼져 있으면 캘린더에 연결할 수 없어요' },
-     { where: 'gemini.google.com (Workspace와 같은 Google 계정)', action: '일정 요청 입력 예: "다음 주 수요일 오후 3시에 병원 일정 만들어 줘"', result: '연결이 안 돼 있으면 연결 안내가 나와요' },
-     { where: '연결 안내 화면', action: '표시된 안내에 따라 Google Workspace 연결 승인' },
-     { where: '대답 아래', action: '만들어진 일정 확인. 틀렸으면 "실행취소" 또는 일정을 열어 수정', result: '참석자·위치·설명은 캘린더 앱에서 직접 고쳐요' },
+   <FlowSteps title="Adding an event to your calendar in Gemini (per the help pages)" officialUrl="https://support.google.com/gemini/answer/15305236?hl=en" steps={[
+     { where: 'Gemini settings', action: 'Turn on Keep Activity', result: 'If it\'s off, you can\'t connect to the calendar' },
+     { where: 'gemini.google.com (same Google account as Workspace)', action: 'Enter an event request, for example: "Create a doctor\'s appointment for next Wednesday at 3 p.m."', result: 'If it isn\'t connected, a connection prompt appears' },
+     { where: 'Connection prompt screen', action: 'Follow the instructions shown and approve the Google Workspace connection' },
+     { where: 'Below the reply', action: 'Check the event that was created. If it\'s wrong, use "Undo" or open the event and edit it', result: 'Edit attendees, location, and description directly in the calendar app' },
    ]} />
 
-   <ScreenshotPlaceholder caption="Gemini 앱에서 캘린더 일정 생성 및 관리하기 도움말 화면" officialUrl="https://support.google.com/gemini/answer/15305236?hl=ko" />
+   <ScreenshotPlaceholder caption="The help page for creating and managing Calendar events in the Gemini app" officialUrl="https://support.google.com/gemini/answer/15305236?hl=en" />
 
-   일정 추가를 AI에게 맡길 때는 만든 뒤에 **날짜와 시간이 맞는지 캘린더에서 직접 확인**하세요. 도움말도 Gemini가 틀린 정보를 말할 수 있다고 안내해요.
+   When you leave adding events to the AI, **check in your calendar that the date and time are right** after it creates them. The help pages also warn that Gemini can state incorrect information.
 
-   <PromptBox label="일정 추가 요청 (연결한 경우)">
-   내 캘린더의 [다음 주 수요일 오후 3시]에 [치과 진료]를 추가해줘. 일정을 만들기 전에 그 시간에 다른 일정과 겹치는지 먼저 알려줘.
+   <PromptBox label="Request to add an event (if connected)">
+   Add [a dental appointment] to my calendar at [next Wednesday at 3 p.m.]. Before creating the event, first tell me whether it overlaps with any other event at that time.
    </PromptBox>
 
-5. **여행 계획은 제약 조건과 예비안까지 요청하세요**
+5. **For trip plans, ask for constraints and a backup plan too**
 
-   "일정 짜줘"보다 **누구와, 어떤 속도로, 무엇을 피하고 싶은지**를 말해야 쓸 만한 계획이 나와요. 여권번호, 예약번호, 카드번호는 넣지 마세요.
+   You'll get a usable plan only if you say **who's going, at what pace, and what you want to avoid**, not just "make an itinerary." Don't include passport numbers, booking numbers, or card numbers.
 
-   <PromptBox label="여행 계획 심화">
-   [도시]로 [3박 4일] 여행을 가. 동행은 [부모님 두 분], 하루 걷는 시간은 [2시간 이내]로 줄이고 싶어. 예산은 1인당 [60만 원], 매운 음식과 가파른 언덕은 피하고 싶어.
+   <PromptBox label="Trip planning, in depth">
+   I'm taking a [4-day, 3-night] trip to [city]. I'm traveling with [my parents], and I want to keep walking to [under 2 hours] a day. The budget is [KRW 600,000] per person, and I want to avoid spicy food and steep hills.
 
-   다음 형식으로 만들어줘.
-   1. 하루 일정 표 (오전·오후·저녁, 이동 방법 포함)
-   2. 비가 올 때 바꿀 수 있는 실내 대안 2가지
-   3. 내가 공식 사이트에서 확인해야 할 목록 (영업시간, 휴무일, 예약 필요 여부, 입장료)
-   4. 정확한 가격이나 시간을 모르는 부분은 지어내지 말고 "확인 필요"로 표시
+   Make it in this format.
+   1. A daily itinerary table (morning, afternoon, evening, including how to get around)
+   2. 2 indoor alternatives to switch to if it rains
+   3. A list of things I should check on official sites (opening hours, closing days, whether a reservation is needed, admission fees)
+   4. For anything where you don't know the exact price or time, don't make it up. Mark it "needs confirmation."
 
-   그리고 일정이 빡빡하게 느껴지면 어디를 줄일지도 알려줘.
+   And if the schedule feels tight, tell me where to cut.
    </PromptBox>
 
-   받은 계획은 **초안**이에요. 영업시간, 휴무일, 요금, 예약 가능 여부는 가기 전에 해당 장소의 공식 사이트에서 직접 확인하세요. 확인 방법은 [4편: 사실 확인하는 법](/basics/04-fact-checking/)에서 다뤘어요. 최신 정보를 AI가 찾아 주길 원하면 [AI 검색 제대로 쓰기](/chat/22-ai-search/)도 참고하세요.
+   The plan you get is a **draft.** Before you go, check opening hours, closing days, fees, and booking availability directly on each place's official site. How to check is covered in [Tutorial 4: How to fact-check](/basics/04-fact-checking/). If you want the AI to look up recent information, see [Using AI search well](/chat/22-ai-search/) too.
 
-6. **약속 잡기와 연락 문구도 맡기세요**
+6. **Hand off scheduling and messages too**
 
-   일정을 조율하는 메시지는 비서가 잘하는 일이에요. 상대방의 이름이나 연락처는 가리고, 내 가능한 시간만 알려 주세요.
+   Messages for coordinating a meeting are something an assistant is good at. Mask the other person's name and contact details, and tell it only your available times.
 
-   <PromptBox label="약속 조율 메시지">
-   [거래처 담당자]와 다음 주에 30분 통화 일정을 잡고 싶어. 내가 가능한 시간은 [화요일 오후 2~5시, 목요일 오전 10~12시]야. 정중하지만 짧은 문자 메시지로 후보 시간 3개를 제안하는 문구를 써줘. 답이 없을 때 이틀 뒤에 보낼 짧은 재안내 문구도 같이 써줘.
+   <PromptBox label="Message for coordinating a meeting">
+   I want to set up a 30-minute call next week with [the client contact]. My available times are [Tuesday 2 to 5 p.m., Thursday 10 a.m. to 12 p.m.]. Write a polite but short text message proposing 3 candidate times. Also write a short follow-up message to send two days later if there's no reply.
    </PromptBox>
 
-   보내기 전에 날짜와 요일이 내 캘린더와 맞는지 직접 확인하세요. 전송은 내가 직접 하거나, 연결을 쓴다면 AI가 보여 주는 내용을 읽고 승인한 뒤에 하세요.
+   Before you send it, check yourself that the dates and days of the week match your calendar. Either send it yourself, or if you're using a connection, read what the AI shows you and approve before it goes out.
 
-7. **매일 아침 브리핑을 예약해 보세요 (되는 곳에서만)**
+7. **Try scheduling a morning briefing (only where available)**
 
-   AI가 정해 둔 시간에 일정과 할 일을 요약해 알려 주는 기능이에요. 조건이 있으니 먼저 확인하세요.
+   This is a feature where the AI summarizes your schedule and to-dos at a set time and tells you. There are conditions, so check first.
 
-   - **Gemini**: 일일·주간·월간 반복 작업을 예약할 수 있다고 안내돼요. 도움말의 예시에 "캘린더, 할 일 목록, 이메일의 일일 요약"이 있어요. 단, 이 기능은 개인 Google 계정이나 해당 Google Workspace 버전을 쓰는 업무·학교 계정에 점진적으로 제공되고 있어서(2026-10-19 기준) **아직 쓸 수 없는 계정도 있어요.** 활동 기록 보관이 켜져 있어야 하고, 활성 예약 작업은 최대 10개예요. 결과는 미리 준비돼서 빠르게 바뀌는 정보는 받을 때 최신이 아닐 수 있다고 해요. 관리는 gemini.google.com의 설정 및 도움말(Settings & help) > 예약된 작업에서 해요.
-   - **ChatGPT**: 반복 작업을 예약하고 **Scheduled**에서 상태와 실행 기록을 본다고 안내돼요. 요금제 조건은 위에서 밝혔듯 확인하지 못했어요. 공식 문서는 예약하기 전에 일반 채팅에서 프롬프트를 시험하고, 처음 몇 번의 실행 결과를 검토하라고 권해요.
-   - **Claude**: 반복 실행은 [반복 업무 자동 실행하기](/claude/c18-automate-recurring/)와 [Gmail·캘린더 아침 브리핑](/automation/17-morning-briefing/)에서 다뤄요.
+   - **Gemini**: It's described as letting you schedule daily, weekly, and monthly recurring tasks. The help page's examples include "a daily summary of your calendar, to-do list, and email." But this feature is rolling out gradually to personal Google accounts and to work or school accounts on the relevant Google Workspace editions (as of 2026-10-19), so **some accounts can't use it yet.** Keep Activity must be on, and you can have up to 10 active scheduled tasks. Results are prepared in advance, so fast-changing information may not be current when you receive it. You manage them at gemini.google.com under Settings & help > Scheduled actions.
+   - **ChatGPT**: It's described as letting you schedule recurring tasks and view their status and run history under **Scheduled**. As noted above, we couldn't confirm the plan requirements. The official docs recommend testing the prompt in a regular chat before scheduling, and reviewing the results of the first few runs.
+   - **Claude**: Recurring runs are covered in [Automating recurring tasks](/claude/c18-automate-recurring/) and [Morning briefing from Gmail and Calendar](/automation/17-morning-briefing/).
 
-   <PromptBox label="아침 브리핑 요청 (Gemini 예약 작업 예)">
-   매일 아침 [7시 30분]까지 오늘의 브리핑을 준비해줘. 오늘 내 캘린더 일정, 마감이 가까운 할 일 3개, 챙겨야 할 준비물을 5줄 이내로 정리해줘. 정확하지 않은 정보는 "확인 필요"라고 표시해줘.
+   <PromptBox label="Morning briefing request (example for Gemini scheduled actions)">
+   Prepare today's briefing for me every morning by [7:30 a.m.]. Summarize today's calendar events, the 3 to-dos with the nearest deadlines, and things I need to bring, in 5 lines or fewer. Mark any information that isn't accurate "needs confirmation."
    </PromptBox>
 
-   예약 작업은 연결한 앱의 내용을 자동으로 읽어요. 처음에는 읽기만 하는 요약으로 시작하고, 메일을 대신 보내는 일은 맡기지 않는 편이 안전해요. 이 마지막 문장은 승인 단계를 둔 공식 안내를 바탕으로 한 이 글의 권고예요.
+   Scheduled tasks automatically read the content of connected apps. It's safer to start with summaries that only read, and not hand off sending email on your behalf. That last sentence is this guide's recommendation, based on the official guidance about having an approval step.
 
-8. **연결과 기억을 점검하세요**
+8. **Review your connections and memory**
 
-   비서를 쓰다 보면 AI가 내 정보를 많이 알게 돼요. 한 번씩 점검하세요.
+   The more you use an assistant, the more the AI knows about you. Review these once in a while.
 
-   - **연결 해제**: Gemini는 연결된 앱 설정에서 언제든 연결하거나 해제할 수 있다고 안내해요(웹: 설정 및 도움말 > 연결된 앱, 모바일: 메뉴 > 맞춤설정 > 커넥터. 메뉴 이름은 기기와 계정에 따라 달라요). Claude는 [커넥터 편](/claude/c07-connectors/)에서 해제 방법을 다뤘어요.
-   - **메모리**: Claude는 Free, Pro, Max에서 메모리가 기본으로 켜져 있고, 설정(Settings) > Your Claude의 "Memory from chats"에서 끌 수 있어요(예전 화면은 설정 > 메모리(Memory)의 "Generate memory from chats"). 기록을 남기고 싶지 않은 대화는 새 채팅 오른쪽 위의 유령 아이콘으로 시크릿 채팅을 쓸 수 있고, 무료 플랜을 포함한 모든 사용자가 쓸 수 있다고 안내돼요. 자세한 내용은 [메모리와 개인 설정](/claude/c09-memory-settings/)에 있어요.
-   - **ChatGPT**: 설정(Settings)에서 개인화 기능과 메모리를 켜고 끌 수 있다고 공식 문서가 안내해요.
-   - 서비스별 학습·기록 설정은 [5편: 개인정보·안전](/basics/05-privacy-safety/)에서 다뤘어요.
+   - **Disconnecting**: Gemini says you can connect or disconnect at any time in the connected apps settings (web: Settings & help > Connected apps; mobile: Menu > Personalization > Connectors. Menu names vary by device and account). For Claude, disconnecting is covered in [the connectors tutorial](/claude/c07-connectors/).
+   - **Memory**: In Claude, memory is on by default for Free, Pro, and Max, and you can turn it off with "Memory from chats" under Settings > Your Claude (on older screens, "Generate memory from chats" under Settings > Memory). For chats you don't want recorded, you can use an incognito chat with the ghost icon at the upper right of a new chat, and it's described as available to all users, including the free plan. Details are in [Memory and personal settings](/claude/c09-memory-settings/).
+   - **ChatGPT**: The official docs say you can turn personalization and memory on or off in Settings.
+   - Each service's training and history settings are covered in [Tutorial 5: Privacy and safety](/basics/05-privacy-safety/).
 
 </Steps>
 
-<Aside type="caution" title="비서에게 넣지 말아야 할 것">
-- 주민등록번호, 여권번호, 카드·계좌번호, 비밀번호, 집 현관 비밀번호
-- 다른 사람의 이름·연락처·건강 정보처럼 **그 사람 동의 없이 넘기기 어려운 정보**
-- 회사 기밀이 담긴 회의 일정과 고객 이름 (회사 규정이 우선이에요)
+<Aside type="caution" title="What not to put into your assistant">
+- National ID numbers, passport numbers, card or account numbers, passwords, and your home's door codes
+- Other people's names, contact details, and health information, or any **information that's hard to hand over without that person's consent**
+- Meeting schedules and customer names that contain company secrets (company rules come first)
 
-일정은 생각보다 많은 정보를 담고 있어요. 누구를 언제 어디서 만나는지가 드러나기 때문이에요. 캘린더를 연결하기 전에 어떤 일정이 AI에게 보일지 한 번 떠올려 보세요.
+A schedule holds more information than you might think, because it reveals who you meet, when, and where. Before connecting your calendar, picture which events the AI will be able to see.
 </Aside>
 
-## 빠른 참조표
+## Quick reference
 
-| 하고 싶은 일 | 꼭 넣을 것 | 주의 |
+| What you want to do | What to include | Caution |
 | --- | --- | --- |
-| 오늘 할 일 정하기 | 할 일 전체, 마감, 하루에 할 수 있는 개수 | AI의 우선순위는 제안일 뿐이에요 |
-| 주간 시간표 | 옮길 수 없는 고정 일정, 일하는 시간대 | 시간 추정이 틀릴 수 있어요 |
-| 캘린더 반영 | 날짜, 시간, 일정 이름 | 만든 뒤 캘린더에서 확인. Gemini는 참석자 초대 불가 |
-| 여행 계획 | 동행, 예산, 속도, 피할 것 | 영업시간·요금·예약은 공식 사이트에서 확인 |
-| 약속 조율 문구 | 내 가능한 시간 후보 | 보내기 전에 요일 확인 |
-| 반복 브리핑 | 시각, 포함할 항목 | 서비스·계정에 따라 사용 가능 여부가 달라요 |
+| Decide today's tasks | All your to-dos, deadlines, how many you can do per day | The AI's priorities are only a suggestion |
+| Weekly schedule | Fixed commitments you can't move, your working hours | Time estimates can be wrong |
+| Get it into the calendar | Date, time, event name | Check in the calendar after it's created. Gemini can't invite attendees |
+| Trip plan | Companions, budget, pace, what to avoid | Check opening hours, fees, and bookings on official sites |
+| Meeting-coordination message | Your candidate available times | Check the day of the week before sending |
+| Recurring briefing | Time, items to include | Availability varies by service and account |
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 캘린더에 연결하려는데 "사용할 수 없어요"라고 나와요
+### When I try to connect to my calendar, it says "unavailable"
 
-- **원인**: Gemini는 활동 기록 보관(Keep Activity)이 꺼져 있으면 연결할 수 없다고 안내해요. Google 메시지 안의 Gemini에서는 지원되는 캘린더 앱을 쓸 수 없다고도 해요. 회사·학교 계정은 관리자 설정의 영향을 받을 수 있어요.
-- **해결**: 설정에서 활동 기록 보관을 켜고 gemini.google.com에서 Workspace와 같은 계정으로 로그인해 보세요. 회사 계정이면 관리자 설정을 확인하세요.
+- **Cause**: Gemini says you can't connect if Keep Activity is off. It also says supported calendar apps can't be used from Gemini in Google Messages. Work and school accounts can be affected by admin settings.
+- **Fix**: Turn on Keep Activity in settings and sign in at gemini.google.com with the same account as Workspace. For a work account, check the admin settings.
 
-### 일정은 만들어졌는데 참석자나 장소가 비어 있어요
+### The event was created but the attendees or location are empty
 
-- **원인**: Gemini는 일정에 참석자를 초대하거나 기존 일정의 위치·설명을 추가·수정하는 일은 못 한다고 도움말에 적혀 있어요.
-- **해결**: 캘린더 앱에서 참석자와 위치, 설명을 직접 채우세요.
+- **Cause**: The Gemini help pages say it can't invite attendees to an event or add or edit the location or description of an existing event.
+- **Fix**: Fill in the attendees, location, and description yourself in the calendar app.
 
-### AI가 알려 준 영업시간이 틀렸어요
+### The opening hours the AI gave me were wrong
 
-- **원인**: AI는 틀린 내용을 그럴듯하게 말할 수 있어요.
-- **해결**: 비서 설정에 "모르는 건 확인 필요로 표시"를 넣고, 가기 전에 공식 사이트에서 확인하세요([4편](/basics/04-fact-checking/)).
+- **Cause**: The AI can state incorrect things in a convincing way.
+- **Fix**: Add "mark what you don't know as needs confirmation" to your assistant setup, and check on official sites before you go ([Tutorial 4](/basics/04-fact-checking/)).
 
-### 시간표가 너무 빡빡해서 지킬 수가 없어요
+### The schedule is too tight to follow
 
-- **원인**: AI가 내 체력과 집중력을 모르고 빈 시간에 최대한 채웠어요.
-- **해결**: "하루 3개를 넘기지 마", "이동·휴식 30분 넣어줘", "금요일은 가볍게"처럼 한도를 말해 주세요. 시간표를 한 번 만든 뒤에 "무리한 곳 찾아줘"라고 요청해도 좋아요.
+- **Cause**: The AI doesn't know your stamina and focus, and filled the free time as much as it could.
+- **Fix**: Give it limits, like "No more than 3 per day," "Add 30 minutes for travel and breaks," or "Keep Friday light." You can also build the schedule once and then ask, "Find the overloaded spots."
 
-### 예약된 작업이 안 보여요
+### I can't see scheduled tasks
 
-- **원인**: Gemini는 개인 계정과 해당 Workspace 버전의 업무·학교 계정에 점진적으로 제공하는 기능이라 아직 쓸 수 없는 계정이 있어요. ChatGPT는 플랜과 워크스페이스 설정에 따라 달라요.
-- **해결**: 없으면 아침마다 같은 프롬프트를 직접 보내는 방법으로 시작하세요. 프롬프트를 메모 앱에 저장해 두면 돼요.
+- **Cause**: Gemini is rolling the feature out gradually to personal accounts and to work or school accounts on the relevant Workspace editions, so some accounts can't use it yet. In ChatGPT, it depends on your plan and workspace settings.
+- **Fix**: If it's not there, start by sending the same prompt yourself each morning. Just save the prompt in a notes app.
 
-## 실전 팁
+## Practical tips
 
-- 비서에게 **한 번에 하나**만 시키세요. "할 일 정리 → 시간표 → 캘린더 반영" 순서로 나눠 가면 실수를 잡기 쉬워요.
-- 결과가 마음에 들면 **그 대화 안에서** 고쳐 달라고 하세요. 처음부터 다시 쓰는 것보다 빨라요.
-- 날짜는 "다음 주 수요일"처럼 말하면 오해가 생길 수 있어요. 중요한 일정은 **월/일을 같이 적으세요.**
-- 일주일에 한 번, 일요일 저녁에 "다음 주 시간표 만들기"를 루틴으로 삼으면 효과가 커요.
-- 가족 일정처럼 여러 사람의 정보가 섞이는 계획은, 그 사람들 이름을 별명이나 초성으로 바꿔서 물어보세요.
+- Ask your assistant for **one thing at a time.** Splitting it into "organize to-dos → schedule → add to calendar" makes mistakes easier to catch.
+- If you like the result, ask for changes **within that same chat.** It's faster than starting over.
+- Saying a date like "next Wednesday" can cause misunderstandings. For important events, **write the month and day too.**
+- Making "build next week's schedule" a Sunday-evening routine, once a week, pays off.
+- For plans that mix in information about several people, like family schedules, change their names to nicknames or initials when you ask.
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [생활 속 AI 활용 10가지](/basics/06-everyday-uses/) — 기본 활용 사례
-- [실무 프롬프트 작성법](/chat/01-prompt-basics/) — 비서 설정을 더 잘 쓰는 법
-- [커넥터로 Gmail·캘린더·Drive·Notion 연결하기](/claude/c07-connectors/) — Claude에서 캘린더 연결
-- [Gmail·캘린더를 AI와 연결해 아침 브리핑 받기](/automation/17-morning-briefing/) — 반복 브리핑 심화
-- [개인정보·회사 정보 안전하게 지키며 쓰기](/basics/05-privacy-safety/) — 넣으면 안 되는 정보
-- [사무직을 위한 가이드](/roles/office/) — 업무 일정에 AI를 쓸 때
-- [1인 사업자·소상공인을 위한 AI 활용 가이드](/roles/solo-business/) — 혼자 일하는 분의 일정 관리
+- [10 everyday uses for AI](/basics/06-everyday-uses/) — basic use cases
+- [Writing work prompts](/chat/01-prompt-basics/) — getting more out of your assistant setup
+- [Connecting Gmail, Calendar, Drive, and Notion with connectors](/claude/c07-connectors/) — connecting your calendar in Claude
+- [Connecting Gmail and Calendar to AI for a morning briefing](/automation/17-morning-briefing/) — recurring briefings in depth
+- [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/) — information you shouldn't enter
+- [A guide for office workers](/roles/office/) — when using AI for work schedules
+- [An AI guide for solo business owners and small shops](/roles/solo-business/) — schedule management for people working alone

@@ -1,16 +1,16 @@
 ---
-title: "Claude Design으로 시안·프로토타입 만들기"
-description: "대화로 화면 시안, 클릭되는 프로토타입, 원페이저를 만들고 코멘트·캔버스로 다듬어 PDF·PPTX로 내보내거나 Claude Code로 넘기는 방법을 공식 도움말 기준으로 정리했어요"
+title: "Making mockups and prototypes with Claude Design"
+description: "How to make screen mockups, clickable prototypes, and one-pagers through conversation, refine them with comments and the canvas, then export to PDF or PPTX or hand off to Claude Code, based on the official help"
 sidebar:
   label: "C20. Claude Design"
 level: practical
 category: claude
 tools: ["Claude", "Claude Design", "Claude Code"]
-duration: "30분"
+duration: "30 min"
 prerequisites:
-  - "claude.ai 계정 (Free, Pro, Max, Ultra, Team, Enterprise 모두 대상)"
-  - "C6(아티팩트)을 읽어 봤다면 더 수월해요"
-  - "(선택) 디자인 시스템 자료: 브랜드 색·글꼴이 담긴 파일이나 GitHub 저장소"
+  - "A claude.ai account (Free, Pro, Max, Ultra, Team, and Enterprise are all covered)"
+  - "It helps if you've read C6 (Artifacts)"
+  - "(Optional) Design system materials: a file with your brand colors and fonts, or a GitHub repository"
 lastVerified: 2026-10-31
 sources:
   - title: "Get started with Claude Design"
@@ -26,168 +26,168 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
-- **Claude Design**은 Claude와 대화하면서 디자인, 클릭되는 프로토타입, 원페이저 같은 시각 결과물을 만드는 기능이에요. 아티팩트의 템플릿 중 하나라서 **어느 대화에서나**, Artifacts 탭에서, Claude Code에서 쓸 수 있어요(2026-10-31 기준).
-- Free, Pro, Max, Ultra, Team, Enterprise 플랜에서 쓸 수 있고 기본으로 켜져 있어요. Enterprise는 2026-10-15부터 기본 켜짐이에요.
-- 예전의 **독립 버전(claude.ai/design)은 2026-12-14에 종료**돼요. 거기서 만든 프로젝트와 디자인 시스템은 그날 전에 Claude로 옮겨야 해요.
-- 첫 결과는 시작점이에요. **채팅(큰 변경), 인라인 코멘트(특정 부분), 캔버스 직접 편집(간단한 시각 수정)** 세 가지로 다듬어요.
-- 별도 사용량은 없고 **다른 Claude 사용량과 같은 한도**를 써요. 한도에 닿으면 리셋될 때까지 못 쓰고, usage credits를 켜 두었다면 계속할 수 있어요.
+- **Claude Design** is a feature for making visual deliverables like designs, clickable prototypes, and one-pagers by talking with Claude. It's one of the artifact templates, so you can use it **in any conversation**, from the Artifacts tab, and in Claude Code (as of 2026-10-31).
+- It's available on the Free, Pro, Max, Ultra, Team, and Enterprise plans and is on by default. On Enterprise, it has been on by default since 2026-10-15.
+- The earlier **standalone version (claude.ai/design) shuts down on 2026-12-14**. Projects and design systems made there need to be moved to Claude before that date.
+- The first result is a starting point. You refine it in three ways: **chat (big changes), inline comments (specific parts), and direct canvas editing (simple visual tweaks)**.
+- There's no separate usage; it uses **the same limits as the rest of your Claude usage**. If you hit the limit you can't use it until it resets, though you can keep going if you've turned on usage credits.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- 화면 시안이나 원페이저를 대화 한두 번으로 만들어 캔버스에서 확인할 수 있어요.
-- 채팅, 인라인 코멘트, 직접 편집 중 상황에 맞는 수정 방법을 골라 쓸 수 있어요.
-- 결과를 PDF, PPTX, HTML 등으로 내보내거나 팀에 공유하고, 개발 단계로 Claude Code에 넘길 수 있어요.
-- 독립 버전 종료 일정과 한계를 알고 안전하게 옮길 준비를 할 수 있어요.
+- Make a screen mockup or one-pager in one or two exchanges and check it on the canvas.
+- Choose the right editing method for the situation: chat, inline comments, or direct editing.
+- Export the result to PDF, PPTX, HTML, and more, or share it with your team, and hand it off to Claude Code for the development stage.
+- Know the standalone version's shutdown schedule and limits, and prepare to move safely.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **Claude Design** | 대화와 캔버스를 짝지어 디자인을 만드는 기능이에요. 대화에서 설명하면 옆의 캔버스에 실제로 동작하는 디자인이 만들어져요. |
-| **캔버스와 아트보드** | 디자인은 아트보드(화면 한 장) 여러 개가 놓인 캔버스예요. 아트보드 안에는 글, 도형, 이미지 같은 레이어가 들어 있어요. |
-| **디자인 시스템** | 조직의 색, 글꼴, 컴포넌트 규칙 모음이에요. 붙여 두면 Claude가 그 규칙으로 만들고, 결과가 규칙과 맞는지 스스로 점검해서 고쳐요. |
-| **인라인 코멘트** | 캔버스의 특정 위치를 눌러 "여기만 바꿔 줘"라고 남기는 메모예요. |
-| **/design, /design-sync** | Claude Code에서 쓰는 명령이에요. `/design`은 디자인을 만들고 고치고 동기화하고, `/design-sync`는 디자인 시스템을 가져와요. |
+| **Claude Design** | A feature that pairs a conversation with a canvas to make designs. When you describe something in the conversation, a working design appears on the canvas beside it. |
+| **Canvas and artboards** | A design is a canvas with several artboards (one screen each) on it. Inside an artboard are layers such as text, shapes, and images. |
+| **Design system** | A collection of an organization's colors, fonts, and component rules. When you attach one, Claude builds with those rules and checks and fixes its own output against them. |
+| **Inline comment** | A note you leave by clicking a specific spot on the canvas, like "change just this." |
+| **/design, /design-sync** | Commands used in Claude Code. `/design` creates, edits, and syncs designs, and `/design-sync` brings in a design system. |
 
-이 기능은 [C6. 아티팩트](/claude/c06-artifacts/)와 같은 틀 위에서 움직여요. 공유 방식과 일반 내보내기는 C6에 이미 정리돼 있어서 이 글에서는 디자인에 필요한 부분만 다뤄요. 문서·슬라이드까지 이어 만드는 방법은 [C8. 스킬](/claude/c08-skills/)의 내장 스킬이나 [C21](/claude/c21-office-agents/)을 함께 보세요.
+This feature runs on the same framework as [C6. Artifacts](/claude/c06-artifacts/). Sharing methods and general export are already covered in C6, so this article covers only what's needed for design. For making documents and slides as a follow-up, also see the built-in skills in [C8. Skills](/claude/c08-skills/) or [C21](/claude/c21-office-agents/).
 
-<Aside type="caution" title="독립 버전(claude.ai/design)은 2026-12-14에 닫혀요">
-도움말에 따르면 독립 버전은 닫히는 날까지 계속 동작하고, 기존 프로젝트도 그때까지 거기에 남아요. Claude로 옮기는 기능은 유료 플랜부터 순차적으로 열리고 있어요. **디자인 시스템은 닫히기 전에 Claude로 옮기라**고 안내돼요. 이 글은 Claude 안의 Design(통합 버전) 기준이에요(2026-10-31 기준).
+<Aside type="caution" title="The standalone version (claude.ai/design) closes on 2026-12-14">
+According to the help, the standalone version keeps working until the day it closes, and existing projects stay there until then. The feature for moving to Claude is rolling out in stages starting with paid plans. It's advised that you **move your design systems to Claude before it closes**. This article is based on Design inside Claude (the integrated version) (as of 2026-10-31).
 </Aside>
 
-<Aside type="note" title="확인되지 않은 점">
-Design에서 쓸 수 있는 모델, 한국어 화면·한국어 글꼴 지원 범위, 플랜별 구체 사용량 수치는 이번에 읽은 공식 도움말에서 확인하지 못했어요. 한국어 결과가 필요하면 직접 시험해 보고 글꼴이 깨지지 않는지 확인하세요.
+<Aside type="note" title="Things we couldn't confirm">
+We couldn't confirm in the official help we read this time which models Design can use, how far Korean-language screens and Korean fonts are supported, or the specific usage numbers by plan. If you need Korean output, test it yourself and check that the fonts don't break.
 </Aside>
 
-## 단계별 따라하기
+## Step by step
 
 <Checklist items={[
-  '사용할 계정과 플랜에서 Design이 켜져 있는지 확인했어요',
-  '만들 결과물의 목적, 구성, 내용, 대상을 한 문단으로 적었어요',
-  '(선택) 디자인 시스템이나 참고 이미지를 붙였어요',
-  '첫 결과를 캔버스에서 검토하고 채팅으로 큰 방향을 잡았어요',
-  '세부는 인라인 코멘트나 직접 편집으로 다듬었어요',
-  '내보내기 또는 공유 전에 내용과 접근성을 점검했어요',
+  'I confirmed Design is turned on for the account and plan I\'ll use',
+  'I wrote the purpose, structure, content, and audience of what I want to make in one paragraph',
+  '(Optional) I attached a design system or reference images',
+  'I reviewed the first result on the canvas and set the big direction in chat',
+  'I refined the details with inline comments or direct editing',
+  'I checked the content and accessibility before exporting or sharing',
 ]} />
 
 <Steps>
 
-1. **시작할 곳 고르기**
+1. **Pick where to start**
 
-   가장 쉬운 방법은 아무 대화에서 "이 제안서로 원페이저 만들어 줘", "방금 얘기한 온보딩 흐름을 목업으로 만들어 줘"처럼 요청하는 거예요. 메시지 입력창에서 출력(Output) > 디자인(Design)을 고르거나, Artifacts 탭에서 Design 템플릿을 골라도 돼요. Claude Code에서는 터미널과 데스크톱 모두 `/design`을 쓸 수 있어요. iOS·Android 앱에서도 요청할 수 있고, 결과는 나중에 Artifacts 탭에서 전체 화면으로 볼 수 있어요. 다만 공유 설정은 웹이나 데스크톱에서만 바꿀 수 있어요.
+   The easiest way is to ask in any conversation, like "Make a one-pager from this proposal" or "Make a mockup of the onboarding flow we just talked about." You can also choose Output > Design in the message input box, or pick the Design template in the Artifacts tab. In Claude Code, you can use `/design` in both the terminal and the desktop app. You can also ask from the iOS and Android apps, and view the result full screen later in the Artifacts tab. However, you can change sharing settings only on the web or desktop.
 
-   <ScreenshotPlaceholder caption="메시지 입력창의 출력(Output) 메뉴에서 Design을 고르는 화면" officialUrl="https://support.claude.com/en/articles/14604416-get-started-with-claude-design" />
+   <ScreenshotPlaceholder caption="Choosing Design from the Output menu in the message input box" officialUrl="https://support.claude.com/en/articles/14604416-get-started-with-claude-design" />
 
-2. **(선택) 디자인 시스템과 참고 자료 붙이기**
+2. **(Optional) Attach a design system and reference materials**
 
-   새 프로젝트는 조직의 디자인 시스템을 자동으로 이어받는다고 안내돼요. 직접 붙일 때는 GitHub 저장소, 디자인 파일, 업로드한 파일, 또는 Claude Code의 `/design-sync`로 로컬 코드베이스에서 가져와요. 스크린샷, 경쟁 제품 화면, 와이어프레임, 기존 슬라이드나 문서도 "이런 느낌으로"의 참고 자료로 올릴 수 있어요. 도움말은 **스타일, 글꼴, 컴포넌트가 다 있는 완전한 디자인 시스템**을 가져올수록 결과가 좋고, 가져온 결과물은 원본 품질을 그대로 따라간다고 해요.
+   It's noted that new projects automatically inherit your organization's design system. To attach one yourself, bring it from a GitHub repository, a design file, an uploaded file, or a local codebase with Claude Code's `/design-sync`. You can also upload screenshots, competitor screens, wireframes, and existing slides or documents as references for "something like this." The help says results get better the more **complete a design system you bring, with styles, fonts, and components all included**, and that imported results follow the original's quality as is.
 
-3. **목표, 배치, 내용, 대상을 적어 요청하기**
+3. **Make your request by writing the goal, layout, content, and audience**
 
-   공식 도움말이 꼽는 좋은 프롬프트의 네 요소는 **목표, 배치, 내용, 대상**이에요. 디자이너가 아니어도 구체적일수록 좋아요. 필요한 정보가 모자라면 Claude가 먼저 되물어요.
+   The four elements of a good prompt, according to the official help, are **goal, layout, content, and audience**. You don't have to be a designer; the more specific, the better. If you're missing needed information, Claude asks you first.
 
    <PromptBox>
-   동네 도서관의 독서 모임 신청 페이지를 만들어 주세요. 대상은 40~60대 주민이고 모바일에서 주로 열어요. 맨 위에 모임 소개 한 줄과 신청 버튼, 그 아래에 일정 3개 카드(날짜·책 제목·정원), 맨 아래에 신청 폼(이름, 연락 방법 선택)을 넣어 주세요. 글자는 크게, 색은 차분한 톤으로, 모바일 화면 기준으로 만들어 주세요.
+   Please make a sign-up page for a neighborhood library's book club. The audience is residents in their 40s to 60s, mostly opening it on mobile. At the top, put a one-line club intro and a sign-up button; below that, three schedule cards (date, book title, capacity); and at the bottom, a sign-up form (name, choice of contact method). Make the text large, use calm colors, and design for a mobile screen.
    </PromptBox>
 
-   이 프롬프트는 예시예요. 실제 이름이나 연락처 같은 개인정보는 넣지 말고 가짜 값을 쓰세요.
+   This prompt is an example. Don't put in personal information like real names or contact details; use fake values.
 
-4. **세 가지 방법으로 다듬기**
+4. **Refine in three ways**
 
-   첫 결과는 시작점이에요. 도움말은 수정 도구를 이렇게 나눠 써요.
+   The first result is a starting point. The help divides the editing tools like this.
 
-   | 방법 | 이럴 때 | 예시 |
+   | Method | When | Example |
    | --- | --- | --- |
-   | **채팅** | 전체 분위기, 구조, 새 섹션 등 큰 변경, 설명이 필요한 요청 | "색을 더 어둡고 단순하게", "대안 레이아웃 2~3개 보여 줘" |
-   | **인라인 코멘트** | 특정 부분만 콕 집어 바꿀 때 | 버튼을 눌러 "여백을 더 크게", "라디오 버튼 대신 드롭다운으로" |
-   | **캔버스 직접 편집** | 끌어서 옮기기, 크기 조절, 정렬 같은 빠른 시각 수정 | 요소를 끌어 정렬 |
+   | **Chat** | Big changes like overall feel, structure, or new sections, and requests that need explanation | "Make the colors darker and simpler," "Show me 2-3 alternative layouts" |
+   | **Inline comments** | Changing just one specific part | Click and leave "more spacing" or "use a dropdown instead of radio buttons" |
+   | **Direct canvas editing** | Quick visual tweaks like dragging to move, resizing, and aligning | Drag elements to align them |
 
-   코멘트가 반영되지 않으면 같은 내용을 채팅에 붙여 넣으라고 안내돼요. 코멘트가 간헐적으로 사라지는 문제가 알려져 있어서예요. 다른 방향을 시험하고 싶다면 "지금 것을 저장하고 완전히 다른 접근으로 해 봐"라고 말하면 현재 작업을 저장했다고 알려 줘요. 도움말은 아직 버전 기록 기능이 없다고 밝히고 있어요.
+   If a comment isn't applied, it's advised to paste the same content into chat. That's because there's a known issue where comments occasionally disappear. If you want to try a different direction, say "save the current one and try a completely different approach," and Claude tells you it saved the current work. The help states that there's no version history feature yet.
 
-   <FlowSteps title="결과물 다듬는 순서" officialUrl="https://support.claude.com/en/articles/14604416-get-started-with-claude-design" steps={[
-     { where: '채팅', action: '목표·배치·내용·대상을 적어 첫 시안 요청', result: '캔버스에 첫 디자인이 나와요' },
-     { where: '채팅', action: '구조나 분위기 같은 큰 변경을 요청' },
-     { where: '캔버스', action: '고칠 부분에 인라인 코멘트를 남기거나 직접 끌어 편집' },
-     { where: '우측 상단 내보내기(Export) 또는 공유(Share)', action: '형식을 고르거나 접근 수준을 정하기' },
+   <FlowSteps title="Order for refining the result" officialUrl="https://support.claude.com/en/articles/14604416-get-started-with-claude-design" steps={[
+     { where: 'Chat', action: 'Request a first mockup by writing goal, layout, content, and audience', result: 'The first design appears on the canvas' },
+     { where: 'Chat', action: 'Request big changes such as structure or feel' },
+     { where: 'Canvas', action: 'Leave inline comments on parts to fix, or drag to edit directly' },
+     { where: 'Export (top right) or Share', action: 'Choose a format or set the access level' },
    ]} />
 
-5. **내보내기와 공유**
+5. **Export and share**
 
-   프로젝트를 볼 때 오른쪽 위의 내보내기(Export) 버튼에서 형식을 골라요(2026-10-31 기준).
+   When viewing a project, choose a format from the Export button at the top right (as of 2026-10-31).
 
-   | 목적 | 선택지 |
+   | Purpose | Options |
    | --- | --- |
-   | 파일로 저장 | .zip 다운로드, PDF, PPTX, Google Slides, 독립 실행 HTML |
-   | 다른 도구로 보내기 | Canva, Gamma, HubSpot, Miro, Netlify, Replit, v0, Vercel, Wix, Lovable 등 도움말 목록 |
-   | 개발로 넘기기 | 로컬 코딩 에이전트로 보내기, Claude Code 웹으로 보내기 |
+   | Save as a file | .zip download, PDF, PPTX, Google Slides, standalone HTML |
+   | Send to other tools | Canva, Gamma, HubSpot, Miro, Netlify, Replit, v0, Vercel, Wix, Lovable, and others in the help list |
+   | Hand off to development | Send to a local coding agent, send to Claude Code on the web |
 
-   만든 디자인은 처음엔 나만 볼 수 있어요. 공유(Share)에서 누가 열 수 있는지, 보기·댓글·편집 중 무엇을 할 수 있는지 정해요. Team과 Enterprise의 공유 규칙은 [C6](/claude/c06-artifacts/)과 같은 아티팩트 규칙을 따라요.
+   A design you make is visible only to you at first. In Share, you set who can open it and whether they can view, comment, or edit. Sharing rules for Team and Enterprise follow the same artifact rules as [C6](/claude/c06-artifacts/).
 
-6. **개발 단계로 넘기기 (Claude Code)**
+6. **Hand off to development (Claude Code)**
 
-   디자인이 소프트웨어로 만들어질 단계라면 Claude Code로 넘기라고 안내돼요. Claude Code는 스크린샷에서 다시 시작하지 않고 기존 작업을 이어받아요. Claude Code에서 `/design`을 쓰면 디자인을 코드베이스로 가져오거나, 코드를 동작하는 프로토타입으로 내보내거나, 처음부터 끝까지 만들게 할 수 있어요. Claude Code 자체는 [C12](/claude/c12-claude-code-overview/)를 보세요.
+   If the design is at the stage of being built as software, you're advised to hand it off to Claude Code. Claude Code picks up the existing work instead of starting over from a screenshot. Using `/design` in Claude Code, you can bring a design into the codebase, export code as a working prototype, or have it build from start to finish. For Claude Code itself, see [C12](/claude/c12-claude-code-overview/).
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-| 항목 | 내용 (2026-10-31 기준) |
+| Item | Details (as of 2026-10-31) |
 | --- | --- |
-| 제공 플랜 | Free, Pro, Max, Ultra, Team, Enterprise. 기본 켜짐 |
-| Enterprise | 2026-10-15부터 기본 켜짐. 그 전에는 조직 설정(Organization settings) > Artifacts에서 소유자가 켤 수 있음 |
-| 시작 위치 | 대화, Artifacts 탭의 Design 템플릿, Claude Code(`/design`), 모바일 앱 |
-| 사용량 | Claude 전체와 같은 한도를 공유. 예전에 있던 Design 전용 주간 한도는 없어짐 |
-| 독립 버전 | claude.ai/design은 2026-12-14에 종료 |
-| 내보내기 | .zip, PDF, PPTX, Google Slides, HTML, 외부 도구 전송, Claude Code 인계 |
-| 키보드 | F6으로 상단 바, 캔버스, 속성 패널 이동. 아트보드 제목에서 Space로 선택, Return으로 진입 |
+| Available plans | Free, Pro, Max, Ultra, Team, Enterprise. On by default |
+| Enterprise | On by default since 2026-10-15. Before that, an owner could turn it on under Organization settings > Artifacts |
+| Where to start | A conversation, the Design template in the Artifacts tab, Claude Code (`/design`), the mobile app |
+| Usage | Shares the same limits as all of Claude. The Design-only weekly limit that used to exist is gone |
+| Standalone version | claude.ai/design ends on 2026-12-14 |
+| Export | .zip, PDF, PPTX, Google Slides, HTML, sending to external tools, handoff to Claude Code |
+| Keyboard | F6 moves among the top bar, canvas, and properties panel. On an artboard title, Space selects and Return enters |
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 인라인 코멘트가 반영되지 않아요
+### Inline comments aren't applied
 
-- **원인**: 코멘트가 가끔 Claude가 읽기 전에 사라지는 문제가 알려져 있어요. 페이지에 안 보여도 코멘트 보기에서는 확인할 수 있어요.
-- **해결**: 같은 내용을 채팅에 직접 붙여 넣으세요.
+- **Cause**: There's a known issue where comments sometimes disappear before Claude reads them. Even if you don't see them on the page, you can find them in the comments view.
+- **Fix**: Paste the same content directly into chat.
 
-### "chat upstream error"가 나와요
+### I get "chat upstream error"
 
-- **원인**: 도움말이 알려진 한계로 적은 오류예요. 원인은 설명되어 있지 않아요.
-- **해결**: 같은 프로젝트 안에서 새 채팅 탭을 열어 보세요.
+- **Cause**: This is an error the help lists as a known limitation. The cause isn't explained.
+- **Fix**: Try opening a new chat tab within the same project.
 
-### 디자인을 못 쓰겠다고 나와요
+### It says I can't use Design
 
-- **원인**: 사용량 한도에 닿으면 한도가 리셋될 때까지 Design을 쓸 수 없어요. Design 전용 한도는 없어졌어요.
-- **해결**: 한도가 리셋될 때까지 기다리거나, usage credits를 켜 두었다면 계속 쓸 수 있어요. 한도 구조는 [C2](/claude/c02-plans-limits/)를 보세요.
+- **Cause**: When you hit your usage limit, you can't use Design until the limit resets. The Design-specific limit is gone.
+- **Fix**: Wait until the limit resets, or keep going if you've turned on usage credits. For how limits are structured, see [C2](/claude/c02-plans-limits/).
 
-### 큰 코드 저장소를 연결했더니 느려요
+### Connecting a large code repository is slow
 
-- **원인**: 아주 큰 저장소를 웹에서 연결하면 지연이나 브라우저 문제가 생길 수 있어요.
-- **해결**: Claude Code에서 `/design-sync`로 연결하는 쪽을 고려하라고 안내돼요.
+- **Cause**: Connecting a very large repository on the web can cause delays or browser problems.
+- **Fix**: It's advised to consider connecting with `/design-sync` in Claude Code.
 
-### 속성 패널의 레이어 목록에서 엉뚱한 것이 지워져요
+### The wrong thing gets deleted from the properties panel's layer list
 
-- **원인**: 레이어 목록에서 Delete, Backspace, 잘라내기는 목록의 행이 아니라 캔버스에서 선택된 것에 적용돼요.
-- **해결**: 지우기 전에 해당 행에서 Return을 눌러 선택하세요.
+- **Cause**: In the layer list, Delete, Backspace, and cut apply to what's selected on the canvas, not to the row in the list.
+- **Fix**: Before deleting, select the row by pressing Return on it.
 
-### 둘 이상이 동시에 편집하면 이상해요
+### Things get weird when more than one person edits at once
 
-- **원인**: 여러 명의 동시 편집은 아직 기본적인 수준이라 안정적이지 않을 수 있다고 안내돼요.
-- **해결**: 한 번에 한 사람이 편집하고, 나머지는 보기·댓글로 참여하세요.
+- **Cause**: It's noted that simultaneous editing by multiple people is still basic and may not be stable.
+- **Fix**: Have one person edit at a time, and let the others take part by viewing and commenting.
 
-## 실전 팁
+## Practical tips
 
-- **간단하게 시작해 점점 더하세요.** 핵심 레이아웃과 내용부터 만들고, 동작·예외 상황·마감 다듬기는 나중에 요청하라고 안내돼요.
-- **피드백은 구체적으로.** "이상해"보다 "입력 칸 사이 간격을 8px로 줄여 줘"가 훨씬 잘 먹혀요.
-- **대안을 2~3개 요청하세요.** 방향이 불확실할 때 비교하는 쪽이 추측하는 것보다 빨라요.
-- **반응형을 일찍 말하세요.** 모바일, 태블릿, 데스크톱 중 어디에서 쓸지 처음에 적으세요.
-- **Claude를 검토자로 쓰세요.** 접근성, 대비, 정보 위계, 사용성 점검을 Claude에게 요청할 수 있어요. 최종 판단은 사람이 하세요.
-- **브랜드 자료와 개인정보를 구분하세요.** 실제 고객 이름, 연락처, 내부 자료는 시안에 넣지 말고 가짜 값으로 시안을 만드세요. 올린 자료와 코드 저장소가 어디까지 쓰이는지는 조직 정책을 먼저 확인하세요.
-- **키보드·스크린리더 사용자**를 위한 이동 방법도 공식 도움말에 표로 있어요. 새 텍스트·아트보드·도형을 캔버스에 놓는 일은 마우스나 트랙패드가 필요하고, 키보드만 쓴다면 Claude에게 추가를 요청하라고 안내돼요.
+- **Start simple and add more.** It's advised to build the core layout and content first, and ask for behavior, edge cases, and polish later.
+- **Be specific with feedback.** "Reduce the spacing between input fields to 8px" works far better than "it looks off."
+- **Ask for 2-3 alternatives.** When you're unsure of the direction, comparing is faster than guessing.
+- **Mention responsive early.** Write at the start whether it will be used on mobile, tablet, or desktop.
+- **Use Claude as a reviewer.** You can ask Claude to check accessibility, contrast, information hierarchy, and usability. A person should make the final call.
+- **Keep brand materials and personal information separate.** Don't put real customer names, contact details, or internal materials in a mockup; build it with fake values. Check your organization's policy first on how far uploaded materials and code repositories are used.
+- **Navigation for keyboard and screen reader users** is in a table in the official help. Placing new text, artboards, and shapes on the canvas needs a mouse or trackpad, and if you only use the keyboard, you're advised to ask Claude to add them.
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [C6. 아티팩트](/claude/c06-artifacts/) — Design의 바탕이 되는 아티팩트, 공유와 내보내기
-- [C21. Claude for Excel·PowerPoint](/claude/c21-office-agents/) — 만든 시안·내용을 오피스 문서로 이어 가기
-- [C8. 스킬](/claude/c08-skills/) — PowerPoint·Word 같은 내장 스킬과 나만의 스킬
-- [AI로 발표 자료 만들기](/media/25-ai-presentations/) — 발표 자료 도구 비교
-- [직장인(사무직) 가이드](/roles/office/) — 업무에 AI를 붙이는 방법
+- [C6. Artifacts](/claude/c06-artifacts/) — the artifacts Design is built on, sharing, and export
+- [C21. Claude for Excel and PowerPoint](/claude/c21-office-agents/) — carrying your mockups and content into Office documents
+- [C8. Skills](/claude/c08-skills/) — built-in skills like PowerPoint and Word, and your own skills
+- [Making presentations with AI](/media/25-ai-presentations/) — comparing presentation tools
+- [Guide for office workers](/roles/office/) — how to bring AI into your work

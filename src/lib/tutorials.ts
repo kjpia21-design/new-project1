@@ -27,29 +27,29 @@ export const getCategoryLabel = (cat: Category, lang: Lang = 'ko') => t(lang, `c
 
 export const categoryOrder: Category[] = ['basics', 'claude', 'agents', 'dev', 'chat', 'coding', 'media', 'automation'];
 
-/** 사이트 base 경로(`/`, 도메인 연결 후)를 붙인 내부 링크를 만든다. lang을 주면 영어는 `/en` 접두사를 붙인다. */
-export function url(path: string, lang: Lang = 'ko'): string {
+/** 사이트 base 경로(`/`, 도메인 연결 후)를 붙인 내부 링크를 만든다. lang을 주면 한국어는 `/ko` 접두사를 붙인다. */
+export function url(path: string, lang: Lang = 'en'): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   const clean = path.startsWith('/') ? path : `/${path}`;
   return `${base}${langPrefix(lang)}${clean}`;
 }
 
-/** 문서 id로 URL을 만든다. 영어 문서 id(`en/...`)는 그대로 `/en/...`가 된다. */
+/** 문서 id로 URL을 만든다. 한국어 문서 id(`ko/...`)는 그대로 `/ko/...`가 된다. */
 export function entryUrl(id: string): string {
   return url(`/${id.replace(/\/index$/, '').replace(/^index$/, '')}/`.replace(/\/\/$/, '/'));
 }
 
 export type Tutorial = CollectionEntry<'docs'>;
 
-/** 튜토리얼 = 분야 폴더 안의 index가 아닌 페이지 (영어는 `en/` 접두사 허용) */
+/** 튜토리얼 = 분야 폴더 안의 index가 아닌 페이지 (한국어는 `ko/` 접두사 허용) */
 export function isTutorial(id: string): boolean {
-  return /^(en\/)?(basics|claude|agents|dev|chat|coding|media|automation)\/(?!index$)/.test(id);
+  return /^(ko\/)?(basics|claude|agents|dev|chat|coding|media|automation)\/(?!index$)/.test(id);
 }
 
 export async function getTutorials(
   opts: { level?: Level; category?: Category; lang?: Lang } = {},
 ): Promise<Tutorial[]> {
-  const lang = opts.lang ?? 'ko';
+  const lang = opts.lang ?? 'en';
   const all = await getCollection('docs');
   return all
     .filter((e) => langOfId(e.id) === lang)

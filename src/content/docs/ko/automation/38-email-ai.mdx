@@ -1,0 +1,208 @@
+---
+title: "메일함 정리를 AI로: Gmail Gemini·Outlook Copilot·Claude 커넥터"
+description: "긴 메일 스레드 요약, 답장 초안, 라벨 정리를 Gmail의 Gemini, Outlook의 Copilot, Claude의 Gmail·Microsoft 365 커넥터로 하는 방법과 필요한 플랜, 개인정보 주의점"
+sidebar:
+  label: "10. 메일함 정리 AI"
+level: practical
+category: automation
+tools: ["Gmail", "Gemini", "Outlook", "Microsoft 365 Copilot", "Claude"]
+duration: "30분"
+prerequisites:
+  - "Gmail 또는 Outlook 계정 (기능에 따라 유료·회사 플랜이 필요할 수 있어요)"
+  - "연습용 가상 메일 스레드 (실제 고객 정보·기밀이 든 메일은 쓰지 마세요)"
+lastVerified: 2026-10-26
+sources:
+  - title: "Catch up on email threads with AI Overview conversation summaries (Gmail Help)"
+    url: "https://support.google.com/mail/answer/16561387"
+  - title: "Collaborate with Gemini in Gmail (Gmail Help)"
+    url: "https://support.google.com/mail/answer/14199860"
+  - title: "Draft emails with Gemini in Gmail (Gmail Help)"
+    url: "https://support.google.com/mail/answer/13955415"
+  - title: "Supported languages for Google Workspace with Gemini (Gmail Help)"
+    url: "https://support.google.com/mail/answer/14925782"
+  - title: "Welcome to Copilot in Outlook (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/outlook/welcome-to-copilot-in-outlook"
+  - title: "Supported languages for Microsoft Copilot (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/microsoft-365-copilot/supported-languages-for-microsoft-365-copilot"
+  - title: "Use Google Workspace connectors (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/10166901-use-google-workspace-connectors"
+  - title: "Set up the Microsoft 365 connector (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12542951-set-up-the-microsoft-365-connector"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- 메일 AI는 크게 **요약**(긴 스레드 줄이기), **답장 초안**, **정리**(검색·라벨)로 나눠요. 이 글은 메일 서비스 안의 AI와 Claude 커넥터 두 가지 길을 비교해요.
+- **Gmail**: 스레드 위 **Summarize this email**(AI Overview), 작성창의 **Help me write**, 오른쪽 위 **Ask Gemini**. 요약은 모든 Gmail 사용자가 쓸 수 있다고 안내되지만, 초안·Ask Gemini는 적격 Google Workspace 또는 Google AI 요금제가 필요해요(2026-10-15 기준).
+- **Outlook**: 새 메일의 Copilot 아이콘에서 **Draft**, 스레드 요약은 **Summary by Copilot**. Copilot 라이선스·구독에 따라 보여요.
+- **Claude 커넥터**: Gmail 커넥터는 메일 검색·읽기·초안·라벨 관리, Microsoft 365 커넥터는 Outlook 포함 검색. 보내기 전에는 내 승인을 물어요.
+- 메일에는 개인정보와 기밀이 많아요. **보내기 전에 꼭 읽고**, 민감한 메일은 AI에 맡길지 먼저 정하세요.
+</Summary>
+
+<Aside type="note" title="확인하지 못한 점 (2026-10-15 기준)">
+Gemini 기능이 포함된 구체적인 요금제 이름과 가격, Outlook Copilot의 가격과 자동 분류 기능, Gmail의 AI Inbox(받은 편지함 할 일 정리)는 원문을 열어 확인하지 못해 본문에서 설명하지 않아요. 한국어 지원은 공식 지원 언어 목록 기준이고, 실제 한국어 품질은 직접 써 보고 판단하세요.
+</Aside>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 긴 메일 스레드를 **몇 줄로 요약**할 수 있어요.
+- 요청 내용만 적어 **답장 초안**을 만들고 고쳐서 보낼 수 있어요.
+- Gmail과 Outlook에서 AI 기능이 **어디에 있고 무엇이 필요한지** 알 수 있어요.
+- Claude 커넥터로 "지난주 거래처 메일 찾아 요약" 같은 일을 맡기되, **보내기 전에 승인**하는 안전한 습관을 익힐 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **스레드(Thread)** | 같은 주제로 이어진 메일 묶음이에요. |
+| **AI Overview** | Gmail이 스레드 위에 보여 주는 AI 요약 카드예요. |
+| **Help me write** | Gmail 작성창에서 프롬프트로 초안을 만들거나 다듬는 기능이에요. |
+| **Copilot (Outlook)** | Outlook 안에서 초안과 요약을 도와주는 Microsoft의 AI예요. 자세한 계정·라이선스 구분은 [24. M365 Copilot](/ko/automation/24-m365-copilot/) 참고. |
+| **커넥터(Connector)** | Claude가 내 Gmail·Outlook 같은 서비스에 접근해 읽거나 작업하게 하는 연결이에요. 자세한 내용은 [C7. 커넥터](/ko/claude/c07-connectors/) 참고. |
+| **스마트 기능(Smart features)** | Gmail 설정에서 켜는 항목이에요. 끄면 AI 요약뿐 아니라 AI 작성·교정도 함께 꺼진다고 안내돼요. |
+
+### 세 가지 길 비교
+
+| | Gmail의 Gemini | Outlook의 Copilot | Claude 커넥터 |
+| --- | --- | --- | --- |
+| 요약 | 스레드 위 AI Overview(Summarize this email), Ask Gemini에 요청 | 스레드 위 Summary by Copilot(새 Outlook) / Summarize(클래식) | 대화로 "이 스레드 요약해 줘" (메일 검색·읽기) |
+| 답장 초안 | Help me write, Ask Gemini | Draft / Draft with Copilot, 길이·톤 조절 | 메일 초안 작성, 초안 목록 보기 |
+| 정리 | Ask Gemini로 여러 메일 삭제·라벨 추가 요청 | (이번에 확인하지 못함) | 라벨·스레드 관리 |
+| 필요한 것 | 요약: 업무·학교·개인 Google 계정. 초안·Ask Gemini: 적격 Workspace 또는 Google AI 요금제 | Copilot이 포함된 구독 또는 회사 라이선스 | Gmail: 모든 사용자. Microsoft 365: 모든 Claude 플랜이지만 회사용 Microsoft 계정과 관리자 동의 필요 |
+| 한국어 | 지원 언어 목록에 Korean 포함(요약, 초안, 사이드 패널) | Copilot 지원 언어 목록에 Korean 포함 | Claude는 한국어로 대화 가능 |
+| 보내기 | 내가 직접 보내요 | 내가 직접 보내요 | 보내기·답장·전달은 기본적으로 매번 승인을 물어요 |
+
+<Aside type="caution" title="개인 Google 계정은 일부 기능이 미국만이에요">
+Gmail 도움말에 따르면 "Help me write"는 개인 Google 계정에서는 미국에서만 쓸 수 있어요. 적격 Workspace·Google AI 요금제는 여러 지원 언어로 전 세계에서 쓸 수 있다고 안내돼요. 내 계정에서 보이는지는 직접 확인하세요.
+</Aside>
+
+## 단계별 따라하기
+
+예제는 "일정 조율이 길게 이어진 거래처 메일 스레드"예요. 연습용 가상 메일로 먼저 해 보세요.
+
+<Checklist items={[
+  '연습용 메일로 시작하고 실제 기밀 메일은 쓰지 않았어요',
+  '쓰는 메일 서비스에서 AI 요약을 해 봤어요',
+  '답장 초안을 만들고 내용을 직접 고쳤어요',
+  '(선택) Claude 커넥터를 연결하고 읽기 요청부터 시켜 봤어요',
+  '보내기 전에 받는 사람과 내용을 다시 읽었어요',
+]} />
+
+<Steps>
+
+1. **Gmail: 스레드 요약하기**
+
+   컴퓨터에서 Gmail을 열고 긴 스레드를 열어요. 스레드 위의 **Summarize this email**을 누르면 AI Overview가 나와요. 내용에 마감일이 있는 할 일이 있으면 **Remind me**로 미리 알림을 만들 수 있고, 만든 미리 알림은 Google Tasks와 Calendar에서 볼 수 있다고 안내돼요. 요약이 안 보이면 Gmail 설정에서 **스마트 기능**이 켜져 있는지 확인하세요. 요약이 틀리면 카드 아래의 Bad suggestion으로 알릴 수 있어요.
+
+   <ScreenshotPlaceholder caption="Gmail 스레드 위의 Summarize this email과 AI Overview 카드" officialUrl="https://support.google.com/mail/answer/16561387" />
+
+2. **Gmail: 답장 초안 만들기**
+
+   **Compose**를 누르거나 메일에 답장을 눌러 작성창을 열고, 아래 프롬프트 창(**Help me write**)에 요청을 적은 뒤 **Create**를 눌러요. 만든 초안은 Formalize, Friendly, Shorten으로 다듬거나 "금요일 마감을 언급해 줘"처럼 다시 지시할 수 있어요. 받는 사람, 용건, 말투를 구체적으로 적을수록 좋다고 공식 문서가 안내해요.
+
+   <PromptBox>
+   거래처 김 팀장님께 보내는 답장을 써 줘. 다음 주 화요일 오후 2시 회의에 동의하고, 사전 자료는 월요일까지 보내겠다는 내용이야. 정중하고 짧게, 존댓말 3문장 이내로.
+   </PromptBox>
+
+   Help me write는 내 다른 메일과 Drive 파일에서 정보(비행기 시간, 예약 번호 등)를 가져와 초안에 반영할 수 있어요. 어떤 자료를 썼는지 **Sources**로 확인할 수 있으니, 의도하지 않은 정보가 들어가지 않았는지 보세요.
+
+3. **Gmail: Ask Gemini로 정리 맡기기**
+
+   오른쪽 위의 **Ask Gemini**를 눌러 사이드 패널을 열면 요약, 초안, 검색, 일정 제안, 그리고 여러 메일 삭제·라벨 추가 같은 정리를 요청할 수 있다고 안내돼요. 이 기능은 적격 Workspace 또는 Google AI 요금제가 필요해요. **삭제처럼 되돌리기 어려운 요청은 처음에는 소수의 메일로 시험**해 보세요.
+
+4. **Outlook: 스레드 요약과 답장 초안**
+
+   새 Outlook에서는 스레드 위의 **Summary by Copilot**, 클래식 Outlook에서는 **Summarize**를 눌러요. 답장은 Home > New Mail에서 Copilot 아이콘 > **Draft**(클래식은 **Draft with Copilot**)를 고르고 프롬프트를 입력한 뒤 **Generate**를 눌러요. **Make it shorter / Make it longer / Change Tone**(클래식은 **Adjust**)로 길이와 말투를 고치고, 마음에 안 들면 **Retry**해요. 자세한 과정과 계정별 차이는 [24. M365 Copilot으로 업무하기](/ko/automation/24-m365-copilot/)에 있어요.
+
+   <ScreenshotPlaceholder caption="Outlook 새 메일에서 Copilot 아이콘 > Draft를 고르는 화면" officialUrl="https://support.microsoft.com/en-us/outlook/welcome-to-copilot-in-outlook" />
+
+5. **Claude 커넥터로 메일 다루기 (선택)**
+
+   Gmail은 입력창의 **+** > Connectors에서 Gmail을 연결해요(Team/Enterprise는 Owner가 먼저 켜 둬야 해요). 연결 방법과 승인 창은 [C7. 커넥터](/ko/claude/c07-connectors/)에 자세히 있어요. Outlook은 Microsoft 365 커넥터가 SharePoint·OneDrive·Outlook·Teams를 검색해요. 이 커넥터는 모든 Claude 플랜에서 제공되지만 Microsoft Business 플랜에 묶인 Entra 테넌트가 필요하고, `@outlook.com`·`@hotmail.com` 같은 개인 Microsoft 계정은 연결할 수 없어요. 회사 관리자의 동의도 필요해서, 회사 메일이라면 먼저 관리자와 상의하세요.
+
+   <FlowSteps title="Claude에서 Gmail 커넥터 쓰기" officialUrl="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" steps={[
+     { where: 'Claude 입력창', action: '+ > Connectors에서 Gmail 연결', result: 'Google 로그인·동의' },
+     { where: 'Claude 대화', action: '읽기 요청부터 시작 (검색·요약)', result: '출처 메일이 인용돼요' },
+     { where: 'Claude 대화', action: '답장 초안 요청 (보내지 말고 초안으로)', result: '초안 확인' },
+     { where: '승인 창', action: '받는 사람과 내용을 읽고 승인할지 결정', result: '승인한 뒤에만 전송' },
+   ]} />
+
+   <PromptBox>
+   최근 일주일 동안 거래처 김 팀장님과 주고받은 메일을 찾아서 핵심을 3줄로 요약해 줘. 내가 답해야 하는 질문이 있으면 따로 알려 주고, 답장 초안을 만들어 줘. 보내지는 말고 초안으로만 남겨 줘.
+   </PromptBox>
+
+   공식 문서에 따르면 Claude는 Gmail에서 첨부 파일의 메타데이터는 볼 수 있지만 첨부 내용은 볼 수 없고, 내가 이미 볼 수 있는 정보만 볼 수 있어요. 가져온 데이터는 해당 대화에 남고 대화를 삭제하면 같이 지워진다고 안내돼요.
+
+6. **보내기 전에 점검하기**
+
+   받는 사람, 참조(CC), 첨부 파일, 날짜·금액·약속을 눈으로 확인하세요. AI가 만든 초안은 사실과 다르거나 의도와 다른 어조일 수 있어요.
+
+</Steps>
+
+## 개인정보·기밀 주의
+
+메일에는 이름, 연락처, 계약 내용, 고객 정보가 섞여 있어요. 아래를 지키세요. 더 자세한 원칙은 [개인정보·회사 정보 안전하게 지키며 쓰기](/ko/basics/05-privacy-safety/)에 있어요.
+
+- **회사 메일은 회사 규정이 우선**이에요. 허용된 도구(회사 계정의 Copilot, Workspace의 Gemini 등)가 있는지 먼저 확인하세요.
+- 주민등록번호, 계좌·카드번호, 비밀번호가 든 메일은 AI에 넘기지 마세요. 꼭 도움이 필요하면 가린 뒤에 물어보세요.
+- 커넥터는 **읽기 요청부터** 시작하고, 보내기·전달·삭제는 승인 창에서 받는 사람과 내용을 읽은 뒤에만 허용하세요.
+- Gmail 도움말은 Gemini 결과를 의학·법률·금융 등 전문 조언으로 의존하지 말라고 안내해요. 계약이나 법적 분쟁 메일의 답장은 사람이 최종 판단하세요.
+- 요약본을 다른 사람에게 전달할 때는 **원문에 없던 사람의 정보가 섞이지 않았는지** 확인하세요.
+
+## 빠른 참조표
+
+| 하고 싶은 일 | Gmail | Outlook | Claude |
+| --- | --- | --- | --- |
+| 스레드 요약 | 스레드 위 Summarize this email | Summary by Copilot / Summarize | "이 스레드 요약해 줘" |
+| 초안 만들기 | Compose > Help me write > Create | New Mail > Copilot 아이콘 > Draft | "초안으로 남겨 줘" |
+| 다듬기 | Formalize, Friendly, Shorten | Make it shorter/longer, Change Tone, Retry | 대화로 수정 요청 |
+| 여러 메일 정리 | Ask Gemini에 요청 | (확인 못 함) | 라벨·스레드 관리 요청 |
+| 안 보일 때 | 스마트 기능, 요금제, 언어 확인 | 구독·라이선스·관리자 설정 확인 | 커넥터 연결·관리자 활성화 확인 |
+
+## 자주 막히는 지점
+
+### Summarize this email이 안 보여요
+
+- **원인**: Gmail 설정에서 스마트 기능이 꺼져 있거나, 지원 언어가 아니거나, 스레드가 요약 대상이 아닐 수 있어요.
+- **해결**: 설정에서 Smart features in Gmail, Chat, and Meet와 Smart features in Google Workspace를 켜 보세요. 끄면 AI 작성·교정도 같이 꺼진다고 안내돼요.
+
+### Help me write 버튼이 없어요
+
+- **원인**: 개인 Google 계정은 미국에서만 쓸 수 있고, 그 외에는 적격 Workspace·Google AI 요금제가 필요해요.
+- **해결**: 계정 종류와 위치를 확인하고, 회사 계정이면 관리자에게 문의하세요.
+
+### Outlook에 Copilot 아이콘이 없어요
+
+- **원인**: 구독이나 회사 라이선스에 Copilot이 없거나 조직 설정으로 막혔을 수 있어요.
+- **해결**: [24. M365 Copilot](/ko/automation/24-m365-copilot/)의 계정·라이선스 구분을 보고 관리자에게 문의하세요.
+
+### Claude가 Outlook 메일에 연결되지 않아요
+
+- **원인**: Microsoft 365 커넥터는 개인 Microsoft 계정으로는 연결할 수 없고, Entra 관리자 동의와 (Team/Enterprise는) Claude Owner의 활성화가 필요해요.
+- **해결**: 회사 관리자에게 설정 문서를 전달하고, 개인 계정이라면 메일을 복사해 대화에 붙여넣는 방법을 쓰세요(민감 정보는 가리고).
+
+### 첨부 파일 내용을 못 읽어요
+
+- **원인**: Claude의 Gmail 커넥터는 첨부 파일의 메타데이터만 접근하고 첨부 내용은 읽지 못해요.
+- **해결**: 필요한 첨부는 대화에 직접 올려서 요청하세요.
+
+## 실전 팁
+
+- **요약은 길이 지정**: "3줄로", "내가 답해야 할 질문만"처럼 적으면 쓸모 있는 결과가 나와요.
+- **초안은 사실만 넣고 감정은 직접**: 날짜, 금액, 약속은 내가 적고 AI에게는 문장 다듬기만 맡기세요.
+- **정리 요청은 작게 시작**: 라벨 붙이기나 삭제는 소수의 메일로 시험한 뒤 범위를 넓히세요.
+- **프롬프트를 저장**: 자주 쓰는 요청은 [C8. 스킬](/ko/claude/c08-skills/)로 저장해 두면 편해요.
+
+## 다음에 볼 튜토리얼
+
+- [C7. 커넥터로 Gmail·캘린더·Drive·Notion 연결하기](/ko/claude/c07-connectors/) — Claude 커넥터 연결과 승인
+- [24. Microsoft 365 Copilot으로 업무하기](/ko/automation/24-m365-copilot/) — Outlook·Word·PowerPoint
+- [37. 온라인 회의 AI 비교](/ko/automation/37-meeting-ai/) — 회의 후속 정리
+- [사무·기획·관리직을 위한 AI 활용 가이드](/ko/roles/office/) — 직무별 추천 순서

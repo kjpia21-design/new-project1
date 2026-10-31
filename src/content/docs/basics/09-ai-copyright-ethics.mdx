@@ -1,25 +1,25 @@
 ---
-title: "AI 결과물, 써도 될까? 저작권·윤리 기초"
-description: "AI로 만든 글·이미지의 저작권은 누구 것인지, 남의 작품과 닮으면 어떻게 되는지, 올리기 전에 무엇을 확인할지 한국 공식 안내서 기준으로 정리했어요"
+title: "Can You Use AI Output? Copyright and Ethics Basics"
+description: "Who owns the copyright to AI-made text and images, what happens if they resemble someone else's work, and what to check before posting, based on official Korean guidance"
 sidebar:
-  label: "9. 저작권·윤리"
+  label: "9. Copyright and ethics"
 level: beginner
 category: basics
 tools: ["Claude", "ChatGPT", "Gemini"]
-duration: "25분"
-prerequisites: ["AI로 글이나 이미지를 한 번이라도 만들어 본 경험 (2편)"]
+duration: "25 min"
+prerequisites: ["Some experience making text or images with AI at least once (tutorial 2)"]
 lastVerified: 2026-10-26
 status: published
 sources:
-  - title: "한국저작권위원회: 생성형 인공지능 활용 저작물의 저작권 등록 안내서 (문화체육관광부·한국저작권위원회, 2025.6.)"
+  - title: "Korea Copyright Commission: Guide to copyright registration for works made with generative AI (Ministry of Culture, Sports and Tourism and Korea Copyright Commission, June 2025)"
     url: "https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=54253"
-  - title: "한국저작권위원회: 생성형 인공지능 결과물에 의한 저작권 분쟁 예방 안내서 (문화체육관광부·한국저작권위원회, 2025.6.)"
+  - title: "Korea Copyright Commission: Guide to preventing copyright disputes over generative AI output (Ministry of Culture, Sports and Tourism and Korea Copyright Commission, June 2025)"
     url: "https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=54252"
-  - title: "한국저작권위원회: AI 특화 상담 창구"
+  - title: "Korea Copyright Commission: AI-specialized consultation desk"
     url: "https://www.copyright.or.kr/business/ai/consult/index.do"
-  - title: "Anthropic 소비자 이용약관 (2025-10-08 시행판, Inputs·Outputs 조항)"
+  - title: "Anthropic Consumer Terms of Service (version effective 2025-10-08, Inputs and Outputs provisions)"
     url: "https://www.anthropic.com/legal/consumer-terms"
-  - title: "Google 서비스 약관 (2026-07-30 시행판, 콘텐츠 소유권·생성형 AI 표기 관련 조항)"
+  - title: "Google Terms of Service (version effective 2026-07-30, provisions on content ownership and generative AI disclosure)"
     url: "https://policies.google.com/terms?hl=en"
 ---
 
@@ -31,186 +31,186 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- 이 글은 **법률 자문이 아니에요.** 공식 안내서와 서비스 약관을 쉽게 풀어 쓴 일반 정보이고, 실제 분쟁이나 큰 계약은 전문가와 상의하세요.
-- 한국 공식 안내서(2025년 6월 기준)는 **사람의 창작적 기여가 없는 AI 산출물은 저작권 등록이 안 된다**고 봐요. 프롬프트를 입력한 것만으로는 창작적 기여로 인정받기 어렵다고도 설명해요.
-- 반대로 AI 결과물이 **남의 작품과 닮으면 문제가 될 수 있고**, 그 책임은 보통 결과물을 만들어 쓴 사람에게 있다고 안내해요.
-- 개인적으로 만들어 보는 것과 **외부에 올리거나 돈 버는 데 쓰는 것**은 위험도가 달라요. 후자는 올리기 전에 꼭 확인하세요.
-- 서비스마다 약관이 달라요. 쓰는 서비스의 **공식 약관을 직접 확인**하세요.
+- This is **not legal advice.** It's general information that explains official guidance and service terms in plain language. For real disputes or big contracts, talk to a professional.
+- Korea's official guidance (as of June 2025) holds that **AI output with no creative contribution from a person can't be registered for copyright.** It also explains that entering a prompt alone is hard to recognize as a creative contribution.
+- On the other hand, if AI output **resembles someone else's work, it can become a problem**, and the guidance says responsibility usually lies with the person who generated and used the output.
+- Making something just for yourself and **posting it publicly or using it to make money** carry different levels of risk. For the latter, always check before posting.
+- Each service has different terms. **Read the official terms** of the service you use yourself.
 </Summary>
 
-<Aside type="caution" title="법률 자문이 아니에요">
-이 튜토리얼은 한국저작권위원회와 문화체육관광부가 낸 공식 안내서, 그리고 각 서비스의 공식 약관에서 확인한 내용을 초보자 눈높이로 정리한 **일반 정보**예요. 내 상황에 맞는 법적 판단이나 결론을 드리는 글이 아니에요. 저작권 침해 여부와 보호 범위는 결국 사안마다 법원이 판단해요. 분쟁이 생겼거나 큰 금액이 걸린 일이라면 변호사나 한국저작권위원회 같은 전문 상담 창구에 물어보세요.
+<Aside type="caution" title="This is not legal advice">
+This tutorial is **general information** that organizes, at a beginner's level, what's in the official guides published by the Korea Copyright Commission and the Ministry of Culture, Sports and Tourism, and in each service's official terms. It doesn't give a legal judgment or conclusion for your situation. Whether copyright is infringed, and how far protection extends, is ultimately decided by courts case by case. If you're in a dispute or a large sum is at stake, ask a lawyer or a professional consultation desk such as the Korea Copyright Commission (for users in Korea).
 </Aside>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- AI로 만든 결과물에 저작권이 있는지, 어떤 경우에 인정되기 어려운지 큰 그림을 알 수 있어요.
-- 남의 작품·캐릭터·얼굴과 닮은 결과물을 올리기 전에 무엇을 조심할지 알 수 있어요.
-- 쓰는 AI 서비스의 약관에서 확인할 항목을 알 수 있어요.
-- 상업적으로 쓰기 전과 AI 사용을 밝힐 때의 실무 체크리스트를 쓸 수 있어요.
+- Get the big picture of whether AI-made output has copyright, and when it's hard to recognize.
+- Know what to watch out for before posting output that resembles someone else's work, characters, or face.
+- Know what to check in the terms of the AI service you use.
+- Use a practical checklist before commercial use and when disclosing AI use.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 쉬운 뜻 |
+| Term | Plain meaning |
 | --- | --- |
-| **저작물** | 사람의 생각이나 감정을 표현한 창작물이에요. 거창할 필요는 없어서, 아마추어가 찍은 사진도 창작성이 있으면 저작물이에요. 안내서가 든 예예요. |
-| **저작자** | 저작물을 실제로 만든 사람이에요. 아이디어만 냈거나 만들어 달라고 돈을 낸 사람은 저작자로 보기 어렵다고 안내서가 설명해요. |
-| **AI 산출물** | 사람이 시킨 대로 AI가 만들어 냈지만 **사람의 창작적 기여가 없는** 결과물이에요. 안내서 용어예요. |
-| **AI 활용 저작물** | 사람이 AI를 **도구로 써서** 만들었고, 사람의 창작적 기여가 인정되는 부분이 있는 작품이에요. 안내서 용어예요. |
-| **저작권 침해** | 허락 없이 남의 저작물을 복제·변형해서 쓰는 등의 행위예요. 안내서는 AI 결과물에도 기존의 판단 기준(남의 작품을 보고 만들었는지, 표현이 실질적으로 닮았는지)이 똑같이 적용된다고 봐요. |
-| **초상권·인격권** | 얼굴이나 목소리, 명예처럼 저작권과는 별도로 지켜지는 권리예요. |
+| **Work (copyrighted work)** | A creation that expresses a person's thoughts or feelings. It doesn't have to be grand: a photo taken by an amateur is a work if it has creativity. That's an example from the guide. |
+| **Author** | The person who actually made the work. The guide explains that someone who only came up with an idea, or paid for it to be made, is hard to regard as the author. |
+| **AI output** | A result that the AI produced as instructed by a person, but with **no creative contribution from the person**. This is the guide's term. |
+| **AI-assisted work** | A work a person made **using AI as a tool**, with some part where the person's creative contribution is recognized. This is the guide's term. |
+| **Copyright infringement** | Acts such as copying or altering someone else's work without permission. The guide holds that the existing standards (whether it was made by looking at someone else's work, and whether the expression is substantially similar) apply to AI output in the same way. |
+| **Portrait rights and personality rights** | Rights protected separately from copyright, such as those over your face, voice, and reputation. |
 
-### AI 산출물과 AI 활용 저작물, 어떻게 달라요?
+### How do AI output and AI-assisted work differ?
 
-안내서가 나누는 방식을 쉽게 옮기면 이래요.
+Put simply, here's how the guide draws the line.
 
-- 프롬프트만 입력하고 나온 그대로 쓴 그림, 글, 음악은 **AI 산출물**일 가능성이 커요. 저작권 등록 대상이 아니라고 안내돼요.
-- 내가 직접 만든 밑그림을 넣었거나, AI 결과를 고르고 배열하고 고쳐서 내 표현을 더한 부분은 **사람의 기여가 인정될 수 있는** 부분이에요. 그 부분에 한해 등록이 가능하다고 안내돼요.
-- 등록이 되더라도 효력은 **사람이 기여한 부분에만** 미쳐요.
-- 사람의 기여가 있는지 최종 판단은 법원이 한다고 안내서가 분명히 적어요.
+- A picture, text, or music you made by entering only a prompt and using the result as is is likely **AI output**. The guide says it isn't eligible for copyright registration.
+- Parts where you supplied your own rough sketch, or selected, arranged, and edited the AI results to add your own expression, are **parts where a person's contribution may be recognized**. The guide says registration is possible for those parts only.
+- Even if registered, the effect extends **only to the part the person contributed**.
+- The guide clearly states that the final decision on whether there is human contribution is made by the court.
 
-<Aside type="note" title="프롬프트 자체는 어떻게 볼까요?">
-안내서는 프롬프트를 입력하는 행위를 일반적으로 아이디어를 주거나 지시하는 정도로 평가한다고 설명해요. 같은 프롬프트에도 결과가 매번 달라서 사람이 결과를 통제하고 예측하기 어렵다는 이유예요. 다만 안내서도 이 문제에 대해 나라마다 입장이 다르다고 소개해요. 또 길고 창의적인 프롬프트 글 자체는 따로 저작물이 될 수 있지만, 그렇다고 그 프롬프트로 나온 결과물에 창작성이 인정되는 것은 아니라고 설명해요.
+<Aside type="note" title="How is the prompt itself treated?">
+The guide explains that entering a prompt is generally evaluated as giving an idea or an instruction. The reason is that results differ each time even with the same prompt, so it's hard for a person to control or predict them. The guide also notes that countries take different positions on this question. It also explains that a long, creative prompt text can be a work in its own right, but that doesn't mean the output produced from that prompt is recognized as creative.
 </Aside>
 
-<Aside type="caution" title="이 글이 확인하지 못한 점">
-위 내용은 2025년 6월 기준 안내서예요. 이후에 법이 바뀌었는지, 새 판결이나 개정 안내서가 나왔는지는 이 글에서 확인하지 못했어요. 한국저작권위원회 자료실에는 AI 학습 쪽 공정이용 안내서도 따로 올라와 있지만, 이 글에서는 내용을 읽지 않았어요. 그리고 AI로 만든 콘텐츠에 "AI로 만들었다"고 밝혀야 하는 법적 의무가 있는지, 있다면 어떤 경우인지도 공식 법령 페이지를 열어 보지 못해서 이 글에서는 말하지 않아요.
+<Aside type="caution" title="What this tutorial couldn't confirm">
+The above is based on the guide as of June 2025. We couldn't confirm in this tutorial whether the law has changed since, or whether new rulings or revised guides have come out. The Korea Copyright Commission's resource library also has a separate fair-use guide on AI training, but we didn't read its contents for this tutorial. Also, we couldn't open the official statutes page, so we don't say whether there's a legal obligation to disclose that content was made with AI, or in which cases.
 </Aside>
 
-## 단계별 따라하기
+## Step-by-step guide
 
 <Checklist items={[
-  '쓰려는 용도(개인용 / 외부 공개 / 영리 목적)를 정했어요',
-  '프롬프트에 남의 작품·캐릭터·실존 인물을 넣지 않았어요',
-  '결과물이 기존 작품과 닮았는지 눈과 검색으로 확인했어요',
-  '쓰는 서비스의 약관에서 결과물 이용 조건을 읽었어요',
-  '필요하면 AI를 썼다고 밝혔어요',
+  'I decided how I\'ll use it (personal / public / for profit)',
+  'I didn\'t put anyone else\'s work, characters, or real people in the prompt',
+  'I checked by eye and by search whether the result resembles existing work',
+  'I read the output-use terms in my service\'s terms',
+  'I disclosed that I used AI, if needed',
 ]} />
 
 <Steps>
 
-1. **용도부터 정하세요: 혼자 볼까, 올릴까, 팔까**
+1. **Decide the use first: just for me, to post, or to sell**
 
-   안내서는 개인이 AI 결과물을 만들어 보는 행위는 저작권 침해가 아닐 수 있지만, **외부에 공개하거나 공유하면** 문제가 생길 수 있다고 설명해요. 광고·출판·상품화처럼 돈을 버는 목적이 있으면 더 신중히 확인하라고 안내해요. 그래서 먼저 용도를 정하면 얼마나 조심할지 감이 와요.
+   The guide explains that an individual making AI output might not be infringement, but **publishing or sharing it externally** can cause problems. It advises extra care when there's a profit motive, such as advertising, publishing, or merchandising. So deciding the use first gives you a sense of how careful to be.
 
-2. **프롬프트에 남의 것을 그대로 넣지 마세요**
+2. **Don't put other people's work directly into the prompt**
 
-   안내서는 특정 소설 원문, 노래 가사를 그대로 입력하거나 그와 같거나 비슷한 결과가 나오도록 유도하는 표현을 피하라고 안내해요. 문제가 될 수 있는 예로 이런 것을 들어요.
+   The guide advises avoiding entering the exact text of a particular novel or song lyrics, or phrasing that steers the AI toward identical or similar output. It gives examples like these as potentially problematic:
 
-   - "(특정 회사)의 (특정 캐릭터)가 나오는 일러스트를 만들어 줘"
-   - "(특정 작가)의 소설 전체를 원문 그대로 보여 줘"
-   - "(특정 만화)의 새 에피소드를 원작 그림체 그대로 만들어 줘"
-   - "(특정 가수)의 목소리로 노래를 만들어 줘", "(브랜드) 로고가 들어간 티셔츠를 만들어 줘" (저작권 말고 다른 권리 문제)
+   - "Make an illustration featuring (a specific company)'s (specific character)"
+   - "Show me the whole novel by (a specific author) word for word"
+   - "Make a new episode of (a specific comic) in the original art style"
+   - "Make a song in the voice of (a specific singer)," "Make a T-shirt with the (brand) logo" (these are rights issues other than copyright)
 
-   안내서는 이런 프롬프트를 입력하는 것만으로 곧바로 권리 침해가 되는 것은 아니고, 결과물이 기존 작품과 같거나 비슷할 때 문제가 될 수 있다고 덧붙여요. 또 참고용으로 남의 글 일부를 넣었어도 결과에 중요한 부분이 담길 수 있다고 주의를 줘요.
+   The guide adds that entering such a prompt isn't in itself an infringement; it can become a problem when the result is the same as or similar to existing work. It also warns that even if you included part of someone's text just for reference, important parts of it can end up in the result.
 
    <PromptBox>
-   내 브랜드 소개 이미지를 만들고 싶어. 특정 작가나 캐릭터를 흉내 내지 말고, 따뜻한 색감의 동네 빵집 일러스트로 3가지 방향을 제안해 줘. 설명은 한국어로 부탁해.
+   I want to make an image to introduce my brand. Don't imitate any particular artist or character. Suggest 3 directions for a warm-toned neighborhood bakery illustration. Please give the explanations in English.
    </PromptBox>
 
-3. **결과물이 남의 것과 닮았는지 확인하세요**
+3. **Check whether the result resembles someone else's**
 
-   안내서는 침해 책임이 일반적으로 결과물을 생성하도록 프롬프트를 입력한 **이용자**에게 있고, 서비스 사업자도 일정한 경우 책임질 여지가 있다고 설명해요. 이용자가 특정 작품을 알고 있었고 그 표현과 닮은 결과가 나오도록 구체적 프롬프트를 여러 번 넣었다면 위험이 높을 수 있다는 설명도 있어요. 반대로 "귀여운 고양이 그림" 같은 평범한 요청에서 우연히 닮은 경우는 곧바로 침해라고 단정하지 않는다고 해요. 어디까지가 침해인지는 개별 사안마다 달라서, 이 글은 선을 그어 드릴 수 없어요.
+   The guide explains that responsibility for infringement generally lies with the **user** who entered the prompt to generate the output, and that the service provider can also be responsible in certain cases. It also explains that the risk can be high if the user knew of a particular work and entered specific prompts several times so the result would resemble its expression. Conversely, it says that when an ordinary request like "a picture of a cute cat" happens to produce something similar by chance, it doesn't immediately treat that as infringement. Where infringement begins differs case by case, so this tutorial can't draw that line for you.
 
-   실무에서는 이렇게 해 보세요.
+   In practice, try this:
 
-   - 외부에 올릴 결과물은 **이미지 검색**(구글 렌즈, 네이버 이미지 검색 등)으로 비슷한 기존 작품이 있는지 찾아봐요.
-   - 글이라면 눈에 띄는 문장을 따옴표로 검색해서 원문이 나오는지 확인해요.
-   - 로고, 캐릭터, 유명 인물 얼굴처럼 알아볼 수 있는 것이 들어갔다면 쓰지 않는 쪽이 안전해요.
+   - For output you'll post externally, use **image search** (Google Lens, Naver image search for users in Korea, and so on) to see if similar existing work exists.
+   - For text, search eye-catching sentences in quotation marks and see if the original turns up.
+   - If something recognizable is included, such as a logo, a character, or a famous person's face, it's safer not to use it.
 
-4. **얼굴·목소리·상표는 저작권과 별도로 조심하세요**
+4. **Be careful with faces, voices, and trademarks, separately from copyright**
 
-   안내서는 저작권 외에도 인격권, 초상권, 영업비밀 같은 권리가 침해될 수 있다고 알려요. 실존 인물의 사진을 AI에 넣어 변형하거나 목소리를 흉내 내는 것, 회사 기밀을 프롬프트에 넣는 것은 따로 조심해야 해요. 기밀 정보를 넣는 문제는 [5편: 개인정보·안전](/basics/05-privacy-safety/)에서 다뤘어요.
+   The guide notes that besides copyright, rights such as personality rights, portrait rights, and trade secrets can be infringed. Altering a real person's photo with AI, imitating a voice, or putting company secrets into a prompt each need separate care. We covered the problem of entering confidential information in [tutorial 5: Privacy and safety](/basics/05-privacy-safety/).
 
-5. **쓰는 서비스의 약관을 직접 읽으세요**
+5. **Read the terms of the service you use yourself**
 
-   안내서는 AI 서비스가 결과물의 저작권 귀속과 상업적 이용 가능 여부를 약관에 적어 두니, 반드시 확인하고 허용 범위를 넘지 말라고 해요. 이 글이 공식 약관 페이지에서 직접 확인한 내용은 아래와 같아요.
+   The guide says that AI services state in their terms who owns the output's copyright and whether commercial use is allowed, so be sure to check and don't go beyond what's permitted. Here is what this tutorial confirmed directly on the official terms pages.
 
-   | 서비스 | 확인한 내용 | 확인일·기준 |
+   | Service | What we confirmed | Date and version |
    | --- | --- | --- |
-   | **Claude** (소비자 이용약관) | 약관을 지키는 한, Anthropic은 결과물(Outputs)에 대해 자신이 가진 권리가 있다면 그 모든 권리를 이용자에게 넘긴다고 적혀 있어요("if any"). 입력물에 대한 권리는 이용자가 계속 가진다고 해요. 결과물에 부정확한 내용이 있을 수 있어 확인 없이 믿지 말라는 안내도 있어요. | 2025-10-08 시행판, 2026-10-14 확인 |
-   | **Gemini** (Google 서비스 약관) | 이용자가 서비스로 만든 콘텐츠에 대해 Google이 소유권을 주장하지 않는다고 적혀 있어요. 또 생성형 AI 콘텐츠를 사람이 만든 것처럼 남을 속이는 행위를 금지 행위의 예로 들어요. | 2026-07-30 시행판, 2026-10-14 확인 |
-   | **ChatGPT** | OpenAI 약관 페이지가 이 환경에서 열리지 않아(접근 거부) **공식 약관에서 확인하지 못했어요.** 쓰기 전에 직접 읽어 보세요. | 확인 못 함 |
-   | **Midjourney 등 이미지 서비스** | 약관 페이지가 열리지 않아 **확인하지 못했어요.** 이미지 도구는 [이미지 생성 심화](/media/30-image-generation-advanced/) 편의 안내와 공식 약관을 함께 보세요. | 확인 못 함 |
+   | **Claude** (Consumer Terms) | As long as you comply with the terms, Anthropic assigns to you whatever rights it has in the Outputs, if any ("if any"). You keep your rights in your inputs. It also notes that outputs may contain inaccuracies, so don't rely on them without checking. | Version effective 2025-10-08, checked 2026-10-14 |
+   | **Gemini** (Google Terms of Service) | It states that Google doesn't claim ownership of content you create with the services. It also lists, as an example of prohibited conduct, deceiving others by presenting generative AI content as if it were human-made. | Version effective 2026-07-30, checked 2026-10-14 |
+   | **ChatGPT** | OpenAI's terms page wouldn't open in this environment (access denied), so **we couldn't confirm this from the official terms.** Read them yourself before using. | Not confirmed |
+   | **Midjourney and other image services** | The terms pages wouldn't open, so **we couldn't confirm this.** For image tools, read the guidance in [Advanced image generation](/media/30-image-generation-advanced/) together with the official terms. | Not confirmed |
 
-   <Aside type="note" title="약관이 말하는 것과 법이 인정하는 것은 달라요">
-   약관에서 "결과물의 권리를 이용자에게 넘긴다"고 해도, 그 결과물에 **법적으로 저작권이 생기는지**는 별개 문제예요. 위 Claude 약관도 회사가 "가진 권리가 있다면"이라는 조건을 달아 두었어요. 한국 안내서는 사람의 창작적 기여가 없는 AI 산출물을 저작물로 보지 않는다고 설명하니, 약관의 허락과 법적 보호를 구분해서 이해하세요.
+   <Aside type="note" title="What the terms say and what the law recognizes are different">
+   Even if the terms say "we assign rights in the output to you," whether that output **legally has copyright** is a separate question. The Claude terms above also attach the condition "if any" to the rights the company holds. The Korean guide explains that AI output with no creative contribution from a person isn't regarded as a work, so understand the difference between permission under the terms and legal protection.
    </Aside>
 
-   무료·유료 플랜에 따라 약관이나 기능이 다를 수 있으니, 플랜 차이는 [8편: 무료 vs 유료](/basics/08-free-vs-paid/)와 각 서비스 공식 안내에서 확인하세요.
+   Terms and features may differ by free and paid plan. Check plan differences in [tutorial 8: Free vs. paid](/basics/08-free-vs-paid/) and each service's official information.
 
-6. **올리기 전 마지막 점검 절차**
+6. **A final check before you post**
 
-   <FlowSteps title="AI 결과물을 외부에 올리기 전 점검 흐름" officialUrl="https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=54252" steps={[
-     { where: '결과물 완성 직후', action: '용도 확인 (개인 보관 / 공개 / 영리)' },
-     { where: '이미지·문장 검색', action: '기존 작품과 닮았는지 확인', result: '닮았으면 다시 만들거나 쓰지 않아요' },
-     { where: '서비스 약관', action: '상업적 이용 가능 범위 확인' },
-     { where: '게시 직전', action: '실존 인물·로고·남의 글이 들어갔는지 마지막 점검' },
+   <FlowSteps title="Checklist flow before posting AI output externally" officialUrl="https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=54252" steps={[
+     { where: 'Right after the output is done', action: 'Confirm the use (keep personal / publish / for profit)' },
+     { where: 'Image and text search', action: 'Check whether it resembles existing work', result: 'If it does, remake it or don\'t use it' },
+     { where: 'Service terms', action: 'Check the scope of permitted commercial use' },
+     { where: 'Right before posting', action: 'Last check for real people, logos, or other people\'s writing' },
    ]} />
 
-   <ScreenshotPlaceholder caption="한국저작권위원회 자료실의 '생성형 인공지능 결과물에 의한 저작권 분쟁 예방 안내서' 상세 페이지" officialUrl="https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=54252" officialLabel="한국저작권위원회에서 안내서 보기" />
+   <ScreenshotPlaceholder caption="The detail page of the Korea Copyright Commission's 'Guide to preventing copyright disputes over generative AI output'" officialUrl="https://www.copyright.or.kr/information-materials/publication/research-report/view.do?brdctsno=54252" officialLabel="See the guide at the Korea Copyright Commission" />
 
-7. **AI를 썼다는 것은 사실대로 밝히세요**
+7. **Be honest that you used AI**
 
-   어디까지 밝혀야 하는지는 학교, 회사, 공모전, 출판사의 규칙마다 달라요. 이 글은 일반적인 법적 의무를 단정하지 않아요. 확인된 것은 두 가지예요.
+   How much you need to disclose depends on the rules of your school, company, contest, or publisher. This tutorial doesn't claim a general legal obligation. Two things were confirmed:
 
-   - Google 약관은 생성형 AI 콘텐츠를 사람이 만든 것처럼 남을 속이는 일을 금지 행위의 예로 들어요.
-   - 한국저작권위원회 안내서는 저작권 등록 때 AI 산출물을 사람이 창작한 것처럼 거짓으로 신청하면 **허위 등록으로 처벌될 수 있다**고 경고해요. 등록 신청서에는 AI 산출물 부분과 사람이 창작한 부분을 나누어 쓰도록 안내해요.
+   - Google's terms list deceiving others by presenting generative AI content as human-made as an example of prohibited conduct.
+   - The Korea Copyright Commission's guide warns that if you falsely apply for copyright registration presenting AI output as if a person created it, you **can be punished for false registration**. It directs applicants to separate the AI-output parts from the human-created parts on the registration form.
 
-   습관으로는 "초안은 AI로 만들고 제가 고쳤습니다" 정도로 솔직하게 밝히는 것이 가장 안전해요. 학교 과제나 공모전은 해당 규정을 먼저 읽으세요.
+   As a habit, it's safest to say plainly something like "I made the draft with AI and edited it myself." For school assignments or contests, read the relevant rules first.
 
-8. **결과가 사실인지도 확인하세요**
+8. **Check that the result is true, too**
 
-   윤리의 또 다른 축은 정확성이에요. AI는 그럴듯하게 틀릴 수 있어요. 숫자·인용·출처는 [4편: 사실 확인하는 법](/basics/04-fact-checking/)대로 직접 확인하고, 남에게 보여 주기 전에 내가 책임질 수 있는지 한 번 더 보세요.
+   Another pillar of ethics is accuracy. AI can be plausibly wrong. Check numbers, quotes, and sources yourself as in [tutorial 4: How to fact-check](/basics/04-fact-checking/), and before showing it to others, ask once more whether you can stand behind it.
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-| 상황 | 안내서 기준으로 본 큰 그림 | 할 일 |
+| Situation | The big picture under the guide | What to do |
 | --- | --- | --- |
-| 프롬프트만 넣고 나온 그림을 그대로 사용 | 사람의 창작적 기여가 없으면 저작권 등록 대상이 아니에요. 최종 판단은 법원 | 독점 권리가 있다고 생각하지 마세요 |
-| AI 그림을 골라서 배열하고 직접 고쳐서 완성 | 사람이 기여한 부분은 등록이 가능할 수 있어요(효력은 그 부분에만) | 어떤 작업을 했는지 기록해 두세요 |
-| 내가 그린 밑그림을 AI로 다듬음 | 내 창작이 결과에 알아볼 수 있게 남아 있으면 등록이 가능할 수 있어요 | 밑그림 원본을 보관하세요 |
-| 특정 캐릭터·작가 스타일을 지시 | 기존 작품과 닮으면 침해 문제가 될 수 있어요 | 지시하지 말고, 닮았으면 쓰지 마세요 |
-| 실존 인물 얼굴·목소리 사용 | 저작권 외에 초상권·인격권 문제가 생길 수 있어요 | 본인 동의 없이는 쓰지 마세요 |
-| 개인 노트용으로만 사용 | 안내서는 개인 생성만으로는 침해가 아닐 수 있다고 봐요 | 그래도 외부 공유 전엔 재확인 |
-| 광고·상품·출판에 사용 | 영리 목적은 사전 확인이 더 필요하다고 안내돼요 | 닮은 작품 검색 + 약관 확인 + 전문가 상담 |
+| Using a picture made from a prompt only, as is | Without a person's creative contribution, it isn't eligible for copyright registration. Final decision rests with the court | Don't assume you have exclusive rights |
+| Selecting and arranging AI pictures and finishing them by hand | Registration may be possible for the human-contributed parts (effective only for those parts) | Keep a record of what work you did |
+| Refining my own rough sketch with AI | If my creative work remains recognizable in the result, registration may be possible | Keep the original sketch |
+| Instructing a specific character or artist's style | If it resembles existing work, it can be an infringement issue | Don't instruct it, and if it looks similar, don't use it |
+| Using a real person's face or voice | Beyond copyright, portrait and personality rights issues can arise | Don't use without the person's consent |
+| Using it only for personal notes | The guide holds that personal generation alone might not be infringement | Still recheck before sharing externally |
+| Using it in ads, products, or publishing | Commercial purposes are described as needing more advance checking | Search for similar works + check terms + consult an expert |
 
-## 자주 막히는 지점
+## Common sticking points
 
-### "AI가 만들었으니 내 저작물이 아닌가요?"
+### "If AI made it, isn't it not my work?"
 
-- **원인**: "AI가 만든 것"과 "내가 AI를 도구로 쓴 것"이 섞여 있어서 헷갈려요.
-- **해결**: 안내서는 사람의 창작적 기여가 없는 산출물은 저작물로 보지 않지만, 사람이 기여한 부분(수정, 선택·배열, 직접 쓴 입력물)은 저작물이 될 수 있다고 해요. 어느 쪽인지는 사안마다 달라서 법원이 최종 판단해요.
+- **Cause**: "Made by AI" and "I used AI as a tool" get mixed together.
+- **Fix**: The guide doesn't treat output with no creative human contribution as a work, but says the parts a person contributed (edits, selection and arrangement, inputs you wrote yourself) can be works. Which side you're on differs case by case, and the court makes the final call.
 
-### "약관에 상업적으로 써도 된다고 되어 있는데 안전한가요?"
+### "The terms say commercial use is okay. Is that safe?"
 
-- **원인**: 약관의 허락과 제3자의 권리 침해 문제는 별개예요.
-- **해결**: 약관은 서비스와 나 사이의 약속이에요. 결과물이 남의 작품과 닮아서 생기는 문제까지 약관이 막아 주지는 않아요. 안내서가 든 국내 서비스 약관 사례에도 결과물 사용 책임은 회원에게 있다는 조항이 나와요.
+- **Cause**: Permission under the terms and infringing a third party's rights are separate matters.
+- **Fix**: The terms are an agreement between the service and you. They don't prevent problems that arise because the output resembles someone else's work. Even the Korean service terms cited in the guide include a clause that members are responsible for using the output.
 
-### "남이 내 글·그림을 AI에 쓰지 못하게 하고 싶어요"
+### "I want to stop others from using my writing and art in AI"
 
-- **원인**: 창작자 입장에서도 AI 학습이 고민이에요.
-- **해결**: 안내서(2025년 6월 기준)는 허락 없이 저작물을 AI 학습에 쓰는 것이 침해인지에 대해 법원 판단이 아직 없다고 밝히고, 권리자가 거부 의사를 명시하거나 robots.txt로 크롤러를 제한하는 방법 등을 참고용으로 소개해요. 법적 효력은 확립된 해석이 없다고도 적어요.
+- **Cause**: AI training is a worry from the creator's side too.
+- **Fix**: The guide (as of June 2025) states that there is not yet a court ruling on whether using works for AI training without permission is infringement, and introduces, for reference, methods such as rights holders stating their refusal explicitly or restricting crawlers with robots.txt. It also notes that there's no established interpretation of their legal effect.
 
-### "분쟁이 생겼는데 어디에 물어요?"
+### "A dispute came up. Where do I ask?"
 
-- **원인**: 개인이 혼자 판단하기 어려워요.
-- **해결**: 한국저작권위원회는 AI 분야 상담 전담 변호사 창구(전화 1800-5455 연결 후 0번, 2026-10-14 해당 페이지 기준)를 안내하고 있어요. 안내서는 분쟁 조정 제도도 소개해요. 구체적 사안은 변호사와 상의하세요.
+- **Cause**: It's hard for an individual to judge alone.
+- **Fix**: For users in Korea, the Korea Copyright Commission offers a desk with lawyers dedicated to AI consultations (call 1800-5455, then press 0, per that page as of 2026-10-14). The guide also introduces a dispute mediation system. For specific cases, talk to a lawyer.
 
-## 실전 팁
+## Practical tips
 
-- 결과물을 만들 때 쓴 **프롬프트, 수정 전후 파일, 작업 날짜**를 폴더에 모아 두면 내가 어떤 기여를 했는지 설명하기 좋아요.
-- 완전히 새로 만든 작품이 필요한 일(로고, 브랜드 이미지)은 AI 결과를 **초안으로 삼아 직접 다듬는** 편이 안전하고 품질도 좋아요.
-- 학교·회사의 AI 사용 규정이 있으면 이 글보다 **그 규정이 우선**이에요.
-- 가이드라인은 바뀔 수 있어요. 큰 일 전에는 한국저작권위원회 최신 자료를 한 번 더 열어 보세요.
+- Collecting the **prompts, before-and-after files, and work dates** in a folder when you make output makes it easier to explain what contribution you made.
+- For jobs that need an entirely new work (a logo, brand imagery), it's safer and better in quality to **treat the AI result as a draft and refine it yourself**.
+- If your school or company has an AI usage policy, **that policy takes priority** over this tutorial.
+- Guidelines can change. Before anything big, open the Korea Copyright Commission's latest materials once more.
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [개인정보·회사 정보 안전하게 지키며 쓰기](/basics/05-privacy-safety/) — 프롬프트에 넣으면 안 되는 정보
-- [AI 답변 믿어도 될까: 사실 확인하는 법](/basics/04-fact-checking/) — 결과의 정확성 점검
-- [이미지 생성 심화](/media/30-image-generation-advanced/) — 도구별 이미지 만들기와 이용 조건
-- [사업용 이미지 만들기](/media/11-business-images/) — 홍보용 이미지 실습
-- [1인 사업자를 위한 가이드](/roles/solo-business/) — 상업적 사용이 많은 분께
-- [교사를 위한 가이드](/roles/teacher/) — 수업 자료에 AI 결과물을 쓸 때
+- [Using AI while protecting personal and company information](/basics/05-privacy-safety/) — Information you shouldn't put in prompts
+- [Can you trust AI answers? How to fact-check](/basics/04-fact-checking/) — Checking the accuracy of results
+- [Advanced image generation](/media/30-image-generation-advanced/) — Making images with each tool and usage terms
+- [Making business images](/media/11-business-images/) — Practice with promotional images
+- [A guide for solo business owners](/roles/solo-business/) — For those with heavy commercial use
+- [A guide for teachers](/roles/teacher/) — When using AI output in class materials

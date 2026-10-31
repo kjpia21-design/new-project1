@@ -1,16 +1,16 @@
 ---
-title: "스킬(Skills) 사용하고 직접 만들기"
-description: "Claude가 필요할 때 불러오는 스킬을 켜 보고, 간단한 스킬을 직접 만들어 claude.ai와 Claude Code에서 쓰는 방법을 정리한 참고서"
+title: "Using and building Skills"
+description: "A reference for turning on the Skills Claude loads when it needs them, building a simple skill yourself, and using it in claude.ai and Claude Code"
 sidebar:
-  label: "C8. 스킬"
+  label: "C8. Skills"
 level: practical
 category: claude
 tools: ["Claude", "Claude Code"]
-duration: "30분"
+duration: "30 min"
 prerequisites:
-  - "claude.ai 계정 (Free/Pro/Max/Ultra/Team/Enterprise)"
-  - "설정(Settings)에서 코드 실행 및 파일 생성 켜기"
-  - "(Claude Code 예제를 따라 한다면) Claude Code가 설치된 터미널과 git 저장소"
+  - "A claude.ai account (Free/Pro/Max/Ultra/Team/Enterprise)"
+  - "Code execution and file creation turned on in Settings"
+  - "(If you follow the Claude Code example) A terminal with Claude Code installed and a git repository"
 lastVerified: 2026-10-31
 sources:
   - title: "Claude pricing"
@@ -35,82 +35,82 @@ import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- 스킬은 **지침·스크립트·리소스가 담긴 폴더**예요. Claude가 전문 작업에 필요할 때 동적으로 불러와요.
-- Free/Pro/Max/Ultra/Team/Enterprise에서 쓸 수 있고 코드 실행(code execution)이 켜져 있어야 해요. Claude Code와 API에서도 써요.
-- Excel, Word, PowerPoint, PDF 내장 스킬은 요청에 맞으면 Claude가 자동으로 골라요.
-- 스킬의 핵심 파일은 frontmatter(`name`, `description`)가 있는 마크다운이에요. 파일명은 문서마다 `skill.md`와 `SKILL.md`로 달라요. **Claude Code 문서 기준은 `SKILL.md`**예요.
-- 신뢰할 수 있는 출처의 스킬만 설치하고, 활성화하기 전에 번들 파일(특히 스크립트)을 읽으세요.
+- A skill is a **folder of instructions, scripts, and resources**. Claude loads it dynamically when a specialized task calls for it.
+- Skills are available on Free/Pro/Max/Ultra/Team/Enterprise, and code execution must be turned on. They also work in Claude Code and the API.
+- For the built-in Excel, Word, PowerPoint, and PDF skills, Claude picks the right one automatically when your request fits.
+- The core file of a skill is a markdown file with frontmatter (`name`, `description`). The file name differs between docs: `skill.md` in some and `SKILL.md` in others. **The Claude Code docs use `SKILL.md`.**
+- Install skills only from sources you trust, and read the bundled files (especially scripts) before you enable a skill.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do
 
-- 내장 스킬이 언제 쓰이는지 알고, 스킬을 켜고 끌 수 있어요.
-- 간단한 커스텀 스킬을 만들어 claude.ai에 올릴 수 있어요.
-- Claude Code에서 `SKILL.md`로 스킬을 만들고 `/스킬이름`으로 실행할 수 있어요.
-- 스킬의 보안 위험을 알고 안전하게 쓸 수 있어요.
+- Know when the built-in skills kick in, and turn skills on and off.
+- Build a simple custom skill and upload it to claude.ai.
+- Create a skill with `SKILL.md` in Claude Code and run it with `/skill-name`.
+- Understand the security risks of skills and use them safely.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **스킬(Skill)** | 지침·스크립트·리소스가 담긴 폴더예요. Claude가 필요할 때 동적으로 불러와요. |
-| **내장 스킬** | Anthropic이 제공하는 Excel, Word, PowerPoint, PDF 생성·처리 스킬이에요. |
-| **커스텀 스킬** | 내가 만드는 스킬이에요. 폴더 이름이 스킬 이름과 같아야 하고, 마크다운 파일이 필요해요. |
-| **frontmatter** | 파일 맨 위 `---` 사이의 YAML 설정이에요. 이름과 설명 등을 적어요. |
-| **description** | Claude가 이 스킬을 언제 쓸지 판단하는 근거예요. 구체적으로 쓸수록 잘 불려와요. |
-| **`/skill-name`** | Claude Code에서 스킬을 직접 호출하는 명령이에요. description에 맞으면 Claude가 자동으로 불러오기도 해요. |
+| **Skill** | A folder of instructions, scripts, and resources. Claude loads it dynamically when it's needed. |
+| **Built-in skills** | Skills from Anthropic for creating and handling Excel, Word, PowerPoint, and PDF files. |
+| **Custom skill** | A skill you build yourself. The folder name must match the skill name, and a markdown file is required. |
+| **frontmatter** | The YAML settings between the `---` lines at the top of the file. You put the name, description, and more here. |
+| **description** | What Claude uses to decide when to use the skill. The more specific it is, the more reliably the skill gets loaded. |
+| **`/skill-name`** | The command that calls a skill directly in Claude Code. Claude may also load it automatically when the description matches. |
 
-### 파일 이름은 `skill.md`일까요, `SKILL.md`일까요?
+### Is the file called `skill.md` or `SKILL.md`?
 
-| 문서 | 표기 |
+| Doc | Spelling |
 | --- | --- |
-| claude.ai 지원센터의 "How to create custom skills" | `skill.md` (소문자로만 표기) |
-| Claude Code 문서 | `SKILL.md` (대문자) |
+| "How to create custom skills" in the claude.ai Help Center | `skill.md` (lowercase only) |
+| Claude Code docs | `SKILL.md` (uppercase) |
 
-두 표기가 문서마다 달라요. 이 튜토리얼에서는 두 문서의 예시를 각각 그대로 소개하고, **Claude Code 문서 기준은 `SKILL.md`**라고 밝혀요. 직접 만들 때는 `SKILL.md`(대문자)로 쓰는 편이 안전해 보이지만, claude.ai 업로드에서 대소문자가 어떻게 처리되는지는 확정하지 못했어요. 업로드가 안 되면 지원센터 문서의 표기(`skill.md`)로 바꿔 보세요.
+The two docs spell it differently. This tutorial presents each doc's example as written and notes that **the Claude Code docs use `SKILL.md`**. When you build one yourself, `SKILL.md` (uppercase) seems the safer choice, but we couldn't confirm how claude.ai handles upper- and lowercase on upload. If the upload fails, switch to the Help Center spelling (`skill.md`).
 
-### 두 가지 frontmatter 규칙
+### Two sets of frontmatter rules
 
-| | claude.ai (지원센터) | Claude Code |
+| | claude.ai (Help Center) | Claude Code |
 | --- | --- | --- |
-| `name` | 필수, 최대 64자 | 선택. 기본값은 폴더 이름 |
-| `description` | 필수, 최대 200자 | 권장. 핵심 용도를 앞에 쓰기. `description`과 `when_to_use`를 합친 글은 스킬 목록에서 1,536자까지만 보여요(2026-10-26 기준) |
-| 그 외 | 선택 `dependencies` (예: python>=3.8) | `when_to_use`, `argument-hint`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `context: fork`, `model`, `effort`, `paths`, `hooks` 등 |
+| `name` | Required, up to 64 characters | Optional. Defaults to the folder name |
+| `description` | Required, up to 200 characters | Recommended. Put the key use first. The combined text of `description` and `when_to_use` is truncated at 1,536 characters in the skill list (as of 2026-10-26) |
+| Others | Optional `dependencies` (e.g., python>=3.8) | `when_to_use`, `argument-hint`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `context: fork`, `model`, `effort`, `paths`, `hooks`, and more |
 
-<Aside type="note" title="공식 문서에 없는 수치와 메뉴 이름">
-- claude.ai 스킬 업로드의 ZIP 크기 제한: 공식 도움말은 "크기 제한 초과"가 업로드 실패 원인이 될 수 있다고만 하고 숫자는 공개하지 않아요(2026-10-13 확인).
-- "Create skill" 대화로 만들기는 이 튜토리얼에서 다루지 않아요. 화면 녹화로 스킬 만들기는 공식 도움말에서 조건을 확인했어요(2026-10-13 기준). Mac용 Claude의 Cowork에서만 되고 Pro/Max/Team 플랜 대상이에요. 채팅, Windows, Free, Enterprise에서는 쓸 수 없고, macOS 손쉬운 사용(Accessibility)과 화면 기록(Screen recording) 권한이 필요하며 녹화는 약 10분까지 가능해요.
-- 업로드 메뉴 이름은 공식 도움말에서 "+" 버튼 > "+ Create skill" > "Upload a skill"로 안내돼요(2026-10-13 확인). 화면 표기가 다르면 화면을 우선하세요.
+<Aside type="note" title="Numbers and menu names not in the official docs">
+- ZIP size limit for claude.ai skill uploads: the official help says only that "exceeding the size limit" can cause an upload to fail, and doesn't publish a number (confirmed 2026-10-13).
+- This tutorial doesn't cover building a skill through the "Create skill" conversation. For building a skill from a screen recording, we checked the conditions in the official help (as of 2026-10-13). It works only in Cowork on Claude for Mac, for Pro/Max/Team plans. It isn't available in chat, on Windows, on Free, or on Enterprise; it needs macOS Accessibility and Screen recording permissions, and recordings can run up to about 10 minutes.
+- The official help describes the upload menu as "+" button > "+ Create skill" > "Upload a skill" (confirmed 2026-10-13). If what you see on screen differs, go with the screen.
 </Aside>
 
-## 단계별 따라하기
+## Step by step
 
 <Checklist items={[
-  '설정에서 코드 실행 및 파일 생성을 켰어요',
-  '내장 스킬이 쓰이는 요청을 해 봤어요',
-  '스킬 폴더와 파일을 만들었어요',
-  'ZIP으로 만들어 claude.ai에 업로드하고 켰어요',
-  '관련 요청으로 스킬이 불려오는지 테스트했어요',
-  '(선택) Claude Code에서 SKILL.md 스킬을 만들어 실행했어요',
+  'I turned on code execution and file creation in Settings',
+  'I made a request that uses a built-in skill',
+  'I created the skill folder and file',
+  'I zipped it, uploaded it to claude.ai, and turned it on',
+  'I tested that the skill loads for related requests',
+  '(Optional) I created and ran a SKILL.md skill in Claude Code',
 ]} />
 
 <Steps>
 
-1. **코드 실행 켜기**
+1. **Turn on code execution**
 
-   설정(Settings) > Capabilities에서 **Code execution and file creation**(새 화면 구성에서는 **Create and edit files**)을 켜요. 그다음 Customize > Skills에서 스킬별로 토글을 켜고 꺼요. Team/Enterprise는 Owner가 조직 설정(Organization settings) > Plugins & skills(Policy 탭)에서 코드 실행과 스킬을 먼저 켜야 해요.
+   Go to Settings > Capabilities and turn on **Code execution and file creation** (in the newer layout, **Create and edit files**). Then go to Customize > Skills and flip the toggle for each skill on or off. On Team/Enterprise, an Owner has to turn on code execution and skills first under Organization settings > Plugins & skills (Policy tab).
 
-2. **내장 스킬 체험하기**
+2. **Try a built-in skill**
 
-   코드 실행이 켜져 있으면 요청에 맞는 내장 스킬을 Claude가 자동 선택해요. 분기 실적 발표자료를 요청하면 PowerPoint 스킬이 쓰이는 식이에요.
+   With code execution on, Claude automatically picks the built-in skill that fits your request. Ask for a quarterly results deck and the PowerPoint skill gets used, for example.
 
    <PromptBox>
-   첨부한 월별 매출 표를 바탕으로 3분기 실적 발표용 PowerPoint 5장을 만들어 줘. 장마다 핵심 메시지 한 줄과 표 또는 그래프 하나를 넣어 줘.
+   Using the attached monthly sales table, make a 5-slide PowerPoint for our Q3 results presentation. On each slide, put one key-message line and either one table or one chart.
    </PromptBox>
 
-3. **커스텀 스킬 폴더 만들기**
+3. **Create a custom skill folder**
 
-   회의록을 매번 같은 형식으로 요약하는 스킬을 만들어 봐요. 폴더 이름은 스킬 이름과 같게 하세요. 아래는 claude.ai용 예시예요. 지원센터 문서는 `skill.md`로 적고, `name`과 `description`이 필수예요.
+   Let's build a skill that summarizes meeting notes in the same format every time. Name the folder the same as the skill. The example below is for claude.ai. The Help Center doc uses `skill.md`, and `name` and `description` are required.
 
    ```text
    meeting-notes/
@@ -120,26 +120,26 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    ```markdown
    ---
    name: meeting-notes
-   description: 회의 메모를 결정사항, 할 일, 미결 사항으로 정리한다. 회의록 요약을 요청할 때 사용한다.
+   description: Organizes meeting notes into decisions, action items, and open questions. Use when asked to summarize meeting minutes.
    ---
 
-   # 회의록 요약
+   # Meeting notes summary
 
-   ## 지침
-   회의 메모를 받으면 아래 순서로 정리한다.
-   1. 한 줄 요약
-   2. 결정사항 (번호 목록)
-   3. 할 일 (담당자 / 기한 / 내용 표)
-   4. 미결 사항
+   ## Instructions
+   When you receive meeting notes, organize them in this order.
+   1. One-line summary
+   2. Decisions (numbered list)
+   3. Action items (table of owner / due date / task)
+   4. Open questions
 
-   메모에 없는 담당자나 기한은 지어내지 말고 "미정"이라고 쓴다.
+   If the notes don't name an owner or a due date, don't make one up. Write "TBD" instead.
    ```
 
-   하나의 스킬은 하나의 워크플로에 집중하는 것이 좋아요. 입출력 예시를 본문에 넣으면 더 안정적이에요.
+   A skill works best when it focuses on a single workflow. Putting input and output examples in the body makes it more reliable.
 
-4. **ZIP으로 묶어 올리기**
+4. **Zip it and upload**
 
-   ZIP의 **루트에 스킬 폴더**가 있어야 해요. 파일이 ZIP 루트에 흩어져 있으면 안 돼요.
+   The **skill folder must be at the root** of the ZIP. Files scattered at the ZIP root won't work.
 
    ```text
    meeting-notes.zip
@@ -147,21 +147,21 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
        └── skill.md
    ```
 
-   Customize > Skills에서 **+** > **Create skill** > **Upload a skill**을 고르고 ZIP을 선택한 뒤, 목록에서 토글을 켜요.
+   In Customize > Skills, choose **+** > **Create skill** > **Upload a skill**, pick the ZIP, and then turn on the toggle in the list.
 
-   <ScreenshotPlaceholder caption="Customize > Skills에서 ZIP을 업로드하고 토글을 켜는 화면" officialUrl="https://support.claude.com/en/articles/12512180-use-skills-in-claude" />
+   <ScreenshotPlaceholder caption="Uploading a ZIP in Customize > Skills and turning on the toggle" officialUrl="https://support.claude.com/en/articles/12512180-use-skills-in-claude" />
 
-5. **테스트하고 description 다듬기**
+5. **Test it and refine the description**
 
-   관련 요청을 여러 가지로 보내 스킬이 불려오는지 확인해요. 불려오지 않으면 description을 더 구체적으로 고쳐요.
+   Send a few different related requests and check that the skill loads. If it doesn't, make the description more specific.
 
    <PromptBox>
-   오늘 팀 회의 메모야. 정리해 줘. 신제품 일정은 11월 말로 하기로 했고, 디자인 시안은 박 대리가 다음 주 금요일까지, 가격 정책은 아직 결론이 안 났어.
+   Here are today's team meeting notes. Please organize them. We decided to set the new product schedule for the end of November, Alex will deliver the design draft by next Friday, and we haven't reached a conclusion on the pricing policy.
    </PromptBox>
 
-6. **Claude Code에서 스킬 만들기 (선택)**
+6. **Create a skill in Claude Code (optional)**
 
-   Claude Code는 파일 기반 스킬을 써요. 개인 스킬은 `~/.claude/skills/<이름>/SKILL.md`, 프로젝트 스킬은 `.claude/skills/<이름>/SKILL.md`에 둬요. 공식 문서의 예제를 그대로 따라 해 봐요. 변경 사항을 요약하고 위험 요소를 알려 주는 스킬이에요.
+   Claude Code uses file-based skills. Put a personal skill at `~/.claude/skills/<name>/SKILL.md` and a project skill at `.claude/skills/<name>/SKILL.md`. Follow the example from the official docs as is. It's a skill that summarizes your changes and flags risks.
 
    ```markdown
    ---
@@ -177,93 +177,93 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    Summarize the changes above in two or three bullet points, then list any risks you notice such as missing error handling, hardcoded values, or tests that need updating. If the diff is empty, say there are no uncommitted changes.
    ```
 
-   이 내용을 `~/.claude/skills/summarize-changes/SKILL.md`로 저장하고, git 저장소에서 `/summarize-changes`를 실행해요. `` !`git diff HEAD` `` 줄은 Claude Code가 명령을 실행해 결과로 바꾼 뒤 Claude에 전달해요. 저장소 안에서 변경을 만든 뒤 실행해야 내용이 있어요.
+   Save this as `~/.claude/skills/summarize-changes/SKILL.md`, then run `/summarize-changes` inside a git repository. For the `` !`git diff HEAD` `` line, Claude Code runs the command and swaps in the result before passing the text to Claude. You need to make some changes in the repository before running it, or there's nothing to summarize.
 
-   <Aside type="note" title="Claude Code 스킬 참고">
-   - 같은 이름이면 enterprise > personal > project 순으로 우선해요. 커스텀 명령은 스킬로 통합됐어요.
-   - 같은 계정에서 claude.ai에 켜 둔 스킬·플러그인은 로그인한 터미널 세션에 동기화되어 `/skills`에 나타나요. 변경 확인 주기는 세션이 쓰이지 않는 동안 약 40분마다예요(2.1.293, 이전에는 10분). 끄려면 설정에 `syncClaudeAiSkills: false`(플러그인은 `syncClaudeAiPlugins: false`)를 넣으세요.
-   - 클라우드 세션에서는 동기화된 스킬 이름이 `anthropic-skills:<name>`이에요. 다른 곳에서 쓰지 않는 이름이면 이름만으로도 호출돼요.
-   - 로컬에서 `anthropic-skills` 이름공간으로 만든 스킬 폴더·명령 파일은 로드되지 않아요(2.1.282).
-   - 개인 스킬은 Cowork나 클라우드 세션에는 적용되지 않아요(공식 문서 기준).
+   <Aside type="note" title="Notes on Claude Code skills">
+   - When names collide, precedence is enterprise > personal > project. Custom commands have been merged into skills.
+   - Skills and plugins you've turned on in claude.ai for the same account sync into logged-in terminal sessions and show up in `/skills`. Changes are checked about every 40 minutes while the session is idle (2.1.293; it used to be 10 minutes). To turn this off, put `syncClaudeAiSkills: false` in your settings (`syncClaudeAiPlugins: false` for plugins).
+   - In cloud sessions, a synced skill is named `anthropic-skills:<name>`. If the name isn't used anywhere else, you can call it by the bare name.
+   - Skill folders and command files you create locally under the `anthropic-skills` namespace aren't loaded (2.1.282).
+   - Personal skills don't apply in Cowork or cloud sessions (per the official docs).
    </Aside>
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-### claude.ai 스킬 요약
+### claude.ai skills at a glance
 
-| 항목 | 내용 |
+| Item | Details |
 | --- | --- |
-| 사용 가능 | Free/Pro/Max/Ultra/Team/Enterprise (코드 실행 필요) |
-| 켜는 곳 | Settings > Capabilities > Code execution and file creation(새 화면: Create and edit files), 그다음 Customize > Skills |
-| 필수 구조 | 폴더 이름 = 스킬 이름, 안에 `skill.md`(지원센터 표기) |
-| 필수 frontmatter | `name`(64자 이하), `description`(200자 이하) |
-| ZIP | ZIP 루트에 스킬 폴더 |
-| Team/Enterprise | Owner가 Plugins & skills(Policy 탭)에서 켜기 |
+| Availability | Free/Pro/Max/Ultra/Team/Enterprise (code execution required) |
+| Where to turn on | Settings > Capabilities > Code execution and file creation (new layout: Create and edit files), then Customize > Skills |
+| Required structure | Folder name = skill name, with `skill.md` inside (Help Center spelling) |
+| Required frontmatter | `name` (64 characters or fewer), `description` (200 characters or fewer) |
+| ZIP | Skill folder at the ZIP root |
+| Team/Enterprise | Owner turns it on under Plugins & skills (Policy tab) |
 
-### Claude Code 스킬 위치
+### Where Claude Code skills live
 
-| 위치 | 경로 | 적용 범위 |
+| Location | Path | Scope |
 | --- | --- | --- |
-| 개인 | `~/.claude/skills/<name>/SKILL.md` | 이 컴퓨터의 모든 프로젝트 |
-| 프로젝트 | `.claude/skills/<name>/SKILL.md` | 해당 저장소 (커밋하면 팀과 공유) |
-| 플러그인 | `<plugin>/skills/<name>/SKILL.md` | 플러그인이 켜진 곳 |
-| 엔터프라이즈 | 관리 설정 디렉터리 | 조직이 배포한 모든 사용자 |
+| Personal | `~/.claude/skills/<name>/SKILL.md` | All projects on this computer |
+| Project | `.claude/skills/<name>/SKILL.md` | That repository (shared with your team if committed) |
+| Plugin | `<plugin>/skills/<name>/SKILL.md` | Wherever the plugin is enabled |
+| Enterprise | Managed settings directory | All users the organization deploys to |
 
-### Claude Code 번들 스킬
+### Claude Code bundled skills
 
-`/doctor`, `/skill-doctor`(안 쓰는 스킬과 컨텍스트 비용 확인), `/code-review`, `/batch`, `/debug`, `/loop`, `/claude-api`, `/verify`, `/run`
+`/doctor`, `/skill-doctor` (checks for unused skills and context cost), `/code-review`, `/batch`, `/debug`, `/loop`, `/claude-api`, `/verify`, `/run`
 
-### 공유 (Team/Enterprise)
+### Sharing (Team/Enterprise)
 
-| 방법 | 내용 |
+| Method | Details |
 | --- | --- |
-| 특정 사람에게 공유 | Enterprise는 그룹도 가능. 보기 전용, 업데이트 자동 반영 |
-| 조직 라이브러리에 게시 | 검토가 필요한 조직도 있음 |
+| Share with specific people | Enterprise can share with groups too. View-only, with updates applied automatically |
+| Publish to the organization library | Some organizations require review |
 
-플러그인을 만들었다면 2026-09-25부터 새 개발자 포털로 Claude 디렉터리에 제출할 수 있어요(릴리스 노트 기준, 세부 절차는 공식 안내 확인).
+If you've built a plugin, you can submit it to the Claude directory through the new developer portal starting 2026-09-25 (per the release notes; check the official guide for the detailed steps).
 
-## 자주 막히는 지점
+## Where people get stuck
 
-### 업로드한 ZIP이 인식되지 않아요
+### The uploaded ZIP isn't recognized
 
-- **원인**: ZIP 안 구조가 맞지 않을 수 있어요. 파일이 루트에 흩어져 있거나 폴더 이름이 스킬 이름과 다를 수 있어요.
-- **해결**: `my-skill.zip` 안에 `my-skill/` 폴더가 있고 그 안에 파일이 있는 구조로 다시 묶으세요. 파일명 대소문자(`skill.md`/`SKILL.md`)도 확인하세요.
+- **Cause**: The structure inside the ZIP may be off. Files may be scattered at the root, or the folder name may differ from the skill name.
+- **Fix**: Re-zip it so that `my-skill.zip` contains a `my-skill/` folder with the files inside it. Also check the file name's capitalization (`skill.md`/`SKILL.md`).
 
-### 스킬이 안 불려와요
+### The skill doesn't get loaded
 
-- **원인**: description이 모호하거나 요청과 맞지 않을 수 있어요. 코드 실행이 꺼져 있거나 토글이 꺼져 있을 수도 있어요.
-- **해결**: description에 "언제 쓰는지"를 구체적으로 쓰고, 여러 가지 요청으로 테스트하세요. 설정과 토글을 확인하세요.
+- **Cause**: The description may be vague or not match your request. Code execution or the toggle may also be off.
+- **Fix**: Write specifically "when to use it" in the description, and test with a variety of requests. Check your settings and toggles.
 
-### Team/Enterprise에서 스킬 메뉴가 없어요
+### There's no Skills menu on Team/Enterprise
 
-- **원인**: Owner가 코드 실행과 스킬을 아직 켜지 않았을 수 있어요.
-- **해결**: Owner에게 Organization settings > Plugins & skills(Policy 탭)를 확인해 달라고 요청하세요.
+- **Cause**: The Owner may not have turned on code execution and skills yet.
+- **Fix**: Ask the Owner to check Organization settings > Plugins & skills (Policy tab).
 
-### `/summarize-changes`에서 아무 내용도 안 나와요
+### `/summarize-changes` prints nothing
 
-- **원인**: 커밋되지 않은 변경이 없으면 diff가 비어 있어요.
-- **해결**: 파일을 하나 수정한 뒤 다시 실행하세요. 비어 있으면 "변경 없음"이라고 답하도록 만든 스킬이에요.
+- **Cause**: With no uncommitted changes, the diff is empty.
+- **Fix**: Edit a file and run it again. The skill is written to reply that there are no changes when the diff is empty.
 
-### 다른 사람이 만든 스킬을 써도 될지 모르겠어요
+### I'm not sure whether it's OK to use a skill someone else made
 
-- **원인**: 스킬은 서드파티 패키지를 포함·설치할 수 있어 프롬프트 인젝션이나 데이터 유출 위험이 있어요.
-- **해결**: 신뢰할 수 있는 출처의 스킬만 설치하고, 활성화 전에 번들 파일(특히 코드, 스크립트, 외부 네트워크 연결 지시)을 읽으세요. Enterprise는 스킬 스캔을 쓸 수 있어요.
+- **Cause**: Skills can include or install third-party packages, so there's a risk of prompt injection or data leakage.
+- **Fix**: Install skills only from sources you trust, and read the bundled files (especially code, scripts, and instructions that connect to outside networks) before activating. Enterprise can use skill scanning.
 
-## 실전 팁
+## Practical tips
 
-- **하나의 스킬에는 하나의 워크플로를 담으세요.** 범위가 좁을수록 잘 불려와요.
-- **간단한 마크다운으로 시작하세요.** 스크립트는 나중에 추가해도 돼요.
-- **입출력 예시를 넣으세요.** 결과 형식이 안정돼요. agentskills.io 사양을 따르면 호환성이 좋아진다고 안내돼요.
-- **API 키나 비밀번호를 스킬 안에 쓰지 마세요.** 하드코딩 금지예요.
-- **바꿀 때마다 테스트하세요.** 여러 요청으로 불려오는지 확인하세요.
-- **프롬프트와 함께 쓰세요.** 좋은 지침 작성은 [C4. 프롬프트 잘 쓰는 법](/claude/c04-prompting/)과 같은 원리예요.
+- **Put one workflow in each skill.** The narrower the scope, the better it gets loaded.
+- **Start with simple markdown.** You can add scripts later.
+- **Include input and output examples.** The output format becomes more stable. Following the agentskills.io spec is said to improve compatibility.
+- **Don't put API keys or passwords in a skill.** No hardcoding.
+- **Test after every change.** Check that it loads with several different requests.
+- **Pair it with good prompts.** Writing good instructions follows the same principles as [C4. Prompting well](/claude/c04-prompting/).
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — CLAUDE.md, 슬래시 명령, 훅과 스킬
-- [C7. 커넥터](/claude/c07-connectors/) — 외부 서비스 연결
-- [C12. Claude Code 개요](/claude/c12-claude-code-overview/) — Claude Code 설치와 첫 작업
-- [스킬·플러그인 패키지로 만들어 팀에 배포하기](/dev/06-plugins-skills-team/) — 만든 스킬을 팀에 나누는 법
-- [반복 업무를 에이전트에게 맡기기: 스킬, 루틴, 서브에이전트](/coding/10-delegate-agents/) — 스킬을 일상 업무에 쓰는 예
+- [C14. Claude Code key features](/claude/c14-claude-code-features/) — CLAUDE.md, slash commands, hooks, and skills
+- [C7. Connectors](/claude/c07-connectors/) — Connecting outside services
+- [C12. Claude Code overview](/claude/c12-claude-code-overview/) — Installing Claude Code and your first task
+- [Packaging skills and plugins and distributing them to your team](/dev/06-plugins-skills-team/) — How to share the skills you build with your team
+- [Delegating recurring work to agents: skills, routines, and subagents](/coding/10-delegate-agents/) — An example of using skills in daily work
