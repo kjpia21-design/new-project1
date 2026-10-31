@@ -1,132 +1,132 @@
 ---
-title: 사무·기획·관리직을 위한 AI 활용 가이드
-description: 회의록, 보고서, 데이터 정리, 이메일, 일정까지. 사무·기획·관리직이 AI로 반복 업무를 줄이는 방법과 학습 순서를 안내해요.
+title: AI Guide for Office, Planning, and Admin Roles
+description: Meeting notes, reports, data cleanup, email, and scheduling. How office, planning, and management professionals can cut repetitive work with AI, and the order to learn it.
 ---
 
 import { Aside } from '@astrojs/starlight/components';
 import PromptBox from '../../../components/PromptBox.astro';
 import FlowSteps from '../../../components/FlowSteps.astro';
 
-## 이런 분께
+## Who this is for
 
-총무, 인사, 재무, 기획, 운영, 팀 관리자처럼 문서와 사람 사이를 오가는 일을 하는 분께 맞는 페이지예요.
+This page suits people whose work moves between documents and people, such as general affairs, HR, finance, planning, operations, and team managers.
 
-- 회의가 끝나면 회의록과 후속 업무 정리가 또 하나의 일이 돼요.
-- 보고서와 이메일을 쓰는 데 생각보다 시간이 많이 들어요.
-- 엑셀 데이터를 정리하고 요약하는 일이 매번 비슷한데도 손이 많이 가요.
+- After every meeting, writing up the notes and follow-up tasks becomes another job.
+- Writing reports and emails takes more time than you'd expect.
+- Cleaning up and summarizing Excel data is always about the same, yet it takes a lot of manual effort.
 
-## AI가 특히 도움 되는 일 TOP 5
+## Top 5 ways AI helps
 
-### 1. 회의록 정리와 할 일 뽑기
+### 1. Organize meeting notes and pull out to-dos
 
-**할 수 있는 일**: 메모나 녹취 텍스트에서 결정 사항, 담당자, 기한을 표로 뽑아요.
-**추천 도구**: 대화형 AI. 녹음 파일은 [회의·강의 녹음을 텍스트로 받아 정리하기](/media/14-transcribe-recordings/)로 먼저 글로 바꿔요. 요약 요령은 [회의록·긴 문서 요약하고 할 일 뽑기](/chat/02-summarize-documents/)에 있어요.
+**What it can do**: Extract decisions, owners, and deadlines into a table from your notes or a transcript.
+**Suggested tools**: A chat AI. For recordings, first turn them into text with [Transcribe and organize meeting and lecture recordings](/media/14-transcribe-recordings/). Summarizing tips are in [Summarize meeting notes and long documents and pull out to-dos](/chat/02-summarize-documents/).
 
-<PromptBox label="회의록 정리">
-아래는 회의 메모야. 다음 형식으로 정리해 줘.
-1) 회의 목적 한 줄
-2) 결정 사항(번호 목록)
-3) 할 일 표: 업무, 담당자, 기한, 비고
-4) 아직 결정되지 않은 쟁점
-메모에 없는 담당자나 기한은 "미정"으로 적고 지어내지 마.
+<PromptBox label="Organize meeting notes">
+Below are my meeting notes. Organize them in this format.
+1) The meeting's purpose in one line
+2) Decisions (numbered list)
+3) Action items table: task, owner, deadline, notes
+4) Open issues not yet decided
+If an owner or deadline isn't in the notes, write "TBD" and don't make one up.
 
-[회의 메모 붙여넣기]
+[Paste meeting notes]
 </PromptBox>
 
-### 2. 보고서·기획안 초안 쓰기
+### 2. Draft reports and plans
 
-**할 수 있는 일**: 개요를 잡고 항목별 초안을 쓰고, 읽는 사람에 맞게 톤을 조정해요.
-**추천 도구**: 대화형 AI. 자세한 흐름은 [보고서·제안서 초안 쓰고 다듬기](/chat/04-write-reports/)를 따라 하세요.
+**What it can do**: Set up an outline, write a draft for each section, and adjust the tone for the reader.
+**Suggested tools**: A chat AI. Follow [Write and polish report and proposal drafts](/chat/04-write-reports/) for the full flow.
 
-<PromptBox label="보고서 개요 잡기">
-[주제]에 대한 [독자: 예) 임원, 팀원] 보고서를 쓰려고 해.
-목적: [결정 요청 / 현황 공유 / 제안]
-분량: A4 [장수]장
-먼저 목차와 항목별 핵심 문장을 제안해 줘. 내가 확인하면 항목별로 초안을 쓰자. 내가 준 자료에 없는 수치는 넣지 마.
-참고 자료: [자료 붙여넣기]
+<PromptBox label="Outline a report">
+I'm going to write a report on [topic] for [audience: e.g., executives, teammates].
+Purpose: [request a decision / share status / make a proposal]
+Length: [number] pages
+First, suggest a table of contents and a key sentence for each section. Once I confirm, we'll draft section by section. Don't include any numbers that aren't in the materials I give you.
+Reference materials: [paste materials]
 </PromptBox>
 
-### 3. 엑셀·CSV 데이터 요약
+### 3. Summarize Excel and CSV data
 
-**할 수 있는 일**: 표를 올리면 합계, 추이, 이상한 값을 찾고 엑셀 수식도 알려 줘요.
-**추천 도구**: 파일 분석이 되는 대화형 AI. [엑셀·CSV 데이터 분석을 AI에게 맡기기](/chat/03-data-analysis/)를 참고하세요.
+**What it can do**: Upload a table and it finds totals, trends, and odd values, and can also suggest Excel formulas.
+**Suggested tools**: A chat AI that can analyze files. See [Let AI analyze your Excel and CSV data](/chat/03-data-analysis/).
 
-<PromptBox label="데이터 살펴보기">
-첨부한 표는 [무엇에 대한 데이터]야.
-1) 열 구성과 빈 칸, 중복, 이상한 값을 먼저 점검해 줘.
-2) [월별 / 부서별] 합계와 증감을 표로 정리해 줘.
-3) 눈에 띄는 변화 3가지와 확인해 볼 질문을 알려 줘.
-계산 방법을 함께 적어서 내가 검증할 수 있게 해 줘.
+<PromptBox label="Explore the data">
+The attached table is data about [what the data is].
+1) First check the column layout, blank cells, duplicates, and odd values.
+2) Summarize [monthly / by-department] totals and changes in a table.
+3) Tell me 3 notable changes and questions worth checking.
+Write down how you calculated things so I can verify them.
 </PromptBox>
 
-### 4. 이메일·공지문 쓰기
+### 4. Write emails and announcements
 
-**할 수 있는 일**: 요청, 사과, 독촉, 공지처럼 어려운 톤의 메일 초안을 만들어요.
-**추천 도구**: 대화형 AI. Gmail 안에서 쓰려면 [Google Workspace의 AI 기능(Gemini) 실무 활용](/automation/19-google-workspace-gemini/)을 보세요.
+**What it can do**: Draft emails with a tricky tone, such as requests, apologies, reminders, and announcements.
+**Suggested tools**: A chat AI. To use it inside Gmail, see [Practical use of AI features (Gemini) in Google Workspace](/automation/19-google-workspace-gemini/).
 
-<PromptBox label="이메일 초안">
-다음 상황의 이메일을 써 줘.
-받는 사람: [직책, 관계]
-목적: [요청 / 일정 조율 / 지연 안내 / 독촉]
-꼭 들어갈 내용: [날짜, 요청 사항]
-톤: 정중하지만 간결하게, 5문장 이내. 제목 3안도 같이 줘.
+<PromptBox label="Email draft">
+Write an email for the situation below.
+Recipient: [title, relationship]
+Purpose: [request / scheduling / delay notice / reminder]
+Must include: [dates, what's being requested]
+Tone: polite but concise, within 5 sentences. Also give me 3 subject line options.
 </PromptBox>
 
-### 5. 아침 브리핑과 일정 정리
+### 5. Morning briefing and schedule planning
 
-**할 수 있는 일**: 메일과 캘린더를 읽어 오늘 할 일과 답장할 메일을 정리해요.
-**추천 도구**: Claude 커넥터 등. 설정은 [Gmail·캘린더를 AI와 연결해 아침 브리핑 받기](/automation/17-morning-briefing/)를 따르세요.
+**What it can do**: Read your email and calendar and organize today's to-dos and the emails you need to reply to.
+**Suggested tools**: Claude connectors and similar. Follow [Connect Gmail and Calendar to AI for a morning briefing](/automation/17-morning-briefing/) for setup.
 
-<PromptBox label="오늘 할 일 정리">
-오늘 일정과 어제부터 온 메일을 보고 다음을 정리해 줘.
-1) 오늘 꼭 해야 할 일 3가지
-2) 답장이 필요한 메일과 우선순위
-3) 회의 전에 준비할 것
-메일은 읽기만 하고 보내거나 지우지 마.
+<PromptBox label="Organize today's to-dos">
+Look at today's schedule and the emails that have come in since yesterday, and organize the following.
+1) The 3 things I must do today
+2) Emails that need a reply, and their priority
+3) What to prepare before meetings
+Only read my email. Don't send or delete anything.
 </PromptBox>
 
-## 실전 하루 시나리오
+## A day in the life
 
-<FlowSteps title="사무직의 하루" steps={[
-  { where: '출근 직후', action: '아침 브리핑으로 오늘 일정과 답장할 메일 확인', result: '우선순위가 정해진 하루' },
-  { where: '오전', action: '지난 회의 메모를 회의록과 할 일 표로 정리', result: '공유 가능한 회의록' },
-  { where: '점심 이후', action: '월간 데이터 표를 요약하고 보고서 개요 잡기', result: '보고서 초안 뼈대' },
-  { where: '오후', action: '초안을 쓰고 이메일 작성, 숫자와 사실은 직접 확인', result: '검토 가능한 문서와 메일' },
-  { where: '퇴근 전', action: '내일 할 일을 AI와 정리하고 민감 정보 점검', result: '내일 준비 끝' },
+<FlowSteps title="An office worker's day" steps={[
+  { where: 'Right after arriving', action: 'Check today\'s schedule and emails to reply to with a morning briefing', result: 'A day with priorities set' },
+  { where: 'Morning', action: 'Turn last meeting\'s notes into minutes and an action-item table', result: 'Minutes ready to share' },
+  { where: 'After lunch', action: 'Summarize the monthly data table and outline a report', result: 'The skeleton of a report draft' },
+  { where: 'Afternoon', action: 'Write the draft and emails, and check numbers and facts yourself', result: 'Documents and emails ready for review' },
+  { where: 'Before leaving', action: 'Plan tomorrow\'s tasks with AI and check for sensitive information', result: 'Ready for tomorrow' },
 ]} />
 
-## 추천 학습 경로
+## Recommended learning path
 
-1. [AI가 처음인 분을 위한 첫 30분](/basics/01-first-30-minutes/): AI에게 말을 거는 감을 잡아요.
-2. [질문 잘하는 법 기초](/basics/03-asking-well/): 업무 지시도 질문 방식이 결과를 좌우해요.
-3. [개인정보·회사 정보 안전하게 지키며 쓰기](/basics/05-privacy-safety/): 사내 자료를 쓰기 전에 기준부터 세워요.
-4. [실무 프롬프트 작성법](/chat/01-prompt-basics/): 역할·맥락·형식으로 지시를 구조화해요.
-5. [회의록·긴 문서 요약하고 할 일 뽑기](/chat/02-summarize-documents/): 가장 자주 쓰는 요약 업무부터 익혀요.
-6. [엑셀·CSV 데이터 분석을 AI에게 맡기기](/chat/03-data-analysis/): 숫자 작업을 덜어요.
-7. [보고서·제안서 초안 쓰고 다듬기](/chat/04-write-reports/): 문서 작성을 한 흐름으로 이어요.
-8. [AI 답변 믿어도 될까](/basics/04-fact-checking/): 제출 전 검증 습관을 만들어요.
-9. [Gmail·캘린더를 AI와 연결해 아침 브리핑 받기](/automation/17-morning-briefing/): 반복 업무를 자동화로 넘겨요.
-10. [Notion AI로 업무 문서와 데이터베이스 정리하기](/automation/16-notion-ai/): 쌓인 문서를 정리해요.
+1. [Your first 30 minutes with AI](/basics/01-first-30-minutes/): Get a feel for talking to AI.
+2. [Asking good questions: the basics](/basics/03-asking-well/): Even for work instructions, how you ask shapes the result.
+3. [Using AI while protecting personal and company information](/basics/05-privacy-safety/): Set your standards before you use internal materials.
+4. [Writing practical prompts](/chat/01-prompt-basics/): Structure your instructions with role, context, and format.
+5. [Summarize meeting notes and long documents and pull out to-dos](/chat/02-summarize-documents/): Start with the summarizing work you do most often.
+6. [Let AI analyze your Excel and CSV data](/chat/03-data-analysis/): Take the load off number work.
+7. [Write and polish report and proposal drafts](/chat/04-write-reports/): Connect document writing into one flow.
+8. [Can you trust AI answers?](/basics/04-fact-checking/): Build a verification habit before you submit.
+9. [Connect Gmail and Calendar to AI for a morning briefing](/automation/17-morning-briefing/): Hand off repetitive work to automation.
+10. [Organize work documents and databases with Notion AI](/automation/16-notion-ai/): Tidy up the documents that have piled up.
 
-### 더 보기: 사무직에게 어울리는 새 편
+### More: new tutorials that suit office workers
 
-- [엑셀·구글 시트에 AI 붙이기](/automation/23-spreadsheet-ai/): 표 정리, 수식, 요약을 Copilot·Gemini·Claude에 맡기는 법을 비교해요.
-- [Microsoft 365 Copilot으로 Word·PowerPoint·Outlook 업무하기](/automation/24-m365-copilot/): 문서 초안, 발표 자료, 메일 답장 초안을 Copilot으로 만들어요.
-- [AI로 발표 자료 만들기](/media/25-ai-presentations/): 보고용 슬라이드 초안을 만들고 직접 다듬는 흐름을 익혀요.
-- [AI 번역 실전](/media/26-ai-translation/): 업무 문서를 번역하면서 기밀을 지키고 결과를 검토하는 방법이에요.
+- [Adding AI to Excel and Google Sheets](/automation/23-spreadsheet-ai/): Compare how to hand table cleanup, formulas, and summaries to Copilot, Gemini, and Claude.
+- [Working with Word, PowerPoint, and Outlook in Microsoft 365 Copilot](/automation/24-m365-copilot/): Create document drafts, presentations, and email reply drafts with Copilot.
+- [Making presentations with AI](/media/25-ai-presentations/): Learn the flow of drafting report slides and polishing them yourself.
+- [AI translation in practice](/media/26-ai-translation/): How to translate work documents while protecting confidential information and reviewing the results.
 
-## 주의할 점
+## What to watch out for
 
-<Aside type="caution" title="사내 자료를 넣기 전에">
-- **회사·개인 정보**: 인사 평가, 급여, 고객 명단, 계약서는 함부로 붙여 넣지 마세요. 사내 AI 사용 규정을 먼저 확인하고, 이름과 연락처는 가리세요. 기준은 [개인정보·회사 정보 안전하게 지키며 쓰기](/basics/05-privacy-safety/)에 있어요.
-- **숫자와 사실**: AI가 계산하거나 요약한 숫자는 원본과 대조하세요. 법령, 규정, 날짜도 마찬가지예요. 점검 방법은 [AI 답변 믿어도 될까](/basics/04-fact-checking/)에 있어요.
-- **메일·일정 연결**: 읽기 권한부터 주고, 보내기·삭제 권한은 신중하게 정하세요. [개인 AI 에이전트 안전하게 쓰는 법](/agents/05-agent-safety/)을 참고하세요.
-- **저작권**: 외부 보고서나 기사를 그대로 옮기지 말고 출처를 남기세요.
+<Aside type="caution" title="Before you paste in internal materials">
+- **Company and personal information**: Don't casually paste in performance reviews, salaries, customer lists, or contracts. Check your company's AI usage policy first, and mask names and contact details. The standards are in [Using AI while protecting personal and company information](/basics/05-privacy-safety/).
+- **Numbers and facts**: Check any numbers AI calculates or summarizes against the original, and do the same for laws, regulations, and dates. The method is in [Can you trust AI answers?](/basics/04-fact-checking/).
+- **Email and calendar connections**: Grant read access first, and decide carefully about send and delete permissions. See [How to use personal AI agents safely](/agents/05-agent-safety/).
+- **Copyright**: Don't copy external reports or articles word for word, and keep track of your sources.
 </Aside>
 
-## 다음 단계
+## Next steps
 
-- 콘텐츠와 홍보 업무도 맡고 있다면 [마케터·콘텐츠 담당 가이드](/roles/marketer/)를 보세요.
-- 작은 사업을 직접 운영한다면 [1인 사업자·소상공인 가이드](/roles/solo-business/)도 맞아요.
-- 더 많은 프롬프트는 [바로 쓰는 프롬프트 모음](/start/prompts/)에서 찾아보세요.
-- 전체 직무는 [직무별 AI 활용 가이드](/roles/)에서 볼 수 있어요.
+- If you also handle content and promotion, see the [Guide for marketers and content managers](/roles/marketer/).
+- If you run a small business yourself, the [Guide for solo business owners and small shops](/roles/solo-business/) fits too.
+- Find more prompts in the [Ready-to-use prompt collection](/start/prompts/).
+- You can see all the roles in [AI Guides by Role](/roles/).

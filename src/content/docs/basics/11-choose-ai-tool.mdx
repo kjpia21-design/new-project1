@@ -1,23 +1,23 @@
 ---
-title: "어떤 AI를 써야 할까? 목적별 도구 고르기"
-description: "하고 싶은 일에서 출발해 대화형 AI, 검색, 자료 정리, 번역, 발표, 이미지, 코딩 도구 중 무엇을 열어 볼지 정하고, 이 사이트의 해당 튜토리얼로 바로 가는 길잡이 표"
+title: "Which AI Should You Use? Choosing a Tool by Purpose"
+description: "A guide table that starts from what you want to do and helps you decide whether to open a chat AI, search, a note-organizing tool, translation, presentations, images, or a coding tool, with direct paths to the matching tutorials on this site"
 sidebar:
-  label: "11. 어떤 AI를 써야 할까? 목적별 도구 고르기"
+  label: "11. Which AI should you use? Choosing by purpose"
 level: beginner
 category: basics
 tools: ["Claude", "ChatGPT", "Gemini"]
-duration: "15분"
+duration: "15 min"
 prerequisites:
-  - "AI 서비스 계정 1개 이상이면 좋아요 (없어도 읽을 수 있어요)"
+  - "It helps to have at least one AI service account (you can read this without one)"
 lastVerified: 2026-10-31
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
-  - title: "Pricing (OpenAI, ChatGPT 문서)"
+  - title: "Pricing (OpenAI, ChatGPT docs)"
     url: "https://learn.chatgpt.com/docs/pricing"
   - title: "Google AI plans (Gemini subscriptions)"
     url: "https://gemini.google/subscriptions/"
-  - title: "DeepL 요금제"
+  - title: "DeepL plans"
     url: "https://www.deepl.com/en/pro"
   - title: "GitHub Copilot plans"
     url: "https://docs.github.com/en/copilot/get-started/plans"
@@ -30,156 +30,156 @@ import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 
 <Summary>
-- **도구 이름이 아니라 "하고 싶은 일"에서 출발하세요.** 글쓰기·요약·질문은 대화형 AI 하나로 대부분 끝나요. 번역, 발표 자료, 이미지, 코딩처럼 결과물이 정해져 있으면 전용 도구가 편할 때가 있어요.
-- 이 편은 **길잡이**예요. 도구 품질 순위는 매기지 않아요. 같은 도구도 일과 취향에 따라 달리 느껴져요.
-- Claude, ChatGPT, Gemini는 모두 **무료로 시작할 수 있어요**(2026-10-31 기준 공식 가격 페이지). 무료 플랜에는 사용량 한도가 있어요.
-- 처음에는 **대화형 AI 하나만 정해서** 일주일 써 보고, 막히는 일이 생기면 그때 전용 도구를 더하세요.
-- 회사 문서나 개인정보를 넣기 전에는 [5편](/basics/05-privacy-safety/)의 기준을 먼저 확인하세요.
+- **Start from "what you want to do," not from a tool name.** For writing, summarizing, and asking questions, one chat AI handles most of it. When the output is a fixed kind of thing, such as translation, slides, images, or code, a dedicated tool can be more convenient.
+- This tutorial is a **guide**. We don't rank tool quality. The same tool can feel different depending on your work and taste.
+- Claude, ChatGPT, and Gemini can all be **started for free** (per the official pricing pages as of 2026-10-31). Free plans have usage limits.
+- At first, **pick just one chat AI** and use it for a week, and add a dedicated tool only when you hit something it can't handle.
+- Before entering company documents or personal information, check the standards in [tutorial 5](/basics/05-privacy-safety/) first.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- "내 일에는 어떤 종류의 AI가 맞을까?"를 스스로 좁힐 수 있어요.
-- 하고 싶은 일별로 이 사이트의 어느 튜토리얼을 읽으면 되는지 바로 찾을 수 있어요.
-- 도구를 하나 고른 뒤, 확인할 것(요금, 한도, 정보 안전)을 짚을 수 있어요.
+- Narrow down on your own, "What kind of AI fits my work?"
+- Find right away which tutorial on this site to read for each thing you want to do.
+- After choosing a tool, point out what to check (pricing, limits, information safety).
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **대화형 AI** | 말을 걸면 글로 답하는 AI예요. Claude, ChatGPT, Gemini가 대표적이에요. 글쓰기, 요약, 질문, 아이디어 정리를 폭넓게 해요. |
-| **전용 도구** | 번역, 발표 자료, 음악처럼 한 가지 결과물에 맞춰진 서비스예요. 결과물 형식과 내보내기가 편한 대신 쓰는 곳이 늘어요. |
-| **업무 도구 안의 AI** | 엑셀, 워드, 메일, 문서 도구 안에 붙은 AI예요. 파일이 이미 그 안에 있을 때 편해요. |
-| **에이전트** | 질문에 답하는 데서 더 나아가 여러 단계의 일을 대신 해 주는 AI예요. 권한과 안전을 따로 챙겨야 해요. |
-| **무료 플랜** | 돈을 내지 않는 기본 이용이에요. 쓸 수 있는 양에 한도가 있어요. 요금제 비교는 [8편](/basics/08-free-vs-paid/)에서 다뤄요. |
+| **Chat AI** | An AI that answers in writing when you talk to it. Claude, ChatGPT, and Gemini are the main examples. It handles writing, summarizing, questions, and organizing ideas broadly. |
+| **Dedicated tool** | A service tuned for one kind of output, such as translation, slides, or music. Output formats and exporting are more convenient, but you end up using more places. |
+| **AI inside work tools** | AI built into Excel, Word, email, or document tools. It's handy when your files are already in there. |
+| **Agent** | An AI that goes beyond answering questions to do multi-step work for you. You need to take extra care with permissions and safety. |
+| **Free plan** | Basic use that doesn't cost anything. There's a limit on how much you can use. We compare plans in [tutorial 8](/basics/08-free-vs-paid/). |
 
-## 단계별 따라하기
+## Step-by-step guide
 
 <Checklist items={[
-  '이번 주에 AI에게 시키고 싶은 일 3가지를 적었어요',
-  '아래 표에서 그 일에 해당하는 줄을 찾았어요',
-  '대화형 AI 하나를 정하고 무료 플랜으로 시작했어요',
-  '필요한 일에만 전용 도구를 더했어요',
-  '회사·개인 정보를 넣기 전에 안전 기준을 확인했어요',
+  'I wrote down 3 things I want to ask AI to do this week',
+  'I found the matching row in the table below',
+  'I picked one chat AI and started on the free plan',
+  'I added a dedicated tool only for what needed it',
+  'I checked the safety standards before entering company or personal information',
 ]} />
 
 <Steps>
 
-1. **하고 싶은 일 3가지 적기**
+1. **Write down 3 things you want to do**
 
-   "보고서 초안 쓰기", "영문 메일 번역", "발표 자료 만들기"처럼 이번 주에 실제로 할 일을 적어요. 막연히 "AI를 잘 쓰고 싶다"보다 훨씬 고르기 쉬워져요.
+   Write what you'll actually do this week, like "draft a report," "translate an English email," or "make slides." That makes it much easier to choose than a vague "I want to use AI well."
 
-2. **아래 길잡이 표에서 내 일 찾기**
+2. **Find your task in the guide table below**
 
-   표의 가운데 칸은 **써 볼 만한 후보**예요. 순위가 아니고, 읽고 싶은 도구부터 열어 보면 돼요. 오른쪽 칸의 튜토리얼에서 가입부터 사용법까지 이어서 볼 수 있어요.
+   The middle column shows **candidates worth trying**. It isn't a ranking, so open whichever tool you want to read about first. The tutorial in the right column continues from sign-up through how to use it.
 
-3. **대화형 AI 하나를 정해 무료로 일주일 써 보기**
+3. **Pick one chat AI and use it free for a week**
 
-   고르기 어렵다면 Claude, ChatGPT, Gemini 중 가입이 가장 쉬운 곳을 고르세요. 계정이 이미 있는 곳이 가장 빨라요. 가입 절차는 [2편](/basics/02-sign-up-first-question/)을 따라 하세요. 세 서비스를 같은 질문으로 비교해 보고 싶다면 [chat/5편](/chat/05-compare-assistants/)이 도움이 돼요.
+   If choosing is hard, pick whichever of Claude, ChatGPT, and Gemini is easiest to sign up for. A service you already have an account with is the fastest. Follow [tutorial 2](/basics/02-sign-up-first-question/) for the sign-up steps. If you want to compare the three with the same question, [chat tutorial 5](/chat/05-compare-assistants/) helps.
 
-4. **막히는 일이 생기면 그 일에 맞는 도구 추가하기**
+4. **When you hit something it can't handle, add a tool for that task**
 
-   예를 들어 대화형 AI로 번역이 어색하다면 번역 전용 도구를, 최신 정보에 출처가 필요하다면 AI 검색을 더해 보세요. 한꺼번에 여러 개를 쓰기 시작하면 어디에 무엇을 넣었는지 헷갈려요.
+   For example, if a chat AI's translation feels awkward, add a dedicated translation tool; if you need recent information with sources, add AI search. If you start using several at once, you'll lose track of what you put where.
 
-5. **넣기 전에 안전 확인하기**
+5. **Check safety before you enter anything**
 
-   회사 자료, 고객 정보, 주민등록번호 같은 개인정보는 도구마다 저장과 학습 조건이 달라요. [5편](/basics/05-privacy-safety/)의 기준과 회사 AI 사용 정책을 먼저 확인하세요.
+   Company materials, customer information, and personal information such as national ID numbers each have different storage and training terms in every tool. Check the standards in [tutorial 5](/basics/05-privacy-safety/) and your company's AI usage policy first.
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-### 하고 싶은 일별 길잡이
+### A guide by what you want to do
 
-"무료로 시작?" 칸은 아래 공식 페이지에서 직접 확인한 것만 적었어요(2026-10-31 기준). 칸에 "해당 편 참고"라고 쓴 것은 그 튜토리얼이 확인한 내용을 따르라는 뜻이에요. 한도와 가격은 바뀔 수 있으니 가입 전에 공식 페이지를 보세요.
+The "Free to start?" column only lists what we confirmed directly on the official pages below (as of 2026-10-31). Where the cell says "See that tutorial," follow what that tutorial confirmed. Limits and prices can change, so check the official pages before signing up.
 
-| 하고 싶은 일 | 써 볼 만한 후보 | 무료로 시작? | 이 사이트 튜토리얼 |
+| What you want to do | Candidates worth trying | Free to start? | Tutorials on this site |
 | --- | --- | --- | --- |
-| 처음이라 뭐든 물어보고 싶어요 | Claude, ChatGPT, Gemini | 세 곳 모두 무료 플랜이 있어요 | [1편](/basics/01-first-30-minutes/), [2편](/basics/02-sign-up-first-question/), [3편](/basics/03-asking-well/) |
-| 글쓰기, 보고서 초안, 메일 문장 다듬기 | Claude, ChatGPT, Gemini | 위와 같아요 | [chat/1](/chat/01-prompt-basics/), [chat/4](/chat/04-write-reports/) |
-| 긴 문서·회의록 요약, 할 일 뽑기 | Claude, ChatGPT, Gemini | 위와 같아요 | [chat/2](/chat/02-summarize-documents/) |
-| 엑셀·CSV 숫자 정리와 분석 | 대화형 AI, 엑셀·구글 시트 안의 AI | 해당 편 참고 | [chat/3](/chat/03-data-analysis/), [automation/23](/automation/23-spreadsheet-ai/) |
-| 최신 정보를 출처와 함께 찾기 | AI 검색(Perplexity, ChatGPT 검색, Claude 웹 검색) | 해당 편 참고 | [chat/22](/chat/22-ai-search/), [4편](/basics/04-fact-checking/) |
-| 내가 모은 자료만 근거로 공부·정리 | Gemini Notebook(구 NotebookLM) | Gemini 무료 플랜 목록에 Gemini Notebook이 들어 있어요 | [chat/21](/chat/21-notebooklm/) |
-| 외국어 문서 번역, 외국어 공부 | DeepL, 파파고, Claude | DeepL은 무료 버전이 있어요(월 글자 수 제한). 나머지는 해당 편 참고 | [media/26](/media/26-ai-translation/), [chat/31](/chat/31-language-learning/) |
-| 발표 자료 만들기 | Gamma, Claude, Microsoft Copilot | 해당 편 참고 | [media/25](/media/25-ai-presentations/) |
-| 이미지·썸네일·홍보 이미지 | Gemini, ChatGPT 이미지 생성 | 해당 편 참고 | [media/11](/media/11-business-images/), [media/30](/media/30-image-generation-advanced/), [media/12](/media/12-canva-sns/) |
-| 영상, 음악, 음성 내레이션 | 영상 생성 도구, Suno 등 | 해당 편 참고 | [media/13](/media/13-promo-video/), [media/32](/media/32-ai-music/), [media/15](/media/15-voice-narration/) |
-| 녹음 파일을 글로, 긴 영상 요약 | 녹취 도구, 영상 요약 도구 | 해당 편 참고 | [media/14](/media/14-transcribe-recordings/), [media/33](/media/33-video-summary-shorts/) |
-| 메일, 회의, 문서 앱 안에서 AI 쓰기 | Gmail·Google Workspace의 Gemini, Microsoft 365 Copilot | 해당 편 참고 | [automation/38](/automation/38-email-ai/), [automation/37](/automation/37-meeting-ai/), [automation/24](/automation/24-m365-copilot/), [automation/19](/automation/19-google-workspace-gemini/) |
-| 일정, 할 일, 여행 계획 | 대화형 AI | 위와 같아요 | [chat/39](/chat/39-personal-assistant/), [6편](/basics/06-everyday-uses/) |
-| 휴대폰으로 쓰고 싶어요 | Claude, ChatGPT, Gemini 앱 | 위와 같아요 | [7편](/basics/07-ai-on-phone/) |
-| 한국어 국내 서비스가 궁금해요 | 네이버, 카카오 등 국내 AI | 해당 편 참고 | [chat/29](/chat/29-korean-ai-services/) |
-| 코딩을 몰라도 작은 웹 도구·앱 만들기 | Claude Code | Claude Code는 유료 플랜(Pro 이상)에 들어 있어요 | [coding/6](/coding/06-claude-code-start/), [coding/27](/coding/27-first-app-with-claude-code/), [coding/7](/coding/07-no-code-web-tools/) |
-| 코드 작성·수정을 도와받기 | GitHub Copilot, Cursor, OpenAI Codex, Claude Code | GitHub Copilot에 무료 플랜(Copilot Free)이 있어요(제한된 기능). Codex는 ChatGPT 무료 플랜에도 포함돼요. Cursor는 해당 편 참고 | [coding/28](/coding/28-github-copilot/), [coding/9](/coding/09-cursor/), [coding/36](/coding/36-openai-codex/) |
-| 앱·서비스를 연결해 반복 업무 자동화 | 커넥터(MCP), Zapier, Make | 해당 편 참고 | [automation/20](/automation/20-connectors-mcp/), [automation/18](/automation/18-zapier-make/), [claude/c07](/claude/c07-connectors/) |
-| AI에게 일을 대신 맡기기 | 개인 AI 에이전트, 브라우저 에이전트 | 해당 편 참고 | [agents/1](/agents/01-agents-compared/), [agents/6](/agents/06-browser-agents/), [agents/5](/agents/05-agent-safety/) |
+| I'm new and want to ask about anything | Claude, ChatGPT, Gemini | All three have free plans | [Tutorial 1](/basics/01-first-30-minutes/), [Tutorial 2](/basics/02-sign-up-first-question/), [Tutorial 3](/basics/03-asking-well/) |
+| Writing, report drafts, polishing email sentences | Claude, ChatGPT, Gemini | Same as above | [chat/1](/chat/01-prompt-basics/), [chat/4](/chat/04-write-reports/) |
+| Summarizing long documents and meeting notes, pulling out to-dos | Claude, ChatGPT, Gemini | Same as above | [chat/2](/chat/02-summarize-documents/) |
+| Organizing and analyzing numbers in Excel and CSV | Chat AI, AI inside Excel and Google Sheets | See that tutorial | [chat/3](/chat/03-data-analysis/), [automation/23](/automation/23-spreadsheet-ai/) |
+| Finding recent information with sources | AI search (Perplexity, ChatGPT search, Claude web search) | See that tutorial | [chat/22](/chat/22-ai-search/), [Tutorial 4](/basics/04-fact-checking/) |
+| Studying and organizing based only on material I've gathered | Gemini Notebook (formerly NotebookLM) | Gemini Notebook is listed in the Gemini free plan | [chat/21](/chat/21-notebooklm/) |
+| Translating foreign-language documents, studying a foreign language | DeepL, Papago, Claude | DeepL has a free version (monthly character limit). For the rest, see that tutorial | [media/26](/media/26-ai-translation/), [chat/31](/chat/31-language-learning/) |
+| Making slides | Gamma, Claude, Microsoft Copilot | See that tutorial | [media/25](/media/25-ai-presentations/) |
+| Images, thumbnails, promotional images | Gemini, ChatGPT image generation | See that tutorial | [media/11](/media/11-business-images/), [media/30](/media/30-image-generation-advanced/), [media/12](/media/12-canva-sns/) |
+| Video, music, voice narration | Video generation tools, Suno, and others | See that tutorial | [media/13](/media/13-promo-video/), [media/32](/media/32-ai-music/), [media/15](/media/15-voice-narration/) |
+| Turning recordings into text, summarizing long videos | Transcription tools, video summary tools | See that tutorial | [media/14](/media/14-transcribe-recordings/), [media/33](/media/33-video-summary-shorts/) |
+| Using AI inside email, meeting, and document apps | Gemini in Gmail and Google Workspace, Microsoft 365 Copilot | See that tutorial | [automation/38](/automation/38-email-ai/), [automation/37](/automation/37-meeting-ai/), [automation/24](/automation/24-m365-copilot/), [automation/19](/automation/19-google-workspace-gemini/) |
+| Schedules, to-dos, trip planning | Chat AI | Same as above | [chat/39](/chat/39-personal-assistant/), [Tutorial 6](/basics/06-everyday-uses/) |
+| I want to use it on my phone | Claude, ChatGPT, and Gemini apps | Same as above | [Tutorial 7](/basics/07-ai-on-phone/) |
+| I'm curious about Korean domestic services (for users in Korea) | Domestic AI such as Naver and Kakao | See that tutorial | [chat/29](/chat/29-korean-ai-services/) |
+| Making small web tools and apps without knowing how to code | Claude Code | Claude Code is included in paid plans (Pro and above) | [coding/6](/coding/06-claude-code-start/), [coding/27](/coding/27-first-app-with-claude-code/), [coding/7](/coding/07-no-code-web-tools/) |
+| Getting help writing and editing code | GitHub Copilot, Cursor, OpenAI Codex, Claude Code | GitHub Copilot has a free plan (Copilot Free, limited features). Codex is also included in the ChatGPT free plan. For Cursor, see that tutorial | [coding/28](/coding/28-github-copilot/), [coding/9](/coding/09-cursor/), [coding/36](/coding/36-openai-codex/) |
+| Connecting apps and services to automate repetitive work | Connectors (MCP), Zapier, Make | See that tutorial | [automation/20](/automation/20-connectors-mcp/), [automation/18](/automation/18-zapier-make/), [claude/c07](/claude/c07-connectors/) |
+| Handing work off to AI | Personal AI agents, browser agents | See that tutorial | [agents/1](/agents/01-agents-compared/), [agents/6](/agents/06-browser-agents/), [agents/5](/agents/05-agent-safety/) |
 
-### 고르기 전에 확인할 것
+### What to check before choosing
 
-| 확인할 것 | 왜 중요한가요 | 어디서 보나요 |
+| What to check | Why it matters | Where to look |
 | --- | --- | --- |
-| 무료 한도 | 무료 플랜은 쓸 수 있는 양이 정해져 있어요. 자주 걸리면 유료를 고민할 때예요. | [8편](/basics/08-free-vs-paid/) |
-| 입력하는 정보 | 회사 비밀과 개인정보는 넣기 전에 정책을 봐야 해요. | [5편](/basics/05-privacy-safety/) |
-| 답의 정확성 | 어떤 도구든 틀릴 수 있어요. 중요한 내용은 직접 확인하세요. | [4편](/basics/04-fact-checking/) |
-| 저작권·사용 조건 | 결과물을 업무에 쓰기 전에 약관과 규칙을 봐야 해요. | [9편](/basics/09-ai-copyright-ethics/) |
-| 한국어와 한국 제공 | 서비스마다 한국어 품질과 제공 여부, 가격 표시가 달라요. | 각 공식 가격·도움말 페이지 |
+| Free limits | Free plans cap how much you can use. If you hit it often, it's time to think about paying. | [Tutorial 8](/basics/08-free-vs-paid/) |
+| The information you enter | You need to look at the policy before entering company secrets and personal information. | [Tutorial 5](/basics/05-privacy-safety/) |
+| Accuracy of answers | Any tool can be wrong. Check important content yourself. | [Tutorial 4](/basics/04-fact-checking/) |
+| Copyright and terms of use | Before using output for work, look at the terms and rules. | [Tutorial 9](/basics/09-ai-copyright-ethics/) |
+| Korean support and availability in Korea | Korean quality, availability, and price display differ by service. | Each official pricing and help page |
 
-### 지금까지 확인된 무료 시작 정보 (2026-10-31 기준)
+### Free-start information confirmed so far (as of 2026-10-31)
 
-| 서비스 | 확인된 내용 |
+| Service | What was confirmed |
 | --- | --- |
-| Claude | Free $0. 5시간과 주간 단위의 제한된 사용량, 웹·데스크톱·모바일 채팅, 웹 검색, 파일 만들기, 코드 실행, 메모리, 아티팩트가 포함돼요. Claude Code는 Pro 이상(Pro·Max·Ultra)에 들어 있어요. |
-| ChatGPT | Free $0, Go $8, Plus $20 (월, 미국 달러 기준). ChatGPT Work와 Codex가 Free, Go, Plus 등 플랜에 포함된다고 안내돼요. |
-| Gemini | Free $0 (구글 계정). Gemini 앱, 이미지 생성과 편집, Deep Research, Gemini Live, Canvas, Gems, Gemini Notebook, 클라우드 저장 공간 15GB가 무료 플랜 목록에 있어요. |
-| DeepL | 요금제 표에 무료 버전이 있고, 월 글자 수와 파일 수에 제한이 있어요. 숫자는 지역마다 달라 [media/26](/media/26-ai-translation/)에서 확인하세요. |
-| GitHub Copilot | Copilot Free가 있고, 제한된 기능을 무료로 써 볼 수 있어요. 개인 개발자용이에요. |
+| Claude | Free $0. Includes limited usage on 5-hour and weekly bases, chat on web, desktop, and mobile, web search, file creation, code execution, memory, and artifacts. Claude Code is included in Pro and above (Pro, Max, Ultra). |
+| ChatGPT | Free $0, Go $8, Plus $20 (monthly, US dollars). ChatGPT Work and Codex are described as included in plans such as Free, Go, and Plus. |
+| Gemini | Free $0 (Google account). The Gemini app, image generation and editing, Deep Research, Gemini Live, Canvas, Gems, Gemini Notebook, and 15 GB of cloud storage are on the free plan list. |
+| DeepL | The plans table has a free version, with limits on monthly characters and number of files. The numbers vary by region, so check [media/26](/media/26-ai-translation/). |
+| GitHub Copilot | There is Copilot Free, and you can try limited features for free. It's for individual developers. |
 
-가격은 지역에 따라 다를 수 있어요. 한국 가격과 요금제 비교는 [8편](/basics/08-free-vs-paid/)을 보세요.
+Prices can differ by region. For Korean prices and plan comparisons, see [tutorial 8](/basics/08-free-vs-paid/).
 
-<Aside type="note" title="이 표가 다루지 않는 것">
-도구의 품질이나 성능 순위는 일부러 적지 않았어요. 같은 질문도 모델과 날짜에 따라 결과가 달라서, 공식 문서로 확인할 수 있는 사실(무료 플랜 여부, 기능 포함 여부)만 적었어요. Perplexity, Gamma, Suno, Cursor 등의 무료 플랜 세부는 이 편에서 직접 열어 보지 않았어요. 해당 편의 확인 내용을 따라가세요.
+<Aside type="note" title="What this table doesn't cover">
+We intentionally left out quality or performance rankings of tools. Even the same question gives different results depending on the model and the date, so we only listed facts we could confirm in official documents (whether there's a free plan, whether a feature is included). We didn't open the free plan details for Perplexity, Gamma, Suno, Cursor, and others in this tutorial. Follow what the corresponding tutorials confirmed.
 </Aside>
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 도구가 너무 많아서 고를 수가 없어요
+### There are too many tools and I can't choose
 
-- **원인**: 처음부터 일에 맞는 도구를 찾으려고 하면 후보가 끝없이 늘어요.
-- **해결**: 대화형 AI 하나로 시작하세요. 같은 일을 시켜 보고 아쉬운 지점이 보이면 그때 표에서 전용 도구를 찾으면 돼요.
+- **Cause**: If you try to find the right tool for each task from the start, the candidates grow endlessly.
+- **Fix**: Start with one chat AI. Have it do the same task, and when you see where it falls short, look for a dedicated tool in the table.
 
-### 유료 구독을 여러 개 하고 싶어져요
+### I keep wanting to subscribe to several paid plans
 
-- **원인**: 도구마다 장점 소개가 눈에 띄어요.
-- **해결**: 무료로 일주일 쓰고, 한도에 자주 걸릴 때만 한 곳을 한 달 결제해 보세요. [8편](/basics/08-free-vs-paid/)을 참고하세요.
+- **Cause**: Each tool's pitch catches your eye.
+- **Fix**: Use free for a week, and only if you hit the limit often, pay for just one service for a month. See [tutorial 8](/basics/08-free-vs-paid/).
 
-### 블로그에서 본 "최고의 AI" 순위가 서로 달라요
+### The "best AI" rankings I saw on blogs don't agree
 
-- **원인**: 순위는 시험 방식, 시점, 쓰는 사람의 일에 따라 달라져요.
-- **해결**: 내 일 한 가지로 직접 비교해 보세요. 방법은 [chat/5편](/chat/05-compare-assistants/)에 있어요.
+- **Cause**: Rankings vary with how they were tested, when, and what work the person does.
+- **Fix**: Compare directly with one of your own tasks. The method is in [chat tutorial 5](/chat/05-compare-assistants/).
 
-### 같은 AI인데 어제와 답이 달라요
+### It's the same AI but the answer differs from yesterday
 
-- **원인**: AI는 같은 질문에도 매번 조금씩 다르게 답할 수 있고, 서비스도 자주 업데이트돼요.
-- **해결**: 중요한 일은 요구 조건과 형식을 구체적으로 적고([3편](/basics/03-asking-well/)), 결과는 직접 확인하세요([4편](/basics/04-fact-checking/)).
+- **Cause**: AI can answer a little differently each time even for the same question, and services are updated often.
+- **Fix**: For important tasks, write the requirements and format specifically ([tutorial 3](/basics/03-asking-well/)), and check the results yourself ([tutorial 4](/basics/04-fact-checking/)).
 
-## 실전 팁
+## Practical tips
 
-- **일 하나에 도구 하나로 시작하세요.** 어디에 무엇을 넣었는지 기억하기 쉬워요.
-- **같은 일을 두 곳에 시켜 비교해 보세요.** 순위를 믿는 것보다 내 일로 해 보는 것이 정확해요.
-- **분기마다 한 번 다시 보세요.** 요금제와 기능은 자주 바뀌어요.
-- **직무에 맞는 묶음이 궁금하면** [사무·기획·관리직](/roles/office/), [학생·취업 준비생](/roles/student/), [1인 사업자](/roles/solo-business/) 같은 직무별 가이드를 보세요.
-- **어디서부터 읽을지 모르겠다면** [입문자 시작점](/start/beginner/)에 읽는 순서가 있어요.
+- **Start with one tool per task.** It's easier to remember what you put where.
+- **Give the same task to two tools and compare.** Trying it on your own work is more accurate than trusting a ranking.
+- **Take another look once a quarter.** Plans and features change often.
+- **If you'd like bundles suited to your job,** see the role-based guides such as [office, planning, and management roles](/roles/office/), [students and job seekers](/roles/student/), and [solo business owners](/roles/solo-business/).
+- **If you don't know where to start reading,** the [beginner starting point](/start/beginner/) has a reading order.
 
-고르기가 어렵다면 AI에게 이렇게 물어봐도 좋아요. 회사 이름이나 개인정보는 적지 마세요.
+If choosing is hard, you can also ask AI like this. Don't write company names or personal information.
 
 <PromptBox>
-나는 [직업 또는 상황]이고, 이번 주에 AI로 하고 싶은 일은 1) [일 1], 2) [일 2], 3) [일 3]이야. AI 도구는 거의 안 써 봤어. 각 일에 어떤 종류의 AI 도구(대화형 AI, AI 검색, 번역 전용 도구 등)가 맞는지 이유와 함께 알려 줘. 도구의 가격이나 한도는 네가 확실히 아는 것만 말하고, 모르면 공식 페이지에서 확인하라고 알려 줘.
+I'm [job or situation], and the things I want to do with AI this week are 1) [task 1], 2) [task 2], 3) [task 3]. I've barely used AI tools. For each task, tell me what kind of AI tool (chat AI, AI search, dedicated translation tool, and so on) fits and why. For tool prices and limits, only say what you're certain of, and if you don't know, tell me to check the official page.
 </PromptBox>
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [8. 무료 vs 유료 요금제](/basics/08-free-vs-paid/) — 한도와 가격 비교
-- [chat/5. 업무별 비교와 고르는 법](/chat/05-compare-assistants/) — 세 서비스를 같은 질문으로 비교
-- [5. 개인정보·회사 정보 안전하게 지키며 쓰기](/basics/05-privacy-safety/) — 넣어도 되는 정보 구분
-- [입문자 시작점](/start/beginner/) — 다음에 읽을 순서
+- [8. Free vs. paid plans](/basics/08-free-vs-paid/) — Comparing limits and prices
+- [chat/5. Comparing by task and how to choose](/chat/05-compare-assistants/) — Comparing the three services with the same question
+- [5. Using AI while protecting personal and company information](/basics/05-privacy-safety/) — Telling apart what you can enter
+- [Beginner starting point](/start/beginner/) — What to read next, in order

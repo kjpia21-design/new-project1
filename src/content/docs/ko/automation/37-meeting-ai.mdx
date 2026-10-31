@@ -1,0 +1,221 @@
+---
+title: "온라인 회의 AI 비교: Google Meet·Zoom·Teams의 회의록·요약 기능"
+description: "Google Meet의 Take notes for me, Zoom의 Meeting Summary, Teams의 Copilot 요약이 각각 무엇을 하고 어떤 플랜이 필요한지, 한국어 지원과 녹음 동의 주의점까지 비교한 참고서"
+sidebar:
+  label: "9. 회의 AI 비교"
+level: practical
+category: automation
+tools: ["Google Meet", "Zoom", "Microsoft Teams", "Claude"]
+duration: "25분"
+prerequisites:
+  - "Google Meet, Zoom, Teams 중 쓰는 서비스의 계정 (유료·회사 계정이 필요할 수 있어요)"
+  - "연습용 가상 회의 (실제 기밀 회의는 쓰지 마세요)"
+  - "참석자에게 녹음·전사 사실을 알릴 방법"
+lastVerified: 2026-10-26
+sources:
+  - title: '"Take notes for me" in Google Meet (Google Meet Help)'
+    url: "https://support.google.com/meet/answer/14754931"
+  - title: "Record a video meeting (Google Meet Help)"
+    url: "https://support.google.com/meet/answer/9308681"
+  - title: "Use Transcripts with Google Meet (Google Meet Help)"
+    url: "https://support.google.com/meet/answer/12849897"
+  - title: "Using Meeting Summary with AI Companion (Zoom Support)"
+    url: "https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0058013"
+  - title: "Supported languages for Zoom AI features (Zoom Support)"
+    url: "https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0078144"
+  - title: "Catch up on meetings with Microsoft Copilot in Teams (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/teams/copilot/catch-up-on-meetings-with-microsoft-365-copilot-in-teams"
+  - title: "Welcome to Copilot in Microsoft Teams (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/teams/meetings-events/welcome-to-copilot-in-microsoft-teams"
+  - title: "Recap a Teams meeting (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/teams/meetings-events/recap-a-teams-meeting"
+  - title: "Record a meeting in Microsoft Teams (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/office/record-a-meeting-in-microsoft-teams-34dfbe7f-b07d-4a27-b4c6-de62f1348c24"
+  - title: "Supported languages for Microsoft Copilot (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/microsoft-365-copilot/supported-languages-for-microsoft-365-copilot"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- 세 서비스 모두 **회의 중에 AI를 켜면 회의 후에 요약이 나오는** 방식이에요. 이름이 달라요: Meet는 **Take notes for me**, Zoom은 **Meeting summary**(Zoom AI Companion), Teams는 **Copilot**(Recap 탭).
+- 거의 다 **유료·회사 플랜**이 필요해요. Meet는 적격 Google Workspace 또는 Google AI 요금제, Zoom은 유료 Workplace 플랜, Teams는 Microsoft 365와 Copilot 라이선스예요(2026-10-15 기준).
+- 한국어: Meet(노트·전사)와 Zoom(Meeting summary)은 공식 문서의 지원 언어 목록에 한국어가 있어요. Teams는 Copilot 지원 언어 목록에 한국어가 있지만 회의 요약 기능만의 지원 범위는 확인하지 못했어요.
+- **켜기 전에 참석자에게 알리세요.** 세 서비스 모두 시작하면 참가자에게 표시가 뜨지만, 동의는 서비스가 대신해 주지 않아요.
+- 요약은 틀릴 수 있어요. 숫자·담당자·기한은 원본과 대조한 뒤 공유하세요.
+</Summary>
+
+<Aside type="note" title="확인하지 못한 점 (2026-10-15 기준)">
+가격은 이번에 공식 요금제 페이지를 열지 않아 적지 않았어요. Meet의 구체적인 요금제 이름, Zoom 무료 계정에서의 AI 사용 가능 여부, Teams 회의 요약의 한국어 품질은 공식 문서에서 확인하지 못했어요. Zoom 도움말은 "일부 산업 분야와 일부 지역 고객에게는 AI 기능이 제공되지 않을 수 있다"고 안내하는데(2026-10-26 기준), 한국 계정의 제공 여부는 확인하지 못했어요. 한국의 녹음 관련 법적 요건도 이 문서들로는 확인할 수 없어서 일반 권고로만 적었어요.
+</Aside>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 우리 팀이 쓰는 회의 서비스에서 AI 회의록을 **어디서 켜는지** 알 수 있어요.
+- 세 서비스의 **필요한 플랜, 한국어 지원, 결과물 저장 위치**를 한눈에 비교할 수 있어요.
+- 녹음·전사 전에 **동의와 알림**을 챙기는 순서를 익힐 수 있어요.
+- AI 요약 결과를 Claude 등으로 **할 일 표**로 다시 정리할 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **녹화(Recording)** | 영상과 소리를 파일로 저장하는 기능이에요. |
+| **전사(Transcript)** | 말한 내용을 글자로 옮긴 기록이에요. 요약의 재료가 돼요. |
+| **AI 요약(회의록)** | 전사(음성 인식) 내용을 바탕으로 AI가 요약·결정사항·할 일을 정리한 결과예요. |
+| **호스트 / 주최자** | 회의를 만든 사람이에요. 대부분의 기능을 켜고 끄는 권한은 호스트(와 공동 호스트)에게 있어요. |
+| **동의 요구 설정** | 관리자가 녹화·전사·AI 노트를 시작할 때 참가자의 명시적 동의(Start/Join 등)를 받게 하는 설정이에요. Meet 문서 기준으로 기본은 꺼져 있어요. |
+
+## 세 서비스 비교
+
+| 항목 | Google Meet | Zoom | Microsoft Teams |
+| --- | --- | --- | --- |
+| 기능 이름 | Take notes for me (Gemini) | Meeting summary (Zoom AI Companion) | Copilot in Teams meetings, 회의 후 Recap 탭 |
+| 필요한 것 | 적격 Google Workspace 에디션 또는 Google AI 요금제 | Zoom Workplace Pro·Pro Plus·Business·Business Plus·Enterprise·Enterprise Plus 또는 Enterprise Bundle 계정의 라이선스 사용자 | Microsoft 365 및 Microsoft Copilot 라이선스 |
+| 한국어 | 회의 구어 8개 언어에 한국어 포함 (한 번에 한 언어만) | Meeting summary 지원 언어 목록에 Korean 포함 | Copilot 지원 언어 목록에 Korean 포함. 회의 요약의 구체 범위는 확인 못 함 |
+| 누가 켜나 | 주최자/참가자(조직 내). 호스트 관리가 켜져 있으면 호스트·공동 호스트만 | 호스트·공동 호스트 (참가자는 요청 가능) | 주최자가 회의 옵션 **Allow Copilot and Facilitator**로 정함 |
+| 전사 필요 여부 | 노트 기능 자체가 음성을 바탕으로 생성 | 선택: Generate transcript 체크 | 기본은 전사 필요. "회의 중에만" 옵션이면 전사 없이도 회의 중 사용 가능 |
+| 결과물 위치 | 주최자 Drive의 "Google Meet" 폴더, Calendar 이벤트에 첨부, 이메일 링크 | 이메일, (켜져 있으면) 회의 그룹 채팅, 웹 포털 Summaries | 회의 채팅 또는 Calendar 이벤트의 Recap 탭 |
+| 참가자 알림 | 모든 참가자에게 알림(연필 아이콘) | AI 기능 활성 표시(다이아몬드 색 변경) | 전사 알림. 녹화 시작 시 모든 참가자에게 알림 |
+| 제한 | 15분~8시간 회의 권장 | 소그룹 회의실(breakout room)에서는 불가 | 조직 외부 사람이 만든 회의에서는 Copilot 사용 불가 |
+
+(출처는 각 서비스 공식 도움말, 2026-10-15 기준. 세부 조건은 계정 종류와 관리자 설정에 따라 달라질 수 있어요.)
+
+## 단계별 따라하기
+
+예제는 "30분짜리 주간 팀 회의"예요. 쓰는 서비스의 단계만 따라 해도 돼요.
+
+<Checklist items={[
+  '참석자에게 AI 회의록을 쓴다고 알렸어요',
+  '쓰는 서비스에서 AI 기능을 켤 수 있는지 확인했어요',
+  '회의 중 AI를 켜고 표시가 뜨는 것을 확인했어요',
+  '회의 후 요약이 저장된 위치를 찾았어요',
+  '요약을 원본과 대조해 고쳤어요',
+  '민감한 부분을 정리하고 공유했어요',
+]} />
+
+<Steps>
+
+1. **회의 전: 알리고 설정 확인하기**
+
+   회의 초대나 시작 때 "회의록 작성을 위해 AI 요약(녹음·전사)을 쓴다"고 알리고 반대하는 사람이 없는지 확인해요. 이 알림은 서비스가 자동으로 표시해 주는 것과 별개로 사람이 챙겨야 하는 부분이에요. 관리자가 동의 요구 설정을 켜 놓았다면 참가자에게 Start/Join/Continue 같은 선택 화면이 떠요. 회사 계정이면 AI 기능이 관리자 설정으로 꺼져 있을 수 있으니 미리 확인하세요.
+
+2. **Google Meet: Take notes for me 켜기**
+
+   회의에 들어가 화면 오른쪽 위의 **Take notes for me**를 눌러요. 미리 켜려면 Google Calendar에서 일정을 열고 Video call options > Meeting records에서 "Take notes with Gemini"를 체크해요. 시작 전에 노트를 받을 사람(초대된 모든 게스트, 조직 내, 호스트·공동 호스트만)과 노트 언어를 고를 수 있어요. 한 번에 한 언어만 지원해서, 한국어와 영어를 섞어 말하는 회의는 노트가 어색할 수 있어요.
+
+   <ScreenshotPlaceholder caption="Meet 화면 오른쪽 위의 Take notes for me와 설정 창" officialUrl="https://support.google.com/meet/answer/14754931" />
+
+   회의가 끝나면 노트 문서가 주최자 Drive의 "Google Meet" 폴더에 만들어지고 Calendar 이벤트에도 첨부돼요. 문서는 **Quick notes**(핵심 요약과 할 일)와 **Full notes**(요약·결정사항·할 일·세부 내용) 두 탭으로 나와요.
+
+3. **Zoom: Meeting summary 켜기**
+
+   호스트가 회의 창 오른쪽 위의 Zoom AI 아이콘에 마우스를 올려 창을 열고 **Meeting summary**를 체크한 뒤 **Start Zoom AI**를 눌러요. 필요하면 **Generate transcript**도 체크해요. 참가자는 호스트에게 시작을 요청할 수 있어요. 한국어 회의라면 자막(caption) 언어를 한국어로 맞춰 두는 편이 좋다고 공식 문서가 안내해요.
+
+   <FlowSteps title="Zoom에서 회의 요약 시작하기 (호스트, 데스크톱)" officialUrl="https://support.zoom.com/hc/en/article?id=zm_kb&sysparm_article=KB0058013" steps={[
+     { where: '회의 창 오른쪽 위', action: 'Zoom AI 아이콘에 마우스 올리기', result: '인-미팅 AI 창' },
+     { where: 'AI 창', action: 'Meeting summary 체크 (선택: Generate transcript)', result: '요약 준비' },
+     { where: 'AI 창', action: 'Start Zoom AI 누르기', result: '참가자에게 AI 활성 표시' },
+     { where: '회의 후', action: '이메일 또는 웹 포털 Summaries에서 확인', result: '요약 보기·편집·공유' },
+   ]} />
+
+   요약은 이메일로 오고, 회의 그룹 채팅이 켜져 있으면 Chat에도 올라가요. 웹 포털의 Summaries 페이지에서 보고, 고치고, 공유하고, 지울 수 있어요. 참가자가 요약을 자동으로 받으려면 Zoom에 로그인해 있어야 해요. 중요한 논의를 AI에서 빼고 싶으면 호스트가 체크를 해제하거나 **Stop Zoom AI**를 눌러요.
+
+4. **Teams: Copilot 켜기와 Recap**
+
+   회의 주최자는 회의 예약 화면의 온라인 회의 옵션(Online meeting options) > Copilot and other AI에서 **Allow Copilot and Facilitator**를 정해요. 옵션은 세 가지예요: 전사가 필요한 상태에서 회의 중과 후 모두 사용, 회의 중에만 사용, 끄기. 끄면 녹화와 전사도 함께 꺼져요. 회의 중에는 회의 컨트롤의 **Copilot**을 눌러요. 회의 후에는 회의 채팅의 **Recap** 탭에서 Copilot > View prompts > **Recap the meeting**을 골라요.
+
+   <PromptBox>
+   이 회의에서 결정된 사항과 나에게 배정된 할 일을 표로 정리해 줘. 아직 결론이 나지 않은 질문도 따로 알려 줘.
+   </PromptBox>
+
+   회의 후에 Copilot에게 질문하려면 회의 중에 전사가 켜져 있어야 해요. "회의 중에만" 옵션에서는 전사하지 않은 부분의 음성 데이터와 Copilot 대화가 회의가 끝나면 사라진다고 공식 문서가 안내해요.
+
+   <ScreenshotPlaceholder caption="Teams 회의 채팅의 Recap 탭에서 Copilot을 여는 화면" officialUrl="https://support.microsoft.com/en-us/teams/meetings-events/recap-a-teams-meeting" />
+
+5. **요약 검수하기**
+
+   AI 요약은 틀리거나 빠질 수 있어요. Meet 문서도 연결 문제나 짧은 회의에서는 요약이 불완전하거나 생성되지 않을 수 있다고 하고, Teams 문서도 결과를 확인하라고 안내해요. 숫자, 이름, 기한, 담당자를 원본(전사 또는 기억)과 대조하고 틀린 곳을 고치세요.
+
+6. **할 일 표로 다시 정리하고 공유하기**
+
+   요약 텍스트를 Claude에 붙여넣어 팀 공용 양식으로 바꿔요. 붙여넣기 전에 사내 보안 정책이 허용하는 도구인지 먼저 확인하세요([개인정보·회사 정보 안전하게 지키며 쓰기](/ko/basics/05-privacy-safety/) 참고).
+
+   <PromptBox>
+   아래는 AI가 만든 회의 요약이야. 틀린 부분이 있을 수 있어. 다음 형식으로 정리해 줘.
+   1. 한 줄 요약
+   2. 결정사항 (번호 목록)
+   3. 할 일 표 (담당자 / 기한 / 내용)
+   4. 미결 사항
+   5. 원문과 대조가 필요한 부분 (숫자, 이름, 기한)
+   글에 없는 담당자나 기한은 지어내지 말고 "미정"이라고 써 줘.
+
+   (여기에 요약 텍스트를 붙여넣기)
+   </PromptBox>
+
+</Steps>
+
+## 녹음·전사 동의와 예절
+
+<Aside type="caution" title="서비스가 알림을 띄워도 동의가 자동으로 해결되지는 않아요">
+세 서비스 모두 AI 기능이나 녹화를 시작하면 참가자에게 알림이나 표시가 떠요. Teams 도움말은 "지역에 따라 녹화하려면 모든 사람의 허락이 필요할 수 있다"고 안내해요. 한국의 구체적인 법적 요건은 이 공식 문서들에서 확인할 수 없어요. 일반적으로는 아래처럼 하면 안전해요.
+</Aside>
+
+- 회의 **초대문과 시작 때** "AI 회의록을 쓴다"고 두 번 알려요.
+- 외부 사람(고객, 협력사)이 있으면 **사전에 메일 등으로 동의**를 받아 두세요. 외부 참가자에게는 조직 내 참가자와 다른 제한이 있을 수 있어요(예: Meet에서 노트를 멈출 수 있는 사람은 호스트 조직 내 참가자예요).
+- 민감한 논의(인사, 급여, 법률, 고객 개인정보)는 **AI를 잠시 끄거나** 아예 켜지 않고, 끈 사실을 알려요. Meet는 조직 내 참가자 누구나 노트를 멈출 수 있어 기밀 논의를 요약에서 뺄 수 있다고 안내해요.
+- **누가 결과물을 볼 수 있는지** 확인해요. Meet 노트는 공유 설정에 따라, Teams 녹화는 기본적으로 주최자·공동 주최자만 다운로드·삭제할 수 있어요.
+- 회사 규정과 법무·보안 담당의 안내가 항상 우선이에요.
+
+## 빠른 참조표
+
+| 하고 싶은 일 | Meet | Zoom | Teams |
+| --- | --- | --- | --- |
+| AI 요약 켜기 | 회의 중 Take notes for me, 또는 Calendar Video call options > Meeting records | Zoom AI 아이콘 > Meeting summary > Start Zoom AI | 회의 중 Copilot (주최자 옵션 확인) |
+| 결과 찾기 | Drive의 Google Meet 폴더, Calendar 첨부, 이메일 | 이메일, Chat, 웹 포털 Summaries | 회의 채팅 또는 Calendar의 Recap 탭 |
+| 전사 따로 받기 | 회의 도구 > Transcribe > Start transcription | Generate transcript 체크 | Copilot 사용 시 전사 켜기 |
+| 멈추기 | 노트 중지 (조직 내 참가자) | 체크 해제 또는 Stop Zoom AI | Copilot/전사 중지 |
+| 중간에 들어갔을 때 | Summary so far | (확인 못 함) | 5분 이상 늦으면 요약 제안 |
+
+## 자주 막히는 지점
+
+### Take notes for me가 안 눌려요
+
+- **원인**: Meet 도움말에 따르면 주최자의 Workspace 에디션에 기능이 없거나, 관리자가 켜지 않았거나, 스마트 기능(Smart features)이 꺼져 있을 수 있어요. 호스트 관리가 켜져 있으면 호스트·공동 호스트만 켤 수 있어요.
+- **해결**: 관리자에게 어떤 항목이 꺼져 있는지 물어보세요.
+
+### Zoom에서 AI 아이콘이 보이지 않아요
+
+- **원인**: 계정 플랜이나 Meeting summary 설정이 꺼져 있을 수 있어요. 참가자는 시작 권한이 없어요.
+- **해결**: 호스트에게 **Ask host to start Zoom AI** 요청을 보내세요. 관리자가 같은 회의에 있으면 그 자리에서 켜라는 안내가 뜰 수 있고, 아니면 관리자에게 이메일 요청이 가요.
+
+### Teams 회의 후 Copilot이 내용을 몰라요
+
+- **원인**: 회의 중에 전사가 켜지지 않았을 수 있어요. 공식 문서는 회의 후 질문에는 전사가 필요하다고 해요. 조직 밖 사람이 만든 회의에서는 Copilot 자체를 쓸 수 없어요.
+- **해결**: 다음 회의부터 전사를 켜 두고, 주최자 옵션을 확인하세요.
+
+### 요약에 한국어가 어색하거나 영어가 섞여요
+
+- **원인**: Meet는 한 번에 한 언어만 지원해요. Zoom은 한국어가 아닌 언어가 감지되면 적응하는데, 여러 언어가 섞이면 다수가 쓴 언어로 요약돼요. Teams의 한국어 품질은 확인하지 못했어요.
+- **해결**: 회의 언어 설정(Meet 노트 언어, Zoom 자막 언어)을 한국어로 맞추고, 결과는 직접 읽고 고치세요.
+
+## 실전 팁
+
+- 안건과 참석자 이름을 회의 처음에 한 번 말해 두면 요약이 정리되기 쉬워요.
+- 15분 미만의 짧은 회의는 Meet 노트가 불완전할 수 있다고 안내돼요. 중요한 짧은 회의는 직접 메모를 남기세요.
+- 회의 후 **24시간 안에** 요약을 검수해 공유해야 기억이 남아 있을 때 고칠 수 있어요.
+- 이미 녹음 파일이 있다면 [회의·강의 녹음을 텍스트로 정리하기](/ko/media/14-transcribe-recordings/)의 방법으로 같은 정리를 할 수 있어요.
+- 정기 회의는 위 정리 프롬프트를 고정해서 매번 같은 양식으로 받으세요.
+
+## 다음에 볼 튜토리얼
+
+- [14. 회의·강의 녹음을 텍스트로 정리하기](/ko/media/14-transcribe-recordings/) — 녹음 파일에서 회의록 만들기
+- [38. 메일함 정리를 AI로](/ko/automation/38-email-ai/) — 회의 후속 메일 정리
+- [24. Microsoft 365 Copilot으로 업무하기](/ko/automation/24-m365-copilot/) — Teams와 같은 Copilot 계열
+- [사무·기획·관리직을 위한 AI 활용 가이드](/ko/roles/office/) — 직무별 추천 순서

@@ -1,20 +1,20 @@
 ---
-title: "회의록·긴 문서 요약하고 할 일 뽑기"
-description: "회의록과 긴 문서를 올려 요약하고, 담당자·기한이 붙은 할 일 표로 뽑은 뒤 근거를 대조하는 실습"
+title: "Summarizing Meeting Notes and Long Documents, and Pulling Out Action Items"
+description: "A hands-on exercise: upload meeting notes and long documents, summarize them, pull out a table of action items with owners and deadlines, and check them against the source"
 sidebar:
-  label: "2. 문서 요약과 할 일 뽑기"
+  label: "2. Summaries and action items"
 level: practical
 category: chat
 tools: ["Claude", "ChatGPT", "Gemini"]
-duration: "25분"
-prerequisites: ["사용할 대화형 AI의 계정", "요약할 회의록이나 문서 (개인정보는 가린 것)"]
+duration: "25 min"
+prerequisites: ["An account for the chat AI you plan to use", "Meeting notes or a document to summarize (with personal information masked)"]
 lastVerified: 2026-10-26
 sources:
   - title: "Upload files to Claude"
     url: "https://support.claude.com/en/articles/8241126-upload-files-to-claude"
   - title: "How do usage and length limits work?"
     url: "https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work"
-  - title: "Prompting best practices (Claude 공식 프롬프트 가이드)"
+  - title: "Prompting best practices (Claude official prompting guide)"
     url: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
   - title: "What are projects?"
     url: "https://support.claude.com/en/articles/9517075-what-are-projects"
@@ -24,11 +24,11 @@ sources:
     url: "https://support.google.com/gemini/answer/14903178"
   - title: "Gemini Apps limits & upgrades"
     url: "https://support.google.com/gemini/answer/16275805"
-  - title: "Projects and chats (OpenAI, ChatGPT 문서)"
+  - title: "Projects and chats (OpenAI, ChatGPT docs)"
     url: "https://learn.chatgpt.com/docs/projects"
-  - title: "Use ChatGPT (OpenAI, ChatGPT 문서)"
+  - title: "Use ChatGPT (OpenAI, ChatGPT docs)"
     url: "https://learn.chatgpt.com/docs/use-chatgpt"
-  - title: "File inputs (OpenAI API 문서, API 한도 참고)"
+  - title: "File inputs (OpenAI API docs, for API limits)"
     url: "https://developers.openai.com/api/docs/guides/file-inputs"
 status: published
 ---
@@ -40,165 +40,165 @@ import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- 요약만 시키지 말고 **결정사항 · 할 일(담당자·기한) · 미결 사항**으로 구조를 정해 주세요.
-- 담당자나 기한이 문서에 없으면 **지어내지 말고 "확인 필요"** 라고 적게 하세요.
-- 결과는 **근거 문장 인용**을 함께 받아 원문과 대조하세요.
-- Claude 기준 채팅 업로드는 파일당 500MB, 채팅당 20개, PDF는 1000쪽까지예요 (2026-10-10 기준). Gemini 앱은 프롬프트 하나에 파일 최대 10개, 동영상 외 파일은 100MB까지예요(Gemini 도움말 기준). ChatGPT 앱의 파일 수·크기 한도는 OpenAI가 공개한 문서(learn.chatgpt.com, developers.openai.com)에서 찾지 못해 숫자를 적지 않았어요. 화면에 나오는 안내를 따르세요.
-- 긴 대화는 새 대화로 나누면 사용량도 아낄 수 있어요.
+- Don't just ask for a summary. Give it a structure: **decisions, action items (owner and deadline), and open issues.**
+- If an owner or deadline isn't in the document, tell the AI to **write "needs confirmation" instead of making one up.**
+- Ask for **quoted supporting sentences** with the results, and check them against the source.
+- For Claude, chat uploads are limited to 500MB per file, 20 files per chat, and PDFs up to 1,000 pages (as of 2026-10-10). Gemini apps allow up to 10 files per prompt and 100MB per non-video file (per Gemini Help). We couldn't find the ChatGPT app's file count and size limits in OpenAI's published docs (learn.chatgpt.com, developers.openai.com), so we haven't listed numbers. Follow the guidance shown on screen.
+- Splitting a long chat into a new one also saves usage.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do
 
-- 회의록을 팀장 보고용 요약과 할 일 표로 바꿀 수 있어요.
-- 수십 쪽짜리 문서에서 필요한 결정과 위험 요소만 뽑을 수 있어요.
-- 요약이 원문과 맞는지 근거 문장으로 검증할 수 있어요.
-- 요약을 후속 메일이나 공지로 바로 이어 쓸 수 있어요.
+- Turn meeting notes into a summary for your team lead plus an action-item table.
+- Pull only the necessary decisions and risks out of a document that's dozens of pages long.
+- Verify that a summary matches the source by checking the supporting sentences.
+- Carry the summary straight into a follow-up email or announcement.
 
-## 먼저 알아둘 개념
+## Concepts first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **컨텍스트 윈도우** | AI가 한 번에 볼 수 있는 글의 양이에요. 대화, 올린 자료, 답변이 모두 이 안에 들어가요. |
-| **구조화 요약** | 줄글 요약 대신 항목(결정, 할 일, 위험)을 정해서 뽑는 방식이에요. |
-| **근거 인용** | 요약의 각 항목이 원문 어디에서 나왔는지 문장을 함께 받는 것이에요. |
-| **프로젝트** | 같은 자료와 지침을 여러 대화에서 반복 쓰는 Claude의 작업 공간이에요. |
+| **Context window** | The amount of text the AI can see at once. The conversation, uploaded material, and answers all fit inside it. |
+| **Structured summary** | Instead of a prose summary, you pick the categories (decisions, action items, risks) to pull out. |
+| **Source quote** | Getting the sentence from the original along with each item in the summary, so you can see where it came from. |
+| **Project** | Claude's workspace for reusing the same material and instructions across multiple chats. |
 
-Claude의 컨텍스트 윈도우는 모델마다 달라요. 공식 도움말은 유료 플랜의 최신 모델이 최대 1M 토큰, 그 외는 500K 또는 200K 토큰을 지원한다고 설명해요 (2026-10-10 기준). 응답용으로 일부가 예약되어 실제 쓸 수 있는 양은 조금 적어요.
+Claude's context window varies by model. The official help pages say the latest models on paid plans support up to 1M tokens, and others support 500K or 200K tokens (as of 2026-10-10). Part of it is reserved for the response, so the amount you can actually use is a little smaller.
 
-<Aside type="note" title="업로드된 파일과 한도">
-공식 도움말은 업로드한 파일이 컨텍스트나 사용량에 어떻게 계산되는지 설명하지 않아요. 파일이 커질수록 사용량을 더 쓴다고 가정하고 아껴 쓰는 편이 안전해요.
+<Aside type="note" title="Uploaded files and limits">
+The official help pages don't explain how uploaded files count toward context or usage. It's safer to assume that bigger files use more of your allowance and to use them sparingly.
 </Aside>
 
-## 단계별 따라하기
+## Step-by-step
 
 <Checklist items={[
-  '민감한 이름·연락처·금액을 가렸어요',
-  '문서를 붙여넣거나 업로드했어요',
-  '구조(결정/할 일/미결)를 정해 요약을 받았어요',
-  '근거 문장으로 원문과 대조했어요',
-  '후속 메일 초안까지 만들었어요',
+  'I masked sensitive names, contact details, and amounts',
+  'I pasted or uploaded the document',
+  'I set a structure (decisions / action items / open issues) and got a summary',
+  'I checked the summary against the source using the supporting sentences',
+  'I even drafted a follow-up email',
 ]} />
 
 <Steps>
 
-1. **자료 준비하고 올리기**
+1. **Prepare and upload your material**
 
-   회의 메모는 채팅창에 바로 붙여넣어도 돼요. 문서는 첨부(Claude는 입력창 왼쪽 아래 "+")로 올려요.
+   You can paste meeting notes straight into the chat box. Upload documents as attachments (in Claude, the "+" at the lower left of the input box).
 
-   Claude가 받는 형식은 PDF, DOCX, CSV, TXT, HTML, ODT, RTF, EPUB, JSON, XLSX, 이미지(JPEG·PNG·GIF·WebP)예요. 한도는 채팅당 파일 20개, 파일당 500MB, PDF 1000쪽이에요. PDF가 100쪽 이하면 글과 시각 요소를 함께 분석하고, 101~1000쪽이면 글만 분석해요. 1000쪽을 넘으면 "Uploaded file is too large" 오류로 거부돼요. DOCX 같은 문서는 글만 추출되어 안에 든 이미지는 못 읽어요.
+   Claude accepts PDF, DOCX, CSV, TXT, HTML, ODT, RTF, EPUB, JSON, XLSX, and images (JPEG, PNG, GIF, WebP). The limits are 20 files per chat, 500MB per file, and 1,000 pages per PDF. If a PDF is 100 pages or fewer, Claude analyzes both text and visual elements; for 101 to 1,000 pages, it analyzes text only. Anything over 1,000 pages is rejected with an "Uploaded file is too large" error. For documents like DOCX, only the text is extracted, so images inside can't be read.
 
-   <ScreenshotPlaceholder caption="파일을 첨부한 채팅 입력창" officialUrl="https://support.claude.com/en/articles/8241126-upload-files-to-claude" />
+   <ScreenshotPlaceholder caption="A chat input box with a file attached" officialUrl="https://support.claude.com/en/articles/8241126-upload-files-to-claude" />
 
-   <Aside type="caution" title="올리기 전에">
-   고객 이름, 연락처, 계약 금액처럼 외부에 나가면 안 되는 정보는 지우거나 가명으로 바꾸세요. 회사 보안 지침도 먼저 확인하세요.
+   <Aside type="caution" title="Before you upload">
+   Delete or pseudonymize information that shouldn't leave your organization, such as customer names, contact details, and contract amounts. Check your company's security guidelines first, too.
    </Aside>
 
-2. **구조를 정해서 요약 요청하기**
+2. **Ask for a summary with a set structure**
 
-   긴 자료는 위에, 요청은 아래에 두세요. 공식 가이드가 안내하는 방식이에요.
-
-   <PromptBox>
-   [회의 메모 붙여넣기]
-
-   위 회의 메모를 팀장 보고용으로 정리해줘. 아래 형식을 지켜줘.
-   1) 한 줄 결론
-   2) 결정사항 (번호 목록)
-   3) 할 일: 표로, 열은 할 일 / 담당자 / 기한 / 근거 문장
-   4) 미결 사항과 다음 회의에서 정할 것
-   메모에 담당자나 기한이 없으면 지어내지 말고 "확인 필요"라고 적어줘.
-   </PromptBox>
-
-3. **근거를 대조하기**
-
-   요약이 그럴듯해도 원문과 다를 수 있어요. 표의 "근거 문장"이 원문에 실제로 있는지 몇 개만 직접 찾아보세요. 의심이 가면 이렇게 요청해요.
+   Put long material on top and your request below it. That's the approach the official guide describes.
 
    <PromptBox>
-   방금 표의 항목 중 원문에 직접 근거가 없고 네가 추론한 것이 있으면 따로 표시해줘. 추론한 항목은 이유도 한 줄 적어줘.
+   [Paste meeting notes]
+
+   Organize the meeting notes above for a report to my team lead. Follow this format:
+   1) One-line conclusion
+   2) Decisions (numbered list)
+   3) Action items: a table with the columns Action / Owner / Deadline / Supporting sentence
+   4) Open issues and what to decide at the next meeting
+   If an owner or deadline isn't in the notes, don't make one up. Write "needs confirmation."
    </PromptBox>
 
-4. **긴 문서에서 필요한 것만 뽑기**
+3. **Check the supporting sentences**
 
-   여러 문서를 한꺼번에 줄 때는 문서마다 이름을 붙여 구분하게 하면 헷갈림이 줄어요. 공식 가이드는 `<document>` 태그로 문서를 나누는 구조를 안내해요.
+   A summary can look convincing and still differ from the source. Pick a few of the "supporting sentences" in the table and look for them in the original yourself. If you have doubts, ask like this.
+
+   <PromptBox>
+   If any items in the table you just made aren't directly supported by the source and you inferred them, mark them separately. For each inferred item, add a one-line reason.
+   </PromptBox>
+
+4. **Pull out only what you need from a long document**
+
+   When you give several documents at once, have the AI keep them apart by name to reduce confusion. The official guide describes a structure that separates documents with `<document>` tags.
 
    <PromptBox>
    <documents>
    <document index="1">
-   <source>1차 계약서 초안</source>
-   <document_content>[내용]</document_content>
+   <source>Contract draft v1</source>
+   <document_content>[Content]</document_content>
    </document>
    <document index="2">
-   <source>2차 수정본</source>
-   <document_content>[내용]</document_content>
+   <source>Revised draft v2</source>
+   <document_content>[Content]</document_content>
    </document>
    </documents>
 
-   두 문서에서 달라진 조항을 표로 정리해줘. 열은 조항 / 1차 / 2차 / 달라진 이유로 하고, 각 칸에는 원문 문장을 짧게 인용해줘.
+   Compare the two documents and list the clauses that changed in a table. Use the columns Clause / v1 / v2 / Reason for change, and briefly quote the original sentence in each cell.
    </PromptBox>
 
-   <Aside type="caution" title="법률·재무 문서">
-   계약서 같은 문서는 AI 요약을 참고용으로만 쓰고, 중요한 판단은 원문과 담당자 확인을 거치세요.
+   <Aside type="caution" title="Legal and financial documents">
+   For documents like contracts, treat an AI summary as a reference only. For important decisions, go back to the original and check with the person in charge.
    </Aside>
 
-5. **후속 문서로 이어 쓰기**
+5. **Carry it into the next document**
 
-   정리한 표를 그대로 두고 다음 산출물을 만들어요.
+   Keep the table you just made and use it to build the next deliverable.
 
    <PromptBox>
-   위 할 일 표를 바탕으로 참석자에게 보낼 회의 후속 메일을 써줘. 할 일은 담당자별로 묶고, "확인 필요"로 남은 항목은 마지막에 회신을 요청해줘. 300자 이내로.
+   Based on the action-item table above, write a follow-up email to send to the meeting attendees. Group the action items by owner, and at the end, ask for replies on any items left as "needs confirmation." Keep it under 150 words.
    </PromptBox>
 
-   원하면 결과를 파일로 받을 수도 있어요. Claude는 코드 실행·파일 생성 기능을 켜면 .docx, .xlsx, .pptx, PDF를 만들 수 있고 파일당 30MB까지예요. 켜는 곳은 [3편](/chat/03-data-analysis/)에 정리했어요.
+   If you like, you can also get the result as a file. With the code execution and file creation feature turned on, Claude can create .docx, .xlsx, .pptx, and PDF files, up to 30MB per file. Where to turn it on is covered in [Tutorial 3](/chat/03-data-analysis/).
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-| 항목 | Claude 기준 (2026-10-10) | Gemini (2026-10-10) | ChatGPT (2026-10-10) |
+| Item | Claude (2026-10-10) | Gemini (2026-10-10) | ChatGPT (2026-10-10) |
 | --- | --- | --- | --- |
-| 채팅당 업로드 | 파일 20개, 파일당 500MB | 프롬프트당 파일 10개, 동영상 외 파일당 100MB, 동영상은 2GB | 앱 한도는 공개 문서에서 찾지 못함. 참고로 API 입력은 파일당 50MB, 요청 전체 합계 50MB(앱 한도와 다를 수 있음) |
-| PDF | 1000쪽까지, 100쪽 초과는 글만 분석 | 쪽수 한도는 확인하지 못함 | 앱 기준 쪽수 한도는 찾지 못함 |
-| 프로젝트 파일 | 파일당 30MB, 개수 제한 없음(내용은 컨텍스트 안에 들어가야 함) | 확인하지 못함 | 프로젝트의 Sources에 파일을 올려 여러 대화가 함께 쓰고, 프로젝트 지침도 모든 대화에 적용돼요. 개수·크기 한도는 찾지 못함 |
-| 컨텍스트 | 모델별 200K~1M 토큰 | 플랜 없음 32K, AI Plus 128K, AI Pro·Ultra 1M 토큰(약 1,500쪽) | 앱 기준 수치는 찾지 못함 |
-| 긴 대화 | 코드 실행이 켜져 있으면 한계 근처에서 이전 메시지를 자동 요약 | 확인하지 못함 | 찾지 못함 |
+| Uploads per chat | 20 files, 500MB per file | 10 files per prompt, 100MB per non-video file, 2GB for video | We couldn't find the app limits in public docs. For reference, API input is 50MB per file and 50MB total per request (may differ from the app limits) |
+| PDF | Up to 1,000 pages; text only beyond 100 pages | We couldn't confirm a page limit | We couldn't find a page limit for the app |
+| Project files | 30MB per file, no limit on count (the content must fit in the context) | We couldn't confirm this | Files uploaded to a project's Sources are shared across its chats, and project instructions apply to every chat. We couldn't find count or size limits |
+| Context | 200K to 1M tokens, depending on the model | No plan 32K, AI Plus 128K, AI Pro and Ultra 1M tokens (about 1,500 pages) | We couldn't find figures for the app |
+| Long chats | With code execution on, earlier messages are automatically summarized near the limit | We couldn't confirm this | We couldn't find this |
 
-ChatGPT 열은 OpenAI의 ChatGPT 문서(learn.chatgpt.com)와 API 문서를 근거로 해요. 이 문서들은 파일을 올려 요약·분석을 맡기는 흐름과 프로젝트 구조를 설명하지만 앱의 업로드 수치는 싣지 않아요. 숫자가 중요하면 업로드할 때 나오는 안내나 OpenAI 도움말을 직접 보세요.
+The ChatGPT column is based on OpenAI's ChatGPT docs (learn.chatgpt.com) and API docs. They describe the flow of uploading files for summarizing and analysis and how projects are structured, but they don't list the app's upload numbers. If the numbers matter, check the guidance shown when you upload, or OpenAI's help pages directly.
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 요약이 너무 짧거나 핵심을 놓쳐요
+### The summary is too short or misses the key points
 
-- **원인**: 독자와 목적을 알려 주지 않았을 수 있어요.
-- **해결**: "팀장 보고용", "신입에게 설명용"처럼 독자를 정하고 꼭 들어갈 항목을 지정하세요.
+- **Cause**: You may not have told the AI who the reader is and what the goal is.
+- **Fix**: Name the reader, like "for my team lead" or "to explain to a new hire," and specify the items that must be included.
 
-### 없는 담당자나 기한이 생겨요
+### Owners or deadlines show up that don't exist
 
-- **원인**: 빈칸을 AI가 그럴듯하게 채웠을 수 있어요.
-- **해결**: "없으면 지어내지 말고 확인 필요"를 요청에 넣고, 근거 문장 열을 추가하세요.
+- **Cause**: The AI may have filled in blanks with something plausible.
+- **Fix**: Add "if missing, don't make it up; write needs confirmation" to your request, and add a supporting-sentence column.
 
-### 긴 PDF 뒷부분 내용이 반영되지 않은 것 같아요
+### The end of a long PDF doesn't seem to be reflected
 
-- **원인**: 대화가 길어졌거나 PDF가 100쪽을 넘어 글만 분석된 경우일 수 있어요. 표나 그림은 글로 추출되지 않으면 놓칠 수 있어요.
-- **해결**: 장 단위로 나눠 올리거나, 필요한 부분을 따로 붙여넣으세요.
+- **Cause**: The chat may have gotten long, or the PDF may be over 100 pages so only the text was analyzed. Tables and figures can be missed if they aren't extracted as text.
+- **Fix**: Upload the document split by chapter, or paste the parts you need separately.
 
-### 업로드가 거부돼요
+### The upload is rejected
 
-- **원인**: 지원하지 않는 형식이거나 한도 초과일 수 있어요. 음성 파일은 지원 형식 목록에 없어요.
-- **해결**: 지원 형식으로 변환하세요. XLSX는 코드 실행·파일 생성을 켜야 올릴 수 있어요. 녹음은 먼저 글로 옮기세요([녹음을 텍스트로 받아 정리하기](/media/14-transcribe-recordings/)에서 다뤄요).
+- **Cause**: The format may be unsupported or over the limit. Audio files aren't on the supported formats list.
+- **Fix**: Convert to a supported format. XLSX can only be uploaded with code execution and file creation turned on. For recordings, turn them into text first (covered in [Getting recordings as text and organizing them](/media/14-transcribe-recordings/)).
 
-### 대화가 길어지며 답이 느려지거나 한도가 빨리 줄어요
+### Answers slow down or the limit drops fast as the chat gets long
 
-- **원인**: 긴 대화는 사용량을 더 써요.
-- **해결**: 주제가 바뀌면 새 대화를 시작하세요.
+- **Cause**: Long chats use more of your allowance.
+- **Fix**: Start a new chat when the topic changes.
 
-## 실전 팁
+## Practical tips
 
-- **회의 직후 10분 안에 정리하세요.** 기억이 남아 있어 "확인 필요" 항목을 바로 채울 수 있어요.
-- **같은 양식이 반복되면 프로젝트에 저장하세요.** Claude 프로젝트는 지침에 요약 양식을 넣고 대화마다 재사용해요. 유료 플랜은 지식이 많을 때 필요한 부분만 불러오는 방식으로 용량이 늘어나요. 공식 도움말은 프로젝트 지침을 짧게 유지하고 안 쓰는 파일은 지우라고 안내해요 ([C5](/claude/c05-projects/)).
-- **주제가 바뀌면 새 대화로 옮기세요.** 길어진 대화는 사용량을 더 많이 쓰고 앞 내용이 요약될 수 있어요.
-- **최종 확인은 사람이 하세요.** 요약은 초안이에요. 보고 전에 숫자, 날짜, 담당자를 한 번 더 보세요.
+- **Summarize within 10 minutes of the meeting.** Your memory is still fresh, so you can fill in the "needs confirmation" items right away.
+- **If you reuse the same format, save it in a project.** In a Claude project, you put the summary format in the instructions and reuse it in every chat. On paid plans, capacity expands when there's a lot of knowledge, because only the relevant parts are retrieved. The official help pages advise keeping project instructions short and deleting files you don't use ([C5](/claude/c05-projects/)).
+- **Move to a new chat when the topic changes.** Long chats use more of your allowance, and earlier content may get summarized.
+- **Have a person do the final check.** A summary is a draft. Before you report it, look over the numbers, dates, and owners once more.
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [3. 엑셀·CSV 데이터 분석을 AI에게 맡기기](/chat/03-data-analysis/) — 표 데이터를 맡길 때
-- [4. 보고서·제안서 초안 쓰고 다듬기](/chat/04-write-reports/) — 요약을 문서로 확장하기
-- [C5. 프로젝트](/claude/c05-projects/) — 같은 지침과 자료를 반복 쓰기
+- [3. Handing Excel and CSV data analysis to AI](/chat/03-data-analysis/) — when you're handing off tabular data
+- [4. Drafting and polishing reports and proposals](/chat/04-write-reports/) — expanding a summary into a document
+- [C5. Projects](/claude/c05-projects/) — reusing the same instructions and material

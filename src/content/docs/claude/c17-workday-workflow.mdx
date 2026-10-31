@@ -1,16 +1,16 @@
 ---
-title: "Claude로 업무 하루 굴리기: 실전 조합 사례"
-description: "프로젝트, 커넥터, 스킬, 리서치, 아티팩트, 메모리를 아침부터 퇴근까지 하루 흐름 안에서 어떻게 조합하는지 보여 주는 실전 사례"
+title: "Running your workday with Claude: a real-world combination"
+description: "A practical case study showing how to combine projects, connectors, skills, research, artifacts, and memory in one day's flow, from morning to end of day"
 sidebar:
-  label: "C17. 업무 하루 굴리기"
+  label: "C17. Running your workday"
 level: practical
 category: claude
 tools: ["Claude"]
-duration: "35분"
+duration: "35 min"
 prerequisites:
-  - "claude.ai 계정 (프로젝트·메모리는 무료도 가능, 커넥터·Research·아티팩트 공유는 플랜에 따라 다름)"
-  - "C5(프로젝트)와 C7(커넥터)을 한 번 읽어 봤다면 더 수월해요"
-  - "연습에 쓸 업무 하나 (주간 보고, 고객 제안, 시장 조사 중 아무거나)"
+  - "A claude.ai account (projects and memory work on the free plan; connectors, Research, and artifact sharing depend on your plan)"
+  - "It helps if you've read C5 (Projects) and C7 (Connectors) once"
+  - "One real work task to practice on (a weekly report, a client proposal, or market research, whichever you like)"
 lastVerified: 2026-10-19
 sources:
   - title: "What are projects?"
@@ -35,181 +35,181 @@ import PromptBox from '../../../components/PromptBox.astro';
 import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
-- 이 글은 새 기능을 소개하는 글이 아니라 **C5~C10에서 배운 기능을 하루 안에 이어 붙이는 조합 사례**예요.
-- 흐름은 **아침(프로젝트 + 커넥터) → 오전(스킬로 형식 고정) → 점심 전후(Research) → 오후(아티팩트로 결과물) → 퇴근 전(메모리·정리)** 이에요.
-- 각 도구의 역할은 달라요. 프로젝트는 **자료와 규칙**, 커넥터는 **내 데이터 접근**, 스킬은 **작업 방식**, Research는 **조사**, 아티팩트는 **결과물**, 메모리는 **이어 쓰기**를 맡아요.
-- 처음부터 전부 쓰지 마세요. **프로젝트 하나**로 시작해서 불편한 곳에 하나씩 보태는 편이 오래가요.
-- 사례는 가상의 업무 담당자 한 명의 하루예요. 화면 구성은 계정과 앱 버전, 플랜에 따라 다를 수 있어요.
+- This isn't an article introducing a new feature. It's **a case study of chaining together, within a single day, the features you learned in C5-C10**.
+- The flow is **morning (project + connectors) → mid-morning (lock in format with skills) → around lunch (Research) → afternoon (deliverables as artifacts) → end of day (memory and wrap-up)**.
+- Each tool has a different role. Projects handle **materials and rules**, connectors handle **access to your data**, skills handle **how the work is done**, Research handles **investigation**, artifacts handle **deliverables**, and memory handles **continuity**.
+- Don't use everything from the start. Starting with **one project** and adding one piece at a time where it's inconvenient lasts longer.
+- The case is one day in the life of a fictional office worker. The screens may differ depending on your account, app version, and plan.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- 내 업무를 **프로젝트 단위**로 나누고, 하루 동안 어떤 기능을 언제 꺼내 쓸지 그릴 수 있어요.
-- 같은 일을 반복할 때 **무엇을 프로젝트 지침에, 무엇을 스킬에, 무엇을 매번 요청에** 넣을지 구분할 수 있어요.
-- 조사 → 정리 → 공유 가능한 결과물까지 **한 흐름**으로 이어갈 수 있어요.
-- 개인정보·권한 문제를 하루 흐름의 어느 지점에서 점검해야 하는지 알 수 있어요.
+- Split your work into **projects**, and sketch which feature to pull out when during the day.
+- Tell apart **what goes in project instructions, what goes in a skill, and what goes in each request** when you repeat the same task.
+- Carry research → organizing → a shareable deliverable through **a single flow**.
+- Know at which points in the day to check privacy and permission issues.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-가상의 인물 **민지**(소규모 팀의 기획 담당)의 하루로 설명할게요. 민지는 매주 고객사 제안 한 건을 맡고, 주간 진행 보고를 써요.
+I'll explain through the day of a fictional person, **Minji** (a planner on a small team). Each week Minji handles one client proposal and writes a weekly progress report.
 
-| 기능 | 하루 중 맡는 역할 | 자세한 내용 |
+| Feature | Its role during the day | Details |
 | --- | --- | --- |
-| **프로젝트** | 제안서 자료와 말투·형식 규칙을 한곳에 두고, 업무별로 대화를 분리 | [C5](/claude/c05-projects/) |
-| **커넥터** | Gmail·Google Calendar·Drive의 내 자료를 Claude가 읽게 함 | [C7](/claude/c07-connectors/) |
-| **스킬** | "보고서는 이 형식으로"처럼 작업 방식을 폴더로 고정 | [C8](/claude/c08-skills/) |
-| **Research** | 여러 출처를 단계적으로 조사해 인용 달린 보고서 작성 | [C10](/claude/c10-research/) |
-| **아티팩트** | 결과물(문서·슬라이드·작은 도구)을 대화 옆에서 만들고 공유 | [C6](/claude/c06-artifacts/) |
-| **메모리** | 대화에서 나온 선호와 맥락을 다음 대화로 이어감 | [C9](/claude/c09-memory-settings/) |
+| **Projects** | Keep proposal materials and tone/format rules in one place, and separate conversations by task | [C5](/claude/c05-projects/) |
+| **Connectors** | Let Claude read your own Gmail, Google Calendar, and Drive | [C7](/claude/c07-connectors/) |
+| **Skills** | Lock in how work is done as a folder, like "reports in this format" | [C8](/claude/c08-skills/) |
+| **Research** | Investigate multiple sources step by step and write a report with citations | [C10](/claude/c10-research/) |
+| **Artifacts** | Build deliverables (documents, slides, small tools) beside the conversation and share them | [C6](/claude/c06-artifacts/) |
+| **Memory** | Carry preferences and context from a conversation into the next one | [C9](/claude/c09-memory-settings/) |
 
-<FlowSteps title="민지의 하루 흐름" officialUrl="https://support.claude.com/en/articles/9517075-what-are-projects" steps={[
-  { where: '아침', action: '프로젝트를 열고 커넥터로 오늘 일정과 메일 확인', result: '오늘 할 일 목록' },
-  { where: '오전', action: '스킬로 보고서·메일 초안을 정해진 형식으로 작성', result: '초안' },
-  { where: '점심 전후', action: 'Research로 시장 조사', result: '인용이 달린 보고서' },
-  { where: '오후', action: '아티팩트로 제안서·요약 페이지 만들고 공유', result: '공유할 결과물' },
-  { where: '퇴근 전', action: '메모리·프로젝트 지침 정리', result: '내일 이어 쓸 맥락' },
+<FlowSteps title="Minji's day" officialUrl="https://support.claude.com/en/articles/9517075-what-are-projects" steps={[
+  { where: 'Morning', action: 'Open the project and check today\'s schedule and email through connectors', result: 'Today\'s to-do list' },
+  { where: 'Mid-morning', action: 'Write the report and email drafts in a set format using skills', result: 'Drafts' },
+  { where: 'Around lunch', action: 'Run market research with Research', result: 'A report with citations' },
+  { where: 'Afternoon', action: 'Build the proposal and summary page with artifacts and share them', result: 'Deliverables to share' },
+  { where: 'End of day', action: 'Tidy up memory and project instructions', result: 'Context to pick up tomorrow' },
 ]} />
 
-<Aside type="note" title="이 글의 원칙">
-기능을 많이 쓰는 것이 목적이 아니에요. "이 일은 어떤 기능이 가장 알맞나"를 고르는 연습이에요. 아래 각 장면은 해당 편으로 연결돼 있으니, 모르는 부분은 그 편을 먼저 보세요.
+<Aside type="note" title="The principle of this article">
+The goal isn't to use lots of features. It's practice in choosing "which feature fits this job best." Each scene below links to its own tutorial, so if something is unfamiliar, read that one first.
 </Aside>
 
-## 단계별 따라하기
+## Step by step
 
 <Checklist items={[
-  '업무용 프로젝트를 하나 만들고 지침과 자료를 넣었어요',
-  '(선택) Gmail·Calendar 커넥터를 연결하고 아침 정리를 시켜 봤어요',
-  '반복 문서 하나를 스킬이나 지침으로 형식을 고정했어요',
-  'Research로 조사를 하나 돌리고 인용 링크를 직접 열어 확인했어요',
-  '결과물을 아티팩트로 만들고 공유 범위를 확인했어요',
-  '메모리와 프로젝트 지침에 남길 것을 정리했어요',
+  'I created a work project and added instructions and materials',
+  '(Optional) I connected the Gmail and Calendar connectors and tried a morning rundown',
+  'I locked in the format of one recurring document with a skill or instructions',
+  'I ran one Research investigation and opened the citation links myself to check',
+  'I made a deliverable as an artifact and checked its sharing scope',
+  'I sorted out what to keep in memory and project instructions',
 ]} />
 
 <Steps>
 
-1. **아침: 프로젝트를 열고 하루를 정리해요**
+1. **Morning: open the project and organize your day**
 
-   업무마다 프로젝트를 나눠 두면 자료와 규칙이 섞이지 않아요([C5](/claude/c05-projects/)). 민지는 "고객사 제안" 프로젝트의 **지식**에 제안서 양식과 지난 제안서를, **지침**에 "존댓말로, 결론부터, 표는 3열 이하로" 같은 규칙을 넣어 뒀어요. 변하지 않는 자료는 지식에, 매번 달라지는 내용은 대화에서 알려 주는 편이 정확해요.
+   If you split projects by task, materials and rules don't get mixed together ([C5](/claude/c05-projects/)). Minji put the proposal template and past proposals in the **knowledge** of her "Client proposals" project, and rules like "formal tone, conclusion first, tables of 3 columns or fewer" in its **instructions**. Materials that don't change belong in knowledge, and content that changes every time is more accurate when you tell it in the conversation.
 
-   Gmail·Google Calendar 커넥터를 연결해 두었다면([C7](/claude/c07-connectors/)) 오늘 일정과 읽을 메일을 한 번에 정리시킬 수 있어요. 커넥터는 내 권한 범위에서만 읽고, 메일 전송 같은 쓰기 작업은 기본적으로 승인을 물어요.
+   If you've connected the Gmail and Google Calendar connectors ([C7](/claude/c07-connectors/)), you can have today's schedule and the emails you need to read organized in one go. Connectors read only within your own permissions, and by default they ask for approval before write actions like sending email.
 
    <PromptBox>
-   오늘 내 캘린더의 일정과, 어제 이후 받은 메일 중 답장이 필요해 보이는 것을 골라서 정리해 주세요. 일정은 시간순 표로, 메일은 보낸 사람·요지·권장 답장 시점으로 정리하고, 메일은 보내지 말고 초안 작성이 필요한 것만 표시해 주세요.
+   Please pull together today's events on my calendar and, from the emails I've received since yesterday, pick the ones that look like they need a reply. Show events as a table in time order, and emails with sender, gist, and suggested reply timing. Don't send any emails; just mark the ones that need a draft.
    </PromptBox>
 
-   <Aside type="caution" title="커넥터는 필요한 것만 켜세요">
-   대화마다 커넥터를 켜고 끌 수 있어요. 오늘 작업에 필요 없는 커넥터는 꺼 두면 엉뚱한 자료를 읽을 위험이 줄어요. 고객 이름이나 연락처가 담긴 메일은 정리 결과를 외부에 붙여넣기 전에 한 번 더 확인하세요.
+   <Aside type="caution" title="Turn on only the connectors you need">
+   You can turn connectors on and off per conversation. Keeping connectors you don't need today turned off lowers the risk of reading the wrong material. For emails that contain customer names or contact details, double-check before pasting the summary anywhere outside.
    </Aside>
 
-2. **오전: 반복 문서는 형식을 고정해요**
+2. **Mid-morning: lock in the format of recurring documents**
 
-   주간 진행 보고처럼 매주 같은 구조의 문서는 **스킬**로 만들어 두면 좋아요([C8](/claude/c08-skills/)). 스킬은 Claude가 필요할 때 불러오는 지침 폴더예요. 스킬을 쓰려면 코드 실행(code execution)이 켜져 있어야 하고, Customize > Skills에서 토글로 켜고 꺼요.
+   A document with the same structure every week, like a weekly progress report, is a good candidate for a **skill** ([C8](/claude/c08-skills/)). A skill is a folder of instructions that Claude loads when needed. To use skills, code execution must be turned on, and you switch them on and off with a toggle under Customize > Skills.
 
-   스킬까지 만들기 부담스럽다면 프로젝트 지침에 형식을 적는 것으로 시작해도 충분해요. 어디에 둘지는 이렇게 가르면 쉬워요.
+   If building a skill feels like too much, starting by writing the format in your project instructions is plenty. This split makes it easy to decide where things go.
 
-   | 내용 | 두는 곳 |
+   | Content | Where it goes |
    | --- | --- |
-   | 이 프로젝트에서 항상 지킬 말투·규칙 | 프로젝트 **지침** |
-   | 이 프로젝트에서 계속 참고할 자료 | 프로젝트 **지식** |
-   | 여러 프로젝트에서 쓰는 작업 절차(보고서 형식 등) | **스킬** |
-   | 오늘만 해당하는 요청 | 대화에서 직접 |
+   | Tone and rules to always follow in this project | Project **instructions** |
+   | Materials to keep referencing in this project | Project **knowledge** |
+   | Work procedures used across projects (such as report format) | **Skill** |
+   | Requests that apply only today | Directly in the conversation |
 
    <PromptBox>
-   이번 주 진행 보고 초안을 써 주세요. 아래 메모를 바탕으로, 지난주 한 일 / 이번 주 할 일 / 막힌 점 / 요청 사항 네 부분으로 나눠 주세요. 메모에 없는 수치나 일정은 지어내지 말고 [확인 필요]로 표시해 주세요.
+   Please write a draft of this week's progress report. Based on the notes below, split it into four parts: what I did last week / what I'll do this week / blockers / requests. Don't make up numbers or dates that aren't in the notes; mark them [needs confirmation].
 
-   [여기에 이번 주 메모를 붙여넣으세요]
+   [Paste this week's notes here]
    </PromptBox>
 
-3. **점심 전후: 조사가 필요하면 Research를 써요**
+3. **Around lunch: use Research when you need to investigate**
 
-   고객사의 업계 동향처럼 여러 출처를 모아 비교해야 하는 조사는 한두 번의 검색보다 **Research**가 알맞아요([C10](/claude/c10-research/)). 공식 도움말은 Research를 5회 이상의 도구 호출과 1~3분이 걸리는 포괄적 조사에 쓰라고 안내해요. 일반 대화와 같은 한도를 쓰고, 더 빨리 소진될 수 있어요. 그래서 점심 전에 질문을 구체적으로 적어 한 번에 돌리는 편이 좋아요.
+   For research where you need to gather and compare multiple sources, like industry trends for a client, **Research** fits better than one or two searches ([C10](/claude/c10-research/)). The official help says to use Research for comprehensive investigations that take five or more tool calls and 1-3 minutes. It uses the same limits as regular chat and can use them up faster. So it's better to write a specific question before lunch and run it once.
 
    <PromptBox>
-   [업계/분야]의 최근 1년 동향을 조사해 주세요. 우리 고객사([고객사 규모와 상황 한 줄])가 제안서에서 다뤄야 할 주요 변화 3~5가지를 뽑고, 각각 근거 출처를 달아 주세요. 출처가 약하거나 서로 엇갈리는 내용은 따로 표시해 주세요.
+   Please research the last year of trends in [industry/field]. Pull out the 3-5 major changes our client ([one line on the client's size and situation]) should address in the proposal, and attach a supporting source to each. Mark separately anything where the sources are weak or conflict.
    </PromptBox>
 
-   <Aside type="caution" title="인용 링크는 직접 열어 보세요">
-   보고서에 인용이 붙어 있어도 틀릴 수 있어요. 제안서에 쓸 숫자와 주장은 인용 링크를 눌러 원문에서 확인한 뒤에 쓰세요.
+   <Aside type="caution" title="Open the citation links yourself">
+   Even a report with citations can be wrong. Before using a number or claim in a proposal, click the citation link and confirm it in the original source.
    </Aside>
 
-4. **오후: 결과물은 아티팩트로 만들어요**
+4. **Afternoon: make the deliverable as an artifact**
 
-   조사와 초안이 모이면 보여 줄 수 있는 결과물로 만들어요. 아티팩트는 대화 옆에 열리는 문서·슬라이드·작은 도구예요([C6](/claude/c06-artifacts/)). 새 아티팩트는 비공개로 시작하고, 공유(Share) 메뉴에서 범위를 정해요. 요금제에 따라 공유 방식이 다르니 먼저 C6의 표를 확인하세요.
+   Once the research and drafts are in, turn them into something you can show. An artifact is a document, slide deck, or small tool that opens beside the conversation ([C6](/claude/c06-artifacts/)). A new artifact starts private, and you set the scope from the Share menu. Sharing works differently depending on your plan, so check the table in C6 first.
 
    <PromptBox>
-   위 조사 결과와 제안서 양식(프로젝트 자료)을 바탕으로 고객사 제안서 요약 문서를 만들어 주세요. 1쪽 분량으로, 제목 / 핵심 제안 3가지 / 근거 / 다음 단계 순서로 구성해 주세요. 근거에는 출처를 달고, 확인되지 않은 수치는 넣지 마세요.
+   Based on the research above and the proposal template (project materials), please make a client proposal summary document. Keep it to one page, in this order: title / three key proposals / supporting evidence / next steps. Cite sources for the evidence, and don't include any unconfirmed numbers.
    </PromptBox>
 
-   <Aside type="note" title="공유 전 점검">
-   고객 이름, 연락처, 내부 단가가 들어 있지 않은지 공유 전에 한 번 읽어 보세요. 링크를 받은 사람이 어디까지 볼 수 있는지는 C6의 권한 설명을 확인하세요.
+   <Aside type="note" title="Check before sharing">
+   Before you share, read it through once to make sure it doesn't contain customer names, contact details, or internal unit prices. For how much someone with the link can see, check the permissions explanation in C6.
    </Aside>
 
-5. **퇴근 전: 다음 날을 위해 정리해요**
+5. **End of day: tidy up for tomorrow**
 
-   오늘 대화에서 반복해서 고친 지시가 있다면 그것이 프로젝트 지침에 추가할 후보예요. 예를 들어 "표는 3열 이하로 줄여 줘"를 세 번 말했다면 지침에 한 줄 넣으세요. 메모리는 대화 중 주제 단위로 자동 저장되고, 설정(Settings) > Your Claude(예전 화면은 Memory)에서 무엇이 저장됐는지 보고 고치거나 지울 수 있어요([C9](/claude/c09-memory-settings/)). 프로젝트마다 메모리 공간이 따로 있어서 다른 업무와 섞이지 않아요.
+   If there's an instruction you kept correcting in today's conversation, it's a candidate to add to your project instructions. For example, if you said "cut tables down to 3 columns or fewer" three times, add a line to the instructions. Memory is saved automatically by topic during conversations, and under Settings > Your Claude (Memory on older screens) you can see what's been saved and edit or delete it ([C9](/claude/c09-memory-settings/)). Each project has its own memory space, so it doesn't get mixed with other work.
 
    <PromptBox>
-   오늘 우리 대화에서 내가 반복해서 정정하거나 요청한 형식·말투 규칙이 있으면 정리해 주세요. 프로젝트 지침에 한 줄씩 추가할 수 있도록 짧은 문장으로 제안해 주세요.
+   Please sort out any formatting or tone rules that I corrected or asked for repeatedly in today's conversation. Suggest them as short sentences that I can add to my project instructions, one line each.
    </PromptBox>
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-### 장면별 기능 고르기
+### Choosing a feature by scene
 
-| 이런 일이라면 | 먼저 쓸 기능 | 참고 |
+| If the job is... | Feature to use first | Reference |
 | --- | --- | --- |
-| 같은 자료를 매번 붙여넣고 있어요 | 프로젝트 지식 | [C5](/claude/c05-projects/) |
-| 내 메일·일정·문서를 보고 정리해야 해요 | 커넥터 | [C7](/claude/c07-connectors/) |
-| 매주 같은 형식의 문서를 써요 | 프로젝트 지침 또는 스킬 | [C8](/claude/c08-skills/) |
-| 여러 출처를 비교하는 조사예요 | Research | [C10](/claude/c10-research/) |
-| 남에게 보여 줄 문서·슬라이드·도구가 필요해요 | 아티팩트 | [C6](/claude/c06-artifacts/) |
-| 내 선호를 다음 대화에서도 기억해야 해요 | 메모리 | [C9](/claude/c09-memory-settings/) |
-| 같은 일이 정해진 시간에 자동으로 돌아야 해요 | 예약 작업·루틴 | [C18](/claude/c18-automate-recurring/) |
+| I paste the same material every time | Project knowledge | [C5](/claude/c05-projects/) |
+| I need to review and organize my email, calendar, and documents | Connectors | [C7](/claude/c07-connectors/) |
+| I write the same format of document every week | Project instructions or a skill | [C8](/claude/c08-skills/) |
+| It's research comparing multiple sources | Research | [C10](/claude/c10-research/) |
+| I need a document, slides, or a tool to show others | Artifacts | [C6](/claude/c06-artifacts/) |
+| I need my preferences remembered in the next conversation | Memory | [C9](/claude/c09-memory-settings/) |
+| The same job needs to run automatically at set times | Scheduled tasks and routines | [C18](/claude/c18-automate-recurring/) |
 
-### 조합할 때 기억할 제약
+### Constraints to remember when combining
 
-- 지식에 없는 맥락은 **대화 사이에 공유되지 않아요.** 다른 대화의 내용을 프로젝트가 자동으로 아는 것은 아니에요([C5](/claude/c05-projects/)).
-- 커넥터는 **내 권한을 그대로 상속**해요. 팀 프로젝트에서 커넥터 데이터를 팀원과 공유할 수 없는 경우가 있어요([C7](/claude/c07-connectors/)).
-- Research와 스킬, 아티팩트는 플랜과 조직 설정에 따라 보이지 않을 수 있어요. 메뉴가 없으면 Team/Enterprise는 Owner 설정을 확인하세요.
-- 가격·한도는 바뀌어요. 내 사용량은 설정(Settings) > 사용량(Usage)에서 확인하세요.
+- Context that isn't in knowledge is **not shared between conversations.** A project doesn't automatically know what was said in another conversation ([C5](/claude/c05-projects/)).
+- Connectors **inherit your permissions as they are.** In a team project, there are cases where connector data can't be shared with teammates ([C7](/claude/c07-connectors/)).
+- Research, skills, and artifacts may not appear depending on your plan and organization settings. If a menu is missing, Team/Enterprise users should check with their Owner settings.
+- Prices and limits change. Check your own usage under Settings > Usage.
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 기능을 다 썼는데 결과가 오히려 산만해요
+### I used every feature, but the results got more scattered
 
-- **원인**: 커넥터를 전부 켜고, 지침에 규칙이 너무 많고, 지식에 관련 없는 자료가 섞였을 수 있어요.
-- **해결**: 오늘 작업에 필요한 커넥터만 켜고, 지침은 짧게 줄이고, 자료는 업무별 프로젝트로 나누세요.
+- **Cause**: You may have turned on all connectors, put too many rules in the instructions, or mixed unrelated materials into the knowledge.
+- **Fix**: Turn on only the connectors today's work needs, shorten the instructions, and split materials into projects by task.
 
-### 어제 한 이야기를 오늘 프로젝트가 몰라요
+### The project doesn't know what we talked about yesterday
 
-- **원인**: 대화 사이에는 지식 베이스에 있는 자료만 공유돼요. 메모리는 주제 단위로 저장되지만 모든 내용이 담기지는 않아요.
-- **해결**: 계속 필요한 결정은 프로젝트 지식이나 지침에 직접 적어 두세요.
+- **Cause**: Between conversations, only materials in the knowledge base are shared. Memory is saved by topic, but it doesn't capture everything.
+- **Fix**: Write decisions you'll keep needing directly into the project knowledge or instructions.
 
-### Research 결과의 숫자를 믿어도 될지 모르겠어요
+### I'm not sure whether to trust the numbers in a Research result
 
-- **원인**: 인용이 있어도 출처가 약하거나 해석이 어긋날 수 있어요.
-- **해결**: 인용 링크를 직접 열어 원문을 확인하고, 확인되지 않은 수치는 "확인 필요"로 남기게 프롬프트에 적으세요.
+- **Cause**: Even with citations, the source may be weak or the interpretation may be off.
+- **Fix**: Open the citation links yourself to check the original, and write in your prompt that unconfirmed figures should be left as "needs confirmation."
 
-### 공유한 아티팩트를 상대가 못 열어요
+### The person I shared an artifact with can't open it
 
-- **원인**: 플랜별 공유 방식과 권한이 달라요.
-- **해결**: [C6](/claude/c06-artifacts/)의 공유 방식 표와 "공유하려 했는데 상대가 못 열어요" 항목을 확인하세요.
+- **Cause**: Sharing methods and permissions differ by plan.
+- **Fix**: Check the sharing methods table in [C6](/claude/c06-artifacts/) and the "I tried to share but the other person can't open it" item.
 
-## 실전 팁
+## Practical tips
 
-- **프로젝트 하나로 시작하세요.** 가장 자주 하는 업무 하나만 프로젝트로 만들고, 한 주 써 본 뒤 커넥터와 스킬을 보태세요.
-- **지침은 대화하며 키우세요.** 어긋난 답이 나올 때마다 한 줄씩 보태면 돼요.
-- **조사는 질문을 모아서 한 번에 돌리세요.** Research는 한도를 더 쓸 수 있어요.
-- **쓰기 작업은 사람이 확인하세요.** 메일 전송이나 공유는 초안 → 내가 확인 → 실행 순서를 지키세요.
-- **민감한 자료는 프롬프트와 지식에 넣기 전에 한 번 더 생각하세요.** 개인정보와 거래처 정보는 [개인정보와 보안](/basics/05-privacy-safety/) 기준으로 다루세요.
-- **매일 같은 시간에 하는 일은 자동화를 검토하세요.** 단, 자동 실행은 사람이 보지 않는 동안 돌아요. 안전한 설계는 C18에서 다뤄요.
+- **Start with one project.** Make a project for just the one task you do most often, use it for a week, then add connectors and skills.
+- **Grow your instructions through conversation.** Each time an off-target answer comes out, add one line.
+- **Batch your research questions and run them once.** Research can use more of your limit.
+- **Have a person confirm write actions.** For sending email or sharing, follow the order of draft → I check → run.
+- **Think twice before putting sensitive material into prompts and knowledge.** Handle personal information and client information according to [Privacy and security](/basics/05-privacy-safety/).
+- **Consider automation for things you do at the same time every day.** Just remember that automatic runs happen while no one is watching. C18 covers safe design.
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [C18. 반복 업무 자동 실행하기](/claude/c18-automate-recurring/) — 아침 정리 같은 일을 정해진 시간에 자동으로 돌리기
-- [C5. 프로젝트](/claude/c05-projects/) — 지식과 지침 설계
-- [C7. 커넥터](/claude/c07-connectors/) — 메일·일정·문서 연결
-- [C8. 스킬](/claude/c08-skills/) — 반복 작업 방식 고정하기
-- [C9. 메모리와 개인 설정](/claude/c09-memory-settings/) — 기억 관리
+- [C18. Automating recurring work](/claude/c18-automate-recurring/) — running things like the morning rundown automatically at set times
+- [C5. Projects](/claude/c05-projects/) — designing knowledge and instructions
+- [C7. Connectors](/claude/c07-connectors/) — connecting email, calendar, and documents
+- [C8. Skills](/claude/c08-skills/) — locking in how recurring work is done
+- [C9. Memory and personal settings](/claude/c09-memory-settings/) — managing what Claude remembers

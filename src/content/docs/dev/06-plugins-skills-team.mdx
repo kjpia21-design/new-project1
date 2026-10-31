@@ -1,17 +1,17 @@
 ---
-title: "스킬·플러그인 패키지로 만들어 팀에 배포하기"
-description: "SKILL.md 설계 원칙부터 플러그인 구조, 마켓플레이스, claude plugin eval 품질 확인, 저장소·조직 설정으로 팀 배포, Anthropic 디렉터리 제출 포털까지 정리한 참고서"
+title: "Package Skills and Plugins and Roll Them Out to Your Team"
+description: "A reference covering SKILL.md design principles, plugin structure, marketplaces, quality checks with claude plugin eval, team rollout through repo and org settings, and the Anthropic directory submission portal"
 sidebar:
-  label: "6. 스킬·플러그인 팀 배포"
+  label: "6. Skills and plugins for teams"
 level: advanced
 category: dev
 tools: ["Claude Code", "Claude", "Git"]
-duration: "75분"
+duration: "75 min"
 prerequisites:
-  - "C8. 스킬 (스킬이 무엇인지, claude.ai 업로드 방식)"
-  - "C14. Claude Code 핵심 기능 (슬래시 명령, 훅, MCP, 플러그인 설치 명령)"
-  - "Claude Code 2.1.269 이상 (claude plugin eval 사용 시), git, GitHub 저장소 하나"
-  - "(조직 설정을 한다면) 조직 관리자 권한"
+  - "C8. Skills (what a skill is, how to upload one to claude.ai)"
+  - "C14. Core Claude Code features (slash commands, hooks, MCP, plugin install commands)"
+  - "Claude Code 2.1.269 or later (to use claude plugin eval), git, and one GitHub repository"
+  - "(If you configure org settings) organization admin permissions"
 lastVerified: 2026-10-26
 sources:
   - title: "Extend Claude with skills (Claude Code)"
@@ -42,122 +42,122 @@ import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- 혼자 쓰는 스킬은 `~/.claude/skills/`나 `.claude/skills/`에 두면 돼요. **여러 프로젝트·여러 사람에게 버전을 붙여 나눠 줄 때** 플러그인으로 묶어요.
-- 플러그인은 스킬·에이전트·훅·MCP 서버를 한 폴더에 담고 `.claude-plugin/plugin.json`으로 이름을 붙인 것이에요. 마켓플레이스(`marketplace.json`)는 플러그인 목록이 담긴 카탈로그이고, git 저장소 하나면 돼요.
-- 배포 전에 `claude plugin validate --strict`로 형식을, `claude plugin eval`로 **Claude가 실제로 그 스킬을 쓰는지**를 확인해요. eval은 모델을 호출하니 비용이 들어요.
-- 팀 배포는 저장소의 `.claude/settings.json`(프로젝트 단위) 또는 관리 설정(조직 단위)으로 해요. 모두에게 공개하려면 claude.ai/directory/manage의 제출 포털을 써요.
-- 설치한 플러그인은 **사용자 권한으로 코드를 실행**해요. 만들 때도, 설치할 때도 그 점을 기준으로 검토하세요.
+- A skill you use alone can live in `~/.claude/skills/` or `.claude/skills/`. When you want to **hand out a versioned skill to multiple projects and people**, bundle it as a plugin.
+- A plugin puts skills, agents, hooks, and MCP servers in one folder and gives it a name through `.claude-plugin/plugin.json`. A marketplace (`marketplace.json`) is a catalog listing plugins, and a single git repository is all you need.
+- Before you distribute, run `claude plugin validate --strict` to check the format and `claude plugin eval` to check that **Claude actually uses the skill**. Evals call a model, so they cost money.
+- Team rollout works through the repository's `.claude/settings.json` (per project) or managed settings (per organization). To make a plugin public, use the submission portal at claude.ai/directory/manage.
+- Installed plugins **run code with your permissions**. Review them with that in mind, both when you build them and when you install them.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- 잘 불려오는 `SKILL.md`를 설계하고, 팀 공용 플러그인 폴더로 묶을 수 있어요.
-- `claude plugin validate`와 `claude plugin eval`로 배포 전에 품질을 확인할 수 있어요.
-- 팀 마켓플레이스를 만들고, 저장소 설정이나 관리 설정으로 팀원에게 자동으로 깔리게 할 수 있어요.
-- Anthropic 디렉터리에 제출하는 경로와 준비물을 알 수 있어요.
+- Design a `SKILL.md` that gets picked up reliably, and bundle it into a shared team plugin folder.
+- Check quality before release with `claude plugin validate` and `claude plugin eval`.
+- Build a team marketplace and have it install automatically for teammates through repo settings or managed settings.
+- Know the path and the prerequisites for submitting to the Anthropic directory.
 
-<Aside type="note" title="이 편이 다루는 범위">
-Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai와 Cowork에서도 설치되지만, 그쪽에서는 일부 구성요소만 로드돼요(어떤 것이 되는지는 공식 "component support table" 참고). claude.ai에 ZIP으로 스킬 하나를 올리는 방법은 [C8. 스킬](/claude/c08-skills/)에 있어요.
+<Aside type="note" title="What this tutorial covers">
+This is for Claude Code (the terminal). The same plugin folder can also be installed in claude.ai and Cowork, but only some components load there (see the official "component support table" for which ones). To upload a single skill to claude.ai as a ZIP, see [C8. Skills](/claude/c08-skills/).
 </Aside>
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **스킬** | `SKILL.md`가 든 폴더예요. Claude가 설명(description)을 보고 필요할 때 불러오거나, `/이름`으로 직접 실행해요. |
-| **플러그인** | 스킬·에이전트·훅·MCP 서버를 한 단위로 묶은 폴더예요. 이름 접두사가 붙어서 `/플러그인:스킬`로 실행해요. |
-| **마켓플레이스** | 플러그인 목록과 가져올 위치가 적힌 카탈로그예요. 저장소에 `.claude-plugin/marketplace.json`이 있으면 돼요. 앱 스토어처럼 호스팅되는 서비스가 아니에요. |
-| **설치 범위** | user(나, 모든 프로젝트), project(저장소 모두), local(나, 이 저장소만)이에요. |
-| **관리 설정** | 조직이 모든 기기에 내려보내는 설정이에요. 사용자가 못 바꿔요. |
+| **Skill** | A folder containing a `SKILL.md`. Claude loads it when needed based on its description, or you run it directly with `/name`. |
+| **Plugin** | A folder that bundles skills, agents, hooks, and MCP servers into one unit. It gets a name prefix, so you run it as `/plugin:skill`. |
+| **Marketplace** | A catalog listing plugins and where to fetch them. All it takes is a `.claude-plugin/marketplace.json` in a repository. It is not a hosted service like an app store. |
+| **Install scope** | user (you, all projects), project (everyone on the repository), local (you, this repository only). |
+| **Managed settings** | Settings an organization pushes to every device. Users can't change them. |
 
-### 어떤 배포 방식을 고를까요?
+### Which distribution method should you pick?
 
-| 방식 | 대상 | 필요한 것 | 업데이트 |
+| Method | Audience | What you need | Updates |
 | --- | --- | --- | --- |
-| 폴더·ZIP 전달 | 몇 사람 | 플러그인 폴더 | 자동 없음 (받은 사본을 씀) |
-| 팀 마켓플레이스 | 저장소에 접근할 수 있는 사람 | git 저장소 + `marketplace.json` | 사용자가 `claude plugin update`, 또는 자동 업데이트를 켬 |
-| 조직 관리 설정 | 조직 전체 | 관리자 권한 | 정책으로 통제 |
-| Anthropic 디렉터리 | claude.ai·Cowork·Claude Code 사용자 누구나 | GitHub 저장소 + 유료 claude.ai 플랜, 심사 | 새 버전이 심사 후 반영 |
+| Send a folder or ZIP | A few people | The plugin folder | No automatic updates (they use the copy they received) |
+| Team marketplace | Anyone with access to the repository | A git repository + `marketplace.json` | Users run `claude plugin update`, or turn on auto-update |
+| Org managed settings | The whole organization | Admin permissions | Controlled by policy |
+| Anthropic directory | Any claude.ai, Cowork, or Claude Code user | GitHub repository + paid claude.ai plan, plus review | New versions go live after review |
 
-<Aside type="caution" title="플러그인은 코드를 실행해요">
-활성화된 플러그인은 세션마다 스킬 이름·설명이 컨텍스트에 실리고, 포함된 MCP 서버와 훅도 함께 실행돼요. 플러그인이 하는 일은 **내 권한으로** 실행돼요. 서드파티 플러그인은 설치 전에 스킬 본문, 훅 명령, MCP 서버 설정을 읽어 보세요. 공식 문서는 설치 전 `/plugin`의 상세 화면(Anthropic 공식 마켓플레이스는 컨텍스트 비용 추정 표시)과 설치 후 `claude plugin details`로 구성요소와 토큰 비용을 볼 수 있다고 안내해요.
+<Aside type="caution" title="Plugins run code">
+For every enabled plugin, the skill names and descriptions are loaded into context each session, and any bundled MCP servers and hooks run too. Whatever a plugin does runs **with your permissions**. Before installing a third-party plugin, read its skill bodies, hook commands, and MCP server settings. The official docs say you can see the components and token cost in the `/plugin` detail view before installing (the official Anthropic marketplace shows an estimated context cost) and with `claude plugin details` after installing.
 </Aside>
 
-## 단계별 따라하기
+## Step-by-step guide
 
 <Checklist items={[
-  'SKILL.md를 설계 원칙에 맞게 썼어요',
-  '플러그인 폴더와 plugin.json을 만들고 --plugin-dir로 로드해 봤어요',
-  'claude plugin validate --strict를 통과했어요',
-  'eval 케이스를 만들고 비용 상한을 정해 실행했어요',
-  '마켓플레이스를 만들어 로컬에서 설치까지 해 봤어요',
-  'GitHub에 올리고 저장소 설정으로 팀원에게 안내했어요',
-  '(선택) 조직 관리 설정이나 디렉터리 제출을 검토했어요',
+  'I wrote SKILL.md following the design principles',
+  'I created a plugin folder and plugin.json and loaded it with --plugin-dir',
+  'I passed claude plugin validate --strict',
+  'I created eval cases and ran them with a cost cap',
+  'I built a marketplace and installed from it locally',
+  'I pushed to GitHub and shared instructions with teammates through repo settings',
+  '(Optional) I looked into org managed settings or directory submission',
 ]} />
 
 <Steps>
 
-1. **SKILL.md 설계하기**
+1. **Design your SKILL.md**
 
-   Claude Code 문서가 알려 주는 원칙을 정리하면 이래요.
+   Here is a summary of the principles from the Claude Code docs.
 
-   | 원칙 | 이유 |
+   | Principle | Why |
    | --- | --- |
-   | `description` 맨 앞에 핵심 용도를 쓰고, 사용자가 실제로 쓰는 말(트리거 문구)을 넣어요 | `description`과 `when_to_use`를 합친 글이 스킬 목록에서 **1,536자에서 잘려요**. Claude는 이 목록을 보고 고르기 때문에 모호하면 안 불려와요. |
-   | 파일 첫 줄이 `---`여야 해요 | 아니면 프런트매터가 본문으로 취급돼요. YAML이 틀려도 오류 없이 필드가 비어서 로드돼요(조용한 실패). |
-   | `SKILL.md`는 500줄 미만으로, 긴 자료는 같은 폴더의 다른 파일로 분리해요 | 스킬이 로드되면 본문이 대화 내내 컨텍스트에 남아서 줄마다 반복 비용이에요. 참고 파일은 필요할 때만 읽혀요. |
-   | "한 번 하라"보다 "항상 이렇게 하라"로 써요 | Claude는 이후 턴에서 파일을 다시 읽지 않아요. 계속 지켜야 할 규칙은 상시 지침 문체가 맞아요. |
-   | 부작용이 있는 스킬(배포, 커밋)은 `disable-model-invocation: true` | 사용자가 `/이름`으로 부를 때만 실행돼요. 이 스킬의 설명은 컨텍스트에도 안 실려요. |
-   | `allowed-tools`는 필요한 명령만, 가능하면 `${CLAUDE_SKILL_DIR}`로 번들 스크립트 지정 | 스킬을 호출한 그 턴에만 사전 승인돼요(다음 사용자 메시지에서 해제). 다른 도구를 막아 주는 기능은 아니에요. |
-   | `` !`명령` ``으로 최신 정보를 넣고, 실패할 수 있는 명령은 끝에 `\|\| true`를 붙여요 | 명령이 실패하면 스킬 호출 전체가 중단돼요. 명령당 기본 2분 제한이 있어요. |
-   | 입출력 예시를 넣고, 지어내기 금지 규칙을 적어요 | 형식이 안정되고 환각이 줄어요. |
+   | Put the key purpose at the very start of `description`, and include the words users actually say (trigger phrases) | The combined text of `description` and `when_to_use` is **cut off at 1,536 characters** in the skill list. Claude picks skills from that list, so a vague description won't get loaded. |
+   | The first line of the file must be `---` | Otherwise the frontmatter is treated as body text. Even if the YAML is invalid, the skill loads with empty fields and no error (a silent failure). |
+   | Keep `SKILL.md` under 500 lines and split long reference material into other files in the same folder | Once a skill loads, its body stays in context for the whole conversation, so every line is a recurring cost. Reference files are read only when needed. |
+   | Write "always do it this way," not "do this once" | Claude doesn't re-read the file in later turns. Rules that must keep applying belong in the style of standing instructions. |
+   | For skills with side effects (deploy, commit), set `disable-model-invocation: true` | They run only when the user calls them with `/name`. The description of such a skill isn't loaded into context either. |
+   | Limit `allowed-tools` to the commands you need, and where possible point to bundled scripts with `${CLAUDE_SKILL_DIR}` | Pre-approval lasts only for the turn in which the skill is invoked (it ends at the next user message). It does not block other tools. |
+   | Inject fresh info with `` !`command` ``, and add `\|\| true` at the end of commands that can fail | If a command fails, the whole skill invocation is aborted. Each command has a default 2-minute limit. |
+   | Include input and output examples, and add a rule against making things up | The format stays stable and hallucinations drop. |
 
-   팀 PR 설명 스킬 예시예요. `plugins/team-kit/skills/pr-description/SKILL.md`로 저장해요.
+   Here is an example team PR description skill. Save it as `plugins/team-kit/skills/pr-description/SKILL.md`.
 
    ```markdown
    ---
    name: pr-description
-   description: 변경 사항을 팀 형식의 PR 설명(요약, 변경 내용, 테스트 방법, 위험 요소)으로 정리한다. PR 설명, 풀 리퀘스트 본문, 변경 요약을 써 달라고 할 때 사용한다.
+   description: Summarizes changes as a PR description in the team format (summary, changes, how to test, risks). Use when asked to write a PR description, pull request body, or change summary.
    ---
 
-   # PR 설명 작성
+   # Writing a PR description
 
-   변경 내용을 받으면 아래 순서의 마크다운으로 작성한다.
+   When you receive a set of changes, write Markdown in the following order.
 
-   1. `## 요약` — 한두 문장
-   2. `## 변경 내용` — 파일 또는 모듈 단위 목록
-   3. `## 테스트 방법` — 재현 가능한 명령
-   4. `## 위험 요소` — 없으면 "없음"
+   1. `## Summary` — one or two sentences
+   2. `## Changes` — a list by file or module
+   3. `## How to test` — reproducible commands
+   4. `## Risks` — write "None" if there are none
 
-   입력에 없는 사실(테스트 결과, 이슈 번호)은 지어내지 않고 "확인 필요"라고 쓴다.
+   Do not invent facts that are not in the input (test results, issue numbers). Write "Needs confirmation" instead.
    ```
 
-   부작용이 있는 스킬은 이렇게 써요. 직접 호출만 허용하고, 필요한 git 명령만 사전 승인해요.
+   Here is how to write a skill with side effects. It allows direct invocation only and pre-approves only the git commands it needs.
 
    ```markdown
    ---
    name: release-notes
-   description: 마지막 태그 이후 커밋으로 릴리스 노트 초안을 만든다. 릴리스 노트, 변경 로그 정리를 요청할 때 사용한다.
+   description: Drafts release notes from commits since the last tag. Use when asked for release notes or a changelog cleanup.
    disable-model-invocation: true
    allowed-tools: Bash(git log *)
    ---
 
-   ## 마지막 태그 이후 커밋
+   ## Commits since the last tag
 
    !`git log --oneline "$(git describe --tags --abbrev=0)"..HEAD || true`
 
-   ## 지침
+   ## Instructions
 
-   위 커밋을 기능, 수정, 기타로 묶어 한국어 릴리스 노트 초안을 쓴다. 커밋이 없으면 "변경 없음"이라고 답한다.
+   Group the commits above into features, fixes, and other, and write a draft of the release notes. If there are no commits, answer "No changes".
    ```
 
    <Aside type="note">
-   스킬 이름 표기는 문서마다 달라요. claude.ai 업로드는 지원센터 문서 기준 `skill.md`, Claude Code 플러그인은 `SKILL.md`예요. 플러그인에서는 `SKILL.md`를 쓰세요. 자세한 차이는 [C8](/claude/c08-skills/)에 있어요. 또 claude.ai용 frontmatter에는 name 64자, description 200자 제한이 있고, Claude Code 쪽 목록 제한은 위의 1,536자예요. 두 곳에 같이 올릴 스킬이면 description을 짧게 쓰세요.
+   The way the skill file name is written differs from document to document. For claude.ai uploads, the Help Center docs say `skill.md`; for Claude Code plugins, it is `SKILL.md`. In a plugin, use `SKILL.md`. For the details of the difference, see [C8](/claude/c08-skills/). Also, claude.ai frontmatter has limits of 64 characters for name and 200 for description, while the Claude Code list limit is the 1,536 characters mentioned above. If a skill will go to both, keep the description short.
    </Aside>
 
-2. **플러그인 폴더 만들기**
+2. **Create the plugin folder**
 
-   마켓플레이스 저장소 하나에 플러그인을 `plugins/` 아래 여러 개 두는 구조로 만들어요.
+   Set it up as a single marketplace repository with several plugins under `plugins/`.
 
    ```text
    team-marketplace/
@@ -170,21 +170,21 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
            ├── skills/
            │   ├── pr-description/SKILL.md
            │   └── release-notes/SKILL.md
-           ├── .mcp.json            (선택: MCP 서버 번들)
-           └── evals/               (선택: claude plugin eval 케이스)
+           ├── .mcp.json            (optional: bundled MCP server)
+           └── evals/               (optional: claude plugin eval cases)
    ```
 
-   <Aside type="caution" title="`.claude-plugin/` 안에는 plugin.json만">
-   `skills/`, `agents/`, `hooks/`, `.mcp.json`은 플러그인 루트에 두세요. `.claude-plugin/` 안에 넣으면 로드되지 않아요.
+   <Aside type="caution" title="Only plugin.json goes inside `.claude-plugin/`">
+   Put `skills/`, `agents/`, `hooks/`, and `.mcp.json` at the plugin root. If you put them inside `.claude-plugin/`, they won't load.
    </Aside>
 
-   `plugins/team-kit/.claude-plugin/plugin.json`이에요.
+   This is `plugins/team-kit/.claude-plugin/plugin.json`.
 
    ```json
    {
      "name": "team-kit",
-     "displayName": "팀 도구 모음",
-     "description": "우리 팀의 PR 설명 작성 스킬 모음",
+     "displayName": "Team Toolkit",
+     "description": "A set of skills for writing PR descriptions on our team",
      "version": "1.0.0",
      "author": { "name": "Platform Team" },
      "repository": "https://github.com/your-org/team-marketplace",
@@ -192,11 +192,11 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
    }
    ```
 
-   - `name`은 필수예요. 공백 없는 kebab-case로 정하고 **한 번 정하면 바꾸지 마세요.** 이름이 바뀌면 이미 설치한 사람의 설치가 끊겨요. 표시 이름은 `displayName`으로 바꿔요.
-   - `version`을 적으면 **올리기 전까지 사용자가 업데이트를 못 받아요.** 푸시해도 `claude plugin update`가 "already at the latest version"이라고 답해요. 릴리스마다 올리거나, git 마켓플레이스에서는 `version`을 생략해 커밋 SHA를 버전으로 쓰는 방법이 있어요.
-   - 스킬은 `/team-kit:pr-description`처럼 플러그인 이름이 접두사로 붙어요.
+   - `name` is required. Use kebab-case with no spaces and **don't change it once you've picked it.** If the name changes, installs that people already have break. Change the display name through `displayName`.
+   - If you set `version`, **users don't get updates until you bump it.** Even if you push, `claude plugin update` answers "already at the latest version." Either bump it on every release, or in a git marketplace leave `version` out so the commit SHA is used as the version.
+   - Skills get the plugin name as a prefix, like `/team-kit:pr-description`.
 
-   **MCP 서버 번들하기(선택).** [5. MCP 서버 직접 만들기](/dev/05-mcp-server/)에서 만든 서버를 같이 배포하려면 플러그인 루트의 `.mcp.json`에 넣어요. 파일 경로는 `${CLAUDE_PLUGIN_ROOT}`로 쓰라고 공식 문서가 안내해요. 서버 실행에 필요한 `mcp` 패키지는 사용자 컴퓨터에 이미 있어야 하니 README에 적어 두세요.
+   **Bundling an MCP server (optional).** To ship the server you built in [5. Build your own MCP server](/dev/05-mcp-server/) along with the plugin, put it in `.mcp.json` at the plugin root. The official docs say to write file paths with `${CLAUDE_PLUGIN_ROOT}`. The `mcp` package the server needs must already be on the user's computer, so note that in your README.
 
    ```json
    {
@@ -209,42 +209,42 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
    }
    ```
 
-   번들 서버는 플러그인이 켜져 있는 모든 세션에서 같이 실행되고, 도구 이름은 `mcp__plugin_<플러그인>_<서버>__<도구>` 형태가 돼요.
+   A bundled server runs in every session where the plugin is on, and its tool names take the form `mcp__plugin_<plugin>_<server>__<tool>`.
 
-3. **검증하고 로컬에서 써 보기**
+3. **Validate it and try it locally**
 
-   형식부터 확인해요. `--strict`는 경고(알 수 없는 필드, 빠진 메타데이터)도 실패로 처리해서 CI에 알맞아요.
+   Check the format first. `--strict` also treats warnings (unknown fields, missing metadata) as failures, which suits CI.
 
    ```bash
    claude plugin validate --strict ./team-marketplace/plugins/team-kit
    claude plugin validate --strict ./team-marketplace
    ```
 
-   각각 `Validation passed`가 나와야 해요. 이어서 설치 없이 한 세션에서만 로드해 봐요.
+   Each should print `Validation passed`. Next, load it for a single session without installing.
 
    ```bash
    claude --plugin-dir ./team-marketplace/plugins/team-kit
    ```
 
-   세션에서 `/team-kit:pr-description`을 실행하거나, "getUser를 fetchUser로 바꾼 변경으로 PR 설명 써 줘"처럼 평소 말투로 요청해 보세요. 파일을 고친 뒤에는 `/reload-plugins`로 반영해요. 안 보이면 `/plugin`의 **Errors** 탭과 `claude plugin list`를 확인하세요.
+   In the session, run `/team-kit:pr-description`, or ask in everyday language, like "Write a PR description for the change that renamed getUser to fetchUser." After you edit files, apply the changes with `/reload-plugins`. If it doesn't show up, check the **Errors** tab in `/plugin` and `claude plugin list`.
 
    <PromptBox>
-   getUser 함수를 fetchUser로 이름을 바꾸고 호출부 3곳을 고쳤어. 이 변경으로 PR 설명 써 줘.
+   I renamed the getUser function to fetchUser and updated 3 call sites. Write a PR description for this change.
    </PromptBox>
 
-   안 불려온다면 `/team-kit:pr-description`으로 직접 호출해 "안 불려오는 것"과 "불려오지만 결과가 이상한 것"을 나눠 보세요. `/skills`로 로드 여부도 볼 수 있어요.
+   If it doesn't get picked up, call it directly with `/team-kit:pr-description` to tell apart "it doesn't load" from "it loads but the output is off." You can also check whether it's loaded with `/skills`.
 
-4. **`claude plugin eval`로 품질 확인하기**
+4. **Check quality with `claude plugin eval`**
 
-   형식이 맞아도 Claude가 스킬을 안 고르거나 결과가 어긋날 수 있어요. `claude plugin eval`은 플러그인의 테스트 케이스를 실제로 돌려 점수를 매기고, **플러그인 없는 기준선과 비교**해 줘요. Claude Code 2.1.269 이상이 필요하고, git이 설치돼 있다면 2.31 이상이어야 해요(2026-10-19 기준). 더 오래된 git이면 케이스를 돌리기 전에 멈춰요.
+   Even with a valid format, Claude may not choose the skill, or the output may be off. `claude plugin eval` actually runs the plugin's test cases, scores them, and **compares against a baseline without the plugin**. It needs Claude Code 2.1.269 or later, and if git is installed it must be version 2.31 or later (as of 2026-10-19). With an older git, it stops before running any cases.
 
-   <Aside type="caution" title="eval은 모델을 호출해서 비용이 들어요">
-   실행마다 에이전트 호출과 채점 호출이 계정 사용량(또는 API 요금)으로 잡혀요. 기본값은 케이스마다 3번, 그리고 같은 횟수의 플러그인 없는 기준선이라서 케이스 하나가 6번 실행이에요. 처음에는 `--ablation none`(기준선 생략, 절반 비용)과 `--runs 1`로 돌리고, 항상 `--max-cost-usd`로 상한을 거세요. 플러그인을 믿을 수 있는 경우에만 실행하세요. eval은 내 권한으로 플러그인을 로드해 실행해요.
+   <Aside type="caution" title="Evals call a model, so they cost money">
+   Every run counts agent calls and grading calls against your account usage (or API charges). The default is 3 runs per case, plus the same number of baseline runs without the plugin, so one case is 6 runs. Start with `--ablation none` (skip the baseline, half the cost) and `--runs 1`, and always set a ceiling with `--max-cost-usd`. Only run it on plugins you trust. Evals load and run the plugin with your permissions.
    </Aside>
 
-   케이스는 `evals/<케이스 이름>/` 폴더에 두어요. `claude plugin eval init`이 질문을 하며 만들어 주거나(대화형 세션), 직접 쓸 수도 있어요(`claude plugin eval init --bare 이름`은 빈 템플릿).
+   Cases go in `evals/<case name>/` folders. `claude plugin eval init` can create them by asking you questions (in an interactive session), or you can write them by hand (`claude plugin eval init --bare name` gives you an empty template).
 
-   `evals/pr-from-diff/prompt.md`: 프런트매터에 실행 한도를, 본문에 사용자가 입력할 문장을 써요. **스킬 이름을 부르지 말고 평소 말투**로 써야 "자연스러운 요청에도 불려오는지"를 볼 수 있어요.
+   `evals/pr-from-diff/prompt.md`: put the run limits in the frontmatter and the sentence the user would type in the body. Write it **in everyday language without naming the skill**, so you can see "whether it gets picked up from a natural request."
 
    ```markdown
    ---
@@ -252,10 +252,10 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
    allowed_tools: [Skill]
    ---
 
-   getUser를 fetchUser로 이름을 바꾸고 호출부 3곳을 고쳤어. 이 변경으로 PR 설명 써 줘.
+   I renamed getUser to fetchUser and updated 3 call sites. Write a PR description for this change.
    ```
 
-   `evals/pr-from-diff/graders/skill-fired.md`: 스킬이 실제로 호출됐는지(`tool_used`)를 봐요.
+   `evals/pr-from-diff/graders/skill-fired.md`: checks whether the skill was actually invoked (`tool_used`).
 
    ```markdown
    ---
@@ -265,25 +265,25 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
    ---
    ```
 
-   `evals/pr-from-diff/graders/format.md`: 답변에 네 개의 제목이 순서대로 있는지를 정규식(`regex`)으로 봐요. 정규식 채점은 호출 없이 같은 결과가 나와서 안정적이고 공짜예요.
+   `evals/pr-from-diff/graders/format.md`: uses a regular expression (`regex`) to check that the response has the four headings in order. Regex grading gives the same result without any model call, so it's stable and free.
 
    ```markdown
    ---
    type: regex
-   pattern: '## 요약[\s\S]*## 변경 내용[\s\S]*## 테스트 방법[\s\S]*## 위험 요소'
+   pattern: '## Summary[\s\S]*## Changes[\s\S]*## How to test[\s\S]*## Risks'
    ---
    ```
 
-   실행은 플러그인 폴더에서 해요.
+   Run it from the plugin folder.
 
    ```bash
    cd team-marketplace/plugins/team-kit
    claude plugin eval . --runs 1 --ablation none --max-cost-usd 2
    ```
 
-   결과 표에서 `WITH`(플러그인 사용 점수), `W/OUT`(플러그인 없는 점수), `Δ`(차이)를 봐요. 문서가 알려 주는 가장 흔한 첫 발견은 "Δ가 0에 가깝고 `tool_used: Skill` 채점이 실패"예요. Claude가 자연스러운 말에서 스킬을 고르지 않는다는 뜻이니 `description`을 고쳐 다시 돌려 보세요. 한 번 실행은 편차가 크니, 바꾼 효과는 기본 횟수(3회)로 다시 확인하세요.
+   In the results table, look at `WITH` (score with the plugin), `W/OUT` (score without it), and `Δ` (the difference). The most common first finding the docs describe is "Δ near 0 and the `tool_used: Skill` grader fails." That means Claude doesn't pick the skill from natural phrasing, so fix the `description` and run again. A single run varies a lot, so confirm the effect of a change with the default count (3 runs).
 
-   CI에서는 첫 신뢰 확인을 건너뛰고(`--trust-plugin`) 결과를 JSON으로 저장하며 점수 미달이면 실패시켜요. 모델은 고정해서 점수를 비교 가능하게 해요.
+   In CI, skip the first-time trust prompt (`--trust-plugin`), save the results as JSON, and fail the job when the score is below a threshold. Pin the model so scores stay comparable.
 
    ```bash
    claude plugin eval . \
@@ -296,37 +296,37 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
      --max-cost-usd 20
    ```
 
-   종료 코드는 0이 통과, 1이 점수 미달·로드 실패 등, 2가 비용 상한 도달이나 인증 거부로 인한 부분 실행이에요. 매 변경마다 도는 가벼운 검사에는 judge 없이 도는 `regex`·`tool_used` 채점기만 두면 비용이 안 늘어요. 일반 평가 방법은 [8. 평가(evals)로 LLM 결과 품질 관리하기](/dev/08-evals/)를 보세요.
+   Exit code 0 means pass, 1 means a score below threshold or a load failure, and 2 means a partial run caused by hitting the cost ceiling or a rejected authentication. For lightweight checks that run on every change, keep only the `regex` and `tool_used` graders, which run without a judge, so costs don't grow. For general evaluation methods, see [8. Manage LLM output quality with evals](/dev/08-evals/).
 
    <Aside type="note">
-   위 eval 케이스의 파일 구조와 채점기 옵션은 공식 문서(plugin-evals)를 따랐어요. 이 편을 쓰며 `claude plugin validate`는 실제로 돌려 통과를 확인했지만, `claude plugin eval`은 비용 때문에 실행하지 않았어요. 점수 예시는 싣지 않았어요.
+   The file structure and grader options for the eval cases above follow the official docs (plugin-evals). While writing this tutorial we actually ran `claude plugin validate` and confirmed it passes, but we did not run `claude plugin eval` because of the cost. We have not included example scores.
    </Aside>
 
-5. **마켓플레이스 만들기**
+5. **Build a marketplace**
 
-   마켓플레이스 저장소 루트의 `.claude-plugin/marketplace.json`이에요. `name`, `owner`, `plugins`가 필수예요.
+   This is `.claude-plugin/marketplace.json` at the root of the marketplace repository. `name`, `owner`, and `plugins` are required.
 
    ```json
    {
      "name": "team-marketplace",
-     "description": "우리 팀 플러그인",
+     "description": "Our team's plugins",
      "owner": { "name": "Platform Team" },
      "plugins": [
        {
          "name": "team-kit",
          "source": "./plugins/team-kit",
-         "description": "PR 설명 작성 스킬 모음"
+         "description": "A set of skills for writing PR descriptions"
        }
      ]
    }
    ```
 
-   - 상대 경로 `source`는 **마켓플레이스 루트(`.claude-plugin/`이 있는 폴더) 기준**이고 `..`는 쓸 수 없어요.
-   - 항목의 `name`과 `plugin.json`의 `name`을 같게 하세요. 다르면 설치 때 not found가 나요.
-   - 플러그인이 다른 저장소에 있으면 `source`에 `{ "source": "github", "repo": "your-org/team-kit" }` 같은 객체를 써요. `git-subdir`(모노레포 하위 폴더), `url`, `archive`(zip), `npm` 소스도 있어요.
-   - 공식 마켓플레이스 이름(예: `claude-plugins-official`)은 쓸 수 없어요.
+   - A relative `source` path is **relative to the marketplace root (the folder that contains `.claude-plugin/`)** and can't use `..`.
+   - Make the entry's `name` match the `name` in `plugin.json`. If they differ, you get a not-found error at install time.
+   - If the plugin lives in a different repository, use an object like `{ "source": "github", "repo": "your-org/team-kit" }` for `source`. There are also `git-subdir` (a subfolder in a monorepo), `url`, `archive` (zip), and `npm` sources.
+   - You can't use official marketplace names (for example, `claude-plugins-official`).
 
-   로컬에서 설치까지 해 보고 확인해요.
+   Install it locally to check.
 
    ```bash
    claude plugin marketplace add ./team-marketplace
@@ -335,24 +335,24 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
    claude plugin details team-kit
    ```
 
-   `details`는 구성요소 목록과 **세션마다 더해지는 토큰 비용 추정**을 보여 줘요. 이 예제는 상시 비용이 약 114토큰이었어요(스킬 하나 기준, 직접 실행). 스킬을 늘릴수록 이 숫자가 커지니, 안 쓰는 스킬은 `/skill-doctor`로 찾아서 정리하세요.
+   `details` shows the component list and an **estimate of the token cost added to every session**. In this example the standing cost was about 114 tokens (for one skill, run directly). The more skills you add, the bigger this number gets, so find unused skills with `/skill-doctor` and clean them up.
 
-   로컬 경로로 추가한 마켓플레이스는 파일을 고치면 다음 세션 시작이나 `/reload-plugins`에서 바로 반영돼요. 호스팅된 마켓플레이스는 사용자가 사본을 받으므로, 위의 `version` 규칙이 적용돼요.
+   For a marketplace added by local path, edits take effect at the next session start or with `/reload-plugins`. With a hosted marketplace, users download a copy, so the `version` rule above applies.
 
-6. **팀에 배포하기: 저장소 단위**
+6. **Roll out to your team: per repository**
 
-   `team-marketplace`를 GitHub에 올려요. 비공개 저장소면 마켓플레이스도 비공개라서, 저장소를 clone할 수 있는 사람만 설치할 수 있어요.
+   Push `team-marketplace` to GitHub. If the repository is private, the marketplace is private too, so only people who can clone the repository can install from it.
 
-   팀원에게 안내할 명령은 두 줄이에요.
+   The instructions for teammates are two lines.
 
    ```bash
    claude plugin marketplace add your-org/team-marketplace
    claude plugin install team-kit@team-marketplace
    ```
 
-   Claude Code 2.1.292 이상에서는 한 줄로도 돼요: `claude plugin install team-kit --marketplace your-org/team-marketplace`. 세션 안에서는 `/plugin install team-kit --marketplace your-org/team-marketplace`로 마켓플레이스 등록과 설치를 한 번에 할 수 있어요(2.1.275 이상). 업데이트는 `claude plugin update team-kit@team-marketplace`예요.
+   On Claude Code 2.1.292 or later, one line works too: `claude plugin install team-kit --marketplace your-org/team-marketplace`. Inside a session, `/plugin install team-kit --marketplace your-org/team-marketplace` registers the marketplace and installs in one go (2.1.275 or later). To update, run `claude plugin update team-kit@team-marketplace`.
 
-   **팀 코드 저장소에서 자동으로 권하기.** 팀이 쓰는 코드 저장소의 `.claude/settings.json`에 아래를 커밋하면 마켓플레이스 등록과 플러그인 활성화를 저장소 안에서 선언할 수 있어요.
+   **Recommend it automatically from your team's code repository.** If you commit the following to `.claude/settings.json` in the code repository your team uses, you can declare marketplace registration and plugin activation inside the repository.
 
    ```json
    {
@@ -367,29 +367,29 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
    }
    ```
 
-   적용 조건과 한계가 있어요(공식 문서).
+   There are conditions and limits (from the official docs).
 
-   - `extraKnownMarketplaces`는 팀원이 **폴더 신뢰(workspace trust) 대화상자를 수락한 폴더에서만** 적용돼요. 미신뢰 폴더에서는 메시지 없이 무시돼요.
-   - 마켓플레이스 안에 상대 경로로 든 플러그인은 그대로 로드돼요. 플러그인이 외부 저장소를 가리키면 팀원이 각자 `claude plugin install team-kit@team-marketplace --scope project`를 한 번 해야 해요. 그 전에는 "enabled in project settings but isn't installed"로 보여요.
-   - `claude -p`나 CI에서는 설치가 백그라운드로 진행돼서 첫 턴에 플러그인이 빠질 수 있어요. 이럴 때는 환경변수 `CLAUDE_CODE_SYNC_PLUGIN_INSTALL=1`로 설치를 기다리게 해요.
-   - 비공개 마켓플레이스를 CI에서 설치하려면 읽기 권한이 있는 토큰을 `GH_TOKEN`으로 내보내고 `gh auth setup-git`을 실행하세요. GitHub Actions의 기본 토큰은 그 워크플로의 저장소에만 접근해요. 토큰은 저장소 시크릿에 두세요.
-   - 클라우드 세션(claude.ai/code)은 내 컴퓨터의 설정에 있는 플러그인을 로드하지 않아요.
+   - `extraKnownMarketplaces` applies only **in folders where the teammate has accepted the workspace trust dialog**. In untrusted folders it is ignored silently.
+   - A plugin that is listed in the marketplace by a relative path loads as-is. If a plugin points to an external repository, each teammate has to run `claude plugin install team-kit@team-marketplace --scope project` once. Until then it shows as "enabled in project settings but isn't installed."
+   - With `claude -p` or in CI, installation happens in the background, so the plugin may be missing on the first turn. In that case set the environment variable `CLAUDE_CODE_SYNC_PLUGIN_INSTALL=1` to make it wait for installation.
+   - To install a private marketplace in CI, export a token with read access as `GH_TOKEN` and run `gh auth setup-git`. The default GitHub Actions token can only access the repository of that workflow. Keep the token in repository secrets.
+   - Cloud sessions (claude.ai/code) don't load plugins from the settings on your own computer.
 
-   자동 업데이트는 마켓플레이스마다 사용자 쪽 설정이에요. 서드파티(우리 팀 포함) 마켓플레이스는 기본이 꺼짐이라서, 팀원이 `/plugin`에서 켜거나 관리 설정의 `autoUpdate`로 정해요.
+   Auto-update is a per-marketplace, user-side setting. Third-party marketplaces (including your team's) default to off, so teammates turn it on in `/plugin`, or you set it with `autoUpdate` in managed settings.
 
-   **릴리스 표시.** 다른 플러그인이 버전 범위로 내 플러그인에 의존하는 경우에는 git 태그가 필요해요. 플러그인 폴더에서 `claude plugin tag --push`를 실행하면 `{이름}--v{버전}` 태그를 만들어 푸시해요(`--dry-run`으로 먼저 확인).
+   **Marking releases.** If other plugins depend on yours with a version range, you need git tags. Running `claude plugin tag --push` in the plugin folder creates and pushes a `{name}--v{version}` tag (check first with `--dry-run`).
 
-7. **팀에 배포하기: 조직 관리 설정**
+7. **Roll out to your team: org managed settings**
 
-   조직 전체에 강제하려면 관리 설정(managed settings)을 써요. 전달 방식은 세 가지예요.
+   To enforce it across the whole organization, use managed settings. There are three delivery methods.
 
-   | 방식 | 설명 |
+   | Method | Description |
    | --- | --- |
-   | 서버 관리 설정 | claude.ai 관리자 화면 조직 설정(Organization settings) > Claude Code > 관리 설정(Managed settings)에 JSON을 넣어요. Owner 권한이 필요해요. |
-   | MDM | macOS plist, Windows 레지스트리로 배포해요. |
-   | 관리 설정 파일 | 시스템 경로의 `managed-settings.json`이에요. |
+   | Server-managed settings | Paste the JSON in the claude.ai admin console under Organization settings > Claude Code > Managed settings. You need Owner permissions. |
+   | MDM | Deploy through a macOS plist or the Windows registry. |
+   | Managed settings file | A `managed-settings.json` at a system path. |
 
-   마켓플레이스를 등록하고 플러그인을 강제 설치하는 예시예요(공식 문서 예시를 우리 이름으로 바꿨어요).
+   This example registers a marketplace and force-installs a plugin (the official docs example, with our names swapped in).
 
    ```json
    {
@@ -405,141 +405,141 @@ Claude Code(터미널) 기준이에요. 같은 플러그인 폴더가 claude.ai�
    }
    ```
 
-   사용자가 개인 설정에서 꺼도 관리 설정이 우선해서 계속 로드돼요. 반대로 `enabledPlugins`에서 `false`로 두면 모든 범위에서 막고 목록에서도 숨겨요. 제한용 키도 있어요.
+   Even if a user turns it off in their personal settings, managed settings take priority and it keeps loading. Conversely, setting `false` in `enabledPlugins` blocks it in every scope and hides it from the list. There are also keys for restrictions.
 
-   | 키 | 역할 |
+   | Key | Role |
    | --- | --- |
-   | `strictKnownMarketplaces` | 허용할 마켓플레이스 소스 목록이에요. `[]`면 공식 마켓플레이스까지 전부 막아요. |
-   | `blockedMarketplaces` | 차단 목록이에요. 허용 목록보다 먼저 검사해요. |
-   | `disableSideloadFlags` | `--plugin-dir`, `--plugin-url` 같은 임의 로드를 막아요. |
-   | `strictPluginOnlyCustomization` | 플러그인·관리 설정이 아닌 곳의 스킬·에이전트·훅·MCP 서버를 막아요. |
-   | `syncClaudeAiPlugins` | `false`면 claude.ai 계정에서 동기화된 플러그인을 내려받지 않아요. |
+   | `strictKnownMarketplaces` | The list of allowed marketplace sources. `[]` blocks everything, including the official marketplace. |
+   | `blockedMarketplaces` | A block list. It's checked before the allow list. |
+   | `disableSideloadFlags` | Blocks arbitrary loading such as `--plugin-dir` and `--plugin-url`. |
+   | `strictPluginOnlyCustomization` | Blocks skills, agents, hooks, and MCP servers that come from anywhere other than plugins or managed settings. |
+   | `syncClaudeAiPlugins` | If `false`, plugins synced from a claude.ai account are not downloaded. |
 
-   여러 키를 쓸 때 주의할 점이에요.
+   Things to watch out for when using several keys.
 
-   - 서버 관리 설정이 정책 키를 하나라도 보내면, 기본값에서는 MDM·파일의 플러그인 키는 무시돼요. 둘을 같이 쓰려면 `managedSourcesBehavior`를 `"merge"`로 해요.
-   - 허용 목록(`strictKnownMarketplaces`)을 쓰면 `~/.claude/skills/`의 플러그인이 로드되지 않을 수 있어요. 유지하려면 `{ "source": "skills-dir" }`를 목록에 넣어요.
-   - 허용 목록은 마켓플레이스를 등록해 주지 않아요. 등록은 `extraKnownMarketplaces`가 하고, 등록할 소스는 허용 목록을 통과해야 해요.
-   - 부서별로 다른 정책은 서버 관리 설정으로는 안 돼요(조직 전체에 하나). 부서별 MDM 파일이나 게이트웨이 정책을 써요.
-   - 설치·로드 현황은 OpenTelemetry 이벤트(`claude_code.plugin_installed`, `claude_code.plugin_loaded`)와 Enterprise의 Analytics API로 볼 수 있어요.
+   - If server-managed settings send even one policy key, then by default the plugin keys from MDM and files are ignored. To use both together, set `managedSourcesBehavior` to `"merge"`.
+   - If you use an allow list (`strictKnownMarketplaces`), plugins in `~/.claude/skills/` may not load. To keep them, add `{ "source": "skills-dir" }` to the list.
+   - An allow list doesn't register marketplaces for you. `extraKnownMarketplaces` does the registering, and the source being registered has to pass the allow list.
+   - Per-department policies aren't possible with server-managed settings (there is one per organization). Use per-department MDM files or gateway policies.
+   - You can see install and load activity through OpenTelemetry events (`claude_code.plugin_installed`, `claude_code.plugin_loaded`) and the Enterprise Analytics API.
 
-   claude.ai 조직 설정의 **Plugins & skills**에서 구성원 계정에 플러그인을 켜면, 그 플러그인이 Claude Code에는 `<이름>@synced`로 전달돼요. 이것은 위의 관리 설정 키와는 별개의 경로예요. 스킬 단위 공유는 [C8](/claude/c08-skills/)의 공유 방법도 보세요.
+   When you turn on a plugin for member accounts under **Plugins & skills** in the claude.ai organization settings, that plugin is delivered to Claude Code as `<name>@synced`. This is a separate path from the managed-settings keys above. For sharing at the skill level, also see the sharing methods in [C8](/claude/c08-skills/).
 
-8. **(선택) Anthropic 디렉터리에 제출하기**
+8. **(Optional) Submit to the Anthropic directory**
 
-   팀을 넘어 누구나 설치하게 하려면 개발자 포털에 제출해요. 심사를 거치고, 통과하면 claude.ai와 Cowork, 그리고 계정 동기화를 통해 Claude Code 사용자에게 가요.
+   To let anyone install your plugin beyond your team, submit it through the developer portal. It goes through review, and once approved it reaches claude.ai and Cowork, and Claude Code users through account sync.
 
-   | 준비물 | 내용 |
+   | Requirement | Details |
    | --- | --- |
-   | GitHub 저장소 | 플러그인이 든 저장소예요. claude.ai에 GitHub 계정을 연결해야 하고, 그 계정이 저장소에 푸시할 수 있어야 해요. |
-   | 유료 claude.ai 플랜 | Pro/Max는 본인 계정으로, Team/Enterprise는 Owner가 제출해요. Enterprise는 역할로 Directory 권한을 줄 수 있어요. |
-   | 정책 준수 | Anthropic Software Directory Terms와 Policy를 지켜야 해요. |
-   | 사전 점검 | `claude plugin validate ./플러그인 --strict`를 통과하고, 공식 pre-submission checklist를 확인해요. 포털의 Validate 단계는 CLI보다 검사가 더 많아요. |
+   | GitHub repository | The repository that contains the plugin. You need to connect a GitHub account to claude.ai, and that account must be able to push to the repository. |
+   | Paid claude.ai plan | Pro/Max submit from their own account; on Team/Enterprise, the Owner submits. On Enterprise, you can grant Directory permission by role. |
+   | Policy compliance | You must follow the Anthropic Software Directory Terms and Policy. |
+   | Pre-check | Pass `claude plugin validate ./your-plugin --strict` and review the official pre-submission checklist. The portal's Validate step runs more checks than the CLI. |
 
-   제출 흐름이에요(2026-10-11 공식 문서 기준).
+   Here is the submission flow (per the official docs as of 2026-10-11).
 
-   1. [claude.ai/directory/manage](https://claude.ai/directory/manage)에서 **Submit new** > **Plugin bundle**
-   2. Source 단계에서 저장소, 플러그인 폴더(저장소 루트가 아니라면), 추적할 브랜치나 태그를 넣고 **Validate**
-   3. Listing details(`plugin.json`과 README에서 읽어 와요), Data handling(개인정보 수집·저장·전송 여부), Compliance 단계를 채워요
-   4. **Submit for review**
+   1. At [claude.ai/directory/manage](https://claude.ai/directory/manage), choose **Submit new** > **Plugin bundle**
+   2. In the Source step, enter the repository, the plugin folder (if it isn't the repository root), and the branch or tag to track, then click **Validate**
+   3. Fill in the Listing details (read from `plugin.json` and the README), Data handling (whether you collect, store, or transmit personal information), and Compliance steps
+   4. Click **Submit for review**
 
-   심사 뒤의 동작도 알아 두세요.
+   Also know what happens after review.
 
-   - 버전마다 검증과 보안 스캔을 하고, 통과하면 게시할 수 있어요. 검토자 확인이 필요한 버전은 보류돼요. 게시는 기본적으로 Anthropic 검토자가 해요.
-   - 이후에는 추적 브랜치에 병합하면 새 커밋을 스캔하고 게시해요. `plugin.json`에 `version`을 적었다면 릴리스마다 올리세요.
-   - 비공개 저장소로도 제출할 수 있어요. 이때 소스가 Anthropic에 업로드되어 스캔되고 검토자에게 보여요. 게시 전에는 공개로 바꿔야 해요.
-   - 조직당 24시간에 제출 10건 제한이 있어요.
-   - 플러그인이 참조하는 원격 MCP 서버가 직접 만든 것이라면, 서버도 **MCP connector**로 따로 제출해야 해요.
-   - Anthropic 공식 마켓플레이스(`claude-plugins-official`)는 이 포털 제출을 받지 않아요.
+   - Each version gets validation and a security scan, and once it passes it can be published. Versions that need a reviewer's check are put on hold. By default, publishing is done by Anthropic reviewers.
+   - After that, merging into the tracked branch scans and publishes the new commits. If you set `version` in `plugin.json`, bump it with each release.
+   - You can submit with a private repository. In that case the source is uploaded to Anthropic, scanned, and shown to reviewers. You must make it public before it is published.
+   - There is a limit of 10 submissions per 24 hours per organization.
+   - If the remote MCP server your plugin references is one you built yourself, you must also submit the server separately as an **MCP connector**.
+   - The official Anthropic marketplace (`claude-plugins-official`) does not accept submissions through this portal.
 
    <Aside type="note">
-   심사에 걸리는 기간은 공식 문서에 안내가 없어요. 스캔 뒤 사람 검토를 거쳐야 공개되는 "보류" 사유는 공식 pre-submission checklist에 정리돼 있어요(2026-10-13 확인). 제출 후 상태는 포털의 **Submissions**에서 보세요.
+   The official docs don't say how long review takes. The reasons for a "hold," where a person has to review after the scan before the plugin goes public, are listed in the official pre-submission checklist (confirmed 2026-10-13). To see the status after submitting, check **Submissions** in the portal.
    </Aside>
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-### 자주 쓰는 `claude plugin` 명령
+### Common `claude plugin` commands
 
-| 명령 | 용도 |
+| Command | Purpose |
 | --- | --- |
-| `claude plugin init <이름> [--with skills ...]` | `~/.claude/skills/<이름>/`에 플러그인을 만들어 매 세션 자동 로드해요 |
-| `claude --plugin-dir <경로>` | 설치 없이 한 세션만 플러그인을 로드해요 (`/reload-plugins`로 반영) |
-| `claude plugin validate [--strict] <경로>` | 플러그인 또는 마켓플레이스의 형식을 검사해요 |
-| `claude plugin eval [대상]` | 케이스를 돌려 점수와 기준선 대비 차이(Δ)를 줘요. 비용이 들어요 |
-| `claude plugin marketplace add <소스>` | 마켓플레이스를 등록해요 (`owner/repo`, URL, 경로) |
-| `claude plugin install <이름>@<마켓플레이스>` | 설치해요 (`--scope project`로 저장소에 공유) |
-| `claude plugin update <이름>@<마켓플레이스>` | 새 버전으로 올려요 (재시작 필요) |
-| `claude plugin list` / `details <이름>` | 설치 목록과 구성요소·토큰 비용을 봐요 |
-| `claude plugin disable` / `enable` / `uninstall` | 끄기 / 켜기 / 제거 |
-| `claude plugin tag [--push]` | `{이름}--v{버전}` 릴리스 태그를 만들어요 |
-| `claude plugin marketplace remove <이름>` | 마켓플레이스를 제거해요 (그 플러그인도 함께 제거) |
+| `claude plugin init <name> [--with skills ...]` | Creates a plugin in `~/.claude/skills/<name>/` that loads automatically every session |
+| `claude --plugin-dir <path>` | Loads a plugin for one session only, without installing (apply edits with `/reload-plugins`) |
+| `claude plugin validate [--strict] <path>` | Checks the format of a plugin or marketplace |
+| `claude plugin eval [target]` | Runs the cases and gives you scores and the difference versus the baseline (Δ). It costs money |
+| `claude plugin marketplace add <source>` | Registers a marketplace (`owner/repo`, URL, path) |
+| `claude plugin install <name>@<marketplace>` | Installs (share with the repository using `--scope project`) |
+| `claude plugin update <name>@<marketplace>` | Updates to the new version (restart required) |
+| `claude plugin list` / `details <name>` | Shows installed plugins, and components and token cost |
+| `claude plugin disable` / `enable` / `uninstall` | Turn off / turn on / remove |
+| `claude plugin tag [--push]` | Creates a `{name}--v{version}` release tag |
+| `claude plugin marketplace remove <name>` | Removes a marketplace (its plugins are removed too) |
 
-### 파일 위치 요약
+### File location summary
 
-| 파일 | 위치 |
+| File | Location |
 | --- | --- |
-| 플러그인 매니페스트 | `<플러그인>/.claude-plugin/plugin.json` |
-| 스킬 | `<플러그인>/skills/<이름>/SKILL.md` |
-| 에이전트·훅·MCP | `<플러그인>/agents/`, `hooks/hooks.json`, `.mcp.json` |
-| 마켓플레이스 | `<저장소>/.claude-plugin/marketplace.json` |
-| 저장소 단위 팀 설정 | `<코드 저장소>/.claude/settings.json` |
-| 평가 케이스 | `<플러그인>/evals/<케이스>/prompt.md` + `graders/*.md` |
+| Plugin manifest | `<plugin>/.claude-plugin/plugin.json` |
+| Skill | `<plugin>/skills/<name>/SKILL.md` |
+| Agents, hooks, MCP | `<plugin>/agents/`, `hooks/hooks.json`, `.mcp.json` |
+| Marketplace | `<repository>/.claude-plugin/marketplace.json` |
+| Per-repository team settings | `<code repository>/.claude/settings.json` |
+| Eval cases | `<plugin>/evals/<case>/prompt.md` + `graders/*.md` |
 
-### 스킬 점검 명령 (세션 안)
+### Skill check commands (inside a session)
 
-| 명령 | 확인할 것 |
+| Command | What it checks |
 | --- | --- |
-| `/skills` | 로드된 스킬 목록 |
-| `/skill-doctor` | 스킬별 컨텍스트 비용과 호출 이력, 안 쓰는 스킬 |
-| `/reload-plugins` | 디스크에서 고친 내용 반영 |
-| `/plugin` | Installed·Errors·Marketplaces 탭 |
+| `/skills` | The list of loaded skills |
+| `/skill-doctor` | Context cost and invocation history per skill, and unused skills |
+| `/reload-plugins` | Applies edits made on disk |
+| `/plugin` | The Installed, Errors, and Marketplaces tabs |
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 플러그인은 로드되는데 스킬이 안 보여요
+### The plugin loads but I can't see the skill
 
-- **원인**: `skills/`를 `.claude-plugin/` 안에 넣었거나, 매니페스트의 `skills` 경로가 `SKILL.md`가 든 폴더를 가리키지 않아요.
-- **해결**: `skills/`를 플러그인 루트로 옮기고 `/reload-plugins`를 실행하세요. `/plugin`의 Errors 탭에 원인이 나와요.
+- **Cause**: You put `skills/` inside `.claude-plugin/`, or the `skills` path in the manifest doesn't point to a folder containing `SKILL.md`.
+- **Fix**: Move `skills/` to the plugin root and run `/reload-plugins`. The Errors tab in `/plugin` shows the cause.
 
-### 푸시했는데 팀원이 새 버전을 못 받아요
+### I pushed, but teammates don't get the new version
 
-- **원인**: `plugin.json`에 `version`을 적어 두고 올리지 않았어요. 이 경우 `claude plugin update`가 "already at the latest version"이라고 답해요.
-- **해결**: 릴리스마다 `version`을 올리거나, git 마켓플레이스에서는 `version`을 생략해 커밋 SHA를 버전으로 쓰세요. 서드파티 마켓플레이스는 자동 업데이트도 기본이 꺼져 있으니 팀원이 켜거나 `claude plugin update`를 실행해야 해요.
+- **Cause**: You set `version` in `plugin.json` and didn't bump it. In that case `claude plugin update` answers "already at the latest version."
+- **Fix**: Bump `version` on every release, or in a git marketplace leave `version` out so the commit SHA is used as the version. Auto-update is also off by default for third-party marketplaces, so teammates need to turn it on or run `claude plugin update`.
 
-### 설치할 때 `Plugin "…" not found in marketplace`가 나요
+### I get `Plugin "…" not found in marketplace` when installing
 
-- **원인**: 마켓플레이스 항목의 `name`과 `plugin.json`의 `name`이 달라요. 또는 `source` 경로가 마켓플레이스 루트 기준이 아니에요.
-- **해결**: 두 이름을 같게 하고, `source`는 `./plugins/team-kit`처럼 루트에서 시작하는 상대 경로로 쓰세요. `claude plugin validate`가 `..` 경로는 잡아 줘요. 없는 폴더는 설치할 때야 오류가 나요.
+- **Cause**: The `name` in the marketplace entry differs from the `name` in `plugin.json`. Or the `source` path isn't relative to the marketplace root.
+- **Fix**: Make the two names match, and write `source` as a relative path starting from the root, like `./plugins/team-kit`. `claude plugin validate` catches `..` paths. A missing folder only produces an error at install time.
 
-### 스킬이 있는데 Claude가 자동으로 안 써요
+### The skill exists but Claude doesn't use it automatically
 
-- **원인**: `description`이 모호하거나 핵심 용도가 뒤쪽에 있어요. 또는 `disable-model-invocation: true`가 붙어 있어요.
-- **해결**: 사용자가 실제로 쓰는 말을 넣어 앞부분을 다시 쓰고, `claude plugin eval`의 `tool_used: Skill` 채점으로 확인하세요. `/이름` 직접 호출이 잘 되는지 보면 원인이 나뉘어요.
+- **Cause**: The `description` is vague or the key purpose is at the end. Or `disable-model-invocation: true` is set.
+- **Fix**: Rewrite the beginning using the words users actually say, and confirm with the `tool_used: Skill` grader in `claude plugin eval`. Checking whether a direct `/name` call works will narrow down the cause.
 
-### 저장소 설정에 마켓플레이스를 넣었는데 팀원에게 안 깔려요
+### I added the marketplace to repo settings, but it doesn't install for teammates
 
-- **원인**: 팀원이 그 폴더의 신뢰 대화상자를 수락하지 않았거나, 플러그인이 외부 저장소를 가리켜 각자 설치가 필요해요.
-- **해결**: 신뢰를 수락하게 안내하고, 외부 소스 플러그인이면 `claude plugin install … --scope project`를 한 번 실행하게 하세요.
+- **Cause**: A teammate hasn't accepted the trust dialog for that folder, or the plugin points to an external repository so each person has to install it.
+- **Fix**: Tell them to accept the trust prompt, and for plugins from an external source, have them run `claude plugin install … --scope project` once.
 
-### `claude plugin eval` 비용이 예상보다 커요
+### `claude plugin eval` costs more than expected
 
-- **원인**: 케이스 수 x 3회 x 2(기준선)에 채점 호출이 더해져요.
-- **해결**: `--runs 1`과 `--ablation none`으로 줄이고, `--max-cost-usd`로 상한을 걸고, 가능한 채점은 `regex`·`tool_used`로 바꾸세요. 비용 상한에 닿으면 종료 코드 2와 부분 결과가 나와요.
+- **Cause**: It's the number of cases x 3 runs x 2 (baseline), plus the grading calls.
+- **Fix**: Cut it down with `--runs 1` and `--ablation none`, set a ceiling with `--max-cost-usd`, and switch graders to `regex` or `tool_used` wherever you can. If it hits the cost ceiling, you get exit code 2 and partial results.
 
-## 실전 팁
+## Practical tips
 
-- **작게 시작해서 늘리세요.** 스킬 하나, 케이스 하나, 팀원 한 명에게서 시작해요. 스킬이 늘수록 모든 세션의 시작 비용도 늘어요.
-- **스킬은 배포 전에 평가로, 배포 후에는 사용량으로 보세요.** `/skill-doctor`와 `claude plugin details`로 안 쓰는 스킬을 정리하세요.
-- **이름은 처음부터 신중하게.** 플러그인 이름은 나중에 못 바꿔요. 정말 바꿔야 하면 마켓플레이스의 `renames`로 기존 설치를 옮겨 주세요.
-- **서드파티 마켓플레이스는 허용 목록으로.** 조직에서는 `strictKnownMarketplaces`로 회사 마켓플레이스만 허용하는 구성을 검토하세요.
-- **비밀 값은 플러그인에 넣지 마세요.** API 키와 토큰은 사용자 환경변수나 저장소 시크릿에 두고, 코드와 `.mcp.json`에는 `${VAR}`만 쓰세요.
-- **코드 예제의 검증 범위.** 이 편의 JSON·마크다운 예제는 공식 문서 기준이며 2026-10-11에 `claude plugin validate --strict`로 형식을 검증했고, 로컬 마켓플레이스 추가와 설치까지 확인했어요. `claude plugin eval`은 실행하지 않았어요.
+- **Start small and grow.** Begin with one skill, one case, and one teammate. The more skills you have, the higher the startup cost of every session.
+- **Evaluate skills before release, and watch usage after release.** Clean up unused skills with `/skill-doctor` and `claude plugin details`.
+- **Choose names carefully from the start.** You can't change a plugin name later. If you really must, move existing installs over with the marketplace's `renames`.
+- **Use an allow list for third-party marketplaces.** In an organization, consider a setup that allows only the company marketplace with `strictKnownMarketplaces`.
+- **Don't put secrets in plugins.** Keep API keys and tokens in users' environment variables or repository secrets, and use only `${VAR}` in code and `.mcp.json`.
+- **What the code examples were checked against.** The JSON and Markdown examples in this tutorial follow the official docs. On 2026-10-11 we verified their format with `claude plugin validate --strict`, and also confirmed adding a local marketplace and installing from it. We did not run `claude plugin eval`.
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [C8. 스킬](/claude/c08-skills/) — 스킬의 기본과 claude.ai 업로드, 공유 방법
-- [5. MCP 서버 직접 만들어 Claude에 연결하기](/dev/05-mcp-server/) — 플러그인에 번들할 MCP 서버 만들기
-- [8. 평가(evals)로 LLM 결과 품질 관리하기](/dev/08-evals/) — 플러그인 eval을 넘어 일반적인 품질 관리
-- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — 훅, 서브에이전트, 플러그인 설치 명령
+- [C8. Skills](/claude/c08-skills/) — Skill basics, claude.ai upload, and how to share
+- [5. Build your own MCP server and connect it to Claude](/dev/05-mcp-server/) — Build an MCP server to bundle into a plugin
+- [8. Manage LLM output quality with evals](/dev/08-evals/) — General quality management beyond plugin evals
+- [C14. Core Claude Code features](/claude/c14-claude-code-features/) — Hooks, subagents, and plugin install commands

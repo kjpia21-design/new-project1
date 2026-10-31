@@ -1,27 +1,27 @@
 ---
-title: "코딩을 몰라도 되는 업무용 웹 도구 만들기: 견적 계산기"
-description: "Claude 아티팩트와 Claude Code로 견적 계산기 같은 업무용 웹 도구를 만들고 검증하고 공유하는 실습"
+title: "Building Work Web Tools Without Coding: A Quote Calculator"
+description: "A hands-on exercise: build, verify, and share a work web tool like a quote calculator with Claude artifacts and Claude Code"
 sidebar:
-  label: "2. 업무용 웹 도구 만들기"
+  label: "2. Building work web tools"
 level: practical
 category: coding
 tools: ["Claude", "Claude Code"]
-duration: "40분"
+duration: "40 min"
 prerequisites:
-  - "Claude 계정 (아티팩트 기능 사용 가능)"
-  - "(선택) Claude Code 설치 — 6편 참고"
-  - "만들고 싶은 업무 도구 하나의 계산 규칙 (예: 단가, 할인 규칙)"
+  - "A Claude account (with the artifacts feature available)"
+  - "(Optional) Claude Code installed — see Tutorial 6"
+  - "The calculation rules for one work tool you want to build (e.g., unit prices, discount rules)"
 lastVerified: 2026-10-31
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
-  - title: "What are artifacts and how do I use them? (Claude 고객센터)"
+  - title: "What are artifacts and how do I use them? (Claude Help Center)"
     url: "https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them"
-  - title: "Publish and share artifacts (Claude 고객센터)"
+  - title: "Publish and share artifacts (Claude Help Center)"
     url: "https://support.claude.com/en/articles/9547008-publish-and-share-artifacts"
   - title: "Claude Code overview"
     url: "https://code.claude.com/docs/en/overview"
-  - title: "Configuring a publishing source for your GitHub Pages site (GitHub 공식 문서)"
+  - title: "Configuring a publishing source for your GitHub Pages site (GitHub official docs)"
     url: "https://raw.githubusercontent.com/github/docs/main/content/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site.md"
 status: published
 ---
@@ -33,187 +33,187 @@ import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- 견적 계산기, 일정 안내, 체크리스트 같은 **작은 업무 도구**는 코딩 없이 말로 설명해서 만들 수 있어요.
-- 가장 쉬운 길은 **Claude 아티팩트**(채팅 옆에 열리는 결과물)예요. 파일로 따로 갖고 싶거나 폴더로 관리하고 싶다면 **Claude Code**로 `quote.html` 같은 파일을 만들어요.
-- 계산 도구는 **그럴듯해 보여도 틀릴 수 있어요.** 손으로 계산한 값 2~3개와 반드시 맞춰 보세요.
-- 공유 전에는 누가 볼 수 있는지, 입력한 내용이 어디에 저장되는지 확인하세요. 아티팩트는 비공개로 시작해요.
+- **Small work tools** like quote calculators, schedule notices, and checklists can be built without coding, just by describing them in words.
+- The easiest route is a **Claude artifact** (a result that opens next to the chat). If you want it as a separate file or want to manage it in a folder, use **Claude Code** to make a file like `quote.html`.
+- Calculation tools **can be wrong even when they look convincing.** Always check them against 2 or 3 values you calculated by hand.
+- Before sharing, check who can view it and where the entered content is stored. Artifacts start out private.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- 계산 규칙을 말로 정리해서 견적 계산기 아티팩트를 만들 수 있어요.
-- 테스트 값으로 계산 결과를 검증하고, 틀린 부분을 고치게 할 수 있어요.
-- Claude Code로 같은 도구를 파일로 만들어 내 컴퓨터에서 열 수 있어요.
-- 공유 방식(링크, 초대, 파일 전달, 웹 배포)을 상황에 맞게 고를 수 있어요.
+- Write your calculation rules in words and build a quote calculator artifact.
+- Verify the results with test values and have Claude fix anything that's wrong.
+- Build the same tool as a file with Claude Code and open it on your own computer.
+- Choose a sharing method (link, invitation, file transfer, web deployment) that fits your situation.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **아티팩트(Artifact)** | Claude가 만든 결과물이에요. 문서, 슬라이드, 대시보드, 작은 인터랙티브 도구가 있고 대화 옆에 열려요. 자세한 내용은 [C6. 아티팩트](/claude/c06-artifacts/)를 보세요. |
-| **정적 웹페이지** | 서버 없이 파일 하나로 동작하는 웹페이지예요. 계산기, 안내 페이지 정도는 이 방식으로 충분해요. |
-| **요구사항** | 도구가 해야 할 일을 적은 글이에요. "입력은 이것, 계산은 이렇게, 출력은 이렇게"를 적으면 결과가 좋아져요. |
-| **테스트 값** | 정답을 미리 아는 입력이에요. 도구가 맞게 계산하는지 확인하는 기준이에요. |
+| **Artifact** | Something Claude made for you. It can be a document, slides, a dashboard, or a small interactive tool, and it opens beside the conversation. See [C6. Artifacts](/claude/c06-artifacts/) for details. |
+| **Static web page** | A web page that works from a single file with no server. That's plenty for a calculator or an info page. |
+| **Requirements** | A write-up of what the tool should do. Results get better when you write "the inputs are this, the calculation goes like this, the output looks like this". |
+| **Test values** | Inputs whose correct answers you already know. They're the standard for checking that the tool calculates correctly. |
 
-### 아티팩트와 Claude Code, 무엇을 고를까요?
+### Artifact or Claude Code: which should I choose?
 
-| | 아티팩트 | Claude Code |
+| | Artifact | Claude Code |
 | --- | --- | --- |
-| **어디서** | Claude 채팅 화면 옆 | 내 컴퓨터의 폴더 |
-| **결과** | 채팅 안에서 바로 미리보기, 수정은 말로 | `quote.html` 같은 실제 파일 |
-| **공유** | 공유 설정(링크·초대 등) | 파일 전달 또는 웹 배포([8편](/coding/08-cloud-github/)) |
-| **이럴 때** | 빠르게 만들어 보고 팀에 보여 주기 | 파일로 보관·수정 이력 관리·웹 주소로 공개 |
+| **Where** | Next to the Claude chat screen | A folder on your computer |
+| **Result** | Instant preview in chat; you edit by talking | A real file like `quote.html` |
+| **Sharing** | Sharing settings (link, invitation, etc.) | File transfer or web deployment ([Tutorial 8](/coding/08-cloud-github/)) |
+| **Best when** | You want to build quickly and show your team | You want to keep it as a file, track edit history, or publish at a web address |
 
-<Aside type="caution" title="이 도구는 연습용이에요">
-견적 금액이 실제 계약에 쓰인다면, 계산 규칙이 맞는지 담당자가 검토한 뒤에 쓰세요. AI가 만든 계산 로직은 겉보기에 멀쩡해도 반올림, 부가세, 할인 순서가 틀릴 수 있어요.
+<Aside type="caution" title="This tool is for practice">
+If the quote amounts will be used in real contracts, have the responsible person review the calculation rules before use. Calculation logic made by AI can look fine but get rounding, VAT, or discount order wrong.
 </Aside>
 
-## 단계별 따라하기
+## Step-by-step guide
 
-예시 과제는 **"수량과 단가를 넣으면 공급가액, 할인, 부가세, 합계를 계산하는 견적 계산기"**예요. 다른 업무에도 같은 순서를 쓰면 돼요.
+The example task is a **"quote calculator that takes quantity and unit price and calculates the subtotal, discount, VAT, and total"**. Use the same order for other work tasks.
 
 <Checklist items={[
-  '계산 규칙(단가, 할인 조건, 부가세, 반올림)을 문장으로 정리했어요',
-  '아티팩트로 계산기를 만들었어요',
-  '손으로 계산한 테스트 값 2~3개와 결과를 비교했어요',
-  '화면과 문구를 수정 요청으로 다듬었어요',
-  '(선택) Claude Code로 quote.html 파일을 만들었어요',
-  '공유 범위와 저장 위치를 확인한 뒤 공유했어요',
+  'I wrote out the calculation rules (unit price, discount conditions, VAT, rounding) as sentences',
+  'I built the calculator as an artifact',
+  'I compared the results against 2 or 3 test values I calculated by hand',
+  'I polished the screen and wording with follow-up requests',
+  '(Optional) I made a quote.html file with Claude Code',
+  'I checked who can see it and where it is stored, then shared it',
 ]} />
 
 <Steps>
 
-1. **계산 규칙을 먼저 글로 적기**
+1. **Write the calculation rules down first**
 
-   Claude에게 시키기 전에 메모장에 규칙을 적어요. 이 단계가 결과 품질의 절반이에요.
+   Before asking Claude, write the rules in a notepad. This step is half of the quality of the result.
 
-   - 입력: 품목 이름, 수량, 단가
-   - 품목은 최대 5개까지
-   - 할인: 합계 100만 원 이상이면 5% 할인 (예시 규칙이에요. 실제 규칙으로 바꾸세요)
-   - 부가세: 할인 후 금액의 10%
-   - 반올림: 원 단위 미만은 버림
+   - Inputs: item name, quantity, unit price
+   - Up to 5 items
+   - Discount: 5% off if the subtotal is 1,000,000 KRW or more (this is an example rule; replace it with your real rule)
+   - VAT: 10% of the amount after the discount
+   - Rounding: round down anything below 1 won
 
-   규칙을 모르면 "모르겠다"고 적고 Claude에게 질문하게 하세요.
+   If you don't know a rule, write "I don't know" and let Claude ask you questions.
 
-2. **아티팩트로 계산기 만들기**
+2. **Build the calculator as an artifact**
 
-   Claude 채팅에서 요구사항을 붙여 넣어요. 아티팩트 기능은 설정(Settings) > 기능(Capabilities)의 "Cloud code execution and file creation"이 켜져 있어야 해요(Team·Enterprise는 조직 설정의 Capabilities). 안 보이면 여기를 확인하세요.
+   Paste the requirements into a Claude chat. The artifacts feature requires "Cloud code execution and file creation" to be turned on under Settings > Capabilities (for Team and Enterprise, under Capabilities in the organization settings). If you don't see it, check there.
 
    <PromptBox>
-   견적 계산기를 만들어 줘. 입력은 품목 이름, 수량, 단가이고 품목은 최대 5줄이야. 계산 규칙은 다음과 같아. (1) 공급가액은 수량x단가의 합계. (2) 공급가액이 1,000,000원 이상이면 5% 할인. (3) 부가세는 할인 후 금액의 10%. (4) 원 단위 미만은 버림. 화면에는 공급가액, 할인액, 부가세, 합계를 따로 보여 주고 숫자에는 천 단위 쉼표를 넣어 줘. 한국어 화면으로 만들어 줘. 만들기 전에 이해한 규칙을 먼저 정리해서 알려 줘.
+   Build me a quote calculator. The inputs are item name, quantity, and unit price, with up to 5 rows. The calculation rules are as follows. (1) The subtotal is the sum of quantity x unit price. (2) If the subtotal is 1,000,000 KRW or more, apply a 5% discount. (3) VAT is 10% of the amount after the discount. (4) Round down anything below 1 won. On the screen, show the subtotal, discount amount, VAT, and total separately, and add thousands separators to the numbers. Make the screen in English. Before building, summarize the rules as you understand them.
    </PromptBox>
 
-   오른쪽에 아티팩트가 열려요. 처음부터 완벽하지 않아도 돼요.
+   The artifact opens on the right. It doesn't have to be perfect at first.
 
-   <ScreenshotPlaceholder caption="견적 계산기 아티팩트가 채팅 옆에 열린 화면" officialUrl="https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them" />
+   <ScreenshotPlaceholder caption="A quote calculator artifact opened next to the chat" officialUrl="https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them" />
 
-3. **테스트 값으로 계산 검증하기**
+3. **Verify the calculation with test values**
 
-   아래처럼 정답을 미리 계산해 둔 값을 직접 넣어 보세요.
+   Enter values whose correct answers you've worked out in advance, like the ones below.
 
-   | 입력 | 기대 결과 |
+   | Input | Expected result |
    | --- | --- |
-   | 수량 10, 단가 50,000 | 공급가액 500,000 / 할인 0 / 부가세 50,000 / 합계 550,000 |
-   | 수량 20, 단가 60,000 | 공급가액 1,200,000 / 할인 60,000 / 부가세 114,000 / 합계 1,254,000 |
-   | 수량 3, 단가 33,333 | 공급가액 99,999 / 할인 0 / 부가세 9,999 / 합계 109,998 |
+   | Quantity 10, unit price 50,000 | Subtotal 500,000 / Discount 0 / VAT 50,000 / Total 550,000 |
+   | Quantity 20, unit price 60,000 | Subtotal 1,200,000 / Discount 60,000 / VAT 114,000 / Total 1,254,000 |
+   | Quantity 3, unit price 33,333 | Subtotal 99,999 / Discount 0 / VAT 9,999 / Total 109,998 |
 
-   (부가세는 원 단위 미만 버림 규칙이에요. 세 번째 줄은 99,999의 10%인 9,999.9에서 0.9를 버린 값이에요.)
+   (VAT follows the round-down rule. The third row is 9,999.9, which is 10% of 99,999, with the 0.9 dropped.)
 
-   값이 다르면 Claude에게 어떤 입력에서 얼마가 나왔는지 그대로 알려 주세요.
-
-   <PromptBox>
-   수량 20, 단가 60,000을 넣었더니 합계가 1,260,000으로 나와. 내가 계산한 정답은 공급가액 1,200,000, 할인 60,000, 부가세 114,000, 합계 1,254,000이야. 어느 계산이 틀렸는지 찾아서 고치고, 위 세 가지 테스트 값으로 다시 확인한 결과를 알려 줘.
-   </PromptBox>
-
-4. **화면과 사용성 다듬기**
-
-   계산이 맞으면 보기 좋게 고쳐요. 한 번에 한두 가지씩 요청하세요.
+   If a value differs, tell Claude exactly what input gave what result.
 
    <PromptBox>
-   입력 칸이 모바일 화면에서도 잘 보이게 해 줘. 숫자가 아닌 값을 넣으면 빨간 안내 문구가 나오게 하고, 맨 아래에 "초기화" 버튼을 넣어 줘. 맨 위에는 "이 계산기는 참고용입니다"라는 작은 문구를 넣어 줘.
+   I entered quantity 20 and unit price 60,000 and the total came out as 1,260,000. My correct answer is subtotal 1,200,000, discount 60,000, VAT 114,000, total 1,254,000. Find which calculation is wrong and fix it, then tell me the results of re-checking with the three test values above.
    </PromptBox>
 
-   오류가 나면 아티팩트에 "Try fixing with Claude" 같은 안내가 보일 수 있어요. 성공이 보장되지는 않으니, 안 고쳐지면 채팅으로 상황을 설명해 다시 요청하세요.
+4. **Polish the screen and usability**
 
-5. **(선택) Claude Code로 파일 만들기**
-
-   파일로 갖고 싶다면 6편처럼 빈 폴더에서 Claude Code를 열고 같은 요구사항을 줘요.
+   Once the calculation is right, make it look nice. Ask for just one or two things at a time.
 
    <PromptBox>
-   견적 계산기를 quote.html 파일 하나로 만들어 줘. 외부 서비스에 연결하지 말고, 입력은 품목 이름·수량·단가(최대 5줄), 계산 규칙은 이렇게야: (여기에 규칙 붙여넣기). 만든 뒤에 아래 테스트 값으로 계산이 맞는지 확인하고 결과를 알려 줘: (테스트 값 붙여넣기)
+   Make the input fields look good on mobile screens too. If someone enters a non-numeric value, show a red notice. Add a "Reset" button at the very bottom. At the very top, add a small note saying "This calculator is for reference only."
    </PromptBox>
 
-   `quote.html`은 더블클릭하면 브라우저에서 열려요. 폴더 안에 "이 폴더는 견적 계산기이고 계산 규칙은 이렇다"는 내용의 CLAUDE.md를 남겨 두면 다음 수정이 쉬워요.
+   If an error occurs, the artifact may show a hint like "Try fixing with Claude". Success isn't guaranteed, so if it doesn't get fixed, describe the situation in chat and ask again.
 
-6. **공유하기 전에 확인하기**
+5. **(Optional) Make a file with Claude Code**
 
-   - **아티팩트**: 비공개로 시작해요. 공유(Share) 설정에서 링크 공유나 이메일 초대를 선택할 수 있고, 플랜에 따라 방식이 달라요(이메일 초대는 Pro 이상, 베타). Team·Enterprise는 기본적으로 조직 안에서만 공유돼요. 권한은 Can view / Commenter / Can edit로 나뉘어요.
-   - **파일**: `quote.html`을 그대로 전달하면 받는 사람은 브라우저로 열어요.
-   - **웹 주소로 공개**: GitHub Pages를 쓸 수 있어요. 순서는 [8편](/coding/08-cloud-github/)을 보세요. 공개 전에는 단가표 같은 내부 정보가 포함되지 않았는지 확인하세요.
+   If you want it as a file, open Claude Code in an empty folder as in Tutorial 6 and give it the same requirements.
 
-   <ScreenshotPlaceholder caption="아티팩트 공유 설정 화면" officialUrl="https://support.claude.com/en/articles/9547008-publish-and-share-artifacts" />
+   <PromptBox>
+   Build the quote calculator as a single quote.html file. Don't connect to any outside services. The inputs are item name, quantity, and unit price (up to 5 rows), and the calculation rules are: (paste your rules here). After building it, check that the calculations are right with the test values below and tell me the results: (paste your test values here)
+   </PromptBox>
+
+   Double-click `quote.html` to open it in your browser. Leaving a CLAUDE.md in the folder that says "this folder is a quote calculator and these are the calculation rules" makes the next edit easier.
+
+6. **Check before sharing**
+
+   - **Artifact**: It starts out private. In the Share settings you can choose link sharing or email invitations, and the options vary by plan (email invitations are Pro or higher, in beta). On Team and Enterprise, sharing is by default limited to inside your organization. Permissions are split into Can view / Commenter / Can edit.
+   - **File**: If you send `quote.html` as is, the recipient opens it in a browser.
+   - **Publish at a web address**: You can use GitHub Pages. See [Tutorial 8](/coding/08-cloud-github/) for the steps. Before publishing, check that it doesn't include internal information like a price list.
+
+   <ScreenshotPlaceholder caption="The artifact sharing settings screen" officialUrl="https://support.claude.com/en/articles/9547008-publish-and-share-artifacts" />
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-### 업무 도구 아이디어와 요구사항 쓰는 법
+### Work tool ideas and how to write requirements
 
-| 도구 | 입력 | 출력 | 테스트 값 예시 |
+| Tool | Input | Output | Test value example |
 | --- | --- | --- | --- |
-| 견적 계산기 | 수량, 단가 | 공급가액, 부가세, 합계 | 10 x 50,000 = 500,000 |
-| 연차 계산기 | 입사일, 기준일 | 발생 일수 | 사내 규정 표와 대조 |
-| 회의 시간 환산 | 시각, 지역 | 각 지역 현지 시각 | 서울 오전 9시 = 도쿄 오전 9시 |
-| 체크리스트 | 항목 목록 | 완료율 | 5개 중 2개 = 40% |
-| 문구 글자 수 세기 | 텍스트 | 글자·바이트 수 | 알려진 문장으로 확인 |
+| Quote calculator | Quantity, unit price | Subtotal, VAT, total | 10 x 50,000 = 500,000 |
+| Annual leave calculator | Hire date, reference date | Days earned | Compare with your company policy table |
+| Meeting time converter | Time, region | Local time in each region | 9 AM in Seoul = 9 AM in Tokyo |
+| Checklist | List of items | Completion rate | 2 of 5 = 40% |
+| Text character counter | Text | Character and byte counts | Check with a sentence of known length |
 
-### 아티팩트 공유와 저장 (2026-10-26 기준, 플랜별로 다를 수 있어요)
+### Artifact sharing and storage (as of 2026-10-26; may vary by plan)
 
-| 항목 | 내용 |
+| Item | Details |
 | --- | --- |
-| 기본 상태 | 비공개 |
-| 공유 | 링크 공유는 모든 플랜, 이메일 초대(베타)는 Pro·Max·Ultra·Team·Enterprise, Team·Enterprise는 기본적으로 조직 안에서만(조직·그룹 공유는 Team·Enterprise, 그룹은 Enterprise) |
-| 권한 | Can view(보기) / Commenter(댓글, 아티팩트가 제공하는 파일 내려받기) / Can edit(수정) |
-| Claude나 커넥터를 쓰는 아티팩트 | 링크 공유가 되지 않아요 |
-| 저장소 | 개인 저장과 공유 저장이 있고 아티팩트당 20MB, 텍스트만. 민감한 정보를 넣기 전 어느 저장소인지 확인하세요 |
-| 예전 방식 게시(Publish) | 2026-09-16 이전 아티팩트에만 해당(게시는 Free·Pro·Max, Team·Enterprise는 Share & copy link). 게시 취소는 영구적이라 다시 게시할 수 없고 저장 데이터가 삭제돼요 |
+| Default state | Private |
+| Sharing | Link sharing on all plans; email invitations (beta) on Pro, Max, Ultra, Team, and Enterprise; on Team and Enterprise, by default only inside the organization (organization and group sharing on Team and Enterprise, groups on Enterprise) |
+| Permissions | Can view / Commenter (comment, and download files the artifact provides) / Can edit |
+| Artifacts that use Claude or connectors | Link sharing isn't available |
+| Storage | Personal and shared storage, 20 MB per artifact, text only. Check which storage it is before entering sensitive information |
+| Legacy publishing (Publish) | Applies only to artifacts from before 2026-09-16 (publishing on Free, Pro, and Max; Share & copy link on Team and Enterprise). Unpublishing is permanent: you can't publish again and the stored data is deleted |
 
-<Aside type="note" title="참고할 점 (2026-10-26 기준)">
-Docs·Slides·Design 템플릿으로 만든 아티팩트는 Export(내보내기)가 있고(Design은 .zip, PDF, PowerPoint, HTML), 예전 방식 아티팩트는 패널 위쪽에서 코드 보기·복사·다운로드를 할 수 있다고 해요. 다만 직접 만든 계산기를 단일 HTML 파일로 내려받는 정확한 메뉴 이름은 공식 도움말(support.claude.com, 2026-10-26 기준)에 적혀 있지 않아요. 파일로 갖고 싶다면 5단계처럼 Claude Code로 만들거나, 화면 안내에 따르세요. 공유 화면의 문구는 계정마다 다를 수 있어요.
+<Aside type="note" title="Good to know (as of 2026-10-26)">
+Artifacts made from the Docs, Slides, and Design templates have Export (Design exports as .zip, PDF, PowerPoint, and HTML), and legacy artifacts reportedly let you view, copy, and download the code from the top of the panel. However, the exact menu name for downloading a calculator you built as a single HTML file isn't written in the official help (support.claude.com, as of 2026-10-26). If you want it as a file, build it with Claude Code as in step 5, or follow the on-screen instructions. The wording on the sharing screen may differ by account.
 </Aside>
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 계산 결과가 미묘하게 틀려요
+### The calculation results are slightly off
 
-- **원인**: 반올림 방식(버림·반올림), 할인과 부가세 순서, 소수점 처리가 요구사항에 빠져 있을 때 가장 흔해요.
-- **해결**: 틀린 입력과 결과, 기대 결과를 숫자로 알려 주세요. 규칙을 문장으로 더 분명히 적고 테스트 값으로 다시 확인하게 하세요.
+- **Cause**: Most often, the rounding method (round down vs. round), the order of discount and VAT, or decimal handling is missing from the requirements.
+- **Fix**: Tell Claude the wrong input, the result, and the expected result as numbers. State the rules more clearly in sentences and have it re-check with the test values.
 
-### 수정하다 보니 잘 되던 부분이 망가졌어요
+### Something that worked broke while I was editing
 
-- **원인**: 한 번에 많은 변경을 요청했을 수 있어요.
-- **해결**: 한두 가지씩 요청하세요. 아티팩트는 이전 버전을 볼 수 있는지 화면에서 확인하고, Claude Code는 `/rewind`로 되돌려요.
+- **Cause**: You may have asked for too many changes at once.
+- **Fix**: Ask for one or two changes at a time. For artifacts, check on screen whether you can view earlier versions; in Claude Code, undo with `/rewind`.
 
-### 링크를 보냈는데 상대방이 못 열어요
+### I sent the link but the other person can't open it
 
-- **원인**: 대개 링크를 받은 사람이 Claude에 로그인해야 하고, Team·Enterprise는 기본적으로 조직 안에서만 공유돼요. Claude나 커넥터를 쓰는 아티팩트는 링크 공유가 안 돼요.
-- **해결**: 공유 설정과 상대방 계정을 확인하세요. 로그인 없이 보여 줘야 한다면 `quote.html` 파일 전달이나 웹 배포를 쓰세요.
+- **Cause**: Usually the recipient has to be logged in to Claude, and on Team and Enterprise, sharing is by default limited to inside the organization. Artifacts that use Claude or connectors can't be shared by link.
+- **Fix**: Check the sharing settings and the recipient's account. If you need to show it without a login, send the `quote.html` file or use web deployment.
 
-### 공개된 페이지에 내부 정보가 들어갔어요
+### Internal information ended up on a public page
 
-- **원인**: 단가표나 고객 이름을 예시로 넣고 그대로 공유했을 수 있어요.
-- **해결**: 공유를 중단하고 내용을 바꾼 뒤 다시 공유하세요. 예전 방식으로 게시한 아티팩트의 게시 취소는 영구적이니 취소 전 필요한 내용을 복사해 두세요.
+- **Cause**: You may have put a price list or customer names in as examples and shared it as is.
+- **Fix**: Stop sharing, change the content, and share again. Unpublishing a legacy-published artifact is permanent, so copy anything you need before you unpublish.
 
-## 실전 팁
+## Practical tips
 
-- **규칙 → 테스트 값 → 요청 순서로.** 정답을 아는 값이 있어야 틀린 것을 알아챌 수 있어요.
-- **"만들기 전에 이해한 규칙을 정리해 줘"** 라고 요청하면 오해를 일찍 잡을 수 있어요.
-- **실제 고객 정보나 단가는 연습 단계에서 넣지 마세요.** 가짜 값으로 만든 뒤 운영 값으로 바꾸세요.
-- **계산에 책임이 따르는 도구는 담당자 검토를 거치세요.** 견적·급여·세금은 특히 그래요.
-- **필요 이상으로 크게 만들지 마세요.** 계산기 하나, 체크리스트 하나처럼 한 가지 일만 하는 도구가 오래 써요.
+- **Rules → test values → request, in that order.** You need values with known answers to notice what's wrong.
+- **Ask, "Before building, summarize the rules as you understand them."** That catches misunderstandings early.
+- **Don't enter real customer information or prices during practice.** Build with fake values, then swap in the real ones.
+- **Have a responsible person review any tool where the calculation carries responsibility.** That's especially true for quotes, payroll, and taxes.
+- **Don't make it bigger than it needs to be.** A tool that does one thing, like one calculator or one checklist, lasts longer.
 
-## 다음에 볼 튜토리얼
+## Next tutorials
 
-- [8. 클라우드 세션으로 GitHub 저장소 작업 맡기기](/coding/08-cloud-github/) — 만든 페이지를 웹에 공개하기
-- [C6. 아티팩트](/claude/c06-artifacts/) — 아티팩트 공유와 AI가 들어간 앱
-- [6. Claude Code 시작하기](/coding/06-claude-code-start/) — 파일로 만드는 방법의 기본기
+- [8. Handing off GitHub repository work to a cloud session](/coding/08-cloud-github/) — publishing your page on the web
+- [C6. Artifacts](/claude/c06-artifacts/) — sharing artifacts and AI-powered apps
+- [6. Getting started with Claude Code](/coding/06-claude-code-start/) — the basics of building with files

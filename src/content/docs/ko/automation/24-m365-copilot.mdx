@@ -1,0 +1,222 @@
+---
+title: "Microsoft 365 Copilot으로 Word·PowerPoint·Outlook 업무하기"
+description: "Word 초안·요약, PowerPoint 발표 자료 만들기, Outlook 메일 요약·답장 초안을 Copilot으로 하는 방법과 개인·회사 라이선스 차이, 한국어 지원, 주의점을 정리한 참고서"
+sidebar:
+  label: "7. M365 Copilot 업무하기"
+level: practical
+category: automation
+tools: ["Microsoft 365 Copilot", "Word", "PowerPoint", "Outlook"]
+duration: "30분"
+prerequisites:
+  - "Copilot이 포함된 Microsoft 365 구독 또는 회사의 Copilot 라이선스 (관리자 허용 필요할 수 있음)"
+  - "연습용 가상 문서와 메일 스레드 (실제 고객·사내 기밀은 쓰지 마세요)"
+lastVerified: 2026-10-26
+sources:
+  - title: "Welcome to Copilot in Word (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/word/welcome-to-copilot-in-word"
+  - title: "Create a new presentation with Copilot in PowerPoint (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d"
+  - title: "Welcome to Copilot in Outlook (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/outlook/welcome-to-copilot-in-outlook"
+  - title: "Copilot in Microsoft 365 Personal, Family, Premium, and Pro (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/microsoft-365-copilot/copilot-in-microsoft-365-personal-family-and-premium"
+  - title: "Frequently asked questions about Copilot in Microsoft 365 subscriptions (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/microsoft-365-copilot/frequently-asked-questions-about-copilot-in-microsoft-365-subscriptions"
+  - title: "Supported languages for Microsoft Copilot (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/microsoft-365-copilot/supported-languages-for-microsoft-365-copilot"
+  - title: "Microsoft Copilot overview (Microsoft Learn)"
+    url: "https://learn.microsoft.com/en-us/copilot/microsoft-365/microsoft-365-copilot-overview"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- **Word**: 오른쪽 아래(문서 모서리)의 Copilot 버튼으로 채팅 창을 열어 초안 작성, 다듬기, 요약을 해요. 기본은 편집(Edit) 모드예요.
+- **PowerPoint**: 오른쪽 아래 Copilot 아이콘으로 채팅 창을 열고 프롬프트로 발표 자료를 만들 수 있어요(2026-10-26 기준). Word 문서를 바탕으로 만드는 방법과 모범 사례도 공식 문서에 있어요.
+- **Outlook**: 새 메일에서 Copilot 아이콘으로 초안을 만들고, 스레드 맨 위 **Summary by Copilot**으로 긴 메일을 요약해요.
+- 화면에 Copilot이 보이는지는 **구독·라이선스·조직 설정**에 달려 있어요. 회사 계정은 Copilot Chat(기본), Copilot (Basic), Copilot (Premium) 같은 경험으로 나뉘어요(2026-10-14 기준).
+- 가격은 이번 확인에서 공식 요금제 페이지를 읽지 못해 적지 않았어요. 생성된 내용은 보내기 전에 꼭 읽고 고치세요.
+</Summary>
+
+<Aside type="caution" title="가격과 플랜 이름은 확인하지 못했거나 자주 바뀌어요">
+Microsoft의 요금제 페이지(microsoft.com)는 이번 확인에서 접근이 막혀 읽지 못했고, 한국 원화 가격도 확인하지 못했어요. 일부 공식 블로그 글은 화면이 스크립트로 그려져 숫자를 읽을 수 없었어요. 플랜 이름도 최근 공식 문서에서 바뀌는 중이에요. 구독 전에 [Microsoft 공식 요금제 페이지](https://www.microsoft.com/ko-kr/microsoft-365/microsoft-365-copilot)에서 직접 확인하세요.
+</Aside>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- Word에서 **초안을 만들고**, 선택한 문장을 **다시 쓰고**, 긴 문서를 **요약**할 수 있어요.
+- PowerPoint에서 프롬프트나 기존 Word 문서로 **발표 자료 초안**을 만들 수 있어요.
+- Outlook에서 긴 메일 스레드를 **요약**하고 **답장 초안**을 받을 수 있어요.
+- 내 계정에서 Copilot이 왜 안 보이는지(구독·라이선스·조직 설정) 점검할 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **Copilot in Microsoft 365 앱** | Word, Excel, PowerPoint, Outlook 같은 앱 안에서 쓰는 Microsoft의 AI예요. |
+| **편집 모드 / 채팅 전용(Chat only)** | Word의 Copilot은 기본이 편집 모드예요. **Chat only**를 고르면 채팅으로만 답하고 문서는 바꾸지 않아요. |
+| **Copilot Chat (Basic)** | 적격한 Microsoft 365 라이선스에 포함되는 기본 채팅이에요. 주로 웹 데이터를 쓰고, 회사 콘텐츠는 내가 직접 붙이거나 첨부해야 해요(회사 계정 기준). |
+| **Microsoft 365 Copilot (Basic)** | Copilot 애드온 라이선스는 없지만 Word·Excel·PowerPoint·OneNote 등에서 표준 접근이 있는 경험이에요. 서비스 용량에 따라 달라질 수 있다고 안내돼요. |
+| **Microsoft 365 Copilot (Premium)** | 애드온 라이선스가 있는 전체 경험이에요. 우선 접근과 회사 데이터(메일·파일·회의 등) 기반 답변이 포함돼요. |
+| **개인 구독의 Copilot** | Microsoft 365 Personal·Family·Premium·Pro에 Copilot이 포함돼요. AI 크레딧 모델을 쓰고, Family·Premium의 AI 기능은 구독 소유자만 쓸 수 있어요. |
+
+<Aside type="note" title="개인 계정과 회사 계정의 화면은 달라요 (2026-10-14 기준)">
+공식 문서는 개인 구독(집·가족용)과 회사·학교 계정을 따로 안내해요. 개인용은 Microsoft Services Agreement와 Copilot 이용약관이 적용되고, 회사용은 조직의 데이터 보호 정책이 적용돼요. 내 화면에 버튼이 없으면 이상한 게 아니라 **계정 종류나 라이선스 때문일 수 있으니** 화면 안내를 따르세요. 앱 안의 표시(예: "M365 Copilot (Premium)")로 내 경험을 알 수 있다고 공식 문서가 설명해요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '내 계정에서 Copilot이 켜져 있는지 확인했어요',
+  'Word에서 초안을 만들고 직접 고쳤어요',
+  'Word 문서를 요약해 봤어요',
+  'PowerPoint에서 발표 자료 초안을 만들었어요',
+  'Outlook에서 긴 메일을 요약했어요',
+  'Outlook에서 답장 초안을 만들고 읽어 본 뒤 보냈어요',
+]} />
+
+<Steps>
+
+1. **내 계정에서 Copilot 확인하기**
+
+   Word를 열어 문서 모서리에 Copilot 버튼(Copilot Dynamic Action Button)이 보이는지 확인해요. 안 보이면 구독에 포함되지 않았거나 조직 설정으로 막혔을 수 있다고 공식 문서가 안내해요. 개인 구독이라면 연령 제한이 적용될 수 있고, 회사 계정이면 관리자에게 어떤 앱에서 무엇이 안 보이는지 알려 주세요.
+
+   <ScreenshotPlaceholder caption="Word 문서 모서리의 Copilot 버튼과 열린 채팅 창" officialUrl="https://support.microsoft.com/en-us/word/welcome-to-copilot-in-word" />
+
+2. **Word: 초안 만들기**
+
+   Copilot 버튼을 눌러 채팅 창을 열어요(편집 모드로 열려요). 결과물, 대상, 길이, 말투를 적고, 참고할 자료가 있으면 채팅 입력란에 `/`를 치고 문서·메일·회의 이름을 골라 지정할 수 있어요. 결과는 보관하거나 버리거나 후속 프롬프트로 계속 다듬을 수 있어요.
+
+   <PromptBox>
+   고객사 임원에게 보내는 프로젝트 현황 보고서 초안을 써 줘. 구성은 배경, 진행 상황, 위험 요소, 다음 단계 순서. 숫자는 내가 따로 넣을 거라서 [ ]로 비워 둬. 한국어 존댓말로, A4 한 장 분량으로.
+   </PromptBox>
+
+   <Aside type="caution" title="숫자는 비워 두게 하세요">
+   AI가 그럴듯한 숫자를 지어낼 수 있어요. 수치는 직접 넣고, AI에게는 구조와 문장을 맡기세요.
+   </Aside>
+
+3. **Word: 다듬기와 요약**
+
+   이미 쓴 글은 문장을 선택하고 **Rewrite** 같은 프리셋을 고르거나, 채팅 창에 원하는 수정을 문장으로 적어요. 요약이나 질문만 하고 문서는 건드리고 싶지 않으면 **Chat only**를 고르세요. 공유 문서에서는 Copilot이 바꿀 내용을 먼저 미리보기로 보여 주고, 승인하기 전에는 문서에 아무것도 추가하지 않는다고 공식 문서가 안내해요.
+
+   <PromptBox>
+   이 문서를 불릿 다섯 개로 요약해 줘. 그리고 공유하기 전에 정해져야 할 결정 사항이 뭔지 알려 줘.
+   </PromptBox>
+
+4. **PowerPoint: 발표 자료 초안 만들기**
+
+   새 프레젠테이션에서 화면 오른쪽 아래의 Copilot 아이콘을 눌러 Copilot Chat을 열어요. 원하면 모델 선택기(model selector)에서 AI 모델을 고르고, 기본값 Auto로 둬도 돼요. 조직이 Brand Kit을 요구하면 Select brand에서 쓸 Brand Kit을 골라요(개인 계정이거나 조직에 없으면 건너뛰어요). 그다음 입력란에 만들고 싶은 발표 자료를 설명해요. Copilot이 대상, 발표 길이, 템플릿·디자인 방향, 이미지 종류 같은 질문을 먼저 할 수 있는데, 답하거나 건너뛰면 Copilot이 내용을 모아 선택한 템플릿으로 프레젠테이션을 만들어요(2026-10-26 기준 공식 문서). 2026-10-14 기준 문서에 있던 "Add Content > Agent Mode" 안내는 지금 이 문서에서 찾지 못했으니, 내 화면에 그 메뉴가 보이면 화면 안내를 따르세요.
+
+   <FlowSteps title="PowerPoint에서 Copilot으로 발표 자료 시작하기" officialUrl="https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d" steps={[
+     { where: 'PowerPoint 새 프레젠테이션', action: '슬라이드 오른쪽 아래 Copilot 아이콘 누르기', result: 'Copilot 채팅 창' },
+     { where: '채팅 창', action: '(선택) 모델 선택기와 Brand Kit 고르기', result: '모델·브랜드 설정' },
+     { where: '채팅 창', action: '프롬프트 입력 후 화살표 버튼', result: 'Copilot의 확인 질문' },
+     { where: '채팅 창', action: '질문에 답하거나 건너뛰기', result: '슬라이드 초안' },
+   ]} />
+
+   <PromptBox>
+   신입 사원 온보딩 발표 자료 초안을 만들어 줘. 대상은 입사 첫 주 직원 20명이고, 10분 분량이야. 회사 소개, 첫 주 일정, 자주 묻는 질문, 연락처 순서로 구성해 줘.
+   </PromptBox>
+
+   기존 Word 문서로 만들 때의 모범 사례도 공식 문서에 있어요. Word 스타일(제목 등)로 문서를 정리하면 슬라이드 나누기가 좋아지고, 관련 이미지를 넣으면 반영을 시도하고, 회사 템플릿으로 시작하면 테마를 유지해요. 24MB보다 작은 Word 문서에서 가장 잘 동작해요.
+
+   <ScreenshotPlaceholder caption="PowerPoint Copilot 창에서 발표 자료를 만드는 화면" officialUrl="https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d" />
+
+5. **Outlook: 긴 메일 스레드 요약하기**
+
+   받은 편지함에서 대화를 열어요. 새 Outlook에서는 스레드 맨 위 **Summary by Copilot** 상자를 누르고, 클래식 Outlook에서는 **Summarize**를 눌러요. 요약에는 번호 인용이 붙어서 누르면 해당 메일로 이동할 수 있어요.
+
+6. **Outlook: 답장 초안 만들기**
+
+   새 메일(Home > New Mail)에서 툴바의 Copilot 아이콘을 누르고, 새 Outlook에서는 **Draft**, 클래식 Outlook에서는 **Draft with Copilot**을 골라요. 프롬프트를 입력하고 **Generate**를 누르면 초안이 나와요. 길이와 말투는 조절할 수 있고, 마음에 안 들면 다시 생성할 수 있어요. 만족스러우면 **Keep it**(클래식은 **Keep**)을 누르고, 직접 고친 뒤 보내세요. 새 Outlook에는 메일 스레드로 회의 초대장을 만들어 주는 **Schedule with Copilot**도 있어요.
+
+   <PromptBox>
+   거래처 김 팀장님께 보내는 답장을 써 줘. 요청하신 견적서는 금요일까지 보내겠다는 내용이고, 정중하되 짧게. 존댓말로, 3문장 이내로.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Outlook 새 메일에서 Copilot Draft를 쓰는 화면" officialUrl="https://support.microsoft.com/en-us/outlook/welcome-to-copilot-in-outlook" />
+
+</Steps>
+
+## 빠른 참조표
+
+### 앱별 기능과 위치 (2026-10-14 기준, 공식 도움말)
+
+| 앱 | 하고 싶은 일 | 위치 / 버튼 |
+| --- | --- | --- |
+| Word | 초안 작성 | Copilot 버튼 > 채팅 창(편집 모드) |
+| Word | 선택 문장 다시 쓰기 | 문장 선택 후 Rewrite |
+| Word | 요약·질문만 하기 | Chat only |
+| Word | 다른 문서·메일·회의 참조 | 채팅 입력란에 `/` |
+| PowerPoint | 발표 자료 생성 | 오른쪽 아래 Copilot 아이콘 > 프롬프트 입력 |
+| Outlook (새) | 초안 | 툴바 Copilot 아이콘 > Draft |
+| Outlook (클래식) | 초안 | Copilot 아이콘 > Draft with Copilot |
+| Outlook (새) | 스레드 요약 | 스레드 위 Summary by Copilot |
+| Outlook (클래식) | 스레드 요약 | Summarize |
+| Outlook (새) | 회의 초대 만들기 | Schedule with Copilot |
+
+### 계정·라이선스 구분 (회사 계정, Microsoft Learn 개요 기준, 2026-10-14)
+
+| 구분 | 설명 |
+| --- | --- |
+| Copilot Chat (Basic) | 적격 라이선스에 포함. 웹 데이터 중심. Word·Excel·PowerPoint·OneNote의 앱 안 Copilot은 포함하지 않는다고 안내돼요. |
+| Microsoft 365 Copilot (Basic) | 애드온 없음. 앱 안(Word·Excel·PowerPoint·Outlook 등) 표준 접근. 용량에 따라 달라질 수 있어요. |
+| Microsoft 365 Copilot (Premium) | 애드온 라이선스. 우선 접근과 회사 데이터(Microsoft Graph, Work IQ) 기반 답변 포함. |
+
+### 개인 구독과 기타
+
+| 항목 | 내용 |
+| --- | --- |
+| 개인 구독 | Personal·Family·Premium·Pro에 Copilot과 AI 크레딧 포함. Family·Premium의 AI 기능은 구독 소유자만 사용 가능. |
+| 한국어 | 공식 지원 언어 목록의 회사·학교 계정과 개인 계정 모두에 한국어가 있어요. 기능별 품질은 별도 확인이 필요해요. |
+| 모델 선택 | Word에서는 Model Selector로 OpenAI나 Claude 같은 지원 모델을 고를 수 있다고 안내돼요. Anthropic 모델은 일부 라이선스 경험에서만, 기본 제공은 아니라고 Learn 문서가 밝혀요. |
+| 끄기 | Word·Excel·PowerPoint에서 Copilot을 켜고 끄는 설정이 있어요(개인 구독 기준). Designer·Notepad·Paint는 끌 수 없어요. |
+| 가격 | 이번 확인에서 공식 요금제 페이지를 읽지 못해 적지 않아요. |
+
+## 자주 막히는 지점
+
+### Copilot 버튼이 안 보여요
+
+- **원인**: 구독에 Copilot이 없거나, 조직 설정으로 제한됐거나, 연령 제한이 적용됐을 수 있어요.
+- **해결**: 개인 구독이면 계정의 구독을 확인하고, 회사 계정이면 관리자에게 문의하세요. 어떤 앱에서 무엇이 안 보이는지 알려 주면 빨라요.
+
+### 한국어 결과가 어색해요
+
+- **원인**: 한국어는 공식 지원 언어지만, Copilot이 주로 영어 자료로 학습돼 언어에 따라 성능이 다를 수 있다고 Excel 문서가 밝혀요. Word 문서는 Copilot이 Word 인터페이스보다 적은 언어를 지원한다고 안내해요.
+- **해결**: 프롬프트에 "한국어 존댓말로", 대상과 길이를 적고, 결과를 읽고 고치세요.
+
+### PowerPoint에서 파일을 참조해 만들 수 없어요
+
+- **원인**: 2026-10-26 기준 공식 PowerPoint 문서는 Word 문서로 만드는 모범 사례(Word 스타일, 이미지, 템플릿, 24MB 미만)를 안내하지만 Agent Mode 파일 참조는 설명하지 않아요. 이전 문서에 있던 "곧 제공" 문구도 지금은 찾지 못했어요. 기능이 순차 제공 중일 수 있어요.
+- **해결**: 내 화면의 안내를 따르고, 필요하면 Word 요약을 먼저 받아 프롬프트에 붙여 넣어 윤곽을 만드세요. 공유 문서라면 Word 쪽의 미리보기·승인 기능도 활용하세요.
+
+### 요약이 중요한 내용을 놓쳤어요
+
+- **원인**: 긴 스레드의 맥락이나 첨부의 세부 사항이 요약에 모두 담기지 않을 수 있어요.
+- **해결**: "결정된 것 / 미정 / 내가 할 일"처럼 항목을 지정해 요청하고, 핵심 메일은 인용 번호로 원문을 확인하세요.
+
+### 회사 기밀을 써도 될지 모르겠어요
+
+- **원인**: 회사마다 AI 사용 규정이 달라요. 개인 구독과 회사 계정의 데이터 보호 방식도 달라요.
+- **해결**: 회사 업무는 회사 계정으로 쓰고, 사내 보안 담당자에게 확인하세요. [개인정보·회사 정보 안전하게 지키며 쓰기](/ko/basics/05-privacy-safety/)도 읽어 보세요.
+
+## 실전 팁
+
+- **구체적으로 시키세요.** 대상, 목적, 길이, 말투를 적으세요. Microsoft 문서도 "프롬프트가 완벽할 필요는 없고, 원하는 결과에서 시작해 길이·형식·말투·자료를 더하라"고 안내해요.
+- **초안은 초안이에요.** Outlook 초안은 보내기 전에 꼭 읽고, 발표 자료는 AI가 만든 내용을 사람이 검토해 고치라고 공식 문서가 안내해요.
+- **숫자와 날짜는 직접 확인하세요.** 이름, 날짜, 금액, 약속 문구는 특히 꼼꼼히 보세요.
+- **같은 일을 다른 도구로 비교해 보세요.** Google Workspace를 쓴다면 [19. Google Workspace의 Gemini](/ko/automation/19-google-workspace-gemini/), 대화형 AI를 비교하려면 [Claude·ChatGPT·Gemini 비교](/ko/chat/05-compare-assistants/)를 보세요.
+- **Claude로 Office 파일을 다룰 수도 있어요.** Claude 쪽 방법은 [23. 엑셀·구글 시트에 AI 붙이기](/ko/automation/23-spreadsheet-ai/)와 [C7. 커넥터](/ko/claude/c07-connectors/)를 참고하세요.
+
+## 다음에 볼 튜토리얼
+
+- [23. 엑셀·구글 시트에 AI 붙이기: Copilot·Gemini·Claude](/ko/automation/23-spreadsheet-ai/) — Excel에서의 Copilot과 시트 자동화
+- [17. 아침 브리핑 받기](/ko/automation/17-morning-briefing/) — 메일·일정 요약을 매일 받는 방법
+- [4. 보고서·제안서 쓰기](/ko/chat/04-write-reports/) — 보고서 초안을 대화형 AI로 쓰는 방법
+- [사무·기획·관리직을 위한 AI 활용 가이드](/ko/roles/office/) — 메일·보고서·발표 같은 반복 업무를 직무 관점에서 보기

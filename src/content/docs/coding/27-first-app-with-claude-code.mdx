@@ -1,16 +1,16 @@
 ---
-title: "코딩 몰라도 Claude Code로 첫 웹앱 만들기 (바이브 코딩)"
-description: "말로 설명하며 간단한 가계부 웹앱을 만들고, 브라우저로 확인하고, 고쳐 나가고, 안전하게 지키는 방법까지 따라 하는 실습"
+title: "Build Your First Web App with Claude Code, No Coding Needed (Vibe Coding)"
+description: "A hands-on exercise: describe a simple expense tracker web app in words, check it in the browser, refine it step by step, and keep it safe"
 sidebar:
-  label: "6. 코딩 몰라도 첫 웹앱"
+  label: "6. Your first web app, no coding needed"
 level: beginner
 category: coding
 tools: ["Claude Code"]
-duration: "60분"
+duration: "60 min"
 prerequisites:
-  - "Claude 유료 플랜 (Pro 이상) 또는 Console 계정"
-  - "Claude Code 설치와 로그인 (C12 참고)"
-  - "빈 폴더 하나와 웹 브라우저"
+  - "A paid Claude plan (Pro or higher) or a Console account"
+  - "Claude Code installed and logged in (see C12)"
+  - "One empty folder and a web browser"
 lastVerified: 2026-10-26
 sources:
   - title: "Quickstart"
@@ -30,166 +30,168 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- 이 편은 [6편](/coding/06-claude-code-start/)의 다음 단계예요. 6편이 "한 장짜리 페이지"였다면, 여기서는 **입력하고 저장되는 작은 가계부 웹앱**을 만들어요.
-- 설치와 로그인은 [C12](/claude/c12-claude-code-overview/)에 있어요. 이 편은 반복하지 않아요.
-- 요령은 세 가지예요. **뼈대부터 → 기능을 하나씩 → 매번 눈으로 확인.** 큰 요청 하나보다 작은 요청 여러 개가 훨씬 잘 돼요.
-- 안전 습관도 같이 익혀요. 변경 내용 확인, 비밀정보(비밀번호·API 키) 넣지 않기, 되돌리기, 작업 폴더 밖은 건드리지 않기.
-- Claude Code는 Pro 이상 유료 플랜에서 쓸 수 있어요([C2](/claude/c02-plans-limits/), 2026-10-26 기준).
+- This tutorial is the next step after [Tutorial 6](/coding/06-claude-code-start/). If Tutorial 6 was a "one-page page", here you build **a small expense tracker web app where you enter data and it gets saved**.
+- Installation and login are covered in [C12](/claude/c12-claude-code-overview/). This tutorial doesn't repeat them.
+- There are three tricks. **Skeleton first → one feature at a time → check with your own eyes every time.** Several small requests work much better than one big one.
+- You'll also learn safety habits: check the changes, never put in secrets (passwords, API keys), undo when needed, and don't touch anything outside your working folder.
+- Claude Code is available on paid plans (Pro or higher) ([C2](/claude/c02-plans-limits/), as of 2026-10-26).
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- 만들고 싶은 앱을 문장으로 설명해서 **동작하는 가계부 웹페이지**를 얻을 수 있어요.
-- 내 컴퓨터의 브라우저에서 결과를 열어 보고, 잘 되는지 **직접 시험하는 방법**을 알게 돼요.
-- "이것 좀 바꿔 줘"를 반복하며 **조금씩 다듬는 흐름**을 익혀요.
-- 위험한 상황(비밀정보 노출, 의도치 않은 변경)을 **미리 줄이는 습관**을 갖게 돼요.
+- Describe the app you want in sentences and get **a working expense tracker web page**.
+- Open the result in your computer's browser and learn **how to test it yourself** to see if it works.
+- Get used to **refining it bit by bit**, repeating "change this for me".
+- Build **habits that reduce risk in advance** (exposing secrets, unintended changes).
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-이 방식을 흔히 **바이브 코딩**이라고 불러요. 코드를 직접 쓰지 않고, 원하는 것을 말로 설명하고 결과를 보면서 고쳐 달라고 하는 작업 방식이에요(이 사이트에서 편의상 쓰는 표현이에요).
+This approach is often called **vibe coding**. It's a way of working where you don't write code yourself; you describe what you want in words, look at the result, and ask for fixes (this site uses the term for convenience).
 
-| 용어 | 이 실습에서의 뜻 |
+| Term | What it means in this exercise |
 | --- | --- |
-| **작업 폴더** | Claude Code가 읽고 쓰는 범위예요. 빈 폴더 하나에서 시작해요. |
-| **권한 모드** | Claude가 묻지 않고 해도 되는 동작 범위예요. `Shift+Tab`으로 바꿔요. 모드 설명은 [C14](/claude/c14-claude-code-features/)를 보세요. |
-| **계획 모드** | 파일을 바꾸지 않고 계획만 제안하는 모드예요. |
-| **체크포인트** | Claude가 파일을 바꾸기 전에 남기는 되돌리기 지점이에요. `/rewind`로 열어요. |
-| **확인 방법** | 결과가 맞는지 보는 방법이에요. 이 실습에서는 "브라우저에서 직접 눌러 보기"예요. |
+| **Working folder** | The area Claude Code can read and write. You start with one empty folder. |
+| **Permission mode** | The range of actions Claude may take without asking. Change it with `Shift+Tab`. See [C14](/claude/c14-claude-code-features/) for descriptions of the modes. |
+| **Plan mode** | A mode that only proposes a plan without changing files. |
+| **Checkpoint** | A restore point Claude leaves before changing files. Open it with `/rewind`. |
+| **How to verify** | A way to see whether the result is right. In this exercise, it's "click through it yourself in the browser". |
 
-공식 문서는 Claude에게 **스스로 확인할 방법을 주라**고 권해요. 테스트, 빌드, 스크린샷처럼 결과를 읽을 수 있는 신호가 있으면 결과 품질이 좋아져요. 그리고 "검증할 수 없다면 내보내지 말라"고 해요(2026-10-26 확인). 이 편의 프롬프트에는 그래서 "만든 뒤에 이렇게 시험해 줘"가 들어 있어요.
+The official docs recommend **giving Claude a way to check its own work**. When there's a signal it can read the result from, like tests, a build, or a screenshot, the quality of the result improves. They also say, "if you can't verify it, don't ship it" (checked 2026-10-26). That's why the prompts in this tutorial include "after you build it, test it like this".
 
-<Aside type="note" title="이 실습의 가계부는 연습용이에요">
-브라우저에 데이터를 저장하는 아주 단순한 앱이에요. 실제 은행 연동, 로그인, 여러 기기 동기화는 들어 있지 않아요. 진짜 개인 금융 정보는 넣지 말고 **연습용 예시 데이터**로만 시험하세요.
+<Aside type="note" title="The expense tracker in this exercise is for practice">
+It's a very simple app that stores data in the browser. It has no real bank connection, login, or multi-device sync. Don't enter real personal financial information; test only with **sample practice data**.
 </Aside>
 
-## 단계별 따라하기
+## Step-by-step guide
+
+The folder name `gaegebu` below is Korean for "household ledger". You can name your folder anything.
 
 <Checklist items={[
-  '빈 폴더 gaegebu를 만들고 그 안에서 claude를 시작했어요',
-  '계획 모드에서 계획을 먼저 받고 읽어 봤어요',
-  '뼈대(입력 폼 + 목록)를 만들고 브라우저에서 열었어요',
-  '지출 한 건을 직접 입력해서 시험했어요',
-  '합계와 삭제 기능을 한 번에 하나씩 추가했어요',
-  '새로고침해도 데이터가 남는지 확인했어요',
-  '일부러 되돌리기를 한 번 해 봤어요',
-  '비밀정보를 폴더에 넣지 않았는지 점검했어요',
+  'I created an empty folder gaegebu and started claude in it',
+  'I got a plan first in plan mode and read it',
+  'I built the skeleton (input form + list) and opened it in the browser',
+  'I entered one expense myself to test it',
+  'I added the total and delete features one at a time',
+  'I confirmed the data remains after refreshing',
+  'I tried undoing on purpose once',
+  'I checked that I hadn\'t put any secrets in the folder',
 ]} />
 
 <Steps>
 
-1. **빈 폴더에서 시작하기**
+1. **Start in an empty folder**
 
-   바탕화면 등에 `gaegebu`라는 빈 폴더를 만들고, 터미널을 그 폴더에서 열어 `claude`를 실행해요. 터미널이 처음이라면 [6편](/coding/06-claude-code-start/)과 [C12](/claude/c12-claude-code-overview/)를 먼저 보세요. 시작 화면의 권한 모드 표시도 6편에서 설명해요.
+   Create an empty folder named `gaegebu` on your desktop or somewhere similar, open a terminal in that folder, and run `claude`. If the terminal is new to you, read [Tutorial 6](/coding/06-claude-code-start/) and [C12](/claude/c12-claude-code-overview/) first. Tutorial 6 also explains the permission mode shown on the start screen.
 
    ```sh
    cd ~/Desktop/gaegebu
    claude
    ```
 
-   처음에는 편집할 때마다 확인을 묻는 모드로 두는 것이 안전해요. `Shift+Tab`을 누르면 모드가 바뀌고 화면 아래에 현재 모드가 보여요.
+   At first, it's safest to stay in the mode that asks for confirmation on every edit. Press `Shift+Tab` to change modes; the current mode is shown at the bottom of the screen.
 
-2. **무엇을 만들지 먼저 말하고 계획 받기**
+2. **Say what you want to build first and get a plan**
 
-   만들고 싶은 것을 한 번에 다 말하지 말고, **최소한의 첫 버전**부터 정해요. 계획 모드(`Shift+Tab`을 눌러 plan mode로, 또는 `claude --permission-mode plan`)에서 시작하면 파일을 바꾸기 전에 계획을 볼 수 있어요.
-
-   <PromptBox>
-   간단한 가계부 웹페이지를 만들고 싶어. 나는 코딩을 전혀 몰라. 첫 버전은 이것만 해 줘. (1) 날짜, 항목, 금액을 입력하는 칸과 추가 버튼 (2) 입력한 내역이 아래 표로 쌓이는 것. 파일은 index.html 하나로만 만들고, 인터넷에 연결하거나 외부 서비스를 쓰지 말아 줘. 어떤 파일을 어떻게 만들지 쉬운 말로 계획부터 알려 줘.
-   </PromptBox>
-
-   계획에서 볼 것은 세 가지예요. 파일이 `index.html` 하나인지, 외부 서비스에 연결하지 않는지, 내가 말한 기능만 들어 있는지요. 아니면 말로 고쳐 달라고 하세요.
-
-3. **승인하고 뼈대 만들기**
-
-   계획이 괜찮으면 승인해서 실행해요. 변경을 확인하는 화면이 나오면 **어떤 파일을 만드는지**만 보면 돼요. 폴더 안의 `index.html`이 맞으면 Yes를 선택해요. 승인 화면 읽는 법은 [6편](/coding/06-claude-code-start/)의 3단계에 있어요.
-
-   <ScreenshotPlaceholder caption="Claude Code가 파일 변경을 승인해 달라고 묻는 화면" officialUrl="https://code.claude.com/docs/en/quickstart#step-4-make-your-first-code-change" />
-
-4. **내 컴퓨터에서 열어 보고 직접 눌러 보기**
-
-   `index.html`을 더블클릭하면 브라우저에서 열려요. 열리지 않거나 헷갈리면 Claude에게 물어보세요.
+   Don't say everything you want at once; decide on a **minimal first version**. If you start in plan mode (press `Shift+Tab` to get to plan mode, or use `claude --permission-mode plan`), you can see the plan before any files change.
 
    <PromptBox>
-   만든 index.html을 내 컴퓨터 브라우저에서 여는 방법을 알려 줘. 그리고 잘 동작하는지 내가 직접 해 볼 시험 목록을 3개만 만들어 줘. 예를 들면 "항목 1건을 입력하고 추가를 누르면 표에 보여야 한다" 같은 식으로.
+   I want to make a simple expense tracker web page. I know nothing about coding. For the first version, just do this. (1) Fields to enter a date, item, and amount, plus an Add button (2) The entries I add stack up in a table below. Make it as a single index.html file only, and don't connect to the internet or use any outside services. First tell me, in plain language, which files you'll create and how.
    </PromptBox>
 
-   목록대로 **직접 입력하고 눌러 봐요.** 예시 데이터는 "10월 1일 / 점심 / 9000" 정도면 충분해요. 코드를 읽지 못해도 화면은 읽을 수 있어요. 문제가 있으면 본 대로 설명하세요. "추가를 눌렀는데 표에 아무것도 안 생겨"처럼요.
+   There are three things to look for in the plan: that it's a single `index.html` file, that it doesn't connect to outside services, and that it includes only the features you mentioned. If not, ask for it to be fixed in plain words.
 
-   <Aside type="tip" title="파일 대신 주소로 열고 싶다면">
-   브라우저마다 파일을 직접 연 페이지의 저장 기능이 다르게 동작할 수 있어요. 데이터가 저장되지 않는다면 "내 컴퓨터에서 이 페이지를 간단한 로컬 서버로 여는 방법을 알려 줘"라고 요청해 보세요. Claude가 명령을 실행하려고 하면 승인을 묻는 화면이 나오니, 어떤 명령인지 읽어 보고 허용하세요. 공식 문서에서 이 부분의 정확한 동작은 확인하지 못했어요.
+3. **Approve and build the skeleton**
+
+   If the plan looks good, approve it to run. When the screen asking you to confirm changes appears, just look at **which file is being created**. If it's `index.html` in your folder, choose Yes. How to read the approval screen is in step 3 of [Tutorial 6](/coding/06-claude-code-start/).
+
+   <ScreenshotPlaceholder caption="The screen where Claude Code asks you to approve file changes" officialUrl="https://code.claude.com/docs/en/quickstart#step-4-make-your-first-code-change" />
+
+4. **Open it on your computer and click through it yourself**
+
+   Double-click `index.html` to open it in your browser. If it doesn't open or you're confused, ask Claude.
+
+   <PromptBox>
+   Tell me how to open the index.html you made in my computer's browser. Then write me just 3 tests I can try myself to see if it works. For example, something like "If I enter 1 entry and click Add, it should show up in the table".
+   </PromptBox>
+
+   **Enter things and click through it yourself**, following the list. Sample data like "Oct 1 / Lunch / 9000" is plenty. Even if you can't read code, you can read the screen. If there's a problem, describe it as you saw it, like "I clicked Add but nothing appeared in the table".
+
+   <Aside type="tip" title="If you want to open it by address instead of as a file">
+   How saving works on a page opened directly as a file can differ from browser to browser. If your data isn't being saved, ask, "Tell me how to open this page on my computer with a simple local server." When Claude tries to run a command, an approval screen appears, so read what the command is and then allow it. We couldn't confirm the exact behavior of this in the official documentation.
    </Aside>
 
-5. **기능을 하나씩 추가하기**
+5. **Add features one at a time**
 
-   뼈대가 잘 보이면 기능을 **한 번에 하나씩** 추가해요. 한 번에 여러 개를 시키면 어디가 잘못됐는지 찾기 어려워요. 아래 요청을 순서대로 하나씩 해 보세요.
+   Once the skeleton looks good, add features **one at a time**. If you ask for several at once, it's hard to find what went wrong. Try the requests below one by one, in order.
 
    <PromptBox>
-   입력한 내역이 새로고침해도 사라지지 않도록, 이 브라우저 안에 저장되게 해 줘. 외부 서버에는 아무것도 보내지 말아 줘. 바꾼 뒤에 내가 어떻게 시험하면 되는지도 알려 줘.
+   Make the entries I add stay saved in this browser so they don't disappear when I refresh. Don't send anything to an outside server. After you change it, also tell me how I should test it.
    </PromptBox>
 
    <PromptBox>
-   표 맨 아래에 전체 합계 금액을 보여 주고, 각 줄 끝에 삭제 버튼을 달아 줘. 삭제 전에는 정말 지울지 한 번 물어봐 줘.
+   At the bottom of the table, show the overall total, and add a Delete button at the end of each row. Ask me once to confirm before deleting.
    </PromptBox>
 
    <PromptBox>
-   금액은 숫자만 입력할 수 있게 하고, 항목이나 금액이 비어 있으면 추가되지 않게 해 줘. 그리고 지출 말고 수입도 입력할 수 있게 구분 칸을 하나 추가해 줘.
+   Allow only numbers in the amount field, and don't add an entry if the item or amount is empty. Also add one selector so I can enter income as well as expenses.
    </PromptBox>
 
-   요청할 때마다 브라우저를 새로고침(F5)하고, 방금 바뀐 부분만 직접 눌러 확인해요. 막히면 [빠른 참조표](#빠른-참조표)의 문장 틀을 쓰세요.
+   Each time you ask, refresh the browser (F5) and click through only the part that just changed. If you get stuck, use the sentence patterns in the [Quick reference](#quick-reference).
 
-6. **다듬기: 화면 보고 말하기**
+6. **Polish it: look at the screen and say what you see**
 
-   기능이 되면 모양을 다듬어요. 화면을 보고 **구체적으로** 말할수록 결과가 좋아져요. "더 예쁘게"보다는 아래처럼요.
+   Once the features work, polish the look. The more **specific** you are while looking at the screen, the better the result. Instead of "make it prettier", try something like the following.
 
    <PromptBox>
-   글자를 조금 키우고, 표의 줄마다 번갈아 연한 배경색을 넣어 줘. 수입은 파란색, 지출은 빨간색 글씨로 보여 줘. 휴대폰 화면에서도 가로로 넘치지 않게 해 줘. 바뀐 점을 3줄 이내로 요약해 줘.
+   Make the text a little bigger and give alternating rows of the table a light background color. Show income in blue text and expenses in red text. Make sure it doesn't overflow sideways on a phone screen. Summarize what changed in 3 lines or fewer.
    </PromptBox>
 
-   화면 일부를 캡처해서 붙여 넣고 "이 모양처럼 만들어 줘"라고 할 수도 있어요. 공식 모범 사례도 화면 변경은 이미지를 보여 주고 결과와 비교하게 하는 방식을 예로 들어요.
+   You can also capture part of the screen, paste it in, and say, "Make it look like this." The official best practices also give an example of showing an image for screen changes and having it compare against the result.
 
-   <ScreenshotPlaceholder caption="완성된 가계부 페이지 예시 (연습용 데이터)" />
+   <ScreenshotPlaceholder caption="An example of the finished expense tracker page (practice data)" />
 
-7. **마음에 안 들면 되돌리기**
+7. **Undo if you don't like it**
 
-   일부러 이상한 변경을 요청해 보고 되돌려 보세요. 세션에서 `Esc`를 두 번 누르거나 `/rewind`를 입력하면 이전 체크포인트로 대화와 코드를 되돌리는 메뉴가 열려요. 되돌릴 대상은 대화만, 코드만, 둘 다 중에서 고를 수 있어요(공식 문서 2026-10-26 기준).
+   Try asking for a strange change on purpose, then undo it. In a session, press `Esc` twice or type `/rewind` and a menu opens for restoring the conversation and code to an earlier checkpoint. You can choose what to restore: the conversation only, the code only, or both (as of the official docs, 2026-10-26).
 
-   <FlowSteps title="변경이 마음에 안 들 때" officialUrl="https://code.claude.com/docs/en/best-practices" steps={[
-     { where: '브라우저', action: '새로고침하고 직접 눌러 보기', result: '문제를 발견' },
-     { where: 'Claude Code 세션', action: 'Esc를 두 번 누르거나 /rewind 입력', result: '되돌릴 지점 목록' },
-     { where: '되돌리기 메뉴', action: '문제가 생기기 전 지점을 고르고 복원 대상(대화·코드·둘 다) 선택', result: '파일이 이전 상태로 돌아옴' },
-     { where: '프롬프트', action: '더 구체적으로 다시 요청하기', result: '새 시도' },
+   <FlowSteps title="When you don't like a change" officialUrl="https://code.claude.com/docs/en/best-practices" steps={[
+     { where: 'Browser', action: 'Refresh and click through it yourself', result: 'You spot a problem' },
+     { where: 'Claude Code session', action: 'Press Esc twice or type /rewind', result: 'A list of restore points' },
+     { where: 'Rewind menu', action: 'Choose a point before the problem started, then choose what to restore (conversation, code, or both)', result: 'The files go back to an earlier state' },
+     { where: 'Prompt', action: 'Ask again, more specifically', result: 'A fresh attempt' },
    ]} />
 
-   <Aside type="caution" title="되돌리기의 한계">
-   체크포인트는 Claude의 파일 편집 도구로 바뀐 것만 기록해요. 터미널 명령이나 외부 프로세스로 바뀐 것은 기록되지 않고, 공식 문서도 Git을 대체하지 않는다고 해요. 중요한 결과물은 별도 폴더에 복사해 두세요. Git 사용은 [8편](/coding/08-cloud-github/)에서 다뤄요.
+   <Aside type="caution" title="Limits of undoing">
+   Checkpoints only record what was changed by Claude's file-editing tools. Changes made by terminal commands or outside processes aren't recorded, and the official docs also say it doesn't replace Git. Copy important results into a separate folder. Using Git is covered in [Tutorial 8](/coding/08-cloud-github/).
    </Aside>
 
-8. **안전 점검하고 마무리하기**
+8. **Do a safety check and wrap up**
 
-   앱이 마음에 들면 다음 점검을 하고 끝내요. 자세한 이유는 아래 [안전하게 쓰기](#안전하게-쓰기)에 있어요.
+   Once you're happy with the app, do the following check and finish. The detailed reasons are in [Using it safely](#using-it-safely) below.
 
    <PromptBox>
-   이 폴더의 모든 파일을 훑어보고 다음을 알려 줘. (1) 비밀번호, API 키, 개인정보로 보이는 내용이 있는지 (2) 인터넷으로 데이터를 보내는 코드가 있는지 (3) 파일 목록과 각 파일의 역할. 아직 아무것도 바꾸지 말고 보고만 해 줘.
+   Look through all the files in this folder and tell me the following. (1) Whether anything looks like passwords, API keys, or personal information (2) Whether any code sends data over the internet (3) A list of the files and what each one does. Don't change anything yet; just report.
    </PromptBox>
 
-   내일 이어서 하고 싶다면 같은 폴더에서 `claude -c`(가장 최근 대화 이어가기)나 `claude -r`(고르기)를 쓰세요. 안내 메모(CLAUDE.md) 만드는 법은 [6편](/coding/06-claude-code-start/)의 7단계를 보세요.
+   To pick this up tomorrow, use `claude -c` (continue the most recent conversation) or `claude -r` (pick one) in the same folder. For how to create the guide note (CLAUDE.md), see step 7 of [Tutorial 6](/coding/06-claude-code-start/).
 
 </Steps>
 
-## 안전하게 쓰기
+## Using it safely
 
-코드를 모른다고 해서 위험한 것은 아니지만, **"AI가 알아서 했겠지"** 하고 넘어가는 습관이 가장 위험해요. 아래 다섯 가지를 지키면 대부분의 사고를 막을 수 있어요.
+Not knowing code isn't what's dangerous; the most dangerous habit is **assuming "the AI must have handled it"** and moving on. Following the five habits below prevents most accidents.
 
-| 습관 | 이유와 방법 |
+| Habit | Why and how |
 | --- | --- |
-| **승인 화면을 읽는다** | 어떤 파일을 만들거나 바꾸는지, 실행하려는 명령이 무엇인지 봐요. 모르는 명령이면 "이 명령이 뭘 하는지 설명해 줘"라고 먼저 물어요. |
-| **작은 요청, 자주 확인** | 한 번에 한두 가지만 바꾸고 브라우저로 확인해요. 공식 문서도 같은 문제로 두 번 넘게 고쳤다면 `/clear`로 새로 시작해 더 구체적으로 요청하라고 해요. |
-| **비밀정보를 넣지 않는다** | 비밀번호, API 키, 카드·계좌 번호, 주민등록번호는 대화에도, 폴더 안 파일에도 두지 마세요. Claude Code는 작업 폴더의 파일을 읽을 수 있어요. |
-| **자동 승인은 천천히** | 편집 자동 승인이나 자동 모드는 익숙해진 뒤에 되돌릴 수 있는 폴더에서만 쓰세요. 권한이 어떻게 평가되는지는 아래에 설명해요. |
-| **공개 전에 점검한다** | 웹에 올리면 누구나 볼 수 있어요. 개인 내역이 들어 있지 않은지 꼭 확인하세요. 공개 방법은 [8편](/coding/08-cloud-github/)에 있어요. |
+| **Read the approval screen** | Look at which files are being created or changed and what command it's trying to run. If you don't know a command, first ask, "Explain what this command does." |
+| **Small requests, frequent checks** | Change just one or two things at a time and check in the browser. The official docs also say that if you've corrected the same problem more than twice, start fresh with `/clear` and ask more specifically. |
+| **Don't put in secrets** | Don't keep passwords, API keys, card or account numbers, or national ID numbers in the conversation or in files in the folder. Claude Code can read files in your working folder. |
+| **Go slowly with auto-approval** | Use edit auto-approval or auto mode only after you're comfortable, and only in folders where you can undo changes. How permissions are evaluated is explained below. |
+| **Check before publishing** | Anything you put on the web can be seen by anyone. Be sure it doesn't contain personal records. See [Tutorial 8](/coding/08-cloud-github/) for how to publish. |
 
-### 읽으면 안 되는 파일을 막아 두기 (선택)
+### Blocking files that shouldn't be read (optional)
 
-폴더에 `.env` 같은 비밀 설정 파일이 있다면 Claude가 읽지 못하게 규칙을 걸 수 있어요. 공식 문서의 권한 규칙은 `deny`(거부), `ask`(확인), `allow`(허용) 순으로 평가되고, **거부가 항상 우선**해요. `Read(./.env)`는 현재 폴더의 `.env` 읽기를 가리키는 규칙 형식이에요. 프로젝트 설정 파일 `.claude/settings.json`에 이렇게 적어요.
+If the folder has a secret config file like `.env`, you can set a rule so Claude can't read it. In the official docs, permission rules are evaluated in the order `deny`, `ask`, `allow`, and **deny always takes priority**. `Read(./.env)` is the rule format that refers to reading the `.env` in the current folder. Write it like this in the project settings file `.claude/settings.json`.
 
 ```json
 {
@@ -199,75 +201,75 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 }
 ```
 
-세션 안에서 `/permissions`를 입력하면 현재 규칙과 그 규칙이 어느 설정 파일에서 왔는지 볼 수 있어요. 다만 공식 문서는 Bash 규칙이 같은 프로그램의 다른 호출 형태까지 막아 주지는 않는다고 설명해요. 규칙은 보조 장치일 뿐이니, **가장 확실한 방법은 비밀정보를 작업 폴더에 두지 않는 것**이에요. 이 규칙이 모든 경우에 막아 주는지는 공식 문서에서 확인하지 못했어요.
+If you type `/permissions` in a session, you can see the current rules and which settings file each rule came from. However, the official docs explain that a Bash rule doesn't block other call forms of the same program. Rules are only a supplementary safeguard, so **the surest method is not to keep secrets in your working folder at all**. We couldn't confirm in official documentation whether this rule blocks in every case.
 
-<Aside type="caution" title="'Yes, and don't ask again'은 신중히">
-이 선택지를 고르면 허용 규칙이 저장돼서 이후 같은 종류의 동작을 묻지 않고 실행해요. 공식 문서에 따르면 영구 저장되는 경우 `.claude/settings.local.json`에 기록돼요. 잘 모르는 명령이라면 이번 한 번만 허용하세요.
+<Aside type="caution" title="Be careful with 'Yes, and don't ask again'">
+If you choose this option, an allow rule is saved and the same kind of action runs afterward without asking. According to the official docs, when it's saved permanently it's recorded in `.claude/settings.local.json`. If it's a command you don't fully understand, allow it just this once.
 </Aside>
 
-## 빠른 참조표
+## Quick reference
 
-### 프롬프트 문장 틀
+### Prompt sentence patterns
 
-| 상황 | 이렇게 말해 보세요 |
+| Situation | Try saying this |
 | --- | --- |
-| 처음 시작 | "첫 버전은 이것만 해 줘: (1)… (2)…. 파일은 index.html 하나로. 계획부터 알려 줘." |
-| 기능 추가 | "[기능] 하나만 추가해 줘. 바꾼 뒤에 내가 시험할 방법도 알려 줘." |
-| 오류 신고 | "[눌렀을 때] [이런 일이 생겨야 하는데] [이렇게 됐어]. 원인을 찾아서 고쳐 줘." |
-| 모양 수정 | "[어느 부분]을 [어떻게] 바꿔 줘. 나머지는 그대로 둬." |
-| 이해가 안 될 때 | "방금 바꾼 내용을 코딩을 모르는 사람에게 설명하듯 알려 줘." |
-| 점검 | "비밀정보나 외부로 데이터를 보내는 코드가 있는지 보고만 해 줘. 바꾸지는 마." |
-| 이어서 할 때 | 같은 폴더에서 `claude -c` |
+| Starting out | "For the first version, just do this: (1)… (2)…. As a single index.html file. Tell me the plan first." |
+| Adding a feature | "Add just one thing: [feature]. After you change it, also tell me how I can test it." |
+| Reporting an error | "When I [click X], [this should happen], but [this happened]. Find the cause and fix it." |
+| Changing the look | "Change [which part] to [how]. Leave everything else as is." |
+| When you don't understand | "Explain the change you just made as if to someone who doesn't know coding." |
+| Checking | "Just report whether there's any secret info or code that sends data outside. Don't change anything." |
+| Picking up later | `claude -c` in the same folder |
 
-### 자주 쓰는 키와 명령
+### Frequently used keys and commands
 
-| 키·명령 | 하는 일 |
+| Key / command | What it does |
 | --- | --- |
-| `Shift+Tab` | 권한 모드 바꾸기(계획 모드 포함) |
-| `Esc` 두 번, `/rewind` | 체크포인트로 되돌리기 메뉴 |
-| `/clear` | 새 대화 시작(파일은 그대로) |
-| `/permissions` | 권한 규칙 보기·관리 |
-| `claude -c` / `claude -r` | 최근 대화 이어가기 / 골라서 이어가기 |
+| `Shift+Tab` | Change permission mode (including plan mode) |
+| `Esc` twice, `/rewind` | Menu for restoring a checkpoint |
+| `/clear` | Start a new conversation (files stay as they are) |
+| `/permissions` | View and manage permission rules |
+| `claude -c` / `claude -r` | Continue the most recent conversation / pick one to continue |
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 만들 때마다 파일이 늘어나요
+### More files appear every time I build
 
-- **원인**: 요청에서 범위를 정하지 않았어요.
-- **해결**: "파일은 index.html 하나로만"이라고 명시하세요. 이미 늘었다면 되돌리고 다시 요청하세요.
+- **Cause**: The request didn't set a scope.
+- **Fix**: State explicitly, "Only one index.html file." If extra files already exist, undo and ask again.
 
-### 새로고침하면 입력한 내역이 사라져요
+### My entries disappear when I refresh
 
-- **원인**: 저장 기능이 없거나, 파일로 연 페이지에서 브라우저가 저장을 막았을 수 있어요(브라우저마다 달라질 수 있어요).
-- **해결**: "새로고침해도 남게 해 줘"를 다시 요청하고, 그래도 안 되면 4단계 팁처럼 로컬 서버로 여는 방법을 물어보세요.
+- **Cause**: There may be no saving feature, or the browser may block saving on a page opened as a file (this can vary by browser).
+- **Fix**: Ask again, "Make it persist even after refreshing". If that still doesn't work, ask how to open it with a local server, as in the tip in step 4.
 
-### 고칠수록 더 이상해져요
+### The more I fix, the weirder it gets
 
-- **원인**: 대화에 실패한 시도가 쌓여서 헷갈리는 상태일 수 있어요.
-- **해결**: 공식 문서의 권장대로 `/clear`로 새로 시작하고, 지금 상태와 원하는 결과를 더 구체적으로 적어서 요청하세요. 그 전에 `/rewind`로 잘 되던 시점으로 되돌릴 수도 있어요.
+- **Cause**: Failed attempts may have piled up in the conversation and left it confused.
+- **Fix**: As the official docs recommend, start fresh with `/clear` and ask by describing the current state and the result you want more specifically. Before that, you can also use `/rewind` to go back to a point where it worked well.
 
-### 승인 질문이 너무 자주 나와요
+### Approval questions come up too often
 
-- **원인**: 확인을 묻는 모드는 변경마다 승인을 요구해요.
-- **해결**: 익숙해지면 `Shift+Tab`으로 편집 자동 승인 모드를 쓸 수 있지만, 빈 폴더나 Git 저장소처럼 되돌릴 수 있는 곳에서만 쓰세요. 모드 설명은 [C14](/claude/c14-claude-code-features/)에 있어요.
+- **Cause**: The confirm-first mode requires approval for every change.
+- **Fix**: Once you're comfortable, you can use edit auto-approval mode with `Shift+Tab`, but only where you can undo, such as an empty folder or a Git repository. Modes are explained in [C14](/claude/c14-claude-code-features/).
 
-### Claude가 자신 있게 말하는데 화면이 달라요
+### Claude sounds confident but the screen is different
 
-- **원인**: Claude가 "됐다"고 말해도 실제로는 빠뜨린 부분이 있을 수 있어요.
-- **해결**: 말만 믿지 말고 직접 눌러 보세요. 공식 문서도 성공 주장 대신 실행 결과나 스크린샷 같은 증거를 보여 달라고 하라고 권해요.
+- **Cause**: Even when Claude says "done", it may have missed something.
+- **Fix**: Don't just trust the words; click through it yourself. The official docs also recommend asking for evidence like run results or screenshots instead of claims of success.
 
-## 실전 팁
+## Practical tips
 
-- **작게 시작해 키우세요.** 가계부 다음에는 월별 보기, 카테고리별 합계처럼 한 가지씩 늘려요.
-- **원하는 결과를 숫자와 예시로 말하세요.** "합계가 맞게" 대신 "9000원과 3500원을 넣으면 합계가 12500원이어야 해"라고 하면 Claude도, 나도 확인하기 쉬워요.
-- **같은 것을 두 번 설명하지 마세요.** 반복해서 알려 줄 규칙은 CLAUDE.md에 적어 두면 다음 세션에서도 읽어요([6편](/coding/06-claude-code-start/), [C14](/claude/c14-claude-code-features/)).
-- **쓰는 양이 걱정되면** [C2](/claude/c02-plans-limits/)의 사용량 안내를 먼저 보세요.
-- **만든 걸 세상에 내보내고 싶다면** 개인 내역을 지운 다음 [8편](/coding/08-cloud-github/)의 GitHub Pages 공개 실습을 따라가세요. 비용과 조건은 그쪽에서 확인하세요.
+- **Start small and grow it.** After the expense tracker, add one thing at a time, like a monthly view or totals by category.
+- **Describe the result you want with numbers and examples.** Instead of "the total should be right", say "if I enter 9000 and 3500, the total should be 12500". That makes it easy for both Claude and you to check.
+- **Don't explain the same thing twice.** Rules you'd keep telling it go in CLAUDE.md, which it reads again in the next session ([Tutorial 6](/coding/06-claude-code-start/), [C14](/claude/c14-claude-code-features/)).
+- **If you're worried about how much you're using**, see the usage guide in [C2](/claude/c02-plans-limits/) first.
+- **If you want to put what you made out into the world**, remove the personal records and then follow the GitHub Pages publishing exercise in [Tutorial 8](/coding/08-cloud-github/). Check costs and conditions there.
 
-## 다음에 볼 튜토리얼
+## Next tutorials
 
-- [6. Claude Code 시작하기](/coding/06-claude-code-start/) — 이 편의 바로 앞 단계
-- [7. 코딩을 몰라도 되는 업무용 웹 도구 만들기](/coding/07-no-code-web-tools/) — 업무용 계산기
-- [8. 클라우드 세션 작업 맡기기](/coding/08-cloud-github/) — Git과 웹 공개
-- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — 권한 모드, CLAUDE.md, 되돌리기
-- [직장인 가이드](/roles/office/) · [1인 사업자 가이드](/roles/solo-business/) · [학생 가이드](/roles/student/) — 직무별 활용법
+- [6. Getting started with Claude Code](/coding/06-claude-code-start/) — the step right before this one
+- [7. Building work web tools without coding](/coding/07-no-code-web-tools/) — a work calculator
+- [8. Handing off work to cloud sessions](/coding/08-cloud-github/) — Git and publishing on the web
+- [C14. Claude Code core features](/claude/c14-claude-code-features/) — permission modes, CLAUDE.md, undoing
+- [Office worker guide](/roles/office/) · [Solo business owner guide](/roles/solo-business/) · [Student guide](/roles/student/) — how to use it by role

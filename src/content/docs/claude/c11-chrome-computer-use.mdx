@@ -1,16 +1,16 @@
 ---
-title: "Claude in Chrome과 컴퓨터 사용"
-description: "브라우저 작업은 Claude in Chrome에, 앱 화면 조작은 컴퓨터 사용(Computer use)에 맡기는 방법과 안전 수칙을 정리한 참고서"
+title: "Claude in Chrome and computer use"
+description: "A reference for handing browser tasks to Claude in Chrome and app-screen control to Computer use, plus safety rules"
 sidebar:
-  label: "C11. Chrome과 컴퓨터 사용"
+  label: "C11. Chrome and computer use"
 level: practical
 category: claude
 tools: ["Claude in Chrome", "Claude Desktop", "Claude Code"]
-duration: "30분"
+duration: "30 min"
 prerequisites:
-  - "Claude 유료 플랜 (Chrome 확장은 Pro·Max·Team·Enterprise, 컴퓨터 사용은 Pro·Max)"
-  - "Google Chrome과 Chrome 웹 스토어에서 설치할 수 있는 환경"
-  - "(컴퓨터 사용) macOS 또는 Windows의 Claude Desktop 앱"
+  - "A paid Claude plan (the Chrome extension: Pro, Max, Team, Enterprise; computer use: Pro, Max)"
+  - "Google Chrome and an environment where you can install from the Chrome Web Store"
+  - "(Computer use) The Claude Desktop app on macOS or Windows"
 lastVerified: 2026-10-31
 sources:
   - title: "Claude pricing"
@@ -40,212 +40,212 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
-- **Claude in Chrome**은 Chrome 안에서 Claude가 페이지를 읽고 클릭·입력·이동을 대신 해 주는 확장 프로그램이에요. 모든 유료 플랜에서 써요. Cowork 기반 새 사이드 패널은 단계적으로 롤아웃 중이에요(2026-10-26 기준, 도움말은 Claude in Chrome 자체를 베타로 표기하지 않아요).
-- **컴퓨터 사용(Computer use)**은 커넥터나 브라우저로 안 될 때 Claude가 내 컴퓨터 화면의 앱을 직접 조작하는 기능이에요. Pro와 Max에서 베타이고, Team·Enterprise는 현재 쓸 수 없다고 안내돼요(2026-10-10 기준).
-- 컴퓨터 사용은 macOS와 Windows의 Claude Desktop 앱 안(Cowork, Claude Code)에서 써요. Linux 데스크톱은 안 돼요.
-- 도구 우선순위는 **커넥터 → 브라우저 → 화면 조작**이에요. 화면 조작이 가장 느리고 오류 가능성이 높아요.
-- **은행·의료·정부 앱, 금융 계좌, 법률 문서에는 쓰지 마세요.** 컴퓨터 사용에는 샌드박스가 없어서 화면에 보이는 모든 정보를 Claude가 볼 수 있어요.
+- **Claude in Chrome** is an extension that lets Claude read pages in Chrome and click, type, and navigate for you. It works on all paid plans. The new Cowork-based side panel is rolling out in stages (as of 2026-10-26; the help doesn't label Claude in Chrome itself as beta).
+- **Computer use** lets Claude operate apps on your computer screen directly when connectors or the browser won't do. It's in beta on Pro and Max, and the help says it's currently unavailable on Team and Enterprise (as of 2026-10-10).
+- Computer use runs inside the Claude Desktop app (Cowork, Claude Code) on macOS and Windows. It doesn't work on Linux desktops.
+- The tool priority is **connectors, then the browser, then screen control**. Screen control is the slowest and most error-prone.
+- **Don't use it with banking, medical, or government apps, financial accounts, or legal documents.** Computer use has no sandbox, so Claude can see everything on your screen.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do
 
-- 작업에 맞게 커넥터, Claude in Chrome, 컴퓨터 사용 중 알맞은 도구를 고를 수 있어요.
-- Chrome 확장을 설치하고 사이드 패널에서 첫 작업을 맡길 수 있어요.
-- 권한 모드와 사이트별 허용을 이해하고 안전하게 설정할 수 있어요.
-- 데스크톱 앱에서 컴퓨터 사용을 켜고, 민감 정보를 지키면서 작은 작업부터 시도할 수 있어요.
+- Pick the right tool for the job among connectors, Claude in Chrome, and computer use.
+- Install the Chrome extension and hand off your first task from the side panel.
+- Understand permission modes and per-site approvals, and set them up safely.
+- Turn on computer use in the desktop app and start with small tasks while protecting sensitive information.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **Claude in Chrome** | Chrome 확장 프로그램이에요. 페이지 읽기, 클릭, 입력, 이동, 양식 작성, 여러 탭 관리를 해요. Claude Cowork와 Claude Code에서 쓸 수 있어요. |
-| **사이드 패널** | Chrome 옆에 열리는 Claude 창이에요. 새 Cowork 기반 패널은 단계적으로 롤아웃 중이고, Enterprise는 소유자가 Claude in Chrome과 클라우드 Cowork를 켜야 새 패널을 쓸 수 있어요(2026-10-26 기준). 이전 방식은 패널의 점 세 개 메뉴에서 "Switch back to classic"으로 돌아갈 수 있어요. |
-| **컴퓨터 사용(Computer use)** | Claude가 화면을 보고 클릭·입력·앱 열기·이동을 직접 하는 기능이에요. 컴퓨터가 켜져 있으면 자리를 비워도 계속 작업해요. |
-| **Cowork** | Claude Desktop 안에서 작업을 맡기는 공간이에요. 컴퓨터 사용은 여기와 Claude Code에서 쓸 수 있어요. |
-| **권한 모드** | Claude가 동작하기 전에 얼마나 승인을 받을지 정하는 설정이에요. |
+| **Claude in Chrome** | A Chrome extension. It reads pages, clicks, types, navigates, fills in forms, and manages multiple tabs. Available in Claude Cowork and Claude Code. |
+| **Side panel** | The Claude window that opens next to Chrome. The new Cowork-based panel is rolling out in stages, and on Enterprise an owner has to turn on Claude in Chrome and cloud Cowork before you can use the new panel (as of 2026-10-26). To go back to the old version, use "Switch back to classic" in the panel's three-dot menu. |
+| **Computer use** | A feature where Claude looks at the screen and clicks, types, opens apps, and navigates directly. If your computer stays on, it keeps working while you're away. |
+| **Cowork** | A space inside Claude Desktop where you hand off tasks. You can use computer use here and in Claude Code. |
+| **Permission mode** | A setting for how much approval Claude asks for before it acts. |
 
-### 어떤 도구를 쓸까요?
+### Which tool should you use?
 
-Claude는 가능하면 더 빠르고 안정적인 방법을 먼저 쓰도록 되어 있어요. 우선순위는 이래요.
+Claude is set up to try the faster, more reliable method first whenever possible. The priority is:
 
-| 순서 | 방법 | 설명 |
+| Order | Method | Description |
 | --- | --- | --- |
-| 1 | **커넥터** | Gmail, Drive 같은 서비스에 직접 연결해요. 가장 빠르고 정확해요. [C7. 커넥터로 Gmail·캘린더·Drive·Notion 연결하기](/claude/c07-connectors/) 참고. |
-| 2 | **브라우저** | 내장 브라우저 또는 Claude in Chrome으로 웹페이지를 조작해요. |
-| 3 | **화면 조작** | 컴퓨터 사용으로 앱 화면을 직접 조작해요. 가장 느리고 오류 가능성이 높아요. |
+| 1 | **Connectors** | Connect directly to services like Gmail and Drive. The fastest and most accurate. See [C7. Connecting Gmail, Calendar, Drive, and Notion with connectors](/claude/c07-connectors/). |
+| 2 | **Browser** | Operate web pages with the built-in browser or Claude in Chrome. |
+| 3 | **Screen control** | Operate app screens directly with computer use. The slowest and most error-prone. |
 
-<Aside type="caution" title="문서마다 다른 점 (2026-10-10 기준)">
-- **지원 브라우저**: 지원센터 문서는 Chrome 전용이고 다른 Chromium 브라우저와 모바일은 지원하지 않는다고 설명해요. 반면 Claude Code 문서는 Chrome과 Edge에서 동작하고, Brave·Arc 등 다른 Chromium 브라우저도 연결을 설정한다고 적혀 있어요. 쓰려는 환경은 각 공식 문서에서 최신 내용을 확인하세요.
-- **컴퓨터 사용 플랜**: 지원센터 문서는 Pro·Max 베타, Team·Enterprise 불가로 안내해요. 플랜별 제공은 자주 바뀌므로 Claude Desktop의 설정 화면에서 실제 표시를 확인하세요.
+<Aside type="caution" title="Where the docs disagree (as of 2026-10-10)">
+- **Supported browsers**: The Help Center doc says it's Chrome only, with no support for other Chromium browsers or mobile. The Claude Code doc, on the other hand, says it works in Chrome and Edge, and that other Chromium browsers such as Brave and Arc can be set up to connect. Check each official doc for the latest on the environment you plan to use.
+- **Plans for computer use**: The Help Center doc says Pro and Max beta, not available on Team or Enterprise. Availability by plan changes often, so check what actually shows in Claude Desktop's settings.
 </Aside>
 
-<Aside type="note" title="Chrome 확장의 사용량">
-Chrome 확장이 사용량을 얼마나 쓰는지는 공식 시작 가이드에 수치가 없고 공개하지 않아요(2026-10-13 확인). Auto 방식은 추가 안전 검사 때문에 사용량이 더 들 수 있다는 안내가 있는 정도예요. 한도는 [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/)와 설정(Settings) > 사용량(Usage)에서 확인하세요.
+<Aside type="note" title="Chrome extension usage">
+How much usage the Chrome extension consumes isn't given as a number in the official getting-started guide, and it isn't disclosed (confirmed 2026-10-13). All it says is that the Auto mode may use more because of extra safety checks. Check your limits in [C2. Plans and usage limits](/claude/c02-plans-limits/) and Settings > Usage.
 </Aside>
 
-## 단계별 따라하기
+## Step by step
 
 <Checklist items={[
-  'Chrome 웹 스토어에서 Claude 확장을 설치하고 로그인했어요',
-  '확장을 고정하고 권한을 허용했어요',
-  '사이드 패널에서 첫 작업을 요청했어요',
-  '권한 모드를 확인하고 사이트별 허용을 검토했어요',
-  '(선택) Claude Desktop에서 컴퓨터 사용을 켰어요',
-  '민감한 앱을 닫고 작은 작업으로 컴퓨터 사용을 시험했어요',
+  'I installed the Claude extension from the Chrome Web Store and signed in',
+  'I pinned the extension and granted the permissions',
+  'I asked for a first task in the side panel',
+  'I checked the permission mode and reviewed per-site approvals',
+  '(Optional) I turned on computer use in Claude Desktop',
+  'I closed sensitive apps and tried computer use on a small task',
 ]} />
 
 <Steps>
 
-1. **Chrome 확장 설치하기**
+1. **Install the Chrome extension**
 
-   Google Chrome에서 Chrome 웹 스토어로 가서 Claude 확장 프로그램을 추가해요. 설치 후 Claude 계정으로 로그인하고, 퍼즐 아이콘에서 고정(pin)한 뒤 요청하는 권한을 허용해요.
+   In Google Chrome, go to the Chrome Web Store and add the Claude extension. After installing, sign in with your Claude account, pin it from the puzzle icon, and grant the permissions it asks for.
 
-   <ScreenshotPlaceholder caption="Chrome 웹 스토어의 Claude 확장 설치와 퍼즐 아이콘 고정 화면" officialUrl="https://support.claude.com/en/articles/12012173-get-started-with-claude-in-chrome" />
+   <ScreenshotPlaceholder caption="Installing the Claude extension from the Chrome Web Store and pinning it from the puzzle icon" officialUrl="https://support.claude.com/en/articles/12012173-get-started-with-claude-in-chrome" />
 
-   Claude Desktop 앱에서 쓰려면 설정(Settings) > Customize > Connectors에서 Claude in Chrome의 구성(Configure)으로 켜요(2026-10-26 기준 도움말 경로). 대화마다 기본은 꺼져 있어요.
+   To use it from the Claude Desktop app, turn it on from Claude in Chrome's Configure in Settings > Customize > Connectors (the help's path as of 2026-10-26). It's off by default for each conversation.
 
-2. **사이드 패널에서 첫 작업 맡기기**
+2. **Hand off a first task from the side panel**
 
-   지금 보고 있는 페이지로 간단한 작업부터 시작해요.
+   Start with something simple on the page you're looking at.
 
    <PromptBox>
-   이 페이지에 있는 표를 읽고, 항목별로 핵심만 뽑아서 간단한 목록으로 정리해 주세요. 페이지의 내용은 바꾸지 마세요.
+   Read the table on this page and pull out the key point for each item into a simple list. Don't change anything on the page.
    </PromptBox>
 
-3. **권한 모드 확인하기**
+3. **Check the permission mode**
 
-   입력창 드롭다운에서 권한 모드를 골라요.
+   Pick a permission mode from the dropdown in the input box.
 
-   | 모드 | 동작 |
+   | Mode | Behavior |
    | --- | --- |
-   | **Manually approve** | 동작마다 승인을 물어요. 처음엔 이걸로 시작하세요. |
-   | **Automatically approve** | 계속 진행하되 각 동작을 안전 검사해요. 안전하지 않은 동작은 자동으로 막아요. 사이드 패널의 기본값이에요. |
-   | **Skip all approvals** | 자동 검사 없이 실행해요. 완전히 신뢰하는 작업에만 쓰세요. |
+   | **Manually approve** | Asks for approval on every action. Start with this one. |
+   | **Automatically approve** | Keeps going but runs a safety check on each action. Unsafe actions are blocked automatically. This is the side panel's default. |
+   | **Skip all approvals** | Runs without automatic checks. Use only for tasks you fully trust. |
 
-   모드 이름은 예전에 "Ask before acting", "Act without asking"으로 불렸어요. 화면 표기는 버전에 따라 다를 수 있어요.
+   The modes used to be called "Ask before acting" and "Act without asking." The on-screen labels can differ by version.
 
-4. **사이트별 권한 다루기**
+4. **Handle per-site permissions**
 
-   새 사이트에서 "New permissions required" 창이 뜨면 세 가지 중에서 골라요.
+   When a "New permissions required" window appears on a new site, pick one of three:
 
-   - **Allow this action**: 이번 동작 하나만 허용해요. 가장 안전해요.
-   - **Always allow actions on this site**: 그 사이트를 계속 허용해요. 완전히 믿는 사이트에만 쓰세요.
-   - **Decline**: 막아요.
+   - **Allow this action**: Allows just this one action. The safest.
+   - **Always allow actions on this site**: Keeps allowing that site. Use only for sites you completely trust.
+   - **Decline**: Blocks it.
 
-   허용한 사이트는 확장 설정(사이드 패널의 점 세 개) > Permissions 페이지의 "Your approved sites"에서 검토하고 취소할 수 있어요.
+   You can review and revoke the sites you've allowed under "Your approved sites" on the Permissions page in the extension settings (the three dots in the side panel).
 
-   <ScreenshotPlaceholder caption="New permissions required 창과 Your approved sites 목록" officialUrl="https://support.claude.com/en/articles/12902446-claude-in-chrome-permissions-guide" />
+   <ScreenshotPlaceholder caption="The New permissions required window and the Your approved sites list" officialUrl="https://support.claude.com/en/articles/12902446-claude-in-chrome-permissions-guide" />
 
-5. **컴퓨터 사용 켜기 (선택, Pro/Max)**
+5. **Turn on computer use (optional, Pro/Max)**
 
-   Claude Desktop을 최신으로 업데이트한 뒤 설정(Settings) > Capabilities에서 "Enable computer use"를 켜요. Computer use 항목이 없으면 설정(Settings) > System의 This computer 아래에 있어요(2026-10-26 기준). 그다음 Cowork 또는 Claude Code 세션에서 앱 관련 작업을 요청하면 Claude가 앱마다 접근 승인을 물어요.
+   Update Claude Desktop to the latest version, then turn on "Enable computer use" in Settings > Capabilities. If you don't see a Computer use item, it's under This computer in Settings > System (as of 2026-10-26). Then ask for an app-related task in a Cowork or Claude Code session, and Claude asks for access approval for each app.
 
-   <ScreenshotPlaceholder caption="Settings > Capabilities의 Enable computer use 토글" officialUrl="https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork" />
+   <ScreenshotPlaceholder caption="The Enable computer use toggle in Settings > Capabilities" officialUrl="https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork" />
 
-   <FlowSteps title="컴퓨터 사용 켜는 길" officialUrl="https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork" steps={[
-     { where: 'Claude Desktop 앱', action: '최신 버전으로 업데이트' },
-     { where: '설정(Settings) > Capabilities (없으면 Settings > System)', action: 'Enable computer use 켜기' },
-     { where: 'Cowork 또는 Claude Code 세션', action: '앱 관련 작업 요청', result: '앱마다 접근 승인을 물어요' },
+   <FlowSteps title="How to turn on computer use" officialUrl="https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork" steps={[
+     { where: 'Claude Desktop app', action: 'Update to the latest version' },
+     { where: 'Settings > Capabilities (or Settings > System if you don\'t see it)', action: 'Turn on Enable computer use' },
+     { where: 'A Cowork or Claude Code session', action: 'Ask for an app-related task', result: 'Claude asks for access approval for each app' },
    ]} />
 
-6. **작은 작업으로 시험하기**
+6. **Test with a small task**
 
-   민감한 정보가 든 파일과 앱은 먼저 닫아요. 그다음 구체적이고 위험이 낮은 작업을 요청하고, 처음에는 Claude가 하는 일을 지켜보세요.
+   First, close any files and apps that contain sensitive information. Then ask for something specific and low-risk, and watch what Claude does at first.
 
    <PromptBox>
-   바탕화면에 있는 스크린샷 파일들을 확인하고, 날짜별 폴더를 만들어 정리해 주세요. 파일을 삭제하지는 마세요. 시작하기 전에 어떻게 정리할지 먼저 알려 주세요.
+   Look at the screenshot files on my desktop and organize them by creating a folder for each date. Don't delete any files. Before you start, tell me how you plan to organize them.
    </PromptBox>
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-### Claude in Chrome과 컴퓨터 사용 비교 (2026-10-10 기준)
+### Claude in Chrome vs. computer use (as of 2026-10-10)
 
-| 항목 | Claude in Chrome | 컴퓨터 사용 |
+| Item | Claude in Chrome | Computer use |
 | --- | --- | --- |
-| 대상 | 웹 브라우저 안의 작업 | 내 컴퓨터의 앱 화면 |
-| 플랜 | 모든 유료 플랜 (Pro, Max, Ultra, Team, Enterprise) | Pro, Max (Team·Enterprise 불가) |
-| 상태 | 새 사이드 패널은 단계적 롤아웃 | 베타 |
-| OS / 브라우저 | Chrome (문서마다 다른 점은 위 참고). 모바일 불가 | macOS, Windows의 Claude Desktop. Linux 데스크톱 불가. macOS 15 이상에서 백그라운드 작동 |
-| 쓰는 곳 | Cowork, Claude Code, Chrome 사이드 패널 | Claude Desktop의 Cowork, Claude Code |
-| 켜는 곳 | 확장 설치, Desktop에서는 Settings > Customize > Connectors | Settings > Capabilities(또는 Settings > System) > Enable computer use |
+| Target | Tasks inside the web browser | App screens on your computer |
+| Plans | All paid plans (Pro, Max, Ultra, Team, Enterprise) | Pro, Max (not Team or Enterprise) |
+| Status | New side panel rolling out in stages | Beta |
+| OS / browser | Chrome (see above for where the docs differ). Not on mobile | Claude Desktop on macOS and Windows. Not on Linux desktops. Works in the background on macOS 15 and later |
+| Where it's used | Cowork, Claude Code, the Chrome side panel | Cowork and Claude Code in Claude Desktop |
+| Where to turn on | Install the extension; in Desktop, Settings > Customize > Connectors | Settings > Capabilities (or Settings > System) > Enable computer use |
 
-### Claude in Chrome이 할 수 있는 일
+### What Claude in Chrome can do
 
-- 페이지 읽기, 클릭, 입력, 이동, 양식 작성
-- 여러 탭 관리
-- 예약 작업, 단축 명령("/"), 백그라운드 워크플로
-- 콘솔·네트워크·DOM 디버깅
-- Slack, Google Calendar, Gmail, Google Docs, GitHub 탐색
-- 1Password 로그인 요청은 macOS 베타예요(Claude는 비밀번호를 볼 수 없어요).
+- Read pages, click, type, navigate, and fill in forms
+- Manage multiple tabs
+- Scheduled tasks, shortcut commands ("/"), and background workflows
+- Debugging the console, network, and DOM
+- Navigating Slack, Google Calendar, Gmail, Google Docs, and GitHub
+- Login requests through 1Password are a macOS beta (Claude can't see your passwords).
 
-### 권한과 안전
+### Permissions and safety
 
-| 항목 | 내용 |
+| Item | Details |
 | --- | --- |
-| 항상 명시적 허가가 필요한 동작 | 권한 설정 변경, 인증 승인, 웹사이트에 민감할 수 있는 정보 입력. "항상 허용" 사이트에서도 파일 다운로드와 민감 정보 입력 전에는 물어요. |
-| 권한과 상관없이 하지 않는 일 | 구매, 계정 생성, 신용카드·신분증 정보 처리, 영구 삭제, 이메일이나 웹 콘텐츠 안에 적힌 지시 수행 |
-| 컴퓨터 사용 기본 차단 | 투자·거래 플랫폼, 암호화폐 앱 |
-| 앱 차단 목록 | 직접 추가할 수 있고, 차단 앱 요청은 자동으로 거부돼요. |
-| 샌드박스 | 컴퓨터 사용에는 없어요. 화면에 보이는 모든 것을 볼 수 있어요. |
-| 관리자 | Team/Enterprise 관리자는 사이트 허용/차단 목록을 설정할 수 있어요. |
+| Actions that always need explicit permission | Changing permission settings, approving authentication, and entering information that may be sensitive on a website. Even on "always allow" sites, it asks before downloading files and before entering sensitive information. |
+| Things it won't do regardless of permissions | Making purchases, creating accounts, handling credit card or ID information, permanent deletion, and following instructions written inside emails or web content |
+| Blocked by default for computer use | Investing and trading platforms, crypto apps |
+| App block list | You can add to it yourself, and requests for blocked apps are rejected automatically. |
+| Sandbox | There isn't one for computer use. It can see everything on your screen. |
+| Admins | Team/Enterprise admins can set site allow/block lists. |
 
-### 한계
+### Limits
 
-- Chrome 확장: 로컬 파일과 컴퓨터 관련 작업은 Claude Desktop이 열려 연결되어 있어야 해요. 백그라운드 작업은 Chrome이 열려 있는 동안만 돼요.
-- 컴퓨터 사용: 컴퓨터가 깨어 있고 Claude Desktop이 열려 있어야 해요. 복잡한 다단계 작업은 다시 시도해야 할 수 있어요.
-- 웹과 모바일에서의 컴퓨터 사용과 로컬 파일 접근은 Claude Desktop 앱에 의존해요.
+- Chrome extension: Tasks involving local files and your computer require Claude Desktop to be open and connected. Background tasks only run while Chrome is open.
+- Computer use: Your computer has to be awake and Claude Desktop open. Complex multi-step tasks may need to be retried.
+- Computer use and local file access from the web and mobile depend on the Claude Desktop app.
 
-### Claude Code에서 Chrome 쓰기
+### Using Chrome with Claude Code
 
-개발자라면 Claude Code에서도 Chrome을 연결해 로컬 웹앱을 테스트하고 콘솔 오류를 보며 디버깅할 수 있어요. Claude Code 문서 기준 요건은 Claude in Chrome 확장, Claude Code, 직접 Anthropic 플랜(Pro, Max, Team, Enterprise)이에요. 연결은 `claude --chrome`으로 시작하고, `/chrome`에서 상태 확인과 재연결을 할 수 있어요. API 키나 서드파티 제공자(Bedrock 등)만으로는 이 기능을 쓸 수 없어요. Claude Code의 Chrome 연동은 조직의 Claude in Chrome 관리자 설정을 따라서(2.1.260), 관리자가 끄면 `--chrome`, `/chrome`, 브라우저 도구를 쓸 수 없어요. 또 프로젝트의 설정 파일로는 켤 수 없고(2.1.290) `--chrome`, `/chrome`, 사용자 설정으로만 켜요(2026-10-11 기준). Claude Code 전반은 [C12. Claude Code 개요](/claude/c12-claude-code-overview/)에서 다뤄요.
+If you're a developer, you can also connect Chrome to Claude Code to test local web apps and debug while looking at console errors. According to the Claude Code docs, the requirements are the Claude in Chrome extension, Claude Code, and a direct Anthropic plan (Pro, Max, Team, Enterprise). Start the connection with `claude --chrome`, and use `/chrome` to check status and reconnect. You can't use this feature with just an API key or a third-party provider (such as Bedrock). Claude Code's Chrome integration follows your organization's Claude in Chrome admin settings (2.1.260), so if an admin turns it off, you can't use `--chrome`, `/chrome`, or the browser tools. Also, it can't be turned on through a project settings file (2.1.290); you turn it on only with `--chrome`, `/chrome`, or user settings (as of 2026-10-11). Claude Code as a whole is covered in [C12. Claude Code overview](/claude/c12-claude-code-overview/).
 
-## 자주 막히는 지점
+## Where people get stuck
 
-### 컴퓨터 사용 메뉴가 안 보여요
+### I don't see the computer use menu
 
-- **원인**: Team·Enterprise 플랜이거나, Linux 데스크톱이거나, Claude Desktop이 최신이 아닐 수 있어요.
-- **해결**: Pro/Max인지, macOS 또는 Windows인지 확인하고 Claude Desktop을 업데이트하세요. 플랜별 제공은 바뀔 수 있으니 공식 도움말에서 최신 내용을 확인하세요.
+- **Cause**: You may be on a Team or Enterprise plan, on a Linux desktop, or Claude Desktop may not be up to date.
+- **Fix**: Check that you're on Pro/Max and on macOS or Windows, and update Claude Desktop. Availability by plan can change, so check the official help for the latest.
 
-### Claude가 클릭을 잘못하거나 같은 동작을 반복해요
+### Claude clicks the wrong thing or repeats the same action
 
-- **원인**: 화면 조작은 가장 느리고 오류 가능성이 높은 방법이에요. 복잡한 다단계 작업은 재시도가 필요할 수 있어요.
-- **해결**: 작업을 작게 나누고 구체적으로 지시하세요. 가능하면 커넥터나 브라우저로 처리할 수 있는지 먼저 보세요.
+- **Cause**: Screen control is the slowest and most error-prone method. Complex multi-step tasks may need retries.
+- **Fix**: Break the task into small pieces and give specific instructions. See first whether a connector or the browser can handle it.
 
-### 컴퓨터를 켜 두었는데 작업이 멈췄어요
+### My computer is on, but the task stopped
 
-- **원인**: 컴퓨터가 잠자기 상태이거나 Claude Desktop이 닫혔을 수 있어요.
-- **해결**: 컴퓨터가 깨어 있고 Claude Desktop이 열려 있는지 확인하세요.
+- **Cause**: The computer may have gone to sleep or Claude Desktop may have been closed.
+- **Fix**: Check that the computer is awake and Claude Desktop is open.
 
-### Chrome 확장이 로컬 파일 작업을 못 해요
+### The Chrome extension can't do local file tasks
 
-- **원인**: 로컬 파일과 컴퓨터 관련 작업은 Claude Desktop이 열려 연결되어 있어야 해요.
-- **해결**: Claude Desktop을 열어 두고 연결을 확인하세요.
+- **Cause**: Tasks involving local files and your computer require Claude Desktop to be open and connected.
+- **Fix**: Keep Claude Desktop open and check the connection.
 
-### Claude Code에서 "Browser extension is not connected"가 나와요
+### Claude Code says "Browser extension is not connected"
 
-- **원인**: Claude Code 문서에 따르면 확장이 설치·실행되지 않았거나, 확장과 Claude Code가 서로 다른 claude.ai 계정·조직으로 로그인했을 수 있어요.
-- **해결**: 같은 계정과 조직인지 확인하고 Chrome과 Claude Code를 다시 시작한 뒤 `/chrome`에서 재연결하세요.
+- **Cause**: According to the Claude Code docs, the extension may not be installed or running, or the extension and Claude Code may be signed in to different claude.ai accounts or organizations.
+- **Fix**: Check that it's the same account and organization, restart Chrome and Claude Code, and reconnect with `/chrome`.
 
-### 사이트가 계속 권한을 물어봐요
+### A site keeps asking for permission
 
-- **원인**: 파일 다운로드나 민감 정보 입력은 "항상 허용"이어도 확인을 요구해요.
-- **해결**: 정상 동작이에요. 승인 전에 무엇을 하려는지 읽고 판단하세요.
+- **Cause**: File downloads and entering sensitive information require confirmation even under "always allow."
+- **Fix**: That's normal behavior. Read what it's about to do before you approve, and use your judgment.
 
-## 실전 팁
+## Practical tips
 
-- **민감한 것은 먼저 치우세요.** 컴퓨터 사용 전에 민감한 파일과 앱을 닫으세요. Claude는 화면에 보이는 모든 것을 볼 수 있어요.
-- **금융·의료·법률은 맡기지 마세요.** 은행, 의료, 정부 앱과 금융 계좌, 법률 문서, 의료 정보 작업에는 쓰지 말라는 공식 권고가 있어요.
-- **Manually approve로 시작하세요.** 익숙해지고 나서 Automatically approve로 바꿔도 늦지 않아요. Skip all approvals는 완전히 신뢰하는 작업에만 쓰세요.
-- **"항상 허용"은 아껴 쓰세요.** 완전히 믿는 사이트에만 주고, 가끔 승인 목록을 검토해 정리하세요.
-- **웹 콘텐츠 속 지시를 조심하세요.** 웹페이지나 이메일 안에 숨은 지시에 속지 않도록, 확장은 그런 지시를 수행하지 않게 되어 있어요. 그래도 안전 장치가 완벽하지는 않으니 낯선 사이트에서는 지켜보세요.
-- **초반에는 지켜보세요.** 작은 작업, 구체적인 프롬프트, 초반 관찰이 기본이에요. 언제든 중단할 수 있어요.
-- **베타라는 점을 기억하세요.** 기능과 제공 범위는 바뀔 수 있어요(2026-10-10 기준).
+- **Put away sensitive things first.** Close sensitive files and apps before using computer use. Claude can see everything on your screen.
+- **Don't hand over finance, medical, or legal work.** There's an official recommendation not to use it with banking, medical, or government apps, financial accounts, legal documents, or medical information.
+- **Start with Manually approve.** It's not too late to switch to Automatically approve once you're comfortable. Use Skip all approvals only for tasks you fully trust.
+- **Use "always allow" sparingly.** Give it only to sites you completely trust, and review and clean up the approved list from time to time.
+- **Watch out for instructions in web content.** The extension is built not to follow instructions hidden in web pages or emails. Safeguards aren't perfect, though, so keep an eye on it on unfamiliar sites.
+- **Watch closely early on.** Small tasks, specific prompts, and early observation are the basics. You can stop it at any time.
+- **Remember it's beta.** Features and availability can change (as of 2026-10-10).
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [C7. 커넥터로 Gmail·캘린더·Drive·Notion 연결하기](/claude/c07-connectors/) — 화면 조작보다 먼저 시도할 직접 연결 방법
-- [C12. Claude Code 개요](/claude/c12-claude-code-overview/) — 개발 환경에서 Chrome 연동을 쓰는 Claude Code
-- [C3. Claude 앱 시작하기](/claude/c03-getting-started/) — 데스크톱 앱과 모바일 앱의 차이
-- [컴퓨터·브라우저 도구 API로 화면 작업 자동화](/dev/10-computer-browser-tools/) — 같은 기능을 코드(API)로 쓰는 법
+- [C7. Connecting Gmail, Calendar, Drive, and Notion with connectors](/claude/c07-connectors/) — A direct connection method to try before screen control
+- [C12. Claude Code overview](/claude/c12-claude-code-overview/) — Claude Code, which uses the Chrome integration in a dev environment
+- [C3. Getting started with the Claude app](/claude/c03-getting-started/) — Differences between the desktop and mobile apps
+- [Automating screen tasks with the computer and browser tool APIs](/dev/10-computer-browser-tools/) — Using the same capability from code (the API)

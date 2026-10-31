@@ -1,17 +1,17 @@
 ---
-title: "프롬프트 캐싱·배치·effort로 API 비용 줄이기"
-description: "캐시 읽기 단가, Message Batches 50% 할인, effort 조절, 모델 분담, 토큰 세기와 사용량 로그를 Python 예제와 가격 비교 계산으로 정리한 API 비용 최적화 참고서"
+title: "Cut API Costs with Prompt Caching, Batches, and Effort"
+description: "An API cost optimization reference covering cache read pricing, the 50% Message Batches discount, effort tuning, dividing work among models, token counting, and usage logging, with Python examples and price comparison calculations"
 sidebar:
-  label: "2. 프롬프트 캐싱·배치·effort로 API 비용 줄이기"
+  label: "2. Cut API costs with prompt caching, batches, and effort"
 level: advanced
 category: dev
 tools: ["Claude API", "Python SDK"]
-duration: "60분"
+duration: "60 min"
 prerequisites:
-  - "C16. Claude API 시작하기 (API 키, 첫 호출, 가격표)"
-  - "C15. 모델 분담 전략"
-  - "1. 도구 사용으로 업무 봇 만들기 (도구가 있는 봇이면 도움이 돼요)"
-  - "Python 3.10 이상, pip install anthropic"
+  - "C16. Getting started with the Claude API (API key, first call, price list)"
+  - "C15. Model division strategy"
+  - "1. Build a work bot with tool use (helpful if your bot uses tools)"
+  - "Python 3.10 or later, pip install anthropic"
 lastVerified: 2026-10-31
 sources:
   - title: "Pricing"
@@ -38,85 +38,85 @@ import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- 비용은 **호출 한 번의 단가가 아니라 "작업 하나를 끝내는 데 든 총액"**으로 봐야 해요. 같은 일을 여러 번 시키거나 실패해서 재시도하면 싼 모델도 비싸져요.
-- 공식 순서는 **캐싱과 입력 줄이기 -> 프롬프트 점검 -> effort 조절 -> 모델 비교 -> 출력·예산 상한** 순이에요. 품질을 건드리지 않는 것부터 하세요.
-- **프롬프트 캐싱**: 똑같이 반복되는 앞부분을 캐시하면 읽기 단가가 기본 입력가의 10%예요. Opus 5.5와 Sonnet 5.5는 5%, Fable 5.1은 2.5%예요.
-- **Message Batches API**: 급하지 않은 일은 입력·출력 모두 **50% 할인**이에요. 대신 결과가 최대 24시간 걸릴 수 있어요.
-- 아래 예시 계산(요청 1,000건)에서 Opus 5.5는 기본 $88.00, 캐시 $12.10, 배치 $44.00, 캐시+배치 이론상 $6.05예요.
-- 호출마다 `usage`를 로그로 남기고, 실제 호출 전에는 `count_tokens`로 입력 크기를 재세요.
+- Look at cost as **"the total it takes to finish one task," not the price of a single call.** If you run the same job several times, or retry after failures, even a cheap model gets expensive.
+- The official order is **caching and trimming input -> auditing prompts -> tuning effort -> comparing models -> output and budget caps.** Start with the things that don't touch quality.
+- **Prompt caching**: if you cache the part at the front that repeats identically, the read price is 10% of the base input price. For Opus 5.5 and Sonnet 5.5 it's 5%, and for Fable 5.1 it's 2.5%.
+- **Message Batches API**: for work that isn't urgent, both input and output get a **50% discount**. The tradeoff is that results can take up to 24 hours.
+- In the example calculation below (1,000 requests), Opus 5.5 costs $88.00 at baseline, $12.10 with caching, $44.00 with batches, and $6.05 in theory with caching plus batches.
+- Log `usage` on every call, and measure input size with `count_tokens` before making real calls.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- `cache_control`로 반복되는 프롬프트를 캐시하고, `usage`로 캐시가 실제로 동작하는지 확인할 수 있어요.
-- 급하지 않은 대량 작업을 Message Batches API로 돌려 비용을 절반으로 줄일 수 있어요.
-- effort와 모델을 바꿔 보며 "작업당 비용"을 비교하는 방법을 알 수 있어요.
-- 내 워크로드의 비용을 계산기와 사용량 로그로 미리 추정하고 추적할 수 있어요.
+- Cache repeated prompts with `cache_control`, and confirm through `usage` that the cache is really working.
+- Run large, non-urgent jobs through the Message Batches API and cut the cost in half.
+- Compare "cost per task" by switching effort levels and models.
+- Estimate and track the cost of your own workload with a calculator and usage logs.
 
-<Aside type="note" title="예제 검증 범위">
-예제는 공식 문서 기준이며 2026-10-11에 Python 문법만 검증했어요(`python3 -m py_compile`). 가격 계산기(`cost_calc.py`)는 실제로 실행해 표의 숫자를 얻었어요. API 키가 없어 Claude를 호출한 실행 결과는 확인하지 못했어요.
+<Aside type="note" title="What the examples were verified against">
+The examples follow the official documentation, and on 2026-10-11 only the Python syntax was verified (`python3 -m py_compile`). We actually ran the price calculator (`cost_calc.py`) to get the numbers in the table. We had no API key, so we couldn't confirm the results of runs that call Claude.
 </Aside>
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-### 모델별 가격 (100만 토큰당 USD, 2026-10-11 기준)
+### Prices by model (USD per 1 million tokens, as of 2026-10-11)
 
-가격은 미국 달러 기준이고 바뀔 수 있어요. 항상 [공식 pricing 페이지](https://platform.claude.com/docs/en/about-claude/pricing)로 확인하세요. 모델 ID와 입력/출력 가격은 [C16](/claude/c16-api/)과 같아요.
+Prices are in US dollars and can change. Always check the [official pricing page](https://platform.claude.com/docs/en/about-claude/pricing). Model IDs and input/output prices match [C16](/claude/c16-api/).
 
-| 모델 | 입력 | 5분 캐시 쓰기 | 1시간 캐시 쓰기 | 캐시 읽기 | 출력 |
+| Model | Input | 5-minute cache write | 1-hour cache write | Cache read | Output |
 | --- | --- | --- | --- | --- | --- |
 | Fable 5.1 (`claude-fable-5-1`) | $10 | $12.50 | $20 | $0.25 | $50 |
 | Opus 5.5 (`claude-opus-5-5`) | $4 | $5 | $8 | $0.20 | $20 |
 | Sonnet 5.5 (`claude-sonnet-5-5`) | $2 | $2.50 | $4 | $0.10 | $10 |
-| Haiku 5.5 (`claude-haiku-5-5`), 프롬프트 10만 토큰 이하 | $0.10 | $0.125 | $0.20 | $0.01 | $0.50 |
-| Haiku 5.5, 프롬프트 10만 토큰 초과 | $0.50 | $0.625 | $1 | $0.05 | $2.50 |
+| Haiku 5.5 (`claude-haiku-5-5`), prompts of 100K tokens or less | $0.10 | $0.125 | $0.20 | $0.01 | $0.50 |
+| Haiku 5.5, prompts over 100K tokens | $0.50 | $0.625 | $1 | $0.05 | $2.50 |
 
-- Haiku 5.5는 **요청 하나의 프롬프트가 10만 토큰을 넘으면** 그 요청에 더 비싼 가격이 적용돼요. 캐시 읽기·쓰기 토큰도 프롬프트 길이에 포함돼요.
-- **배치**는 위 가격의 50%예요. 다른 수정자와 곱해져요(공식 문서: 배치 할인은 다른 가격 수정자와 stack).
-- 미국에만 추론을 고정(`inference_geo`)하면 모든 가격에 1.1배가 붙어요(공식 pricing 페이지).
+- For Haiku 5.5, **if a single request's prompt is over 100K tokens**, the higher price applies to that request. Cache read and write tokens count toward the prompt length.
+- **Batches** are 50% of the prices above. It multiplies with other modifiers (per the official docs, the batch discount stacks with other pricing modifiers).
+- If you pin inference to the US only (`inference_geo`), all prices get a 1.1x multiplier (per the official pricing page).
 
-### 비용을 줄이는 순서
+### The order for cutting costs
 
-공식 비용 가이드는 품질을 건드리지 않는 "공짜 수단"을 먼저, 품질과 맞바꾸는 "트레이드오프"를 나중에 하라고 해요.
+The official cost guide says to do the "free" measures that don't touch quality first, and the "tradeoffs" that trade away quality later.
 
-| 순서 | 수단 | 성격 |
+| Order | Measure | Nature |
 | --- | --- | --- |
-| 1 | 프롬프트 캐싱, 입력 토큰 줄이기 | 품질 그대로 |
-| 2 | 오래된 프롬프트 점검 | 품질 그대로 |
-| 3 | 급하지 않은 일은 배치 | 품질 그대로, 대신 느려요 |
-| 4 | effort 조절 | 품질과 맞바꿔요 |
-| 5 | 모델 비교(작업당 비용) | 품질과 맞바꿔요 |
-| 6 | `max_tokens`와 예산 상한 | 안전장치 |
-| 7 | 여러 모델 조합 | 마지막에, 측정 후에만 |
+| 1 | Prompt caching, trimming input tokens | Quality unchanged |
+| 2 | Audit old prompts | Quality unchanged |
+| 3 | Batches for non-urgent work | Quality unchanged, but slower |
+| 4 | Tune effort | Trades off against quality |
+| 5 | Compare models (cost per task) | Trades off against quality |
+| 6 | `max_tokens` and budget caps | Safeguard |
+| 7 | Combine multiple models | Last, and only after measuring |
 
-공식 가이드는 내부 측정으로 캐싱이 에이전트 루프 비용을 2.7~5.3배 줄인 사례를 소개해요. 이 수치는 방향을 보여 주는 참고값이고 내 워크로드에서 같다는 보장은 아니에요.
+The official guide cites a case where internal measurements showed caching cutting the cost of an agent loop by 2.7x to 5.3x. This figure shows the direction and is for reference; it isn't a guarantee that you'll get the same on your workload.
 
-## 단계별 따라하기
+## Step by step
 
 <Checklist items={[
-  '내 요청에서 반복되는 앞부분(시스템 프롬프트, 도구, 문서)을 찾았어요',
-  'cache_control을 달고 usage에서 cache_read_input_tokens가 찍히는 것을 확인했어요',
-  '급하지 않은 작업을 배치로 보내 결과를 custom_id로 받았어요',
-  'effort를 바꿔 가며 작업당 비용을 비교했어요',
-  'count_tokens로 입력 크기를 미리 쟀어요',
-  'usage를 CSV로 남기는 로거를 붙였어요',
-  '가격 계산기로 우리 워크로드를 추정했어요',
+  'I found the repeated front part of my requests (system prompt, tools, documents)',
+  'I added cache_control and confirmed that cache_read_input_tokens shows up in usage',
+  'I sent non-urgent work as a batch and got the results by custom_id',
+  'I compared cost per task while changing effort',
+  'I measured input size ahead of time with count_tokens',
+  'I attached a logger that writes usage to a CSV',
+  'I estimated our workload with the price calculator',
 ]} />
 
 <Steps>
 
-1. **프롬프트 캐싱 적용하기**
+1. **Apply prompt caching**
 
-   캐시는 **앞부분이 한 바이트도 다르지 않을 때만** 적용돼요. 요청은 `tools` -> `system` -> `messages` 순서로 이어 붙여서 비교하니, 안 바뀌는 것(규정집, 도구 정의)을 앞에 두고 바뀌는 것(질문, 날짜)을 뒤에 두세요.
+   The cache applies **only when the front part is identical down to the byte.** Requests are compared as `tools` -> `system` -> `messages` concatenated in that order, so put the things that don't change (the policy manual, tool definitions) first and the things that do change (the question, the date) last.
 
-   `company_manual.txt`에 사내 규정집 같은 긴 텍스트를 저장하고 `cache_demo.py`를 만들어요. 캐시되려면 접두사가 최소 512토큰(Opus 5.5, Sonnet 5.5, Haiku 5.5 기준)이어야 해요. 그보다 짧으면 오류 없이 조용히 캐시가 안 돼요.
+   Save a long text like an internal policy manual in `company_manual.txt` and create `cache_demo.py`. To be cached, the prefix must be at least 512 tokens (for Opus 5.5, Sonnet 5.5, and Haiku 5.5). If it's shorter, it silently isn't cached, with no error.
 
    ```python
    import anthropic
 
    client = anthropic.Anthropic()
 
-   # 매 요청 똑같은 긴 매뉴얼(512토큰 이상이어야 캐시돼요). 날짜·요청 ID 같은 값은 넣지 마세요.
+   # The same long manual on every request (it must be 512 tokens or more to be cached). Don't put in values like dates or request IDs.
    MANUAL = open("company_manual.txt", encoding="utf-8").read()
 
 
@@ -125,54 +125,54 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
            model="claude-sonnet-5-5",
            max_tokens=1024,
            system=[
-               {"type": "text", "text": "사내 규정 도우미야. 매뉴얼 근거로만 한국어로 답해."},
+               {"type": "text", "text": "You are an internal policy assistant. Answer in English, based only on the manual."},
                {
                    "type": "text",
                    "text": MANUAL,
-                   # 여기까지(도구 -> system -> 이 블록)를 캐시해요. 기본 수명은 5분이에요.
+                   # Cache everything up to here (tools -> system -> this block). The default lifetime is 5 minutes.
                    "cache_control": {"type": "ephemeral"},
                },
            ],
-           messages=[{"role": "user", "content": question}],  # 바뀌는 부분은 항상 뒤쪽에
+           messages=[{"role": "user", "content": question}],  # Always put the changing part at the back
            output_config={"effort": "low"},
        )
        u = response.usage
        print(
-           f"새 입력 {u.input_tokens} | 캐시 쓰기 {u.cache_creation_input_tokens}"
-           f" | 캐시 읽기 {u.cache_read_input_tokens} | 출력 {u.output_tokens}"
+           f"new input {u.input_tokens} | cache write {u.cache_creation_input_tokens}"
+           f" | cache read {u.cache_read_input_tokens} | output {u.output_tokens}"
        )
        return response
 
 
-   ask("연차는 며칠이에요?")  # 첫 호출: 캐시 쓰기가 찍혀야 해요
-   ask("경조사 휴가는요?")  # 두 번째: 캐시 읽기가 찍혀야 해요 (0이면 캐시 무효화 원인을 찾으세요)
+   ask("How many days of annual leave do I get?")  # First call: you should see a cache write
+   ask("What about leave for family events?")  # Second call: you should see a cache read (if it's 0, look for what invalidated the cache)
    ```
 
-   첫 호출은 `캐시 쓰기`가, 두 번째 호출은 `캐시 읽기`가 찍혀야 해요. 쓰기는 기본 입력가의 1.25배, 읽기는 Opus 5.5·Sonnet 5.5에서 0.05배예요. 5분 캐시는 **재사용이 한 번만 있어도** 쓰기 프리미엄을 회수해요.
+   The first call should show `cache write`, and the second call should show `cache read`. A write costs 1.25x the base input price, and a read costs 0.05x for Opus 5.5 and Sonnet 5.5. A 5-minute cache recovers its write premium **with just one reuse.**
 
-   | 항목 | 값 |
+   | Item | Value |
    | --- | --- |
-   | 기본 수명(TTL) | 5분. 히트할 때마다 갱신돼요(추가 비용 없음) |
-   | 1시간 수명 | `"cache_control": {"type": "ephemeral", "ttl": "1h"}`. 쓰기가 2배 |
-   | 명시 브레이크포인트 | 요청당 최대 4개 |
-   | 한 브레이크포인트의 룩백 | 최대 20블록 |
-   | 총 입력 토큰 | `cache_read_input_tokens + cache_creation_input_tokens + input_tokens` |
+   | Default lifetime (TTL) | 5 minutes. Refreshed on each hit (no extra cost) |
+   | 1-hour lifetime | `"cache_control": {"type": "ephemeral", "ttl": "1h"}`. Writes cost 2x |
+   | Explicit breakpoints | Up to 4 per request |
+   | Lookback of one breakpoint | Up to 20 blocks |
+   | Total input tokens | `cache_read_input_tokens + cache_creation_input_tokens + input_tokens` |
 
-   요청 간격이 5분보다 길면 매번 캐시를 새로 써서 오히려 손해일 수 있어요. 그럴 때만 1시간 수명을 검토하세요. 1시간 캐시는 쓰기가 2배라 재사용이 여러 번 있어야 이득이에요.
+   If the gap between requests is longer than 5 minutes, you rewrite the cache every time, which can actually cost you. Consider the 1-hour lifetime only in that case. Because 1-hour cache writes cost 2x, it only pays off if there are several reuses.
 
-   <Aside type="caution" title="캐시가 깨지는 흔한 원인">
-   - 시스템 프롬프트 앞부분에 현재 시각, 요청 ID, 사용자 이름을 넣었어요.
-   - 도구를 추가하거나 순서를 바꿨어요(도구가 가장 앞이라 이후 전부 무효가 돼요).
-   - 대화 도중에 effort나 thinking 설정을 바꿨어요.
-   - 같은 접두사로 보내는 요청이 워크스페이스가 달라서 서로 다른 캐시를 써요.
-   - JSON을 만들 때 키 순서가 요청마다 달라요.
+   <Aside type="caution" title="Common reasons the cache breaks">
+   - You put the current time, a request ID, or a user name at the start of the system prompt.
+   - You added tools or changed their order (tools come first, so everything after is invalidated).
+   - You changed the effort or thinking setting in the middle of a conversation.
+   - Requests with the same prefix use different caches because they're in different workspaces.
+   - The key order differs from request to request when you build the JSON.
 
-   `cache_read_input_tokens`가 계속 0이면 위를 하나씩 점검하세요. 공식 비용 가이드는 에이전트 루프에서 입력의 중앙값 84%가 캐시에서 읽힌다고 소개하고, 80% 아래면 캐시를 깨는 요인을 찾으라고 해요.
+   If `cache_read_input_tokens` stays at 0, check the items above one by one. The official cost guide says that in agent loops a median of 84% of input is read from cache, and that if you're under 80%, you should look for what's breaking the cache.
    </Aside>
 
-2. **배치로 반값에 처리하기**
+2. **Process at half price with batches**
 
-   사용자가 기다리지 않는 일(분류, 요약, 평가, 야간 리포트)은 Message Batches API로 보내요. 입력과 출력 모두 50% 할인이에요. `batch_demo.py`를 만들어요.
+   Send work that nobody is waiting on (classification, summaries, evaluation, overnight reports) to the Message Batches API. Both input and output get a 50% discount. Create `batch_demo.py`.
 
    ```python
    import time
@@ -184,23 +184,23 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    client = anthropic.Anthropic()
 
    tickets = {
-       "t-001": "배송이 너무 늦어요. 환불해 주세요.",
-       "t-002": "사용법이 궁금해요. 감사합니다!",
-       "t-003": "결제가 두 번 됐어요.",
+       "t-001": "My delivery is way too late. Please refund me.",
+       "t-002": "I'm wondering how to use this. Thank you!",
+       "t-003": "I was charged twice.",
    }
 
    batch = client.messages.batches.create(
        requests=[
            Request(
-               custom_id=ticket_id,  # 결과는 순서가 섞여 오니 반드시 custom_id로 짝지어요
+               custom_id=ticket_id,  # Results come back out of order, so always match them up by custom_id
                params=MessageCreateParamsNonStreaming(
                    model="claude-haiku-5-5",
-                   max_tokens=1024,  # Haiku 5.5는 기본으로 생각하고, 생각도 max_tokens에 포함돼요
+                   max_tokens=1024,  # Haiku 5.5 thinks by default, and thinking counts toward max_tokens
                    output_config={"effort": "low"},
                    messages=[
                        {
                            "role": "user",
-                           "content": f"문의를 '환불', '사용법', '결제오류', '기타' 중 하나로만 분류해: {text}",
+                           "content": f"Classify this inquiry as exactly one of 'refund', 'how-to', 'payment error', or 'other': {text}",
                        }
                    ],
                ),
@@ -208,9 +208,9 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
            for ticket_id, text in tickets.items()
        ]
    )
-   print("배치 ID:", batch.id)
+   print("Batch ID:", batch.id)
 
-   # 보통 1시간 안에 끝나지만 최대 24시간이 걸릴 수 있어요. 실제로는 스케줄러로 나눠 확인하세요.
+   # It usually finishes within an hour but can take up to 24 hours. In practice, check on it in separate runs with a scheduler.
    while True:
        batch = client.messages.batches.retrieve(batch.id)
        if batch.processing_status == "ended":
@@ -222,60 +222,60 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
            text = next((b.text for b in entry.result.message.content if b.type == "text"), "")
            print(entry.custom_id, "->", text)
        else:
-           print(entry.custom_id, "실패:", entry.result.type)
+           print(entry.custom_id, "failed:", entry.result.type)
    ```
 
-   | 항목 | 값 |
+   | Item | Value |
    | --- | --- |
-   | 배치 한도 | 요청 100,000개 또는 256MB 중 먼저 닿는 쪽 |
-   | 처리 시간 | 대부분 1시간 안, 24시간 안에 끝나지 않으면 만료 |
-   | 결과 보관 | 생성 후 29일 |
-   | 결과 순서 | 무작위. 반드시 `custom_id`로 매칭 |
-   | 결과 종류 | `succeeded`, `errored`, `canceled`, `expired` |
+   | Batch limit | 100,000 requests or 256 MB, whichever you hit first |
+   | Processing time | Most finish within an hour; expires if not finished within 24 hours |
+   | Result retention | 29 days after creation |
+   | Result order | Random. Always match by `custom_id` |
+   | Result types | `succeeded`, `errored`, `canceled`, `expired` |
 
-   - 배치 안에서도 캐싱을 쓸 수 있지만 요청이 동시에 처리돼서 **캐시 히트는 best-effort**예요(공식 문서는 30~98% 범위를 언급).
-   - 배치는 요청마다 한 번 응답하는 방식이라 **도구 루프는 돌릴 수 없어요**. 필요한 데이터를 미리 가져와 프롬프트에 넣는 식으로 바꿔야 해요.
-   - 배치는 서버가 입력과 출력을 보관해요. 개인정보나 보존 정책(ZDR) 조건은 공식 "API and data retention" 문서를 확인하세요. 처리가 끝난 배치는 삭제할 수 있어요.
-   - Claude Managed Agents 세션에는 배치 모드가 없어요.
+   - You can use caching inside batches too, but since requests are processed concurrently, **cache hits are best-effort** (the official docs mention a range of 30 to 98%).
+   - A batch answers once per request, so **you can't run a tool loop.** You have to change your approach to fetch the data you need ahead of time and put it in the prompt.
+   - Batches keep input and output on the server. For personal data and retention policy (ZDR) conditions, check the official "API and data retention" docs. You can delete a batch once it has finished processing.
+   - Claude Managed Agents sessions have no batch mode.
 
-   <Aside type="danger" title="배치도 한 번에 많이 보내면 비용이 커져요">
-   배치 한 번에 요청 수만 건을 넣으면 반값이어도 총액이 커요. 처음에는 3~10건으로 시험하고, `max_tokens`를 적절히 제한하고, 예상 비용을 먼저 계산해 보세요(7단계의 계산기). Haiku 5.5처럼 기본으로 생각하는 모델은 생각 토큰도 출력 `max_tokens`와 비용에 포함돼요.
+   <Aside type="danger" title="Sending a lot in one batch gets expensive too">
+   If you put tens of thousands of requests into a single batch, the total is large even at half price. Start by testing with 3 to 10, limit `max_tokens` appropriately, and calculate the expected cost first (the calculator in step 7). For models that think by default, such as Haiku 5.5, thinking tokens count toward output `max_tokens` and cost.
    </Aside>
 
-3. **effort로 깊이와 비용 조절하기**
+3. **Tune depth and cost with effort**
 
-   `output_config={"effort": "low"}`처럼 effort를 정하면 생각 깊이와 전체 토큰 사용량이 달라져요. 단계는 `low`, `medium`, `high`, `xhigh`, `max`예요. 기본값은 모델마다 달라요. Opus 5.5와 Haiku 5.5는 `medium`, Sonnet 5.5는 `high`예요. 그래서 **명시적으로 정하는 것**을 권해요.
+   When you set effort, as in `output_config={"effort": "low"}`, the depth of thinking and the total token usage change. The levels are `low`, `medium`, `high`, `xhigh`, and `max`. The default differs by model: it's `medium` for Opus 5.5 and Haiku 5.5, and `high` for Sonnet 5.5. That's why we recommend **setting it explicitly.**
 
-   공식 비용 가이드의 측정(내부·방향성 수치)은 이래요.
+   The measurements in the official cost guide (internal, directional figures) are as follows.
 
-   - Fable 5로 잰 연구형 벤치마크에서 `low`는 정확도 1~3점을 내주고 비용을 3분의 1~2분의 1로 줄였고, `medium`은 기본 정확도에 비용 70~87%였어요.
-   - 코딩 벤치마크(SWE-bench Pro)에서 `high` 대비 `medium`은 약 2.5점 낮고 비용은 약 70%, `low`는 약 8점 낮고 비용은 약 3분의 1, `xhigh`는 1.4점 높고 비용은 2.5배였어요.
-   - 다만 모델마다 달라요. 같은 가이드에서 Fable 5.1은 DeepResearch Bench II에서 `low`와 `high`의 점수가 거의 같았지만, Opus 5.5는 DRACO(연구 과제)에서 `low`가 `medium`보다 13.3점 낮았어요(2026-10-26 기준).
-   - 일부 측정에서는 Opus 5.5를 `medium`으로 쓴 쪽이 Fable 5.1 기본 설정과 비슷한 정확도를 훨씬 낮은 "정답당 비용"으로 냈어요.
+   - On a research-style benchmark measured with Fable 5, `low` gave up 1 to 3 points of accuracy and cut cost to between a third and a half, while `medium` matched baseline accuracy at 70 to 87% of the cost.
+   - On a coding benchmark (SWE-bench Pro), compared with `high`, `medium` scored about 2.5 points lower at about 70% of the cost, `low` scored about 8 points lower at about a third of the cost, and `xhigh` scored 1.4 points higher at 2.5x the cost.
+   - It does vary by model, though. In the same guide, Fable 5.1 scored almost the same at `low` and `high` on DeepResearch Bench II, but Opus 5.5 at `low` scored 13.3 points lower than at `medium` on DRACO (a research task) (as of 2026-10-26).
+   - In some measurements, using Opus 5.5 at `medium` reached accuracy similar to Fable 5.1's default setting at a much lower "cost per correct answer."
 
-   내 작업에서도 같다는 보장은 없어요. 채팅·분류·대량 처리는 `low`로도 충분한 경우가 많고, 코딩·긴 에이전트 작업은 effort에 민감해요. **대표 샘플로 직접 재 보세요.**
+   There's no guarantee it's the same for your task. Chat, classification, and bulk processing are often fine at `low`, while coding and long agent tasks are sensitive to effort. **Measure it yourself with a representative sample.**
 
-   <Aside type="caution" title="effort를 대화 중간에 바꾸면 캐시가 깨져요">
-   공식 비용 가이드는 effort를 바꾸면 메시지 캐시가 무효화되니 effort마다 별도 세션에서 시험하라고 해요. 한 대화 안에서 최상위 effort 값을 오르내리는 설계는 피하세요. 다만 공식 effort 문서(2026-10-12 기준)에 따르면 Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5 등은 메시지별 effort 변경(베타, 베타 헤더 `mid-conversation-output-config-2026-07-01`)을 지원하고, 이 방식은 프롬프트 캐시를 유지해요.
+   <Aside type="caution" title="Changing effort mid-conversation breaks the cache">
+   The official cost guide says changing effort invalidates the message cache, so test each effort level in a separate session. Avoid designs that move the top-level effort value up and down within one conversation. That said, according to the official effort docs (as of 2026-10-12), Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5, and others support changing effort per message (beta, with the beta header `mid-conversation-output-config-2026-07-01`), and this approach keeps the prompt cache.
    </Aside>
 
-   `max_tokens`도 함께 보세요. 너무 낮으면 응답이 잘려 재시도 비용이 들고, 에이전트 작업에는 64,000 정도가 권장돼요(공식 비용 가이드). 반대로 짧은 분류에는 256 같은 작은 값이 안전장치가 돼요. Opus 5.5는 thinking을 끌 수 없어서 effort가 유일한 조절 수단이에요.
+   Look at `max_tokens` too. If it's too low, responses get cut off and you pay for retries; for agent work, about 64,000 is recommended (per the official cost guide). On the other hand, for short classification, a small value like 256 works as a safeguard. Opus 5.5 can't turn thinking off, so effort is the only dial you have.
 
-4. **모델 분담으로 작업당 비용 낮추기**
+4. **Lower cost per task by dividing work among models**
 
-   가장 큰 모델이 늘 가장 비싼 결과를 내는 것은 아니에요. 공식 비용 가이드의 측정 사례에서는 Haiku 5.5가 한 과학 추론 벤치마크(GPQA Diamond)에서 Opus 5.5 비용의 약 20분의 1로 85%(Opus 5.5는 91%)를 냈어요. 쉬운 일은 작은 모델이 하고 어려운 일만 큰 모델로 올리면 평균 비용이 크게 내려가요.
+   The biggest model doesn't always give the most expensive results. In a measured case in the official cost guide, Haiku 5.5 scored 85% on one science reasoning benchmark (GPQA Diamond) at about one twentieth the cost of Opus 5.5 (which scored 91%). If small models do the easy work and you escalate only the hard work to larger models, the average cost drops a lot.
 
-   - 분류, 추출, 요약 같은 대량 작업은 Haiku 5.5나 Sonnet 5.5로 시작하세요.
-   - 어려운 판단만 Opus 5.5로 올리고, 필요하면 Fable 5.1은 가장 어려운 일에만 쓰세요.
-   - 가격이 아니라 **작업당 비용**으로 비교하세요. 싼 모델이 더 자주 실패해 재시도하면 오히려 비싸요. 공식 가이드는 "가장 어려운 10%의 작업 비용"도 따로 보라고 해요.
-   - 모델을 바꿀 때는 [C16의 모델별 요청 제한](/claude/c16-api/)을 먼저 확인하세요(예: Haiku 5.5는 `budget_tokens`와 샘플링 파라미터가 400 오류).
-   - 모델이 달라지면 캐시도 따로예요. 캐시는 모델별로 분리돼요.
+   - Start bulk work like classification, extraction, and summarization on Haiku 5.5 or Sonnet 5.5.
+   - Escalate only the hard judgment calls to Opus 5.5, and if needed use Fable 5.1 only for the hardest work.
+   - Compare by **cost per task**, not by price. If a cheap model fails more often and you retry, it ends up costing more. The official guide also says to look separately at "the cost of the hardest 10% of tasks."
+   - When you switch models, check [C16's request limits by model](/claude/c16-api/) first (for example, Haiku 5.5 returns a 400 error for `budget_tokens` and sampling parameters).
+   - If the model changes, the cache is separate too. Caches are separated by model.
 
-   Claude Code에서 모델을 나누는 방법은 [C15. 모델 분담 전략](/claude/c15-model-division/)에서 다뤘어요.
+   We covered how to split models in Claude Code in [C15. Model division strategy](/claude/c15-model-division/).
 
-5. **토큰 미리 세기**
+5. **Count tokens ahead of time**
 
-   보내기 전에 `count_tokens`로 입력이 몇 토큰인지 재요. 이 엔드포인트는 **무료**이고, 메시지 생성과 별개로 분당 요청 제한(Start 5,000, Build 10,000, Scale 20,000)이 있어요. 결과는 추정치라서 실제와 조금 다를 수 있어요. `count_demo.py`를 만들어요.
+   Before you send, use `count_tokens` to measure how many tokens the input is. This endpoint is **free**, and it has its own per-minute request limits separate from message creation (Start 5,000, Build 10,000, Scale 20,000). The result is an estimate, so it may differ slightly from the actual count. Create `count_demo.py`.
 
    ```python
    import anthropic
@@ -283,22 +283,22 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    client = anthropic.Anthropic()
 
    system_prompt = open("company_manual.txt", encoding="utf-8").read()
-   question = [{"role": "user", "content": "연차는 며칠이에요?"}]
+   question = [{"role": "user", "content": "How many days of annual leave do I get?"}]
 
-   # 토큰 세기는 무료지만 분당 요청 제한이 있어요. 모델마다 토큰 수가 다르니 쓸 모델로 세세요.
+   # Counting tokens is free, but there's a per-minute request limit. Token counts differ by model, so count with the model you'll use.
    for model in ["claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5"]:
        count = client.messages.count_tokens(model=model, system=system_prompt, messages=question)
        print(model, count.input_tokens)
    ```
 
-   - **모델마다 토큰 수가 달라요.** Opus 4.7 이후 모델의 토크나이저는 이전 모델보다 같은 글에 약 30% 더 많은 토큰을 써요. 예전 모델에서 잰 숫자로 비용을 추정하지 말고, 쓸 모델 ID로 다시 세세요.
-   - 웹 검색 같은 서버 도구, MCP 커넥터, URL이나 파일 ID로 넘기는 이미지·문서는 세기에서 오류가 나요. 그런 요청은 응답의 `usage`로 확인하세요.
-   - `count_tokens`에 `cache_control`을 넣어도 캐시는 쓰이지 않아요. 캐시 효과는 실제 호출의 `usage`로만 보여요.
-   - 입력이 너무 커서 모델 컨텍스트 창을 넘을지 확인할 때도 써요.
+   - **Token counts differ by model.** The tokenizer of models from Opus 4.7 onward uses about 30% more tokens for the same text than earlier models. Don't estimate cost from numbers measured on an older model; count again with the ID of the model you'll use.
+   - Server tools like web search, MCP connectors, and images or documents passed by URL or file ID cause errors when counting. For those requests, check the response `usage`.
+   - Even if you put `cache_control` in `count_tokens`, the cache isn't used. You can only see the cache effect in the `usage` of real calls.
+   - Also use it to check whether an input is so large it would exceed the model's context window.
 
-6. **사용량 로그와 모니터링**
+6. **Usage logs and monitoring**
 
-   호출마다 `usage`를 남기면 어떤 기능이 돈을 쓰는지 보여요. `usage_log.py`를 만들어요. 5분 캐시 쓰기 기준으로 계산하니 1시간 캐시를 쓴다면 `usage.cache_creation`의 `ephemeral_1h_input_tokens`를 따로 계산에 넣으세요.
+   If you record `usage` on every call, you can see which features are spending money. Create `usage_log.py`. It calculates based on 5-minute cache writes, so if you use a 1-hour cache, add `ephemeral_1h_input_tokens` from `usage.cache_creation` to the calculation separately.
 
    ```python
    import csv
@@ -311,7 +311,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 
    def log_usage(response, model: str, task: str, path: str = "usage.csv") -> float:
-       """호출 한 번의 비용을 계산해 CSV에 한 줄 남겨요. 반환값은 USD."""
+       """Calculate the cost of one call and write one line to the CSV. Returns USD."""
        u = response.usage
        p_in, p_write, p_read, p_out = PRICES[model]
        usd = (
@@ -329,31 +329,31 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
        return usd
    ```
 
-   사용하는 곳에서는 응답을 받은 직후에 `log_usage(response, model, task)`를 호출하면 돼요. 작업 이름(`task`)을 함께 남기면 "작업당 비용"으로 모아 볼 수 있어요.
+   Where you use it, just call `log_usage(response, model, task)` right after you get the response. If you also record a task name (`task`), you can roll things up into "cost per task."
 
-   조직 전체의 사용량은 Console의 Usage와 Cost 화면이나 Usage and Cost Admin API에서 볼 수 있어요. 이 API는 `usage_report/messages`와 `cost_report` 엔드포인트가 있고 **Admin API 키**(`sk-ant-admin...`)가 필요해요. Admin API 키는 개인 계정으로는 만들 수 없는 조직용 키라서 조건을 공식 문서에서 확인하세요. Amazon Bedrock, Vertex AI, Foundry로 호출한 트래픽은 이 보고서에 나오지 않을 수 있어요.
+   You can see usage for your whole organization on the Console's Usage and Cost pages or through the Usage and Cost Admin API. This API has `usage_report/messages` and `cost_report` endpoints and needs an **Admin API key** (`sk-ant-admin...`). Admin API keys are organization keys that you can't create on a personal account, so check the requirements in the official docs. Traffic you send through Amazon Bedrock, Vertex AI, or Foundry may not show up in these reports.
 
-   <Aside type="tip" title="더 새로운 API가 있어요 (2026-10-31 기준)">
-   위 `usage_report`·`cost_report` 엔드포인트는 기존(레거시) Usage and Cost API예요. 모델·워크스페이스·API 키·사용자별로 쪼개 볼 수 있는 새 **Usage and Cost Analytics API(베타)**도 나와 있어요. 자세한 사용법은 [사용량·비용 분석 API로 팀 사용 현황 대시보드 만들기](/dev/11-usage-cost-api/)를 보세요.
+   <Aside type="tip" title="There is a newer API (as of 2026-10-31)">
+   The `usage_report` and `cost_report` endpoints above belong to the older (legacy) Usage and Cost API. There is also a newer **Usage and Cost Analytics API (beta)** that breaks usage down by model, workspace, API key, and user. See [Build a Team Usage Dashboard with the Usage and Cost Analytics API](/dev/11-usage-cost-api/) for details.
    </Aside>
 
-   <ScreenshotPlaceholder caption="Console의 Usage와 Cost 화면" officialUrl="https://platform.claude.com/docs/en/manage-claude/usage-cost-api" officialLabel="Anthropic 문서에서 보기" />
+   <ScreenshotPlaceholder caption="The Console's Usage and Cost pages" officialUrl="https://platform.claude.com/docs/en/manage-claude/usage-cost-api" officialLabel="View in the Anthropic docs" />
 
-   <Aside type="note" title="지출 한도 설정">
-   조직 지출 상한은 사용 티어에 따라 정해져요(Start $500, Build $1,000, Scale $200,000, 월 기준, 2026-10-12 기준). 공식 rate limits 문서에 따르면 Console의 설정(Settings) > 결제(Billing)에서 **Spend limits** 섹션의 **Adjust limit**(없으면 **Set limit**)을 눌러 티어 상한 이하로 내 지출 한도를 정할 수 있어요. 내가 정한 한도에 닿으면 요청이 HTTP 400(`invalid_request_error`)으로 거절돼요. 지출 알림 설정 절차는 공식 rate limits 문서에 없어요(2026-10-13 확인). 티어 설명은 [C16](/claude/c16-api/)에서도 소개했어요.
+   <Aside type="note" title="Setting a spend limit">
+   The organization spend cap is set by your usage tier (Start $500, Build $1,000, Scale $200,000, per month, as of 2026-10-12). According to the official rate limits docs, in the Console under Settings > Billing, you can click **Adjust limit** (or **Set limit** if none exists) in the **Spend limits** section to set your own spend limit at or below the tier cap. When you hit the limit you set, requests are rejected with HTTP 400 (`invalid_request_error`). The official rate limits docs have no procedure for setting spend alerts (checked 2026-10-13). We also introduced the tiers in [C16](/claude/c16-api/).
    </Aside>
 
-7. **가격 비교 계산하기**
+7. **Run a price comparison**
 
-   바꾸기 전에 숫자로 비교해 보세요. `cost_calc.py`는 요청 수, 고정 접두사, 새 입력, 출력 토큰으로 모델별·방식별 비용을 계산해요. 캐시는 첫 요청이 쓰기고 이후는 모두 읽기(계속 살아 있음)라고 가정해요.
+   Compare with numbers before you switch. `cost_calc.py` calculates cost by model and by method from the number of requests, the fixed prefix, new input, and output tokens. It assumes the first request is a write and all the rest are reads (the cache stays alive).
 
    ```python
-   """가격 비교 계산기. 가격은 100만 토큰(MTok)당 USD, 2026-10-11 공식 pricing 페이지 기준."""
+   """Price comparison calculator. Prices are USD per 1 million tokens (MTok), per the official pricing page of 2026-10-11."""
 
    PRICES = {  # input, cache_write_5m, cache_read, output
        "claude-opus-5-5": (4.00, 5.00, 0.20, 20.00),
        "claude-sonnet-5-5": (2.00, 2.50, 0.10, 10.00),
-       "claude-haiku-5-5": (0.10, 0.125, 0.01, 0.50),  # 프롬프트 100,000토큰 이하 기준
+       "claude-haiku-5-5": (0.10, 0.125, 0.01, 0.50),  # For prompts of 100,000 tokens or less
    }
 
 
@@ -361,7 +361,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
             cached=False, batch=False):
        p_in, p_write, p_read, p_out = PRICES[model]
        if cached:
-           # 첫 요청은 캐시 쓰기, 나머지는 캐시 읽기 (캐시가 계속 살아 있다고 가정)
+           # The first request is a cache write, the rest are cache reads (assuming the cache stays alive)
            prefix = prefix_tokens * p_write + prefix_tokens * p_read * (requests - 1)
            total_in = prefix + new_input_tokens * requests * p_in
        else:
@@ -378,94 +378,94 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
            cached = cost(model, cached=True, **args)
            batch = cost(model, batch=True, **args)
            both = cost(model, cached=True, batch=True, **args)
-           print(f"{model:20s} 기본 ${base:7.2f} | 캐시 ${cached:6.2f} | 배치 ${batch:6.2f} | 둘 다 ${both:6.2f}")
+           print(f"{model:20s} base ${base:7.2f} | cached ${cached:6.2f} | batch ${batch:6.2f} | both ${both:6.2f}")
    ```
 
-   가정: 하루 요청 1,000건, 고정 접두사(규정집) 20,000토큰, 새 입력 500토큰, 출력 300토큰이에요. 실행 결과는 이래요.
+   Assumptions: 1,000 requests per day, a fixed prefix (the policy manual) of 20,000 tokens, 500 tokens of new input, and 300 tokens of output. The results of running it are as follows.
 
-   | 모델 | 기본 | 캐시 | 배치 | 캐시+배치 |
+   | Model | Baseline | Cached | Batch | Cached + batch |
    | --- | --- | --- | --- | --- |
    | Opus 5.5 | $88.00 | $12.10 | $44.00 | $6.05 |
    | Sonnet 5.5 | $44.00 | $6.05 | $22.00 | $3.02 |
    | Haiku 5.5 | $2.20 | $0.40 | $1.10 | $0.20 |
 
-   읽는 법은 이래요.
+   Here's how to read it.
 
-   - 같은 Opus 5.5에서 **캐시만으로 약 86% 절감**이에요(88.00 -> 12.10). 접두사가 클수록 효과가 커요.
-   - 모델을 Opus 5.5에서 Sonnet 5.5로 바꾸면 기본 요금이 절반이고, Haiku 5.5는 40분의 1 수준이에요. 단 품질이 그 작업에 충분한지는 따로 재야 해요.
-   - 캐시+배치는 **이론상 최저치**예요. 배치에서는 캐시 히트가 best-effort이고, 실제는 중간쯤일 가능성이 커요.
-   - 이 계산은 생각(thinking) 토큰을 넣지 않았어요. 생각은 출력으로 과금되므로 실제 출력 비용은 더 클 수 있어요. 실제 `usage`로 보정하세요.
-   - 요청 간격이 5분을 넘어 캐시가 자주 만료되면 쓰기 비용이 반복돼서 캐시 효과가 줄어요.
+   - For the same Opus 5.5, **caching alone saves about 86%** (88.00 -> 12.10). The bigger the prefix, the bigger the effect.
+   - Switching from Opus 5.5 to Sonnet 5.5 halves the base rate, and Haiku 5.5 is about one fortieth. But you have to measure separately whether the quality is good enough for that task.
+   - Cached + batch is the **theoretical minimum.** In batches, cache hits are best-effort, and the real figure is likely somewhere in the middle.
+   - This calculation doesn't include thinking tokens. Thinking is billed as output, so actual output costs may be higher. Correct it with real `usage`.
+   - If the gap between requests is over 5 minutes and the cache often expires, write costs repeat and the benefit of caching shrinks.
 
    <PromptBox>
-   내 서비스의 하루 요청 수는 ( ), 고정 프롬프트는 약 ( )토큰, 질문은 평균 ( )토큰, 답변은 평균 ( )토큰이야. cost_calc.py를 이 값으로 바꿔 돌려서, Sonnet 5.5 기준으로 캐시와 배치를 각각 적용했을 때 하루 비용을 표로 정리해 줘. 사용자가 기다리는 요청과 아닌 요청을 구분해서 어디에 배치를 쓸지도 제안해 줘.
+   My service gets ( ) requests per day, the fixed prompt is about ( ) tokens, questions average ( ) tokens, and answers average ( ) tokens. Update cost_calc.py with these values and run it, then put the daily cost in a table for Sonnet 5.5 with caching and with batches applied separately. Also separate the requests that users are waiting on from the ones they aren't, and suggest where I should use batches.
    </PromptBox>
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-### 수단별 비교
+### Comparison of measures
 
-| 수단 | 절감 | 대가 | 쓰기 좋은 때 |
+| Measure | Savings | Cost | Good for |
 | --- | --- | --- | --- |
-| 프롬프트 캐싱 | 반복 접두사 입력의 90~95% | 쓰기 프리미엄 1.25배, 접두사 고정 필요 | 긴 시스템 프롬프트, 도구, 문서를 여러 번 쓸 때 |
-| Message Batches | 입력·출력 50% | 최대 24시간 지연, 도구 루프 불가 | 분류, 평가, 야간 처리 |
-| effort 낮추기 | 작업에 따라 다름 | 어려운 작업은 품질 하락 | 채팅, 분류, 단순 조회 |
-| 작은 모델 | 가격 차이만큼 | 품질 위험 | 대량·정형 작업, 서브에이전트 |
-| `max_tokens` 제한 | 의도치 않은 긴 출력 방지 | 너무 낮으면 잘림 | 짧은 답이 정해진 작업 |
-| 입력 줄이기 | 입력 토큰만큼 | 정보 누락 위험 | 도구 결과·긴 문서 정리 |
+| Prompt caching | 90 to 95% of repeated-prefix input | 1.25x write premium, the prefix must stay fixed | Reusing a long system prompt, tools, or documents many times |
+| Message Batches | 50% of input and output | Up to 24 hours of delay, no tool loops | Classification, evaluation, overnight processing |
+| Lower effort | Varies by task | Lower quality on hard tasks | Chat, classification, simple lookups |
+| Smaller model | The price difference | Quality risk | Bulk, structured work, subagents |
+| `max_tokens` cap | Prevents unintended long output | Cuts off if too low | Tasks with a known short answer |
+| Trim input | As many input tokens as you cut | Risk of dropping information | Tidying tool results and long documents |
 
-### 캐시 규칙 요약
+### Cache rules at a glance
 
-| 항목 | 값 |
+| Item | Value |
 | --- | --- |
-| 최소 길이 | Opus 5.5, Sonnet 5.5, Haiku 5.5는 512토큰 (공식 caching 페이지) |
-| 쓰기 비용 | 5분 1.25배, 1시간 2배 |
-| 읽기 비용 | 기본 입력의 0.1배. Opus 5.5·Sonnet 5.5 0.05배, Fable 5.1 0.025배 |
-| 수명 | 5분(기본) 또는 1시간. 히트 시 갱신 |
-| 순서 | tools -> system -> messages |
-| 같은 요청에서 TTL을 섞으면 | 1시간 항목이 5분 항목보다 앞에 와야 해요 |
+| Minimum length | 512 tokens for Opus 5.5, Sonnet 5.5, and Haiku 5.5 (official caching page) |
+| Write cost | 1.25x for 5 minutes, 2x for 1 hour |
+| Read cost | 0.1x of base input. 0.05x for Opus 5.5 and Sonnet 5.5, 0.025x for Fable 5.1 |
+| Lifetime | 5 minutes (default) or 1 hour. Refreshed on a hit |
+| Order | tools -> system -> messages |
+| If you mix TTLs in one request | 1-hour entries must come before 5-minute entries |
 
-## 자주 막히는 지점
+## Common sticking points
 
-### `cache_read_input_tokens`가 계속 0이에요
+### `cache_read_input_tokens` stays at 0
 
-- **원인**: 접두사가 512토큰보다 짧거나, 요청마다 앞부분이 달라져요(시각, ID, 도구 순서 변경). 요청 간격이 TTL보다 길거나 워크스페이스가 달라도 그래요.
-- **해결**: 접두사 길이를 `count_tokens`로 확인하고, 바뀌는 값을 `cache_control` 뒤쪽으로 옮기세요. 두 번째 요청이 첫 요청 직후 5분 안에 가는지 확인하세요.
+- **Cause**: The prefix is shorter than 512 tokens, or the front part differs from request to request (time, ID, a change in tool order). The same happens if the gap between requests is longer than the TTL or the workspace differs.
+- **Fix**: Check the prefix length with `count_tokens`, and move the changing values to after `cache_control`. Make sure the second request goes out within 5 minutes of the first.
 
-### 배치 결과가 보낸 순서와 달라요
+### Batch results come back in a different order than you sent them
 
-- **원인**: 배치는 요청을 비동기로, 순서 없이 처리해요.
-- **해결**: 항상 `custom_id`로 짝지으세요.
+- **Cause**: Batches process requests asynchronously and without order.
+- **Fix**: Always match by `custom_id`.
 
-### 배치 요청 일부가 `expired`예요
+### Some batch requests are `expired`
 
-- **원인**: 24시간 안에 처리되지 않았어요. 수요가 많거나 요청이 많으면 늘어날 수 있다고 공식 문서가 설명해요.
-- **해결**: 만료된 요청만 모아 다시 제출하세요. 공식 문서(2026-10-12 기준)는 `expired` 요청에는 비용이 청구되지 않는다고 설명해요.
+- **Cause**: They weren't processed within 24 hours. The official docs explain that this can increase when demand is high or there are many requests.
+- **Fix**: Collect only the expired requests and submit them again. The official docs (as of 2026-10-12) explain that `expired` requests aren't charged.
 
-### Haiku 5.5로 바꿨더니 400 오류나 응답이 비어요
+### After switching to Haiku 5.5, you get a 400 error or an empty response
 
-- **원인**: Haiku 5.5는 `budget_tokens`, 샘플링 파라미터, prefill이 400 오류예요. 기본으로 생각해서 `max_tokens`가 작으면 생각만 하다 끝날 수 있어요.
-- **해결**: [C16의 모델별 요청 제한](/claude/c16-api/)을 보고 파라미터를 빼고, `max_tokens`를 넉넉히 두거나 `effort`를 `low`로 낮추세요.
+- **Cause**: Haiku 5.5 returns a 400 error for `budget_tokens`, sampling parameters, and prefill. It thinks by default, so if `max_tokens` is small it can finish with only thinking.
+- **Fix**: Check [C16's request limits by model](/claude/c16-api/), remove the parameters, and either leave `max_tokens` generous or lower `effort` to `low`.
 
-### 추정한 비용과 청구서가 달라요
+### The estimated cost differs from the invoice
 
-- **원인**: 생각 토큰, 도구 사용 시스템 프롬프트(약 286토큰), 도구 정의와 결과, 캐시 쓰기 프리미엄이 계산에서 빠졌을 수 있어요. `count_tokens`도 추정치예요.
-- **해결**: `usage` 로그로 실제 토큰 4종(입력, 캐시 쓰기, 캐시 읽기, 출력)을 모아 단가를 곱해 보정하세요.
+- **Cause**: Thinking tokens, the tool-use system prompt (about 286 tokens), tool definitions and results, and the cache write premium may have been left out of the calculation. `count_tokens` is also an estimate.
+- **Fix**: Collect the four real token types from your `usage` logs (input, cache write, cache read, output) and multiply by the unit prices to correct it.
 
-## 실전 팁
+## Practical tips
 
-- **"작업 하나"를 단위로 비용을 재세요.** 한 번의 호출이 아니라 사용자 요청 하나를 끝내는 모든 호출의 합을 로그로 남기세요.
-- **측정이 먼저예요.** 어디서 돈이 나가는지 로그로 보기 전에는 최적화하지 마세요. 공식 가이드도 입력 비용 대부분이 반복 접두사라면 캐싱이 가장 큰 수단이라고 해요.
-- **사용자가 기다리는 요청과 아닌 요청을 나누세요.** 같은 서비스라도 실시간 응답은 일반 호출, 야간 리포트는 배치로 보내요.
-- **큰 변경은 한 번에 하나씩.** 캐싱, effort, 모델을 한꺼번에 바꾸면 무엇이 효과였는지 알 수 없어요. 대표 샘플로 품질을 같이 재세요(품질 측정은 08편 평가를 보세요).
-- **상한을 두세요.** 에이전트 루프나 반복 호출은 반복 횟수, `max_tokens`, 일일 호출 수 상한을 코드에 넣으세요. 배치와 에이전트는 한 번 실행에 큰 비용이 나갈 수 있어요.
-- 이 사이트 자체도 기획은 큰 모델, 구현은 작은 모델로 나눠서 만들었어요. 그 사례는 [C15](/claude/c15-model-division/)에 있어요.
+- **Measure cost per "task."** Log not one call, but the sum of all the calls it takes to finish a single user request.
+- **Measure first.** Don't optimize before you've seen in the logs where the money is going. The official guide also says that if most of your input cost is a repeated prefix, caching is the biggest lever.
+- **Separate the requests users are waiting on from those they aren't.** Even within one service, send real-time responses as regular calls and overnight reports as batches.
+- **Make big changes one at a time.** If you change caching, effort, and the model all at once, you can't tell what worked. Measure quality on a representative sample too (for quality measurement, see tutorial 08 on evals).
+- **Set caps.** For agent loops and repeated calls, put caps on the number of iterations, `max_tokens`, and daily calls in your code. Batches and agents can spend a lot in a single run.
+- This site itself was built by dividing the work too: a larger model for planning and a smaller model for implementation. That case is in [C15](/claude/c15-model-division/).
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [1. 도구 사용으로 업무 봇 만들기](/dev/01-tool-use/) — 도구 정의가 긴 봇에 캐싱을 적용해 보세요
-- [C15. 모델 분담 전략](/claude/c15-model-division/) — Claude Code에서의 모델 분담
-- [C16. Claude API 시작하기](/claude/c16-api/) — 가격표와 모델별 요청 제한
-- [9. 사내 문서 Q&A 만들기: Files API와 인용(citations)](/dev/09-rag-files-citations/) — 긴 문서에 프롬프트 캐싱을 적용하는 실례
+- [1. Build a work bot with tool use](/dev/01-tool-use/) — apply caching to a bot with long tool definitions
+- [C15. Model division strategy](/claude/c15-model-division/) — dividing models in Claude Code
+- [C16. Getting started with the Claude API](/claude/c16-api/) — the price list and request limits by model
+- [9. Build internal document Q&A: the Files API and citations](/dev/09-rag-files-citations/) — a real example of applying prompt caching to long documents

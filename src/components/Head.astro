@@ -32,8 +32,8 @@ const SECTION_NAMES_EN: Record<string, string> = {
 const SECTION_NAMES = lang === 'en' ? SECTION_NAMES_EN : SECTION_NAMES_KO;
 
 const { entry } = Astro.locals.starlightRoute;
-// 영어 문서 id는 `en/...`로 시작하므로 접두사를 떼고 섹션을 찾는다. OG 이미지는 두 언어가 같은 파일을 쓴다.
-const first = entry.id.replace(/^en\//, '').split('/')[0];
+// 한국어 문서 id는 `ko/...`로 시작하므로 접두사를 떼고 섹션을 찾는다. OG 이미지는 두 언어가 같은 파일을 쓴다.
+const first = entry.id.replace(/^ko\//, '').split('/')[0];
 // 문서 폴더(id) 우선, 없으면 frontmatter category, 그것도 없으면 사이트 기본 이미지
 const key = first in SECTION_NAMES ? first : entry.data.category && entry.data.category in SECTION_NAMES ? entry.data.category : 'default';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -44,7 +44,7 @@ const imageAlt = key === 'default' ? SITE_NAME : `${SITE_NAME} - ${SECTION_NAMES
 <Default><slot /></Default>
 {/* og:locale은 src/routeMiddleware.ts에서 ko_KR/en_US 형식으로 출력한다. */}
 {/*
-  첫 방문 언어 안내: 홈(`/`)에서만, 브라우저 언어에 한국어가 없으면 `/en/`으로 보낸다.
+  첫 방문 언어 안내: 홈(`/`, 영어)에서만, 브라우저 언어에 한국어가 있으면 `/ko/`로 보낸다.
   - localStorage['lang-pref']('ko'|'en')가 있으면 그 선택을 따른다.
   - 검색엔진·미리보기 봇은 이동시키지 않는다. 깊은 페이지는 절대 이동시키지 않는다.
   자세한 규칙은 docs/guides/english-site.md 참고.
@@ -56,14 +56,14 @@ const imageAlt = key === 'default' ? SITE_NAME : `${SITE_NAME} - ${SECTION_NAMES
       if (/bot|crawl|spider|slurp|bingpreview|facebookexternalhit|kakaotalk-scrap|yeti/i.test(navigator.userAgent)) return;
       var pref = null;
       try { pref = localStorage.getItem('lang-pref'); } catch (e) {}
-      var goEn;
-      if (pref === 'en') goEn = true;
-      else if (pref === 'ko') goEn = false;
+      var goKo;
+      if (pref === 'ko') goKo = true;
+      else if (pref === 'en') goKo = false;
       else {
         var langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
-        goEn = !Array.prototype.some.call(langs, function (l) { return /^ko/i.test(l); });
+        goKo = Array.prototype.some.call(langs, function (l) { return /^ko/i.test(l); });
       }
-      if (goEn) location.replace('/en/' + location.search + location.hash);
+      if (goKo) location.replace('/ko/' + location.search + location.hash);
     } catch (e) {}
   })();
 </script>
@@ -72,7 +72,7 @@ const imageAlt = key === 'default' ? SITE_NAME : `${SITE_NAME} - ${SECTION_NAMES
   document.addEventListener('change', function (e) {
     var el = e.target;
     if (!el || el.tagName !== 'SELECT' || !el.closest || !el.closest('starlight-lang-select')) return;
-    try { localStorage.setItem('lang-pref', /^\/en(\/|$)/.test(el.value) ? 'en' : 'ko'); } catch (err) {}
+    try { localStorage.setItem('lang-pref', /^\/ko(\/|$)/.test(el.value) ? 'ko' : 'en'); } catch (err) {}
   }, true);
 </script>
 <meta name="theme-color" content="#ff7a59" media="(prefers-color-scheme: light)" />

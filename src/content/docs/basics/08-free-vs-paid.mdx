@@ -1,13 +1,13 @@
 ---
-title: "무료로 어디까지? 요금제 고르기 기초"
-description: "Claude·ChatGPT·Gemini 무료 플랜으로 할 수 있는 일, 유료가 필요해지는 순간, 개인 요금제를 쉽게 비교하는 법"
+title: "How Far Does Free Go? Choosing a Plan"
+description: "What you can do on the free plans of Claude, ChatGPT, and Gemini, when you'd need to pay, and an easy way to compare personal plans"
 sidebar:
-  label: "8. 무료 vs 유료 요금제"
+  label: "8. Free vs. paid plans"
 level: beginner
 category: basics
 tools: ["Claude", "ChatGPT", "Gemini"]
-duration: "15분"
-prerequisites: ["AI 서비스 계정 1개 이상 (무료 계정이면 충분해요)"]
+duration: "15 min"
+prerequisites: ["At least one AI service account (a free account is enough)"]
 lastVerified: 2026-10-31
 sources:
   - title: "Claude pricing"
@@ -22,11 +22,11 @@ sources:
     url: "https://gemini.google/subscriptions/"
   - title: "Gemini Apps limits & upgrades for Google AI subscribers"
     url: "https://support.google.com/gemini/answer/16275805"
-  - title: "Pricing (OpenAI, ChatGPT 문서)"
+  - title: "Pricing (OpenAI, ChatGPT docs)"
     url: "https://learn.chatgpt.com/docs/pricing"
-  - title: "Claude 앱 (App Store, 한국)"
+  - title: "Claude app (App Store, Korea)"
     url: "https://apps.apple.com/kr/app/claude/id6473753684"
-  - title: "Google Gemini 앱 (App Store, 한국)"
+  - title: "Google Gemini app (App Store, Korea)"
     url: "https://apps.apple.com/kr/app/google-gemini/id6477489729"
 status: published
 ---
@@ -37,147 +37,147 @@ import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 
 <Summary>
-- **처음에는 무료로 충분해요.** 세 서비스 모두 무료 플랜이 있어요. 한 달쯤 써 보고 "한도에 자주 걸린다"고 느낄 때 유료를 고민해도 늦지 않아요.
-- 개인 유료는 대체로 **월 $20 안팎**이에요. Claude Pro 월 $20, ChatGPT Plus 월 $20, Google AI Pro 월 $19.99예요. (미국 기준, 2026-10-10 기준)
-- 더 싼 단계도 있어요. ChatGPT Go 월 $8, Google AI Plus 월 $4.99예요.
-- 유료의 차이는 주로 **쓸 수 있는 양(한도)과 고급 기능**이에요. 결제 전 공식 가격 페이지를 꼭 확인하세요.
+- **Free is enough at first.** All three services have a free plan. Try it for about a month, and it's not too late to think about paying once you feel like "I keep hitting the limit."
+- Personal paid plans are generally **around $20 a month**: Claude Pro is $20/month, ChatGPT Plus is $20/month, and Google AI Pro is $19.99/month. (US prices, as of 2026-10-10)
+- There are cheaper tiers too: ChatGPT Go is $8/month and Google AI Plus is $4.99/month.
+- The difference with paid plans is mainly **how much you can use (limits) and advanced features**. Be sure to check the official pricing page before paying.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- 무료 플랜으로 할 수 있는 일과 못 하는 일을 구분할 수 있어요.
-- "지금 유료로 바꿔야 하나?"를 스스로 판단할 수 있어요.
-- 세 서비스의 개인 요금제를 한눈에 비교할 수 있어요.
-- 결제 전에 확인할 것들을 알 수 있어요.
+- Tell apart what you can and can't do on a free plan.
+- Decide for yourself, "Should I switch to paid now?"
+- Compare the three services' personal plans at a glance.
+- Know what to check before paying.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **무료 플랜** | 돈을 내지 않는 기본 이용이에요. 쓸 수 있는 양에 제한이 있어요. |
-| **사용량 한도** | 일정 시간 안에 쓸 수 있는 양의 상한이에요. 다 쓰면 시간이 지나 풀릴 때까지 기다려요. |
-| **구독** | 매달(또는 매년) 자동으로 결제되는 이용 방식이에요. 해지하지 않으면 계속 결제돼요. |
-| **개인 플랜 / 팀·기업 플랜** | 혼자 쓰는 플랜과 회사·조직이 여럿이 쓰는 플랜이에요. 이 편은 개인 플랜 위주예요. |
+| **Free plan** | Basic use that doesn't cost anything. There's a limit on how much you can use. |
+| **Usage limit** | The cap on how much you can use within a certain time. When you use it all, you wait until it resets with time. |
+| **Subscription** | A way of paying that's charged automatically every month (or year). It keeps charging until you cancel. |
+| **Personal plan / team or enterprise plan** | A plan for using alone vs. a plan for several people in a company or organization. This tutorial focuses on personal plans. |
 
-### 무료 플랜으로 할 수 있는 일 (2026-10-10 기준)
+### What you can do on the free plans (as of 2026-10-10)
 
-- **Claude Free**: 웹·데스크톱·모바일 채팅, 웹 검색, 파일 만들기와 코드 실행, 메모리, 아티팩트, 프로젝트 최대 5개. Claude Code는 포함되지 않아요. ([C2](/claude/c02-plans-limits/))
-- **Gemini 무료**: 구글 계정으로 월 $0. Deep Research, Canvas, Gems 포함 (미국 기준 안내).
-- **ChatGPT Free**: 월 $0. 다만 Free·Go에서는 모델이 Plus 이상과 다르다고 안내돼요. ([chat/5편](/chat/05-compare-assistants/))
+- **Claude Free**: Chat on web, desktop, and mobile; web search; file creation and code execution; memory; artifacts; up to 5 projects. Claude Code is not included. ([C2](/claude/c02-plans-limits/))
+- **Gemini free**: $0/month with a Google account. Includes Deep Research, Canvas, and Gems (as described for the US).
+- **ChatGPT Free**: $0/month. However, on Free and Go the models are described as different from those on Plus and above. ([chat tutorial 5](/chat/05-compare-assistants/))
 
-무료 플랜의 **구체적인 사용량 숫자**(메시지 몇 개 등)는 Claude를 포함해 공식 문서에 공개돼 있지 않아요. 직접 써 보면서 한도에 닿는지 확인하는 게 가장 정확해요.
+The **specific usage numbers** for free plans (such as how many messages) aren't published in the official documentation, including for Claude. The most accurate way is to use it yourself and see whether you hit the limit.
 
-## 단계별 따라하기
+## Step-by-step guide
 
 <Checklist items={[
-  '무료 플랜으로 일주일 이상 써 봤어요',
-  '한도에 걸린 횟수를 세어 봤어요',
-  '꼭 필요한 유료 기능이 있는지 따져 봤어요',
-  '공식 가격 페이지에서 가격과 기능을 확인했어요',
-  '한 달만 결제해 보고 해지 방법도 확인했어요',
+  'I used a free plan for at least a week',
+  'I counted how many times I hit the limit',
+  'I considered whether there\'s a paid feature I truly need',
+  'I checked prices and features on the official pricing page',
+  'I tried paying for just one month and checked how to cancel',
 ]} />
 
 <Steps>
 
-1. **무료로 먼저 써 보기**
+1. **Try free first**
 
-   일주일 정도 평소 하고 싶던 일(검색 대신 질문, 글 다듬기, 요약)을 시켜 보세요. 어떤 일이 막히는지 메모해 두면 판단이 쉬워져요.
+   For about a week, have it do the things you usually want to do (asking questions instead of searching, polishing writing, summarizing). Making a note of what gets blocked will make the decision easier.
 
-2. **한도에 걸리는지 세어 보기**
+2. **Count how often you hit the limit**
 
-   "잠시 후 다시 이용하세요" 같은 안내가 한 주에 몇 번 나왔나요? 가끔이면 기다리면 돼요. 거의 매일이면 유료를 고려할 때예요.
+   How many times a week did you see a message like "Please try again later"? If it's occasional, you can just wait. If it's almost every day, it's time to consider paying.
 
-3. **유료가 필요한 순간인지 확인하기**
+3. **Check whether it's a moment that calls for paid**
 
-   아래 중 하나라도 해당하면 유료가 도움이 돼요.
+   If any of the following applies, paid can help.
 
-   - 한도에 자주 걸려서 일이 끊겨요.
-   - 더 좋은 모델이나 긴 자료 분석이 필요해요.
-   - 코딩 도구(예: Claude Code)를 쓰고 싶어요. Claude Code는 유료 플랜이 필요해요.
-   - 업무로 매일 많이 쓰고, 시간이 절약되는 만큼 값어치가 있어요.
+   - You hit the limit often, and your work gets interrupted.
+   - You need a better model or analysis of long material.
+   - You want to use a coding tool (for example, Claude Code). Claude Code requires a paid plan.
+   - You use it a lot every day for work, and the time it saves is worth the cost.
 
-   반대로 가끔 질문하는 정도라면 무료로 충분해요.
+   On the other hand, if you only ask now and then, free is enough.
 
-4. **개인 요금제 비교하기**
+4. **Compare personal plans**
 
-   아래 빠른 참조표를 보세요. 같은 가격대끼리 비교하는 게 공정해요.
+   Look at the quick reference table below. It's fairer to compare plans in the same price range.
 
-5. **한 곳만 한 달 결제해 보기**
+5. **Try paying for one service for a month**
 
-   여러 서비스를 동시에 구독하지 마세요. 한 곳만 한 달 써 보고 만족하면 이어 가세요. 연 결제는 월 결제보다 싸지만 한 번에 큰돈이 나가니, 충분히 써 본 뒤에 고르세요.
+   Don't subscribe to several services at the same time. Use just one for a month, and if you're satisfied, keep going. Annual billing is cheaper than monthly, but a large sum goes out at once, so choose it after you've used the service enough.
 
-6. **결제 전 마지막 확인하기**
+6. **Do a final check before paying**
 
-   - 가격이 **원화**로 얼마인지, 부가세가 붙는지
-   - **자동 갱신** 여부와 해지 방법
-   - 앱 스토어로 결제하면 웹보다 가격이 다를 수 있어요 (App Store 표시 가격과 웹 가격이 다른 경우가 있어요)
+   - How much the price is in **your local currency**, and whether tax is added
+   - Whether it **auto-renews** and how to cancel
+   - If you pay through an app store, the price may differ from the web (the App Store price and the web price sometimes differ)
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-### 개인 요금제 한눈에 (미국 달러 기준, 부가세 제외, 2026-10-10 기준)
+### Personal plans at a glance (US dollars, excluding tax, as of 2026-10-10)
 
-| 구분 | Claude | ChatGPT | Gemini (Google AI) |
+| Tier | Claude | ChatGPT | Gemini (Google AI) |
 | --- | --- | --- | --- |
-| 무료 | Free $0 | Free $0 | 무료 $0 |
-| 입문 유료 | 해당 없음 | Go 월 $8 | Google AI Plus 월 $4.99 |
-| 기본 유료 | Pro 월 $20 (연 결제 시 월 $17 환산, $200 선결제) | Plus 월 $20 | Google AI Pro 월 $19.99 |
-| 많이 쓰는 분 | Max 월 $100, Ultra 월 $200 (2026-10-31 기준) | Pro 월 $100·$200·$500 중 선택 | Google AI Ultra 월 $99.99부터 |
+| Free | Free $0 | Free $0 | Free $0 |
+| Entry paid | N/A | Go $8/month | Google AI Plus $4.99/month |
+| Standard paid | Pro $20/month (about $17/month with annual billing, $200 prepaid) | Plus $20/month | Google AI Pro $19.99/month |
+| Heavy users | Max $100/month, Ultra $200/month (as of 2026-10-31) | Pro: choose $100, $200, or $500/month | Google AI Ultra from $99.99/month |
 
-- 한국 가격: ChatGPT는 한국 App Store 표시가 Go ₩13,000, Plus ₩29,000, Pro ₩159,000·₩299,000·₩790,000이에요(iOS 앱 기준, 웹 가격과 다를 수 있어요). Claude는 한국 App Store 앱 내 구입 목록에 Pro 월간 ₩33,000, Max 5x 월간 ₩199,000, Max 20x 월간 ₩449,000이 표시돼 있었는데, 이는 2026-10-13 기준 요금제 개편 전 표시라 바뀌었을 수 있어요(2026-10-31에 다시 확인하려 했지만 스토어 페이지에서 원화 가격을 읽지 못했어요). Gemini는 한국 App Store에 Google AI Plus ₩7,500, Google AI Pro ₩29,000, Google AI Ultra ₩300,000이 표시돼요(둘 다 2026-10-13 기준, 앱 내 구입 항목 기준이라 기간·할인 조건은 스토어 화면에서 확인하세요).
-- 가격은 지역에 따라 다를 수 있어요.
+- Korean prices (KRW): In the Korean App Store, ChatGPT is shown as Go ₩13,000, Plus ₩29,000, and Pro ₩159,000, ₩299,000, or ₩790,000 (iOS app prices, which may differ from web prices). For Claude, the Korean App Store's in-app purchase list shows Pro monthly ₩33,000, Max 5x monthly ₩199,000, and Max 20x monthly ₩449,000, but that was the display as of 2026-10-13, before the plan overhaul, so it may have changed (we tried to recheck on 2026-10-31 but couldn't read the KRW prices on the store page). For Gemini, the Korean App Store shows Google AI Plus ₩7,500, Google AI Pro ₩29,000, and Google AI Ultra ₩300,000 (both as of 2026-10-13; these are in-app purchase items, so check the period and discount terms on the store screen).
+- Prices can differ by region.
 
-### 유료가 되면 달라지는 것
+### What changes when you pay
 
-| 서비스 | 유료 플랜의 주요 차이 (공식 안내) |
+| Service | Main differences on paid plans (per official info) |
 | --- | --- |
-| Claude Pro | Free보다 많은 사용량(5시간·주간 한도 기준), Claude Code, 프로젝트(Free는 최대 5개, Pro는 개수 제한 표기 없음), 더 많은 모델 |
-| Claude Max·Ultra | Max는 Pro의 5배 사용량, Ultra는 주간 사용량 Pro의 10배(인증된 계정은 5시간 한도 없음). 둘 다 Fable 포함, 월 API 크레딧($100/$200), 신기능 조기 접근 (2026-10-31 기준) |
-| Gemini | 컨텍스트 창이 커져요. 플랜 없음 32K, AI Plus 128K, AI Pro·Ultra 1M 토큰. 한도는 5시간 단위와 주간 한도로 갱신돼요 |
-| ChatGPT | Free·Go와 Plus 이상은 모델이 달라요. 사용량 한도는 공식 문서에서 찾지 못했어요 |
+| Claude Pro | More usage than Free (on 5-hour and weekly limits), Claude Code, projects (Free is up to 5; Pro lists no limit on the number), more models |
+| Claude Max / Ultra | Max is 5x Pro's usage; Ultra is 10x Pro's weekly usage (no 5-hour limit for verified accounts). Both include Fable, monthly API credits ($100/$200), and early access to new features (as of 2026-10-31) |
+| Gemini | A larger context window: no plan 32K, AI Plus 128K, AI Pro and Ultra 1M tokens. Limits refresh on a 5-hour basis plus a weekly limit |
+| ChatGPT | Models differ between Free/Go and Plus and above. We couldn't find usage limits in the official docs |
 
-### 한도를 다 쓰면 (Claude 기준)
+### When you use up your limit (Claude)
 
-- 유료 플랜에는 **5시간 세션 한도**와 **주간 한도**가 있어요. 다음 리셋 시각은 설정(Settings) > 사용량(Usage)에서 봐요.
-- 한도 뒤에도 쓰고 싶다면 **추가 사용량(usage credits)**을 켤 수 있어요. 쓴 만큼 따로 결제되는 선택 기능이니, 월 지출 한도를 꼭 정해 두세요.
-- 자세한 내용은 [C2](/claude/c02-plans-limits/)에서 볼 수 있어요.
+- Paid plans have a **5-hour session limit** and a **weekly limit**. You can see the next reset time under Settings > Usage.
+- If you want to keep using it after the limit, you can turn on **extra usage (usage credits)**. It's an optional feature billed separately for what you use, so be sure to set a monthly spending cap.
+- You can read more in [C2](/claude/c02-plans-limits/).
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 블로그와 앱에 나온 가격이 서로 달라요
+### The prices on blogs and in the app don't match
 
-- **원인**: 지역, 연·월 결제, 앱 스토어 수수료, 개편 시점 때문에 달라져요.
-- **해결**: 공식 가격 페이지의 현재 값을 믿으세요. 결제 직전 화면의 금액이 최종이에요.
+- **Cause**: They differ because of region, annual vs. monthly billing, app store fees, and when plans were revamped.
+- **Fix**: Trust the current figures on the official pricing page. The amount on the screen right before you pay is final.
 
-### 결제했는데 한도에 또 걸려요
+### I paid and still hit the limit
 
-- **원인**: 유료도 한도가 있어요. 대화가 길거나 어려운 작업일수록 빨리 줄어요.
-- **해결**: 새 주제는 새 대화로 시작하고, 간단한 일에는 가벼운 모델을 쓰세요. 그래도 부족하면 상위 플랜이나 추가 사용량을 고려하세요.
+- **Cause**: Paid plans have limits too. Long conversations and hard tasks use it up faster.
+- **Fix**: Start new topics in new conversations, and use lighter models for simple tasks. If that's still not enough, consider a higher plan or extra usage.
 
-### 구독을 해지하고 싶어요
+### I want to cancel my subscription
 
-- **원인**: 구독은 자동 갱신돼요.
-- **해결**: 가입한 곳(웹 또는 앱 스토어)에서 해지해야 해요. 앱 스토어로 결제했다면 그 스토어의 구독 관리에서 해지하세요. 정확한 메뉴는 각 서비스 공식 도움말을 확인하세요.
+- **Cause**: Subscriptions auto-renew.
+- **Fix**: You have to cancel where you signed up (the web or an app store). If you paid through an app store, cancel in that store's subscription management. Check each service's official help for the exact menu.
 
-### 무료로 쓰다가 갑자기 쓰지 못한다고 해요
+### I was using the free plan and suddenly it says I can't use it
 
-- **원인**: 한도에 닿았거나 기능이 유료 전용일 수 있어요.
-- **해결**: 안내 문구를 읽고, 시간이 지나 풀리길 기다리거나 다른 서비스의 무료 플랜을 써 보세요.
+- **Cause**: You may have hit the limit, or the feature may be paid only.
+- **Fix**: Read the message, wait for it to reset with time, or try another service's free plan.
 
-## 실전 팁
+## Practical tips
 
-- **무료 계정을 두세 곳에 만들어 두세요.** 한 곳이 막히면 다른 곳을 쓸 수 있어요.
-- **분기마다 가격을 다시 보세요.** 요금제 이름과 가격은 자주 바뀌어요.
-- **회사 일에는 개인 계정을 쓰지 마세요.** 팀·기업 플랜은 학습 정책이 다를 수 있어요. [5편](/basics/05-privacy-safety/)을 보세요.
-- **일상 사용 예시가 궁금하면** [6편](/basics/06-everyday-uses/)에서 무엇이 필요한지 가늠해 보세요.
+- **Keep free accounts at two or three services.** If one gets blocked, you can use another.
+- **Look at the prices again every quarter.** Plan names and prices change often.
+- **Don't use a personal account for company work.** Team and enterprise plans may have different training policies. See [tutorial 5](/basics/05-privacy-safety/).
+- **If you're curious about everyday use,** gauge what you'd need with [tutorial 6](/basics/06-everyday-uses/).
 
-<Aside type="note" title="이 표가 다루지 않는 것 (2026-10-13 기준)">
-ChatGPT의 OpenAI 문서(learn.chatgpt.com)는 Work·Codex 작업의 사용량 추정치(예: Plus는 5시간당 로컬 메시지 수 범위)만 싣고, 일반 채팅의 플랜별 메시지 한도는 숫자로 적지 않아요. 한도는 모델과 작업에 따라 달라지고 계속 바뀌니 앱 안의 사용량 화면과 공식 문서를 확인하세요. 달러 표는 미국 기준 가격이에요.
+<Aside type="note" title="What this table doesn't cover (as of 2026-10-13)">
+OpenAI's ChatGPT docs (learn.chatgpt.com) only list usage estimates for Work and Codex tasks (for example, the range of local messages per 5 hours on Plus), and don't give plan-by-plan message limits for regular chat as numbers. Limits vary by model and task and keep changing, so check the in-app usage screen and the official docs. The dollar table shows US prices.
 </Aside>
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/) — Claude 요금제 자세히
-- [chat/5. 업무별 비교와 고르는 법](/chat/05-compare-assistants/) — 세 서비스 비교 테스트
-- [C3. Claude 앱 시작하기](/claude/c03-getting-started/) — 앱 설치와 시작
+- [C2. Plans and usage limits](/claude/c02-plans-limits/) — Claude plans in detail
+- [chat/5. Comparing by task and how to choose](/chat/05-compare-assistants/) — A test comparing the three services
+- [C3. Getting started with the Claude app](/claude/c03-getting-started/) — Installing the app and getting started

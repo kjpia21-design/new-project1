@@ -1,20 +1,20 @@
-// 사이트 언어 도우미: 한국어는 루트(`/`), 영어는 `/en/` 아래에 있다.
+// 사이트 언어 도우미: 영어는 루트(`/`), 한국어는 `/ko/` 아래에 있다.
 export type Lang = 'ko' | 'en';
 
-/** 현재 요청 경로로 언어를 정한다. `/en` 또는 `/en/...` 이면 영어, 나머지는 한국어. */
+/** 현재 요청 경로로 언어를 정한다. `/ko` 또는 `/ko/...` 이면 한국어, 나머지는 영어. */
 export function getLang(astro: { url: URL }): Lang {
   const p = astro.url.pathname;
-  return p === '/en' || p.startsWith('/en/') ? 'en' : 'ko';
+  return p === '/ko' || p.startsWith('/ko/') ? 'ko' : 'en';
 }
 
 /** 문서 id(콘텐츠 컬렉션)로 언어를 정한다. */
 export function langOfId(id: string): Lang {
-  return id === 'en' || id.startsWith('en/') ? 'en' : 'ko';
+  return id === 'ko' || id.startsWith('ko/') ? 'ko' : 'en';
 }
 
-/** 언어 접두사: 한국어 '', 영어 '/en' */
+/** 언어 접두사: 영어 '', 한국어 '/ko' */
 export function langPrefix(lang: Lang): string {
-  return lang === 'en' ? '/en' : '';
+  return lang === 'ko' ? '/ko' : '';
 }
 
 const dict = {

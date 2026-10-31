@@ -1,20 +1,20 @@
 ---
-title: "Meta Muse 알아보기"
-description: "Meta의 개인 AI 에이전트 Muse가 무엇이고 무엇을 할 수 있는지, 결제·권한·개인정보는 어떻게 다뤄지는지, 한국 출시 전에 알아둘 점을 정리한 참고서"
+title: "Getting to Know Meta Muse"
+description: "A reference on what Meta's personal AI agent Muse is and what it can do, how it handles payments, permissions, and privacy, and what to know before it launches in Korea"
 sidebar:
   label: "2. Meta Muse"
 level: practical
 category: agents
 tools: ["Meta Muse"]
-duration: "25분"
+duration: "25 min"
 prerequisites:
-  - "(체험하려면) Muse가 제공되는 지역(미국 등)에 사는 만 18세 이상 이용자. 한국에서는 아직 공식 제공되지 않아요."
-  - "AI 에이전트가 채팅 AI와 어떻게 다른지에 대한 기본 이해 (선택)"
+  - "(To try it) Be 18 or older and live in a region where Muse is available (such as the US). It isn't officially available in Korea yet."
+  - "A basic understanding of how AI agents differ from chat AI (optional)"
 lastVerified: 2026-10-26
 sources:
   - title: "Introducing Muse: The World's First Personal AI Agent Built for Everyone (Meta Newsroom, 2026-09-08)"
     url: "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/"
-  - title: "Muse 공식 사이트"
+  - title: "Muse official site"
     url: "https://muse.ai"
   - title: "How We Designed Muse (Meta)"
     url: "https://introducing.muse.ai"
@@ -41,229 +41,229 @@ import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 
 <Summary>
-- **Muse는 Meta가 2026-09-08에 내놓은 개인 AI 에이전트**예요. 질문에 답하는 데서 그치지 않고 브라우저를 열어 양식을 채우고, 이메일을 보내고, 예약과 구매까지 직접 진행해요.
-- 사용자마다 **전용 클라우드 컴퓨터(Muse Secure VM)**가 있어서, 앱을 닫아도 일정과 이벤트에 맞춰 계속 일해요. 이메일 발송이나 구매 같은 일은 **먼저 승인**을 받아요.
-- **한국에서는 아직 쓸 수 없어요.** 공식 발표는 미국 롤아웃이고, Meta의 후속 공식 글에는 미국과 캐나다가 나와요. 한국 출시 일정과 한국어 지원은 공식 확인이 안 돼요. VPN 등으로 우회 가입하는 방법은 이 사이트에서 안내하지 않아요.
-- 요금은 **사용량 한도가 있는 무료**와 유료 구독이에요. 도움말센터에는 월 $20(Power)과 월 $100(Maximum)이 나와요(2026-10-10 기준, 미국 달러).
-- 결제는 Stripe Link의 **일회용 카드**를 쓰고, 사용자 책임 범위가 넓은 약관과 **AI 학습 활용 기본 켜짐** 설정을 꼭 확인해야 해요.
+- **Muse is a personal AI agent that Meta released on 2026-09-08.** It doesn't stop at answering questions. It opens a browser, fills in forms, sends email, and even carries out bookings and purchases.
+- Each user gets a **dedicated cloud computer (Muse Secure VM)**, so it keeps working on schedules and events even after you close the app. For things like sending email or making purchases, it asks for **your approval first**.
+- **You can't use it in Korea yet.** The official announcement was a US rollout, and Meta's later official post mentions the US and Canada. A Korea launch date and Korean language support aren't officially confirmed. This site doesn't explain workarounds like signing up through a VPN.
+- Pricing is **free with usage limits** plus paid subscriptions. The Help Center lists $20/month (Power) and $100/month (Maximum) (as of 2026-10-10, in US dollars).
+- Payments use Stripe Link **one-time cards**. Be sure to check the terms, which place broad responsibility on the user, and the **AI training setting that is on by default**.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- Muse가 무엇이고, 채팅 AI와 무엇이 다른지 설명할 수 있어요.
-- Muse가 할 수 있는 일과 연결할 수 있는 서비스를 공식 자료 기준으로 파악할 수 있어요.
-- 결제 연동, 권한, 개인정보 설정에서 어디를 조심해야 하는지 알 수 있어요.
-- 한국 출시 전에 무엇을 확인하고 준비해 둘지 정할 수 있어요.
+- Explain what Muse is and how it differs from a chat AI.
+- Identify what Muse can do and which services it connects to, based on official materials.
+- Know where to be careful with payment integration, permissions, and privacy settings.
+- Decide what to check and prepare before a Korea launch.
 
-<Aside type="caution" title="한국에서는 공식 제공이 아니에요">
-이 편은 "Muse가 무엇인지, 무엇을 할 수 있는지, 한국 출시 전에 알아둘 점"을 다뤄요. 가입 방법을 단계별로 따라 하는 튜토리얼이 아니에요. 공식 제공 지역 밖에서 우회해 가입하는 방법은 안내하지 않아요. 약관은 "관련 법률상 서비스를 받을 수 없는 경우" 사용을 막고, Meta가 약관 위반 시 접근을 정지하거나 종료할 수 있다고 적고 있어요.
+<Aside type="caution" title="It isn't officially available in Korea">
+This guide covers "what Muse is, what it can do, and what to know before a Korea launch." It isn't a step-by-step sign-up tutorial. We don't explain how to sign up from outside the officially supported regions. The terms prohibit use "where the service can't be provided under applicable law," and say Meta can suspend or terminate access for violating the terms.
 </Aside>
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-### Muse는 무엇인가요?
+### What is Muse?
 
-Meta는 Muse를 "개인 AI 에이전트"라고 소개해요. 질문에 답하는 챗봇과 달리 **목표를 말하면 계획을 세우고 직접 실행**해요. 브라우저를 열고, 양식을 작성하고, 협상하고, 이메일을 보내고, 여행을 예약하는 일이 예시로 나와요. 앱을 닫아도 일을 계속하다가, 상황이 바뀌었거나 승인이 필요할 때 다시 알려줘요.
+Meta describes Muse as a "personal AI agent." Unlike a chatbot that answers questions, **you state a goal and it makes a plan and carries it out directly**. Examples include opening a browser, filling out forms, negotiating, sending email, and booking travel. It keeps working after you close the app and notifies you again when things change or it needs your approval.
 
-모델은 Meta의 Muse Spark를 써요(안전 설명 글에는 Muse Spark 1.3으로 표기). 같은 이름이라 헷갈리기 쉬운데, **Muse Spark는 모델 이름이고 Muse는 이 모델을 쓰는 에이전트 서비스**예요.
+It uses Meta's Muse Spark model (the safety post refers to Muse Spark 1.3). The names are easy to mix up, but **Muse Spark is the model name, and Muse is the agent service that uses this model**.
 
-### 누가, 언제 만들었나요?
+### Who made it, and when?
 
-| 날짜 | 내용 | 출처 |
+| Date | What happened | Source |
 | --- | --- | --- |
-| 2026-09-08 | Meta가 Muse 발표. 미국에서 iOS, Android, muse.ai로 롤아웃 | Meta Newsroom |
-| 2026-09 (Connect 2026) | AI 글라스 지원 예정, 음성 모드, 커넥터 추가, Muse 전용 이메일 주소 예정 | Meta Newsroom |
-| 2026-09-29 | Muse for Small Business 발표(커넥터와 스킬 확대). 글에서 "미국과 캐나다에서 이용 가능"이라고 설명 | Meta Newsroom |
+| 2026-09-08 | Meta announced Muse. Rolled out in the US on iOS, Android, and muse.ai | Meta Newsroom |
+| 2026-09 (Connect 2026) | AI glasses support planned, voice mode, more connectors, a dedicated Muse email address planned | Meta Newsroom |
+| 2026-09-29 | Muse for Small Business announced (more connectors and skills). The post describes it as "available in the US and Canada" | Meta Newsroom |
 
-### 핵심 용어
+### Key terms
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **Muse Secure VM** | 사용자마다 하나씩 주어지는 전용 클라우드 컴퓨터예요. 격리된 Linux에 전체 브라우저가 있고, 사용자도 언제든 같이 쓰며 개입할 수 있어요. |
-| **Sentinel** | 같은 컴퓨터에서 Muse와 분리되어 도는 별도 에이전트예요. 커넥터 행동과 외부 네트워크 통신을 허가하는 유일한 주체로, 필요하면 사용자에게 물어봐요. |
-| **커넥터(Connector)** | 이메일, 캘린더, 인스타그램, Shopify 같은 외부 서비스와 Muse를 잇는 연결이에요. 서비스마다 접근 범위를 정해요. |
-| **Muse Spark** | Muse를 움직이는 Meta의 모델이에요. |
-| **Link (Stripe)** | Muse의 결제 수단이에요. 결제할 때마다 일회용 카드 번호를 발급해요. |
-| **Muse Confidential VM** | 사용자만 가진 키로 VM 전체를 암호화해 Meta도 접근하지 못하게 하는 계획이에요. 올해 후반 도입 예정이고 **아직 제공되지 않아요**. |
+| **Muse Secure VM** | A dedicated cloud computer given to each user. It's an isolated Linux machine with a full browser, and you can use it alongside Muse and step in at any time. |
+| **Sentinel** | A separate agent that runs on the same computer, isolated from Muse. It's the only party that authorizes connector actions and outbound network traffic, and it asks you when needed. |
+| **Connector** | A connection between Muse and external services such as email, calendar, Instagram, and Shopify. You set the access scope for each service. |
+| **Muse Spark** | The Meta model that powers Muse. |
+| **Link (Stripe)** | Muse's payment method. It issues a one-time card number for each payment. |
+| **Muse Confidential VM** | A plan to encrypt the entire VM with a key only you hold, so even Meta can't access it. It's planned for later this year and is **not available yet**. |
 
-### 채팅 AI와 무엇이 다른가요?
+### How is it different from a chat AI?
 
-Meta의 설명을 줄이면 이래요. 챗봇은 질문 하나에 답하고, 에이전트는 **여러 단계의 일을 스스로 진행하고 앱을 닫아도 계속 돌아가요.** 그래서 편한 만큼 **잘못 실행했을 때의 피해도 커요.** 이 차이는 [개인 AI 에이전트 안전하게 쓰는 법](/agents/05-agent-safety/)에서 더 자세히 다뤄요.
+Boiled down, Meta's explanation is this: a chatbot answers one question, while an agent **carries out multi-step work on its own and keeps running after you close the app.** That's convenient, but **the damage is bigger when it does something wrong.** We cover this difference in more detail in [Using Personal AI Agents Safely](/agents/05-agent-safety/).
 
-## 할 수 있는 일
+## What it can do
 
-모두 Meta 공식 자료에 나온 내용이에요. 실제 동작은 지역과 계정, 시점에 따라 다를 수 있어요.
+Everything here comes from official Meta materials. Actual behavior may vary by region, account, and time.
 
-- **할 일 맡기기**: 이메일 정리와 발송, 예약, 쇼핑, 일정 관리, 비용 절감 같은 일. 큰 목표(예: 차를 더 비싸게 팔기, 요금 낮추기, 운동 계획을 생활 변화에 맞춰 조정하기)를 주면 계획을 세우고 조율해요.
-- **브라우저 작업**: 검색, 사이트 탐색, 양식 작성, 구매. 사용자가 화면을 보다가 직접 조작을 넘겨받을 수도 있어요.
-- **상시 작동**: 앱을 닫아도 일정과 이벤트에 맞춰 일하고, "의미 있게 새롭거나 입력이 필요할 때만" 알려줘요. 먼저 제안 메시지를 보내기도 하는데, 줄이거나 끌 수 있어요.
-- **기억**: 한 번 말한 내용도 기억해 먼저 제안해요. 예를 들어 인스타그램에서 저장한 레시피 릴스를 장보기 목록으로 바꿔 줘요. 기억 파일(MEMORY.md)을 직접 읽고 고칠 수 있고, "잊어 줘"라고 요청할 수도 있어요.
-- **결과물 만들기**: 문서, PDF, 웹페이지, 지출 추적기나 학습 가이드 같은 대화형 결과물(아티팩트, Artifacts)을 만들어요.
-- **목표 추적**: Goals 탭에서 Muse가 추적하는 목표와 계획을 보고, Ideas 탭에서 제안을 받아요.
-- **연결 서비스**: 이메일, 캘린더, 인스타그램 등에 연결해요. 아래 표처럼 공식 글에 이름이 나온 서비스가 있고, 전체 목록은 Muse 앱 설정에서 보여요. API나 CLI가 있는 서비스는 Muse가 직접 커스텀 커넥터를 만들 수도 있어요.
+- **Hand off tasks**: Things like organizing and sending email, bookings, shopping, schedule management, and cutting costs. Give it a big goal (for example, selling a car for more, lowering a bill, or adjusting a workout plan to life changes) and it makes a plan and coordinates.
+- **Browser tasks**: Searching, browsing sites, filling out forms, and making purchases. You can also watch the screen and take over control yourself.
+- **Always-on**: Works on schedules and events even with the app closed, and notifies you "only when something is meaningfully new or needs your input." It sometimes sends proactive suggestions, which you can reduce or turn off.
+- **Memory**: It remembers what you've told it once and suggests things proactively. For example, it turns recipe Reels you saved on Instagram into a shopping list. You can read and edit the memory file (MEMORY.md) yourself, and you can ask it to "forget."
+- **Creating outputs**: It makes documents, PDFs, web pages, and interactive outputs (Artifacts) such as expense trackers or study guides.
+- **Goal tracking**: In the Goals tab you can see the goals and plans Muse is tracking, and in the Ideas tab you can get suggestions.
+- **Connected services**: It connects to email, calendar, Instagram, and more. Some services are named in official posts, as in the table below, and the full list appears in the Muse app settings. For services with an API or CLI, Muse can even build a custom connector itself.
 
-| 구분 | 공식 글에 나온 연결 서비스 (일부) |
+| Category | Connected services named in official posts (partial) |
 | --- | --- |
-| Small Business 글 (9/29) | Asana, Box, Canva, Dropbox, Figma, Granola, HighLevel, Intuit QuickBooks, Klaviyo, Lovable, Notion, Shopify, Slack, Stripe, Zoom, 페이스북·인스타그램 비즈니스 계정 |
-| Connect 글 (9월) | Walmart, Best Buy, Sephora, Ulta, Wayfair 등 쇼핑몰, Instacart, GitHub, 결제 수단으로 Shop Pay와 PayPal 추가. Expedia는 "곧 제공" |
+| Small Business post (9/29) | Asana, Box, Canva, Dropbox, Figma, Granola, HighLevel, Intuit QuickBooks, Klaviyo, Lovable, Notion, Shopify, Slack, Stripe, Zoom, Facebook and Instagram business accounts |
+| Connect post (September) | Shopping sites like Walmart, Best Buy, Sephora, Ulta, and Wayfair, plus Instacart, GitHub, and Shop Pay and PayPal added as payment methods. Expedia is "coming soon" |
 
-## 플랫폼
+## Platforms
 
-| 플랫폼 | 상태 |
+| Platform | Status |
 | --- | --- |
-| iOS, Android 앱 | 제공(제공 지역 한정) |
-| 웹 (muse.ai) | 제공(제공 지역 한정) |
-| Mac 앱 | 공식 사이트에 "모바일, Mac, 또는 WhatsApp에서 대화"라고 표기 |
-| WhatsApp | 메시지 보내듯 WhatsApp 안에서 Muse와 대화 가능 |
-| AI 글라스 | "곧 제공"(Connect에서 향후 몇 달 내 지원 예고) |
+| iOS and Android apps | Available (in supported regions only) |
+| Web (muse.ai) | Available (in supported regions only) |
+| Mac app | The official site says "chat on mobile, Mac, or WhatsApp" |
+| WhatsApp | You can talk to Muse inside WhatsApp, like sending messages |
+| AI glasses | "Coming soon" (support announced at Connect for the next few months) |
 
-Windows 앱은 공식 자료에서 찾지 못했어요.
+We couldn't find a Windows app in the official materials.
 
-## 요금제
+## Plans and pricing
 
-2026-10-10 기준이에요. 가격은 미국 달러이고, 지역과 계정에 따라 다를 수 있어요.
+As of 2026-10-10. Prices are in US dollars and may vary by region and account.
 
-| 플랜 | 요금 | 포함 사용량 |
+| Plan | Price | Included usage |
 | --- | --- | --- |
-| 무료 | 무료 | 사용량 한도가 있어요. 한도에 닿으면 구독으로 올리거나 한도가 갱신될 때까지 기다려요. **주간 한도 수치는 공식적으로 공개되지 않았어요.** |
-| Power | 월 $20 | 주당 Muse 토큰 5억 |
-| Maximum | 월 $100 | 주당 Muse 토큰 30억 |
+| Free | Free | Has usage limits. When you hit the limit, upgrade to a subscription or wait until the limit resets. **The weekly limit figure hasn't been officially disclosed.** |
+| Power | $20/month | 500 million Muse tokens per week |
+| Maximum | $100/month | 3 billion Muse tokens per week |
 
-- Power와 Maximum 가격과 토큰 수치는 Meta 도움말센터 "About Muse subscriptions" 페이지 본문에서 직접 확인한 내용이에요(2026-10-12 기준). 구독은 Muse 모바일 앱이나 muse.ai에서 하고, 월 단위로 자동 갱신돼요. 가격은 바뀔 수 있으니 가입 전에 도움말센터에서 다시 확인하세요.
-- 같은 페이지에 "Muse와 Muse 구독은 제한적 테스트 중이며 모든 지역에서 제공되지 않는다"는 취지의 안내가 있어요.
-- 약관에는 Meta가 무료 제공을 바꾸거나 중단할 수 있고, **추가 AI 사용량**을 따로 판매할 수 있다고 적혀 있어요. 이 크레딧은 환불이나 현금 교환이 되지 않는다고 해요.
-- 일부 매체가 말하는 무료 한도 수치는 공식 자료가 아니라서 여기에 싣지 않았어요.
+- The Power and Maximum prices and token figures were checked directly in the text of the Meta Help Center page "About Muse subscriptions" (as of 2026-10-12). You subscribe in the Muse mobile app or at muse.ai, and it auto-renews monthly. Prices can change, so recheck in the Help Center before signing up.
+- The same page says, in effect, that "Muse and Muse subscriptions are in limited testing and aren't available in all regions."
+- The terms say Meta can change or end the free offering and may sell **additional AI usage** separately. They say these credits can't be refunded or exchanged for cash.
+- Some outlets report free-limit figures, but they aren't from official sources, so we haven't included them here.
 
-## 한국에서 쓸 수 있나요?
+## Can I use it in Korea?
 
-**지금은 쓸 수 없어요.**
+**Not right now.**
 
-- 2026-09-08 공식 발표는 "미국에서 롤아웃 중(rolling out in the US)"이에요. 2026-09-29 Small Business 공식 글에는 "미국과 캐나다에서 이용 가능"이라는 설명이 있어요.
-- 한국은 어떤 공식 페이지에도 나오지 않아요. 한국 출시 일정도 발표되지 않았어요. 국내 언론도 일정은 미정이라고 보도하고 있어요(언론 보도 기준).
-- Meta 도움말센터는 Muse가 "모든 지역에서 제공되지는 않는다"고만 하고, 지원 국가 목록은 찾지 못했어요.
-- **한국어 지원 여부도 공식 자료에서 확인하지 못했어요.** 지원 언어를 밝힌 공식 문서가 없어서, 한국어로 말을 걸었을 때 얼마나 잘 되는지는 알 수 없어요.
-- 만 18세 이상만 쓸 수 있어요(해당 국가가 더 높은 연령을 요구하면 그에 따라요).
+- The official 2026-09-08 announcement says it's "rolling out in the US." The official 2026-09-29 Small Business post describes it as "available in the US and Canada."
+- Korea doesn't appear on any official page. No Korea launch date has been announced either. Korean media also report that the schedule is undecided (based on press reports).
+- The Meta Help Center only says Muse is "not available in all regions," and we couldn't find a list of supported countries.
+- **We couldn't confirm Korean language support from official materials either.** No official document states the supported languages, so we can't tell how well it works when you talk to it in Korean.
+- You must be 18 or older (or older if your country requires it).
 
-<Aside type="caution" title="VPN 우회 가입은 권하지 않아요">
-이 사이트는 VPN 등으로 지역 제한을 피해 가입하는 방법을 안내하지 않아요. 약관 위반으로 계정이 정지될 수 있고, 그러면 Muse에 연결해 둔 서비스와 맡겨 둔 작업에 문제가 생길 수 있어요. 결제 수단과 본인 정보를 외국 서비스에 연결하는 위험도 있어요. 한국 출시를 기다리는 편이 안전해요.
+<Aside type="caution" title="We don't recommend signing up through a VPN">
+This site doesn't explain how to get around regional restrictions with a VPN or similar. Your account could be suspended for violating the terms, which could cause problems with the services you've connected to Muse and the tasks you've handed off. There's also the risk of linking your payment method and personal information to a foreign service. Waiting for a Korea launch is safer.
 </Aside>
 
-## 한국 출시 전에 해 볼 수 있는 준비
+## Preparing before a Korea launch
 
-따라 하기보다는 점검 목록이에요. 출시 소식이 나오면 아래를 확인해 보세요.
+This is more of a checklist than something to follow along with. When launch news comes out, check the items below.
 
 <Checklist items={[
-  'Meta 뉴스룸(about.fb.com)이나 muse.ai의 공식 공지에서 한국 출시를 확인했어요',
-  '한국어 지원 여부를 공식 도움말에서 확인했어요',
-  '요금제와 무료 한도, 한국 결제 방식을 도움말센터에서 확인했어요',
-  '약관(Muse Supplemental Terms)과 개인정보 안내를 읽었어요',
-  '학습 활용 설정(설정 > 데이터 컨트롤)을 어떻게 할지 정했어요',
-  '처음에는 읽기 권한만 줄 서비스를 정했어요',
-  '결제 연동은 하지 않거나, 상한과 승인 방식을 정한 뒤에만 켜기로 했어요',
+  'I confirmed the Korea launch in an official announcement on Meta Newsroom (about.fb.com) or muse.ai',
+  'I confirmed Korean language support in the official help pages',
+  'I checked the plans, free limits, and Korean payment methods in the Help Center',
+  'I read the terms (Muse Supplemental Terms) and the privacy notice',
+  'I decided how to set the AI training option (Settings > Data controls)',
+  'I decided which services to give read-only access at first',
+  'I decided not to enable payment integration, or to turn it on only after setting a limit and approval method',
 ]} />
 
-제공 지역에서는 Meta가 Small Business 글에서 이런 예시 요청을 제안했어요. 한국에서 바로 쓸 수는 없지만, 에이전트에게 일을 맡기는 방식이 어떤 느낌인지 참고가 돼요.
+In supported regions, Meta suggested this example request in its Small Business post. You can't use it in Korea right away, but it gives you a feel for what handing work to an agent is like.
 
 <PromptBox>
 I'm underwater. What do I need to pay attention to from my email, calendar, news, etc? Can you take any of it off my plate?
 </PromptBox>
 
-위 문구는 Meta가 공식 글에서 소개한 영어 예시("Prompt to try")를 그대로 옮긴 거예요. 한국어로도 같은 방식으로 되는지는 확인되지 않았어요.
+The prompt above is the English example ("Prompt to try") that Meta presented in its official post, carried over as is. We haven't confirmed whether it works the same way in Korean.
 
-## 결제·권한·개인정보 주의점
+## Payments, permissions, and privacy: what to watch for
 
-### 결제
+### Payments
 
-- Muse는 **Stripe Link**로 결제해요. 구매할 때 **일회용 카드 번호**가 만들어져서 실제 카드 정보가 판매자와 에이전트에게 보이지 않아요.
-- Meta는 Muse를 "Link의 구매자 보호를 받는 첫 AI 에이전트"라고 설명해요. 손상·분실 품목 보상, 가격 인하, 수수료 없는 반품 등이 포함되지만 **적격한 구매에 한해서**예요. 어떤 구매가 적격인지는 확인이 필요해요.
-- 이미 결제 수단이 저장된 사이트에서는, Muse가 결제 화면을 감지해서 **구매 내용을 매번 확인받는다**고 Meta가 설명해요.
-- 약관은 "금융 거래 같은 상태를 바꾸는 행동은 사전 검토와 승인 없이 하지 말라"고 해요. 미리 허락해 두는 방식(사전 승인)도 신중하게 쓰라고 적혀 있어요.
-- 사용자가 실수로 승인한 구매나 Muse의 잘못된 판단 때문에 생긴 결과도 **사용자가 책임진다**는 조항이 있어요. Meta의 책임 한도는 약관에서 $250 또는 최근 12개월간 지불액 중 큰 쪽으로 정해져 있어요.
+- Muse pays through **Stripe Link**. A **one-time card number** is generated for each purchase, so your real card details aren't visible to the merchant or the agent.
+- Meta describes Muse as "the first AI agent covered by Link's buyer protection." It includes things like compensation for damaged or lost items, price drops, and fee-free returns, but **only for eligible purchases**. You'll need to check which purchases are eligible.
+- On sites where a payment method is already saved, Meta says Muse detects the checkout screen and **asks you to confirm the purchase details each time**.
+- The terms say not to take state-changing actions like financial transactions "without prior review and approval." They also say to be careful about granting permission in advance (pre-approval).
+- There's a clause saying **you're responsible** for purchases you approved by mistake and for consequences of Muse's wrong judgments. Meta's liability cap in the terms is set at $250 or the amount you paid in the last 12 months, whichever is greater.
 
-### 권한
+### Permissions
 
-| 장치 | 내용 |
+| Safeguard | Details |
 | --- | --- |
-| 승인 카드 | 이메일 발송, 구매 같은 민감 작업은 먼저 승인을 받아요. 승인 요청은 Muse와의 대화가 아니라 앱 화면의 별도 창으로 와요. |
-| 승인 범위 | 이번 한 번만, 항상 허용, 거부를 고를 수 있어요. 기술 문서에는 세션·작업·기간 단위 허용도 설명돼요. |
-| 읽기와 쓰기 분리 | 서비스가 지원하면 "읽기만"과 "보내기까지"를 나눠 줄 수 있어요. 이메일은 읽기만 허용하는 방식을 고를 수 있어요. |
-| 이메일 보호 | 이메일 커넥터는 일회용 인증 코드, 비밀번호 재설정 링크, 로그인 링크를 걸러내요. |
-| 활동 기록 | Muse가 한 일과 할 계획인 일을 활동 로그에서 볼 수 있어요. 권한은 언제든 바꾸거나 연결을 끊을 수 있어요. |
-| 자격 증명 | 비밀번호는 Muse가 볼 수 없는 보안 저장소로 가고, 필요할 때만 브라우저에 입력돼요. |
+| Approval cards | Sensitive actions like sending email and purchases ask for approval first. Approval requests come as a separate window in the app, not in your conversation with Muse. |
+| Approval scope | You can choose just this once, always allow, or deny. Technical docs also describe allowing per session, task, or time period. |
+| Separate read and write | If the service supports it, you can grant "read-only" and "send as well" separately. For email, you can choose read-only access. |
+| Email protection | The email connector filters out one-time verification codes, password reset links, and login links. |
+| Activity log | You can see what Muse has done and plans to do in the activity log. You can change permissions or disconnect at any time. |
+| Credentials | Passwords go to a secure store that Muse can't see, and are entered into the browser only when needed. |
 
-기본 설정은 일반 웹 탐색은 허용하고 **되돌리기 어려운 동작에서 멈추는** 방식이에요. 더 엄격하게 또는 느슨하게 바꿀 수 있어요. 처음에는 엄격한 쪽을 권해요.
+By default, normal web browsing is allowed and it **stops at actions that are hard to undo**. You can make this stricter or looser. We recommend starting with the stricter setting.
 
-### 개인정보
+### Privacy
 
-- **AI 학습 활용은 처음 쓸 때 켜져 있어요.** 설정(Settings) > 데이터 컨트롤(Data controls)에서 끌 수 있고, 끄면 이전 상호작용에도 적용된다고 Muse 개인정보 안내에 적혀 있어요. 켜 둔 경우에도 이름, 이메일, 전화번호, 사회보장번호 같은 일부 개인정보는 제거하고 계정과 분리한다고 설명해요.
-- Meta는 대화와 VM 데이터를 **Meta 광고 시스템과 공유하지 않는다**고 해요. 다만 Muse가 웹을 돌아다닌 활동은 사용자 본인의 활동처럼 보이기 때문에, 예를 들어 어떤 쇼핑몰을 방문시키면 그 업체가 광고를 띄우는 데 영향을 줄 수 있다고 Meta도 설명해요.
-- 삭제: 메시지, 사이드 채팅, VM 파일을 지울 수 있고, "Reset Muse"로 모든 Muse 데이터를 지울 수 있어요. 지워도 Muse가 배운 내용을 기억할 수 있어서 Forget 기능을 쓰라고 안내해요.
-- **현재 구조는 Meta가 필요할 때 데이터에 접근하는 것을 막지 않는다**고 Meta 스스로 밝혔어요. 접근을 암호학적으로 막는 Muse Confidential VM은 올해 후반 도입 예정이라 아직 쓸 수 없어요.
-- Meta는 Muse도 실수하고, 읽는 데이터를 통한 공격(프롬프트 인젝션)을 받을 수 있다고 인정해요. 그래서 "공격받을 수 있다고 가정"하고 피해를 줄이는 구조(Sentinel, 격리, 승인)를 만들었다고 설명해요. 이 구조는 Meta의 설명이고, 독립 검증 결과는 이 편에서 확인하지 않았어요.
-- 일부 언론과 커뮤니티에는 개인정보 논란 보도가 있어요. 특정 주장은 검증되지 않아 여기서는 다루지 않았어요.
+- **AI training is on when you first start.** You can turn it off under Settings > Data controls, and the Muse privacy notice says turning it off also applies to earlier interactions. Even when it's on, Meta says it removes some personal information such as names, emails, phone numbers, and Social Security numbers and separates the data from your account.
+- Meta says it **doesn't share conversation and VM data with Meta's ad systems**. However, Meta also explains that because Muse's web browsing looks like your own activity, having it visit a shopping site, for example, can influence the ads that business shows.
+- Deletion: You can delete messages, side chats, and VM files, and "Reset Muse" erases all your Muse data. Muse may still remember what it learned even after deletion, so the guidance is to use the Forget feature.
+- Meta itself states that **the current architecture doesn't prevent Meta from accessing data when needed**. Muse Confidential VM, which cryptographically blocks that access, is planned for later this year and isn't available yet.
+- Meta acknowledges that Muse also makes mistakes and can be attacked through the data it reads (prompt injection). So it says it built a structure (Sentinel, isolation, approvals) that "assumes it can be attacked" and limits the damage. This structure is Meta's own description, and we didn't verify independent validation results in this guide.
+- Some media and communities have reported privacy controversies. We don't cover specific claims here because they haven't been verified.
 
-## 다른 에이전트와 다른 점
+## How it differs from other agents
 
-공식 자료에서 읽히는 Muse의 특징이에요. 우열 판단이 아니라 방식의 차이예요.
+These are Muse's characteristics as read from official materials. They describe differences in approach, not which is better.
 
-- **일반 이용자용**이에요. 코딩이나 설정 없이 메시지 보내듯 쓰도록 만들어졌고, WhatsApp 안에서도 대화할 수 있어요.
-- **사용자별 전용 클라우드 컴퓨터와 별도 Sentinel 구조**를 앞세워요. "다른 에이전트가 제공하지 않는 보호"라는 표현은 Meta의 주장이라, 직접 비교 검증은 하지 않았어요.
-- **인스타그램, 페이스북 같은 Meta 앱과 쇼핑 서비스 연결**이 강점으로 소개돼요.
-- 기본이 **무료+사용량 한도** 구조예요.
+- It's **for general users**. It's built so you can use it like sending messages, without coding or setup, and you can even talk to it inside WhatsApp.
+- It highlights a **dedicated cloud computer per user and a separate Sentinel architecture**. The phrase "protections other agents don't offer" is Meta's claim, and we didn't verify it by direct comparison.
+- **Connections to Meta apps like Instagram and Facebook, and to shopping services** are presented as strengths.
+- The default is a **free-plus-usage-limit** model.
 
-다른 에이전트와의 비교는 [개인 AI 에이전트 한눈에 비교](/agents/01-agents-compared/)에서 표로 볼 수 있어요. Claude에서 비슷한 방식으로 브라우저 작업을 맡기는 내용은 [C11. Chrome과 컴퓨터 사용](/claude/c11-chrome-computer-use/), 클라우드에서 자동 실행하는 방식은 [C13. 클라우드 세션](/claude/c13-cloud-sessions/)을 보세요.
+For a table comparing it with other agents, see [Personal AI Agents at a Glance](/agents/01-agents-compared/). For handing browser tasks to Claude in a similar way, see [C11. Chrome and computer use](/claude/c11-chrome-computer-use/), and for running automatically in the cloud, see [C13. Cloud sessions](/claude/c13-cloud-sessions/).
 
-## 빠른 참조표
+## Quick reference
 
-| 항목 | 내용 (2026-10-10 기준) |
+| Item | Details (as of 2026-10-10) |
 | --- | --- |
-| 만든 곳 | Meta |
-| 출시 | 2026-09-08 (미국) |
-| 공식 확인된 제공 지역 | 미국, 캐나다 |
-| 한국 제공 | 아니요 (일정 미정) |
-| 한국어 지원 | 공식 확인 불가 |
-| 연령 | 만 18세 이상 |
-| 플랫폼 | iOS, Android, 웹(muse.ai), Mac 앱, WhatsApp. AI 글라스는 예정 |
-| 요금 | 한도 있는 무료 / Power 월 $20 / Maximum 월 $100 (도움말센터, 지역별로 다를 수 있음) |
-| 상시 작동 | 예 (클라우드 VM) |
-| 결제 | Stripe Link 일회용 카드. 구매 전 승인. Shop Pay, PayPal 추가 발표 |
-| 학습 활용 | 기본 켜짐. 설정 > 데이터 컨트롤에서 끌 수 있음 |
-| 암호화 VM | Muse Confidential VM은 올해 후반 예정 (미제공) |
-| 책임 | 약관상 Muse의 행동에 대한 책임은 사용자에게 있음 |
+| Made by | Meta |
+| Launch | 2026-09-08 (US) |
+| Officially confirmed regions | US, Canada |
+| Available in Korea | No (date undecided) |
+| Korean support | Can't be confirmed officially |
+| Age | 18 or older |
+| Platforms | iOS, Android, web (muse.ai), Mac app, WhatsApp. AI glasses planned |
+| Price | Free with limits / Power $20/month / Maximum $100/month (Help Center, may vary by region) |
+| Always-on | Yes (cloud VM) |
+| Payments | Stripe Link one-time cards. Approval before purchases. Shop Pay and PayPal announced as additions |
+| AI training | On by default. Can be turned off under Settings > Data controls |
+| Encrypted VM | Muse Confidential VM planned for later this year (not available) |
+| Liability | Under the terms, you're responsible for Muse's actions |
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 앱 스토어에서 Muse가 안 보이거나, 가입이 안 돼요
+### Muse doesn't show up in the app store, or I can't sign up
 
-- **원인**: 한국은 공식 제공 지역이 아니에요.
-- **해결**: 공식 출시를 기다리세요. 우회 가입은 권하지 않아요. 약관 위반이 될 수 있어요.
+- **Cause**: Korea isn't an officially supported region.
+- **Fix**: Wait for the official launch. We don't recommend signing up through workarounds. It could violate the terms.
 
-### 요금제를 확인하고 싶은데 지역마다 달라 보여요
+### I want to check the plans, but they seem to differ by region
 
-- **원인**: Meta 도움말센터는 Muse와 구독이 제한적 테스트 중이고 혜택이 지역과 계정에 따라 다를 수 있다고 안내해요.
-- **해결**: 가입 과정(온보딩)에 표시되는 내용을 먼저 확인하고 구독하세요.
+- **Cause**: The Meta Help Center says Muse and subscriptions are in limited testing and benefits may vary by region and account.
+- **Fix**: Check what's shown during sign-up (onboarding) before you subscribe.
 
-### 뉴스에서 본 숫자(다운로드 수, 무료 한도)를 믿어도 되나요?
+### Can I trust numbers I saw in the news (download counts, free limits)?
 
-- **원인**: 다운로드 수나 무료 주간 토큰 같은 수치는 단일 매체나 테스터 보고인 경우가 많아요.
-- **해결**: 공식 출처가 없는 수치는 참고만 하세요. 이 편에서도 싣지 않았어요.
+- **Cause**: Figures like download counts or free weekly tokens often come from a single outlet or a tester's report.
+- **Fix**: Treat figures without an official source as reference only. We haven't included them in this guide either.
 
-## 실전 팁 (제공 지역에서 쓰게 될 때)
+## Practical tips (for when you use it in a supported region)
 
-- **읽기 권한부터** 주세요. 익숙해진 뒤에 쓰기 권한을 늘려요.
-- **결제는 마지막에 켜세요.** 구매 승인 화면의 금액과 상품을 매번 직접 확인하세요.
-- **연결은 최소한으로.** 필요한 서비스만 연결하고 안 쓰면 연결을 끊으세요.
-- **활동 로그를 가끔 열어 보세요.** Muse가 한 일과 하려는 일을 확인할 수 있어요.
-- **AI 학습 활용 설정**을 처음에 확인하세요. 기본값이 켜짐이에요.
-- **공유 기기에서 로그인한 채 두지 마세요.** 전용 VM과 연결된 서비스에 접근할 수 있어요.
+- Give it **read permissions first**. Add write permissions once you're comfortable.
+- **Turn on payments last.** Check the amount and the item on the purchase approval screen yourself every time.
+- **Keep connections to a minimum.** Connect only the services you need and disconnect ones you don't use.
+- **Open the activity log once in a while.** You can see what Muse has done and what it's about to do.
+- **Check the AI training setting** at the start. It's on by default.
+- **Don't stay logged in on a shared device.** It can access your dedicated VM and connected services.
 
-<Aside type="note" title="이 사이트의 다른 에이전트 안전 가이드">
-결제·이메일·계정 권한을 에이전트에게 줄 때의 일반 점검표는 [개인 AI 에이전트 안전하게 쓰는 법](/agents/05-agent-safety/)에서 따로 정리해요.
+<Aside type="note" title="Another agent safety guide on this site">
+A general checklist for giving agents payment, email, and account permissions is covered separately in [Using Personal AI Agents Safely](/agents/05-agent-safety/).
 </Aside>
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [개인 AI 에이전트 한눈에 비교](/agents/01-agents-compared/) — Muse, Grok Bot, Dots, Claude 비교
-- [개인 AI 에이전트 안전하게 쓰는 법](/agents/05-agent-safety/) — 결제·권한 점검표
-- [C11. Chrome과 컴퓨터 사용](/claude/c11-chrome-computer-use/) — Claude에게 브라우저 작업 맡기기
-- [C13. 클라우드 세션](/claude/c13-cloud-sessions/) — 클라우드에서 돌아가는 Claude Code와 루틴
+- [Personal AI Agents at a Glance](/agents/01-agents-compared/): comparing Muse, Grok Bot, Dots, and Claude
+- [Using Personal AI Agents Safely](/agents/05-agent-safety/): a payment and permissions checklist
+- [C11. Chrome and computer use](/claude/c11-chrome-computer-use/): handing browser tasks to Claude
+- [C13. Cloud sessions](/claude/c13-cloud-sessions/): Claude Code and routines that run in the cloud

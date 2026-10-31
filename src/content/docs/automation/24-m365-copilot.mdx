@@ -1,15 +1,15 @@
 ---
-title: "Microsoft 365 Copilot으로 Word·PowerPoint·Outlook 업무하기"
-description: "Word 초안·요약, PowerPoint 발표 자료 만들기, Outlook 메일 요약·답장 초안을 Copilot으로 하는 방법과 개인·회사 라이선스 차이, 한국어 지원, 주의점을 정리한 참고서"
+title: "Working in Word, PowerPoint, and Outlook with Microsoft 365 Copilot"
+description: "A reference on using Copilot for Word drafts and summaries, PowerPoint presentations, and Outlook email summaries and reply drafts, with personal vs. work license differences, Korean-language support, and cautions"
 sidebar:
-  label: "7. M365 Copilot 업무하기"
+  label: "7. Working with M365 Copilot"
 level: practical
 category: automation
 tools: ["Microsoft 365 Copilot", "Word", "PowerPoint", "Outlook"]
-duration: "30분"
+duration: "30 min"
 prerequisites:
-  - "Copilot이 포함된 Microsoft 365 구독 또는 회사의 Copilot 라이선스 (관리자 허용 필요할 수 있음)"
-  - "연습용 가상 문서와 메일 스레드 (실제 고객·사내 기밀은 쓰지 마세요)"
+  - "A Microsoft 365 subscription that includes Copilot, or a Copilot license from your company (admin approval may be required)"
+  - "Made-up practice documents and an email thread (don't use real customer or internal confidential information)"
 lastVerified: 2026-10-26
 sources:
   - title: "Welcome to Copilot in Word (Microsoft Support)"
@@ -37,186 +37,186 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- **Word**: 오른쪽 아래(문서 모서리)의 Copilot 버튼으로 채팅 창을 열어 초안 작성, 다듬기, 요약을 해요. 기본은 편집(Edit) 모드예요.
-- **PowerPoint**: 오른쪽 아래 Copilot 아이콘으로 채팅 창을 열고 프롬프트로 발표 자료를 만들 수 있어요(2026-10-26 기준). Word 문서를 바탕으로 만드는 방법과 모범 사례도 공식 문서에 있어요.
-- **Outlook**: 새 메일에서 Copilot 아이콘으로 초안을 만들고, 스레드 맨 위 **Summary by Copilot**으로 긴 메일을 요약해요.
-- 화면에 Copilot이 보이는지는 **구독·라이선스·조직 설정**에 달려 있어요. 회사 계정은 Copilot Chat(기본), Copilot (Basic), Copilot (Premium) 같은 경험으로 나뉘어요(2026-10-14 기준).
-- 가격은 이번 확인에서 공식 요금제 페이지를 읽지 못해 적지 않았어요. 생성된 내용은 보내기 전에 꼭 읽고 고치세요.
+- **Word**: The Copilot button at the bottom right (the corner of the document) opens a chat pane for drafting, polishing, and summarizing. Edit mode is the default.
+- **PowerPoint**: The Copilot icon at the bottom right opens a chat pane where you can build a presentation from a prompt (as of 2026-10-26). The official documentation also covers building from a Word document and best practices.
+- **Outlook**: In a new email, the Copilot icon creates a draft, and **Summary by Copilot** at the top of a thread summarizes a long email.
+- Whether Copilot shows up on your screen depends on your **subscription, license, and organization settings**. Work accounts split into experiences such as Copilot Chat (basic), Copilot (Basic), and Copilot (Premium) (as of 2026-10-14).
+- We couldn't read the official pricing page during this check, so prices aren't listed. Always read and edit generated content before sending.
 </Summary>
 
-<Aside type="caution" title="가격과 플랜 이름은 확인하지 못했거나 자주 바뀌어요">
-Microsoft의 요금제 페이지(microsoft.com)는 이번 확인에서 접근이 막혀 읽지 못했고, 한국 원화 가격도 확인하지 못했어요. 일부 공식 블로그 글은 화면이 스크립트로 그려져 숫자를 읽을 수 없었어요. 플랜 이름도 최근 공식 문서에서 바뀌는 중이에요. 구독 전에 [Microsoft 공식 요금제 페이지](https://www.microsoft.com/ko-kr/microsoft-365/microsoft-365-copilot)에서 직접 확인하세요.
+<Aside type="caution" title="We couldn't confirm prices and plan names, or they change often">
+Microsoft's pricing page (microsoft.com) blocked access during this check, so we couldn't read it, and we couldn't confirm Korean won (KRW) prices either. Some official blog posts render their pages with scripts, so we couldn't read the numbers. Plan names are also being changed in recent official documentation. Check directly on [Microsoft's official pricing page](https://www.microsoft.com/ko-kr/microsoft-365/microsoft-365-copilot) before subscribing (this link goes to the Korean page).
 </Aside>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do
 
-- Word에서 **초안을 만들고**, 선택한 문장을 **다시 쓰고**, 긴 문서를 **요약**할 수 있어요.
-- PowerPoint에서 프롬프트나 기존 Word 문서로 **발표 자료 초안**을 만들 수 있어요.
-- Outlook에서 긴 메일 스레드를 **요약**하고 **답장 초안**을 받을 수 있어요.
-- 내 계정에서 Copilot이 왜 안 보이는지(구독·라이선스·조직 설정) 점검할 수 있어요.
+- In Word, **create a draft**, **rewrite** selected sentences, and **summarize** a long document.
+- In PowerPoint, create a **presentation draft** from a prompt or an existing Word document.
+- In Outlook, **summarize** a long email thread and get a **reply draft**.
+- Troubleshoot why Copilot doesn't show up in your account (subscription, license, organization settings).
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **Copilot in Microsoft 365 앱** | Word, Excel, PowerPoint, Outlook 같은 앱 안에서 쓰는 Microsoft의 AI예요. |
-| **편집 모드 / 채팅 전용(Chat only)** | Word의 Copilot은 기본이 편집 모드예요. **Chat only**를 고르면 채팅으로만 답하고 문서는 바꾸지 않아요. |
-| **Copilot Chat (Basic)** | 적격한 Microsoft 365 라이선스에 포함되는 기본 채팅이에요. 주로 웹 데이터를 쓰고, 회사 콘텐츠는 내가 직접 붙이거나 첨부해야 해요(회사 계정 기준). |
-| **Microsoft 365 Copilot (Basic)** | Copilot 애드온 라이선스는 없지만 Word·Excel·PowerPoint·OneNote 등에서 표준 접근이 있는 경험이에요. 서비스 용량에 따라 달라질 수 있다고 안내돼요. |
-| **Microsoft 365 Copilot (Premium)** | 애드온 라이선스가 있는 전체 경험이에요. 우선 접근과 회사 데이터(메일·파일·회의 등) 기반 답변이 포함돼요. |
-| **개인 구독의 Copilot** | Microsoft 365 Personal·Family·Premium·Pro에 Copilot이 포함돼요. AI 크레딧 모델을 쓰고, Family·Premium의 AI 기능은 구독 소유자만 쓸 수 있어요. |
+| **Copilot in Microsoft 365 apps** | Microsoft's AI that you use inside apps like Word, Excel, PowerPoint, and Outlook. |
+| **Edit mode / Chat only** | Copilot in Word defaults to Edit mode. If you choose **Chat only**, it answers only in chat and doesn't change the document. |
+| **Copilot Chat (Basic)** | The basic chat included with eligible Microsoft 365 licenses. It mainly uses web data, and you have to paste or attach company content yourself (for work accounts). |
+| **Microsoft 365 Copilot (Basic)** | An experience with no Copilot add-on license but standard access in Word, Excel, PowerPoint, OneNote, and more. It's described as possibly varying with service capacity. |
+| **Microsoft 365 Copilot (Premium)** | The full experience with an add-on license. It includes priority access and answers based on company data (mail, files, meetings, etc.). |
+| **Copilot in personal subscriptions** | Copilot is included in Microsoft 365 Personal, Family, Premium, and Pro. They use an AI credit model, and AI features in Family and Premium can be used only by the subscription owner. |
 
-<Aside type="note" title="개인 계정과 회사 계정의 화면은 달라요 (2026-10-14 기준)">
-공식 문서는 개인 구독(집·가족용)과 회사·학교 계정을 따로 안내해요. 개인용은 Microsoft Services Agreement와 Copilot 이용약관이 적용되고, 회사용은 조직의 데이터 보호 정책이 적용돼요. 내 화면에 버튼이 없으면 이상한 게 아니라 **계정 종류나 라이선스 때문일 수 있으니** 화면 안내를 따르세요. 앱 안의 표시(예: "M365 Copilot (Premium)")로 내 경험을 알 수 있다고 공식 문서가 설명해요.
+<Aside type="note" title="Personal and work accounts look different (as of 2026-10-14)">
+The official documentation gives separate guidance for personal (home and family) subscriptions and work or school accounts. Personal use falls under the Microsoft Services Agreement and the Copilot terms of use, while work use falls under your organization's data protection policy. If a button is missing on your screen, that's not unusual. **It may be because of your account type or license**, so follow the on-screen instructions. The official documentation explains that you can tell which experience you have from the label inside the app (for example, "M365 Copilot (Premium)").
 </Aside>
 
-## 단계별 따라하기
+## Step-by-step
 
 <Checklist items={[
-  '내 계정에서 Copilot이 켜져 있는지 확인했어요',
-  'Word에서 초안을 만들고 직접 고쳤어요',
-  'Word 문서를 요약해 봤어요',
-  'PowerPoint에서 발표 자료 초안을 만들었어요',
-  'Outlook에서 긴 메일을 요약했어요',
-  'Outlook에서 답장 초안을 만들고 읽어 본 뒤 보냈어요',
+  'I checked that Copilot is turned on in my account',
+  'I created a draft in Word and edited it myself',
+  'I summarized a Word document',
+  'I created a presentation draft in PowerPoint',
+  'I summarized a long email in Outlook',
+  'I created a reply draft in Outlook, read it, and then sent it',
 ]} />
 
 <Steps>
 
-1. **내 계정에서 Copilot 확인하기**
+1. **Check Copilot in your account**
 
-   Word를 열어 문서 모서리에 Copilot 버튼(Copilot Dynamic Action Button)이 보이는지 확인해요. 안 보이면 구독에 포함되지 않았거나 조직 설정으로 막혔을 수 있다고 공식 문서가 안내해요. 개인 구독이라면 연령 제한이 적용될 수 있고, 회사 계정이면 관리자에게 어떤 앱에서 무엇이 안 보이는지 알려 주세요.
+   Open Word and check whether the Copilot button (Copilot Dynamic Action Button) appears in the corner of the document. The official documentation says if it doesn't, it may not be included in your subscription or may be blocked by organization settings. On a personal subscription, age restrictions may apply; on a work account, tell your admin which app is missing what.
 
-   <ScreenshotPlaceholder caption="Word 문서 모서리의 Copilot 버튼과 열린 채팅 창" officialUrl="https://support.microsoft.com/en-us/word/welcome-to-copilot-in-word" />
+   <ScreenshotPlaceholder caption="The Copilot button in the corner of a Word document and the opened chat pane" officialUrl="https://support.microsoft.com/en-us/word/welcome-to-copilot-in-word" />
 
-2. **Word: 초안 만들기**
+2. **Word: create a draft**
 
-   Copilot 버튼을 눌러 채팅 창을 열어요(편집 모드로 열려요). 결과물, 대상, 길이, 말투를 적고, 참고할 자료가 있으면 채팅 입력란에 `/`를 치고 문서·메일·회의 이름을 골라 지정할 수 있어요. 결과는 보관하거나 버리거나 후속 프롬프트로 계속 다듬을 수 있어요.
+   Click the Copilot button to open the chat pane (it opens in Edit mode). Describe the output, audience, length, and tone, and if there's material to reference, type `/` in the chat box and pick a document, email, or meeting name to point to it. You can keep the result, discard it, or keep refining it with follow-up prompts.
 
    <PromptBox>
-   고객사 임원에게 보내는 프로젝트 현황 보고서 초안을 써 줘. 구성은 배경, 진행 상황, 위험 요소, 다음 단계 순서. 숫자는 내가 따로 넣을 거라서 [ ]로 비워 둬. 한국어 존댓말로, A4 한 장 분량으로.
+   Write a draft project status report to send to an executive at a client company. Use this structure: background, progress, risks, next steps. I'll fill in the numbers myself, so leave them blank as [ ]. Keep the tone professional and the length to about one page.
    </PromptBox>
 
-   <Aside type="caution" title="숫자는 비워 두게 하세요">
-   AI가 그럴듯한 숫자를 지어낼 수 있어요. 수치는 직접 넣고, AI에게는 구조와 문장을 맡기세요.
+   <Aside type="caution" title="Have it leave the numbers blank">
+   AI can make up plausible-looking numbers. Enter the figures yourself and leave the structure and wording to the AI.
    </Aside>
 
-3. **Word: 다듬기와 요약**
+3. **Word: polish and summarize**
 
-   이미 쓴 글은 문장을 선택하고 **Rewrite** 같은 프리셋을 고르거나, 채팅 창에 원하는 수정을 문장으로 적어요. 요약이나 질문만 하고 문서는 건드리고 싶지 않으면 **Chat only**를 고르세요. 공유 문서에서는 Copilot이 바꿀 내용을 먼저 미리보기로 보여 주고, 승인하기 전에는 문서에 아무것도 추가하지 않는다고 공식 문서가 안내해요.
+   For text you've already written, select the sentences and pick a preset such as **Rewrite**, or describe the change you want in the chat pane. If you only want to summarize or ask questions without touching the document, choose **Chat only**. The official documentation says that in shared documents, Copilot first shows a preview of what it will change and adds nothing to the document until you approve.
 
    <PromptBox>
-   이 문서를 불릿 다섯 개로 요약해 줘. 그리고 공유하기 전에 정해져야 할 결정 사항이 뭔지 알려 줘.
+   Summarize this document in five bullets. And tell me what decisions need to be made before it's shared.
    </PromptBox>
 
-4. **PowerPoint: 발표 자료 초안 만들기**
+4. **PowerPoint: create a presentation draft**
 
-   새 프레젠테이션에서 화면 오른쪽 아래의 Copilot 아이콘을 눌러 Copilot Chat을 열어요. 원하면 모델 선택기(model selector)에서 AI 모델을 고르고, 기본값 Auto로 둬도 돼요. 조직이 Brand Kit을 요구하면 Select brand에서 쓸 Brand Kit을 골라요(개인 계정이거나 조직에 없으면 건너뛰어요). 그다음 입력란에 만들고 싶은 발표 자료를 설명해요. Copilot이 대상, 발표 길이, 템플릿·디자인 방향, 이미지 종류 같은 질문을 먼저 할 수 있는데, 답하거나 건너뛰면 Copilot이 내용을 모아 선택한 템플릿으로 프레젠테이션을 만들어요(2026-10-26 기준 공식 문서). 2026-10-14 기준 문서에 있던 "Add Content > Agent Mode" 안내는 지금 이 문서에서 찾지 못했으니, 내 화면에 그 메뉴가 보이면 화면 안내를 따르세요.
+   In a new presentation, click the Copilot icon at the bottom right of the screen to open Copilot Chat. If you like, choose an AI model in the model selector, or leave it on the default, Auto. If your organization requires a Brand Kit, pick the one to use under Select brand (skip this on a personal account or if your organization doesn't have one). Then describe the presentation you want in the input box. Copilot may first ask questions such as the audience, presentation length, template and design direction, and image types; answer or skip them, and Copilot gathers the content and builds the presentation with the template you chose (official documentation as of 2026-10-26). The "Add Content > Agent Mode" guidance that was in the 2026-10-14 version of the documentation couldn't be found in the current one, so if you see that menu on your screen, follow the on-screen instructions.
 
-   <FlowSteps title="PowerPoint에서 Copilot으로 발표 자료 시작하기" officialUrl="https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d" steps={[
-     { where: 'PowerPoint 새 프레젠테이션', action: '슬라이드 오른쪽 아래 Copilot 아이콘 누르기', result: 'Copilot 채팅 창' },
-     { where: '채팅 창', action: '(선택) 모델 선택기와 Brand Kit 고르기', result: '모델·브랜드 설정' },
-     { where: '채팅 창', action: '프롬프트 입력 후 화살표 버튼', result: 'Copilot의 확인 질문' },
-     { where: '채팅 창', action: '질문에 답하거나 건너뛰기', result: '슬라이드 초안' },
+   <FlowSteps title="Starting a presentation with Copilot in PowerPoint" officialUrl="https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d" steps={[
+     { where: 'A new PowerPoint presentation', action: 'Click the Copilot icon at the bottom right of the slide', result: 'The Copilot chat pane' },
+     { where: 'Chat pane', action: '(Optional) Pick a model and a Brand Kit', result: 'Model and brand settings' },
+     { where: 'Chat pane', action: 'Enter a prompt, then click the arrow button', result: 'Copilot\'s clarifying questions' },
+     { where: 'Chat pane', action: 'Answer the questions or skip them', result: 'A draft of the slides' },
    ]} />
 
    <PromptBox>
-   신입 사원 온보딩 발표 자료 초안을 만들어 줘. 대상은 입사 첫 주 직원 20명이고, 10분 분량이야. 회사 소개, 첫 주 일정, 자주 묻는 질문, 연락처 순서로 구성해 줘.
+   Create a draft presentation for onboarding new hires. The audience is 20 employees in their first week, and it should run 10 minutes. Structure it as company overview, first-week schedule, FAQ, and contacts.
    </PromptBox>
 
-   기존 Word 문서로 만들 때의 모범 사례도 공식 문서에 있어요. Word 스타일(제목 등)로 문서를 정리하면 슬라이드 나누기가 좋아지고, 관련 이미지를 넣으면 반영을 시도하고, 회사 템플릿으로 시작하면 테마를 유지해요. 24MB보다 작은 Word 문서에서 가장 잘 동작해요.
+   The official documentation also has best practices for building from an existing Word document. Organizing the document with Word styles (headings, etc.) improves how slides are split, relevant images are included where possible, and starting from a company template preserves the theme. It works best with Word documents under 24 MB.
 
-   <ScreenshotPlaceholder caption="PowerPoint Copilot 창에서 발표 자료를 만드는 화면" officialUrl="https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d" />
+   <ScreenshotPlaceholder caption="Building a presentation in the PowerPoint Copilot pane" officialUrl="https://support.microsoft.com/en-us/office/create-a-new-presentation-with-copilot-in-powerpoint-3222ee03-f5a4-4d27-8642-9c387ab4854d" />
 
-5. **Outlook: 긴 메일 스레드 요약하기**
+5. **Outlook: summarize a long email thread**
 
-   받은 편지함에서 대화를 열어요. 새 Outlook에서는 스레드 맨 위 **Summary by Copilot** 상자를 누르고, 클래식 Outlook에서는 **Summarize**를 눌러요. 요약에는 번호 인용이 붙어서 누르면 해당 메일로 이동할 수 있어요.
+   Open a conversation in your inbox. In new Outlook, click the **Summary by Copilot** box at the top of the thread; in classic Outlook, click **Summarize**. The summary includes numbered citations that you can click to jump to the matching email.
 
-6. **Outlook: 답장 초안 만들기**
+6. **Outlook: create a reply draft**
 
-   새 메일(Home > New Mail)에서 툴바의 Copilot 아이콘을 누르고, 새 Outlook에서는 **Draft**, 클래식 Outlook에서는 **Draft with Copilot**을 골라요. 프롬프트를 입력하고 **Generate**를 누르면 초안이 나와요. 길이와 말투는 조절할 수 있고, 마음에 안 들면 다시 생성할 수 있어요. 만족스러우면 **Keep it**(클래식은 **Keep**)을 누르고, 직접 고친 뒤 보내세요. 새 Outlook에는 메일 스레드로 회의 초대장을 만들어 주는 **Schedule with Copilot**도 있어요.
+   In a new email (Home > New Mail), click the Copilot icon on the toolbar, then choose **Draft** in new Outlook or **Draft with Copilot** in classic Outlook. Enter a prompt and click **Generate** to get a draft. You can adjust the length and tone, and regenerate if you don't like it. When you're satisfied, click **Keep it** (**Keep** in classic), edit it yourself, and then send. New Outlook also has **Schedule with Copilot**, which creates a meeting invitation from an email thread.
 
    <PromptBox>
-   거래처 김 팀장님께 보내는 답장을 써 줘. 요청하신 견적서는 금요일까지 보내겠다는 내용이고, 정중하되 짧게. 존댓말로, 3문장 이내로.
+   Write a reply to Ms. Kim, our contact at the partner company. Say that I'll send the quote she asked for by Friday. Polite but short, no more than 3 sentences.
    </PromptBox>
 
-   <ScreenshotPlaceholder caption="Outlook 새 메일에서 Copilot Draft를 쓰는 화면" officialUrl="https://support.microsoft.com/en-us/outlook/welcome-to-copilot-in-outlook" />
+   <ScreenshotPlaceholder caption="Using Copilot Draft in a new Outlook email" officialUrl="https://support.microsoft.com/en-us/outlook/welcome-to-copilot-in-outlook" />
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-### 앱별 기능과 위치 (2026-10-14 기준, 공식 도움말)
+### Features and locations by app (as of 2026-10-14, official help)
 
-| 앱 | 하고 싶은 일 | 위치 / 버튼 |
+| App | What you want to do | Location / button |
 | --- | --- | --- |
-| Word | 초안 작성 | Copilot 버튼 > 채팅 창(편집 모드) |
-| Word | 선택 문장 다시 쓰기 | 문장 선택 후 Rewrite |
-| Word | 요약·질문만 하기 | Chat only |
-| Word | 다른 문서·메일·회의 참조 | 채팅 입력란에 `/` |
-| PowerPoint | 발표 자료 생성 | 오른쪽 아래 Copilot 아이콘 > 프롬프트 입력 |
-| Outlook (새) | 초안 | 툴바 Copilot 아이콘 > Draft |
-| Outlook (클래식) | 초안 | Copilot 아이콘 > Draft with Copilot |
-| Outlook (새) | 스레드 요약 | 스레드 위 Summary by Copilot |
-| Outlook (클래식) | 스레드 요약 | Summarize |
-| Outlook (새) | 회의 초대 만들기 | Schedule with Copilot |
+| Word | Create a draft | Copilot button > chat pane (Edit mode) |
+| Word | Rewrite selected sentences | Select the sentences, then Rewrite |
+| Word | Summarize or ask questions only | Chat only |
+| Word | Reference other documents, emails, meetings | `/` in the chat box |
+| PowerPoint | Create a presentation | Copilot icon at the bottom right > enter a prompt |
+| Outlook (new) | Draft | Toolbar Copilot icon > Draft |
+| Outlook (classic) | Draft | Copilot icon > Draft with Copilot |
+| Outlook (new) | Summarize a thread | Summary by Copilot above the thread |
+| Outlook (classic) | Summarize a thread | Summarize |
+| Outlook (new) | Create a meeting invitation | Schedule with Copilot |
 
-### 계정·라이선스 구분 (회사 계정, Microsoft Learn 개요 기준, 2026-10-14)
+### Account and license tiers (work accounts, per the Microsoft Learn overview, 2026-10-14)
 
-| 구분 | 설명 |
+| Tier | Description |
 | --- | --- |
-| Copilot Chat (Basic) | 적격 라이선스에 포함. 웹 데이터 중심. Word·Excel·PowerPoint·OneNote의 앱 안 Copilot은 포함하지 않는다고 안내돼요. |
-| Microsoft 365 Copilot (Basic) | 애드온 없음. 앱 안(Word·Excel·PowerPoint·Outlook 등) 표준 접근. 용량에 따라 달라질 수 있어요. |
-| Microsoft 365 Copilot (Premium) | 애드온 라이선스. 우선 접근과 회사 데이터(Microsoft Graph, Work IQ) 기반 답변 포함. |
+| Copilot Chat (Basic) | Included with eligible licenses. Web-data focused. It's described as not including in-app Copilot in Word, Excel, PowerPoint, and OneNote. |
+| Microsoft 365 Copilot (Basic) | No add-on. Standard in-app access (Word, Excel, PowerPoint, Outlook, etc.). May vary with capacity. |
+| Microsoft 365 Copilot (Premium) | Add-on license. Includes priority access and answers based on company data (Microsoft Graph, Work IQ). |
 
-### 개인 구독과 기타
+### Personal subscriptions and other
 
-| 항목 | 내용 |
+| Item | Details |
 | --- | --- |
-| 개인 구독 | Personal·Family·Premium·Pro에 Copilot과 AI 크레딧 포함. Family·Premium의 AI 기능은 구독 소유자만 사용 가능. |
-| 한국어 | 공식 지원 언어 목록의 회사·학교 계정과 개인 계정 모두에 한국어가 있어요. 기능별 품질은 별도 확인이 필요해요. |
-| 모델 선택 | Word에서는 Model Selector로 OpenAI나 Claude 같은 지원 모델을 고를 수 있다고 안내돼요. Anthropic 모델은 일부 라이선스 경험에서만, 기본 제공은 아니라고 Learn 문서가 밝혀요. |
-| 끄기 | Word·Excel·PowerPoint에서 Copilot을 켜고 끄는 설정이 있어요(개인 구독 기준). Designer·Notepad·Paint는 끌 수 없어요. |
-| 가격 | 이번 확인에서 공식 요금제 페이지를 읽지 못해 적지 않아요. |
+| Personal subscriptions | Personal, Family, Premium, and Pro include Copilot and AI credits. AI features in Family and Premium are usable only by the subscription owner. |
+| Korean | Korean is on the official supported-language list for both work or school accounts and personal accounts. Quality by feature needs to be checked separately. |
+| Model selection | In Word, you're told you can pick supported models such as OpenAI or Claude with the Model Selector. The Learn documentation says Anthropic models are available only in some license experiences, and are not provided by default. |
+| Turning off | There are settings to turn Copilot on and off in Word, Excel, and PowerPoint (for personal subscriptions). Designer, Notepad, and Paint can't be turned off. |
+| Price | We couldn't read the official pricing page during this check, so it isn't listed. |
 
-## 자주 막히는 지점
+## Common sticking points
 
-### Copilot 버튼이 안 보여요
+### I don't see the Copilot button
 
-- **원인**: 구독에 Copilot이 없거나, 조직 설정으로 제한됐거나, 연령 제한이 적용됐을 수 있어요.
-- **해결**: 개인 구독이면 계정의 구독을 확인하고, 회사 계정이면 관리자에게 문의하세요. 어떤 앱에서 무엇이 안 보이는지 알려 주면 빨라요.
+- **Cause**: Your subscription may not include Copilot, it may be restricted by organization settings, or an age restriction may apply.
+- **Fix**: On a personal subscription, check the subscription on your account; on a work account, ask your admin. Telling them which app is missing what speeds things up.
 
-### 한국어 결과가 어색해요
+### Korean output is awkward
 
-- **원인**: 한국어는 공식 지원 언어지만, Copilot이 주로 영어 자료로 학습돼 언어에 따라 성능이 다를 수 있다고 Excel 문서가 밝혀요. Word 문서는 Copilot이 Word 인터페이스보다 적은 언어를 지원한다고 안내해요.
-- **해결**: 프롬프트에 "한국어 존댓말로", 대상과 길이를 적고, 결과를 읽고 고치세요.
+- **Cause**: Korean is an officially supported language, but the Excel documentation says Copilot is trained mainly on English material, so performance can vary by language. The Word documentation says Copilot supports fewer languages than the Word interface does.
+- **Fix**: In your prompt, specify the language and tone (for example, "in polite Korean"), plus the audience and length, and read and edit the result.
 
-### PowerPoint에서 파일을 참조해 만들 수 없어요
+### I can't build a presentation by referencing a file in PowerPoint
 
-- **원인**: 2026-10-26 기준 공식 PowerPoint 문서는 Word 문서로 만드는 모범 사례(Word 스타일, 이미지, 템플릿, 24MB 미만)를 안내하지만 Agent Mode 파일 참조는 설명하지 않아요. 이전 문서에 있던 "곧 제공" 문구도 지금은 찾지 못했어요. 기능이 순차 제공 중일 수 있어요.
-- **해결**: 내 화면의 안내를 따르고, 필요하면 Word 요약을 먼저 받아 프롬프트에 붙여 넣어 윤곽을 만드세요. 공유 문서라면 Word 쪽의 미리보기·승인 기능도 활용하세요.
+- **Cause**: As of 2026-10-26, the official PowerPoint documentation covers best practices for building from a Word document (Word styles, images, templates, under 24 MB) but doesn't describe Agent Mode file references. We also couldn't find the "coming soon" wording that was in the earlier version of the documentation. The feature may be rolling out gradually.
+- **Fix**: Follow the instructions on your screen, and if needed, get a summary in Word first and paste it into the prompt to build an outline. For shared documents, also use Word's preview and approval features.
 
-### 요약이 중요한 내용을 놓쳤어요
+### The summary missed something important
 
-- **원인**: 긴 스레드의 맥락이나 첨부의 세부 사항이 요약에 모두 담기지 않을 수 있어요.
-- **해결**: "결정된 것 / 미정 / 내가 할 일"처럼 항목을 지정해 요청하고, 핵심 메일은 인용 번호로 원문을 확인하세요.
+- **Cause**: The context of a long thread or the details of an attachment may not all fit in the summary.
+- **Fix**: Request specific categories such as "decided / undecided / my to-dos," and check the original of key emails using the citation numbers.
 
-### 회사 기밀을 써도 될지 모르겠어요
+### I'm not sure whether I can use company confidential information
 
-- **원인**: 회사마다 AI 사용 규정이 달라요. 개인 구독과 회사 계정의 데이터 보호 방식도 달라요.
-- **해결**: 회사 업무는 회사 계정으로 쓰고, 사내 보안 담당자에게 확인하세요. [개인정보·회사 정보 안전하게 지키며 쓰기](/basics/05-privacy-safety/)도 읽어 보세요.
+- **Cause**: Each company has different rules about using AI. Data protection also differs between personal subscriptions and work accounts.
+- **Fix**: Use your work account for company work, and check with your internal security team. Also read [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/).
 
-## 실전 팁
+## Practical tips
 
-- **구체적으로 시키세요.** 대상, 목적, 길이, 말투를 적으세요. Microsoft 문서도 "프롬프트가 완벽할 필요는 없고, 원하는 결과에서 시작해 길이·형식·말투·자료를 더하라"고 안내해요.
-- **초안은 초안이에요.** Outlook 초안은 보내기 전에 꼭 읽고, 발표 자료는 AI가 만든 내용을 사람이 검토해 고치라고 공식 문서가 안내해요.
-- **숫자와 날짜는 직접 확인하세요.** 이름, 날짜, 금액, 약속 문구는 특히 꼼꼼히 보세요.
-- **같은 일을 다른 도구로 비교해 보세요.** Google Workspace를 쓴다면 [19. Google Workspace의 Gemini](/automation/19-google-workspace-gemini/), 대화형 AI를 비교하려면 [Claude·ChatGPT·Gemini 비교](/chat/05-compare-assistants/)를 보세요.
-- **Claude로 Office 파일을 다룰 수도 있어요.** Claude 쪽 방법은 [23. 엑셀·구글 시트에 AI 붙이기](/automation/23-spreadsheet-ai/)와 [C7. 커넥터](/claude/c07-connectors/)를 참고하세요.
+- **Be specific.** Include the audience, purpose, length, and tone. Microsoft's documentation also says "your prompt doesn't have to be perfect; start from the result you want and add length, format, tone, and sources."
+- **A draft is a draft.** The official documentation tells you to read Outlook drafts before sending, and to have a person review and fix AI-generated presentation content.
+- **Check numbers and dates yourself.** Be especially careful with names, dates, amounts, and wording of commitments.
+- **Compare the same job across tools.** If you use Google Workspace, see [19. Gemini in Google Workspace](/automation/19-google-workspace-gemini/); to compare conversational AI, see [Comparing Claude, ChatGPT, and Gemini](/chat/05-compare-assistants/).
+- **You can also work with Office files in Claude.** For the Claude approach, see [23. Adding AI to Excel and Google Sheets](/automation/23-spreadsheet-ai/) and [C7. Connectors](/claude/c07-connectors/).
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [23. 엑셀·구글 시트에 AI 붙이기: Copilot·Gemini·Claude](/automation/23-spreadsheet-ai/) — Excel에서의 Copilot과 시트 자동화
-- [17. 아침 브리핑 받기](/automation/17-morning-briefing/) — 메일·일정 요약을 매일 받는 방법
-- [4. 보고서·제안서 쓰기](/chat/04-write-reports/) — 보고서 초안을 대화형 AI로 쓰는 방법
-- [사무·기획·관리직을 위한 AI 활용 가이드](/roles/office/) — 메일·보고서·발표 같은 반복 업무를 직무 관점에서 보기
+- [23. Adding AI to Excel and Google Sheets: Copilot, Gemini, and Claude](/automation/23-spreadsheet-ai/) — Copilot in Excel and spreadsheet automation
+- [17. Get a morning briefing](/automation/17-morning-briefing/) — Getting email and schedule summaries every day
+- [4. Writing reports and proposals](/chat/04-write-reports/) — Writing report drafts with conversational AI
+- [An AI usage guide for office, planning, and admin roles](/roles/office/) — Looking at repetitive work like email, reports, and presentations from a job-role perspective

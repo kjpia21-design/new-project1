@@ -1,16 +1,16 @@
 ---
-title: "코딩 없이 반복 파일 작업 자동화: Claude Code로 엑셀 합치기·파일 이름 정리"
-description: "폴더 속 여러 엑셀을 하나로 합치고, 파일 이름을 일괄 바꾸고, CSV를 정리하는 반복 업무를 백업과 승인 확인으로 안전하게 맡기는 실습"
+title: "Automate Repetitive File Work Without Coding: Merge Excel Files and Tidy File Names with Claude Code"
+description: "A hands-on exercise: safely hand off recurring tasks like merging many Excel files in a folder, renaming files in bulk, and cleaning up CSVs, using backups and approval checks"
 sidebar:
-  label: "8. 반복 파일 작업 자동화"
+  label: "8. Automating repetitive file work"
 level: beginner
 category: coding
 tools: ["Claude Code"]
-duration: "40분"
+duration: "40 min"
 prerequisites:
-  - "Claude 유료 플랜 (Pro 이상) 또는 Console 계정"
-  - "Claude Code 설치와 로그인 (C12 참고)"
-  - "연습용 복사본 폴더 (원본은 건드리지 않아요)"
+  - "A paid Claude plan (Pro or higher) or a Console account"
+  - "Claude Code installed and logged in (see C12)"
+  - "A practice copy of a folder (you won't touch the originals)"
 lastVerified: 2026-10-26
 sources:
   - title: "Checkpointing"
@@ -36,244 +36,244 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- 매달 하는 "엑셀 열두 개 합치기", "파일 이름 하나씩 고치기" 같은 일을 Claude Code에 말로 맡기는 실습이에요. 코드를 쓰거나 읽을 필요는 없어요.
-- **가장 먼저 할 일은 폴더 복사 백업**이에요. 파일 이름 변경이나 삭제는 `/rewind`로 안 돌아올 수 있어요(아래에서 이유를 설명해요).
-- 순서는 **계획 모드로 계획 확인 → 파일 3개로 시험 → 승인 화면 읽기 → 결과 직접 열어 보기 → 전체 실행**이에요.
-- 설치와 로그인은 [C12](/claude/c12-claude-code-overview/), 첫 실습 흐름은 [6편](/coding/06-claude-code-start/), 안전 습관 전반은 [27편](/coding/27-first-app-with-claude-code/)에 있어요. 이 편은 반복하지 않아요.
-- Claude Code는 Pro 이상 유료 플랜에서 쓸 수 있어요([C2](/claude/c02-plans-limits/), 2026-10-26 기준).
+- This is an exercise in handing monthly chores like "merge twelve Excel files" and "fix file names one by one" to Claude Code in plain words. You don't need to write or read code.
+- **The very first thing to do is back up by copying the folder.** File renames and deletions may not come back with `/rewind` (the reason is explained below).
+- The order is **check the plan in plan mode → test with 3 files → read the approval screen → open the result yourself → run on everything**.
+- Installation and login are in [C12](/claude/c12-claude-code-overview/), the first-exercise flow is in [Tutorial 6](/coding/06-claude-code-start/), and general safety habits are in [Tutorial 27](/coding/27-first-app-with-claude-code/). This tutorial doesn't repeat them.
+- Claude Code is available on paid plans (Pro or higher) ([C2](/claude/c02-plans-limits/), as of 2026-10-26).
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- 폴더 속 여러 엑셀(또는 CSV) 파일을 **하나의 표로 합치는 일**을 말로 맡길 수 있어요.
-- 파일 이름을 "날짜_거래처_종류" 같은 규칙으로 **일괄 정리**하되, 바꾸기 전에 미리보기를 받는 방법을 알게 돼요.
-- CSV의 빈 줄, 중복, 형식 흐트러짐을 정리하되 **원본은 그대로 두고 새 파일로** 받을 수 있어요.
-- 잘못됐을 때 돌아갈 수 있는 **백업, 승인 화면, `/rewind`의 역할과 한계**를 구분해서 알게 돼요.
+- Hand off the job of **merging many Excel (or CSV) files in a folder into one table** in plain words.
+- **Rename files in bulk** with a rule like "date_client_type", and learn how to get a preview before the change is made.
+- Clean up blank lines, duplicates, and messy formatting in a CSV, getting **the result as a new file while the original stays untouched**.
+- Understand the difference between **backups, the approval screen, and the role and limits of `/rewind`** for getting back when something goes wrong.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 이 실습에서의 뜻 |
+| Term | What it means in this exercise |
 | --- | --- |
-| **작업 폴더** | Claude Code가 읽고 쓰는 범위예요. 연습용 복사본 폴더 하나에서만 시작해요. |
-| **백업** | 작업 전에 폴더를 통째로 복사해 둔 것이에요. 이 편의 가장 중요한 안전장치예요. |
-| **승인 화면** | Claude가 파일을 바꾸거나 명령을 실행하기 전에 "해도 될까요?" 하고 묻는 화면이에요. |
-| **계획 모드** | 파일을 바꾸지 않고 계획만 제안하는 모드예요. `Shift+Tab`으로 바꿔요. |
-| **체크포인트와 `/rewind`** | Claude가 파일을 바꾸기 전 상태를 기록해 두고, `/rewind`로 그 시점으로 되돌리는 기능이에요. |
+| **Working folder** | The area Claude Code can read and write. You start in just one practice copy of a folder. |
+| **Backup** | A copy of the whole folder made before you start working. It's the most important safeguard in this tutorial. |
+| **Approval screen** | The screen where Claude asks "Is it OK to do this?" before changing files or running a command. |
+| **Plan mode** | A mode that only proposes a plan without changing files. Switch with `Shift+Tab`. |
+| **Checkpoints and `/rewind`** | A feature where Claude records the state before changing files, and `/rewind` returns to that point. |
 
-### 어떤 일에 잘 맞나요?
+### What kinds of work does it suit?
 
-Claude Code는 이름처럼 코딩 도구지만, 폴더 안의 파일을 읽고 쓰고 명령을 실행할 수 있어서 반복적인 파일 작업에도 쓸 수 있어요. 이 편의 예시와 프롬프트는 이 사이트가 만든 연습 과제이고 공식 문서의 예시는 아니에요. 아래처럼 **규칙이 분명하고 결과를 눈으로 확인할 수 있는 일**이 잘 맞아요.
+Claude Code is a coding tool by name, but it can read and write files in a folder and run commands, so it can also be used for repetitive file work. The examples and prompts in this tutorial are practice tasks made by this site, not examples from the official docs. Work like the following, **with clear rules and results you can check with your own eyes**, is a good fit.
 
-| 잘 맞는 일 | 조심할 일 |
+| Good fit | Be careful with |
 | --- | --- |
-| 같은 양식의 엑셀·CSV 여러 개를 하나로 합치기 | 서식·수식·차트가 많은 문서를 그대로 보존해야 하는 일 |
-| 파일 이름에 날짜·번호·거래처를 규칙대로 붙이기 | 원본이 하나뿐이고 복사본이 없는 중요 파일 |
-| CSV의 빈 줄 제거, 중복 확인, 열 이름 통일 | 개인정보·급여처럼 외부로 나가면 안 되는 자료 (아래 [안전하게 쓰기](#안전하게-쓰기) 참고) |
+| Merging several Excel or CSV files of the same format into one | Work that must preserve documents with lots of formatting, formulas, or charts exactly |
+| Adding dates, numbers, or client names to file names by a rule | Important files with only one original and no copy |
+| Removing blank lines from a CSV, checking duplicates, standardizing column names | Material like personal information or payroll that must not go outside (see [Using it safely](#using-it-safely) below) |
 
-<Aside type="note" title="확인되지 않은 점">
-Claude Code가 엑셀(.xlsx) 파일을 어떤 방식으로 읽고 쓰는지는 공식 문서에서 확인하지 못했어요. 작업 방식은 Claude가 정하고, 필요한 프로그램을 설치하거나 실행해야 하면 승인을 물어요. 컴퓨터 환경에 따라 결과가 다를 수 있으니 **결과 파일은 반드시 직접 열어 확인**하세요. 엑셀의 수식, 서식, 여러 시트가 그대로 보존되는지도 확인하지 못했어요.
+<Aside type="note" title="What we couldn't confirm">
+We couldn't confirm in official documentation how Claude Code reads and writes Excel (.xlsx) files. Claude decides the method, and asks for approval if it needs to install or run a program. Results can differ depending on your computer environment, so **always open the result file yourself to check it**. We also couldn't confirm whether Excel formulas, formatting, and multiple sheets are preserved intact.
 </Aside>
 
-### 왜 백업이 먼저인가요?
+### Why is backup first?
 
-[27편](/coding/27-first-app-with-claude-code/)에서 `/rewind`를 소개했지만, 파일 정리 작업에서는 한계를 꼭 알아야 해요. 공식 체크포인트 문서(2026-10-26 확인)에 따르면 다음과 같아요.
+[Tutorial 27](/coding/27-first-app-with-claude-code/) introduced `/rewind`, but for file-organizing work you need to know its limits. According to the official checkpointing docs (checked 2026-10-26):
 
-- Claude의 **파일 편집 도구**로 바뀐 것은 추적되어 되돌릴 수 있어요.
-- 하지만 `rm`(삭제), `mv`(이동·이름 변경), `cp`(복사) 같은 **명령으로만 바뀐 파일은 추적되지 않고 `/rewind`로 되돌릴 수 없어요.** (Claude가 편집 도구로 이미 고친 파일이라면 그 뒤 명령이 만든 변화도 함께 되돌려진다고 해요.) 파일 이름 일괄 변경은 보통 명령으로만 이뤄져서 되돌리기 대상이 아니에요.
-- 체크포인트는 세션당 최근 100개까지 파일 스냅샷을 보관하고, 기본 설정에서는 세션이 마지막으로 저장된 뒤 약 30일이 지나면 스냅샷이 지워져요.
-- 내가 Claude Code 밖에서 직접 바꾼 파일은 대개 기록되지 않아요.
-- 문서도 체크포인트는 Git 같은 버전 관리를 대체하지 않는다고 말해요.
+- Things changed by Claude's **file-editing tools** are tracked and can be undone.
+- However, **files changed only by commands** like `rm` (delete), `mv` (move or rename), and `cp` (copy) **aren't tracked and can't be undone with `/rewind`.** (If a file was already edited by Claude's editing tools, changes made by commands afterward are said to be undone along with it.) Bulk file renaming is usually done only by commands, so it isn't covered by undo.
+- Checkpoints keep file snapshots for up to the most recent 100 per session, and under default settings the snapshots are deleted about 30 days after the session was last saved.
+- Files you change yourself outside Claude Code usually aren't recorded.
+- The docs also say checkpoints don't replace version control like Git.
 
-즉 파일 작업에서는 **`/rewind`보다 작업 전 폴더 복사가 더 믿을 만한 안전장치**예요.
+So for file work, **copying the folder before you start is a more reliable safeguard than `/rewind`**.
 
-## 단계별 따라하기
+## Step-by-step guide
 
 <Checklist items={[
-  '작업 폴더를 통째로 복사해서 백업을 만들었어요 (원본과 다른 위치에)',
-  '연습용으로 파일 3~5개만 담은 폴더를 따로 만들었어요',
-  '그 폴더에서 claude를 시작하고 계획 모드로 계획을 먼저 받았어요',
-  '승인 화면에서 어떤 파일이 바뀌는지 읽고 허용했어요',
-  '결과 파일을 직접 열어서 행 수와 합계를 맞춰 봤어요',
-  '파일 이름 변경은 미리보기를 먼저 받은 뒤 실행했어요',
-  '연습이 끝난 뒤에야 실제 폴더 복사본에 같은 요청을 했어요',
-  '원본 파일이 그대로인지 확인했어요',
+  'I copied the whole working folder to make a backup (in a different location from the original)',
+  'I made a separate folder with just 3 to 5 files for practice',
+  'I started claude in that folder and got a plan first in plan mode',
+  'I read which files would change on the approval screen and allowed it',
+  'I opened the result file myself and matched the row count and total',
+  'For file renames, I got a preview first and then ran it',
+  'Only after practicing did I make the same request on a copy of the real folder',
+  'I confirmed the original files were untouched',
 ]} />
 
 <Steps>
 
-1. **백업 만들고 연습 폴더 준비하기**
+1. **Make a backup and prepare a practice folder**
 
-   탐색기(윈도우)나 Finder(맥)에서 작업할 폴더를 통째로 **복사해서 다른 위치에 붙여 넣으세요.** 이름 끝에 `_백업`을 붙여 두면 헷갈리지 않아요. 그다음 연습용으로 `연습` 폴더를 새로 만들고, 같은 양식의 엑셀 3~5개를 **복사해서** 넣어요. 실제 급여, 고객 연락처 같은 민감한 자료는 쓰지 말고 연습용 예시 데이터로 시작하세요.
+   In File Explorer (Windows) or Finder (Mac), **copy the whole folder you'll work on and paste it in a different location.** Adding `_backup` to the end of the name keeps you from getting confused. Next, create a new folder called `practice`, and **copy** 3 to 5 Excel files of the same format into it. Don't use sensitive material like real payroll or customer contact details; start with practice sample data.
 
-   이 폴더가 Git으로 관리되는 곳이라면 Git도 좋은 안전장치지만, 처음이라면 폴더 복사가 가장 쉬워요. Git은 [8편](/coding/08-cloud-github/)에서 다뤄요.
+   If the folder is managed with Git, Git is also a good safeguard, but if you're a beginner, copying the folder is easiest. Git is covered in [Tutorial 8](/coding/08-cloud-github/).
 
-2. **연습 폴더에서 Claude Code 시작하고 계획 모드로 두기**
+2. **Start Claude Code in the practice folder and switch to plan mode**
 
-   터미널을 `연습` 폴더에서 열어 `claude`를 실행해요. 터미널이 처음이라면 [6편](/coding/06-claude-code-start/)을 먼저 보세요. 처음에는 변경마다 확인을 묻는 기본 모드로 두고, `Shift+Tab`을 눌러 **계획 모드**로 바꿔요. 공식 권한 모드 문서(2026-10-26 확인)에 따르면 기본(Manual) 모드는 읽기만 묻지 않고 실행하고, 계획 모드는 파일을 조사하며 계획을 제안할 뿐 승인 전에는 소스를 편집하지 않아요.
+   Open a terminal in the `practice` folder and run `claude`. If the terminal is new to you, read [Tutorial 6](/coding/06-claude-code-start/) first. Start in the default mode that asks for confirmation on every change, then press `Shift+Tab` to switch to **plan mode**. According to the official permission modes docs (checked 2026-10-26), the default (Manual) mode runs reads without asking, and plan mode investigates files and proposes a plan but doesn't edit source until you approve.
 
    ```sh
-   cd ~/Desktop/연습
+   cd ~/Desktop/practice
    claude
    ```
 
-3. **엑셀 합치기: 먼저 읽기만 시키기**
+3. **Merging Excel files: have it read first**
 
-   곧바로 합치게 하지 말고, **폴더에 뭐가 있는지 읽고 보고하게** 해요. 열 이름이 파일마다 다르거나 맨 위에 제목 줄이 있으면 합치기가 틀어지기 쉬워서, 먼저 확인하는 게 좋아요.
-
-   <PromptBox>
-   이 폴더에 있는 엑셀 파일들을 읽고 알려 줘. (1) 파일 이름과 각 파일의 시트 이름 (2) 각 시트의 열 이름이 파일마다 같은지 다른지 (3) 데이터 행이 몇 개인지. 아직 아무것도 바꾸거나 새로 만들지 말고 보고만 해 줘. 읽는 데 프로그램 설치가 필요하면 먼저 어떤 걸 설치할지 알려 줘.
-   </PromptBox>
-
-   프로그램을 설치하거나 명령을 실행하겠다고 승인을 물으면, 화면에 나온 명령을 읽고 모르겠으면 "이 명령이 뭘 하는지 설명해 줘"라고 먼저 물어보세요. 여기서 `pip`이나 `npm` 같은 설치 명령이 나올 수 있는데, 컴퓨터에 프로그램을 추가하는 명령이라 **뭘 설치하는지 이름을 확인**하고 허용하세요.
-
-4. **합치기 요청하기: 원본은 그대로, 새 파일로**
-
-   보고 내용이 맞으면 합치기를 요청해요. 핵심은 **원본을 건드리지 말고 새 파일로 저장**하게 하는 것, 그리고 **검산할 수 있는 숫자**를 받는 것이에요.
+   Don't have it merge right away; have it **read and report what's in the folder**. If column names differ from file to file or there's a title row at the top, merging easily goes wrong, so it's good to check first.
 
    <PromptBox>
-   이 폴더의 엑셀 파일들을 하나의 표로 합쳐서 "합친결과.xlsx"라는 새 파일로 저장해 줘. 원본 파일은 절대 수정하거나 삭제하지 마. 합친 표에는 맨 앞 열에 "원본 파일명"을 추가해 줘. 끝나면 (1) 합치기 전 파일별 행 수 (2) 합친 뒤 전체 행 수 (3) 금액 열의 합계를 알려 줘. 합쳐지지 않은 파일이나 열이 있으면 숨기지 말고 알려 줘.
+   Read the Excel files in this folder and tell me: (1) the file names and the sheet names in each file (2) whether the column names in each sheet are the same or different across files (3) how many data rows there are. Don't change or create anything yet, just report. If you need to install a program to read them, tell me first which one you'd install.
    </PromptBox>
 
-   <ScreenshotPlaceholder caption="Claude Code가 새 파일을 만들겠다며 승인을 묻는 화면" officialUrl="https://code.claude.com/docs/en/quickstart" />
+   If it asks for approval to install a program or run a command, read the command on screen, and if you don't understand it, first ask, "Explain what this command does." Installation commands like `pip` or `npm` may come up here; since they add programs to your computer, **check the name of what's being installed** before allowing it.
 
-   승인 화면에서는 세 가지만 보세요. **(1) 만드는 파일 이름이 `합친결과.xlsx`인지, (2) 작업 폴더 안인지, (3) 삭제(`rm`)나 이름 변경(`mv`) 명령이 섞여 있지 않은지**예요. 요청하지 않은 삭제가 보이면 허용하지 말고 이유를 물어보세요.
+4. **Ask for the merge: new file, original untouched**
 
-5. **결과를 직접 열어서 검산하기**
-
-   Claude의 "됐어요"라는 말만 믿지 말고 `합친결과.xlsx`를 **엑셀로 직접 열어요.** 공식 모범 사례도 Claude가 스스로 확인할 방법을 주고, 성공했다는 말 대신 증거를 보여 달라고 하라고 권해요(2026-10-26 확인). 확인할 것은 다음 네 가지예요.
-
-   - 전체 행 수가 Claude가 보고한 숫자와 같은가요? (파일별 행 수를 내가 직접 더해 보세요.)
-   - 금액 합계가 맞나요? 엑셀에서 열을 선택하면 화면 아래에 합계가 보여요.
-   - 파일 하나가 통째로 빠지지 않았나요?
-   - 날짜나 숫자가 글자로 바뀌지 않았나요?
-
-   문제가 있으면 본 대로 말하세요. 예를 들면 이렇게요.
+   If the report is right, ask for the merge. The key is to have it **save to a new file without touching the originals**, and to get **numbers you can check**.
 
    <PromptBox>
-   합친결과.xlsx를 열어 보니 전체 행이 118개인데, 파일별 행 수를 더하면 124개야. 어느 파일에서 6행이 빠졌는지 찾아서 알려 줘. 원인을 설명한 다음에 고쳐 줘.
+   Merge the Excel files in this folder into one table and save it as a new file called "merged-result.xlsx". Never modify or delete the original files. In the merged table, add "source file name" as the first column. When you're done, tell me (1) the row count of each file before merging (2) the total row count after merging (3) the total of the amount column. If there are any files or columns that weren't merged, don't hide them; tell me.
    </PromptBox>
 
-6. **파일 이름 일괄 정리: 미리보기 먼저**
+   <ScreenshotPlaceholder caption="The screen where Claude Code asks for approval to create a new file" officialUrl="https://code.claude.com/docs/en/quickstart" />
 
-   파일 이름 변경은 한 번 실행하면 돌아오기 어려운 대표적인 작업이에요. 그래서 **바꾸기 전에 "현재 이름 → 새 이름" 목록만** 받아요.
+   On the approval screen, look at just three things: **(1) is the name of the file being created `merged-result.xlsx`, (2) is it inside the working folder, and (3) are there no delete (`rm`) or rename (`mv`) commands mixed in**. If you see a deletion you didn't ask for, don't allow it and ask why.
+
+5. **Open the result yourself and double-check**
+
+   Don't just trust Claude saying "done"; **open `merged-result.xlsx` yourself in Excel.** The official best practices also recommend giving Claude a way to check its own work and asking for evidence instead of claims of success (checked 2026-10-26). Check the following four things.
+
+   - Does the total row count match the number Claude reported? (Add up the per-file row counts yourself.)
+   - Is the amount total right? In Excel, if you select the column, the total appears at the bottom of the screen.
+   - Is an entire file missing?
+   - Have dates or numbers turned into text?
+
+   If there's a problem, say what you saw. For example:
 
    <PromptBox>
-   이 폴더의 엑셀 파일 이름을 "YYYY-MM-DD_거래처_종류.xlsx" 규칙으로 바꾸고 싶어. 날짜와 거래처는 현재 파일 이름이나 파일 안의 내용에서 찾아 줘. 아직 이름은 바꾸지 말고, "지금 이름 → 새 이름"을 표로 먼저 보여 줘. 이름이 겹치거나, 규칙에 맞는 정보를 찾지 못한 파일은 따로 표시해 줘.
+   I opened merged-result.xlsx and there are 118 rows total, but the per-file row counts add up to 124. Find which file lost 6 rows and tell me. Explain the cause first, then fix it.
    </PromptBox>
 
-   표를 읽고 틀린 줄은 말로 고치세요. 모두 맞으면 아래 흐름으로 실행해요.
+6. **Renaming files in bulk: preview first**
 
-   <FlowSteps title="파일 이름을 안전하게 바꾸는 순서" officialUrl="https://code.claude.com/docs/en/checkpointing" steps={[
-     { where: '파일 탐색기·Finder', action: '폴더를 통째로 복사해 백업 만들기', result: '이름 변경이 틀려도 되돌릴 원본 확보' },
-     { where: 'Claude Code', action: '"현재 이름 → 새 이름" 표를 받아 읽고 고치기', result: '실행 전에 결과를 눈으로 확인' },
-     { where: 'Claude Code', action: '"이 표대로 이름을 바꿔 줘. 삭제는 하지 마"라고 요청', result: '승인 화면이 나옴' },
-     { where: '승인 화면', action: 'mv(이름 변경) 명령이 표 내용과 맞는지 읽고 허용', result: '파일 이름이 바뀜' },
-     { where: '파일 탐색기·Finder', action: '파일 개수와 이름을 백업 폴더와 비교', result: '빠진 파일이 없는지 확인' },
+   Renaming files is a classic task that's hard to get back from once run. So get **only the "current name → new name" list** before changing anything.
+
+   <PromptBox>
+   I want to rename the Excel files in this folder using the rule "YYYY-MM-DD_client_type.xlsx". Find the date and client from the current file names or the contents of each file. Don't rename anything yet; first show me "current name → new name" in a table. Flag separately any files where names would collide or where you couldn't find the information the rule needs.
+   </PromptBox>
+
+   Read the table and fix wrong lines in words. If everything's right, run it with the flow below.
+
+   <FlowSteps title="The order for renaming files safely" officialUrl="https://code.claude.com/docs/en/checkpointing" steps={[
+     { where: 'File Explorer / Finder', action: 'Copy the whole folder to make a backup', result: 'You have an original to return to even if the renaming goes wrong' },
+     { where: 'Claude Code', action: 'Get the "current name → new name" table, read it, and fix it', result: 'You check the result with your own eyes before running' },
+     { where: 'Claude Code', action: 'Ask, "Rename the files according to this table. Don\'t delete anything."', result: 'The approval screen appears' },
+     { where: 'Approval screen', action: 'Read whether the mv (rename) commands match the table, then allow', result: 'The file names change' },
+     { where: 'File Explorer / Finder', action: 'Compare the file count and names against the backup folder', result: 'Confirm that no files are missing' },
    ]} />
 
-   <Aside type="caution" title="이름 변경은 /rewind로 안 돌아올 수 있어요">
-   공식 체크포인트 문서에 따르면 `mv` 같은 명령으로 바뀐 파일은 되돌리기 대상이 아니에요. 이름을 잘못 바꿨다면 Claude에게 "백업 폴더의 원래 이름으로 되돌려 줘"라고 요청하거나, 백업에서 다시 복사하세요.
+   <Aside type="caution" title="A rename may not come back with /rewind">
+   According to the official checkpointing docs, files changed by commands like `mv` aren't covered by undo. If you renamed something wrong, ask Claude, "Restore the original names from the backup folder," or copy them again from the backup.
    </Aside>
 
-7. **CSV 정리: 새 파일로 받기**
+7. **Cleaning up a CSV: get it as a new file**
 
-   CSV는 쉼표로 나뉜 단순한 표 파일이라 정리 요청이 비교적 간단해요. 마찬가지로 원본은 두고 정리본을 새 파일로 받아요.
-
-   <PromptBox>
-   "거래내역.csv"를 정리해서 "거래내역_정리본.csv"로 저장해 줘. 원본은 수정하지 마. 정리 내용은 (1) 완전히 빈 줄 제거 (2) 모든 열의 앞뒤 공백 제거 (3) 날짜는 YYYY-MM-DD 형식으로 통일 (4) 완전히 같은 줄이 있으면 지우지 말고 몇 개인지만 알려 줘. 끝나면 정리 전후 행 수와 바꾼 내용을 요약해 줘.
-   </PromptBox>
-
-   정리본을 엑셀로 열었을 때 한글이 깨지면 파일 저장 방식(인코딩) 문제일 수 있어요. 이 부분의 원인을 공식 문서로 확인하지는 못했어요. 깨진 모습을 그대로 설명하고 "엑셀에서 한글이 깨지지 않게 저장해 줘"라고 요청해 보세요.
-
-8. **전체 폴더에 적용하고 마무리하기**
-
-   연습 폴더에서 결과가 맞는 것을 확인했다면, **실제 자료의 복사본 폴더**에서 같은 요청을 해요. 아직도 원본에는 직접 쓰지 않아요. 끝난 뒤에는 이렇게 점검하세요.
+   A CSV is a simple table file separated by commas, so cleanup requests are relatively simple. Likewise, leave the original and get the cleaned version as a new file.
 
    <PromptBox>
-   방금 이 폴더에서 네가 새로 만들거나 바꾸거나 삭제한 파일을 모두 목록으로 알려 줘. 원본이라고 할 수 있는 파일 중에 수정된 게 있는지도 알려 줘. 아직 아무것도 바꾸지 마.
+   Clean up "transactions.csv" and save it as "transactions_cleaned.csv". Don't modify the original. The cleanup is: (1) remove completely blank lines (2) trim leading and trailing spaces from every column (3) standardize dates to YYYY-MM-DD format (4) if there are completely identical lines, don't delete them, just tell me how many there are. When you're done, summarize the row counts before and after and what you changed.
    </PromptBox>
 
-   같은 작업을 다음 달에도 한다면, 지금 쓴 요청 문장을 메모해 두거나 안내 메모(CLAUDE.md)에 "원본은 수정하지 않고 새 파일로 저장한다"를 적어 두세요. CLAUDE.md는 [6편](/coding/06-claude-code-start/)의 7단계와 [C14](/claude/c14-claude-code-features/)에 있어요.
+   If text is garbled when you open the cleaned file in Excel (for example, Korean characters), it may be a file saving method (encoding) issue. We couldn't confirm the cause for this in the official docs. Describe exactly how it looks broken and ask, "Save it so the text isn't garbled in Excel."
+
+8. **Apply to the whole folder and wrap up**
+
+   Once you've confirmed in the practice folder that the results are right, make the same request in **a copy of the real data folder**. You still don't write directly to the originals. When it's done, check like this.
+
+   <PromptBox>
+   List every file you just created, changed, or deleted in this folder. Also tell me whether any of the files that count as originals were modified. Don't change anything yet.
+   </PromptBox>
+
+   If you'll do the same job next month, write down the request sentences you used, or put "Don't modify the originals; save to a new file" in a guide note (CLAUDE.md). CLAUDE.md is covered in step 7 of [Tutorial 6](/coding/06-claude-code-start/) and in [C14](/claude/c14-claude-code-features/).
 
 </Steps>
 
-## 안전하게 쓰기
+## Using it safely
 
-| 습관 | 이유와 방법 |
+| Habit | Why and how |
 | --- | --- |
-| **작업 전 폴더 복사** | 명령으로 바뀐 파일은 `/rewind`로 안 돌아와요. 복사본이 가장 확실해요. |
-| **원본은 읽기만, 결과는 새 파일로** | 프롬프트에 "원본은 수정·삭제하지 마"를 꼭 넣으세요. |
-| **적은 수로 시험하고 전체로 확대** | 파일 3~5개로 규칙이 맞는지 본 뒤 전체에 적용해요. |
-| **승인 화면에서 `rm`을 찾는다** | 삭제 명령이 요청한 적 없는데 나오면 허용하지 말고 이유를 물어요. |
-| **결과를 내 눈으로 검산** | 행 수와 합계를 직접 맞춰 보세요. |
-| **민감한 자료는 신중히** | 급여, 주민등록번호, 고객 연락처는 대화와 폴더에 두지 않는 게 기본이에요. 사내 자료를 외부 서비스에 써도 되는지는 회사 정책이 먼저예요. 자세한 기본 원칙은 [개인정보와 안전](/basics/05-privacy-safety/)에서 봐요. |
+| **Copy the folder before working** | Files changed by commands don't come back with `/rewind`. A copy is the surest. |
+| **Originals are read-only, results go to a new file** | Be sure to include "Don't modify or delete the originals" in the prompt. |
+| **Test on a small number, then scale up** | Check the rules on 3 to 5 files, then apply to everything. |
+| **Look for `rm` on the approval screen** | If a delete command shows up that you never asked for, don't allow it; ask why. |
+| **Double-check results with your own eyes** | Match the row counts and totals yourself. |
+| **Be careful with sensitive material** | By default, don't keep payroll, national ID numbers, or customer contact details in the conversation or the folder. Whether you may use internal material with an outside service is a company policy question first. For the basic principles, see [Privacy and safety](/basics/05-privacy-safety/). |
 
-### 자동 승인 모드는 천천히
+### Go slowly with auto-approval modes
 
-승인 질문이 많아 답답할 수 있어요. 공식 권한 모드 문서(2026-10-26 확인)에 따르면 `acceptEdits` 모드는 파일 편집과 `mkdir`, `touch`, `mv`, `cp` 같은 일반 파일 명령을 묻지 않고 실행해요. 편해지지만 **이름 변경이 묻지 않고 바로 실행**된다는 뜻이기도 해요. 같은 문서가 auto 모드도 안전을 보장하지 않고, 방향을 신뢰하는 작업에 쓰라고 안내해요. 백업을 만들고 연습 폴더에서 규칙이 맞는 것을 확인한 다음에만 쓰세요. 모드 종류는 [C14](/claude/c14-claude-code-features/)에 정리돼 있어요.
+The many approval questions can be frustrating. According to the official permission modes docs (checked 2026-10-26), `acceptEdits` mode runs file edits and ordinary file commands like `mkdir`, `touch`, `mv`, and `cp` without asking. That's convenient, but it also means **a rename runs immediately without asking**. The same doc says auto mode doesn't guarantee safety either and advises using it for tasks whose direction you trust. Use it only after you've made a backup and confirmed in the practice folder that the rules are right. The kinds of modes are summarized in [C14](/claude/c14-claude-code-features/).
 
-## 빠른 참조표
+## Quick reference
 
-### 요청 문장 틀
+### Request sentence patterns
 
-| 상황 | 이렇게 말해 보세요 |
+| Situation | Try saying this |
 | --- | --- |
-| 먼저 파악 | "이 폴더 파일을 읽고 [무엇]을 알려 줘. 아직 아무것도 바꾸지 마." |
-| 합치기 | "[파일들]을 합쳐서 [새 파일명]으로 저장해 줘. 원본은 수정·삭제하지 마. 전후 행 수와 합계를 알려 줘." |
-| 이름 바꾸기 | "[규칙]으로 바꾸고 싶어. 바꾸지 말고 '지금 이름 → 새 이름' 표부터 보여 줘." |
-| CSV 정리 | "[정리 내용]을 적용한 정리본을 새 파일로 저장해 줘. 원본은 그대로." |
-| 검산 | "방금 만든 파일의 행 수와 합계를 원본과 비교해서 알려 줘." |
-| 점검 | "이 폴더에서 새로 만들거나 바꾸거나 삭제한 파일 목록을 알려 줘." |
+| Understand first | "Read the files in this folder and tell me [what]. Don't change anything yet." |
+| Merging | "Merge [the files] and save as [new file name]. Don't modify or delete the originals. Tell me the row counts before and after and the total." |
+| Renaming | "I want to rename them by [rule]. Don't rename; first show me a 'current name → new name' table." |
+| CSV cleanup | "Save a cleaned version with [the cleanup] applied as a new file. Leave the original as is." |
+| Double-checking | "Compare the row count and total of the file you just made against the originals and tell me." |
+| Auditing | "List the files you created, changed, or deleted in this folder." |
 
-### 자주 쓰는 키와 명령
+### Frequently used keys and commands
 
-| 키·명령 | 하는 일 |
+| Key / command | What it does |
 | --- | --- |
-| `Shift+Tab` | 권한 모드 바꾸기(계획 모드 포함) |
-| `Esc` 두 번(입력창이 비었을 때), `/rewind` | 되돌리기 메뉴. 코드 복원, 대화 복원, 둘 다 중 선택 |
-| `/clear` | 새 대화 시작(파일은 그대로) |
-| `/permissions` | 권한 규칙 보기·관리 |
+| `Shift+Tab` | Change permission mode (including plan mode) |
+| `Esc` twice (when the input box is empty), `/rewind` | Restore menu. Choose to restore code, the conversation, or both |
+| `/clear` | Start a new conversation (files stay as they are) |
+| `/permissions` | View and manage permission rules |
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 합친 결과의 행 수가 맞지 않아요
+### The row count of the merged result doesn't match
 
-- **원인**: 파일마다 맨 위에 제목 줄이 있거나 열 이름이 다르거나, 일부 시트가 빠졌을 수 있어요.
-- **해결**: 3단계의 "읽고 보고만" 요청으로 돌아가 파일별 구조를 확인하세요. 그리고 "행 수가 안 맞는 파일을 찾아줘"라고 요청해요. 앞에서 안내한 대로 숫자를 직접 맞춰 보는 습관이 중요해요.
+- **Cause**: Some files may have a title row at the top, different column names, or missing sheets.
+- **Fix**: Go back to the "read and report only" request from step 3 and check the structure of each file. Then ask, "Find the files whose row counts don't match." As advised earlier, the habit of matching the numbers yourself is important.
 
-### 승인 질문이 너무 많이 나와요
+### Approval questions come up too often
 
-- **원인**: 기본 모드는 변경마다 승인을 요구해요.
-- **해결**: 파일 수를 줄여 한 번에 묶어 요청하거나, 백업 후에 `acceptEdits` 모드를 쓰세요. 단 위 [안전하게 쓰기](#안전하게-쓰기)의 주의를 읽고 쓰세요.
+- **Cause**: The default mode requires approval for each change.
+- **Fix**: Reduce the number of files and bundle requests together, or use `acceptEdits` mode after making a backup. Just read the cautions in [Using it safely](#using-it-safely) above first.
 
-### 엑셀에서 열면 한글이 깨져요
+### Text is garbled when I open it in Excel
 
-- **원인**: 파일 저장 방식 문제일 수 있지만 공식 문서로 확인하지는 못했어요.
-- **해결**: 증상을 설명하고 엑셀에서 열었을 때 깨지지 않게 다시 저장해 달라고 요청해 보세요. 원본은 그대로 있는지 확인하세요.
+- **Cause**: It may be a file saving method issue, but we couldn't confirm it in the official docs.
+- **Fix**: Describe the symptom and ask it to save again so it isn't garbled when opened in Excel. Check that the original is still untouched.
 
-### 이름을 잘못 바꿨어요
+### I renamed files wrong
 
-- **원인**: 이름 변경 명령은 `/rewind` 대상이 아니에요.
-- **해결**: 백업 폴더에서 원래 이름을 확인하고 "백업 폴더의 이름을 기준으로 되돌려 줘"라고 요청하거나 직접 복사해 오세요.
+- **Cause**: Rename commands aren't covered by `/rewind`.
+- **Fix**: Check the original names in the backup folder and ask, "Restore the names based on the backup folder," or copy them over yourself.
 
-### 같은 문제를 계속 고쳐도 안 돼요
+### Fixing the same problem keeps not working
 
-- **원인**: 대화에 실패한 시도가 쌓였을 수 있어요.
-- **해결**: 공식 모범 사례의 권장대로 `/clear`로 새로 시작하고, 지금 상태와 원하는 결과를 더 구체적으로 적어 다시 요청하세요.
+- **Cause**: Failed attempts may have piled up in the conversation.
+- **Fix**: As the official best practices recommend, start fresh with `/clear` and ask again, describing the current state and the result you want more specifically.
 
-## 실전 팁
+## Practical tips
 
-- **규칙을 숫자와 예시로 말하세요.** "깔끔하게" 대신 "2026-10-01_한빛상사_견적.xlsx 형태로"처럼 예시 하나를 주면 틀릴 일이 줄어요.
-- **한 번에 하나만 시키세요.** 합치기와 이름 변경과 CSV 정리를 한꺼번에 시키면 어디서 틀렸는지 찾기 어려워요.
-- **복잡해지면 계획 모드로 되돌아가세요.** 파일이 많은 일은 계획을 먼저 받는 편이 나아요.
-- **엑셀 안에서 해결하는 방법도 있어요.** 파일 안의 계산·분석은 [23편](/automation/23-spreadsheet-ai/)처럼 엑셀·구글 시트에 붙은 AI 기능이 더 나을 수 있어요. 이 편은 "파일 여러 개를 다루는" 일에 맞아요.
-- **쓰는 양이 걱정되면** [C2](/claude/c02-plans-limits/)의 사용량 안내를 먼저 보세요.
+- **Describe rules with numbers and examples.** Instead of "neat", give one example like "in the form 2026-10-01_HanbitTrading_quote.xlsx" and mistakes drop.
+- **Ask for one thing at a time.** If you ask for merging, renaming, and CSV cleanup all at once, it's hard to find where it went wrong.
+- **Go back to plan mode when it gets complicated.** For jobs with lots of files, it's better to get a plan first.
+- **You can also solve it inside Excel.** For calculation and analysis inside a file, the AI features built into Excel and Google Sheets, as in [Tutorial 23](/automation/23-spreadsheet-ai/), may be better. This tutorial suits work that "handles multiple files".
+- **If you're worried about how much you're using**, see the usage guide in [C2](/claude/c02-plans-limits/) first.
 
-## 다음에 볼 튜토리얼
+## Next tutorials
 
-- [6. Claude Code 시작하기](/coding/06-claude-code-start/) — 계획 모드, 승인 화면, CLAUDE.md
-- [27. 코딩 몰라도 첫 웹앱 만들기](/coding/27-first-app-with-claude-code/) — 안전 습관과 `/rewind`
-- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — 권한 모드, 훅, CLAUDE.md
-- [23. 엑셀·구글 시트에 AI 붙이기](/automation/23-spreadsheet-ai/) — 파일 안의 계산·분석
-- [5. 개인정보와 안전](/basics/05-privacy-safety/) — 민감한 자료를 다루는 기본 원칙
-- [직장인 가이드](/roles/office/) · [1인 사업자 가이드](/roles/solo-business/) — 직무별 활용법
+- [6. Getting started with Claude Code](/coding/06-claude-code-start/) — plan mode, the approval screen, CLAUDE.md
+- [27. Build your first web app, no coding needed](/coding/27-first-app-with-claude-code/) — safety habits and `/rewind`
+- [C14. Claude Code core features](/claude/c14-claude-code-features/) — permission modes, hooks, CLAUDE.md
+- [23. Adding AI to Excel and Google Sheets](/automation/23-spreadsheet-ai/) — calculation and analysis inside files
+- [5. Privacy and safety](/basics/05-privacy-safety/) — basic principles for handling sensitive material
+- [Office worker guide](/roles/office/) · [Solo business owner guide](/roles/solo-business/) — how to use it by role

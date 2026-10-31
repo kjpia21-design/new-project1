@@ -1,249 +1,249 @@
 ---
-title: Claude 최신 소식
-description: Claude 공식 채널의 최근 업데이트를 최신순으로 모아, 실무자에게 의미 있는 변화만 쉬운 말로 정리했어요.
+title: Claude News
+description: Recent updates from Claude's official channels, newest first, with only the changes that matter to working professionals explained in plain language.
 ---
 
 import NewsItem from '../../components/NewsItem.astro';
 
-Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 모았어요. 모델 출시, 가격, Claude Code와 앱의 새 기능처럼 실제로 쓰는 분에게 의미 있는 것만 골랐고, 사소한 버그 수정은 뺐어요. 공식 채널을 점검해 계속 갱신해요.
+This collects Claude updates from Anthropic's official channels, newest first. We picked only what matters to people who actually use Claude, such as model releases, pricing, and new features in Claude Code and the app, and left out minor bug fixes. We keep checking the official channels and updating this page.
 
-**마지막 업데이트: 2026-10-30**
+**Last updated: 2026-10-30**
 
-## 모니터링하는 공식 채널
+## Official channels we monitor
 
-- [Claude Developer Platform 릴리스 노트](https://platform.claude.com/docs/en/release-notes/overview): 모델, API, Managed Agents, SDK
-- [Claude Code 변경 이력](https://code.claude.com/docs/en/changelog): 버전별 날짜
-- [Claude Code CHANGELOG.md 원문](https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md)
-- [Claude 앱 릴리스 노트](https://support.claude.com/en/articles/12138966-release-notes): claude.ai, 데스크톱, Cowork, 플랜
-- [Anthropic 뉴스](https://www.anthropic.com/news): 정책, 파트너십, 모델 발표
+- [Claude Developer Platform release notes](https://platform.claude.com/docs/en/release-notes/overview): models, API, Managed Agents, SDKs
+- [Claude Code changelog](https://code.claude.com/docs/en/changelog): dates by version
+- [Claude Code CHANGELOG.md (raw source)](https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md)
+- [Claude app release notes](https://support.claude.com/en/articles/12138966-release-notes): claude.ai, desktop, Cowork, plans
+- [Anthropic News](https://www.anthropic.com/news): policy, partnerships, model announcements
 
-## 2026년 10월
+## October 2026
 
-<NewsItem date="10월 29일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/02-cost-optimization/" tutorialLabel="개발자 심화 비용 최적화">
-사용량·비용 분석 API(베타)가 생겼어요. Claude Console과 Claude Enterprise 조직의 토큰 사용량과 비용을 모델, 워크스페이스, API 키, 요청한 사용자·서비스 계정별로 걸러서 묶어 볼 수 있어요. `analytics-usage-cost-2026-08-24` 베타 헤더를 써요. 기존 Usage and Cost API와 Enterprise Analytics API의 보고 엔드포인트는 레거시가 됐지만 계속 지원해요. 10월 28일에는 Messages API와 토큰 세기 API의 최대 요청 크기가 32MB에서 128MB로 늘었어요(Claude API 직접 호출 기준).
+<NewsItem date="Oct 29" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/02-cost-optimization/" tutorialLabel="Developer Deep Dives: Cost optimization">
+A usage and cost analytics API (beta) is now available. You can filter and group token usage and cost for Claude Console and Claude Enterprise organizations by model, workspace, API key, and the user or service account that made the request. It uses the `analytics-usage-cost-2026-08-24` beta header. The reporting endpoints of the existing Usage and Cost API and Enterprise Analytics API are now legacy but remain supported. On Oct 28, the maximum request size for the Messages API and the token counting API increased from 32MB to 128MB (when calling the Claude API directly).
 </NewsItem>
 
-<NewsItem date="10월 27일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c13-cloud-sessions/" tutorialLabel="C13 Claude Code 클라우드 세션">
-2.1.312에서 클라우드에서 도는 루틴의 모델 선택기에 노력 수준(effort)을 고르는 항목이 생겼고, 클라우드 환경의 설정 스크립트를 Bash 편집기에서 쓰고 복사 버튼으로 옮길 수 있어요. 사용 한도 안내 문구는 5시간 창을 "세션 한도" 대신 "5-hour limit"으로 불러요. 또 클라우드 세션에서 WebFetch가 호스트를 못 찾으면, 허용된 네트워크 도메인 밖일 수 있다고 알려 줘요.
+<NewsItem date="Oct 27" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c13-cloud-sessions/" tutorialLabel="C13 Claude Code cloud sessions">
+In 2.1.312, the model picker for routines running in the cloud gained an option for choosing the effort level, and you can write cloud environment setup scripts in a Bash editor and move them with a copy button. In usage limit messages, the 5-hour window is now called the "5-hour limit" instead of the "session limit." Also, if WebFetch can't find a host in a cloud session, it now tells you the host may be outside the allowed network domains.
 </NewsItem>
 
-<NewsItem date="10월 26일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
-2.1.311에서 터미널의 `ultrathink` 키워드가 Anthropic API 기준 Opus 5.5, Sonnet 5.5, Haiku 5.5, Fable 5.1에서 그 턴을 xhigh 노력 수준으로 실행해요. 요청이 200K 토큰을 넘을 때 "Usage credits required for 1M context" 오류로 멈추던 문제도 고쳐져서, 이제는 대화를 압축하고 계속 진행해요. 또 `DISABLE_COMPACT` 설정은 압축을 끄는 쪽으로만 동작해요.
+<NewsItem date="Oct 26" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+In 2.1.311, the `ultrathink` keyword in the terminal runs that turn at the xhigh effort level on Opus 5.5, Sonnet 5.5, Haiku 5.5, and Fable 5.1 (Anthropic API). A problem where requests over 200K tokens stopped with a "Usage credits required for 1M context" error was also fixed; now it compacts the conversation and continues. Also, the `DISABLE_COMPACT` setting now only works to turn compaction off.
 </NewsItem>
 
-<NewsItem date="10월 23일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c13-cloud-sessions/" tutorialLabel="C13 Claude Code 클라우드 세션">
-2.1.310에서 Enterprise 사용자 지정 역할(custom roles)에 클라우드 세션과 Remote Control 권한을 줄 수 있게 돼서, 소유자가 역할별로 접근을 정할 수 있어요. 클라우드 환경 대화상자에는 설정 스크립트를 파일에서 불러오는 "Choose file" 버튼이 생겼고, Monitor 도구와 플러그인 모니터가 Bedrock, Vertex, Foundry에서도 동작해요.
+<NewsItem date="Oct 23" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c13-cloud-sessions/" tutorialLabel="C13 Claude Code cloud sessions">
+In 2.1.310, Enterprise custom roles can be granted cloud session and Remote Control permissions, so owners can set access by role. The cloud environment dialog gained a "Choose file" button for loading a setup script from a file, and the Monitor tool and plugin monitors now work on Bedrock, Vertex, and Foundry too.
 </NewsItem>
 
-<NewsItem date="10월 22일" channel="API" href="https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/anthropic-managed" tutorial="/claude/c16-api/" tutorialLabel="C16 API 시작하기">
-"Claude Models on Google Cloud (Anthropic managed)"가 나왔어요. Anthropic이 운영하는 Claude API를 내 Google Cloud 프로젝트를 통해 쓰는 방식이고, 접근은 Google Cloud IAM으로, 결제는 Google Cloud Marketplace로 처리해요. 이 방식에서는 Claude Opus 5.5의 fast mode도 쓸 수 있어요.
+<NewsItem date="Oct 22" channel="API" href="https://platform.claude.com/docs/en/build-with-claude/claude-models-on-google-cloud/anthropic-managed" tutorial="/claude/c16-api/" tutorialLabel="C16 Getting started with the API">
+"Claude Models on Google Cloud (Anthropic managed)" is here. It lets you use the Claude API operated by Anthropic through your own Google Cloud project, with access handled through Google Cloud IAM and billing through Google Cloud Marketplace. Claude Opus 5.5's fast mode is also available this way.
 </NewsItem>
 
-<NewsItem date="10월 22일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
-2.1.309에서 `claude ultrareview`가 작업 공간 신뢰(workspace trust)를 요구해요. 스크립트에서는 `--trust-workspace`를 붙이거나 `CLAUDE_CODE_DISABLE_ULTRAREVIEW_TRUST_CHECK=1`을 설정해야 해요. 또 `sed -i`는 일반 Bash 확인 절차를 거치고 `/rewind`로 되돌릴 수 없게 됐고, Desktop 앱과 VS Code의 권한 우회 모드에서는 `rm`, `rmdir`이 확인 창 없이 바로 거부돼요. `/claude-api` 스킬은 Managed Agents 서브에이전트 팀을 `multiagent_20261001`로 만들어요.
+<NewsItem date="Oct 22" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+In 2.1.309, `claude ultrareview` requires workspace trust. In scripts, you need to add `--trust-workspace` or set `CLAUDE_CODE_DISABLE_ULTRAREVIEW_TRUST_CHECK=1`. Also, `sed -i` now goes through the normal Bash confirmation process and can't be undone with `/rewind`, and in the permission bypass mode of the Desktop app and VS Code, `rm` and `rmdir` are now rejected immediately without a confirmation prompt. The `/claude-api` skill creates Managed Agents subagent teams as `multiagent_20261001`.
 </NewsItem>
 
-<NewsItem date="10월 22일" channel="Anthropic 뉴스" href="https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation" tutorial="/claude/c08-skills/" tutorialLabel="C8 스킬">
-Anthropic이 에이전트 스킬(Agent Skills) 오픈 표준을 Agentic AI Foundation에 기부한다고 밝혔어요. 2025년 12월 표준 공개 이후 70개 넘는 에이전트 플랫폼이 채택했다고 해요. Claude에서 스킬을 쓰는 방법이 바뀐다는 내용은 확인하지 못했어요.
+<NewsItem date="Oct 22" channel="News" href="https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation" tutorial="/claude/c08-skills/" tutorialLabel="C8 Skills">
+Anthropic announced that it is donating the Agent Skills open standard to the Agentic AI Foundation. It says more than 70 agent platforms have adopted the standard since it was published in December 2025. We couldn't confirm in official documentation that the way you use Skills in Claude is changing.
 </NewsItem>
 
-<NewsItem date="10월 21일" channel="Claude 앱" href="https://claude.com/resources/articles/claude-duet" tutorial="/claude/c01-overview/" tutorialLabel="C1 한눈에 보기">
-Pro·Max 플랜용 "Claude Duet" 리서치 프리뷰가 시작됐어요. 아침 요약을 보내 주고, 연결한 앱을 살펴보다가 맡긴 일을 처리하며, 실행 전에 승인을 물어보는 "먼저 움직이는 에이전트" 앱이에요. 2026-10-21 기준 대기자 명단(waitlist)으로 받고 있고, 미국의 Pro·Max 구독자부터 시작해요. iOS·Android 앱과 claude.ai에서 쓰며 기존 Claude 앱과는 따로 동작해요. 사용량은 플랜의 한도를 함께 쓰고, 연결된 계정은 몇 시간마다 확인해요. 한국에서 쓸 수 있는지는 공식 글에 나와 있지 않아요.
+<NewsItem date="Oct 21" channel="Claude app" href="https://claude.com/resources/articles/claude-duet" tutorial="/claude/c01-overview/" tutorialLabel="C1 Claude at a glance">
+A "Claude Duet" research preview has started for Pro and Max plans. It's a "proactive agent" app that sends you a morning summary, looks through your connected apps and handles tasks you give it, and asks for your approval before acting. As of 2026-10-21, it's available through a waitlist, starting with Pro and Max subscribers in the US. It works on the iOS and Android apps and on claude.ai, and runs separately from the existing Claude app. Usage counts against your plan's limits, and connected accounts are checked every few hours. The official post doesn't say whether it will be available in Korea.
 </NewsItem>
 
-<NewsItem date="10월 21일" channel="API" href="https://platform.claude.com/docs/en/api/migration-2026-10-21" tutorial="/claude/c16-api/" tutorialLabel="C16 API 시작하기">
-API 버전 `2026-10-21`이 나왔어요. 새 SDK와 `ant` CLI(Python 2.0.0, TypeScript 1.0.0 등)는 이 버전을 기본으로 쓰고, SDK와 CLI의 라이선스가 MIT에서 Apache 2.0으로 바뀌었어요. SDK를 새 메이저 버전으로 올리면 호환되지 않는 변경이 있을 수 있어서 이전 가이드를 먼저 확인하세요. Claude Code 2.1.307에는 코드를 새 버전으로 옮기는 `/claude-api api-version`이 추가됐어요.
+<NewsItem date="Oct 21" channel="API" href="https://platform.claude.com/docs/en/api/migration-2026-10-21" tutorial="/claude/c16-api/" tutorialLabel="C16 Getting started with the API">
+API version `2026-10-21` is out. The new SDKs and the `ant` CLI (Python 2.0.0, TypeScript 1.0.0, and others) use this version by default, and the license for the SDKs and CLI changed from MIT to Apache 2.0. Upgrading an SDK to a new major version may bring incompatible changes, so check the previous guide first. Claude Code 2.1.307 added `/claude-api api-version`, which helps move your code to the new version.
 </NewsItem>
 
-<NewsItem date="10월 20일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="개발자 심화 Managed Agents">
-조직 관리자가 Claude Console의 Capabilities 페이지에서 웹 가져오기(web fetch)를 끌 수 있어요. 끄면 web fetch 도구를 넣은 API 요청이 400 오류가 나고, Managed Agents의 `web_fetch`도 오류를 돌려줘요. 켜 둔 경우 허용·차단 도메인도 정할 수 있고, Managed Agents의 web fetch와 web search는 조직 설정과 에이전트 설정을 둘 다 통과해야 해요. 또 최종 고객별로 요청을 구분하는 사용자 프로필(User profiles)이 생겼어요.
+<NewsItem date="Oct 20" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="Developer Deep Dives: Managed Agents">
+Organization admins can turn off web fetch on the Capabilities page in Claude Console. When it's off, API requests that include the web fetch tool return a 400 error, and `web_fetch` in Managed Agents also returns an error. When it's on, you can also set allowed and blocked domains, and web fetch and web search in Managed Agents must pass both the organization settings and the agent settings. User profiles, which distinguish requests by end customer, were also added.
 </NewsItem>
 
-<NewsItem date="10월 20일" channel="API" href="https://platform.claude.com/docs/en/manage-claude/inference-hooks">
-Claude Enterprise 조직용 "추론 훅(Inference hooks)"이 베타에서 정식으로 나왔어요. 조직이 운영하는 AI 보안 서버가 사용자의 프롬프트를 모델에 보내기 전에 검사해서 허용 또는 차단을 결정하는 기능이에요. claude.ai, Cowork, Claude Code 등 조직의 모든 Claude 제품에 한꺼번에 적용되고, 설정은 소유자(Owner) 역할만 할 수 있어요. 개인·Pro·Max 사용자에게는 해당이 없어요.
+<NewsItem date="Oct 20" channel="API" href="https://platform.claude.com/docs/en/manage-claude/inference-hooks">
+"Inference hooks" for Claude Enterprise organizations have graduated from beta to general availability. An AI security server run by your organization inspects a user's prompt before it is sent to the model and decides whether to allow or block it. It applies to all of your organization's Claude products at once, including claude.ai, Cowork, and Claude Code, and only the Owner role can set it up. It doesn't apply to individual, Pro, or Max users.
 </NewsItem>
 
-<NewsItem date="10월 19일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
-2.1.304에서 `/auto-mode-setup`이 생겼어요. 프로젝트와 최근 세션을 바탕으로 자동 모드(auto mode)가 무엇을 허용할지 안내해 주는 설정 도우미예요. Pro·Max 플랜에서는 오래 쉰 대화를 다시 열 때 5시간 사용 한도를 꽤 쓰게 되면 경고가 떠요. Code Review에는 검토 수준(Quick, Standard, Deep)이 생겼고, GitHub 조직의 모든 저장소를 한 번에 검토하는 옵션도 추가됐어요.
+<NewsItem date="Oct 19" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+2.1.304 added `/auto-mode-setup`, a setup helper that guides you on what auto mode should allow, based on your project and recent sessions. On Pro and Max plans, you now get a warning when reopening a long-idle conversation would use up a good chunk of your 5-hour usage limit. Code Review gained review levels (Quick, Standard, Deep), and an option to review every repository in a GitHub organization at once was added.
 </NewsItem>
 
-<NewsItem date="10월 16일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
-2.1.302부터 서브에이전트의 "포크(fork)" 방식이 터미널 밖에서도 기본으로 켜져요. 끄려면 `CLAUDE_CODE_FORK_SUBAGENT=0`을 설정하세요. 프롬프트·에이전트 훅은 이벤트마다 최대 12개까지 동시에 실행돼요. 또 자동 모드(auto mode)의 판정에 쓸 모델을 `CLAUDE_CODE_AUTO_MODE_MODEL`로 고를 수 있고, 별도 앱인 Claude Design은 2026년 12월 14일까지만 쓸 수 있다는 안내가 나왔어요. (10월 18일에는 2.1.303이 "버그 수정과 안정성 개선"만 담고 나왔어요.)
+<NewsItem date="Oct 16" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+From 2.1.302, the subagent "fork" mode is on by default outside the terminal too. To turn it off, set `CLAUDE_CODE_FORK_SUBAGENT=0`. Prompt and agent hooks run up to 12 at a time per event. You can also choose the model used for auto mode's decisions with `CLAUDE_CODE_AUTO_MODE_MODEL`, and a notice says that the separate app Claude Design will only be available until December 14, 2026. (On Oct 18, 2.1.303 shipped containing only "bug fixes and stability improvements.")
 </NewsItem>
 
-<NewsItem date="10월 15일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="개발자 심화 Managed Agents">
-Claude Opus 5.5의 fast mode가 리서치 프리뷰에서 벗어났어요. 이제 접근 권한을 따로 신청하지 않아도 되고, `fast-mode-2026-02-01` 베타 헤더도 필요 없어요(헤더를 계속 보내도 동작해요). 모든 사용 등급에 기본 fast mode 속도 제한이 생겼고, Microsoft Foundry(Azure)의 Claude에서도 쓸 수 있어요. Claude Opus 5와 Opus 4.8의 fast mode는 아직 리서치 프리뷰라서 헤더가 필요해요.
+<NewsItem date="Oct 15" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="Developer Deep Dives: Managed Agents">
+Claude Opus 5.5's fast mode has left research preview. You no longer need to apply separately for access, and the `fast-mode-2026-02-01` beta header is no longer needed (it still works if you keep sending it). Every usage tier now has a default fast mode rate limit, and it's also available on Claude in Microsoft Foundry (Azure). Fast mode for Claude Opus 5 and Opus 4.8 is still a research preview and requires the header.
 </NewsItem>
 
-<NewsItem date="10월 15일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c15-model-division/" tutorialLabel="C15 모델 분담 전략">
-2.1.301에서 컨텍스트 창이 더 작은 모델로 바꿀 때, 대화가 너무 길면 이전 모델이 먼저 요약해 줘요. 또 사용 한도가 너무 먼 시각에 풀리면 자리를 비운 상태의 자동 재시도를 끝내는 `CLAUDE_CODE_RETRY_WATCHDOG_MAX_USAGE_LIMIT_WAIT_MS` 설정이 생겼고, VS Code 사용 한도 배너에 "Get more usage" 링크가 붙었어요.
+<NewsItem date="Oct 15" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c15-model-division/" tutorialLabel="C15 Model division strategy">
+In 2.1.301, when you switch to a model with a smaller context window and the conversation is too long, the previous model summarizes it first. A `CLAUDE_CODE_RETRY_WATCHDOG_MAX_USAGE_LIMIT_WAIT_MS` setting was added to end automatic retries while you're away if the usage limit resets too far in the future, and the VS Code usage limit banner got a "Get more usage" link.
 </NewsItem>
 
-<NewsItem date="10월 14일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
-Claude Code 2.1.299에서 대화가 200K 토큰을 넘은 채 약 54분 동안 쉬면, 프롬프트 캐시가 만료되기 전에 자동으로 압축해요. `"idleCompaction": false`로 끌 수 있어요. 또 MCP 허용 규칙은 이름이 정확히 같은 서버에만 적용돼서, 서버 전체를 허용하려면 `mcp__<서버>__*` 형태로 써야 해요.
+<NewsItem date="Oct 14" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+In Claude Code 2.1.299, if a conversation over 200K tokens sits idle for about 54 minutes, it compacts automatically before the prompt cache expires. You can turn this off with `"idleCompaction": false`. Also, MCP allow rules now apply only to servers with exactly the same name, so to allow an entire server you need to write it in the form `mcp__<server>__*`.
 </NewsItem>
 
-<NewsItem date="10월 14일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c12-claude-code-overview/" tutorialLabel="C12 Claude Code 개요">
-2.1.300부터 `claude remote-control`에 `--sandbox`, `--no-sandbox` 옵션을 쓰면 오류로 종료돼요. 샌드박스는 설정의 `sandbox.enabled`로 정해요. 큰 요청은 gzip으로 보내고, `CLAUDE_CODE_GZIP_REQUEST_BODIES=0`으로 끌 수 있어요.
+<NewsItem date="Oct 14" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c12-claude-code-overview/" tutorialLabel="C12 Claude Code overview">
+From 2.1.300, using the `--sandbox` or `--no-sandbox` options with `claude remote-control` exits with an error. The sandbox is set with `sandbox.enabled` in settings. Large requests are sent with gzip, which you can turn off with `CLAUDE_CODE_GZIP_REQUEST_BODIES=0`.
 </NewsItem>
 
-<NewsItem date="10월 14일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="개발자 심화 Managed Agents">
-OpenTelemetry 내보내기(베타)가 생겼어요. Messages API 요청과 Managed Agents 세션을 쓰던 모니터링 도구에서 추적할 수 있어요. 또 Managed Agents 예약 배포(scheduled deployments)를 AWS의 Claude Platform에서도 쓸 수 있어요.
+<NewsItem date="Oct 14" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="Developer Deep Dives: Managed Agents">
+OpenTelemetry export (beta) is here. You can trace Messages API requests and Managed Agents sessions in the monitoring tools you already use. Managed Agents scheduled deployments are also available on Claude Platform on AWS.
 </NewsItem>
 
-<NewsItem date="10월 9일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="개발자 심화 Managed Agents">
-Managed Agents에 동적 워크플로(베타)가 생겼어요. 에이전트가 직접 여러 에이전트로 이뤄진 워크플로를 작성하고 실행해서, 복잡한 작업을 나눠 맡기기 쉬워져요.
+<NewsItem date="Oct 9" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="Developer Deep Dives: Managed Agents">
+Managed Agents gained dynamic workflows (beta). An agent can write and run a workflow made up of multiple agents on its own, making it easier to split up and hand off complex tasks.
 </NewsItem>
 
-<NewsItem date="10월 9일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c15-model-division/" tutorialLabel="C15 모델 분담 전략">
-서브에이전트에 `autoCompactWindow` 설정과 `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL` 환경 변수가 추가됐어요. 서브에이전트가 쓸 모델을 따로 정해 비용을 조절할 수 있어요. 2.1.296 버전이에요.
+<NewsItem date="Oct 9" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c15-model-division/" tutorialLabel="C15 Model division strategy">
+An `autoCompactWindow` setting and a `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL` environment variable were added for subagents. You can set the model subagents use separately to manage costs. This is version 2.1.296.
 </NewsItem>
 
-<NewsItem date="10월 8일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
-훅에 `onFailure: "block"` 옵션이 생겼어요. 훅이 실패하면 작업을 막도록 설정할 수 있어서 안전 장치를 만들 때 유용해요. 2.1.295 버전이에요.
+<NewsItem date="Oct 8" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+Hooks gained an `onFailure: "block"` option. You can set a hook to block the action if it fails, which is useful for building safeguards. This is version 2.1.295.
 </NewsItem>
 
-<NewsItem date="10월 7일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c16-api/" tutorialLabel="C16 API 시작하기">
-Claude Haiku 5.5가 출시됐어요. 1M 컨텍스트, 128k 출력, 적응형 사고를 지원해요. 다만 Haiku 4.5 방식의 `budget_tokens`와 샘플링 파라미터는 400 오류가 나니, 코드에서 모델만 바꿔 쓰는 분은 확인이 필요해요.
+<NewsItem date="Oct 7" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c16-api/" tutorialLabel="C16 Getting started with the API">
+Claude Haiku 5.5 has launched. It supports a 1M context, 128k output, and adaptive thinking. However, the Haiku 4.5-style `budget_tokens` and sampling parameters return a 400 error, so if you just swap the model in your code, you'll need to check.
 </NewsItem>
 
-<NewsItem date="10월 7일" channel="Claude 앱" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c01-overview/" tutorialLabel="C1 한눈에 보기">
-Claude Haiku 5.5를 Claude 앱에서도 쓸 수 있어요. Claude Code에서는 2.1.293부터 Haiku 기본 모델로 Haiku 5.5가 쓰여요.
+<NewsItem date="Oct 7" channel="Claude app" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c01-overview/" tutorialLabel="C1 Claude at a glance">
+You can use Claude Haiku 5.5 in the Claude app too. In Claude Code, Haiku 5.5 is used as the default Haiku model from 2.1.293.
 </NewsItem>
 
-<NewsItem date="10월 7일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c15-model-division/" tutorialLabel="C15 모델 분담 전략">
-Sonnet 5.5 캐시 읽기 가격이 $0.20에서 $0.10/MTok로 내려갔어요. 같은 자료를 반복해서 보내는 작업의 비용이 줄어요.
+<NewsItem date="Oct 7" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c15-model-division/" tutorialLabel="C15 Model division strategy">
+The Sonnet 5.5 cache read price dropped from $0.20 to $0.10/MTok. This lowers the cost of work that sends the same material repeatedly.
 </NewsItem>
 
-<NewsItem date="10월 7일" channel="Claude 앱" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c02-plans-limits/" tutorialLabel="C2 요금제와 한도">
-Max·Team 플랜에 월 API 크레딧이 포함돼요. Console 조직을 연결하면 받을 수 있어요.
+<NewsItem date="Oct 7" channel="Claude app" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c02-plans-limits/" tutorialLabel="C2 Plans and limits">
+Max and Team plans now include monthly API credits. You can get them by linking a Console organization.
 </NewsItem>
 
-<NewsItem date="10월 7일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/10-computer-browser-tools/" tutorialLabel="개발자 심화 컴퓨터·브라우저 도구">
-브라우저·컴퓨터 사용 SDK 클래스(베타)가 나왔어요. 코드에서 Claude가 화면을 보고 조작하는 기능을 더 쉽게 붙일 수 있어요.
+<NewsItem date="Oct 7" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/10-computer-browser-tools/" tutorialLabel="Developer Deep Dives: Computer and browser tools">
+Browser and computer use SDK classes (beta) are out. It's easier to add Claude's ability to see and operate the screen from your code.
 </NewsItem>
 
-<NewsItem date="10월 6일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
-`claude plugin install <plugin> --marketplace <source>`로 마켓플레이스를 지정해 플러그인을 설치할 수 있어요. Agent 도구에도 `effort` 옵션이 생겼어요. 2.1.292 버전이에요.
+<NewsItem date="Oct 6" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+You can install plugins by specifying a marketplace with `claude plugin install <plugin> --marketplace <source>`. The Agent tool also gained an `effort` option. This is version 2.1.292.
 </NewsItem>
 
-<NewsItem date="10월 5일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c12-claude-code-overview/" tutorialLabel="C12 Claude Code 개요">
-`claude attach`와 `claude logs`를 이름 일부만으로 쓸 수 있어요. WebSearch 한도는 시간당 100회씩 채워지고, Chrome은 프로젝트 설정으로 켤 수 없고 사용자 설정이나 `--chrome`, `/chrome`으로만 켜져요. 2.1.290 버전이에요.
+<NewsItem date="Oct 5" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c12-claude-code-overview/" tutorialLabel="C12 Claude Code overview">
+`claude attach` and `claude logs` work with just part of a name. The WebSearch limit refills at 100 per hour, and Chrome can't be turned on through project settings; it can only be turned on through user settings, `--chrome`, or `/chrome`. This is version 2.1.290.
 </NewsItem>
 
-<NewsItem date="10월 2일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
-`/code-review --max-findings`로 리뷰에서 받을 지적 수를 정할 수 있어요. `claude project purge`는 `claude purge`로 바뀌었고, 클라우드 세션에 `gh api`가 내장됐어요. 2.1.288 버전이에요.
+<NewsItem date="Oct 2" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+With `/code-review --max-findings`, you can set how many findings you get from a review. `claude project purge` was renamed `claude purge`, and `gh api` is now built into cloud sessions. This is version 2.1.288.
 </NewsItem>
 
-<NewsItem date="10월 1일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
-Claude Mods가 도입돼 플러그인이 Claude Code 동작을 더 깊게 바꿀 수 있어요. Opus 4.7 이상과 Fable은 서드파티 제공자에서도 1M 컨텍스트가 기본이에요. 2.1.287 버전이에요.
+<NewsItem date="Oct 1" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+Claude Mods were introduced, letting plugins change Claude Code's behavior more deeply. Opus 4.7 and later and Fable have a 1M context by default on third-party providers too. This is version 2.1.287.
 </NewsItem>
 
-<NewsItem date="10월 1일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c16-api/" tutorialLabel="C16 API 시작하기">
-Dreams 기능이 Opus 5.5, Fable 5.1, Sonnet 5.5를 지원해요.
+<NewsItem date="Oct 1" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c16-api/" tutorialLabel="C16 Getting started with the API">
+The Dreams feature now supports Opus 5.5, Fable 5.1, and Sonnet 5.5.
 </NewsItem>
 
-## 2026년 9월
+## September 2026
 
-<NewsItem date="9월 30일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c01-overview/" tutorialLabel="C1 한눈에 보기">
-Sonnet 4.5 지원 중단이 예고됐어요. 2026-11-30에 퇴역하니 아직 쓰고 있다면 옮길 준비를 해 두세요.
+<NewsItem date="Sep 30" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c01-overview/" tutorialLabel="C1 Claude at a glance">
+Sonnet 4.5 deprecation has been announced. It retires on 2026-11-30, so if you're still using it, get ready to move off it.
 </NewsItem>
 
-<NewsItem date="9월 28일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c01-overview/" tutorialLabel="C1 한눈에 보기">
-Claude Sonnet 5.5가 출시됐어요. Sonnet 5에서 5.5로 옮길 때 바뀌는 점과 계정 종속 thinking 블록도 함께 안내됐어요.
+<NewsItem date="Sep 28" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c01-overview/" tutorialLabel="C1 Claude at a glance">
+Claude Sonnet 5.5 has launched. What changes when moving from Sonnet 5 to 5.5, and account-bound thinking blocks, were also explained.
 </NewsItem>
 
-<NewsItem date="9월 28일" channel="Claude 앱" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c01-overview/" tutorialLabel="C1 한눈에 보기">
-Claude Sonnet 5.5를 Claude 앱에서 쓸 수 있어요. Claude Code는 2.1.284에서 Sonnet 5.5가 추가됐고, auto 모드의 "다음에 다시 묻기"와 `/mcp reconnect all`도 생겼어요.
+<NewsItem date="Sep 28" channel="Claude app" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c01-overview/" tutorialLabel="C1 Claude at a glance">
+You can use Claude Sonnet 5.5 in the Claude app. Claude Code 2.1.284 added Sonnet 5.5, along with auto mode's "ask again next time" and `/mcp reconnect all`.
 </NewsItem>
 
 
-<NewsItem date="9월 25일" channel="Claude 앱" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c08-skills/" tutorialLabel="C8 스킬">
-플러그인 제출 포털이 열렸어요. 심사 진행 상태와 사용량 분석을 볼 수 있어요.
+<NewsItem date="Sep 25" channel="Claude app" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c08-skills/" tutorialLabel="C8 Skills">
+The plugin submission portal is open. You can see review progress and usage analytics.
 </NewsItem>
 
-<NewsItem date="9월 24일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
-auto 모드가 직접 Anthropic API 연결에서 서버 측 분류기를 기본으로 써요. 2.1.283부터는 서드파티 제공자나 텔레메트리를 끈 세션은 auto 모드로 시작해요.
+<NewsItem date="Sep 24" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+Auto mode uses a server-side classifier by default on direct Anthropic API connections. From 2.1.283, sessions on third-party providers or with telemetry turned off start in auto mode.
 </NewsItem>
 
-<NewsItem date="9월 22일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c01-overview/" tutorialLabel="C1 한눈에 보기">
-Claude Opus 5.5가 출시됐어요. 가격은 $4/$20이고 1M 컨텍스트를 지원해요. thinking을 끌 수 없고 `tool_choice`의 `any`/`tool`은 오류가 나요. Fast mode(리서치 프리뷰)도 함께 나왔어요.
+<NewsItem date="Sep 22" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c01-overview/" tutorialLabel="C1 Claude at a glance">
+Claude Opus 5.5 has launched. It's priced at $4/$20 and supports a 1M context. Thinking can't be turned off, and `any`/`tool` for `tool_choice` return an error. Fast mode (research preview) arrived at the same time.
 </NewsItem>
 
-<NewsItem date="9월 22일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c01-overview/" tutorialLabel="C1 한눈에 보기">
-Opus 5.5가 추가되고 기본 Opus가 됐어요. Pro·Team Standard의 기본 모델도 Sonnet에서 Opus로 바뀌었어요. 2.1.280 버전이에요.
+<NewsItem date="Sep 22" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c01-overview/" tutorialLabel="C1 Claude at a glance">
+Opus 5.5 was added and became the default Opus. The default model for Pro and Team Standard also changed from Sonnet to Opus. This is version 2.1.280.
 </NewsItem>
 
-<NewsItem date="9월 17일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c08-skills/" tutorialLabel="C8 스킬">
-claude.ai 계정의 스킬·플러그인을 터미널에 동기화하는 `syncClaudeAiSkills`가 생겼고, 루틴이 편집 가능한 아티팩트를 확인 없이 갱신해요. 2.1.275 버전이에요.
+<NewsItem date="Sep 17" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c08-skills/" tutorialLabel="C8 Skills">
+`syncClaudeAiSkills` was added to sync the skills and plugins on your claude.ai account to the terminal, and routines update editable artifacts without asking for confirmation. This is version 2.1.275.
 </NewsItem>
 
-<NewsItem date="9월 16일" channel="Claude 앱" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c03-getting-started/" tutorialLabel="C3 앱 시작하기">
-Cowork를 모든 대화에서 쓸 수 있게 돼요(Pro·Max는 순차 롤아웃). 디자인, 슬라이드, 문서도 어느 대화에서나 만들 수 있어요. Enterprise는 베타이고 기본값이 꺼짐이에요.
+<NewsItem date="Sep 16" channel="Claude app" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c03-getting-started/" tutorialLabel="C3 Getting started with the app">
+Cowork becomes available in every conversation (rolling out gradually for Pro and Max). You can also create designs, slides, and documents in any conversation. For Enterprise, it's in beta and off by default.
 </NewsItem>
 
-<NewsItem date="9월 15일" channel="Claude 앱" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c07-connectors/" tutorialLabel="C7 커넥터">
-Salesforce in Claude(베타)가 나왔어요. Salesforce 데이터를 Claude 대화에서 활용할 수 있어요.
+<NewsItem date="Sep 15" channel="Claude app" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c07-connectors/" tutorialLabel="C7 Connectors">
+Salesforce in Claude (beta) is out. You can use Salesforce data in Claude conversations.
 </NewsItem>
 
-<NewsItem date="9월 15일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c13-cloud-sessions/" tutorialLabel="C13 클라우드 세션">
-`--remote-control` 세션을 Claude 앱에서 포크할 수 있어요. 2.1.273 버전이에요.
+<NewsItem date="Sep 15" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c13-cloud-sessions/" tutorialLabel="C13 Cloud sessions">
+You can fork a `--remote-control` session from the Claude app. This is version 2.1.273.
 </NewsItem>
 
-<NewsItem date="9월 14일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c16-api/" tutorialLabel="C16 API 시작하기">
-온디맨드 compaction(베타)이 나왔어요. 긴 대화를 필요할 때 요약해 이어 갈 수 있어요.
+<NewsItem date="Sep 14" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c16-api/" tutorialLabel="C16 Getting started with the API">
+On-demand compaction (beta) is here. You can summarize a long conversation when needed and keep going.
 </NewsItem>
 
-<NewsItem date="9월 14일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c13-cloud-sessions/" tutorialLabel="C13 클라우드 세션">
-클라우드·원격 세션에서 fast mode를 쓸 수 있고, Bash `allowed_domains`로 접속 가능한 도메인을 제한할 수 있어요(auto 모드+샌드박스). 2.1.271 버전이에요.
+<NewsItem date="Sep 14" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c13-cloud-sessions/" tutorialLabel="C13 Cloud sessions">
+Fast mode is available in cloud and remote sessions, and you can restrict which domains can be reached with Bash `allowed_domains` (auto mode + sandbox). This is version 2.1.271.
 </NewsItem>
 
-<NewsItem date="9월 12일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c08-skills/" tutorialLabel="C8 스킬">
-`claude plugin eval`과 `/output-style`이 추가됐어요. 클라우드 세션에서 claude.ai 스킬 이름은 `anthropic-skills:<name>` 형태가 돼요. 2.1.269 버전이에요.
+<NewsItem date="Sep 12" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c08-skills/" tutorialLabel="C8 Skills">
+`claude plugin eval` and `/output-style` were added. In cloud sessions, claude.ai skill names take the form `anthropic-skills:<name>`. This is version 2.1.269.
 </NewsItem>
 
-<NewsItem date="9월 1일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c01-overview/" tutorialLabel="C1 한눈에 보기">
-Fable 5.1과 Mythos 5.1이 출시됐어요($10/$50). 30일 보관이 필요해 ZDR(데이터 무보관)은 쓸 수 없고, `tool_choice`가 제한돼요.
+<NewsItem date="Sep 1" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c01-overview/" tutorialLabel="C1 Claude at a glance">
+Fable 5.1 and Mythos 5.1 have launched ($10/$50). They require 30-day retention, so ZDR (zero data retention) isn't available, and `tool_choice` is restricted.
 </NewsItem>
 
-<NewsItem date="9월 1일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c15-model-division/" tutorialLabel="C15 모델 분담 전략">
-Fable 5.1이 추가됐고, `/effort`에서 `s`로 현재 세션에만 적용할 수 있어요. 작업 디렉터리 밖 파일을 처음 읽을 때는 확인을 받아요. 2.1.257 버전이에요.
+<NewsItem date="Sep 1" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c15-model-division/" tutorialLabel="C15 Model division strategy">
+Fable 5.1 was added, and in `/effort` you can press `s` to apply a setting to the current session only. The first time a file outside the working directory is read, you're asked to confirm. This is version 2.1.257.
 </NewsItem>
 
-## 2026년 8월
+## August 2026
 
-<NewsItem date="8월 27일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c02-plans-limits/" tutorialLabel="C2 요금제와 한도">
-`/usage-credits`가 추가됐어요(AWS Marketplace Enterprise 등). `/loop`의 동적 모드도 항상 쓸 수 있어요. 2.1.248 버전이에요.
+<NewsItem date="Aug 27" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c02-plans-limits/" tutorialLabel="C2 Plans and limits">
+`/usage-credits` was added (for AWS Marketplace Enterprise and others). The dynamic mode of `/loop` is also always available. This is version 2.1.248.
 </NewsItem>
 
-<NewsItem date="8월 25일" channel="Claude 앱" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c09-memory-settings/" tutorialLabel="C9 메모리와 설정">
-Cowork 메모리가 생겼어요. 채팅과 클라우드 Cowork에서 공유되고, 기억 주제를 편집할 수 있으며 민감 주제 설정도 있어요.
+<NewsItem date="Aug 25" channel="Claude app" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c09-memory-settings/" tutorialLabel="C9 Memory and settings">
+Cowork memory is here. It's shared between chat and cloud Cowork, you can edit the topics it remembers, and there's a setting for sensitive topics.
 </NewsItem>
 
-<NewsItem date="8월 20일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c16-api/" tutorialLabel="C16 API 시작하기">
-Python SDK가 v1.0이 됐어요. Text Completions가 제거됐으니 `anthropic` 0.x를 쓰던 코드는 점검이 필요해요.
+<NewsItem date="Aug 20" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c16-api/" tutorialLabel="C16 Getting started with the API">
+The Python SDK reached v1.0. Text Completions was removed, so code that used `anthropic` 0.x needs to be checked.
 </NewsItem>
 
-<NewsItem date="8월 19일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/10-computer-browser-tools/" tutorialLabel="개발자 심화 컴퓨터·브라우저 도구">
-컴퓨터 사용 툴셋이 정식(GA)이 되고 브라우저 툴셋이 나왔어요. Files API와 Agent Skills도 GA라서 베타 헤더가 필요 없어요.
+<NewsItem date="Aug 19" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/10-computer-browser-tools/" tutorialLabel="Developer Deep Dives: Computer and browser tools">
+The computer use toolset is now generally available (GA), and a browser toolset arrived. The Files API and Agent Skills are also GA, so no beta header is needed.
 </NewsItem>
 
-<NewsItem date="8월 18일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c16-api/" tutorialLabel="C16 API 시작하기">
-Workbench가 Playground로 이름이 바뀌었어요. 예전 글에서 Workbench를 찾았다면 Playground를 보세요.
+<NewsItem date="Aug 18" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c16-api/" tutorialLabel="C16 Getting started with the API">
+Workbench was renamed Playground. If you were looking for Workbench in an older article, look for Playground.
 </NewsItem>
 
-<NewsItem date="8월 10일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c01-overview/" tutorialLabel="C1 한눈에 보기">
-Sonnet 5 가격은 $2/$10으로 유지돼요. 예고됐던 9월 인상이 취소됐어요.
+<NewsItem date="Aug 10" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c01-overview/" tutorialLabel="C1 Claude at a glance">
+Sonnet 5 pricing stays at $2/$10. The price increase that had been announced for September was canceled.
 </NewsItem>
 
-<NewsItem date="8월 7일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="개발자 심화 Managed Agents">
-Managed Agents에 세션 예산, advisor, `inference_geo`가 추가됐고 GitHub 저장소의 스킬을 자동으로 불러와요.
+<NewsItem date="Aug 7" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="Developer Deep Dives: Managed Agents">
+Managed Agents gained session budgets, an advisor, and `inference_geo`, and it automatically loads skills from GitHub repositories.
 </NewsItem>
 
-<NewsItem date="8월 6일" channel="Claude 앱" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c08-skills/" tutorialLabel="C8 스킬">
-스킬·플러그인 보안 스캔이 Enterprise 베타로 나왔어요. 설치 전에 위험한 스킬을 걸러내는 데 도움이 돼요.
+<NewsItem date="Aug 6" channel="Claude app" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c08-skills/" tutorialLabel="C8 Skills">
+Skill and plugin security scanning arrived as an Enterprise beta. It helps screen out risky skills before you install them.
 </NewsItem>
 
-<NewsItem date="8월 6일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
-`/review`가 `/code-review`의 별칭이 됐어요. 2.1.223 버전이에요.
+<NewsItem date="Aug 6" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+`/review` became an alias for `/code-review`. This is version 2.1.223.
 </NewsItem>

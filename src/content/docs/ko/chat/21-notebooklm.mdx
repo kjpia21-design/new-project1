@@ -1,0 +1,186 @@
+---
+title: "Gemini Notebook(구 NotebookLM)으로 내 자료 기반 공부·정리하기"
+description: "내 PDF·문서·영상 자막만 근거로 답하는 Google의 NotebookLM(공식 도움말 표기 Gemini Notebook)으로 질문하고, 요약·오디오 개요·플래시카드를 만드는 방법"
+sidebar:
+  label: "6. Gemini Notebook(구 NotebookLM)"
+level: practical
+category: chat
+tools: ["NotebookLM (Gemini Notebook)", "Google Drive"]
+duration: "25분"
+prerequisites:
+  - "Google 계정 (개인 계정 또는 관리자가 허용한 업무·학교 계정)"
+  - "공부하거나 정리할 자료 2~3개 (PDF, 문서, 웹 주소 등. 개인정보와 기밀은 제외)"
+lastVerified: 2026-10-26
+sources:
+  - title: "Learn about Gemini Notebook (Google 공식 도움말)"
+    url: "https://support.google.com/gemininotebook/answer/16164461"
+  - title: "Create a notebook in Gemini Notebook"
+    url: "https://support.google.com/gemininotebook/answer/16206563"
+  - title: "Add or discover new sources for your notebook"
+    url: "https://support.google.com/gemininotebook/answer/16215270"
+  - title: "Use chat in Gemini Notebook"
+    url: "https://support.google.com/gemininotebook/answer/16179559"
+  - title: "Manage your Gemini Notebook usage limits"
+    url: "https://support.google.com/gemininotebook/answer/17670842"
+  - title: "Generate Audio Overview in Gemini Notebook"
+    url: "https://support.google.com/gemininotebook/answer/16212820"
+  - title: "Generate Flashcards or Quizzes in Gemini Notebook"
+    url: "https://support.google.com/gemininotebook/answer/16958963"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- NotebookLM은 **내가 올린 자료(소스)를 근거로 답하고, 답마다 인용을 달아 주는** Google의 AI 연구 보조예요.
+- 공식 도움말은 지금 이 서비스를 **"Gemini Notebook"** 이라고 적어요(2026-10-14 기준). 이 글은 익숙한 이름 NotebookLM을 같이 써요.
+- 자료를 올리면 채팅 질문, 오디오 개요, 마인드맵, 보고서, 플래시카드·퀴즈를 만들 수 있어요.
+- 무료는 표준 사용량 한도가 있고, 소스는 무료 사용자 기준 최대 50개예요(2026-10-14 기준). 가격은 공식 도움말에서 확인하지 못했어요.
+- 답이 소스에 근거해도 틀릴 수 있으니, 인용을 눌러 원문과 대조하세요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 자료 여러 개를 한 노트북에 모아 놓고, 그 자료만 근거로 질문할 수 있어요.
+- 답의 인용을 눌러 원문 위치를 확인하는 습관을 들일 수 있어요.
+- 오디오 개요, 플래시카드, 퀴즈로 공부용 결과물을 만들 수 있어요.
+- 사용량 한도와 소스 제한을 알고 막히지 않게 쓸 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **노트북(notebook)** | 한 프로젝트를 위한 소스 모음이에요. 노트북끼리는 서로 독립이라, 한 번에 여러 노트북을 함께 볼 수 없어요. |
+| **소스(source)** | 올리거나 가져온 자료예요. AI는 이 소스를 근거로 답해요. |
+| **Chat 패널** | 소스 요약을 보여 주고 질문하는 곳이에요. |
+| **Studio 패널** | 소스로 노트, 오디오 개요, 마인드맵, 보고서, 플래시카드, 퀴즈 등 결과물을 만드는 곳이에요. |
+| **인용(citation)** | 답에 붙는 소스 속 문장이에요. 마우스를 올리면 전체 인용문이, 누르면 원문 위치가 보여요. |
+
+<Aside type="note" title="이름이 왜 두 개인가요? (2026-10-14 기준)">
+이 사이트에서 NotebookLM이라고 부르는 서비스의 공식 도움말(support.google.com)이 제목과 본문에서 "Gemini Notebook"이라고 표기해요. 도움말 주소도 `/notebooklm/`으로 들어가면 `/gemininotebook/`으로 이동해요. 이름이 바뀐 시점이나 두 이름의 공식 관계는 열어 본 도움말에서 확인하지 못했어요. 화면에서 어느 이름이 보이든 같은 서비스로 보고 따라 하면 돼요.
+</Aside>
+
+<Aside type="note" title="확인하지 못한 점">
+한국어 화면 제공 여부, 한국 원화 가격, 모바일 앱의 한국 제공 여부는 공식 문서에서 확인하지 못했어요. 도움말에서 확인한 것은 지원 언어가 80개 이상이고, 웹 서비스의 지원 국가·지역 목록에 대한민국(South Korea)이 포함된다는 점이에요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '새 노트북을 만들고 소스를 올렸어요',
+  '소스 중 일부만 선택해 질문해 봤어요',
+  '답의 인용을 눌러 원문과 대조했어요',
+  '오디오 개요나 보고서를 만들어 봤어요',
+  '플래시카드나 퀴즈로 복습했어요',
+  '사용량(Settings > Usage)을 확인했어요',
+]} />
+
+<Steps>
+
+1. **노트북 만들고 소스 올리기**
+
+   Google 계정으로 접속해 새 노트북 만들기(Create new notebook)를 누르고, 팝업에서 소스 올리기(Upload a source)를 골라요. 주소는 notebook.google.com이에요(공식 도움말의 채팅 설정 안내에 나와요).
+
+   소스로 쓸 수 있는 것은 PDF, Word(docx), 텍스트, Markdown, CSV, PowerPoint(pptx), Google Docs·Slides·Sheets, 이미지, 오디오 파일, 웹 주소, 공개 YouTube 주소 등이에요. 소스 하나는 최대 50만 단어 또는 업로드 파일 200MB예요(2026-10-14 기준).
+
+   - Google Slides는 100장까지, Google Sheets는 100k 토큰까지예요.
+   - 웹 주소는 본문 텍스트만 가져오고, 유료 구독이 필요한 페이지는 안 돼요.
+   - YouTube는 자막이 있는 공개 영상만 되고, 자막 텍스트만 가져와요.
+   - Google Drive 파일은 몇 분마다 자동으로 동기화돼요. 접근 권한을 잃으면 소스를 못 쓰지만 개수에는 포함돼요.
+
+   <ScreenshotPlaceholder caption="새 노트북에서 소스 올리기 팝업" officialUrl="https://support.google.com/gemininotebook/answer/16206563" />
+
+2. **자료를 정리해서 질문하기**
+
+   소스가 여러 개면 왼쪽 소스(Sources) 패널에서 질문에 쓸 소스만 골라요. 질문에 소스 이름을 넣으면 더 정확하게 찾아요.
+
+   <PromptBox label="소스를 지정해 요약 요청">
+   '운영체제 3장 강의안'과 '교재 요약본'을 기준으로, 프로세스와 스레드의 차이를 중학생도 이해할 수 있게 설명해 줘. 두 자료가 다르게 말하는 부분이 있으면 따로 알려 줘.
+   </PromptBox>
+
+   채팅 답은 소스의 내용만 쓴다고 도움말은 안내해요. 그래서 "내 소설 결말을 다시 써 줘" 같은 창작 요청은 "답할 수 없다"고 나올 수 있어요.
+
+3. **인용으로 원문 확인하기**
+
+   답 속 인용 번호에 마우스를 올리면 인용문 전체가, 누르면 소스에서 그 문장이 있는 위치가 열려요. 숫자, 날짜, 고유명사는 꼭 한 번씩 눌러 보세요. 맞는지는 [팩트 체크 방법](/ko/basics/04-fact-checking/)을 함께 참고하세요.
+
+4. **채팅 스타일 바꾸기**
+
+   채팅(Chat) 패널의 설정(Configure Chat)에서 대화 스타일을 골라요. 기본(Default)은 일반 조사, 학습 가이드(Learning Guide)는 개념을 쉽게 익히는 용도, 사용자 지정(Custom)은 "박사과정 학생처럼 답해줘" 같은 역할 지정이에요. 응답 길이도 정할 수 있어요. 마음에 드는 답은 노트에 저장(Save to note)으로 보관해요.
+
+5. **오디오 개요·보고서 만들기**
+
+   Studio 패널에서 오디오 개요(Audio Overview)를 눌러요. 형식은 Deep Dive(기본, 두 진행자의 깊은 대화), Brief(한 명이 2분 이내로 핵심 정리), Critique(건설적 평가), Debate(토론) 중 고르고, 언어와 프롬프트로 초점을 정해요. 생성에 몇 분 걸리고, 만드는 동안 다른 결과물도 만들 수 있어요. 오디오는 AI가 만든 것이라 부정확하거나 음성에 결함이 있을 수 있어요. 보고서는 FAQ, 스터디 가이드, 브리핑 문서 등을 고를 수 있고, 점 세 개 메뉴에서 Docs로 내보낼 수 있어요.
+
+   - 길이 선택(Shorter, Default, Longer)은 영어만 지원하고, 대화형 모드도 영어만 지원해요(2026-10-14 기준).
+   - 오디오 개요는 80개 이상의 언어를 지원하고 기본 언어는 Google 계정의 선호 언어라고 안내돼요(2026-10-26 기준). 다만 한국어가 목록에 있는지는 도움말에 적혀 있지 않아요. 언어 선택 목록에서 직접 확인하세요.
+
+6. **플래시카드·퀴즈로 복습하기**
+
+   Studio에서 플래시카드(Flashcards) 또는 퀴즈(Quizzes)를 눌러요. 연필 아이콘에서 난이도(쉬움, 보통, 어려움)와 프롬프트를 정할 수 있어요. 카드마다 "Got it!"과 "Missed it!"로 표시하면 진행 상황이 기억되고, "Only cards you missed"로 틀린 카드만 다시 연습해요. 플래시카드는 CSV로 내려받을 수 있어요.
+
+   <FlowSteps title="틀린 카드만 다시 복습하기" officialUrl="https://support.google.com/gemininotebook/answer/16958963" steps={[
+     { where: 'Studio 패널', action: '플래시카드(Flashcards) 열고 연필 아이콘으로 난이도·프롬프트 정하기', result: '카드가 백그라운드에서 만들어져요' },
+     { where: '플래시카드 화면', action: '카드마다 Got it! 또는 Missed it! 표시하기' },
+     { where: '결과 화면', action: 'Only cards you missed 선택', result: '못 맞힌 카드만 다시 연습해요' },
+   ]} />
+
+</Steps>
+
+## 빠른 참조표
+
+| 항목 | 내용 (2026-10-14 기준) |
+| --- | --- |
+| 소스 크기 | 소스 하나당 최대 50만 단어 또는 업로드 파일 200MB |
+| 소스 개수 | 무료 사용자는 최대 50개 (노트북당인지 계정당인지는 도움말 문구에서 확인하지 못함) |
+| 사용량 한도 | 연산량 기반. 5시간마다 갱신되고 주간 한도가 있어요. 무료는 표준, AI Plus 2배, AI Pro 4배, AI Ultra는 AI Pro의 5배 또는 20배 |
+| 사용량 확인 | Settings > Usage |
+| 한도 소진 시 | Generate later로 나중에 생성 (웹 전용, 몇 시간 걸릴 수 있음) |
+| 오디오 개요 형식 | Deep Dive, Brief, Critique, Debate |
+| 공유 | Viewer 또는 Editor 권한. 개인 Gmail 계정은 최대 50명에게 공유 |
+| 복사본 | 소스와 Studio 결과물은 복사되고, 채팅 기록과 노트는 복사되지 않음 |
+| 데이터 학습 | 피드백을 보내지 않는 한 모델 학습에 쓰이지 않는다고 안내 |
+
+## 자주 막히는 지점
+
+### "답할 수 없다"고 나와요
+
+- **원인**: 질문이 소스에 없는 정보를 묻거나, 표현이 모호하거나, 소스 내용이 안전 필터에 걸렸을 수 있어요.
+- **해결**: 질문을 구체적으로 바꾸고, 소스 이름을 넣어 보세요. 필요한 자료가 빠졌다면 소스를 더 추가하세요.
+
+### YouTube 영상이나 웹페이지가 소스로 안 들어가요
+
+- **원인**: 자막이 없거나 비공개 영상, 올린 지 72시간 안 된 영상은 안 될 수 있어요. 웹은 유료 구독 벽이 있으면 안 돼요.
+- **해결**: 내용을 복사해 붙여넣기(텍스트 소스)나 파일로 올려요.
+
+### 사용량 한도에 걸렸어요
+
+- **원인**: 연산량 기반 한도라 복잡한 요청과 긴 채팅, 오디오·비디오 생성이 한도를 빨리 써요.
+- **해결**: 5시간 뒤 갱신을 기다리거나 Generate later를 쓰세요. 더 필요하면 Google AI 구독 업그레이드를 검토하세요.
+
+### 공유 노트북에 다른 사람이 들어와 자료를 봐요
+
+- **원인**: Viewer도 공유된 소스와 노트를 볼 수 있어요. 채팅 화면 링크(Chat View)는 자료를 숨기지만 접근 권한 자체를 없애지는 않는다고 도움말이 안내해요.
+- **해결**: 민감한 자료는 공유하지 마세요. 공유 전에 권한을 확인하세요.
+
+## 실전 팁
+
+- 노트북은 **과목·프로젝트별로 나누세요.** 노트북끼리는 서로의 내용을 못 봐요.
+- 소스가 5개 이상이면 자동 라벨 기능으로 주제별 정리가 가능해요.
+- 한 번에 다 요약하지 말고 소스 일부를 골라 물으면 답이 더 정확해져요. 긴 문서 요약의 기본기는 [문서 요약하기](/ko/chat/02-summarize-documents/)를 참고하세요.
+- 회사 문서는 개인정보·기밀 기준과 회사 보안 지침을 먼저 확인하세요. 업무·학교 계정은 관리자가 허용해야 써요. 일반 원칙은 [개인정보 지키기](/ko/basics/05-privacy-safety/)에 있어요.
+- 업로드한 자료에 저작권이 있다면 권리가 있는 자료만 쓰세요. 도움말도 권한 없는 자료 업로드를 피하라고 안내해요.
+
+## 다음에 볼 튜토리얼
+
+- [2. 긴 문서 요약하기](/ko/chat/02-summarize-documents/) — 소스 없이도 쓰는 요약 프롬프트
+- [C5. 프로젝트](/ko/claude/c05-projects/) — Claude에서 자료를 모아 두고 반복해서 쓰는 방법
+- [C10. 리서치](/ko/claude/c10-research/) — 웹 자료까지 찾아 주는 조사 기능
+- [AI 검색 제대로 쓰기](/ko/chat/22-ai-search/) — 웹에서 근거를 찾는 쪽의 도구들
+- [학생 가이드](/ko/roles/student/) — 공부에 AI를 쓰는 순서
+- [사무직 가이드](/ko/roles/office/) — 업무 문서 정리에 AI를 쓰는 순서

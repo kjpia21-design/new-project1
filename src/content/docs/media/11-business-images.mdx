@@ -1,38 +1,38 @@
 ---
-title: "업무용 이미지 생성: 썸네일·홍보 이미지 만들기"
-description: "Gemini 앱(과 ChatGPT)으로 썸네일과 홍보 이미지를 만들고, 저작권·초상권·상업 이용을 점검하는 방법을 정리한 참고서"
+title: "Business Image Generation: Make Thumbnails and Promo Images"
+description: "A reference guide to making thumbnails and promo images with the Gemini app (and ChatGPT), and checking copyright, likeness rights, and commercial use"
 sidebar:
-  label: "1. 업무용 이미지 생성"
+  label: "1. Business image generation"
 level: practical
 category: media
 tools: ["Gemini 앱", "ChatGPT"]
-duration: "30분"
+duration: "30 min"
 prerequisites:
-  - "Google 계정 (Gemini 앱) 또는 OpenAI 계정 (ChatGPT)"
-  - "만들 이미지의 용도와 크기 (예: 블로그 썸네일 16:9)"
+  - "A Google account (Gemini app) or an OpenAI account (ChatGPT)"
+  - "The purpose and size of the image you want (for example, a 16:9 blog thumbnail)"
 lastVerified: 2026-10-26
 sources:
   - title: "Generate & edit images with Gemini Apps (Gemini Apps Help)"
     url: "https://support.google.com/gemini/answer/14286560"
   - title: "Where you can use the Gemini web app (Gemini Apps Help)"
     url: "https://support.google.com/gemini/answer/13575153"
-  - title: "Nano Banana (Gemini 이미지 생성 소개)"
+  - title: "Nano Banana (Introduction to Gemini image generation)"
     url: "https://gemini.google/overview/image-generation/"
   - title: "How we're bringing AI image verification to the Gemini app (Google)"
     url: "https://blog.google/innovation-and-ai/products/ai-image-verification-gemini-app/"
-  - title: "Image generation (OpenAI, ChatGPT 문서)"
+  - title: "Image generation (OpenAI, ChatGPT docs)"
     url: "https://learn.chatgpt.com/docs/image-generation"
-  - title: "Content provenance (OpenAI API 문서)"
+  - title: "Content provenance (OpenAI API docs)"
     url: "https://developers.openai.com/api/docs/guides/content-provenance"
-  - title: "Pricing (OpenAI, ChatGPT 문서)"
+  - title: "Pricing (OpenAI, ChatGPT docs)"
     url: "https://learn.chatgpt.com/docs/pricing"
-  - title: "ChatGPT - App Store 한국 등록 페이지 (OpenAI OpCo, LLC)"
+  - title: "ChatGPT - App Store Korea listing (OpenAI OpCo, LLC)"
     url: "https://apps.apple.com/kr/app/chatgpt/id6448311069"
-  - title: "OpenAI Usage policies - 원문 미확인(openai.com 접근 차단)"
+  - title: "OpenAI Usage policies - original not verified (openai.com access blocked)"
     url: "https://openai.com/policies/usage-policies/"
-  - title: "OpenAI Terms of Use - 원문 미확인(openai.com 접근 차단)"
+  - title: "OpenAI Terms of Use - original not verified (openai.com access blocked)"
     url: "https://openai.com/policies/row-terms-of-use/"
-  - title: "Adobe Firefly - 원문 미확인(adobe.com 접근 차단)"
+  - title: "Adobe Firefly - original not verified (adobe.com access blocked)"
     url: "https://www.adobe.com/products/firefly.html"
 status: published
 ---
@@ -45,169 +45,169 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
-- 업무용 이미지는 **용도(어디에 쓰나), 비율, 분위기, 넣을 글자**를 먼저 정하고 요청하면 훨씬 잘 나와요.
-- 이 편은 한국에서 쓸 수 있고 한국어를 지원하는 **Gemini 앱**(Nano Banana 계열)을 중심으로, **ChatGPT**를 대안으로 다뤄요.
-- 생성한 이미지는 **저작권·초상권·상표를 직접 점검**해야 해요. 도구 약관은 사용자 책임을 분명히 하고 있어요.
-- 실존 인물 얼굴, 남의 로고·캐릭터가 들어간 이미지는 **동의나 허락 없이 쓰지 마세요.**
-- 요금제·한도·약관은 자주 바뀌어요. 이 글은 2026-10-13 기준이고, 확인하지 못한 부분은 공식 페이지 확인을 안내해요.
+- Business images come out much better when you decide the **purpose (where it will be used), aspect ratio, mood, and any text** before you ask.
+- This tutorial focuses on the **Gemini app** (the Nano Banana family), which is available in Korea and supports Korean, and covers **ChatGPT** as an alternative.
+- You need to **check copyright, likeness rights, and trademarks yourself** for every image you generate. The tools' terms make the user responsible.
+- **Don't use images that include a real person's face or someone else's logo or character** without their consent or permission.
+- Plans, limits, and terms change often. This guide is accurate as of 2026-10-13, and where we couldn't confirm something, we point you to the official page.
 </Summary>
 
-<Aside type="caution" title="OpenAI 약관 원문과 Adobe Firefly는 확인하지 못했어요">
-Gemini 앱 내용은 Google 공식 도움말 원문으로, ChatGPT 이미지 생성 방법과 출처 표시(C2PA, SynthID)는 OpenAI의 ChatGPT 문서와 API 문서 원문으로 확인했어요(2026-10-10 기준). 하지만 OpenAI 이용약관·사용 정책 페이지(openai.com)와 Adobe Firefly 페이지는 접속이 막혀 원문을 열지 못했어요. 약관상 출력물 소유와 상업 이용 조건, Firefly 설명은 단정하지 말고 공식 페이지에서 직접 확인하세요.
+<Aside type="caution" title="We couldn't verify the original OpenAI terms or Adobe Firefly">
+We checked the Gemini app content against Google's official help pages, and the ChatGPT image generation steps and provenance marks (C2PA, SynthID) against OpenAI's ChatGPT docs and API docs (as of 2026-10-10). However, access was blocked to OpenAI's terms of use and usage policy pages (openai.com) and to the Adobe Firefly page, so we couldn't open the originals. Don't assume anything about output ownership, commercial-use terms, or Firefly details; check the official pages yourself.
 </Aside>
 
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- 블로그 썸네일, 행사 안내 이미지 같은 업무용 이미지를 AI로 만들고 대화로 고칠 수 있어요.
-- 잘 나오는 이미지 요청문(프롬프트) 구조를 쓸 수 있어요.
-- 게시 전에 저작권·초상권·상표 위험을 점검하는 체크리스트를 쓸 수 있어요.
-- AI로 만들었다는 표시(워터마크·메타데이터)가 무엇인지 알고 대응할 수 있어요.
+- Create business images such as blog thumbnails and event announcement graphics with AI, and refine them through conversation.
+- Use a prompt structure that produces good images.
+- Use a checklist to review copyright, likeness, and trademark risks before publishing.
+- Understand what AI-generated marks (watermarks and metadata) are and how to handle them.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **프롬프트** | 이미지를 만들어 달라는 설명 문장이에요. 프롬프트 일반 원칙은 [C4. 프롬프트 작성법](/claude/c04-prompting/)과 같아요. |
-| **이미지 편집(대화형)** | 만든 이미지에 "배경을 밝게", "글자를 빼 줘"처럼 이어서 요청해 고치는 방식이에요. |
-| **SynthID** | Google이 AI 생성 이미지에 넣는 보이지 않는 워터마크예요. Gemini 앱에 이미지를 올려 Google AI로 만들었는지 물어볼 수 있다고 안내돼요. |
-| **C2PA(콘텐츠 자격 증명)** | 이미지 출처 정보를 담는 메타데이터 표준이에요. OpenAI는 C2PA와 SynthID를 지원하는 출처 신호로 안내해요. C2PA는 편집·변환·스크린샷·플랫폼 업로드 과정에서 지워질 수 있고, SynthID는 이미지 자체에 들어가는 워터마크라 일부 변형에도 남을 수 있다고 해요. |
-| **초상권·퍼블리시티권** | 사람의 얼굴·모습을 허락 없이 쓰지 못하게 하는 권리예요. 도구 약관도 동의 없는 실존 인물 재현을 제한해요. |
+| **Prompt** | The description you write to ask for an image. The general principles are the same as in [C4. How to write prompts](/claude/c04-prompting/). |
+| **Image editing (conversational)** | Refining a generated image by following up with requests such as "make the background brighter" or "remove the text." |
+| **SynthID** | An invisible watermark Google embeds in AI-generated images. Google says you can upload an image to the Gemini app and ask whether it was made with Google AI. |
+| **C2PA (Content Credentials)** | A metadata standard that carries an image's provenance information. OpenAI describes C2PA and SynthID as supported provenance signals. C2PA can be stripped by editing, conversion, screenshots, or platform uploads, while SynthID is a watermark embedded in the image itself, so it may survive some modifications. |
+| **Likeness rights / right of publicity** | The right to stop others from using a person's face or appearance without permission. Tool terms also restrict recreating real people without consent. |
 
-### 어떤 도구를 쓸까요
+### Which tool should you use?
 
-| | Gemini 앱 | ChatGPT | 그 밖의 선택지 |
+| | Gemini app | ChatGPT | Other options |
 | --- | --- | --- | --- |
-| 한국 이용 | 웹 앱은 70개 이상 언어·230개 이상 국가·지역에서 제공되고 한국어와 South Korea(대한민국)가 목록에 있다고 안내돼요 | 한국 App Store에 앱이 등록돼 있고 언어 목록에 한국어가 있어요. 한국 원화 인앱 가격도 표시돼요(Go ₩13,000, Plus ₩29,000 등, 2026-10-10) | Canva(12편), Adobe Firefly(한국어 도움말 여부는 확인 못 함) |
-| 무료 여부 | 무료로 쓸 수 있고(일일 한도가 있음), Google AI 요금제에서는 더 높은 모델과 높은 한도를 준다고 안내돼요. 모델 이름은 페이지마다 달라요(도움말은 Nano Banana 2·Pro, 소개 페이지는 Nano Banana 2.1도 언급) | OpenAI 문서는 웹의 이미지 사용 가능 여부와 한도가 요금제와 워크스페이스 설정에 따라 달라진다고 안내해요. Free는 월 $0, Go는 월 $8, Plus는 월 $20예요(Pricing 문서). 무료 플랜의 구체적 한도 숫자는 찾지 못했어요 | 서비스별 확인 |
-| 소유권 안내 | 다른 사람의 저작권·개인정보 권리를 침해하지 말고, 생성물을 쓰거나 게시하기 전에 직접 판단하라고 안내 | OpenAI 문서는 생성 이미지에 OpenAI 크레딧 표기가 필요 없다고 안내하고, 조직 지침과 OpenAI 사용 정책을 따르라고 해요. 약관상 출력 소유 조항은 원문을 열지 못해 확인하지 못했어요 | Firefly는 자체 모델을 "상업적으로 안전"하다고 설명(베타 기능은 개인용 제한 가능) |
+| Availability in Korea | The web app is offered in more than 70 languages and more than 230 countries and regions, and Korean and South Korea are on the list | The app is listed on the Korean App Store and Korean is in the language list. In-app prices are shown in Korean won (KRW) (Go ₩13,000, Plus ₩29,000, etc., 2026-10-10) | Canva (Tutorial 12), Adobe Firefly (we couldn't confirm whether Korean help is available) |
+| Free use | You can use it for free (with daily limits), and Google AI plans reportedly give you better models and higher limits. Model names differ by page (the help page mentions Nano Banana 2 and Pro, and the overview page also mentions Nano Banana 2.1) | OpenAI's docs say image availability and limits on the web depend on your plan and workspace settings. Free is $0/month, Go is $8/month, and Plus is $20/month (Pricing docs). We couldn't find specific limit numbers for the free plan | Check each service |
+| Ownership guidance | Says not to infringe others' copyright or privacy rights, and to use your own judgment before using or publishing generated content | OpenAI's docs say generated images don't require OpenAI credit, and tell you to follow your organization's guidelines and OpenAI's usage policies. We couldn't open the original terms, so we couldn't confirm the output ownership clause | Firefly describes its own model as "commercially safe" (beta features may be limited to personal use) |
 
-Gemini 열은 Google 공식 도움말 원문으로, ChatGPT 열은 OpenAI 문서와 App Store 등록 정보로 정리했어요. Firefly 열은 adobe.com을 열지 못해 공식 사이트 검색 결과를 바탕으로 한 설명이니 단정하지 마세요.
+The Gemini column is based on Google's official help pages, and the ChatGPT column on OpenAI's docs and the App Store listing. The Firefly column is based on official-site search results because we couldn't open adobe.com, so don't treat it as definitive.
 
-**나이 조건(Gemini, 개인 계정)**: 도움말은 이미지를 만들려면 만 13세(또는 해당 국가의 적용 연령) 이상이어야 하고, 이미지를 편집하려면 18세 이상이어야 한다고 안내해요. 학교 계정은 접근 제한이 다를 수 있어요.
+**Age requirements (Gemini, personal accounts)**: The help page says you must be at least 13 (or the applicable age in your country) to create images and at least 18 to edit images. School accounts may have different access restrictions.
 
-## 단계별 따라하기
+## Step by step
 
-예제는 "사내 교육 세미나 안내 블로그의 16:9 썸네일"이에요.
+The example is "a 16:9 thumbnail for a blog post announcing an in-house training seminar."
 
 <Checklist items={[
-  '용도, 비율, 분위기, 글자 여부를 정했어요',
-  'Gemini 앱에서 첫 이미지를 만들었어요',
-  '대화로 2~3번 고쳤어요',
-  '저작권·초상권·상표 점검 목록을 확인했어요',
-  'AI 표시 여부를 정하고 파일을 저장했어요',
+  'I decided the purpose, aspect ratio, mood, and whether to include text',
+  'I created the first image in the Gemini app',
+  'I refined it 2-3 times through conversation',
+  'I went through the copyright, likeness, and trademark checklist',
+  'I decided whether to label it as AI-generated and saved the file',
 ]} />
 
 <Steps>
 
-1. **요청 전에 네 가지를 정하기**
+1. **Decide four things before you ask**
 
-   - **용도와 비율**: 블로그 썸네일, 16:9, 가로형
-   - **주제**: 교육 세미나(사람 얼굴 없이 책상 위 노트북과 메모지)
-   - **분위기**: 밝고 깔끔한 사무 분위기, 파란색 계열
-   - **글자**: 이미지 안에 한글을 직접 넣을지 여부. AI가 만든 글자는 깨질 수 있으니 **글자는 비워 두고 Canva 같은 편집 도구에서 올리는 편**이 안전해요.
+   - **Purpose and aspect ratio**: Blog thumbnail, 16:9, landscape
+   - **Subject**: A training seminar (a laptop and sticky notes on a desk, no faces)
+   - **Mood**: A bright, clean office feel, in blues
+   - **Text**: Whether to put Korean text directly in the image. AI-generated text can come out garbled, so it's safer to **leave the text out and add it later in an editing tool like Canva**.
 
-2. **Gemini 앱에서 첫 이미지 만들기**
+2. **Create the first image in the Gemini app**
 
-   Gemini 앱에 로그인하고 이미지 만들기를 골라요. 공식 도움말은 컴퓨터에서 gemini.google.com에 들어가 왼쪽 위의 사이드바를 열고 **Images**를 누른 뒤, 템플릿을 고르거나 프롬프트를 입력하라고 안내해요. 소개 페이지는 도구 메뉴의 "Create images"를 안내하기도 해요. 화면 구성은 바뀔 수 있으니 실제 화면을 따르세요. 프롬프트는 "만들어 줘" 같은 말로 시작하는 편이 좋고, 스타일(사실적인 사진, 수채화 등)을 적으면 도움이 된다고 해요.
+   Sign in to the Gemini app and choose image creation. The official help page says to go to gemini.google.com on a computer, open the sidebar at the top left, click **Images**, and then pick a template or enter a prompt. The overview page also mentions "Create images" in the tools menu. The screen layout may change, so follow what you actually see. It works best to start your prompt with something like "Create...," and the help page says adding a style (a realistic photo, watercolor, and so on) helps.
 
    <PromptBox>
-   블로그 썸네일용 이미지를 만들어 줘. 16:9 가로형. 주제는 사내 교육 세미나 안내야. 밝은 사무실 책상 위에 노트북과 메모지, 커피잔이 있는 장면이고 사람은 나오지 않게 해 줘. 파란색 계열의 깔끔한 분위기. 이미지 안에 글자는 넣지 마. 위쪽 3분의 1은 제목을 올릴 수 있게 비워 줘.
+   Create an image for a blog thumbnail. 16:9 landscape. The topic is an announcement for an in-house training seminar. Show a bright office desk with a laptop, sticky notes, and a coffee cup, and don't include any people. Use a clean look in blue tones. Don't put any text in the image. Leave the top third empty so I can add a title.
    </PromptBox>
 
-   <ScreenshotPlaceholder caption="Gemini 앱에서 이미지 생성 요청을 보낸 화면" officialUrl="https://support.google.com/gemini/answer/14286560" />
+   <ScreenshotPlaceholder caption="Screen after sending an image generation request in the Gemini app" officialUrl="https://support.google.com/gemini/answer/14286560" />
 
-   <FlowSteps title="Gemini에서 이미지 만들고 고치기" officialUrl="https://support.google.com/gemini/answer/14286560" steps={[
-     { where: 'gemini.google.com 사이드바', action: 'Images 누르기', result: '템플릿 고르기 또는 프롬프트 입력' },
-     { where: '만든 이미지', action: '왼쪽 사이드바의 Library에서 열기', result: '아래 Chat으로 이어서 고치기' },
-     { where: '이미지 위에 마우스 올리기', action: 'Download full size 누르기', result: '이미지 저장' },
+   <FlowSteps title="Create and refine an image in Gemini" officialUrl="https://support.google.com/gemini/answer/14286560" steps={[
+     { where: 'gemini.google.com sidebar', action: 'Click Images', result: 'Pick a template or enter a prompt' },
+     { where: 'Generated image', action: 'Open it from Library in the left sidebar', result: 'Keep refining in Chat below' },
+     { where: 'Hover over the image', action: 'Click Download full size', result: 'Image saved' },
    ]} />
 
-3. **대화로 고치기**
+3. **Refine through conversation**
 
-   마음에 들지 않는 부분만 짚어서 이어서 요청해요. 처음부터 다시 만드는 것보다 안정적이에요. 도움말에 따르면 만든 이미지는 왼쪽 사이드바의 **Library**에서 열어 아래의 Chat으로 이어서 고칠 수 있고, 내 기기의 이미지를 올려 편집을 요청할 수도 있어요(이미지 편집은 18세 이상). 유료 요금제는 이미지 아래 **More > Redo with Pro**로 Nano Banana Pro로 다시 만들 수 있어요. 저장은 이미지에 마우스를 올려 "Download full size"를 눌러요. 다운로드 해상도는 Google AI 요금제는 2K, 요금제가 없으면 1K라고 안내돼요.
+   Point out only the parts you don't like and ask for changes in a follow-up. This is more stable than starting over from scratch. According to the help page, you can open a generated image from **Library** in the left sidebar and keep refining it in Chat below, and you can also upload an image from your device and ask for edits (image editing requires age 18 or older). On paid plans, you can use **More > Redo with Pro** under the image to regenerate it with Nano Banana Pro. To save, hover over the image and click "Download full size." The download resolution is reportedly 2K with a Google AI plan and 1K without one.
 
    <PromptBox>
-   방금 이미지에서 커피잔을 빼고, 노트북 화면은 빈 화면으로 바꿔 줘. 전체 톤은 조금 더 밝게 해 줘.
+   In the image you just made, remove the coffee cup and change the laptop screen to a blank screen. Make the overall tone a little brighter.
    </PromptBox>
 
-4. **저작권·초상권·상표 점검**
+4. **Check copyright, likeness, and trademarks**
 
-   게시하기 전에 아래를 확인해요. 도구가 대신 책임져 주지 않아요.
+   Check the items below before you publish. The tool won't take responsibility for you.
 
-   - 실존 인물(직원, 고객, 유명인)의 얼굴이나 닮은 얼굴이 있나요?
-   - 기존 로고, 상표, 캐릭터, 작품과 비슷한 요소가 있나요?
-   - 이미지 안에 읽을 수 있는 글자나 가짜 브랜드명이 들어가 있나요?
-   - 사내 기밀 이미지(도면, 화면 캡처)를 참고 이미지로 올리지 않았나요?
+   - Is there a real person's face (an employee, a customer, a celebrity) or a face that resembles one?
+   - Are there elements similar to an existing logo, trademark, character, or artwork?
+   - Does the image contain readable text or a fake brand name?
+   - Did you avoid uploading internal confidential images (blueprints, screen captures) as reference images?
 
-   <Aside type="caution" title="초상권: 동의 없이는 쓰지 마세요">
-   OpenAI의 ChatGPT 이미지 생성 문서는 실존 인물을 그릴 때 사용 허락이 있는지 확인하고, 특정 브랜드나 작가를 흉내 내지 말고 원본 느낌의 표현을 요청하라고 안내해요. 약관과 사용 정책의 정확한 문구는 원문을 열지 못했으니 공식 페이지에서 확인하세요. 다른 도구도 비슷한 방향이에요. 직원이나 고객 사진을 AI로 바꿔 홍보에 쓰려면 **본인에게 용도를 설명하고 서면으로 동의**를 받으세요.
+   <Aside type="caution" title="Likeness rights: don't use them without consent">
+   OpenAI's ChatGPT image generation docs say to confirm you have permission when depicting a real person, and to ask for original-feeling work instead of imitating a specific brand or artist. We couldn't open the exact wording of the terms and usage policy, so check the official pages. Other tools take a similar approach. If you want to turn photos of employees or customers into AI images for promotion, **explain the purpose to the person and get their written consent**.
    </Aside>
 
-5. **저장하고 AI 표시 정하기**
+5. **Save the file and decide on AI labeling**
 
-   Gemini 소개 페이지는 보이지 않는 SynthID 워터마크와 눈에 보이는 워터마크를 쓴다고 설명해요. 다만 이미지 도움말(Gemini Apps Help)에는 보이는 워터마크가 요금제·화면별로 어떻게 붙는지 안내가 없어요(2026-10-13 기준). 저장한 파일을 직접 확인하세요. 회사 정책에 맞게 "AI로 생성한 이미지" 표기 여부를 정하세요. 표시를 일부러 지우거나 숨기는 것은 피하세요.
+   The Gemini overview page explains that it uses an invisible SynthID watermark and a visible watermark. However, the image help page (Gemini Apps Help) doesn't explain how the visible watermark is applied by plan or screen (as of 2026-10-13). Check the saved file yourself. Decide whether to label it "AI-generated image" according to your company's policy. Avoid deliberately removing or hiding the marks.
 
-6. **(대안) ChatGPT로 만들어 비교하기**
+6. **(Alternative) Compare with ChatGPT**
 
-   같은 프롬프트를 ChatGPT에도 넣어 결과를 비교해 보세요. 웹 채팅에서 이미지를 요청하고, 고치려면 참고 이미지를 첨부해 바꿀 부분과 그대로 둘 부분을 말하면 돼요. OpenAI 문서는 이미지 사용 가능 여부와 한도가 요금제와 워크스페이스 설정에 따라 다르다고 안내해요. 한도 숫자는 화면에 나오는 안내를 따르세요.
+   Enter the same prompt in ChatGPT and compare the results. Ask for an image in web chat, and to refine it, attach a reference image and tell it what to change and what to keep. OpenAI's docs say image availability and limits depend on your plan and workspace settings. Follow the guidance shown on screen for limit numbers.
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-### 이미지 요청문 틀
+### Image prompt template
 
-| 항목 | 예시 |
+| Item | Example |
 | --- | --- |
-| 용도·비율 | 블로그 썸네일, 16:9 |
-| 장면 | 책상 위 노트북과 메모지 |
-| 분위기·색 | 밝고 깔끔함, 파란색 계열 |
-| 구도 | 위쪽 3분의 1은 비워 둠 |
-| 금지 | 사람 얼굴, 글자, 로고 없음 |
+| Purpose and ratio | Blog thumbnail, 16:9 |
+| Scene | A laptop and sticky notes on a desk |
+| Mood and color | Bright and clean, in blues |
+| Composition | Leave the top third empty |
+| Don'ts | No faces, text, or logos |
 
-### 상업 이용 점검표
+### Commercial-use checklist
 
-| 항목 | 확인 내용 |
+| Item | What to check |
 | --- | --- |
-| 약관 | 쓰는 도구의 약관과 사용 정책(2026-10-10 기준 위 출처). 요금제별 차이는 공식 페이지 확인 |
-| 소유권 | OpenAI 약관의 출력물 소유 조항은 원문을 열지 못해 확인하지 못했어요. 소유 조항이 있더라도 저작권 보호를 뜻하지는 않고, AI 생성물의 저작권은 나라마다 달라요 |
-| 인물 | 실존 인물은 동의 필수 |
-| 상표·캐릭터 | 비슷한 것도 피하기 |
-| 출처 표시 | 회사 정책 + 도구의 워터마크·메타데이터 유지 |
+| Terms | The terms and usage policy of the tool you use (sources above, as of 2026-10-10). Check the official pages for differences between plans |
+| Ownership | We couldn't open the original output ownership clause in OpenAI's terms, so we couldn't confirm it. Even if there is an ownership clause, it doesn't mean copyright protection, and copyright for AI-generated works differs by country |
+| People | Real people require consent |
+| Trademarks and characters | Avoid even similar ones |
+| Provenance labeling | Company policy, plus keep the tool's watermarks and metadata |
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 한글이 깨지거나 글자가 엉터리로 나와요
+### The Korean text is garbled or comes out as nonsense
 
-- **원인**: 이미지 모델은 글자를 정확히 그리지 못할 수 있어요.
-- **해결**: 이미지에는 글자를 넣지 말고, 제목은 Canva([12편](/media/12-canva-sns/))나 슬라이드에서 올리세요.
+- **Cause**: Image models may not be able to draw text accurately.
+- **Fix**: Don't put text in the image. Add the title in Canva ([Tutorial 12](/media/12-canva-sns/)) or in a slide.
 
-### 한도에 걸려 더 이상 안 만들어져요
+### I hit a limit and it won't generate any more
 
-- **원인**: Gemini 도움말은 Nano Banana 2 이미지에 일일 한도(quota)가 있고, 한도에 이르면 Pro로 다시 만들기도 안 된다고 안내해요. 구체적인 숫자는 도움말에 없어요.
-- **해결**: 화면 안내를 확인하고 한도가 풀릴 때까지 기다리거나 요금제를 비교하세요. 프롬프트를 한 번에 잘 쓰면 시도 횟수가 줄어요.
+- **Cause**: The Gemini help page says Nano Banana 2 images have a daily quota, and once you reach it, you can't redo with Pro either. The help page doesn't give specific numbers.
+- **Fix**: Check the on-screen message and wait until the limit resets, or compare plans. Writing a good prompt in one go reduces the number of attempts.
 
-### 만든 이미지가 기존 작품·브랜드와 비슷해 보여요
+### The generated image looks similar to an existing work or brand
 
-- **원인**: 모델이 학습한 스타일과 닮을 수 있어요.
-- **해결**: 쓰지 말고 프롬프트에서 특정 작가·브랜드 이름을 빼고 다시 만드세요. 애매하면 법무 담당에게 문의하세요.
+- **Cause**: The model may resemble styles it was trained on.
+- **Fix**: Don't use it. Remove any specific artist or brand names from the prompt and generate again. If you're unsure, ask your legal team.
 
-### 이미지가 AI 생성인지 확인하고 싶어요
+### I want to check whether an image is AI-generated
 
-- **원인**: 메타데이터는 스크린샷·변환으로 사라질 수 있어요.
-- **해결**: Google 공식 블로그에 따르면 Gemini 앱에 이미지를 올려 Google AI로 만들거나 편집했는지 물어보면 SynthID를 확인해 줘요(Google AI 콘텐츠만 인식). Nano Banana Pro 이미지에는 C2PA 메타데이터도 들어간다고 안내돼요. OpenAI는 이미지나 오디오 파일에 OpenAI의 C2PA·SynthID 신호가 있는지 확인하는 웹 도구(openai.com/verify)와 API를 제공해요. 다만 "감지 안 됨" 결과가 OpenAI가 만들지 않았다는 뜻은 아니에요(메타데이터가 지워졌거나 워터마크가 훼손됐을 수 있고, 다른 회사 모델의 결과물은 감지하지 못해요).
+- **Cause**: Metadata can disappear through screenshots or conversion.
+- **Fix**: According to Google's official blog, if you upload an image to the Gemini app and ask whether it was made or edited with Google AI, it checks for SynthID (it only recognizes Google AI content). Nano Banana Pro images also reportedly include C2PA metadata. OpenAI provides a web tool (openai.com/verify) and an API that check whether an image or audio file carries OpenAI's C2PA or SynthID signals. However, a "not detected" result doesn't mean OpenAI didn't make it (the metadata may have been removed or the watermark damaged, and it can't detect output from other companies' models).
 
-## 실전 팁
+## Practical tips
 
-- **처음엔 비율과 용도부터 말하세요.** 나중에 비율을 바꾸면 구도가 어긋나요.
-- **사람 없는 장면으로 시작하세요.** 초상권 위험이 가장 낮아요.
-- **고칠 땐 한 번에 하나만 요청하세요.**
-- **마음에 든 프롬프트는 저장해 두세요.** 시리즈 이미지를 같은 톤으로 만들 때 써요.
-- **참고 이미지를 올릴 땐 권리가 있는 이미지만 쓰세요.**
+- **Start by stating the aspect ratio and purpose.** If you change the ratio later, the composition falls apart.
+- **Start with scenes that have no people.** They carry the lowest likeness-rights risk.
+- **When refining, ask for one change at a time.**
+- **Save prompts you like.** You can reuse them to make a series of images in the same tone.
+- **Only upload reference images you have the rights to.**
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [12. Canva AI로 SNS 콘텐츠 한 세트 만들기](/media/12-canva-sns/) — 만든 이미지를 SNS 규격으로 편집
-- [13. 짧은 홍보 영상 만들기](/media/13-promo-video/) — 이미지를 영상으로 확장
-- [C4. 프롬프트 작성법](/claude/c04-prompting/) — 요청문 쓰는 공통 원리
+- [12. Make a Set of Social Media Content with Canva AI](/media/12-canva-sns/) — edit your images to social media specs
+- [13. Make a Short Promo Video](/media/13-promo-video/) — extend your images into video
+- [C4. How to write prompts](/claude/c04-prompting/) — the common principles for writing requests

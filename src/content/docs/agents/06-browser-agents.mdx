@@ -1,15 +1,15 @@
 ---
-title: "브라우저 에이전트 비교: Claude in Chrome·ChatGPT·Gemini"
-description: "웹사이트를 대신 클릭하고 입력해 주는 브라우저 에이전트를 Claude in Chrome, ChatGPT(브라우저·Work), Gemini(작업·Chrome 자동 브라우징)로 나눠, 공식 문서 기준 제공 조건과 안전 수칙을 비교해요"
+title: "Browser Agents Compared: Claude in Chrome, ChatGPT, and Gemini"
+description: "Browser agents click and type on websites for you. This guide splits them into Claude in Chrome, ChatGPT (Browser and Work), and Gemini (Tasks and Chrome auto browse), and compares availability and safety rules based on official docs"
 sidebar:
-  label: "6. 브라우저 에이전트 비교"
+  label: "6. Browser agents compared"
 level: practical
 category: agents
 tools: ["Claude in Chrome", "ChatGPT", "Gemini"]
-duration: "25분"
+duration: "25 min"
 prerequisites:
-  - "개인 AI 에이전트가 무엇인지 알고 있기 (1편)"
-  - "에이전트 안전 점검표 읽어 보기 (5편)"
+  - "Know what a personal AI agent is (Part 1)"
+  - "Read the agent safety checklist (Part 5)"
 lastVerified: 2026-10-31
 sources:
   - title: "Claude pricing"
@@ -20,9 +20,9 @@ sources:
     url: "https://support.claude.com/en/articles/12902446-claude-in-chrome-permissions-guide"
   - title: "Supported countries and regions (Anthropic)"
     url: "https://www.anthropic.com/supported-countries"
-  - title: "Browser (ChatGPT 사용자 문서)"
+  - title: "Browser (ChatGPT user docs)"
     url: "https://learn.chatgpt.com/docs/browser"
-  - title: "Browser extension (ChatGPT 사용자 문서)"
+  - title: "Browser extension (ChatGPT user docs)"
     url: "https://learn.chatgpt.com/docs/chrome-extension"
   - title: "Manage your tasks & workflows in Gemini Apps"
     url: "https://support.google.com/gemini/answer/16596215"
@@ -37,132 +37,132 @@ import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 
 <Summary>
-- **브라우저 에이전트**는 웹페이지를 읽고, 클릭하고, 입력하고, 이동하며 일을 대신 해 주는 AI예요. 세 회사 모두 만들고 있지만 **이름과 구성이 서로 달라요.**
-- 큰 갈래는 둘이에요. **내 브라우저를 쓰는 방식**(로그인된 내 사이트를 그대로 쓰지만 위험도 같이 커져요)과 **클라우드의 별도 브라우저를 쓰는 방식**(내 로그인과 분리되지만, 로그인할 때 내가 직접 끼어들어야 해요).
-- 모두 2026-10-15 기준 공식 문서에서 직접 읽은 내용이에요. 제공 플랜과 지역은 **문서에 적힌 것만** 썼고, 품질 순위는 매기지 않아요. 확인하지 못한 칸은 그렇게 적었어요.
-- 공통 원칙은 같아요. **결제·메시지 발송·삭제는 내가 승인하고, 로그인과 비밀번호는 채팅에 쓰지 않고, 웹페이지 속 지시는 믿지 않아요.**
+- A **browser agent** is an AI that reads web pages, clicks, types, and navigates to do work for you. All three companies are building one, but **the names and setups differ.**
+- There are two main approaches: **using your own browser** (it uses your logged-in sites as they are, but the risk grows too) and **using a separate browser in the cloud** (it's separate from your logins, but you have to step in yourself when logging in).
+- Everything is as of 2026-10-15 and read directly from official docs. For plans and regions we used **only what the docs state**, and we don't rank quality. Cells we couldn't confirm are marked as such.
+- The common principles are the same: **you approve payments, sending messages, and deletions; you don't type logins and passwords into chat; and you don't trust instructions inside web pages.**
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- Claude in Chrome, ChatGPT, Gemini의 브라우저 에이전트가 각각 **어떤 방식**인지 구분할 수 있어요.
-- 내 플랜·기기·지역에서 무엇을 쓸 수 있는지 **공식 문서에서 확인할 곳**을 알 수 있어요.
-- 어떤 일을 맡기고 어떤 일은 맡기지 말아야 할지 판단하고, 안전 설정을 고를 수 있어요.
+- Tell apart **which approach** each of the browser agents from Claude in Chrome, ChatGPT, and Gemini uses.
+- Know **where in the official docs to check** what you can use on your plan, device, and region.
+- Judge which tasks to hand off and which not to, and choose safe settings.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **브라우저 에이전트** | 웹페이지를 보고 클릭·입력·이동을 대신 하는 AI예요. 정보 조회뿐 아니라 양식 작성, 예약 같은 행동까지 해요. |
-| **내 브라우저 방식** | 내 Chrome 등에 확장 프로그램으로 붙어 일해요. 내가 로그인한 사이트를 그대로 쓸 수 있어요. |
-| **클라우드 브라우저 방식** | AI 서비스 쪽 서버에서 도는 별도 브라우저예요. 내 탭·쿠키·저장된 비밀번호를 쓰지 않아요. |
-| **프롬프트 인젝션** | 웹페이지나 이메일에 AI를 속이는 지시를 숨겨 두는 공격이에요. 브라우저 에이전트는 낯선 웹 콘텐츠를 계속 읽어서 특히 중요해요. |
+| **Browser agent** | An AI that looks at web pages and clicks, types, and navigates for you. It goes beyond looking things up to actions like filling out forms and making reservations. |
+| **Your-own-browser approach** | It attaches to your Chrome or similar as an extension and works there. It can use the sites you're logged in to as they are. |
+| **Cloud browser approach** | A separate browser running on the AI service's servers. It doesn't use your tabs, cookies, or saved passwords. |
+| **Prompt injection** | An attack that hides instructions meant to trick the AI in a web page or email. It matters especially for browser agents because they keep reading unfamiliar web content. |
 
-<Aside type="note" title="제품 이름이 문서마다 달라요">
-이 글에서 "ChatGPT 에이전트"로 부를 만한 기능은 현재 공식 사용자 문서(learn.chatgpt.com)에서 **Browser**(내장 브라우저), **브라우저 확장**, **ChatGPT Work의 클라우드 브라우저**로 나뉘어 설명돼요. Gemini는 **작업(Tasks)**이 **Chrome auto browse** 또는 원격 브라우저를 써요. 이름은 자주 바뀌니 화면의 표기와 공식 문서를 함께 보세요.
+<Aside type="note" title="Product names differ from doc to doc">
+What we'd call the "ChatGPT agent" in this guide is currently described in the official user docs (learn.chatgpt.com) as split into the **Browser** (built-in browser), the **browser extension**, and the **cloud browser in ChatGPT Work**. For Gemini, **Tasks** use **Chrome auto browse** or a remote browser. Names change often, so look at the labels on screen along with the official docs.
 </Aside>
 
-## 단계별 따라하기
+## Step by step
 
-아래 순서로 고르고 시작하면 돼요.
+Choose and start in the order below.
 
 <Checklist items={[
-  '1. 맡길 일이 브라우저 조작이 꼭 필요한 일인지 따져 봤어요 (커넥터나 검색으로 되는지)',
-  '2. 내 로그인 사이트가 필요한지, 별도 브라우저로 충분한지 정했어요',
-  '3. 내 플랜·기기·지역이 조건에 맞는지 공식 문서로 확인했어요',
-  '4. 승인은 매번 묻는 설정으로 시작했어요',
-  '5. 결제·메시지 발송·삭제는 직접 확인하고 눌러요',
-  '6. 끝나고 사이트 권한과 로그인 기록을 정리했어요',
+  '1. I considered whether the task truly requires browser control (or if a connector or search would do)',
+  '2. I decided whether I need my own logged-in sites or a separate browser is enough',
+  '3. I confirmed in the official docs that my plan, device, and region meet the conditions',
+  '4. I started with the setting that asks for approval every time',
+  '5. I check and click payments, sending messages, and deletions myself',
+  '6. I cleaned up site permissions and login records afterward',
 ]} />
 
-### 1. 정말 브라우저 조작이 필요한가요?
+### 1. Do you really need browser control?
 
-페이지 읽기와 요약만이라면 일반 채팅이나 검색으로 충분해요. 브라우저 조작은 느리고 오류 가능성이 있어요. Gmail·Drive 같은 서비스는 커넥터가 더 빠르고 정확해요([C7](/claude/c07-connectors/), [C11](/claude/c11-chrome-computer-use/)의 "어떤 도구를 쓸까요?" 참고).
+If you only need to read and summarize a page, regular chat or search is enough. Browser control is slow and can produce errors. For services like Gmail and Drive, connectors are faster and more accurate (see [C7](/claude/c07-connectors/) and "Which tool should I use?" in [C11](/claude/c11-chrome-computer-use/)).
 
-### 2. 내 브라우저인가, 클라우드 브라우저인가
+### 2. Your own browser, or a cloud browser?
 
-| 이럴 때 | 맞는 방식 |
+| When | Matching approach |
 | --- | --- |
-| 내가 이미 로그인한 업무 사이트에서 일해야 해요 | 내 브라우저 방식 (Claude in Chrome, ChatGPT 확장, Gemini의 Chrome auto browse) |
-| 컴퓨터를 꺼도 돌아가야 해요 | 클라우드 브라우저 방식 (ChatGPT Work, Gemini 원격 브라우저) |
-| 내 탭·쿠키·저장된 비밀번호를 건드리지 않았으면 해요 | 클라우드 브라우저 방식 또는 ChatGPT 내장 브라우저(별도 프로필) |
+| I need to work on a work site I'm already logged in to | Your-own-browser approach (Claude in Chrome, the ChatGPT extension, Gemini's Chrome auto browse) |
+| It has to keep running when my computer is off | Cloud browser approach (ChatGPT Work, Gemini remote browser) |
+| I don't want it touching my tabs, cookies, or saved passwords | Cloud browser approach or the ChatGPT built-in browser (separate profile) |
 
-### 3. 첫 작업은 읽기 전용으로
-
-<PromptBox>
-이 페이지에 나온 요금제 세 가지를 표로 비교해 주세요. 페이지에서 아무것도 클릭하거나 입력하지 말고, 읽기만 해 주세요.
-</PromptBox>
-
-익숙해지면 한 단계씩 넓혀요. 결제나 제출 직전에서 멈추고 나에게 보여 달라고 요청하는 것도 좋은 방법이에요.
+### 3. Make your first task read-only
 
 <PromptBox>
-항공권 검색 결과를 조건(날짜, 예산 상한)에 맞게 비교해 주세요. 결제나 개인정보 입력 화면 직전에서 멈추고, 어떤 선택지를 왜 골랐는지 알려 주세요.
+Compare the three pricing plans on this page in a table. Don't click or type anything on the page; just read.
 </PromptBox>
 
-## 빠른 참조표
+Once you're comfortable, widen the scope one step at a time. Asking it to stop right before payment or submission and show you is also a good approach.
 
-### 세 제품 비교 (2026-10-15 기준, 공식 문서를 직접 읽은 내용)
+<PromptBox>
+Compare these flight search results against my criteria (dates, budget cap). Stop right before the payment or personal information screen, and tell me which options you picked and why.
+</PromptBox>
 
-| 항목 | Claude in Chrome | ChatGPT | Gemini |
+## Quick reference
+
+### Comparing the three products (as of 2026-10-15, read directly from official docs)
+
+| Item | Claude in Chrome | ChatGPT | Gemini |
 | --- | --- | --- | --- |
-| **방식** | Chrome 확장. 내 브라우저에서 읽기·클릭·입력·이동·양식 작성. Chrome 사이드 패널은 베타 | 데스크톱 앱의 **내장 브라우저**(내 일반 브라우저와 별도 프로필), **브라우저 확장**(내 브라우저 사용), **ChatGPT Work**(클라우드의 별도 브라우저) | **작업(Tasks)**이 내 데스크톱 **Chrome(auto browse)** 또는 클라우드 **원격 브라우저**를 사용 |
-| **제공 플랜** | 모든 유료 플랜 (Pro, Max, Ultra, Team, Enterprise). Cowork 시작 가이드(2026-10-31 기준)는 Chrome 사이드 패널을 모든 유료 플랜으로 안내해요 | Browser는 웹과 데스크톱 앱에서 제공(플랜 조건은 해당 페이지에 없음). Work의 사이트 로그인은 웹·모바일의 Plus와 Pro. 클라우드 브라우징은 Free와 Go를 뺀 유료 플랜 | Google AI Pro 또는 Ultra 구독, 개인 Google 계정(회사·학교 계정 불가), 만 18세 이상 |
-| **지역** | Anthropic 제공 국가 목록에 South Korea가 있어요 | 클라우드 브라우징은 "유료 플랜에서 모든 지역"이라고 문서에 적혀 있어요. 확장·내장 브라우저의 지역 조건은 해당 문서에 없어요 | Gemini 앱이 지원되는 곳 중 EEA·나이지리아·스위스·영국은 제외. Gemini 웹앱 지원 국가 목록에 South Korea가 있어요 |
-| **기기** | Chrome 데스크톱. 모바일 불가. Claude Cowork·Claude Code에서도 연결 | 내장 브라우저: 웹·데스크톱 앱. 확장: 데스크톱 앱과 Chrome, Edge, Brave, Opera, Vivaldi. Work: 웹·모바일 | 작업: Gemini 모바일 앱, Mac 앱, 웹. Chrome auto browse는 데스크톱만 |
-| **승인 방식** | Manually approve, Automatically approve, Skip all approvals. 사이트별 Allow this action, Always allow, Decline | 새 사이트마다 묻는 것이 기본. 확장: Allow once, Allow for this site, Allow for all sites, Decline. Work: Always ask, Auto approve, Always allow | 장치에서 처음 쓸 때 Chrome이 연결 허락을 묻고, 이후 브라우징 작업마다 확인을 물어요 |
-| **로그인** | 내 브라우저의 로그인 상태를 사용. 1Password 로그인 요청은 macOS 베타이고 Claude는 비밀번호를 볼 수 없어요 | Work는 로그인 화면에서 멈추고 보안 로그인 양식에 내가 입력. 모델은 아이디·비밀번호를 볼 수 없어요 | 로컬 브라우저는 내가 로그인한 사이트를 모두 쓸 수 있고, 허락하면 Password Manager 저장 정보로 로그인도 가능. 원격 브라우저는 로그인 단계에서 멈추고 내가 인수 |
-| **하지 않는/확인하는 일** | 권한과 상관없이 구매·계정 생성·카드·신분증 처리·영구 삭제를 하지 않아요 | 제출·구매·권한 변경·삭제 같은 민감한 행동 전에 확인을 요청해요. 내장 브라우저는 파일 업로드를 자동화하지 못해요 | 일부 작업은 완료 전에 내 확인이 필요해요. 오프라인 예약 실행은 내가 못 막을 수 있다고 경고해요 |
-| **끄는 법** | 확장 설정에서 사이트 승인 목록 검토·취소 | Computer Use 설정에서 브라우저 관리, Cloud browser 설정에서 사이트별 허용·차단과 브라우저 데이터 삭제 | Chrome 설정 > AI Innovations > Gemini in Chrome에서 auto browse 끄기. 작업 중 Stop으로 중단 |
+| **Approach** | Chrome extension. Reads, clicks, types, navigates, and fills forms in your own browser. The Chrome side panel is in beta | The desktop app's **built-in browser** (a separate profile from your regular browser), the **browser extension** (uses your browser), and **ChatGPT Work** (a separate browser in the cloud) | **Tasks** use your desktop **Chrome (auto browse)** or a cloud **remote browser** |
+| **Available plans** | All paid plans (Pro, Max, Ultra, Team, Enterprise). The Cowork getting-started guide (as of 2026-10-31) lists the Chrome side panel for all paid plans | Browser is available on web and the desktop app (plan conditions aren't on that page). Site login in Work is for Plus and Pro on web and mobile. Cloud browsing is for paid plans other than Free and Go | A Google AI Pro or Ultra subscription, a personal Google account (not work or school accounts), 18 or older |
+| **Region** | South Korea is on Anthropic's list of supported countries | The docs say cloud browsing is "in all regions on paid plans." Region conditions for the extension and built-in browser aren't in those docs | Where the Gemini app is supported, except the EEA, Nigeria, Switzerland, and the UK. South Korea is on the list of countries supported by the Gemini web app |
+| **Device** | Chrome on desktop. Not on mobile. Also connects from Claude Cowork and Claude Code | Built-in browser: web and desktop app. Extension: the desktop app and Chrome, Edge, Brave, Opera, Vivaldi. Work: web and mobile | Tasks: the Gemini mobile app, Mac app, and web. Chrome auto browse is desktop only |
+| **Approval method** | Manually approve, Automatically approve, Skip all approvals. Per site: Allow this action, Always allow, Decline | Asking for each new site is the default. Extension: Allow once, Allow for this site, Allow for all sites, Decline. Work: Always ask, Auto approve, Always allow | The first time you use it on a device, Chrome asks permission to connect, and after that it asks for confirmation for each browsing task |
+| **Login** | Uses your browser's logged-in state. 1Password login requests are a macOS beta, and Claude can't see the password | Work stops at the login screen, and you type into a secure login form. The model can't see the username or password | The local browser can use any site you're logged in to, and with your permission can also log in using Password Manager saved info. The remote browser stops at the login step and you take over |
+| **What it doesn't do / checks** | Regardless of permissions, it doesn't make purchases, create accounts, handle cards or ID, or permanently delete | It asks for confirmation before sensitive actions like submitting, purchasing, changing permissions, and deleting. The built-in browser can't automate file uploads | Some tasks need your confirmation before they complete. It warns that you may not be able to stop an offline scheduled run |
+| **How to turn off** | Review and revoke the site approval list in the extension settings | Manage the browser in Computer Use settings, and in Cloud browser settings allow or block per site and delete browser data | Turn off auto browse under Chrome settings > AI Innovations > Gemini in Chrome. Press Stop during a task to interrupt |
 
-<Aside type="caution" title="이 표의 한계">
-- ChatGPT 내장 브라우저·확장의 플랜 조건과 가격은 이번에 읽은 사용자 문서에 없었어요.
-- ChatGPT와 Gemini의 한국어 지원 수준은 확인하지 못했어요. Gemini 웹앱 지원 언어 목록에 한국어는 있어요.
-- 제품 간 **품질·정확도 순위는 매기지 않았어요.** 같은 일을 직접 시험해 보고 판단하세요.
-- 요금은 이 표에 쓰지 않았어요. 각 서비스의 요금 페이지에서 직접 확인하세요. Claude 플랜은 [C2](/claude/c02-plans-limits/)에 있어요.
+<Aside type="caution" title="Limits of this table">
+- The plan conditions and prices for the ChatGPT built-in browser and extension weren't in the user docs we read this time.
+- We couldn't confirm the level of Korean support in ChatGPT and Gemini. Korean is on the list of languages supported by the Gemini web app.
+- **We don't rank products on quality or accuracy.** Test the same task yourself and judge.
+- We didn't list prices in this table. Check each service's pricing page directly. Claude plans are covered in [C2](/claude/c02-plans-limits/).
 </Aside>
 
-### 안전 원칙은 공통이에요
+### The safety principles are shared
 
-| 위험 | 대처 |
+| Risk | What to do |
 | --- | --- |
-| **숨은 지시** | 세 회사 모두 웹 콘텐츠를 믿을 수 없는 맥락으로 다루라고 안내해요. 낯선 사이트에서는 지켜보세요. |
-| **로그인된 내 계정** | 내 브라우저 방식은 내가 접근할 수 있는 모든 사이트를 에이전트도 쓸 수 있어요. 은행·의료·정부 사이트는 맡기지 마세요. |
-| **되돌릴 수 없는 행동** | 결제, 제출, 삭제는 직접 확인하세요. 승인 기능이 있어도 완벽하지 않아요. |
-| **"항상 허용" 계열** | Always allow, Allow for all sites 같은 설정은 신중히 골라요. ChatGPT 문서는 Allow for all sites를 높은 위험 설정으로 표시해요. |
-| **비밀번호** | 채팅에 쓰지 말고 각 서비스의 보안 입력 흐름이나 직접 입력을 쓰세요. |
+| **Hidden instructions** | All three companies tell you to treat web content as an untrusted context. Watch it closely on unfamiliar sites. |
+| **My logged-in accounts** | With the your-own-browser approach, the agent can use every site you can access. Don't hand off banking, healthcare, or government sites. |
+| **Irreversible actions** | Check payments, submissions, and deletions yourself. Even with approval features, they aren't perfect. |
+| **"Always allow" settings** | Choose settings like Always allow and Allow for all sites carefully. The ChatGPT docs mark Allow for all sites as a high-risk setting. |
+| **Passwords** | Don't type them in chat; use each service's secure input flow or enter them yourself. |
 
-더 넓은 점검표는 [5편 에이전트 안전하게 쓰는 법](/agents/05-agent-safety/), Claude in Chrome의 권한은 [C11](/claude/c11-chrome-computer-use/)에 있어요.
+A broader checklist is in [Part 5, Using Personal AI Agents Safely](/agents/05-agent-safety/), and Claude in Chrome's permissions are in [C11](/claude/c11-chrome-computer-use/).
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 메뉴나 기능이 안 보여요
+### I don't see the menu or feature
 
-- **원인**: 플랜, 기기, 계정 종류(회사·학교 계정 제한), 단계적 롤아웃이 원인일 수 있어요. Gemini 작업은 개인 계정이 필요하고, Work의 사이트 로그인은 Enterprise·Edu에서 제공되지 않는다고 안내돼요.
-- **해결**: 앱을 업데이트하고 위 표의 조건을 하나씩 확인하세요. 롤아웃 중에는 플랜이 맞아도 바로 안 보일 수 있다고 문서가 밝혀요.
+- **Cause**: It could be your plan, device, account type (work and school accounts are restricted), or a phased rollout. Gemini Tasks need a personal account, and site login in Work is noted as not available on Enterprise and Edu.
+- **Fix**: Update the app and check the conditions in the table above one by one. The docs say that during a rollout it may not show up right away even if your plan fits.
 
-### 사이트가 막아요
+### A site blocks it
 
-- **원인**: 일부 사이트는 자동화된 브라우저를 막거나 CAPTCHA를 요구해요(ChatGPT 문서에 명시).
-- **해결**: 그 단계는 내가 직접 하거나 다른 방법을 쓰세요. 우회를 시도하지 마세요.
+- **Cause**: Some sites block automated browsers or demand a CAPTCHA (stated in the ChatGPT docs).
+- **Fix**: Do that step yourself or use another method. Don't try to get around it.
 
-### 컴퓨터가 꺼지면 어떻게 되나요?
+### What happens if my computer turns off?
 
-- **내 브라우저 방식**은 컴퓨터와 브라우저가 켜져 있어야 해요. Gemini 문서도 기기나 Chrome이 꺼지면 원격 브라우저를 쓸 수 있다고 안내해요. Claude in Chrome의 백그라운드 작업은 Chrome이 열려 있는 동안만 돼요([C11](/claude/c11-chrome-computer-use/)).
-- **클라우드 브라우저 방식**은 컴퓨터를 닫아도 이어지지만, 로그인이나 확인이 필요한 단계에서 멈춰 나를 기다려요.
+- The **your-own-browser approach** needs your computer and browser to be on. The Gemini docs also say a remote browser can be used if your device or Chrome is off. Claude in Chrome's background tasks work only while Chrome is open ([C11](/claude/c11-chrome-computer-use/)).
+- The **cloud browser approach** continues even if you close your computer, but it stops at steps that need a login or confirmation and waits for you.
 
-## 실전 팁
+## Practical tips
 
-- **읽기 → 초안 → 실행 순서로 넓혀요.** 처음 며칠은 조회와 비교만 맡기세요.
-- **로그인된 사이트가 필요 없으면 클라우드/분리된 브라우저가 낫다**는 것이 구조상 장점이에요. ChatGPT 문서도 Work의 브라우저는 내 탭·쿠키·저장된 비밀번호를 쓰지 않는다고 밝혀요.
-- **예약된 브라우저 작업은 조심하세요.** Gemini 문서는 예약 실행 중 내가 못 막을 수 있으니 민감한 작업은 예약하지 말라고 해요.
-- **사이트 권한을 주기적으로 정리하세요.** 확장의 허용 목록(allowlist)을 가끔 검토하고, 쓰지 않는 사이트는 지우세요.
-- **저작권·약관을 확인하세요.** 에이전트가 가져온 글·이미지를 그대로 재배포하지 마세요([기본기 9편](/basics/09-ai-copyright-ethics/)). 사이트 약관이 자동화를 금지할 수 있어요.
-- **기능은 빠르게 바뀌어요.** 이 글의 수치와 이름은 2026-10-15 기준이에요.
+- **Widen the scope in the order read, draft, then execute.** For the first few days, hand off only lookups and comparisons.
+- **If you don't need logged-in sites, a cloud or separate browser is better**, which is a structural advantage. The ChatGPT docs also say Work's browser doesn't use your tabs, cookies, or saved passwords.
+- **Be careful with scheduled browser tasks.** The Gemini docs say you may not be able to stop it during a scheduled run, so don't schedule sensitive tasks.
+- **Clean up site permissions regularly.** Review the extension's allowlist from time to time and remove sites you don't use.
+- **Check copyright and terms.** Don't redistribute text or images the agent pulled as is ([Basics Part 9](/basics/09-ai-copyright-ethics/)). A site's terms may prohibit automation.
+- **Features change fast.** The figures and names in this guide are as of 2026-10-15.
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [1편 개인 AI 에이전트 한눈에 비교](/agents/01-agents-compared/) — 한국 제공 여부와 에이전트 전체 지형
-- [5편 개인 AI 에이전트 안전하게 쓰는 법](/agents/05-agent-safety/) — 권한·승인·결제 점검표
-- [C11. Chrome과 컴퓨터 사용](/claude/c11-chrome-computer-use/) — Claude in Chrome 설치와 권한 모드
-- [C19. Cowork 시작하기](/claude/c19-cowork/) — Claude의 데스크톱 에이전트
-- [직장인(사무직) 가이드](/roles/office/) — 업무에 AI를 붙이는 방법
+- [Part 1: Personal AI Agents at a Glance](/agents/01-agents-compared/): availability in Korea and the whole agent landscape
+- [Part 5: Using Personal AI Agents Safely](/agents/05-agent-safety/): a permissions, approval, and payment checklist
+- [C11. Chrome and computer use](/claude/c11-chrome-computer-use/): installing Claude in Chrome and its permission modes
+- [C19. Getting started with Cowork](/claude/c19-cowork/): Claude's desktop agent
+- [Office workers guide](/roles/office/): how to bring AI into your work

@@ -1,15 +1,15 @@
 ---
-title: "모델 분담 전략: 기획은 Opus, 구현은 Sonnet (이 사이트 제작 실례)"
-description: "opusplan 별칭과 서브에이전트 모델 결정 순서 같은 공식 방법을 정리하고, 이 사이트를 Opus 기획 + Sonnet 구현으로 만든 실제 워크플로를 보여주는 고급 튜토리얼"
+title: "Model division strategy: Opus plans, Sonnet builds (a real example from making this site)"
+description: "An advanced tutorial that covers official methods like the opusplan alias and the subagent model resolution order, and shows the real workflow used to build this site with Opus planning and Sonnet implementing"
 sidebar:
-  label: "C15. 모델 분담 전략"
+  label: "C15. Model division strategy"
 level: advanced
 category: claude
 tools: ["Claude Code", "Claude"]
-duration: "30분"
+duration: "30 min"
 prerequisites:
-  - "Claude Code 사용 환경 (터미널 또는 클라우드 세션)"
-  - "서브에이전트 기본 개념 (C14 참고)"
+  - "A Claude Code environment (terminal or cloud session)"
+  - "Basic subagent concepts (see C14)"
 lastVerified: 2026-10-31
 sources:
   - title: "Claude pricing"
@@ -45,75 +45,75 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 import C15ModelSplit from '../../../components/diagrams/C15ModelSplit.astro';
 
 <Summary>
-- 모든 일에 가장 큰 모델을 쓸 필요는 없어요. **어려운 판단(기획·검토)은 Opus, 많은 작업(구현)은 Sonnet**으로 나누면 비용과 사용량을 아낄 수 있어요.
-- 가장 쉬운 방법은 `/model opusplan`이에요. 계획 모드에서는 Opus, 실행 단계에서는 Sonnet으로 자동 전환돼요.
-- 서브에이전트의 모델은 정해진 **네 단계 순서**로 결정돼요. `/model`로 Opus로 바꾸면 모델을 상속하는 서브에이전트도 Opus가 돼요.
-- API 가격은 Sonnet 5.5가 Opus 5.5의 절반이에요 (2026-10-10 기준, 아래 표).
-- 이 사이트가 바로 이 방식으로 만들어졌어요. 아래 사례와 따라 해 볼 수 있는 명세 템플릿을 확인하세요.
+- You don't need the biggest model for every job. If you split the work, **Opus for the hard judgment calls (planning and review) and Sonnet for the bulk of the work (implementation)**, you save cost and usage.
+- The easiest way is `/model opusplan`. It switches automatically: Opus in plan mode, Sonnet during execution.
+- A subagent's model is decided by a fixed **four-step order**. If you switch to Opus with `/model`, subagents that inherit the model also become Opus.
+- On the API, Sonnet 5.5 costs half as much as Opus 5.5 (as of 2026-10-10, see the table below).
+- This site was built exactly this way. Check the case study below and the spec template you can follow along with.
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- `opusplan`과 서브에이전트 설정으로 "계획은 큰 모델, 실행은 작은 모델" 구조를 만들 수 있어요.
-- 서브에이전트가 어떤 모델로 돌아가는지 결정 순서를 보고 예상할 수 있어요.
-- 모델 선택이 비용·사용량에 주는 영향을 숫자로 이해할 수 있어요.
-- 이 사이트의 제작 사례를 참고해, 내 프로젝트용 작업 명세를 직접 써 볼 수 있어요.
+- Build a "big model plans, smaller model executes" setup with `opusplan` and subagent settings.
+- Predict which model a subagent will run on by following the resolution order.
+- Understand, in numbers, how model choice affects cost and usage.
+- Use this site's build as a reference to write a task spec for your own project.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
 <C15ModelSplit />
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **opusplan** | 계획 모드에서는 `opus`, 실행 단계에서는 `sonnet`을 쓰는 특별한 모델 별칭이에요. |
-| **서브에이전트** | 자체 컨텍스트를 가진 보조 에이전트예요. 정의 파일의 `model`로 모델을 정할 수 있어요. ([C14](/claude/c14-claude-code-features/)) |
-| **상속(inherit)** | 서브에이전트가 메인 대화와 같은 모델을 쓰는 것이에요. |
-| **effort** | 모델이 얼마나 깊게 생각할지 정하는 수준이에요 (low, medium, high, xhigh, max). |
-| **orchestrator / worker** | 공식 문서의 모델 조합 패턴이에요. 대량 작업을 저비용 모델(worker)에게 위임하는 구조를 가리켜요. |
+| **opusplan** | A special model alias that uses `opus` in plan mode and `sonnet` during execution. |
+| **Subagent** | A helper agent with its own context. You can set its model with `model` in its definition file. ([C14](/claude/c14-claude-code-features/)) |
+| **Inherit** | A subagent using the same model as the main conversation. |
+| **effort** | The level that sets how deeply the model thinks (low, medium, high, xhigh, max). |
+| **orchestrator / worker** | A model-combination pattern from the official docs. It refers to a structure that delegates bulk work to a lower-cost model (the worker). |
 
-### 공식 가이드가 말하는 모델 선택 (2026-10-10 기준)
+### Model choice according to the official guide (as of 2026-10-10)
 
-| 필요한 것 | 권장 모델 |
+| What you need | Recommended model |
 | --- | --- |
-| 최고 성능 (몇 시간 도는 에이전트 세션, 다단계 딥 리서치) | Fable 5.1 |
-| 복잡한 에이전트형 코딩, 엔터프라이즈 업무 | Opus 5.5 |
-| 일상적 코딩·에이전트 업무의 속도와 성능 | Sonnet 5.5 |
-| 최저 지연·최저 가격 (실시간, 대량 처리, 서브에이전트 작업) | Haiku 5.5 |
+| Top performance (agent sessions that run for hours, multi-step deep research) | Fable 5.1 |
+| Complex agentic coding, enterprise work | Opus 5.5 |
+| Speed and performance for everyday coding and agent work | Sonnet 5.5 |
+| Lowest latency and lowest price (real time, high volume, subagent tasks) | Haiku 5.5 |
 
-공식 문서는 "대부분의 워크로드는 Opus 5.5로 시작"하라고 안내해요. 그리고 effort를 조정하는 것이 모델을 바꾸는 것보다 나은 수단인 경우가 많다고 해요. 시작 전략은 두 가지예요. 효율 우선이면 Haiku 5.5로 시작해 부족할 때 올리고, 성능 우선이면 Opus 5.5로 시작해 effort를 낮추거나 모델을 내려 최적화해요.
+The official docs say to "start with Opus 5.5 for most workloads." They also say that adjusting effort is often a better lever than switching models. There are two starting strategies. If you prioritize efficiency, start with Haiku 5.5 and move up when it falls short. If you prioritize performance, start with Opus 5.5 and optimize by lowering effort or dropping to a smaller model.
 
-### 가격 차이 (API, 100만 토큰당 입력/출력, 2026-10-10 기준)
+### Price differences (API, per 1M tokens, input/output, as of 2026-10-10)
 
-| 모델 | 입력 / 출력 |
+| Model | Input / Output |
 | --- | --- |
 | Fable 5.1 | $10 / $50 |
 | Opus 5.5 | $4 / $20 |
 | Sonnet 5.5 | $2 / $10 |
-| Haiku 5.5 | $0.10부터 / $0.50부터 |
+| Haiku 5.5 | from $0.10 / from $0.50 |
 
-Sonnet은 Opus의 절반, Fable은 Opus의 2.5배예요. 구독 사용량도 대화 길이, 기능, 모델, effort에 따라 달라져요. 자세한 한도 구조는 [C2. 요금제와 사용량 한도](/claude/c02-plans-limits/), 모델 비교는 [C1](/claude/c01-overview/), API 가격은 [C16](/claude/c16-api/)에서 다뤄요.
+Sonnet costs half as much as Opus, and Fable costs 2.5 times as much as Opus. Subscription usage also varies with conversation length, features, model, and effort. See [C2. Plans and usage limits](/claude/c02-plans-limits/) for how limits are structured, [C1](/claude/c01-overview/) for model comparisons, and [C16](/claude/c16-api/) for API prices.
 
-Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코딩 작업을 잘 처리하고 Opus보다 저렴하다. Opus는 복잡한 아키텍처 결정이나 다단계 추론에 아껴 써라." 단순한 서브에이전트에는 `model: haiku`를 쓰라고 해요.
+The Claude Code cost guide recommends: "Sonnet handles most coding tasks well and costs less than Opus. Save Opus for complex architectural decisions or multi-step reasoning." For simple subagents, it suggests `model: haiku`.
 
-<Aside type="note" title="별칭은 바뀔 수 있어요">
-`opusplan`은 계획 모드에서 `opus`, 실행에서 `sonnet` 별칭을 쓰는 방식이에요. Claude Code 모델 설정 문서(2026-10-10)의 표를 보면 Anthropic API에서는 `opus`가 Opus 5.5, `sonnet`이 Sonnet 5.5로 풀려요. Bedrock이나 Foundry 같은 다른 제공처에서는 버전이 달라질 수 있고 별칭은 시간이 지나면 바뀌어요. 버전을 고정하려면 전체 모델 이름이나 `ANTHROPIC_DEFAULT_OPUS_MODEL`, `ANTHROPIC_DEFAULT_SONNET_MODEL` 환경 변수를 쓰세요.
+<Aside type="note" title="Aliases can change">
+`opusplan` uses the `opus` alias in plan mode and the `sonnet` alias during execution. According to the table in the Claude Code model configuration docs (2026-10-10), on the Anthropic API `opus` resolves to Opus 5.5 and `sonnet` resolves to Sonnet 5.5. On other providers such as Bedrock or Foundry the versions may differ, and aliases change over time. To pin a version, use the full model name or the `ANTHROPIC_DEFAULT_OPUS_MODEL` and `ANTHROPIC_DEFAULT_SONNET_MODEL` environment variables.
 </Aside>
 
-## 단계별 따라하기
+## Step by step
 
 <Checklist items={[
-  '/model opusplan으로 계획은 Opus, 실행은 Sonnet이 되게 했어요',
-  '서브에이전트 정의에 model을 명시했어요',
-  '(선택) 환경변수로 서브에이전트 모델을 일괄 지정했어요',
-  '/usage로 어디에서 사용량이 나가는지 확인했어요',
-  '이 사이트의 사례를 읽고 내 작업 명세를 하나 써 봤어요',
+  'I set /model opusplan so Opus plans and Sonnet executes',
+  'I specified model in my subagent definitions',
+  '(Optional) I set the subagent model for all subagents with an environment variable',
+  'I checked /usage to see where my usage goes',
+  'I read this site\'s case study and wrote one task spec of my own',
 ]} />
 
 <Steps>
 
-1. **가장 쉬운 분업: opusplan**
+1. **The easiest division of labor: opusplan**
 
-   Claude Code 세션에서 입력하거나, 시작할 때 `--model`로 지정해요. 설정 파일의 `model`에 `opusplan`을 넣어도 돼요.
+   Type it in a Claude Code session, or pass it with `--model` at startup. You can also put `opusplan` in the `model` field of your settings file.
 
    ```text
    /model opusplan
@@ -123,11 +123,11 @@ Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코
    claude --model opusplan
    ```
 
-   이제 계획 모드(`/plan`)에서는 Opus가 설계하고, 승인 후 구현 단계에서는 Sonnet이 코드를 써요. 두 단계 모두 100만 토큰 컨텍스트가 필요하면 `opusplan[1m]`을 쓰는데, `/model`로 지정하려면 Claude Code v2.1.265 이상이 필요해요. 그보다 낮은 버전은 `--model` 플래그나 `model` 설정을 쓰세요.
+   Now in plan mode (`/plan`) Opus designs, and after you approve, Sonnet writes the code in the implementation phase. If you need a 1M-token context in both phases, use `opusplan[1m]`. Setting it through `/model` requires Claude Code v2.1.265 or later. On earlier versions, use the `--model` flag or the `model` setting.
 
-2. **서브에이전트마다 모델 지정하기**
+2. **Set a model for each subagent**
 
-   정의 파일의 frontmatter에 `model`을 적어요. 검색·로그 분석처럼 가벼운 일은 `haiku`, 리뷰는 `sonnet`처럼요.
+   Put `model` in the frontmatter of the definition file. Use `haiku` for light work like search and log analysis, and `sonnet` for reviews.
 
    ```markdown
    ---
@@ -141,22 +141,22 @@ Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코
    specific, actionable feedback on quality, security, and best practices.
    ```
 
-3. **서브에이전트 모델 결정 순서 알아두기**
+3. **Learn the subagent model resolution order**
 
-   Claude Code는 서브에이전트의 모델을 이 순서로 정해요.
+   Claude Code decides a subagent's model in this order.
 
-   1. 호출할 때 지정한 `model` 파라미터
-   2. 서브에이전트 정의의 `model` frontmatter (`inherit`이면 메인 대화 모델)
-   3. 환경변수 `CLAUDE_CODE_SUBAGENT_MODEL` (모델 별칭이나 ID로 설정했을 때)
-   4. 메인 대화의 모델
+   1. The `model` parameter specified when it's invoked
+   2. The `model` frontmatter in the subagent definition (if `inherit`, the main conversation's model)
+   3. The `CLAUDE_CODE_SUBAGENT_MODEL` environment variable (when set to a model alias or ID)
+   4. The main conversation's model
 
-   <Aside type="caution" title="/model로 Opus로 바꾸면 서브에이전트도 Opus가 될 수 있어요">
-   모델을 상속하는 서브에이전트는 시작될 때의 세션 모델을 따라가요. Opus로 바꾼 채 리서치나 테스트 실행을 위임하면 그 작업도 Opus로 돌아요. 위임 전에 모델을 바꾸거나, 서브에이전트 정의에 `model`을 명시하세요.
+   <Aside type="caution" title="If you switch to Opus with /model, subagents can become Opus too">
+   A subagent that inherits the model follows the session model at the time it starts. If you switch to Opus and then delegate research or test runs, that work also runs on Opus. Switch models before delegating, or set `model` explicitly in the subagent definition.
    </Aside>
 
-4. **모든 서브에이전트를 한 모델로 (선택)**
+4. **One model for all subagents (optional)**
 
-   설정 파일의 환경변수로 일괄 지정할 수 있어요. `FORCE`를 `1`로 하면 정의나 호출에서 지정한 모델보다 우선해서 모든 서브에이전트에 적용돼요. `CLAUDE_CODE_SUBAGENT_MODEL_FORCE`는 Claude Code v2.1.257 이상이 필요해요.
+   You can set it for everything with an environment variable in your settings file. Setting `FORCE` to `1` takes priority over models specified in definitions or at invocation, and applies to every subagent. `CLAUDE_CODE_SUBAGENT_MODEL_FORCE` requires Claude Code v2.1.257 or later.
 
    ```json
    {
@@ -167,9 +167,9 @@ Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코
    }
    ```
 
-   `CLAUDE_CODE_SUBAGENT_MODEL`만 설정해서는 내장 Explore·Plan 서브에이전트의 모델이 바뀌지 않아요. 실행 중인 서브에이전트의 모델은 `/tasks`로 볼 수 있어요.
+   Setting only `CLAUDE_CODE_SUBAGENT_MODEL` does not change the model of the built-in Explore and Plan subagents. You can see the model of a running subagent with `/tasks`.
 
-   **워크플로 에이전트만 한 모델로**: 동적 워크플로(수십~수백 개 에이전트가 도는 스크립트)는 에이전트가 많아 비용이 크게 늘 수 있어요. `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`을 설정하면 워크플로 에이전트는 모두 그 모델로 돌고, 다른 서브에이전트는 각자 모델을 유지해요(v2.1.296 이상).
+   **One model for workflow agents only**: Dynamic workflows (scripts that run dozens to hundreds of agents) can get very expensive because there are so many agents. If you set `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL`, all workflow agents run on that model, while other subagents keep their own models (v2.1.296 or later).
 
    ```json
    {
@@ -179,156 +179,156 @@ Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코
    }
    ```
 
-   값 형식(별칭 또는 모델 ID)은 `CLAUDE_CODE_SUBAGENT_MODEL`과 같다고 보고 쓴 예시예요. 공식 환경변수 문서에는 아직 이 변수의 설명이 없어서, 변경 이력(CHANGELOG)의 설명만 확인했어요.
+   This example assumes the value format (alias or model ID) is the same as `CLAUDE_CODE_SUBAGENT_MODEL`. The official environment variable docs don't describe this variable yet, so we only confirmed the description in the changelog (CHANGELOG).
 
-5. **어려운 순간만 상위 모델에게 묻기: `/advisor` (선택)**
+5. **Ask a higher model only at the hard moments: `/advisor` (optional)**
 
-   메인 모델은 빠른 모델로 두고, 계획을 세우기 전이나 같은 오류가 반복될 때, 끝났다고 선언하기 전에만 더 강한 모델의 조언을 받는 방법이에요. 조언은 Anthropic 서버에서 도는 advisor 도구가 해 주고, 언제 부를지는 Claude가 정해요.
+   You keep the main model fast, and only get advice from a stronger model before planning, when the same error keeps repeating, or before declaring the work done. The advice comes from an advisor tool running on Anthropic's servers, and Claude decides when to call it.
 
    ```text
    /advisor opus
    ```
 
-   - `/advisor`만 입력하면 선택 창이 열리고, `/advisor off`로 꺼요. 고른 모델은 `advisorModel` 설정에 저장돼요. 이번 세션만 쓰려면 `claude --advisor opus`로 시작해요.
-   - 조언 모델은 메인 모델과 같거나 더 높은 등급이어야 해요. 예를 들어 Sonnet 5.5 메인에는 Fable, Opus 5 이상, Sonnet 5.5를 쓸 수 있어요.
-   - 실험 기능이고 Anthropic API에서만 돼요(Bedrock, Vertex, Foundry 등은 안 돼요). 조언 호출은 조언 모델 요금으로 계산되고 구독 플랜에서는 한도에 합산돼요. 모델을 통째로 바꾸는 `/model`이나 `opusplan`과 달리 결정 순간에만 쓰는 방식이라, 공식 문서는 강한 모델을 계속 쓰는 것보다 보통 비용이 낮다고 안내해요.
+   - Typing just `/advisor` opens a picker, and `/advisor off` turns it off. The model you pick is saved in the `advisorModel` setting. To use it for this session only, start with `claude --advisor opus`.
+   - The advisor model must be the same tier as the main model or higher. For example, with a Sonnet 5.5 main model you can use Fable, Opus 5 or later, or Sonnet 5.5.
+   - It's an experimental feature and works only on the Anthropic API (not on Bedrock, Vertex, Foundry, and so on). Advisor calls are billed at the advisor model's rate and count toward your limits on subscription plans. Unlike `/model` or `opusplan`, which swap the whole model, this is used only at decision moments, so the official docs say it usually costs less than running a strong model throughout.
 
-6. **사용량 점검하기**
+6. **Check your usage**
 
-   `/usage`에서 스킬·서브에이전트·MCP별로 사용량이 어디에서 나가는지 볼 수 있어요. 에이전트 팀을 쓸 때는 팀원에게 Sonnet을 권하고 팀을 작게 유지하세요. 계획 모드 팀원은 표준 세션 대비 약 7배의 토큰을 쓴다고 해요.
+   `/usage` shows where usage goes by skill, subagent, and MCP. When using agent teams, we recommend Sonnet for teammates and keeping the team small. Plan-mode teammates reportedly use about 7 times the tokens of a standard session.
 
-   <ScreenshotPlaceholder caption="/usage 화면에서 사용량이 나가는 곳 확인" officialUrl="https://code.claude.com/docs/en/costs" />
+   <ScreenshotPlaceholder caption="Checking where usage goes on the /usage screen" officialUrl="https://code.claude.com/docs/en/costs" />
 
-7. **이 사이트는 어떻게 만들었나: 실제 사례**
+7. **How was this site built? A real case study**
 
-   아래 사례를 읽고, 8단계의 템플릿으로 내 프로젝트용 명세를 써 보세요. (사례는 이 사이트 제작 과정을 있는 그대로 정리한 거예요.)
+   Read the case below, then use the template in step 8 to write a spec for your own project. (The case is an honest account of how this site was built.)
 
-   **구성.** 클라우드 세션 하나에서 **Opus 5.5가 기획**을 맡고, **구현은 Sonnet 5.5 서브에이전트**가 했어요. 서브에이전트의 모델은 Agent 도구의 `model` 파라미터로 지정했어요. 위의 결정 순서 1번에 해당해요.
+   **Setup.** In a single cloud session, **Opus 5.5 handled planning**, and **Sonnet 5.5 subagents did the implementation**. The subagent's model was set with the `model` parameter of the Agent tool. That's number 1 in the resolution order above.
 
-   **Opus가 한 일.**
+   **What Opus did.**
 
-   1. 질문으로 요구사항을 정리해요.
-   2. `docs/PLAN.md`를 써요.
-   3. 단계별 작업 명세를 써요. (`docs/specs/step1-skeleton.md`, `step2-samples.md` 같은 단계별 명세 파일)
-   4. 서브에이전트를 실행해요.
-   5. 결과를 검토해요. 스크린샷을 확인하고 사실을 대조해요.
-   6. 작은 수정은 직접 해요.
-   7. 커밋하고 PR을 만들어요.
+   1. Clarified requirements by asking questions.
+   2. Wrote `docs/PLAN.md`.
+   3. Wrote a task spec for each step. (Per-step spec files such as `docs/specs/step1-skeleton.md` and `step2-samples.md`)
+   4. Launched the subagents.
+   5. Reviewed the results. Checked screenshots and verified facts.
+   6. Made small fixes itself.
+   7. Committed and opened PRs.
 
-   **Sonnet이 한 일.**
+   **What Sonnet did.**
 
-   | 단계 | 맡긴 일 |
+   | Step | Work assigned |
    | --- | --- |
-   | 1단계 | 사이트 구현과 공식 문서 조사를 **두 에이전트가 병렬로** 진행 |
-   | 2단계 | 템플릿과 샘플 2편 작성 |
-   | 3단계 | 에이전트 4명이 Claude 튜토리얼 14편을 나눠 작성 |
-   | 4단계 | 에이전트 4명이 분야별로 조사와 작성을 함께 맡아 20편 작성 |
-   | 5~6단계 | 에이전트 3~4명이 공식 원문과 대조하며 사실 교정과 빈칸 채우기 |
-   | 7단계 | 사이트 구조 담당 1명, 제품별 3명, 비교·안전 편 1명이 "화제의 AI 에이전트" 5편 작성 (비교 편은 제품별 편이 끝난 뒤 실행) |
-   | 8단계 | 구조 담당 1명과 작성자 5명이 "개발자 심화" 10편 작성. 예제 코드는 문법 검사와 타입 검사를 거침 |
-   | 9단계 | 검수자 4명이 섹션을 나눠 51편의 일관성(수치, 용어, 링크, 문체, 화면) 검수 |
+   | Step 1 | Site implementation and official-docs research, run **in parallel by two agents** |
+   | Step 2 | Wrote the template and 2 samples |
+   | Step 3 | 4 agents split up and wrote 14 Claude tutorials |
+   | Step 4 | 4 agents each handled both research and writing for a topic area, producing 20 tutorials |
+   | Steps 5-6 | 3-4 agents checked against the official sources, corrected facts, and filled gaps |
+   | Step 7 | 1 site-structure agent, 3 product-specific agents, and 1 comparison/safety agent wrote 5 "Trending AI agents" tutorials (the comparison one ran after the product ones finished) |
+   | Step 8 | 1 structure agent and 5 writers wrote 10 "Deep dive for developers" tutorials. Example code went through syntax and type checks |
+   | Step 9 | 4 reviewers split up the sections and checked 51 tutorials for consistency (numbers, terms, links, tone, screens) |
 
-   **검토에서 실제로 잡아낸 것.**
+   **What the review actually caught.**
 
-   - **홈 제목이 두 번 나오는 버그.** 원인은 홈 페이지 id를 판별하는 조건이었어요.
-   - **조사 결과와 실제 화면의 차이.** 조사 에이전트는 "클라우드 세션 크레딧은 없다"고 결론 냈지만, 실제 설정 화면에는 그 항목이 표시되어 있었어요. 이 차이를 "공식 문서 미반영 항목"으로 정리했어요. ([C2](/claude/c02-plans-limits/)에서 볼 수 있어요.)
-   - **검색 요약과 원문의 차이.** 처음에는 공식 사이트에 접속할 수 없어 검색 요약으로 쓴 편이 있었어요. 원문과 대조해 보니 지원 언어, 요금제별 상업 이용 조건 같은 중요한 사실이 틀린 경우가 있었어요. 그래서 원문으로 확인하기 전까지는 "확인 중" 안내를 붙여 두었어요.
-   - **서브에이전트끼리 어긋난 사실.** 한 편은 "Sonnet 5.5도 `tool_choice` any/tool이 막힌다"고 썼는데, 기준 편(C16) 표에는 없었어요. 기획 쪽에서 공식 릴리스 노트를 직접 확인해 보니 그 편이 맞았고, 기준 표에 Sonnet 5.5를 추가했어요. 반대로 같은 서브에이전트가 덧붙인 "Sonnet 5.5는 샘플링 파라미터도 막힌다"는 이전 세대 모델의 내용이라 바로잡았어요.
+   - **A bug where the home title appeared twice.** The cause was the condition that checks the home page id.
+   - **A gap between research findings and the real screen.** A research agent concluded "there are no cloud session credits," but the actual settings screen showed that item. We recorded this as an "item not yet reflected in the official docs." (You can see it in [C2](/claude/c02-plans-limits/).)
+   - **A gap between search summaries and the original text.** At first, one tutorial was written from search summaries because the official site was unreachable. When checked against the originals, important facts such as supported languages and commercial-use terms by plan were sometimes wrong. So until they were verified against the original, we kept a "being verified" notice on them.
+   - **Facts that diverged between subagents.** One tutorial said "Sonnet 5.5 also blocks `tool_choice` any/tool," but the reference tutorial (C16) table didn't list it. When the planner checked the official release notes directly, that tutorial turned out to be right, and we added Sonnet 5.5 to the reference table. Conversely, the same subagent also added "Sonnet 5.5 also blocks sampling parameters," which was about earlier-generation models, so we corrected it.
 
-   **교훈.**
+   **Lessons.**
 
-   - 명세가 구체적일수록 서브에이전트의 결과가 좋아요.
-   - 사실 확인과 최종 판단은 기획 모델이 맡아요. 서브에이전트끼리 의견이 다르면 다수결이 아니라 공식 원문으로 판정해요.
-   - 서브에이전트는 커밋하지 않게 하고 기획 쪽에서 모아 커밋하면 충돌이 없어요.
-   - 서로 의존하는 작업은 순서를 정해요. 예를 들어 비교 편은 제품별 편이 끝난 뒤에 실행해요. 의존하지 않는 작업은 병렬로 돌려요.
-   - 병렬로 일하는 서브에이전트에게는 수정 가능한 파일을 겹치지 않게 나눠 줘요.
+   - The more concrete the spec, the better the subagent's results.
+   - The planning model handles fact-checking and final judgment. When subagents disagree, settle it with the official source, not by majority vote.
+   - Have subagents not commit; collect and commit on the planner side to avoid conflicts.
+   - Order dependent tasks. For example, run the comparison tutorial after the product tutorials finish. Run independent tasks in parallel.
+   - Split editable files so they don't overlap among parallel subagents.
 
-8. **내 작업 명세 써 보기**
+8. **Write your own task spec**
 
-   위 교훈을 반영한 명세 템플릿이에요. 괄호 안을 내 프로젝트에 맞게 바꿔서, 기획을 맡은 Opus 세션에서 서브에이전트용 명세 파일을 쓰게 하거나 직접 채워 쓰세요.
+   Here's a spec template that reflects those lessons. Swap the parts in parentheses for your own project, and either have an Opus planning session write the subagent spec file or fill it in yourself.
 
-   <PromptBox label="작업 명세 템플릿 (복사해서 채워 쓰세요)">
-   **작업 명세: (작업 이름)**
+   <PromptBox label="Task spec template (copy and fill in)">
+   **Task spec: (task name)**
 
-   **먼저 읽을 것**
-   - (참고할 파일 경로: 계획서, 템플릿, 완성된 샘플)
+   **Read first**
+   - (Reference file paths: plan, template, finished sample)
 
-   **목표**
-   - (끝났을 때 무엇이 되어 있어야 하는지, 결과 중심으로 3줄 이내)
+   **Goal**
+   - (What should be true when done, outcome-focused, within 3 lines)
 
-   **담당 범위**
-   - 수정해도 되는 파일: (파일 경로 목록)
-   - 건드리면 안 되는 파일: (그 밖의 모든 파일)
+   **Scope**
+   - Files you may edit: (list of file paths)
+   - Files you must not touch: (everything else)
 
-   **규칙**
-   - 사실은 (근거 파일)에 있는 내용만 쓴다. 확인되지 않은 것은 단정하지 말고 "확인 필요"로 표시한다.
-   - git 커밋과 푸시는 하지 않는다.
+   **Rules**
+   - Only write facts that are in (source file). Don't assert anything unconfirmed; mark it "needs verification."
+   - Do not git commit or push.
 
-   **완료 기준**
-   - (예: 빌드와 테스트가 통과한다)
+   **Definition of done**
+   - (e.g., the build and tests pass)
 
-   **보고 형식**
-   1. 작성하거나 고친 파일 목록
-   2. 근거 파일 밖에서 새로 추가한 내용과 출처
-   3. 확인하지 못해 단정을 피한 부분
-   4. 빌드·테스트 결과
+   **Report format**
+   1. List of files written or changed
+   2. Anything added beyond the source files, and its source
+   3. Parts where you avoided asserting because you couldn't confirm
+   4. Build and test results
    </PromptBox>
 
-   명세를 넘긴 뒤에는 결과를 그대로 믿지 말고, 기획 쪽에서 사실을 대조하고 직접 열어 확인하세요.
+   After handing off the spec, don't just trust the result. Have the planning side verify the facts and open and check things directly.
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-| 하고 싶은 것 | 방법 |
+| What you want to do | How |
 | --- | --- |
-| 계획은 Opus, 실행은 Sonnet | `/model opusplan` 또는 `claude --model opusplan` |
-| 서브에이전트 하나의 모델 고정 | 정의 파일에 `model: sonnet` 등 |
-| 모든 서브에이전트를 한 모델로 | `CLAUDE_CODE_SUBAGENT_MODEL` + `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` |
-| 워크플로 에이전트만 한 모델로 | `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL` (v2.1.296 이상) |
-| 어려운 순간만 강한 모델에게 조언받기 | `/advisor opus`, `claude --advisor opus` |
-| 서브에이전트가 큰 모델을 상속하지 않게 | 위임 전에 모델 전환, 또는 정의에 `model` 명시 |
-| 실행 중인 서브에이전트의 모델 확인 | `/tasks` |
-| 사용량 비중 확인 | `/usage` |
-| Explore 서브에이전트를 가볍게 | `Explore`라는 이름의 사용자 서브에이전트를 `model: haiku`로 정의해 덮어쓰기 |
+| Opus plans, Sonnet executes | `/model opusplan` or `claude --model opusplan` |
+| Pin the model for one subagent | `model: sonnet` etc. in the definition file |
+| One model for all subagents | `CLAUDE_CODE_SUBAGENT_MODEL` + `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` |
+| One model for workflow agents only | `CLAUDE_CODE_WORKFLOW_SUBAGENT_MODEL` (v2.1.296 or later) |
+| Get advice from a strong model only at hard moments | `/advisor opus`, `claude --advisor opus` |
+| Stop subagents from inheriting a big model | Switch models before delegating, or set `model` in the definition |
+| Check a running subagent's model | `/tasks` |
+| See where usage goes | `/usage` |
+| Make the Explore subagent lighter | Override it by defining a user subagent named `Explore` with `model: haiku` |
 
-내장 Explore 서브에이전트는 기본적으로 메인 대화의 모델로 돌아가요. 메인 대화가 Fable일 때만 연결 방식에 따라 달라져서, 구독·Console·`ANTHROPIC_BASE_URL` 게이트웨이에서는 `opus` 별칭 모델로, Bedrock·Google Cloud·Foundry 등에서는 메인 모델 그대로 돌아가요 (2026-10-12 기준).
+The built-in Explore subagent runs on the main conversation's model by default. Only when the main conversation is Fable does it depend on how you're connected: with a subscription, Console, or an `ANTHROPIC_BASE_URL` gateway it runs on the `opus` alias model, while on Bedrock, Google Cloud, Foundry, and similar it runs on the main model as is (as of 2026-10-12).
 
-## 자주 막히는 지점
+## Common sticking points
 
-### 가벼운 서브에이전트인데 사용량이 많이 나가요
+### My light subagent uses a lot of usage
 
-- **원인**: 모델을 상속하는 서브에이전트가 메인 대화의 큰 모델(예: Opus)로 돌고 있을 수 있어요.
-- **해결**: 정의에 `model: haiku` 또는 `sonnet`을 명시하고, `/tasks`로 실제 모델을 확인하세요. 내장 Explore는 별도 설정이 필요해요.
+- **Cause**: A subagent that inherits the model may be running on the main conversation's big model (for example, Opus).
+- **Fix**: Set `model: haiku` or `sonnet` explicitly in the definition, and check the actual model with `/tasks`. The built-in Explore needs separate setup.
 
-### `CLAUDE_CODE_SUBAGENT_MODEL`을 설정했는데 적용이 안 돼요
+### I set `CLAUDE_CODE_SUBAGENT_MODEL` but it isn't applied
 
-- **원인**: 이 변수는 기본값 역할이라서 호출 시 지정한 모델이나 정의의 `model`이 우선해요. 내장 Explore·Plan에는 영향을 주지 않아요.
-- **해결**: 모두 강제하려면 `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1`을 함께 설정하세요 (v2.1.257 이상).
+- **Cause**: This variable acts as a default, so the model specified at invocation or in the definition's `model` takes priority. It doesn't affect the built-in Explore and Plan.
+- **Fix**: To force it everywhere, also set `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` (v2.1.257 or later).
 
-### "Opus limit" 같은 모델별 한도 메시지가 나와요
+### I see a per-model limit message like "Opus limit"
 
-- **원인**: 특정 모델 계열의 한도에 닿은 거예요.
-- **해결**: 다른 계열 모델로 `/model` 전환을 하면 작업을 이어갈 수 있어요. 다만 세션·주간 한도는 전 모델 공통이라 모델을 바꿔도 회복되지 않아요.
+- **Cause**: You've hit the limit for a particular model family.
+- **Fix**: Switch to a different model family with `/model` and you can continue the work. Note that session and weekly limits are shared across all models, so switching models doesn't restore them.
 
-### 서브에이전트들이 같은 파일을 서로 고쳐요
+### Subagents are editing the same files
 
-- **원인**: 담당 범위가 겹치게 명세를 줬거나, 각자 커밋했을 가능성이 있어요.
-- **해결**: 명세에 "수정 가능한 파일"을 에이전트별로 나눠 적고, 커밋은 기획 쪽에서만 하게 하세요.
+- **Cause**: The specs may have overlapping scopes, or each agent may have committed on its own.
+- **Fix**: In the spec, list "files you may edit" separately for each agent, and have only the planner side commit.
 
-## 실전 팁
+## Practical tips
 
-- **모델을 바꾸기 전에 effort부터.** 공식 가이드는 effort 조정이 모델 교체보다 나은 경우가 많다고 해요.
-- **Opus는 판단에, Sonnet은 반복에.** 아키텍처 결정과 최종 검토는 Opus, 명세가 분명한 구현은 Sonnet이 잘 맞아요.
-- **명세를 구체적으로.** 파일 경로, 수정 가능 범위, 완료 기준, 보고 형식을 적을수록 결과가 좋아져요.
-- **검토는 기획 모델이 직접.** 이 사이트에서도 사실 대조와 화면 확인에서 실제 버그와 오류를 잡았어요.
-- **일찍 병렬화.** 서로 파일이 겹치지 않는 일은 에이전트를 나눠 동시에 돌리세요. 다만 병렬 실행은 그만큼 사용량도 써요.
-- 엔터프라이즈 평균 비용 수치는 공식 비용 가이드에 있어요(개발자당 활성일 약 $13, 월 $150-250, 90%는 활성일 $30 미만). 내 사용량과는 다를 수 있어요.
+- **Try effort before switching models.** The official guide says adjusting effort is often better than swapping models.
+- **Opus for judgment, Sonnet for repetition.** Opus fits architecture decisions and final review, and Sonnet fits implementation with a clear spec.
+- **Make specs concrete.** The more you write file paths, editable scope, done criteria, and report format, the better the results.
+- **Have the planning model do the review itself.** On this site too, fact-checking and screen checks caught real bugs and errors.
+- **Parallelize early.** Split work that doesn't share files across agents and run them at the same time. Just keep in mind that parallel runs use that much more usage.
+- Average enterprise cost figures are in the official cost guide (about $13 per developer per active day, $150-250 per month, and 90% of users under $30 per active day). Your own usage may differ.
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [C14. Claude Code 핵심 기능](/claude/c14-claude-code-features/) — 서브에이전트 정의와 계획 모드
-- [C13. 클라우드 세션](/claude/c13-cloud-sessions/) — 이 사이트를 만든 실행 환경
-- [C16. Claude API 시작하기](/claude/c16-api/) — 모델 ID와 가격
-- [C1. Claude 한눈에 보기](/claude/c01-overview/) — 모델 4종 비교
-- [프롬프트 캐싱·배치·effort로 API 비용 줄이기](/dev/02-cost-optimization/) — API에서 비용을 줄이는 다른 방법
+- [C14. Claude Code core features](/claude/c14-claude-code-features/) — subagent definitions and plan mode
+- [C13. Cloud sessions](/claude/c13-cloud-sessions/) — the environment this site was built in
+- [C16. Getting started with the Claude API](/claude/c16-api/) — model IDs and prices
+- [C1. Claude at a glance](/claude/c01-overview/) — comparing the 4 models
+- [Cut API costs with prompt caching, batching, and effort](/dev/02-cost-optimization/) — other ways to reduce cost on the API

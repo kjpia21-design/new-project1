@@ -1,19 +1,19 @@
 ---
-title: "ChatGPT Dots(닷츠) 시작하기"
-description: "ChatGPT 안에서 상시 작동하는 OpenAI의 에이전트 Dots를 만들고, 앱과 컴퓨터를 연결하고, 권한과 중지 방법까지 정리한 참고서"
+title: "Getting Started with ChatGPT Dots"
+description: "A reference on creating Dots, OpenAI's always-on agent inside ChatGPT, connecting apps and your computer, and managing permissions and how to stop it"
 sidebar:
   label: "4. ChatGPT Dots"
 level: practical
 category: agents
 tools: ["ChatGPT Dots", "ChatGPT"]
-duration: "25분"
+duration: "25 min"
 prerequisites:
-  - "ChatGPT Pro(월 $100 이상), Business Premium, 또는 관리자가 Dots를 켜 준 Enterprise 계정"
-  - "만 18세 이상 (Pro 기준)"
-  - "ChatGPT 모바일 앱 최신 버전, 데스크톱 앱, 또는 데스크톱 브라우저"
+  - "A ChatGPT Pro (from $100/month), Business Premium, or Enterprise account where an admin has turned on Dots"
+  - "18 or older (for Pro)"
+  - "The latest ChatGPT mobile app, the desktop app, or a desktop browser"
 lastVerified: 2026-10-26
 sources:
-  - title: "Meet dots (OpenAI 개발자 문서)"
+  - title: "Meet dots (OpenAI developer docs)"
     url: "https://learn.chatgpt.com/docs/dots"
   - title: "Get started with your dot"
     url: "https://learn.chatgpt.com/docs/dots/getting-started"
@@ -25,11 +25,11 @@ sources:
     url: "https://learn.chatgpt.com/docs/dots/computers-and-apps"
   - title: "Control your dot"
     url: "https://learn.chatgpt.com/docs/dots/controls"
-  - title: "Manage dots permissions and capabilities (관리자용)"
+  - title: "Manage dots permissions and capabilities (for admins)"
     url: "https://learn.chatgpt.com/docs/enterprise/dots-admin-guide"
-  - title: "Codex pricing (ChatGPT Pro 플랜 가격)"
+  - title: "Codex pricing (ChatGPT Pro plan prices)"
     url: "https://learn.chatgpt.com/docs/pricing"
-  - title: "ChatGPT 앱 - 한국 App Store"
+  - title: "ChatGPT app - Korea App Store"
     url: "https://apps.apple.com/kr/app/chatgpt/id6448311069"
 status: published
 ---
@@ -41,271 +41,271 @@ import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- **Dots(닷츠)** 는 ChatGPT 안에서 **항상 켜져 있는 개인 에이전트**예요. 하나를 만들면 그것이 나의 "dot"이 되고, 클라우드의 자기 컴퓨터와 브라우저로 내 컴퓨터가 꺼져 있어도 일해요.
-- 2026-09-29 DevDay에서 발표됐다고 보도됐고(날짜는 언론 보도 기준), 공식 문서는 **점진적 롤아웃**으로 안내하고, 기업 관리자 문서에서는 설정 이름에 **Beta**를 붙여요.
-- 대상 플랜은 **ChatGPT Pro**(월 $100·$200·$500), **Business Premium**, **Enterprise**(기본 꺼짐, 관리자가 켜야 해요)예요. Pro는 **만 18세 이상, EEA·영국·스위스 제외**예요.
-- **한국**은 공식 제외 지역 목록에 없지만, 한국 제공을 확정한 공식 문장은 찾지 못했어요. 내 계정에 보이는지는 앱에서 직접 확인해야 해요. 한국어 지원도 Dots에 대해서는 공식 확인을 못 했어요.
-- 보내기·결제 같은 행동은 **자동 검토**를 거치고, 사용자 규칙으로 "묻고 실행"을 정할 수 있어요. 처음에는 "초안만 만들고 보내지 마"로 시작하세요.
+- **Dots** is an **always-on personal agent** inside ChatGPT. When you create one, it becomes your "dot," and it works on its own cloud computer and browser even when your computer is off.
+- Press reports say it was announced at DevDay on 2026-09-29 (the date comes from press coverage), the official docs describe a **gradual rollout**, and the enterprise admin docs add **Beta** to the setting name.
+- Eligible plans are **ChatGPT Pro** ($100, $200, $500/month), **Business Premium**, and **Enterprise** (off by default, an admin must turn it on). Pro requires **age 18 or older and excludes the EEA, UK, and Switzerland**.
+- **Korea** isn't on the official list of excluded regions, but we couldn't find an official statement confirming availability in Korea. You'll need to check in the app whether it shows up for your account. We also couldn't get official confirmation of Korean language support for Dots.
+- Actions like sending and payments go through **automatic review**, and you can set "ask, then act" with custom rules. At first, start with "only make drafts, don't send."
 </Summary>
 
-## 이 튜토리얼로 할 수 있게 되는 것
+## What you'll be able to do after this tutorial
 
-- Dots가 무엇이고 채팅·ChatGPT Work·Codex와 어떻게 다른지 설명할 수 있어요.
-- 내 계정에서 Dots를 쓸 수 있는지 확인하고, 첫 dot을 만들 수 있어요.
-- 앱(플러그인), Slack/Teams, 내 컴퓨터를 필요한 만큼만 연결할 수 있어요.
-- 작업을 맡기고, 예약하고, 멈추고, 삭제하는 방법을 알 수 있어요.
+- Explain what Dots is and how it differs from chat, ChatGPT Work, and Codex.
+- Check whether you can use Dots on your account, and create your first dot.
+- Connect apps (plugins), Slack/Teams, and your own computer only as much as you need.
+- Know how to hand off tasks, schedule them, stop them, and delete them.
 
-이 글은 OpenAI 개발자 문서(영어)를 기준으로 정리했어요. openai.com과 도움말센터는 자동 접근이 막혀 열어 보지 못했어요. 확인한 것과 확인하지 못한 것은 아래에 구분해서 적었어요.
+This guide is based on OpenAI's developer docs (in English). openai.com and the Help Center block automated access, so we couldn't open them. What we confirmed and what we couldn't are separated below.
 
-## 먼저 알아둘 개념
+## Concepts to know first
 
-| 용어 | 뜻 |
+| Term | Meaning |
 | --- | --- |
-| **Dots** | 제품(기능) 이름이에요. |
-| **dot** | 내가 만드는 에이전트 한 명이에요. 이름, 모양, 색, 눈, 안경, 액세서리를 정할 수 있고, 핸들은 `@이름-dot` 형태로 시작해요. |
-| **클라우드 컴퓨터** | dot이 가진 자기만의 컴퓨터와 브라우저예요. 내 기기가 꺼져 있어도 작업이 이어져요. |
-| **플러그인** | Gmail, Google Drive, GitHub 같은 앱 연결이에요. 연결하고 허용한 것만 쓸 수 있어요. |
-| **Activity / Scheduled** | 데스크톱 앱에서 dot 프로필에 있는 화면이에요. Activity는 위임한 작업, Scheduled는 반복 작업을 보여 줘요. |
-| **사용자 규칙(Custom rules)** | 특정 행동을 "묻지 않고 / 내가 말할 때 / 묻고 / 나에게 넘김" 중 어떻게 처리할지 정하는 설정이에요. |
+| **Dots** | The name of the product (feature). |
+| **dot** | One agent that you create. You can choose its name, shape, color, eyes, glasses, and accessories, and its handle takes the form `@name-dot`. |
+| **Cloud computer** | The dot's own computer and browser. Work continues even when your device is off. |
+| **Plugin** | A connection to an app such as Gmail, Google Drive, or GitHub. It can only use what you've connected and allowed. |
+| **Activity / Scheduled** | Screens on the dot profile in the desktop app. Activity shows delegated tasks, and Scheduled shows recurring tasks. |
+| **Custom rules** | A setting for how a given action is handled: "without asking," "when I say so," "ask first," or "hand off to me." |
 
-### 무엇이고, 무엇이 다른가요?
+### What is it, and how is it different?
 
-공식 문서의 설명을 줄이면 이래요. 답이나 초안이 필요하면 **채팅**, 한 번 맡길 일(조사·분석·파일 만들기)은 **ChatGPT Work**, 코드 작업은 **Codex**, 그리고 **계속 신경 써야 하는 일**은 **dot**에게 맡기는 쪽이에요. dot은 대화 사이에도 진행을 추적하고, 스스로 다음 할 일을 정하고, ChatGPT·Slack·Teams로 먼저 연락하고, 필요하면 Work나 Codex에 작업을 나눠 맡겨요.
+Boiled down, the official docs say this: use **chat** when you need an answer or a draft, **ChatGPT Work** for one-off jobs (research, analysis, creating files), **Codex** for coding, and a **dot** for **things that need ongoing attention**. A dot tracks progress between conversations, decides its own next steps, contacts you first via ChatGPT, Slack, or Teams, and hands off tasks to Work or Codex when needed.
 
-### 누가, 언제 만들었나요?
+### Who made it, and when?
 
-OpenAI가 만들었고, 2026-09-29 DevDay에서 공개됐다고 여러 매체가 보도했어요(언론 보도 기준). 공식 문서에는 날짜가 없고 "점진적으로 롤아웃 중"이라고만 나와요. 기업 관리자 문서에는 "Use dots (Beta)"로 표시돼 있어요. 기반 모델은 공식 문서상 GPT-6 Astra예요.
+It was made by OpenAI, and several outlets reported it was revealed at DevDay on 2026-09-29 (based on press reports). The official docs carry no date and say only that it's "rolling out gradually." The enterprise admin docs label it "Use dots (Beta)." The underlying model, per the official docs, is GPT-6 Astra.
 
-### 할 수 있는 일
+### What it can do
 
-- **책임 맡기기**: "이 행사 준비를 계속 챙겨 줘"처럼 오래 가는 일을 맡기면 결정할 일, 마감, 답을 기다리는 일을 추적해요.
-- **스스로 깨어나 이어가기**: 모든 후속 일정을 지정하지 않아도 dot이 언제 쉬었다 다시 일할지 정해요. 시간이 중요하면 시간대와 기간을 넣어 예약할 수 있어요.
-- **병렬 작업**: 백그라운드 에이전트로 여러 일을 동시에 하고, 그동안에도 대화할 수 있어요.
-- **통화**: 대화 화면의 전화 버튼으로 음성 통화를 해요. 통화 중에도 글을 입력할 수 있어요. dot이 먼저 거는 전화는 출시 후 예정이고, 문자는 "곧 지원"이라고 돼 있어요.
-- **능동적 리서치**: 연결된 앱을 읽기 전용으로 살펴서 도울 만한 일을 찾아요. 이 과정에서는 메시지 보내기, 내용 수정, 브라우저·컴퓨터 제어를 못 해요.
-- **Work·Codex에 위임**: 내 컴퓨터의 로컬 작업을 만들거나, 미리 만들어 둔 Codex 클라우드 환경에서 코딩 작업을 시킬 수 있어요.
+- **Take on responsibilities**: Hand it a long-running job like "keep an eye on preparations for this event," and it tracks decisions, deadlines, and things you're waiting on replies for.
+- **Wake itself up and continue**: You don't have to specify every follow-up; the dot decides when to rest and when to work again. When timing matters, you can schedule it with a time zone and a time span.
+- **Parallel work**: Background agents do several things at once, and you can keep chatting in the meantime.
+- **Calls**: Voice calls through the phone button on the conversation screen. You can type during a call too. Calls started by the dot are planned for after launch, and text messages are listed as "coming soon."
+- **Proactive research**: It looks over connected apps in read-only mode to find things it can help with. During this it can't send messages, edit content, or control the browser or computer.
+- **Delegate to Work and Codex**: It can create local tasks on your computer or run coding tasks in a Codex cloud environment you've set up in advance.
 
-## 한국에서 쓸 수 있나요?
+## Can I use it in Korea?
 
-<Aside type="caution" title="이 부분은 확정이 아니라 '확인 가능한 범위'예요">
-출처마다 표현이 달라서 정리했어요.
+<Aside type="caution" title="This section is 'what we can confirm,' not a guarantee">
+Sources word this differently, so we've summarized them.
 
-| 출처 | 내용 |
+| Source | Details |
 | --- | --- |
-| OpenAI 개발자 문서 (공식) | Pro는 만 18세 이상, **EEA·영국·스위스 제외**. Business Premium·Enterprise는 전 세계 순차 제공. 한국을 따로 언급하지 않아요. |
-| 국내 언론 보도 | 한국에서 순차 제공 중이라고 전해요 (언론 보도 기준). |
-| 영어권 매체 요약 | 제외 지역 외에는 "해당 시장"이라고만 하고 한국은 언급하지 않아요. |
+| OpenAI developer docs (official) | Pro is 18 or older, **excluding the EEA, UK, and Switzerland**. Business Premium and Enterprise roll out worldwide in phases. Korea isn't mentioned separately. |
+| Korean press reports | Report that it's being rolled out in phases in Korea (based on press reports). |
+| English-language outlet summaries | Say only "applicable markets" apart from the excluded regions and don't mention Korea. |
 
-**정리하면** 한국은 공식 제외 목록에 없어서 대상 플랜이면 쓸 수 있을 가능성이 있어요. 하지만 "한국 제공 확정"이라고 적은 공식 문장은 확인하지 못했고, 롤아웃이 점진적이라 대상 플랜이어도 바로 안 보일 수 있어요. 한국 App Store의 ChatGPT 앱 등록 페이지도 최근 버전 노트가 "버그 수정 및 작은 개선"뿐이라 Dots 근거가 되지 못했어요.
+**In short**, Korea isn't on the official exclusion list, so if you're on an eligible plan, you may be able to use it. But we couldn't find an official statement confirming "available in Korea," and because the rollout is gradual, it may not show up right away even on an eligible plan. The Korean App Store listing for the ChatGPT app also had only "bug fixes and minor improvements" in its latest release notes, so it didn't serve as evidence for Dots.
 </Aside>
 
-**한국어는요?** ChatGPT 앱은 한국 App Store에 한국어로 등록돼 있고 지원 언어에 한국어가 들어 있어요. 하지만 **Dots 자체**의 한국어 지원(대화 품질, 음성 통화, 화면 문구)은 공식 문서에서 확인하지 못했어요. 국내 보도가 인용한 사용 후기에는 한국어 음성이 아직 어색하다는 평이 있었어요. 직접 써 보고 판단하세요.
+**What about Korean?** The ChatGPT app is listed on the Korean App Store in Korean, and Korean is among the supported languages. But we couldn't confirm Korean support for **Dots itself** (conversation quality, voice calls, UI text) in the official docs. A user review quoted in Korean press said the Korean voice still sounds awkward. Try it yourself and judge.
 
-VPN 등으로 지원 지역을 속여 가입하는 방법은 안내하지 않아요. 이용약관 위반이 될 수 있고, 결제·계정 문제가 생기면 보호받기 어려울 수 있어요. 한국에서 내 계정에 보이면 쓰고, 안 보이면 롤아웃을 기다리세요.
+We don't explain how to sign up by faking a supported region with a VPN or similar. It could violate the terms of service, and if payment or account problems arise, you may have little protection. If it shows up on your account in Korea, use it; if not, wait for the rollout.
 
-### 요금은 어떻게 되나요?
+### How much does it cost?
 
-Dots만의 별도 요금은 공식 문서에 없어요. 아래 플랜에 포함돼요.
+The official docs have no separate pricing for Dots. It's included in the plans below.
 
-| 플랜 | 접근 |
+| Plan | Access |
 | --- | --- |
-| Pro 100 / 200 / 500 | 만 18세 이상, EEA·영국·스위스 제외 |
-| Business Premium | 전 세계 순차 제공 |
-| Enterprise | 전 세계 순차 제공, **기본 꺼짐**. 워크스페이스 관리자가 켜야 해요 |
+| Pro 100 / 200 / 500 | 18 or older, excluding the EEA, UK, and Switzerland |
+| Business Premium | Rolling out worldwide in phases |
+| Enterprise | Rolling out worldwide in phases, **off by default**. A workspace admin must turn it on |
 
-- Pro 가격은 OpenAI 공식 가격 안내에서 월 **$100·$200·$500**(USD)이에요. 한국 App Store의 ChatGPT 앱 내 구입 목록에는 Pro 100이 ₩159,000, Pro 200이 ₩299,000, Pro 500이 ₩790,000으로 표시돼요(2026-10-12 기준, 스토어 화면 기준이라 바뀔 수 있어요).
-- **dot과 나누는 대화는 ChatGPT 사용 한도에 포함되지 않아요.** 하지만 dot이 시작하거나 관리하는 **Work·Codex 작업은 해당 제품의 한도에 포함**돼요.
-- 플랜에 더 깊은 작업을 위한 허용량이 포함되고, 출시 후 첫 달은 한도가 확장돼요.
-- Plus나 무료 플랜은 문서의 접근 목록에 없어요. "안 된다"고 직접 적힌 문구는 못 봤어요.
+- Pro pricing per OpenAI's official pricing page is **$100, $200, $500**/month (USD). In the in-app purchase list for the ChatGPT app on the Korean App Store, Pro 100 shows as ₩159,000, Pro 200 as ₩299,000, and Pro 500 as ₩790,000 (KRW, as of 2026-10-12; based on the store screen, so it may change).
+- **Conversations with your dot don't count against your ChatGPT usage limits.** But **Work and Codex tasks that the dot starts or manages count against those products' limits.**
+- The plan includes an allowance for deeper work, and limits are expanded in the first month after launch.
+- Plus and free plans aren't in the docs' access list. We didn't see any wording that says outright "not allowed."
 
-## 단계별 따라하기
+## Step by step
 
 <Checklist items={[
-  '내 플랜과 나이, 지역이 대상인지 확인했어요',
-  'ChatGPT 앱에서 Dots를 열고 첫 dot을 만들었어요',
-  '이름과 모양을 정했어요',
-  '꼭 필요한 앱만 플러그인으로 연결했어요',
-  '"보내기 전에 초안을 먼저 보여 줘"라고 지침을 줬어요',
-  '첫 책임을 맡기고 결과를 검토했어요',
-  '알림 받을 곳과 예약 일정을 정했어요',
-  'Pause, Activity, Scheduled로 멈추는 방법을 확인했어요',
+  'I confirmed my plan, age, and region are eligible',
+  'I opened Dots in the ChatGPT app and created my first dot',
+  'I chose a name and a look',
+  'I connected only the apps I really need as plugins',
+  'I gave the instruction "show me a draft before sending"',
+  'I handed off my first responsibility and reviewed the result',
+  'I decided where to get notifications and set a schedule',
+  'I confirmed how to stop things with Pause, Activity, and Scheduled',
 ]} />
 
 <Steps>
 
-1. **내 계정에 Dots가 있는지 확인하기**
+1. **Check whether your account has Dots**
 
-   ChatGPT 모바일 앱(최신 버전으로 업데이트), 데스크톱 앱, 또는 데스크톱 브라우저에서 Dots 메뉴를 찾아요. **모바일 웹 브라우저는 지원하지 않아요.** 안 보이면 계정이 대상이 아니거나 롤아웃이 아직 오지 않은 거예요. Enterprise는 관리자가 켜 줘야 해요.
+   Look for the Dots menu in the ChatGPT mobile app (updated to the latest version), the desktop app, or a desktop browser. **Mobile web browsers aren't supported.** If you don't see it, your account isn't eligible or the rollout hasn't reached you yet. For Enterprise, an admin has to turn it on.
 
-   <ScreenshotPlaceholder caption="ChatGPT 앱에서 Dots를 여는 화면" officialUrl="https://learn.chatgpt.com/docs/dots/getting-started" officialLabel="OpenAI 공식 문서에서 보기" />
+   <ScreenshotPlaceholder caption="Opening Dots in the ChatGPT app" officialUrl="https://learn.chatgpt.com/docs/dots/getting-started" officialLabel="View in the official OpenAI docs" />
 
-2. **dot 만들기**
+2. **Create a dot**
 
-   앱의 안내를 따라 만들어요. 이름과 모양(색, 눈, 안경, 액세서리)은 나중에 바꿀 수 있어서 기본값으로 넘어가도 돼요. 이름을 정하면 핸들이 `@이름-dot` 식으로 바뀌어요. 폰에서 시작해도, 데스크톱에서 시작해도 같은 dot을 이어서 쓸 수 있어요.
+   Follow the app's prompts. You can change the name and look (color, eyes, glasses, accessories) later, so it's fine to go with the defaults. Once you set a name, the handle becomes something like `@name-dot`. Whether you start on your phone or desktop, you continue with the same dot.
 
-3. **앱(플러그인) 연결하기**
+3. **Connect apps (plugins)**
 
-   메일, 캘린더, 파일 같은 앱을 플러그인으로 연결해요. 건너뛰고 나중에 해도 돼요. 연결한 앱의 **권한은 기존 ChatGPT 앱 권한을 그대로** 따라서, 예를 들어 메일은 "읽기만 허용, 보내기는 불허"처럼 나눌 수 있어요.
+   Connect apps like email, calendar, and files as plugins. You can skip this and do it later. The **permissions for connected apps follow your existing ChatGPT app permissions as is**, so for example you can split email into "read-only, no sending."
 
-   <Aside type="caution" title="처음에는 최소한만 연결하세요">
-   Slack 같은 메시지 채널을 연결해도 메일이나 내 컴퓨터가 자동으로 연결되지는 않아요. 반대로 말하면 각각을 따로 열어야 한다는 뜻이에요. 필요할 때 하나씩 추가하세요.
+   <Aside type="caution" title="Connect only the minimum at first">
+   Connecting a messaging channel like Slack doesn't automatically connect your email or your own computer. Conversely, that means you have to open each one separately. Add them one at a time as you need them.
    </Aside>
 
-4. **첫 대화로 책임 맡기기**
+4. **Hand off a responsibility in your first conversation**
 
-   dot이 먼저 자기소개를 하고 연결된 정보로 도울 일을 제안해요. 공식 문서의 예시처럼 "계속 챙겨야 하는 일"로 시작해 보세요.
-
-   <PromptBox>
-   이번 팀 워크숍 준비를 계속 챙겨 줘요. 내가 공유한 계획서와 장소 업체 메일을 읽고, 결정할 일과 마감, 답을 기다리는 일의 목록을 만들어 주세요. 예산이나 이번 주 안에 답해야 하는 것을 먼저 챙겨 주세요. 답장은 초안만 만들고 보내지 마세요.
-   </PromptBox>
-
-   결과를 확인하고 빠진 내용을 고쳐 달라고 한 다음에 범위를 넓히세요. dot도 실수할 수 있어요.
-
-5. **알림과 일정 정하기**
-
-   일상적인 진행 알림은 ChatGPT에, 결정이 필요한 일은 Slack으로 받는 식으로 나눌 수 있어요. 정해진 시각에 해야 하면 **시간대와 기간(또는 종료일)** 을 넣고 "일정을 확인해 달라"고 해 두세요.
+   The dot introduces itself first and suggests things it can help with based on your connected information. Start with an "ongoing job," like the example in the official docs.
 
    <PromptBox>
-   앞으로 4주 동안 평일 오전 9시(한국 시간)에 워크숍 계획 채널을 확인해 주세요. 마감이 위험하거나 내 결정이 필요하면 ChatGPT로 메시지를 주세요. 일상적인 변경은 체크리스트에만 기록하세요. 저장한 일정을 마지막에 알려 주세요.
+   Keep an eye on preparations for our team workshop. Read the plan I shared and the emails from the venue, and make a list of decisions to make, deadlines, and things we're waiting on replies for. Start with anything about the budget or anything that needs an answer this week. For replies, only draft them and don't send.
    </PromptBox>
 
-   Slack 같은 곳에 dot을 추가하는 것만으로는 감시가 시작되지 않아요. 어떤 채널에서 무엇을 볼지 말해 줘야 해요.
+   Check the result, ask it to fix anything missing, and only then widen the scope. A dot can make mistakes too.
 
-6. **Slack·Teams에서 부르기 (선택)**
+5. **Set notifications and a schedule**
 
-   dot 프로필에서 **Add**를 눌러 연락 방법을 연결해요. Slack에서는 DM을 보내거나, 채널에 추가해 멘션할 수 있어요. 기본적으로 dot은 **나에게만** 답해요. 다른 사람에게도 응답하게 하려면 지침을 줘야 하고, 이때도 기존 권한과 안전장치가 적용돼요. 기업에서는 관리자가 먼저 "Add dots to Slack" 권한을 줘야 해요.
+   You can split things up, such as getting routine progress notifications in ChatGPT and decisions that need your input in Slack. If something has to happen at set times, include a **time zone and a time span (or end date)** and ask it to "confirm the schedule."
 
-7. **내 컴퓨터 연결하기 (선택)**
+   <PromptBox>
+   For the next four weeks, check the workshop planning channel at 9 AM on weekdays (Eastern Time). If a deadline is at risk or you need a decision from me, message me in ChatGPT. Just record routine changes in the checklist. Tell me the saved schedule at the end.
+   </PromptBox>
 
-   기본적으로 dot은 클라우드 컴퓨터만으로 일해요. 내 파일, 코드, 로그인된 브라우저가 필요하면 **데스크톱 앱**에서 dot 프로필 > Computers > Your computer > **Allow access**를 눌러요. 한 번에 **한 대**만 연결되고, 사용하는 동안 컴퓨터가 온라인이고 ChatGPT 앱이 열려 있어야 해요. 연결을 끊으려면 Revoke access를 눌러요.
+   Just adding a dot to a place like Slack doesn't start monitoring. You need to tell it which channels to watch and for what.
 
-   <Aside type="caution" title="이 권한은 신중하게">
-   내 컴퓨터를 연결하면 로컬 파일과 앱으로 작업할 수 있게 돼요. Codex나 Work Sync 연결과는 별개의 권한이에요. 공용 컴퓨터나 회사 지급 기기는 연결하지 마세요.
+6. **Call it from Slack or Teams (optional)**
+
+   On the dot profile, press **Add** to connect a contact method. In Slack, you can send a DM or add it to a channel and mention it. By default, a dot responds **only to you**. To make it respond to others, you have to give it instructions, and existing permissions and safeguards still apply. In companies, an admin must first grant the "Add dots to Slack" permission.
+
+7. **Connect your computer (optional)**
+
+   By default, a dot works with only its cloud computer. If you need your own files, code, or a logged-in browser, press dot profile > Computers > Your computer > **Allow access** in the **desktop app**. Only **one** computer can be connected at a time, and while it's in use the computer must be online with the ChatGPT app open. To disconnect, press Revoke access.
+
+   <Aside type="caution" title="Be careful with this permission">
+   Connecting your computer lets it work with local files and apps. It's a separate permission from the Codex or Work Sync connections. Don't connect a shared computer or a company-issued device.
    </Aside>
 
-8. **웹사이트 로그인이 필요할 때**
+8. **When a website needs a login**
 
-   dot의 클라우드 브라우저는 **내 브라우저의 로그인과 별개**예요. 로그인이 필요하면 dot이 요청을 보내고, 열어서 **비공개 입력 창**에 입력하면 자격 증명이 대화 밖의 브라우저로 전달돼요. 직접 하고 싶으면 "Take over to sign in"을 눌러 대신 로그인한 뒤 Done을 누르세요. 저장된 로그인을 쓸 때는 매번 확인을 거쳐요. 일부 사이트는 클라우드 브라우저를 막아서, 이럴 때는 연결한 내 컴퓨터로 해 보라고 시킬 수 있어요.
+   The dot's cloud browser is **separate from your own browser's logins**. When a login is needed, the dot sends a request, and when you open it and type into the **private input window**, the credentials are passed to the browser outside the conversation. If you'd rather do it yourself, press "Take over to sign in," log in, and press Done. Using a saved login requires confirmation every time. Some sites block cloud browsers, and in that case you can tell it to try using your connected computer.
 
-9. **진행 상황 보고 멈추기**
+9. **Check progress and stop things**
 
-   데스크톱 앱에서 dot 프로필의 **Activity**로 위임한 작업의 진행, 파일, 결과를 보고, **Scheduled**로 반복 작업을 확인해요. 클라우드 컴퓨터에서 직접 보거나 조작해야 하면 **Take over**를, 다시 맡기려면 **Return control**을 누르세요. 멈추는 법은 아래 "빠른 참조표"에 정리했어요.
+   In the desktop app, use **Activity** on the dot profile to see the progress, files, and results of delegated tasks, and **Scheduled** to review recurring tasks. If you need to view or operate the cloud computer yourself, press **Take over**, and to hand it back, press **Return control**. How to stop things is summarized in the "Quick reference" below.
 
 </Steps>
 
-## 빠른 참조표
+## Quick reference
 
-### 어디서 쓰나요
+### Where you can use it
 
-| 항목 | 내용 |
+| Item | Details |
 | --- | --- |
-| 만들기·대화 | ChatGPT 모바일 앱(최신), 데스크톱 앱, 데스크톱 브라우저. **모바일 웹 불가** |
-| 연락 채널 | ChatGPT(메시지·통화), Slack, Microsoft Teams. 문자는 "곧 지원" |
-| 컴퓨터 연결·Activity | 데스크톱 앱 중심 |
+| Creating and chatting | ChatGPT mobile app (latest), desktop app, desktop browser. **Not on mobile web** |
+| Contact channels | ChatGPT (messages and calls), Slack, Microsoft Teams. Text messages "coming soon" |
+| Computer connection and Activity | Mainly the desktop app |
 
-### 연결은 서로 별개예요
+### Connections are separate from each other
 
-| 연결 | 가능해지는 것 |
+| Connection | What it enables |
 | --- | --- |
-| 메시지 채널 | 그곳에서 dot과 대화하고 업데이트를 받기 |
-| 앱(플러그인) | 그 서비스의 정보와 도구를 허용 범위 안에서 쓰기 |
-| 내 컴퓨터 | 그 컴퓨터가 켜져 있는 동안 로컬 파일, 앱, 작업 쓰기 |
+| Messaging channel | Talking to the dot there and receiving updates |
+| App (plugin) | Using that service's information and tools within the allowed scope |
+| My computer | Using local files, apps, and tasks while that computer is on |
 
-### 멈추는 방법 4가지
+### Four ways to stop it
 
-| 하고 싶은 일 | 방법 |
+| What you want to do | How |
 | --- | --- |
-| 지금 하던 주 작업 멈추기 | **Pause** (위임 작업과 예약은 그대로 둬요). 다시 하려면 Resume |
-| 위임한 작업 멈추기 | Activity에서 그 작업을 열어 중지 |
-| 반복 작업 끝내기 | Scheduled에서 해당 작업을 비활성화 또는 삭제 |
-| dot 없애기 | Delete (되돌릴 수 없어요) |
+| Stop the main task it's working on now | **Pause** (delegated tasks and schedules stay as they are). To resume, use Resume |
+| Stop a delegated task | Open the task in Activity and stop it |
+| End a recurring task | Disable or delete it in Scheduled |
+| Get rid of the dot | Delete (can't be undone) |
 
-통화를 끊어도 맡긴 일은 계속될 수 있어요. 멈춰도 이미 한 행동은 되돌려지지 않아요.
+Hanging up a call doesn't necessarily stop the work you handed off. And stopping doesn't undo actions that have already happened.
 
-### 사용자 규칙 4가지
+### The four custom rules
 
-데스크톱 앱과 웹에서는 설정(Settings) > 개인 설정(Personalization) > Custom rules에서, iOS·Android 앱에서는 사이드바의 Customize > Custom rules에서 만들어요(2026-10-26 기준). 앱(플러그인) 권한은 규칙과 별개로 Open Plugins에서 관리해요.
+Create them in the desktop app and web under Settings > Personalization > Custom rules, and in the iOS and Android apps under Customize > Custom rules in the sidebar (as of 2026-10-26). App (plugin) permissions are managed separately from rules, in Open Plugins.
 
-| 규칙 | 동작 |
+| Rule | Behavior |
 | --- | --- |
-| Take action without asking | 묻지 않고 실행 |
-| Take action when you say so | 내가 분명히 시킬 때만 실행. 아니면 실행 직전에 물어봄 |
-| Ask before taking action | 실행 전에 승인 요청 |
-| Hand off to you | 나에게 넘김 |
+| Take action without asking | Acts without asking |
+| Take action when you say so | Acts only when I clearly tell it to. Otherwise asks right before acting |
+| Ask before taking action | Requests approval before acting |
+| Hand off to you | Hands it off to me |
 
-예를 들어 고객에게 보내는 메시지는 "Ask before taking action", 공유 프로젝트 파일 삭제는 "Hand off to you"로 정할 수 있어요. 글쓰기 스타일 같은 취향은 규칙이 아니라 대화로 알려 주라고 문서가 안내해요.
+For example, you can set messages to customers to "Ask before taking action" and deleting shared project files to "Hand off to you." The docs say to tell it preferences like writing style through conversation rather than rules.
 
-### 기업 관리자가 정하는 것
+### What enterprise admins control
 
-Enterprise에서는 관리자가 역할별로 Dots 사용, Slack 추가, 로컬 컴퓨터 접근(별도 동의), 사용자 규칙 사용, 클라우드 브라우저·네트워크·컴퓨터 사용, 비밀번호 관리자 사용을 제어해요. 자세한 설정은 관리자용 문서를 보세요.
+On Enterprise, admins control by role the use of Dots, adding to Slack, local computer access (separate consent), use of custom rules, cloud browser, network, and computer use, and use of password managers. For detailed settings, see the admin documentation.
 
-## 결제·권한·개인정보 주의점
+## What to watch for with payments, permissions, and privacy
 
-- **초안 작성은 발송 허락이 아니에요.** 공식 문서도 "초안을 써 달라"는 요청이 보내기 권한을 주지 않는다고 설명해요. 반대로 범위를 분명히 한 지침(누가, 무엇을, 언제까지)은 이후 같은 범위의 행동에 쓰일 수 있으니 범위를 좁게 쓰세요.
-- **자동 검토가 있어요.** 계정에 영향을 주거나 정보를 공유하는 행동 전에 지침, 권한, 사용자 규칙, 내장 안전 요건을 확인해 진행·승인 요청·내가 직접 할 일(예: 비밀번호 변경) 중 하나로 정해요. 다만 사용자 규칙은 dot이 따르려 노력하는 지침일 뿐이고 실수할 수 있다고 문서가 밝혀요.
-- **결제 기능은 확인하지 못했어요.** 공식 Dots 문서에서 결제나 구매 전용 기능은 찾지 못했어요. 없다고 단정하지는 않아요. 결제가 걸린 일은 직접 하거나 "Ask before" 또는 "Hand off to you"로 두세요. 비밀번호 저장도 선택 사항이니 꼭 필요할 때만 쓰세요.
-- **연결은 최소로.** 메일은 읽기만 허용하는 식으로 앱 권한을 나누고, 쓰지 않는 플러그인은 해제하세요.
-- **내 컴퓨터 연결은 선택이에요.** 한 대만, 필요한 때만 쓰고 Revoke access를 기억해 두세요.
-- **채널 사이 정보 이동.** dot은 채널을 옮겨도 같은 dot이라 메모를 공유해요. 대신 비공개 대화에서 들은 내용을 다른 사람에게 말하기 전에는 내 허락을 확인한다고 해요. 팀 채널에 추가할 때는 어디까지 말해도 되는지 먼저 알려 주세요.
-- **데이터.** ChatGPT 데이터 제어가 dot과의 적격 대화와 작업에 적용돼요. OpenAI는 능동적 리서치와 비공개 노트로는 모델을 직접 학습시키지 않는다고 밝혀요. 자세한 설정은 ChatGPT의 데이터 제어 안내를 확인하세요.
-- **결과를 믿기 전에 확인.** 문서는 dot이 실수할 수 있다고 직접 경고하고, 실행이 끝났다고 원하는 결과가 달성된 것은 아니라고 해요. 중요한 결과는 출처와 함께 검토하세요.
-- 에이전트에게 권한을 줄 때의 일반 점검표는 [5. 개인 AI 에이전트 안전하게 쓰는 법](/agents/05-agent-safety/)에 따로 정리해 뒀어요.
+- **Writing a draft isn't permission to send.** The official docs also explain that a request to "write a draft" doesn't grant permission to send. Conversely, instructions with a clear scope (who, what, until when) can be used for later actions in the same scope, so keep the scope narrow.
+- **There's automatic review.** Before actions that affect your account or share information, it checks instructions, permissions, custom rules, and built-in safety requirements, and decides to proceed, ask for approval, or leave it for you to do yourself (for example, changing a password). However, the docs state that custom rules are only guidance the dot tries to follow, and that it can make mistakes.
+- **We couldn't confirm payment features.** We couldn't find a dedicated payment or purchase feature in the official Dots docs. We're not saying there isn't one. For anything involving payments, do it yourself or set it to "Ask before" or "Hand off to you." Saving passwords is also optional, so use it only when truly needed.
+- **Keep connections to a minimum.** Split app permissions, such as allowing read-only email, and disconnect plugins you don't use.
+- **Connecting your computer is optional.** Use just one, only when needed, and remember Revoke access.
+- **Information moving between channels.** A dot is the same dot even when you switch channels, so it shares notes. In exchange, it says it checks with you before telling others about something it heard in a private conversation. When adding it to a team channel, tell it first how much it's allowed to say.
+- **Data.** ChatGPT data controls apply to eligible conversations and tasks with your dot. OpenAI says it doesn't directly train models on proactive research and private notes. For detailed settings, check ChatGPT's data controls guidance.
+- **Verify before trusting results.** The docs themselves warn that a dot can make mistakes, and that a finished run doesn't mean the result you wanted was achieved. Review important results along with their sources.
+- A general checklist for granting permissions to agents is laid out separately in [5. Using Personal AI Agents Safely](/agents/05-agent-safety/).
 
-## 자주 막히는 지점
+## Common sticking points
 
-### Dots 메뉴가 안 보여요
+### I don't see the Dots menu
 
-- **원인**: 플랜이 대상이 아니거나(Plus·무료 등), 지역 제외(EEA·영국·스위스), 만 18세 미만, 롤아웃이 아직 안 왔거나, Enterprise에서 관리자가 켜지 않은 경우예요.
-- **해결**: 앱을 최신 버전으로 업데이트하고, 모바일 웹이 아닌 앱 또는 데스크톱 브라우저로 접속하세요. 대상 플랜인데도 안 보이면 며칠 기다려 보세요. Enterprise는 관리자에게 Use dots 권한을 요청하세요.
+- **Cause**: Your plan isn't eligible (Plus, free, etc.), your region is excluded (EEA, UK, Switzerland), you're under 18, the rollout hasn't reached you, or on Enterprise the admin hasn't turned it on.
+- **Fix**: Update the app to the latest version, and use the app or a desktop browser, not mobile web. If you're on an eligible plan and still don't see it, wait a few days. On Enterprise, ask your admin for the Use dots permission.
 
-### 내 컴퓨터의 파일을 못 써요
+### I can't use files on my computer
 
-- **원인**: 컴퓨터가 오프라인이거나 ChatGPT 앱이 닫혀 있거나, 연결 자체를 하지 않았을 수 있어요. 기업에서는 관리자의 로컬 컴퓨터 접근 허용이 별도로 필요해요.
-- **해결**: 데스크톱 앱을 열어 둔 채 dot 프로필의 Computers에서 상태를 확인하세요. Offline 표시는 연결이 끊긴 게 아니라 일시적으로 쓸 수 없다는 뜻이에요.
+- **Cause**: The computer may be offline, the ChatGPT app may be closed, or you may not have connected it at all. In companies, an admin must separately allow local computer access.
+- **Fix**: Keep the desktop app open and check the status under Computers in the dot profile. An Offline label doesn't mean it's disconnected; it means it's temporarily unavailable.
 
-### 어떤 사이트에서 클라우드 브라우저가 막혀요
+### The cloud browser is blocked on a certain site
 
-- **원인**: 일부 웹사이트는 클라우드 브라우저를 차단하거나 추가 인증을 요구해요.
-- **해결**: Take over로 직접 로그인하거나, 연결한 내 컴퓨터로 시도해 보라고 요청하세요. 단, 클라우드 브라우저의 로그인 세션이 내 컴퓨터로 옮겨지지는 않아요.
+- **Cause**: Some websites block cloud browsers or require extra authentication.
+- **Fix**: Log in yourself with Take over, or ask it to try using your connected computer. Note that a login session from the cloud browser isn't moved over to your computer.
 
-### 대화를 끝냈는데 일이 계속돼요
+### The work continues after I ended the conversation
 
-- **원인**: 통화나 대화를 끝내도 맡긴 작업은 이어질 수 있어요.
-- **해결**: Pause로 주 작업을, Activity에서 위임 작업을, Scheduled에서 반복 작업을 각각 멈추세요.
+- **Cause**: Even if you end a call or conversation, the tasks you handed off may continue.
+- **Fix**: Stop the main task with Pause, delegated tasks in Activity, and recurring tasks in Scheduled.
 
-### 메일이나 앱을 못 읽어요
+### It can't read my email or an app
 
-- **원인**: 플러그인이 연결되지 않았거나 연결이 만료됐을 수 있어요. Slack만 연결했다면 메일은 연결되지 않은 거예요.
-- **해결**: dot이 보내는 재연결 요청을 열어 다시 연결하세요.
+- **Cause**: The plugin may not be connected or the connection may have expired. If you only connected Slack, email isn't connected.
+- **Fix**: Open the reconnection request the dot sends and connect again.
 
-## 실전 팁
+## Practical tips
 
-- **작게 시작하세요.** 한 가지 책임, 몇 개의 자료로 시작해 결과를 보고 범위를 넓히세요.
-- **"보내지 말고 초안만"을 습관으로.** 메일, 메시지, 문서 공유는 확인 뒤에 보내게 하세요.
-- **알림 기준을 말해 주세요.** "마감이 위험할 때만 알려 줘"처럼 알림 가치가 있는 변화를 정해 주면 알림이 덜 시끄러워요.
-- **예약은 시간대와 기간을 적고 확인받으세요.** "한국 시간 평일 9시, 4주"처럼요. 저장된 내용을 dot에게 되읽어 달라고 하세요.
-- **출시 첫 달 한도.** 공식 문서상 출시 후 첫 달은 깊은 작업 허용량이 확장돼요. 이후 한도가 달라질 수 있으니 사용량을 지켜보세요.
-- **첫 결과는 반드시 검토하세요.** 같은 책임을 처음 맡길 때는 출처와 누락을 직접 확인하세요.
+- **Start small.** Start with one responsibility and a few materials, look at the result, and then widen the scope.
+- **Make "draft only, don't send" a habit.** Have it send email, messages, and document shares only after you've checked.
+- **Tell it your notification criteria.** If you define changes worth a notification, like "only tell me when a deadline is at risk," notifications get less noisy.
+- **For schedules, give a time zone and a time span, and get confirmation.** Something like "weekdays at 9 AM Korea time, for 4 weeks." Ask the dot to read back what was saved.
+- **First-month limits.** Per the official docs, the allowance for deep work is expanded in the first month after launch. Limits may change afterward, so keep an eye on your usage.
+- **Always review the first results.** The first time you hand off a given responsibility, check the sources and anything missing yourself.
 
-## 다른 에이전트와 다른 점
+## How it differs from other agents
 
-- **ChatGPT 안에 있어요.** 별도 앱이 아니라 ChatGPT 계정, 메모리, 플러그인, Work, Codex와 연결돼요.
-- **같은 dot을 여러 곳에서.** ChatGPT, 통화, Slack, Teams에서 같은 dot과 메모를 공유해요.
-- **자체 컴퓨터 + 내 컴퓨터(선택).** 클라우드 컴퓨터가 기본이고, 로컬 연결은 한 대만 선택적으로 할 수 있어요.
-- **Work·Codex에 위임.** 코드는 Codex로, 파일 만들기는 Work로 나눠 일을 시킬 수 있어요.
-- 다른 제품과의 나란히 비교는 [1. 개인 AI 에이전트 한눈에 비교](/agents/01-agents-compared/)에서 해요.
+- **It lives inside ChatGPT.** It's not a separate app; it connects to your ChatGPT account, memory, plugins, Work, and Codex.
+- **The same dot in many places.** The same dot and memory are shared across ChatGPT, calls, Slack, and Teams.
+- **Its own computer plus your computer (optional).** The cloud computer is the default, and a local connection is optional and limited to one machine.
+- **Delegates to Work and Codex.** You can divide the work, with code going to Codex and file creation going to Work.
+- For a side-by-side comparison with other products, see [1. Personal AI Agents at a Glance](/agents/01-agents-compared/).
 
-## 이 글이 확인하지 못한 것
+## What this guide couldn't confirm
 
-- openai.com과 도움말센터의 공식 한국어 안내 (자동 접근 차단)
-- 한국 제공을 확정하는 공식 문장과 지원 지역 도움말
-- Dots의 한국어 대화·음성 지원 수준
-- Plus·일반 Business·Edu 플랜의 정확한 지원 여부
-- 원화 가격, 결제·구매 기능의 유무
-- 정확한 출시 날짜(공식 문서에는 없음)
+- Official Korean-language guidance on openai.com and the Help Center (automated access is blocked)
+- An official statement confirming availability in Korea, and a help page on supported regions
+- The level of Korean conversation and voice support in Dots
+- Exact support status for Plus, standard Business, and Edu plans
+- Prices in KRW, and whether payment or purchase features exist
+- The exact launch date (not in the official docs)
 
-## 다음에 볼 튜토리얼
+## What to read next
 
-- [1. 개인 AI 에이전트 한눈에 비교](/agents/01-agents-compared/) — Muse·Grok Bot·Dots·Claude 비교
-- [5. 개인 AI 에이전트 안전하게 쓰는 법](/agents/05-agent-safety/) — 결제·이메일·계정 권한 점검표
-- [C13. Claude Code 클라우드 세션](/claude/c13-cloud-sessions/) — Claude의 클라우드 자동화와 비교해 보기
+- [1. Personal AI Agents at a Glance](/agents/01-agents-compared/): comparing Muse, Grok Bot, Dots, and Claude
+- [5. Using Personal AI Agents Safely](/agents/05-agent-safety/): a checklist for payment, email, and account permissions
+- [C13. Claude Code cloud sessions](/claude/c13-cloud-sessions/): compare with Claude's cloud automation
