@@ -1,0 +1,310 @@
+---
+title: "Get Reliable JSON from Claude with Structured Outputs"
+description: "Use output_config.format with a JSON schema (or a Pydantic model) so Claude's reply always parses, add strict tool use for tool inputs, and learn the schema limits, refusal and max_tokens cases, and costs from the official docs"
+sidebar:
+  label: "13. Structured outputs (reliable JSON)"
+level: advanced
+category: dev
+tools: ["Claude API", "Structured outputs", "Strict tool use", "Python", "anthropic SDK", "Pydantic"]
+duration: "45 min"
+prerequisites:
+  - "You've finished C16. Getting started with the Claude API (API key, environment variable setup)"
+  - "Python 3.10 or later, pip install anthropic pydantic"
+  - "A feel for the tool_use loop (Dev 1)"
+lastVerified: 2026-11-01
+sources:
+  - title: "Structured outputs"
+    url: "https://platform.claude.com/docs/en/build-with-claude/structured-outputs"
+  - title: "Strict tool use"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- **Structured outputs** make Claude's reply follow a JSON schema you supply, using constrained decoding. The reply in the text block is valid, parseable JSON with the right types and required fields, so you don't need a "parse, fail, retry" loop for schema mistakes.
+- Two features, usable alone or together: **JSON outputs** (`output_config.format`, controls what Claude *says*) and **strict tool use** (`strict: true` on a tool, controls how Claude *calls your functions*).
+- In Python, pass a Pydantic model to `client.messages.parse(..., output_format=Model)` and read `response.parsed_output`. Or send a raw schema in `output_config={"format": {"type": "json_schema", "schema": ...}}` and `json.loads` the text.
+- It is not an absolute guarantee. A **refusal** (`stop_reason: "refusal"`) or a cut-off (`stop_reason: "max_tokens"`) can leave output that doesn't match the schema, and `enum` capitalization isn't guaranteed.
+- Limits to know: no recursive schemas, no `minimum` / `maxLength`-style constraints in the API itself, objects need `additionalProperties: false`, and it can't be combined with citations or prefilling.
+- We read the two official pages on 2026-11-01 and ran the Pydantic and syntax checks locally, but **made no real API call** (no `anthropic` package or API key in our test environment). Treat the code as documented, not as tested end to end.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Turn a free-text email into a validated Python object (or a plain `dict`) with one request.
+- Choose between a Pydantic model and a raw JSON schema, and between JSON outputs and strict tool use.
+- Write a schema the API accepts, and fix the common "400" and "too complex" problems.
+- Handle the cases where the output is not valid: refusals and `max_tokens`.
+
+## Concepts to know first
+
+In [Dev 1](/dev/01-tool-use/) you defined tools with JSON Schema and wrote the tool loop. Structured outputs reuse the same schema language, but for a different job: making sure the data that comes back has the shape your code expects. If you've used web search in [Dev 12](/dev/12-web-search-fetch-tools/), note that this is a different kind of feature: it constrains Claude's own output rather than running a server tool.
+
+| Term | Meaning |
+| --- | --- |
+| **JSON outputs** | Set `output_config.format` with `type: "json_schema"`. Claude's answer, in the response's text content block, is JSON matching your schema. |
+| **Strict tool use** | Set `"strict": true` as a top-level property of a tool definition (next to `name`, `description`, `input_schema`). The `input` of the `tool_use` block then matches your `input_schema`, and the tool `name` is always valid. |
+| **Constrained decoding** | The API compiles your schema into a grammar and restricts which tokens Claude may produce. |
+| **SDK helper** | `client.messages.parse()` with a Pydantic model (Python) or `zodOutputFormat()` with Zod (TypeScript). It builds the schema, sends it, validates, and returns a typed object. |
+
+Which one to use: if you want the **final answer** as data (extract fields, classify, produce a report), use JSON outputs. If Claude is **calling your functions** and the arguments must be well-typed, use strict tool use. You can use both in one request.
+
+### Availability (official docs, 2026-11-01)
+
+- The Structured outputs page says the feature is available on every model, on the Messages API and on all listed cloud platforms (Claude API, Amazon Bedrock, Microsoft Foundry, and others), and is eligible for HIPAA readiness.
+- It is **not available** in Managed Agents (per the page's availability section).
+- Zero data retention: eligible, excluding Covered Models. Prompts and outputs aren't stored; only the JSON schema is cached, for up to 24 hours since last use.
+- The doc's examples use `claude-opus-5-5`. This tutorial uses `claude-sonnet-5-5`, which is in the page's supported-model list. Model names change, so check the page before you copy.
+
+<Aside type="caution" title="Do not put sensitive data in the schema">
+The docs say compiled schemas are cached separately from message content. For HIPAA, **PHI must not appear in schema property names, `enum` values, `const` values, or `pattern` regular expressions**. Put personal data only in the messages.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I set ANTHROPIC_API_KEY and installed anthropic and pydantic',
+  'I extracted a ticket with a Pydantic model and messages.parse()',
+  'I sent the same schema as a raw JSON schema and parsed the text',
+  'I check stop_reason before trusting the output',
+  'I know which schema features are not supported',
+  'I know when to add strict: true to a tool',
+]} />
+
+<Steps>
+
+1. **Set up**
+
+   ```bash
+   mkdir structured-lab && cd structured-lab
+   python3 -m venv .venv && source .venv/bin/activate
+   pip install anthropic pydantic
+   ```
+
+   Set `ANTHROPIC_API_KEY` as in C16. The scenario: a small business gets support emails and wants each one turned into a ticket with a category, a priority, a one-line summary, and a flag for "a person must look at this".
+
+2. **Use a Pydantic model (the recommended Python path)**
+
+   Per the official docs, pass a Pydantic model to `client.messages.parse()` as `output_format`. The SDK transforms the model's schema, sends it as `output_config.format`, validates the response, and returns the parsed object in `parsed_output`.
+
+   ```python
+   from typing import Literal
+
+   import anthropic
+   from pydantic import BaseModel
+
+
+   class Ticket(BaseModel):
+       category: Literal["billing", "bug", "question", "other"]
+       priority: Literal["low", "normal", "urgent"]
+       summary: str
+       needs_human: bool
+
+
+   EMAIL = (
+       "Hi, I was charged twice for my March invoice and I need this fixed today "
+       "because our accountant closes the books tomorrow. - Dana"
+   )
+
+   client = anthropic.Anthropic()
+
+   response = client.messages.parse(
+       model="claude-sonnet-5-5",
+       max_tokens=1024,
+       messages=[{
+           "role": "user",
+           "content": f"Turn this support email into a ticket:\n\n{EMAIL}",
+       }],
+       output_format=Ticket,
+   )
+
+   if response.stop_reason in ("refusal", "max_tokens"):
+       raise RuntimeError(f"No usable output: {response.stop_reason}")
+
+   print(response.parsed_output)
+   ```
+
+   **What we ran:** the file passes `python -m py_compile`, and we validated a hand-written sample (`category="billing"`, `priority="urgent"`, ...) against the `Ticket` model locally. **What we did not run:** the API call itself. The `parse(..., output_format=...)` call and `parsed_output` follow the official Python example. The sample output of a real call would be a `Ticket` object like `category='billing' priority='urgent' ...`, but we haven't seen Claude's actual values.
+
+   <PromptBox>
+   I want to turn incoming emails into structured records with the Claude API. Here are three sample emails and the fields I need: [paste them]. Propose a JSON schema using only simple types (string, boolean, integer, array, string enums), mark every field required, and explain which fields could be missing in real emails and how to represent "unknown".
+   </PromptBox>
+
+3. **Or send a raw JSON schema**
+
+   Use this when your schema comes from a file, an OpenAPI spec, or code. It is the same request, with the schema inside `output_config.format`. The structure below follows the docs' raw-schema example; read the JSON from the first text block.
+
+   ```python
+   import json
+
+   SCHEMA = {
+       "type": "object",
+       "properties": {
+           "category": {"type": "string", "enum": ["billing", "bug", "question", "other"]},
+           "priority": {"type": "string", "enum": ["low", "normal", "urgent"]},
+           "summary": {"type": "string"},
+           "needs_human": {"type": "boolean"},
+       },
+       "required": ["category", "priority", "summary", "needs_human"],
+       "additionalProperties": False,
+   }
+
+   response = client.messages.create(
+       model="claude-sonnet-5-5",
+       max_tokens=1024,
+       messages=[{
+           "role": "user",
+           "content": f"Turn this support email into a ticket:\n\n{EMAIL}",
+       }],
+       output_config={"format": {"type": "json_schema", "schema": SCHEMA}},
+   )
+
+   if response.stop_reason in ("refusal", "max_tokens"):
+       raise RuntimeError(f"No usable output: {response.stop_reason}")
+
+   text = next(b.text for b in response.content if b.type == "text")
+   ticket = json.loads(text)
+   print(ticket["priority"])
+   ```
+
+   The docs say the SDK helpers move unsupported constraints (such as `minimum`) into the field description and still validate against your original schema in your own code. With a raw schema you send exactly what you wrote, so stick to the supported subset below. The docs also mention a `transform_schema()` helper in the `anthropic` package if you want that behavior for a raw schema.
+
+4. **Check why the reply stopped**
+
+   Structured outputs "guarantee schema compliance in most cases", and the docs list the exceptions:
+
+   - **Refusal**: `stop_reason: "refusal"`, HTTP 200, you're billed for generated tokens, and the output may not match your schema because the refusal message takes precedence. The docs add that a schema property asking for the model's thinking or step-by-step reasoning can trigger a `reasoning_extraction` refusal; ask for a short explanation instead.
+   - **Token limit**: `stop_reason: "max_tokens"` means the JSON may be cut off. Retry with a larger `max_tokens`.
+   - **Enum casing**: the capitalization of `enum` and `const` strings isn't guaranteed (the docs' example: `"Conversation Topic 3"` can come back for `"Conversation topic 3"`). Compare case-insensitively and avoid values that differ only by case.
+
+   That is why both examples above check `stop_reason` before using the result.
+
+5. **Write a schema the API accepts**
+
+   See the quick reference table. Two habits help most: set `additionalProperties: false` on every object, and mark fields `required` whenever you can. Optional fields cost complexity (step 7) and change the output order: **required properties come first, then optional ones**, whatever order your schema lists them in.
+
+   The official page doesn't prescribe a pattern for "this value may be missing". Union types (`anyOf`, or a type array such as `["string", "null"]`) are supported, but they count toward the 16-parameter union limit in the quick reference, so use them sparingly.
+
+6. **Add strict tool use when Claude calls your functions**
+
+   If you have the tool loop from Dev 1, add `"strict": true` to the tool definition. The docs' quick start has the tool shape:
+
+   ```python
+   tools = [{
+       "name": "get_weather",
+       "description": "Get the current weather in a given location",
+       "strict": True,
+       "input_schema": {
+           "type": "object",
+           "properties": {
+               "location": {"type": "string", "description": "The city and state, e.g. San Francisco, CA"},
+               "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+           },
+           "required": ["location"],
+           "additionalProperties": False,
+       },
+   }]
+   ```
+
+   With `strict: true`, the docs' example is that `passengers` is always the integer `2`, never `"two"` or `"2"`. Keep `additionalProperties: false` here too. The computer-use and browser-use toolset entries (`computer_toolset_20260801`, `browser_toolset_20260801`) don't accept `strict: true`; a request that sets it on them is rejected.
+
+   Using both features in one request is supported: JSON outputs shape Claude's final reply, strict tool use validates the tool parameters. We did not test a combined request.
+
+7. **Watch the limits and the first-request delay**
+
+   - **First request with a new schema is slower** (the grammar compiles). Compiled grammars are cached for 24 hours from last use. Changing the schema structure (or, with tools, the set of tools) invalidates the cache; changing only `name` or `description` does not.
+   - **Extra tokens**: Claude gets an additional system prompt explaining the format, so input tokens are slightly higher. Changing `output_config.format` invalidates your [prompt cache](/dev/02-cost-optimization/) for that conversation thread.
+   - **Complexity errors**: a 400 with "Schema is too complex for compilation" means the combined schemas are too big. The docs' order of fixes: make only the critical tools strict, reduce optional parameters, flatten nesting, then split into multiple requests.
+
+</Steps>
+
+## Quick reference
+
+### Schema support (official docs, 2026-11-01)
+
+| Supported | Not supported |
+| --- | --- |
+| object, array, string, integer, number, boolean, null | Recursive schemas |
+| `enum` (strings, numbers, booleans, nulls only), `const` | Complex types inside `enum`; external `$ref` |
+| `anyOf`, `allOf` (but `allOf` with `$ref` is not supported) | Numerical constraints (`minimum`, `maximum`, `multipleOf`) |
+| `$ref`, `$def`, `definitions` (internal only) | String constraints (`minLength`, `maxLength`) |
+| `default`; `required`; `additionalProperties` set to `false` | `additionalProperties` set to anything other than `false` |
+| String formats: `date-time`, `time`, `date`, `duration`, `email`, `hostname`, `uri`, `ipv4`, `ipv6`, `uuid` | Array constraints beyond `minItems` of 0 or 1 |
+| Array `minItems` of 0 or 1 | Regex backreferences, lookahead/lookbehind, `\b`, large `{n,m}` ranges |
+
+An unsupported feature returns a 400 with details. Simple regex `pattern` values (full or partial match, `*`, `+`, `?`, simple `{n,m}`, `[]`, `.`, `\d`, `\w`, `\s`, groups) are supported.
+
+### Limits per request (official docs)
+
+| Limit | Value |
+| --- | --- |
+| Strict tools per request | 20 |
+| Optional parameters, across all strict tool schemas and JSON output schemas | 24 |
+| Parameters with union types (`anyOf` or type arrays like `["string", "null"]`) | 16 |
+| Compilation timeout | 180 seconds |
+
+### Works with / does not work with
+
+| Works with | Does not work with |
+| --- | --- |
+| Batch processing (50 percent discount, per the page) | **Citations**: a 400 error if citations are enabled with `output_config.format` |
+| Token counting, streaming | **Message prefilling** |
+| Strict tool use in the same request | |
+
+Grammars apply only to Claude's direct output, not to tool calls, tool results, or thinking blocks, so Claude can still think freely before the structured answer. For structured data with a citation per value, see the Citations page's "Get structured data with citations" section, and [Dev 9](/dev/09-rag-files-citations/) for citations in general.
+
+## Common sticking points
+
+### 400 error mentioning an unsupported schema feature
+
+- **Cause**: `minimum`, `maxLength`, a recursive definition, or `additionalProperties` other than `false` in a raw schema.
+- **Fix**: remove the constraint and validate it in your own code, or use the SDK helper that moves it into the description and validates for you.
+
+### The JSON doesn't match my schema
+
+- **Cause**: `stop_reason` was `refusal` or `max_tokens`.
+- **Fix**: check `stop_reason` first; raise `max_tokens`; rephrase requests that ask for reasoning inside a field.
+
+### The property order in the output looks wrong
+
+- **Cause**: required properties are emitted first, then optional ones.
+- **Fix**: mark everything required, or don't rely on order when parsing.
+
+### "Schema is too complex for compilation"
+
+- **Cause**: too many optional or union-typed parameters, deep nesting, or too many strict tools.
+- **Fix**: follow the reduction order in step 7.
+
+### An enum value comes back with different capitalization
+
+- **Cause**: casing of `enum` / `const` strings isn't guaranteed.
+- **Fix**: compare case-insensitively; use lowercase single-word values like `"urgent"`.
+
+### Request fails after I turned on citations
+
+- **Cause**: citations and `output_config.format` are incompatible.
+- **Fix**: use one or the other, or follow the docs' citations-with-structured-data pattern.
+
+## Practical tips
+
+- Start with a small schema (3 to 6 required fields) and grow it. Flat is cheaper than nested.
+- Use `enum` for anything with a fixed set of answers (category, priority, yes/no/unsure). It is the strongest way to keep answers consistent.
+- Add a field description for any field whose meaning isn't obvious; that is where the model learns what you mean.
+- Structured outputs fix the *shape*, not the *truth*. A well-formed ticket can still contain a wrong category. Spot-check against real examples (see [Dev 8](/dev/08-evals/)).
+- Log `stop_reason` so you can see how often refusals or cut-offs happen.
+- Never put secrets or personal data in schema names, enums, or patterns.
+
+## Next tutorials
+
+- [1. Build a work bot with tool use](/dev/01-tool-use/) — the tool loop that strict tool use plugs into
+- [12. Web search and web fetch tools](/dev/12-web-search-fetch-tools/) — server tools and citations
+- [9. Internal document Q&A](/dev/09-rag-files-citations/) — citations for your own documents
+- [8. Evals](/dev/08-evals/) — measure whether the extracted fields are right
+- [2. Cut API costs](/dev/02-cost-optimization/) — caching and batches
+- [C16. Getting started with the Claude API](/claude/c16-api/)
+- [Developer guide](/roles/developer/)

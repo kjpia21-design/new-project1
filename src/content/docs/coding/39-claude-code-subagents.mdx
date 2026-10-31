@@ -1,0 +1,271 @@
+---
+title: "Create Your Own Claude Code Subagents"
+description: "Write a subagent as a Markdown file in .claude/agents/, limit its tools and model, call it by name, with @-mention, or for a whole session, and check that it works. Based on the official subagents docs"
+sidebar:
+  label: "12. Create your own subagents"
+level: practical
+category: coding
+tools: ["Claude Code"]
+duration: "35 min"
+prerequisites:
+  - "Claude Code installed and signed in (see Coding 6)"
+  - "A practice project folder with a few Markdown or code files (a copy is best)"
+  - "A first look at CLAUDE.md, hooks, and subagents in C14"
+lastVerified: 2026-11-01
+sources:
+  - title: "Create custom subagents"
+    url: "https://code.claude.com/docs/en/sub-agents"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+<Summary>
+- A **subagent** is a helper that works in its **own context window** with its own system prompt, tool access, and permissions, then returns a summary. Use one when a side task would flood your main conversation with logs, search results, or file contents.
+- A subagent is a **Markdown file with YAML frontmatter**. The body is its system prompt. Only `name` and `description` are required. Put it in `.claude/agents/` (this project, shareable through git) or `~/.claude/agents/` (all your projects).
+- Limit it with `tools` (allowlist) or `disallowedTools` (denylist), and pick a `model` (`sonnet`, `opus`, `haiku`, `fable`, a full model ID, or `inherit`).
+- Call it three ways: name it in your prompt, **@-mention** it to guarantee it runs, or run the whole session as it with `claude --agent <name>`.
+- Subagents' requests count toward the same usage limits as your main conversation (official docs).
+- On 2026-11-01 we validated the example files with `claude plugin validate` (Claude Code 2.1.316) and sent one real prompt that used the reviewer. We did not exercise every option in the tables below.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Create a read-only reviewer subagent and a test-runner subagent in a practice project.
+- Decide between asking Claude to write the file and writing it yourself, and where to save it.
+- Call a subagent by name, by @-mention, or as the whole session, and know which one forces it.
+- Spot why a subagent file is silently skipped.
+
+## Concepts to know first
+
+[C14](/claude/c14-claude-code-features/) introduced subagents in one step, next to hooks and MCP. This tutorial is the hands-on version. Hooks ([Coding 10](/coding/37-claude-code-hooks/)) run code at fixed moments; a subagent is a separate worker that Claude delegates to.
+
+| Term | Meaning |
+| --- | --- |
+| **Subagent** | A specialized assistant with its own context window, system prompt, tool access, and permissions. It reports back a summary. |
+| **Frontmatter** | The settings between `---` lines at the top of the file (`name`, `description`, `tools`, `model`, ...). |
+| **Description** | Tells Claude *when* to delegate. It is the most important line. |
+| **Delegation** | Claude hands the task to the subagent, automatically when it matches the description or when you ask. |
+| **Scope** | Where the file lives: project (`.claude/agents/`), user (`~/.claude/agents/`), plugin, managed settings, or a CLI flag. |
+
+### Where subagent files live (official docs, 2026-11-01)
+
+| Location | Scope | Priority |
+| --- | --- | --- |
+| Managed settings | Organization-wide | 1 (highest) |
+| `--agents` CLI flag | Current session only | 2 |
+| `.claude/agents/` | Current project | 3 |
+| `~/.claude/agents/` | All your projects | 4 |
+| A plugin's `agents/` directory | Where the plugin is enabled | 5 (lowest) |
+
+If two subagents share a name, the higher-priority location wins. Claude Code scans `.claude/agents/` and `~/.claude/agents/` recursively, so you can use subfolders such as `agents/review/`; identity comes only from the `name` field.
+
+<Aside type="note" title="Built-in subagents already exist">
+Claude Code ships built-in subagents it uses on its own, such as **Explore** (read-only codebase search), **Plan** (research in plan mode), and **general-purpose**. You create custom ones when you keep spawning the same kind of worker with the same instructions.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I opened a practice project and know whether I want a project or a user subagent',
+  'I created a read-only doc-reviewer subagent',
+  'I called it by name and saw a delegation row in the transcript',
+  'I created a test-runner subagent and chose its tools and model',
+  'I tried an @-mention to force a specific subagent',
+  'I know how to check why a subagent file did not load',
+]} />
+
+<Steps>
+
+1. **Choose the scope and open the project**
+
+   Open a terminal in your practice folder and start `claude`. We'll save the subagents in the project's `.claude/agents/` folder so they can be committed and shared with a team. For a personal helper available everywhere, use `~/.claude/agents/` instead.
+
+   If the `.claude/agents/` folder doesn't exist yet, create it **before** you start the session, or restart Claude Code after adding the first file. The official docs explain that a running session doesn't detect a newly created `agents` directory. Once the folder exists, edits to files in it are picked up within a few seconds.
+
+2. **Write a read-only reviewer by hand**
+
+   Save this as `.claude/agents/doc-reviewer.md`:
+
+   ```markdown
+   ---
+   name: doc-reviewer
+   description: Reviews Markdown documentation for unclear steps, typos, and broken internal links. Use proactively after docs are edited. Read-only.
+   tools: Read, Grep, Glob
+   model: sonnet
+   color: blue
+   ---
+
+   You are a careful documentation reviewer. You never edit files.
+
+   When invoked:
+   1. Find the Markdown files the user named, or the ones changed recently if none were named.
+   2. Read each file and check for unclear steps, typos, and internal links that point to files that do not exist.
+   3. Report in three groups: Must fix, Should fix, Nice to have.
+
+   For every item give the file, the line or heading, the problem, and a suggested rewrite.
+   End with one sentence saying whether the docs are ready to publish.
+   ```
+
+   How the parts work, per the docs: `name` and `description` are required. `tools` is an allowlist (here: read and search only, so the subagent can't edit or write files). If you leave `tools` out, the subagent inherits every tool available to subagents. `model` accepts `sonnet`, `opus`, `haiku`, `fable`, a full model ID, or `inherit`. `color` only changes how it looks in the task list. The body is the **system prompt**: the subagent gets only that plus basic environment details like the working directory, not the full Claude Code system prompt.
+
+   Field names are camelCase and must match exactly. Claude Code **ignores a field it doesn't recognize without an error**, so a typo such as `disallowedtools` silently does nothing.
+
+   <PromptBox>
+   Create a project subagent in .claude/agents/ named doc-reviewer. It should review Markdown docs for unclear steps, typos, and broken internal links, be read-only (Read, Grep, Glob only), and report findings grouped as Must fix, Should fix, Nice to have. Show me the file after you write it.
+   </PromptBox>
+
+   The prompt above is the other route: the docs say you can simply ask Claude to write the file for you. Review the result, especially the `tools` line, before relying on it.
+
+3. **Call it by name**
+
+   Add a small `README.md` with a typo and a link to a file that doesn't exist, then ask:
+
+   ```text
+   Use the doc-reviewer subagent to review README.md
+   ```
+
+   There's no special syntax for this: you name the subagent and Claude decides to delegate. In the transcript, the delegation appears as a tool call row with the subagent's name and a short task description, such as `doc-reviewer(...)`.
+
+   **What we ran:** we did this in a throwaway folder with a seven-line README (a typo, a link to a missing `setup.md`, and vague steps) through a one-off `claude -p` prompt on Claude Code 2.1.316. The answer came back in the reviewer's three groups (Must fix, Should fix, Nice to have), flagged the broken link and the typo, and made no edits. The wording of your result will differ.
+
+4. **Write a test-runner and limit what it can do**
+
+   A second pattern from the docs: a worker whose job is to produce *less* output for your main conversation. Save as `.claude/agents/test-runner.md`:
+
+   ```markdown
+   ---
+   name: test-runner
+   description: Runs the project's tests and reports only the failures with the likely cause. Use when a test run would flood the conversation with output.
+   tools: Bash, Read, Grep, Glob
+   model: haiku
+   maxTurns: 15
+   ---
+
+   You run tests and summarize the result. You do not change any files.
+
+   1. Find the test command (check package.json, Makefile, or README).
+   2. Run it once.
+   3. Reply with: pass/fail counts, then for each failure the test name, the error message, and your best guess at the cause.
+   Do not paste full logs.
+   ```
+
+   `maxTurns` caps how many agentic turns it takes before stopping; when it reaches the limit the output is marked as partial. We validated this file but did **not** run it against a real test suite.
+
+   <Aside type="caution" title="Bash can still change files">
+   "You do not change any files" is an instruction, not a lock. A subagent with `Bash` can run commands that write files. If you need a hard guarantee, give it only `Read, Grep, Glob`, or use permission rules. The docs also say a `disallowedTools` entry with a specifier such as `Bash(git push *)` still removes the **whole** Bash tool; to block only certain commands, use a Bash deny rule in `permissions.deny`, which applies to the main conversation and subagents alike.
+   </Aside>
+
+   `tools` and `disallowedTools` can be combined: `disallowedTools` is applied first, then `tools` is resolved against what remains. For whole MCP servers, `mcp__github__*` in `tools` grants a server's tools, and `mcp__github` in `disallowedTools` withholds them.
+
+5. **Force a specific subagent with an @-mention**
+
+   Natural language lets Claude decide. To guarantee a particular subagent runs, type `@` and pick it from the list, like mentioning a file:
+
+   ```text
+   @"doc-reviewer (agent)" look at the README changes
+   ```
+
+   Your full message still goes to Claude, which writes the subagent's task prompt. The @-mention controls *which* subagent runs, not the prompt it receives. You can also type `@agent-doc-reviewer` by hand.
+
+   To run the **whole session** as a subagent, with its tool limits and model on the main thread, start Claude Code with `claude --agent doc-reviewer`. To make a subagent the default for a project, set `"agent": "doc-reviewer"` in `.claude/settings.json`. The CLI flag wins if both are set. We did not test the `--agent` flag or the setting.
+
+   <FlowSteps title="Three ways to call a subagent" officialUrl="https://code.claude.com/docs/en/sub-agents" steps={[
+     { where: 'Your prompt', action: 'Name it: "Use the doc-reviewer subagent to ..."', result: 'Claude decides whether to delegate' },
+     { where: 'Your prompt', action: 'Type @ and pick the subagent', result: 'That subagent is guaranteed to run for this task' },
+     { where: 'Your terminal', action: 'claude --agent doc-reviewer', result: 'The whole session runs with that subagent\'s tools and model' },
+   ]} />
+
+6. **Check that it loaded, and fix it if not**
+
+   Claude Code **skips a subagent file without telling you in the session** when the frontmatter has a problem: no `name`; an opening `---` that isn't on the first line; a `name` that starts with `-`, contains `:`, or is over 256 characters; a `name` but no `description`; or YAML that doesn't parse.
+
+   Two checks from the docs: run `claude --debug` and read the debug log (`~/.claude/debug/<session-id>.txt`; for a misspelled field, search for `does not recognize or apply`, which needs Claude Code v2.1.296 or later). Or, before a session, run `claude plugin validate .claude/agents` (v2.1.233 or later), which checks the directory you name for files whose frontmatter doesn't parse. It doesn't flag a file that parses but has no `name`. On our two files it printed "Validation passed".
+
+   About the `/agents` command: per the docs, it now prints a reminder to ask Claude or edit the agent folders directly. On Claude Code v2.1.197 and earlier it opened an interactive wizard instead. Check your version if your screen differs.
+
+</Steps>
+
+## Quick reference
+
+### Frontmatter fields (official docs, 2026-11-01)
+
+| Field | Required | What it does |
+| --- | --- | --- |
+| `name` | Yes | Unique ID (at most 256 characters). The filename doesn't have to match. No `:`. |
+| `description` | Yes | When Claude should delegate. Add "use proactively" to encourage automatic use. |
+| `tools` | No | Allowlist, comma-separated or a YAML list. Omit to inherit every tool available to subagents. |
+| `disallowedTools` | No | Denylist, removed from the inherited or listed tools. |
+| `model` | No | `sonnet`, `opus`, `haiku`, `fable`, a full model ID, or `inherit`. |
+| `permissionMode` | No | `default`, `acceptEdits`, `auto`, `dontAsk`, `bypassPermissions`, `plan`. May be overridden by the main conversation's mode. |
+| `maxTurns` | No | Stop after this many agentic turns. |
+| `skills` | No | Skills to preload into its context at startup. |
+| `mcpServers` | No | MCP servers available to this subagent. |
+| `hooks` | No | Lifecycle hooks scoped to this subagent. |
+| `memory` | No | Persistent memory scope: `user`, `project`, or `local`. |
+| `isolation` | No | `worktree` runs it in a temporary git worktree. |
+| `background`, `effort`, `color`, `omitClaudeMd`, `autoCompactWindow`, `initialPrompt` | No | See the docs; several need a recent Claude Code version. |
+
+Plugin subagents ignore `hooks`, `mcpServers`, and `permissionMode` for security. Copy the file into `.claude/agents/` if you need them.
+
+### Model order (official docs)
+
+Claude Code picks a subagent's model in this order: (1) the model Claude passes for that one call, (2) the `model` in the file, (3) the `CLAUDE_CODE_SUBAGENT_MODEL` environment variable, (4) the main conversation's model. For how to split work across models, see [C15](/claude/c15-model-division/).
+
+### Limits and defaults
+
+| Item | Value (official docs) |
+| --- | --- |
+| Combined subagent descriptions | Warning at startup above 15,000 tokens (built-ins excluded); everything still loads |
+| Concurrent subagents | 20 by default; a 21st fails with `Concurrent subagent limit reached` (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS` changes it) |
+| Nesting | A subagent can spawn subagents up to three layers below the main conversation by default (`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`; 1 turns nesting off) |
+| Default run mode | Subagents Claude spawns start in the **background** with a smaller built-in tool set |
+
+## Common sticking points
+
+### Claude can't find my new subagent
+
+- **Cause**: you created `.claude/agents/` (or `~/.claude/agents/`) after the session started, or the file is skipped.
+- **Fix**: restart Claude Code, then check the frontmatter (step 6).
+
+### Claude never delegates automatically
+
+- **Cause**: the `description` is vague or too similar to another subagent's.
+- **Fix**: make it specific about *when* to use it, add "use proactively", or @-mention it.
+
+### A tool I listed isn't available
+
+- **Cause**: background subagents keep only a limited built-in tool set, and some tools are never available to subagents. A `tools` list with no valid entries can fail to launch with an error naming the entries.
+- **Fix**: check names and capitalization against the official tools list in the docs.
+
+### A permission prompt appeared even though I set `permissionMode`
+
+- **Cause**: the main conversation's mode can override the subagent's. For example, if the main session is in `bypassPermissions`, `acceptEdits`, or auto mode, the subagent runs in that mode.
+- **Fix**: set the mode of the main session deliberately; see the permission modes section of the docs.
+
+### My subagent's summary is missing detail
+
+- **Cause**: only a summary comes back by design.
+- **Fix**: ask in the system prompt for exactly the details you want back (file names, line numbers, commands run).
+
+## Practical tips
+
+- Make each subagent good at **one** job, and write the description so only one subagent matches.
+- Give the least tools needed. Reviewers rarely need `Edit` or `Write`.
+- Put cheap, mechanical work (test runs, log reading) on `haiku` and keep judgment work on a stronger model, then compare results on a few real tasks.
+- Commit project subagents so teammates get the same helpers, and treat them like code: review changes to the `tools` line.
+- Use a subagent for verbose side work; stay in the main conversation for back-and-forth, quick edits, or work where several phases share context (the docs' own guidance).
+- Subagent usage counts toward your plan limits, so many parallel subagents use usage faster.
+
+## Next tutorials
+
+- [C14. Claude Code key features](/claude/c14-claude-code-features/) — CLAUDE.md, slash commands, hooks, subagents, MCP in one place
+- [10. Automate checks with hooks](/coding/37-claude-code-hooks/) — run checks automatically; hooks can also react to subagent start and stop
+- [C15. Model division strategy](/claude/c15-model-division/) — which model for which subagent
+- [1. Getting started with Claude Code](/coding/06-claude-code-start/) — plan mode, approvals, CLAUDE.md
+- [5. Delegating recurring work](/coding/10-delegate-agents/) — scheduled and cloud work
+- [Developer guide](/roles/developer/)
