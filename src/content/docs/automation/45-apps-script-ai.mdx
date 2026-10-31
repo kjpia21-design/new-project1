@@ -1,0 +1,295 @@
+---
+title: "Automate Google Sheets with Apps Script and AI"
+description: "How to open Apps Script from a spreadsheet, tell Gemini in Sheets apart from calling an AI API directly, and build a custom menu that sends selected cells to the Claude API, with API key handling and limits"
+sidebar:
+  label: "15. Apps Script and AI for Sheets"
+level: practical
+category: automation
+tools: ["Google Sheets", "Apps Script", "Gemini", "Claude API"]
+duration: "40 min"
+prerequisites:
+  - "A Google account and a spreadsheet filled with made-up practice data (no real customer or payroll information)"
+  - "To try the Claude API part: a Claude Console account and an API key (API usage is billed separately from a Claude subscription; see C16)"
+  - "It helps to have read 'Adding AI to Excel and Google Sheets' (automation 6) first"
+lastVerified: 2026-11-01
+sources:
+  - title: "Extend Google Sheets (Apps Script guide)"
+    url: "https://developers.google.com/apps-script/guides/sheets"
+  - title: "Custom Menus in Google Workspace (Apps Script guide)"
+    url: "https://developers.google.com/apps-script/guides/menus"
+  - title: "Properties Service (Apps Script guide)"
+    url: "https://developers.google.com/apps-script/guides/properties"
+  - title: "External APIs (Apps Script guide)"
+    url: "https://developers.google.com/apps-script/guides/services/external"
+  - title: "UrlFetchApp (Apps Script reference)"
+    url: "https://developers.google.com/apps-script/reference/url-fetch/url-fetch-app"
+  - title: "Custom functions in Google Sheets (Apps Script guide)"
+    url: "https://developers.google.com/apps-script/guides/sheets/functions"
+  - title: "Authorization for Google Services (Apps Script guide)"
+    url: "https://developers.google.com/apps-script/guides/services/authorization"
+  - title: "Quotas for Google Services (Apps Script guide)"
+    url: "https://developers.google.com/apps-script/guides/services/quotas"
+  - title: "Use the Gemini side panel in the Apps Script editor"
+    url: "https://developers.google.com/apps-script/guides/gemini"
+  - title: "Collaborate with Gemini in Google Sheets (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/14356410?hl=en"
+  - title: "Claude API overview"
+    url: "https://platform.claude.com/docs/en/api/overview"
+  - title: "Claude API versions"
+    url: "https://platform.claude.com/docs/en/api/versioning"
+  - title: "Working with Messages"
+    url: "https://platform.claude.com/docs/en/build-with-claude/working-with-messages"
+  - title: "Models overview"
+    url: "https://platform.claude.com/docs/en/about-claude/models/overview"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- In Google Sheets, **Extensions > Apps Script** opens a script bound to that spreadsheet. A bound script can add custom menus and respond when the file opens.
+- There are **two different ways** to bring AI into Sheets. One is Google's built-in Gemini (the Ask Gemini panel and the `=AI()` function). The other is **your own script calling an AI API**, such as the Claude API, with `UrlFetchApp`.
+- For a direct API call, keep the API key in **Script Properties** (Project Settings), never typed into the code or into a cell.
+- A custom function in a cell has a **30-second limit**, while a normal script run has 6 minutes (per the official quotas page, as of 2026-11-01). For AI calls, a **custom menu** is the safer starting point.
+- The sample code in this tutorial **was not run by us**. It is assembled from the official documents listed in the sources. Test it on a copy with made-up data first.
+</Summary>
+
+<Aside type="caution" title="API usage is billed separately, and cell contents leave Google">
+Calling the Claude API from a script sends the text of the cells you choose to Anthropic's API, and API usage is billed per use, separately from a Claude subscription. This tutorial does not cover prices; check the official pricing page yourself. Don't send personal or confidential cell contents. See [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/).
+</Aside>
+
+## What you'll be able to do
+
+- Open the Apps Script editor from a spreadsheet and run a first script.
+- Explain the difference between **Gemini built into Sheets** and **calling an AI API from your own script**, and pick the one that fits.
+- Add a custom menu that sends the cells you select to Claude and writes the answers next to them.
+- Store the API key safely and understand the main limits (time, daily quotas).
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Apps Script** | Google's JavaScript-based tool for extending Workspace apps such as Sheets. You write code in a browser editor. |
+| **Bound script** | A script attached to one spreadsheet, created from **Extensions > Apps Script**. Only bound scripts can create menus. |
+| **Custom menu** | A menu you add in an `onOpen` function. Each item runs a function in your script. |
+| **Custom function** | A function you write in a script and then use in a cell like `=DOUBLE(A1)`. It has stricter limits than a normal script. |
+| **Script Properties** | A key-value store for a project, opened from **Project Settings** in the editor. The official documents describe it as typically used for configuration data. |
+| **UrlFetchApp** | The Apps Script service for requesting a web address (an API). |
+| **Gemini in Sheets / `=AI()`** | Google's own AI features inside Sheets. They run on Google's side, and you don't write code or manage an API key for them. |
+
+### Two ways to bring AI into Sheets
+
+| | Gemini built into Sheets | Your own script calling an API |
+| --- | --- | --- |
+| Where | Ask Gemini panel, `=AI()` function | Custom menu or button you build with Apps Script |
+| Code needed | None | Yes (JavaScript) |
+| Requirements | An eligible Google Workspace or Google AI plan | An API key for the AI service, plus a script you maintain |
+| Strength | Quick, no setup | You decide the prompt, the model, and exactly where the result goes |
+| Watch out for | Availability depends on plan and admin settings | You manage the key, the cost, and the quotas yourself |
+
+For the built-in Gemini features, see [Adding AI to Excel and Google Sheets](/automation/23-spreadsheet-ai/) and [Gemini in Google Workspace](/automation/19-google-workspace-gemini/). This tutorial focuses on the right-hand column.
+
+<Aside type="note" title="Gemini can also help you write the script">
+Google's Apps Script page describes a **Gemini side panel in the script editor** that can generate, modify, and debug code. As of 2026-11-01 the page says it is available only to customers enrolled in the Gemini Beta program and lists license requirements and an admin setting. If it isn't available to you, you can still paste the code below or ask any chat AI to explain it line by line.
+</Aside>
+
+## Step-by-step
+
+Prepare a sheet with a header in row 1 and about 10 made-up customer reviews in column A (rows 2 to 11). The result for each review will go into column B.
+
+<Checklist items={[
+  'I opened Extensions > Apps Script from my practice spreadsheet',
+  'I ran a small test function and approved the authorization prompt',
+  'I stored my API key in Script Properties (not in the code)',
+  'I added the menu code and reloaded the spreadsheet',
+  'I selected a few cells and ran the menu item on a copy',
+  'I checked the results myself and looked at the execution log',
+]} />
+
+<Steps>
+
+1. **Open the editor from the spreadsheet**
+
+   In Google Sheets, choose **Extensions > Apps Script**. This creates a script bound to the spreadsheet. The official guide notes that bound scripts can alter the user interface or respond when the spreadsheet is opened.
+
+   <ScreenshotPlaceholder caption="Extensions > Apps Script in Google Sheets" officialUrl="https://developers.google.com/apps-script/guides/sheets" />
+
+2. **Run a first test function**
+
+   Replace the default code with this short example based on the official guide. It reads the data in the sheet and writes it to the log.
+
+   ```javascript
+   function logRows() {
+     const sheet = SpreadsheetApp.getActiveSheet();
+     const data = sheet.getDataRange().getValues();
+     for (let i = 0; i < data.length; i++) {
+       Logger.log('Row ' + (i + 1) + ': ' + data[i][0]);
+     }
+   }
+   ```
+
+   Click **Run**. The first time, Apps Script shows an authorization dialog for the services your code uses. The official documentation says the needed permissions are detected by scanning the code, and you can revoke access later from your Google account settings. Then open the **Execution log** to see the output.
+
+3. **Store your API key in Script Properties**
+
+   In the editor, click **Project Settings** on the left. Under **Script Properties**, choose **Add script property**, enter `ANTHROPIC_API_KEY` as the property name and paste your key as the value, then click **Save script properties**. (The official guide says you can add up to fifty properties this way.)
+
+   <FlowSteps title="Saving the API key" officialUrl="https://developers.google.com/apps-script/guides/properties" steps={[
+     { where: 'Apps Script editor', action: 'Click Project Settings in the left menu', result: 'The settings page opens' },
+     { where: 'Script Properties', action: 'Click Add script property and enter ANTHROPIC_API_KEY and your key', result: 'The key is stored with the project' },
+     { where: 'Script Properties', action: 'Click Save script properties', result: 'The code can read it with PropertiesService' },
+   ]} />
+
+   Never paste the key into a cell, into the code, or into a screenshot. If you think a key has leaked, delete it in the Claude Console and create a new one.
+
+4. **Add a function that calls Claude**
+
+   This function follows the request format in Anthropic's Messages API documentation (`POST https://api.anthropic.com/v1/messages` with the `x-api-key`, `anthropic-version`, and `content-type` headers) and the `UrlFetchApp.fetch` options from Google's reference (`method`, `contentType`, `headers`, `payload`, `muteHttpExceptions`).
+
+   ```javascript
+   const MODEL = 'claude-sonnet-5-5'; // check the current model list before use
+
+   function askClaude_(prompt) {
+     const key = PropertiesService.getScriptProperties().getProperty('ANTHROPIC_API_KEY');
+     if (!key) {
+       throw new Error('Add ANTHROPIC_API_KEY in Project Settings > Script Properties.');
+     }
+     const response = UrlFetchApp.fetch('https://api.anthropic.com/v1/messages', {
+       method: 'post',
+       contentType: 'application/json',
+       headers: { 'x-api-key': key, 'anthropic-version': '2026-10-21' },
+       payload: JSON.stringify({
+         model: MODEL,
+         max_tokens: 200,
+         messages: [{ role: 'user', content: prompt }],
+       }),
+       muteHttpExceptions: true,
+     });
+     const code = response.getResponseCode();
+     if (code !== 200) {
+       throw new Error('API error ' + code + ': ' + response.getContentText().slice(0, 200));
+     }
+     const data = JSON.parse(response.getContentText());
+     return data.content[0].text.trim();
+   }
+   ```
+
+   Notes from the official documents (as of 2026-11-01):
+
+   - The Claude API requires the `anthropic-version` header. The versions page recommends the latest version, `2026-10-21`. Its migration notes say the `temperature`, `top_p`, and `top_k` parameters are removed in that version, so this code doesn't send them.
+   - The model ID `claude-sonnet-5-5` is listed on the models overview. Model lineups change, so check that page before you rely on an ID.
+   - The reply is in `content`, a list of blocks; for a plain text answer the first block's `text` holds it.
+   - `muteHttpExceptions: true` makes `fetch` return the response instead of throwing, so the code can show a readable error message.
+
+5. **Add a custom menu that classifies the selected cells**
+
+   ```javascript
+   function onOpen() {
+     SpreadsheetApp.getUi()
+       .createMenu('AI tools')
+       .addItem('Classify selected reviews', 'classifySelected')
+       .addToUi();
+   }
+
+   function classifySelected() {
+     const range = SpreadsheetApp.getActiveRange();
+     const values = range.getValues();
+     const results = values.map(function (row) {
+       const text = String(row[0]).trim();
+       if (!text) return [''];
+       const prompt =
+         'Classify this customer review as Praise, Complaint, or Question. ' +
+         'Answer with one word only.\n\nReview: ' + text;
+       return [askClaude_(prompt)];
+     });
+     range.offset(0, 1, results.length, 1).setValues(results);
+   }
+   ```
+
+   Save the script, then reload the spreadsheet. The official menus guide says to put menu code in `onOpen` so the menu shows when the file opens. An **AI tools** menu appears. Select the review cells in column A (for example A2:A6), then choose **AI tools > Classify selected reviews**. The first run asks for authorization, because the script now contacts an external service.
+
+   <PromptBox>
+   Explain this Apps Script code line by line for a beginner. Tell me what data leaves my spreadsheet, where the API key is read from, and what would happen if the API returned an error.
+   </PromptBox>
+
+6. **Check the results and the log**
+
+   Compare each label in column B with the review. If an error appears, open **Executions** or the **Execution log** in the editor. The code above throws an error that includes the HTTP status code, which helps you tell a bad key from a rate limit.
+
+7. **Keep each run small**
+
+   The function above sends one request per cell, one after another. Start with 5 to 10 cells. Google's quotas page lists a runtime limit per execution and daily limits for URL Fetch calls (see the table below). If you need hundreds of rows, split the work into batches or ask for help from a developer.
+
+</Steps>
+
+## Quick reference
+
+### Limits that matter here (Google's quotas page, as of 2026-11-01)
+
+| Item | Value shown | Note |
+| --- | --- | --- |
+| Script runtime | 6 minutes per execution | For menu-triggered runs |
+| Custom function runtime | 30 seconds per execution | A cell shows `#ERROR!` if exceeded |
+| URL Fetch calls | 20,000 per day (consumer accounts), 100,000 per day (Workspace accounts) | One request per cell in the sample code |
+| URL Fetch response size | 50 MB per call | |
+| Triggers total runtime | 90 minutes per day (consumer), 6 hours per day (Workspace) | Matters if you add time-based triggers |
+
+Quotas can change. Check [the official quotas page](https://developers.google.com/apps-script/guides/services/quotas) for the current values.
+
+### Menu or custom function?
+
+| | Custom menu (this tutorial) | Custom function in a cell |
+| --- | --- | --- |
+| How it runs | You click a menu item | Sheets calls it when the cell calculates |
+| Time limit | 6 minutes | 30 seconds |
+| Authorization | Asks you when needed | Official docs: a service that needs user authorization can't be used in a custom function, and they suggest a custom menu instead |
+| Fit for AI calls | Good: you control when it runs | Risky: recalculation can trigger repeated calls (our caution, not an official statement) |
+
+## Common sticking points
+
+### The menu doesn't appear
+
+- **Cause**: The script isn't bound to this spreadsheet (it was created at script.new), or `onOpen` hasn't run yet.
+- **Fix**: Create the script from **Extensions > Apps Script** inside the sheet, save, and reload the spreadsheet. Only bound scripts can create menus.
+
+### "ANTHROPIC_API_KEY" error or HTTP 401
+
+- **Cause**: The property name doesn't match, the value has extra spaces, or the key was deleted.
+- **Fix**: Check the name in Project Settings > Script Properties, and create a new key in the Claude Console if needed.
+
+### The run stops partway or says the time was exceeded
+
+- **Cause**: Too many cells for one run, or the work was started from a custom function (30-second limit).
+- **Fix**: Select fewer cells per run, and use a menu rather than a cell formula.
+
+### The results are inconsistent or wrong
+
+- **Cause**: The prompt is loose, or the review is ambiguous.
+- **Fix**: Make the instruction stricter (fixed list of labels, one word only), test on a few rows, and review the output yourself. See [How to write prompts](/claude/c04-prompting/).
+
+### I want to use Google's built-in AI instead
+
+- **Cause**: You don't want to manage a key or write code.
+- **Fix**: Try the Ask Gemini panel or the `=AI()` function if your plan includes them. See [Adding AI to Excel and Google Sheets](/automation/23-spreadsheet-ai/).
+
+## Practical tips
+
+- **Work on a copy.** A script can overwrite cells, and some changes are hard to undo. Test on a duplicate sheet.
+- **Treat the key like a password.** Keep it in Script Properties, don't share the script with people who shouldn't use it, and avoid pasting the key into chats. The official documents don't say who can read Script Properties, so keep the number of editors small and treat this as our recommendation.
+- **Send only what's needed.** Pass only the cells the AI must read. Don't send names, addresses, or numbers that identify people.
+- **Log usage.** Count the cells you send so you can predict the bill. API pricing is on the official pricing page, not in this tutorial.
+- **Know what you ran.** We did not execute the sample code for this tutorial. Run it yourself on practice data before trusting it with real work.
+- **Learn the API basics.** [C16. Claude API](/claude/c16-api/) covers keys, calls, and cost.
+
+## What to read next
+
+- [6. Adding AI to Excel and Google Sheets](/automation/23-spreadsheet-ai/) — The built-in Copilot, Gemini, and Claude options
+- [4. Gemini in Google Workspace](/automation/19-google-workspace-gemini/) — Gemini across Gmail, Docs, and Sheets
+- [C16. Getting started with the Claude API](/claude/c16-api/) — API keys, first call, and pricing
+- [3. Zapier and Make automation](/automation/18-zapier-make/) — A no-code way to connect Sheets to AI
+- [An AI usage guide for office, planning, and admin roles](/roles/office/) — Repetitive spreadsheet work by job role

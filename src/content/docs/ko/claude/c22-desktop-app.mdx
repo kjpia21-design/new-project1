@@ -1,0 +1,211 @@
+---
+title: "Claude 데스크톱 앱 제대로 쓰기: 빠른 입력, 음성, 파일, 확장 프로그램, 링크"
+description: "Claude 데스크톱 앱(macOS·Windows)이 웹보다 더해 주는 것을 공식 도움말 기준으로 정리한 참고서예요. 설치와 요구 사항, Mac의 빠른 입력, 음성 입력, 파일 첨부, 데스크톱 확장 프로그램, claude:// 링크를 다뤄요"
+sidebar:
+  label: "C22. 데스크톱 앱 제대로 쓰기"
+level: practical
+category: claude
+tools: ["Claude Desktop"]
+duration: "25분"
+prerequisites:
+  - "Claude 계정 (데스크톱 앱의 채팅은 모든 요금제에서 쓸 수 있어요)"
+  - "Mac 또는 Windows PC (Linux는 베타예요. 아래 안내 참고)"
+  - "C3(Claude 앱 시작하기)을 읽어 두면 좋아요"
+lastVerified: 2026-11-01
+sources:
+  - title: "Install Claude Desktop"
+    url: "https://support.claude.com/en/articles/10065433-install-claude-desktop"
+  - title: "Use quick entry with Claude Desktop on Mac"
+    url: "https://support.claude.com/en/articles/12626668-use-quick-entry-with-claude-desktop-on-mac"
+  - title: "Use voice mode"
+    url: "https://support.claude.com/en/articles/11101966-use-voice-mode"
+  - title: "Upload files to Claude"
+    url: "https://support.claude.com/en/articles/8241126-upload-files-to-claude"
+  - title: "Getting Started with Local MCP Servers on Claude Desktop"
+    url: "https://support.claude.com/en/articles/10949351-getting-started-with-local-mcp-servers-on-claude-desktop"
+  - title: "Open Claude Desktop with a link"
+    url: "https://support.claude.com/en/articles/14729294-open-claude-desktop-with-a-link"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- 데스크톱 앱은 **모든 요금제(Free 포함)에서 채팅**을 쓸 수 있고, **Claude Code와 Cowork는 유료 요금제**가 필요해요. macOS 13 이상, Windows 10 이상을 지원하고 Linux는 베타예요(2026-11-01 기준).
+- **빠른 입력(Quick Entry)**은 Mac 전용이에요. 어떤 앱에서든 **Option** 키를 두 번 누르면 메인 창을 열지 않고 메시지를 쓰거나 스크린샷·앱 창을 첨부할 수 있어요. 공식 FAQ에 따르면 Windows에는 없어요.
+- **음성**: 데스크톱에서 음성 모드는 채팅창의 음파 버튼이에요(모든 요금제 베타). Mac의 빠른 입력에는 Caps Lock 받아쓰기 단축키도 따로 있어요.
+- **파일**: "+" 버튼, 끌어다 놓기, 붙여넣기로 첨부해요. 채팅 하나에 파일당 500MB, 최대 20개까지 가능해요.
+- **데스크톱 확장 프로그램**은 로컬 파일과 앱을 연결하고, **`claude://` 링크**는 앱을 바로 새 채팅·Code·Cowork 세션으로 열어 줘요.
+</Summary>
+
+## 이 글을 읽고 나면
+
+- 데스크톱 앱을 설치할 만한지 판단하고 설치할 수 있어요.
+- Mac에서 빠른 입력으로 어떤 앱에서든 Claude를 열고 스크린샷·창을 보낼 수 있어요.
+- 데스크톱 앱에서 음성과 파일 첨부를 쓸 수 있어요.
+- 데스크톱 확장 프로그램의 위치와 `claude://` 링크로 할 수 있는 일을 알아요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **Claude Desktop** | 컴퓨터에 설치하는 Claude 앱이에요. 웹사이트와 따로 있지만 같은 계정으로 로그인해요. |
+| **빠른 입력(Quick Entry)** | 단축키로 어떤 앱 위에나 작은 입력창을 여는 Mac 기능이에요. Claude Desktop이 실행 중이어야 하지만 백그라운드여도 돼요. |
+| **음성 모드** | Claude와 말로 주고받는 대화예요. 모바일·데스크톱·웹에서 쓸 수 있는 베타 기능이에요. |
+| **받아쓰기(Dictation)** | 말을 입력창의 글로 바꿔 주는 기능이에요. Claude가 소리로 답하는 음성 모드와는 달라요. |
+| **데스크톱 확장 프로그램** | 한 번에 설치하는 패키지(로컬 MCP 서버)로, Claude를 컴퓨터의 로컬 파일과 앱에 연결해요. |
+| **딥링크** | Claude Desktop을 특정 위치로 여는 `claude://` 주소예요. |
+
+### 데스크톱 앱이 더해 주는 것 (공식 도움말, 2026-11-01 기준)
+
+| 기능 | 내용 |
+| --- | --- |
+| 요금제 | 채팅: 모든 요금제. Claude Code와 Claude Cowork: 유료 요금제(Pro, Max, Ultra, Team, Enterprise) |
+| 운영체제 | macOS 13(Ventura) 이상, Windows 10 이상, Linux 베타(Ubuntu 22.04 LTS 이상 또는 Debian 12 이상) |
+| 빠른 입력 | Mac 전용 (macOS 12 이상, 음성 받아쓰기는 macOS 14 이상) |
+| 확장 프로그램 | 설정 > 데스크톱 앱 > 확장 프로그램 옆 관리 (이전 레이아웃: 설정 > 확장 프로그램) |
+| 컴퓨터 사용, 받아쓰기 | Linux 베타에서는 쓸 수 없어요 |
+
+이 글은 위 공식 도움말에서 확인되는 내용만 다뤄요. Cowork와 컴퓨터 사용은 [C19. Cowork 시작하기](/ko/claude/c19-cowork/)와 [C11. Chrome용 Claude와 컴퓨터 사용](/ko/claude/c11-chrome-computer-use/)을, 앱 비교와 설치 기본은 [C3. Claude 앱 시작하기](/ko/claude/c03-getting-started/)를 보세요.
+
+<Aside type="note" title="공식 도움말에서 확인하지 못한 것">
+메인 창의 키보드 단축키 목록, Windows용 빠른 입력, Mac·Windows의 자동 업데이트를 설명하는 문서는 찾지 못해서 다루지 않아요. 설정 레이아웃도 바뀌었어요. 도움말은 새 경로(설정 > 데스크톱 앱)와 이전 레이아웃(설정 > 시스템의 이 컴퓨터)을 함께 안내해요. 화면이 다르면 공식 도움말을 확인하세요. 한국어 UI의 메뉴 이름은 공식 문서에서 확인하지 못해서, 아래 메뉴 이름은 영어 UI를 옮긴 것이에요.
+</Aside>
+
+## 따라하기
+
+<Checklist items={[
+  '내 운영체제용 앱을 내려받아 로그인했어요',
+  '(Mac) 빠른 입력 단축키를 켜고 시험해 봤어요',
+  '(Mac) 이 기능을 쓸 때만 필요한 macOS 권한을 허용했어요',
+  '채팅에 파일이나 붙여넣은 이미지를 첨부해 봤어요',
+  '데스크톱 앱에서 음성 모드를 써 봤어요',
+  '확장 프로그램을 관리하는 곳을 찾고, 설치할지 정했어요',
+]} />
+
+<Steps>
+
+1. **설치하고 로그인**
+
+   Claude 다운로드 페이지에서 macOS나 Windows용을 내려받아 파일을 열어 설치하고, 응용 프로그램 폴더(Mac)나 시작 메뉴(Windows)에서 Claude를 실행해 로그인하세요. 채팅은 모든 요금제에서 돼요. Linux는 apt 저장소나 .deb 파일로 설치하는 별도 절차가 있고 Cowork에 추가 요구 사항이 있어요. 공식 설치 페이지에 나와 있어요.
+
+   <ScreenshotPlaceholder caption="Claude 다운로드 페이지" officialUrl="https://support.claude.com/en/articles/10065433-install-claude-desktop" />
+
+2. **(Mac) 빠른 입력 켜기**
+
+   업데이트된 앱을 처음 열면 빠른 입력 단축키를 켜라는 안내가 떠요. **Turn on shortcut**(단축키 켜기)을 체크하고 **Continue**를 누른 뒤 **Option** 키를 두 번 눌러 시험해 보세요. 이후에는 **설정 > 데스크톱 앱**(이전 레이아웃: **설정 > 시스템**의 이 컴퓨터)에서 관리해요.
+
+   <FlowSteps title="Mac에서 빠른 입력 쓰기" officialUrl="https://support.claude.com/en/articles/12626668-use-quick-entry-with-claude-desktop-on-mac" steps={[
+     { where: '아무 앱', action: 'Option 키를 두 번 누르기', result: '텍스트 상자가 열려요' },
+     { where: '텍스트 상자', action: '메시지를 쓰거나, 끌어서 스크린샷을 찍거나, 앱 창을 클릭', result: '스크린샷이나 창 내용이 첨부돼요' },
+     { where: '텍스트 상자', action: '화살표를 누르거나 Enter', result: 'Claude에서 새 채팅이 시작돼요' },
+   ]} />
+
+   공식 문서의 나머지 내용이에요.
+
+   - 텍스트 상자의 **New chat**을 누르면 최근 대화 다섯 개가 보여요.
+   - **Quick access shortcut** 옆에서 단축키를 바꿀 수 있어요. Option 두 번 누르기(기본), Option + Space, 사용자 지정 단축키 중에서 고르세요.
+   - 스크린샷·창 공유에는 macOS **화면 기록** 권한, 빠른 입력에는 **손쉬운 사용** 권한, 받아쓰기에는 **음성 인식** 권한(macOS 14 이상)이 필요해요. 시스템 설정 > 개인정보 보호 및 보안에서 확인할 수 있어요.
+   - 음성 받아쓰기는 Caps Lock 키를 가져가기 때문에 **기본으로 꺼져 있어요**. Caps Lock을 한 번 눌러 시작하고 다시 눌러 끝낸 뒤, 글을 확인하고 화살표로 보내세요.
+
+   <Aside type="caution" title="스크린샷에 개인정보가 들어갈 수 있어요">
+   스크린샷이나 공유한 창에 보이는 모든 것이 Claude에게 전달돼요. 비밀번호, 은행, 메신저, 다른 사람의 개인정보가 보이는 창은 먼저 닫거나 가리세요. [개인·회사 정보를 지키며 AI 쓰기](/ko/basics/05-privacy-safety/)를 참고하세요.
+   </Aside>
+
+3. **파일 첨부**
+
+   채팅창 왼쪽 아래 "+" 버튼을 누르고 **Add files or photos**(파일 또는 사진 추가)를 고르거나, 파일을 채팅창에 끌어다 놓으세요. 클립보드의 이미지를 붙여넣을 수도 있어요. 공식 파일 문서에는 지원 문서(PDF, DOCX, CSV, TXT, HTML, ODT, RTF, EPUB, JSON, 그리고 코드 실행·파일 생성을 켜야 하는 XLSX)와 이미지(JPEG, PNG, GIF, WebP)가 나와요. 채팅 한도는 파일당 500MB, 채팅당 20개이고 PDF는 1,000쪽까지예요. 프로젝트 Files의 파일은 파일당 30MB예요. 모두 2026-11-01 기준이에요.
+
+   <PromptBox>
+   PDF 하나를 첨부했어. 핵심을 다섯 줄로 요약하고, 날짜·금액·마감일을 표로 정리해 줘. 파일에서 불분명한 부분은 추측하지 말고 불분명하다고 알려 줘.
+   </PromptBox>
+
+4. **음성 모드 써 보기**
+
+   데스크톱 앱의 새 채팅에서 채팅창 오른쪽 아래 **음파** 아이콘을 누르고 말을 시작하세요. 기본은 핸즈프리 모드이고, 시끄러운 곳에서는 눌러서 말하기(push-to-talk) 모드가 있어요. **Stop**을 누르면 음성 모드를 나가요. 목소리를 바꾸려면 설정 > Capabilities 아래 Voice settings로 가세요(없으면 설정 > General). 공식 문서는 음성 대화도 일반 사용 한도에 포함된다고 안내해요.
+
+5. **데스크톱 확장 프로그램 살펴보기**
+
+   **설정 > 데스크톱 앱**에서 **확장 프로그램** 옆 **관리**를 누르고(이전 레이아웃: **설정 > 확장 프로그램**), **Browse extensions**를 눌러 필요하면 Anthropic이 검토한 확장 프로그램을 설치하세요. 공식 문서는 확장 프로그램이 로컬 파일, 캘린더, 이메일, 메신저 앱을 연결할 수 있고 일부는 API 키 같은 설정이 필요하다고 설명해요. 필요한 것만 설치하고, 허용하기 전에 각 확장 프로그램이 무엇에 접근하는지 읽어 보세요.
+
+6. **`claude://` 링크 쓰기 (선택)**
+
+   Claude Desktop은 `claude://` 주소에 반응해요. 예를 들어 `claude://claude.ai/new?q=Summarize%20this`는 프롬프트 칸이 미리 채워진 새 채팅을 열어서 확인 후 보낼 수 있어요. `claude://code/new`, `claude://cowork/new` 링크도 있고 `q`, `folder`, `file` 매개변수를 선택으로 쓸 수 있어요. 공식 문서에 따르면 값은 URL 인코딩해야 하고, 프롬프트는 약 14,000자에서 잘리며, 링크로 넘긴 폴더는 신뢰할 수 없는 것으로 취급되어 앱이 항상 확인을 물어요.
+
+</Steps>
+
+## 한눈에 보는 정리
+
+### Mac의 빠른 입력
+
+| 하고 싶은 일 | 방법 |
+| --- | --- |
+| 빠른 입력 열기 | Option 두 번 누르기(기본), 또는 Option + Space나 사용자 지정 단축키 |
+| 스크린샷 보내기 | 빠른 입력을 열고 끌어서 영역 선택 |
+| 앱 창 공유 | 빠른 입력을 열고 창 클릭 |
+| 받아쓰기 | Caps Lock 누르기(켜 둔 경우), 다시 눌러 끝내고 화살표 클릭 |
+| 끄기 | 설정 > 데스크톱 앱에서 빠른 접근 단축키, 음성 단축키, 또는 둘 다 끄기 |
+
+### 딥링크 예시 (공식 문서)
+
+| 목적 | 링크 |
+| --- | --- |
+| 프롬프트가 채워진 새 채팅 | `claude://claude.ai/new?q=Hello` |
+| 새 Code 세션 | `claude://code/new` |
+| 새 Cowork 세션 | `claude://cowork/new` |
+
+### 어떤 앱을 쓸까
+
+| 하고 싶은 일 | 쓸 것 |
+| --- | --- |
+| 아무 앱에서나 빠르게 질문 (Mac) | 데스크톱 + 빠른 입력 |
+| 로컬 파일 작업이나 컴퓨터 사용 | 데스크톱 + [Cowork](/ko/claude/c19-cowork/) 또는 [컴퓨터 사용](/ko/claude/c11-chrome-computer-use/) |
+| 설치 없이 채팅 | 웹, [C3](/ko/claude/c03-getting-started/) 참고 |
+
+## 자주 막히는 지점
+
+### Option 키를 두 번 눌러도 아무 일이 없어요
+
+- **원인**: 빠른 입력이 꺼져 있거나, Claude Desktop이 실행 중이 아니거나, Mac이 아니에요. FAQ에 따르면 현재 Mac 전용이고 앱이 실행 중이어야 해요(백그라운드도 괜찮아요).
+- **해결**: Claude Desktop을 열고 **설정 > 데스크톱 앱**을 확인한 뒤, 시스템 설정 > 개인정보 보호 및 보안의 권한을 확인하세요.
+
+### 단축키가 다른 앱과 겹쳐요
+
+- **원인**: 다른 앱이 같은 키를 써요.
+- **해결**: **Quick access shortcut**을 Option + Space나 사용자 지정 단축키로 바꾸세요.
+
+### 스크린샷이나 창 공유가 안 돼요
+
+- **원인**: macOS 화면 기록 권한이 허용되지 않았어요.
+- **해결**: 시스템 설정 > 개인정보 보호 및 보안에서 허용하세요.
+
+### Code 탭이나 Cowork가 안 보여요
+
+- **원인**: 유료 요금제가 필요해요.
+- **해결**: [C2. 요금제와 사용량 한도](/ko/claude/c02-plans-limits/)에서 요금제를 확인하세요.
+
+### 올린 파일이 거절돼요
+
+- **원인**: 지원하지 않는 형식이나 크기이거나, 코드 실행·파일 생성을 켜지 않고 XLSX를 올렸어요.
+- **해결**: 위의 지원 형식과 한도를 확인하고, 큰 PDF는 나눠서 올리세요.
+
+## 실전 팁
+
+- **먼저 웹으로 써 보세요.** 빠른 입력, 로컬 파일, 확장 프로그램, Cowork가 필요할 때 데스크톱을 설치하세요. [C3](/ko/claude/c03-getting-started/)을 참고하세요.
+- **첨부하는 내용을 확인하세요.** 스크린샷과 창에는 공유하려던 것보다 많은 내용이 보일 수 있어요.
+- **확장 프로그램은 적게 설치하세요.** 각각이 로컬 데이터에 접근할 수 있으니 요청하는 권한을 살펴보세요.
+- **앱을 최신으로 유지하세요.** 컴퓨터 사용 등 일부 기능은 최신 버전을 요구한 적이 있어요([C11](/ko/claude/c11-chrome-computer-use/) 참고).
+- **개인 설정은 한 번만 해 두세요.** 메모리와 지침은 [C9](/ko/claude/c09-memory-settings/)에 있어요.
+
+## 다음에 볼 튜토리얼
+
+- [C3. Claude 앱 시작하기](/ko/claude/c03-getting-started/) — 웹·데스크톱·모바일 앱 비교
+- [C19. Cowork 시작하기](/ko/claude/c19-cowork/) — 내 컴퓨터의 파일 작업 맡기기
+- [C11. Chrome용 Claude와 컴퓨터 사용](/ko/claude/c11-chrome-computer-use/) — 데스크톱 앱의 브라우저·컴퓨터 사용
+- [C9. 메모리와 개인 설정](/ko/claude/c09-memory-settings/) — Claude를 나에게 맞추기
+- [사무·기획·행정 직무 AI 활용 가이드](/ko/roles/office/) — 직무별 일상 워크플로
