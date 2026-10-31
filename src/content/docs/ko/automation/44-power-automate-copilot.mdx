@@ -1,0 +1,243 @@
+---
+title: "Power Automate와 Copilot으로 Microsoft 365 업무 자동화"
+description: "하고 싶은 자동화를 말로 설명하면 Power Automate의 Copilot이 클라우드 흐름 초안을 만들어 줘요. 연결 확인, 테스트, 채팅으로 수정, 오류 해결과 계정·지역·라이선스 주의점까지 정리했어요"
+sidebar:
+  label: "14. Power Automate와 Copilot"
+level: practical
+category: automation
+tools: ["Power Automate", "Copilot in Power Automate", "Outlook", "Teams", "SharePoint"]
+duration: "40분"
+prerequisites:
+  - "Power Automate에 로그인할 수 있는 회사·학교 Microsoft 계정 (개인 Microsoft 계정은 Copilot 기능을 쓸 수 없어요)"
+  - "기밀이 없는 연습 시나리오 (예: 테스트용 Teams 채널과 테스트용 메일함 폴더)"
+  - "조직이 자동화 만들기를 허용할 것 (관리자가 제한할 수 있어요)"
+lastVerified: 2026-10-31
+sources:
+  - title: "Create your first cloud flow using Copilot (Microsoft Learn)"
+    url: "https://learn.microsoft.com/en-us/power-automate/get-started-with-copilot"
+  - title: "FAQ for Copilot in cloud flows (Microsoft Learn)"
+    url: "https://learn.microsoft.com/en-us/power-automate/faqs-copilot"
+  - title: "Troubleshoot failed cloud flows, including Troubleshoot in Copilot (Microsoft Learn)"
+    url: "https://learn.microsoft.com/en-us/power-automate/fix-flow-failures"
+  - title: "Regions overview, including Copilot availability (Microsoft Learn)"
+    url: "https://learn.microsoft.com/en-us/power-automate/regions-overview"
+  - title: "FAQ for Copilot data security and privacy in Microsoft Power Platform (Microsoft Learn)"
+    url: "https://learn.microsoft.com/en-us/power-platform/faqs-copilot-data-security-privacy"
+  - title: "Types of Power Automate licenses (Microsoft Learn)"
+    url: "https://learn.microsoft.com/en-us/power-platform/admin/power-automate-licensing/types"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- **Power Automate**는 **트리거**(흐름을 시작하는 사건)와 그다음의 **작업(action)**으로 이뤄진 클라우드 흐름을 만들어요. **Power Automate의 Copilot**은 하고 싶은 일을 자연어로 설명해 흐름을 만들고, 대화로 계속 고치게 해 줘요(Microsoft Learn, 2026-10-31 확인).
+- Power Automate **홈**에서 **Create with Copilot**을 고르고 흐름을 설명해요. 제안된 트리거와 작업을 확인하고, 연결을 점검한 뒤 흐름을 만들고 **저장해서 테스트**하면 돼요.
+- **"X가 일어나면 Y를 한다(When X happens, do Y)"** 형식으로 쓰고 앱 이름(Outlook, Teams, SharePoint, Forms)을 프롬프트에 넣으세요.
+- Copilot은 **영어에 최적화**되어 있고 다른 언어는 지원이 제한적이에요. **일부 커넥터만** 지원해요. 개인 Microsoft 계정(MSA)은 Copilot 기능을 쓸 수 없어서 회사·학교 계정이 필요해요.
+- [Word·PowerPoint·Outlook 안의 Copilot](/ko/automation/24-m365-copilot/)과는 다른 제품이에요. 이 실습은 회사 테넌트가 필요해서 직접 실행하지 못했어요. 아래 단계는 Microsoft 문서를 따라 썼어요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 작은 자동화(예: "메일이 오면 Teams에 알리기")를 말로 설명해 Copilot에게서 **클라우드 흐름 초안**을 받을 수 있어요.
+- 흐름을 만들기 전에 **연결을 확인**하고 문제 있는 연결을 고칠 수 있어요.
+- **이미 있는 흐름을 채팅으로 수정**하고, Copilot에게 "내 흐름이 뭘 하는지"를 물을 수 있어요.
+- 테스트나 실행이 실패하면 **Troubleshoot in Copilot**을 쓸 수 있어요.
+- Copilot이 안 보이는 이유가 계정·지역·관리자 설정인지 가려낼 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **클라우드 흐름(cloud flow)** | 클라우드에서 도는 자동화예요. 트리거 하나와 그다음의 작업 하나 이상으로 이뤄져요. |
+| **트리거** | 흐름을 시작하는 사건이에요. 예: "메일이 도착하면". |
+| **작업(action)** | 트리거 뒤에 흐름이 하는 단계예요. 예: "Teams에 메시지 올리기". |
+| **커넥터 / 연결** | 커넥터는 Power Automate를 앱·서비스에 이어 주는 것이고, 연결은 그 앱에 대한 내 로그인이에요. |
+| **Copilot 창** | 흐름 디자이너 오른쪽의 채팅 패널이에요. |
+| **새 디자이너** | 현재의 흐름 디자이너예요. Copilot은 클래식이 아닌 **새 디자이너에서만** 쓸 수 있어요(Microsoft Learn). |
+
+### 어느 Copilot일까요?
+
+| 제품 | 하는 일 | 더 읽을 곳 |
+| --- | --- | --- |
+| **Power Automate의 Copilot** (이 편) | 설명대로 **클라우드 흐름**을 만들고 고쳐요 | 이 페이지 |
+| Word·PowerPoint·Outlook의 **Microsoft 365 Copilot** | 문서·슬라이드·메일 초안과 요약 | [7편: M365 Copilot](/ko/automation/24-m365-copilot/) |
+| **다른 자동화 도구** | Zapier, Make, n8n | [3편: Zapier/Make](/ko/automation/18-zapier-make/), [12편: n8n](/ko/automation/42-n8n-ai/) |
+
+<Aside type="caution" title="시작하기 전에 확인하세요">
+Microsoft Learn(2026-10-31 확인)에 따르면 다음과 같아요.
+
+- **계정**: 지역 문서에 개인 Microsoft 서비스 계정(MSA)은 Copilot 기능을 쓸 수 없다고 나와요. 조직 ID가 필요하고, 비주권(non-sovereign) 클라우드 지역이어야 해요.
+- **관리자 설정**: 관리자는 Power Platform 관리 센터에서 클라우드 흐름의 Copilot 기능을 켜거나 끌 수 있어요. 미국·호주·영국 밖의 일부 지역에서는 관리자가 지역 간 호출(cross-geo)을 켜야 해요.
+- **언어**: Copilot은 영어에 최적화되어 있고 다른 언어는 지원이 제한적이라 일부가 영어로 보일 수 있어요. 읽어 본 페이지에서는 한국어 프롬프트를 얼마나 잘 처리하는지, 한국어 화면이 어떤지 확인하지 못했어요. 프롬프트를 영어로 쓰는 것이 가장 안전하고, 한국어 프롬프트는 직접 시험해 보세요.
+- **라이선스**: 데이터 보안 FAQ의 기능 표에는 클라우드 흐름의 Copilot이 "Managed Environments required? No"로 나와요. Power Automate Free 라이선스는 회사·학교 계정에서 표준 커넥터를 쓰는 클라우드 흐름을 포함한다고 하고, 프리미엄 커넥터는 Premium 라이선스가 필요하다고 해요. Copilot 자체에 어떤 라이선스가 필요한지 말하는 페이지는 **찾지 못했고**, Microsoft 요금제 페이지도 읽지 못했어요. 관리자에게 물어보세요. 가격은 이 페이지를 믿지 마세요.
+</Aside>
+
+## 따라 하기
+
+<Checklist items={[
+  '회사·학교 계정으로 Power Automate에 로그인했어요',
+  '"X가 일어나면 Y를 한다" 형식으로 쓰고 앱 이름을 넣었어요',
+  '계속하기 전에 제안된 트리거와 작업을 읽었어요',
+  '모든 연결에 초록 체크 표시가 있는지 확인했어요',
+  '흐름을 저장하고 안전한 테스트 사례로 테스트했어요',
+  'Copilot에게 "내 흐름이 뭘 해?"라고 묻고 내 의도와 비교했어요',
+  '연습이 끝난 뒤 흐름을 끄거나 삭제했어요',
+]} />
+
+<Steps>
+
+1. **로그인하고 Create with Copilot 열기**
+
+   Power Automate에 로그인하세요. 왼쪽 메뉴에서 **Home**이 선택되어 있는지 확인하고, 홈에서 **Create with Copilot**을 고르면 **What will your flow do?**라는 입력란이 나와요.
+
+   <ScreenshotPlaceholder caption="Power Automate 홈의 Create with Copilot 입력란" officialUrl="https://learn.microsoft.com/en-us/power-automate/get-started-with-copilot" />
+
+2. **"X가 일어나면 Y를 한다" 형식으로 설명하기**
+
+   Microsoft의 안내는 **"When X happens, do Y"** 형식으로 쓰고, 최대한 구체적으로 쓰고, 커넥터(Outlook, Teams, Forms 등)를 언급하라는 거예요. Microsoft의 예시 중 하나는 "When an email arrives, I want to post the subject of the email to 'Contoso' Teams General channel."이에요. 영어가 가장 안전하니 프롬프트는 영어로 쓰는 것을 권해요.
+
+   <PromptBox>
+   When an email arrives in my Outlook inbox from [a test sender address], post the email subject to the Teams channel [test channel name].
+   </PromptBox>
+
+   대괄호 부분은 본인의 테스트 값으로 바꾸세요. 입력하는 동안 Copilot이 요청을 다듬는 프롬프트를 제안할 수 있어요. 마음에 들면 보내기(화살표) 아이콘을 누르세요.
+
+3. **제안된 구조 읽기**
+
+   Copilot이 **트리거** 하나와 **작업** 하나 이상을 제안해요. 의도와 같으면 **Keep it and continue**를 누르세요. 아니면 **Add more details for Copilot to work with** 칸에 내용을 더 쓰고 오른쪽 화살표를 누르면 제안된 흐름이 다시 만들어져요.
+
+4. **연결 확인하기**
+
+   제대로 설정된 연결에는 초록 체크 표시가, 확인이 필요한 연결에는 빨간 느낌표가 떠요. 표시된 연결을 눌러 안내대로 로그인하거나 고친 뒤 **Create flow**를 누르세요.
+
+   <FlowSteps title="설명에서 저장된 흐름까지" officialUrl="https://learn.microsoft.com/en-us/power-automate/get-started-with-copilot" steps={[
+     { where: 'Power Automate > Home', action: 'Create with Copilot을 고르고 흐름 설명', result: 'Copilot이 트리거와 작업을 제안해요' },
+     { where: '제안된 흐름', action: 'Keep it and continue 선택 (또는 내용 추가)', result: '연결 목록이 나와요' },
+     { where: '연결', action: '빨간 느낌표를 모두 초록 체크가 될 때까지 고치기', result: '흐름이 각 앱에 로그인할 수 있어요' },
+     { where: 'Create flow', action: 'Create flow 선택', result: '오른쪽에 Copilot 창이 있는 디자이너가 열려요' },
+     { where: '명령 모음', action: 'Save를 누르고 흐름 테스트', result: '의도대로 동작하는지 볼 수 있어요' },
+   ]} />
+
+5. **Copilot 창에서 흐름 다듬기**
+
+   디자이너가 열리면 Copilot 창에서 제안을 따르거나, 질문하거나, 수정을 요청하세요. Microsoft의 수정 요청 예시로는 "I want to send the email subject to Teams channel", "Instead of email, I want to post message on Teams channel"이 있어요. "What does my flow do?"라고 물으면 흐름 요약을 받을 수 있어요.
+
+   <PromptBox>
+   What does my flow do? Then change it so the Teams message also includes the sender's name, and tell me which action you changed.
+   </PromptBox>
+
+   Copilot이 바꾼 내용은 디자이너에서 모두 검토하세요. FAQ에 Copilot의 모든 변경은 디자이너에서 검토해야 하고 되돌릴 수 있다고 나와요.
+
+6. **안전한 데이터로 저장하고 테스트하기**
+
+   명령 모음에서 **Save**를 누르세요. Microsoft는 저장 후 테스트를 권해요. 테스트용 채널과 테스트용 보낸 사람을 쓰세요. 실제 고객 메일이나 다른 사람들이 읽는 채널로 테스트하지 마세요.
+
+7. **이미 있는 흐름 수정하기**
+
+   Copilot은 새 디자이너에서 기존 흐름도 고쳐 줘요. **My flows**에서 흐름을 찾아 세로 점 3개(⋮)를 누르고 **Edit**를 고르면 오른쪽에 Copilot 창이 나와요. Microsoft의 수정 요청 예시로 "Delete action [작업 이름]", "Check if each of the SharePoint items being returned has a title that equals 'USB', and if so, send an email." 등이 있어요.
+
+8. **Troubleshoot in Copilot으로 오류 해결하기**
+
+   테스트나 실행이 실패하면, Microsoft 문제 해결 문서에 따라 새 디자이너가 켜져 있을 때 **Troubleshoot in Copilot**이 테스트 중이나 실행 기록을 볼 때 생긴 오류를 찾고 고치는 걸 도와줘요. 사람이 읽을 수 있는 오류 요약을 주고, 가능하면 해결책도 제안해요. 모든 상황에서 동작하지는 않을 수 있다고도 해요.
+
+   <Aside type="note" title="두 페이지가 달라 보여요">
+   클라우드 흐름의 Copilot FAQ(마지막 업데이트 2026-01-16)는 Copilot이 흐름 오류 수정을 돕도록 갖춰져 있지 않다고 해요. 문제 해결 페이지(마지막 업데이트 2026-10-31)는 Troubleshoot in Copilot 기능을 설명해요. 더 최신 페이지를 현재 기준으로 보지만, 버튼이 보이지 않으면 아직 내 계정에서는 쓸 수 없을 수 있어요.
+   </Aside>
+
+</Steps>
+
+## Microsoft 365 업무 아이디어
+
+아래는 이 사이트가 만든 연습용 프롬프트이고 Microsoft의 예시가 아니에요. 각각 되는지는 내 계정에서 쓸 수 있는 커넥터에 달려 있어요. Microsoft 문서에 Copilot은 커넥터의 일부만 지원한다고 나와요.
+
+| 목표 | 시험해 볼 프롬프트 |
+| --- | --- |
+| 들어오는 메일을 팀에 알리기 | "When an email arrives from [sender], post its subject to the Teams channel [name]." |
+| 새 SharePoint 항목 추적 | "When an item is created in SharePoint list [name], send me an email with the item title." |
+| 모바일 알림 | "When an item is created in SharePoint, send me a mobile notification." |
+| 설문 응답 | "When a new response is submitted in Forms form [name], send me an email with the answers." |
+
+첫째와 셋째 프롬프트는 Microsoft 문서의 시나리오(메일 → Teams, SharePoint 항목 → 모바일 알림)를 따랐고, 둘째와 넷째는 이 사이트의 변형이에요. 먼저 테스트 환경에서 시험하세요.
+
+## 안전하게 쓰는 습관
+
+| 습관 | 이유와 방법 |
+| --- | --- |
+| **저장하기 전에 검토** | FAQ는 Copilot이 바꾼 내용을 디자이너에서 모두 검토하라고 해요. 되돌릴 수도 있어요. |
+| **먼저 가짜 데이터로 테스트** | 메일을 보내거나 Teams에 올리는 흐름은 실행되면 실제 사람에게 영향을 줘요. |
+| **누가 무엇을 받는지 확인** | 흐름을 켜기 전에 각 작업의 받는 사람과 채널을 읽으세요. |
+| **회사 규정 따르기** | 클라우드 흐름의 Copilot을 켤지는 관리자가 정하고, 회사 데이터를 옮기는 자동화는 회사가 제한할 수 있어요. |
+| **내 데이터가 어떻게 다뤄지는지 알기** | Microsoft Power Platform FAQ(마지막 업데이트 2025-05-29)에 따르면 프롬프트와 응답은 OpenAI 같은 제3자 모델의 학습·개선에 쓰이지 않고, 테넌트 관리자가 데이터 공유에 동의하지 않는 한 Microsoft AI 모델 학습에도 쓰이지 않아요. [개인정보와 안전](/ko/basics/05-privacy-safety/)도 보세요. |
+| **필요 없는 흐름은 끄기** | 잊힌 테스트 흐름도 트리거가 일어나면 계속 실행돼요. |
+
+## 한눈에 보기
+
+### 어디에 있나요
+
+| 무엇 | 어디 (Microsoft Learn, 2026-10-31 기준) |
+| --- | --- |
+| Copilot으로 시작 | Power Automate > Home > **Create with Copilot** |
+| Copilot으로 수정 | My flows > ⋮ > **Edit** (새 디자이너, 오른쪽 Copilot 창) |
+| 오류 해결 | **Troubleshoot in Copilot** (새 디자이너) |
+| 기능 켜기·끄기 | Power Platform 관리자(관리 센터) |
+
+### 라이선스 (Microsoft Learn, 2026-10-31)
+
+| 라이선스 | 페이지에 적힌 내용 |
+| --- | --- |
+| **Free** | Microsoft Entra 테넌트의 회사·학교 계정에 무료로 포함돼요. 공유 없이 클라우드 흐름을 만들고 실행할 수 있고, 표준 커넥터만 써요. |
+| **Premium** | 프리미엄 커넥터를 포함해 클라우드·데스크톱 자동화의 모든 기능을 쓸 수 있어요. 유료예요. |
+| **체험판(Trial)** | 90일, Premium과 비슷한 기능(AI Builder 크레딧과 저장 용량 제외)이에요. |
+
+가격과, Copilot 자체에 이 라이선스가 필요한지는 여기서 확인하지 못했어요. Microsoft의 Power Automate 요금제 페이지를 보고 관리자에게 물어보세요.
+
+## 자주 막히는 곳
+
+### Create with Copilot이 안 보여요
+
+- **원인**: 개인 Microsoft 계정이거나, 관리자가 켜야 하는 지역의 환경이거나, 관리자가 꺼 두었을 수 있어요.
+- **해결**: 회사·학교 계정으로 로그인하고, 관리자에게 Power Platform 관리 센터의 Copilot 설정을 확인해 달라고 하세요.
+
+### Copilot이 내 프롬프트를 이해하지 못해요
+
+- **원인**: 프롬프트가 너무 일반적이거나, 앱 이름이 없거나, 지원이 제한적인 언어일 수 있어요.
+- **해결**: "X가 일어나면 Y를 한다" 형식으로 다시 쓰고 커넥터를 적으세요. 같은 프롬프트를 영어로도 시도해 보세요.
+
+### 필요한 커넥터가 제안에 없어요
+
+- **원인**: Copilot은 커넥터의 일부만 지원해요.
+- **해결**: 디자이너에서 직접 흐름을 만들고, 지원되는 부분에만 Copilot을 쓰세요.
+
+### 연결에 빨간 느낌표가 떠요
+
+- **원인**: 흐름이 그 앱에 아직 로그인하지 않았거나 로그인에 확인이 필요해요.
+- **해결**: 연결을 눌러 화면 안내를 따르세요.
+
+### 예전 편집기에는 Copilot이 없어요
+
+- **원인**: Copilot은 새 디자이너에서만 쓸 수 있어요.
+- **해결**: 흐름을 수정할 때 새 디자이너로 바꾸세요.
+
+## 실전 팁
+
+- **아주 작게 시작하세요.** 트리거 하나와 작업 하나가 열 단계 흐름보다 테스트하기 쉬워요.
+- **조금씩 고치세요.** 한 번에 하나씩 요청하고 결과를 읽으세요.
+- **팀원에게 공유하기 전에** Copilot에게 흐름을 설명해 달라고 하세요.
+- **프롬프트 모음을 활용하세요.** Microsoft는 Sample Solutions Gallery의 프롬프트 라이브러리를 링크해 두었어요.
+- **Microsoft 365를 쓰지 않는다면** [Zapier/Make](/ko/automation/18-zapier-make/), [n8n](/ko/automation/42-n8n-ai/), [커넥터와 MCP](/ko/automation/20-connectors-mcp/)를 비교해 보세요.
+
+## 다음에 볼 튜토리얼
+
+- [7. M365 Copilot 업무하기](/ko/automation/24-m365-copilot/) — Word·PowerPoint·Outlook의 Copilot
+- [3. Zapier/Make로 앱 연결하기](/ko/automation/18-zapier-make/) — Microsoft 밖의 자동화 도구
+- [12. n8n으로 AI 워크플로 만들기](/ko/automation/42-n8n-ai/) — 직접 설치해서 쓸 수 있는 대안
+- [6. 엑셀·구글 시트에 AI 붙이기](/ko/automation/23-spreadsheet-ai/) — 스프레드시트 안의 AI
+- [5. 개인정보와 안전](/ko/basics/05-privacy-safety/) — 회사 데이터를 AI와 다룰 때
+- [직장인 가이드](/ko/roles/office/) — 직무별 반복 업무

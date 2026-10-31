@@ -1,0 +1,243 @@
+---
+title: "Automate Microsoft 365 Work with Power Automate and Copilot"
+description: "Describe an automation in plain words and let Copilot in Power Automate draft the cloud flow, then check the connections, test, edit by chat, and troubleshoot, with account, region, and license cautions"
+sidebar:
+  label: "14. Power Automate and Copilot"
+level: practical
+category: automation
+tools: ["Power Automate", "Copilot in Power Automate", "Outlook", "Teams", "SharePoint"]
+duration: "40 min"
+prerequisites:
+  - "A work or school Microsoft account that can sign in to Power Automate (a personal Microsoft account isn't supported for Copilot features)"
+  - "A practice scenario with no confidential data, such as a test Teams channel and a test mailbox folder"
+  - "Permission from your organization to build automations (your admin may restrict this)"
+lastVerified: 2026-10-31
+sources:
+  - title: "Create your first cloud flow using Copilot (Microsoft Learn)"
+    url: "https://learn.microsoft.com/en-us/power-automate/get-started-with-copilot"
+  - title: "FAQ for Copilot in cloud flows (Microsoft Learn)"
+    url: "https://learn.microsoft.com/en-us/power-automate/faqs-copilot"
+  - title: "Troubleshoot failed cloud flows, including Troubleshoot in Copilot (Microsoft Learn)"
+    url: "https://learn.microsoft.com/en-us/power-automate/fix-flow-failures"
+  - title: "Regions overview, including Copilot availability (Microsoft Learn)"
+    url: "https://learn.microsoft.com/en-us/power-automate/regions-overview"
+  - title: "FAQ for Copilot data security and privacy in Microsoft Power Platform (Microsoft Learn)"
+    url: "https://learn.microsoft.com/en-us/power-platform/faqs-copilot-data-security-privacy"
+  - title: "Types of Power Automate licenses (Microsoft Learn)"
+    url: "https://learn.microsoft.com/en-us/power-platform/admin/power-automate-licensing/types"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- **Power Automate** builds cloud flows: a **trigger** (an event that starts the flow) followed by **actions**. **Copilot in Power Automate** lets you describe the flow in natural language and then keep editing it through conversation (Microsoft Learn, checked 2026-10-31).
+- On the Power Automate **Home** page, choose **Create with Copilot**, describe the flow, check the suggested trigger and actions, verify the connections, create the flow, then **save and test** it.
+- Use the **"When X happens, do Y"** pattern and name the apps (Outlook, Teams, SharePoint, Forms) in your prompt.
+- Copilot is **optimized for English** and has limited support for other languages. It supports **only a subset of connectors**. Personal Microsoft accounts (MSA) have no access to Copilot features, so you need a work or school account.
+- This is a different product from [Copilot inside Word, PowerPoint, and Outlook](/automation/24-m365-copilot/). We did not run this exercise ourselves because it needs a work tenant, so the steps below follow Microsoft's documentation.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Describe a small automation (for example, "when an email arrives, post to Teams") and get a **draft cloud flow** from Copilot.
+- **Check connections** and fix the ones that need attention before creating the flow.
+- **Edit an existing flow** by chatting, and ask Copilot "What does my flow do?".
+- Use **Troubleshoot in Copilot** when a test or a run fails.
+- Tell when your account, region, or admin settings are the reason Copilot isn't showing up.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Cloud flow** | An automation that runs in the cloud: a trigger followed by one or more actions. |
+| **Trigger** | The event that starts a flow, such as "an email arrives". |
+| **Action** | A step the flow does after the trigger, such as "post a message in Teams". |
+| **Connector / connection** | A connector links Power Automate to an app or service. A connection is your sign-in to it. |
+| **Copilot pane** | The chat panel on the right side of the flow designer. |
+| **New designer** | The current flow designer. Copilot works **only in the new designer**, not the classic one (Microsoft Learn). |
+
+### Which Copilot is this?
+
+| Product | What it does | Where to read more |
+| --- | --- | --- |
+| **Copilot in Power Automate** (this tutorial) | Builds and edits **cloud flows** from your descriptions | This page |
+| **Microsoft 365 Copilot** in Word, PowerPoint, Outlook | Drafts and summarizes documents, slides, and email | [Tutorial 7: M365 Copilot](/automation/24-m365-copilot/) |
+| **Other automation tools** | Zapier, Make, n8n | [Tutorial 3: Zapier and Make](/automation/18-zapier-make/), [Tutorial 12: n8n](/automation/42-n8n-ai/) |
+
+<Aside type="caution" title="Check these before you start">
+According to Microsoft Learn (checked 2026-10-31):
+
+- **Account**: the regions page says there is no access to Copilot features for personal Microsoft service accounts (MSA). You need an organization ID, in a non-sovereign cloud region.
+- **Admin settings**: an admin can turn the Copilot in cloud flows feature on or off in the Power Platform admin center. In some regions outside the United States, Australia, and the United Kingdom, an admin needs to turn on cross-geo calls.
+- **Language**: Copilot is optimized for English and has limited support for other languages, so parts may appear in English. We didn't confirm in the pages we read how well it handles Korean prompts or what the Korean interface looks like. Writing the prompt in English is the safest choice, and you can test a Korean prompt yourself.
+- **License**: the data security FAQ's feature table lists Copilot in cloud flows with "Managed Environments required? No". The Power Automate Free license is described as including cloud flows with standard connectors for work or school accounts, and premium connectors need a Premium license. We did **not** find a page that states which license is required for Copilot itself, and we could not read Microsoft's pricing page. Ask your admin, and don't rely on this page for prices.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I signed in to Power Automate with a work or school account',
+  'I wrote my prompt in the "When X happens, do Y" form and named the apps',
+  'I read the suggested trigger and actions before continuing',
+  'I checked that every connection has a green check mark',
+  'I saved the flow and tested it with a safe test case',
+  'I asked Copilot "What does my flow do?" and compared the answer to what I meant',
+  'I turned the flow off or deleted it after practice',
+]} />
+
+<Steps>
+
+1. **Sign in and open Create with Copilot**
+
+   Sign in to Power Automate. In the left navigation, make sure **Home** is selected. On the Home page, select **Create with Copilot**. A box titled **What will your flow do?** appears.
+
+   <ScreenshotPlaceholder caption="The Create with Copilot box on the Power Automate Home page" officialUrl="https://learn.microsoft.com/en-us/power-automate/get-started-with-copilot" />
+
+2. **Describe the flow in "When X happens, do Y" form**
+
+   Microsoft's guidance is to use the **"When X happens, do Y"** format, be as specific as possible, and mention the connector (Outlook, Teams, Forms, or others). One of Microsoft's own examples is: "When an email arrives, I want to post the subject of the email to 'Contoso' Teams General channel."
+
+   <PromptBox>
+   When an email arrives in my Outlook inbox from [a test sender address], post the email subject to the Teams channel [test channel name].
+   </PromptBox>
+
+   Replace the bracketed parts with your own test values. As you type, Copilot may suggest prompts to refine your request. Select the send (arrow) icon when you're satisfied.
+
+3. **Read the suggested structure**
+
+   Copilot proposes a **trigger** and one or more **actions**. If it's what you meant, select **Keep it and continue**. If not, type more details in the **Add more details for Copilot to work with** field and select the right arrow. The suggested flow regenerates.
+
+4. **Check the connections**
+
+   Connections that are configured correctly show a green check mark. Connections that need attention show a red exclamation mark. Select a flagged connection and follow the instructions to sign in or fix it. Then select **Create flow**.
+
+   <FlowSteps title="From description to a saved flow" officialUrl="https://learn.microsoft.com/en-us/power-automate/get-started-with-copilot" steps={[
+     { where: 'Power Automate > Home', action: 'Select Create with Copilot and describe the flow', result: 'Copilot proposes a trigger and actions' },
+     { where: 'Suggested flow', action: 'Select Keep it and continue (or add more details)', result: 'The connections list appears' },
+     { where: 'Connections', action: 'Fix any red exclamation marks until all show green checks', result: 'The flow can sign in to each app' },
+     { where: 'Create flow', action: 'Select Create flow', result: 'The designer opens with the Copilot pane on the right' },
+     { where: 'Command bar', action: 'Select Save, then test the flow', result: 'You see whether it does what you meant' },
+   ]} />
+
+5. **Refine the flow in the Copilot pane**
+
+   After the designer opens, use the Copilot pane to follow suggestions, ask questions, or make edits. Microsoft's examples of edit requests include "I want to send the email subject to Teams channel" and "Instead of email, I want to post message on Teams channel." You can also ask, "What does my flow do?" to get a summary.
+
+   <PromptBox>
+   What does my flow do? Then change it so the Teams message also includes the sender's name, and tell me which action you changed.
+   </PromptBox>
+
+   Review every change Copilot makes in the designer. The FAQ says all changes by Copilot should be reviewed in the designer, and you can undo them.
+
+6. **Save and test with safe data**
+
+   Select **Save** on the command bar. Microsoft recommends testing the flow once it's saved. Use a test channel and a test sender. Don't test with real customer email or a channel other people read.
+
+7. **Edit a flow you already have**
+
+   Copilot can also edit existing flows in the new designer. Go to **My flows**, find your flow, select the vertical ellipsis (⋮), and select **Edit**. The Copilot pane appears on the right. Microsoft's example edit prompts include "Delete action [action name]" and "Check if each of the SharePoint items being returned has a title that equals 'USB', and if so, send an email."
+
+8. **Fix errors with Troubleshoot in Copilot**
+
+   If a test or a run fails, Microsoft's troubleshooting page says **Troubleshoot in Copilot** can help find and fix errors during testing or when you review flow run history, when the new designer is turned on. It gives a human-readable summary of the error and, when possible, suggests a fix. Microsoft also says it might not work in all scenarios.
+
+   <Aside type="note" title="Two pages seem to disagree">
+   The Copilot in cloud flows FAQ (last updated 2026-01-16) says Copilot isn't equipped to help with fixing flow errors. The troubleshooting page (last updated 2026-10-31) describes the Troubleshoot in Copilot feature. We treat the newer page as current, but if the button doesn't appear for you, it may not be available to your account yet.
+   </Aside>
+
+</Steps>
+
+## Ideas for Microsoft 365 workflows
+
+These ideas are practice prompts made by this site, not examples from Microsoft. Whether each one works depends on the connectors available to your account. Microsoft's documentation says Copilot supports only a subset of connectors.
+
+| Goal | A prompt to try |
+| --- | --- |
+| Alert a team about incoming mail | "When an email arrives from [sender], post its subject to the Teams channel [name]." |
+| Track new SharePoint items | "When an item is created in SharePoint list [name], send me an email with the item title." |
+| Mobile alert | "When an item is created in SharePoint, send me a mobile notification." |
+| Form responses | "When a new response is submitted in Forms form [name], send me an email with the answers." |
+
+The first and third prompts follow scenarios in Microsoft's documentation (email to Teams, SharePoint item to mobile notification); the second and fourth are our own variations. Try them in a test environment first.
+
+## Using it safely
+
+| Habit | Why and how |
+| --- | --- |
+| **Review before you save** | The FAQ says to review all changes Copilot makes in the designer. You can undo them. |
+| **Test with fake data first** | A flow that sends email or posts to Teams affects real people once it runs. |
+| **Check who receives what** | Read the recipients and channel in each action before turning the flow on. |
+| **Follow company rules** | Your admin controls whether Copilot in cloud flows is on, and your company may restrict automations that move company data. |
+| **Know how your data is treated** | Microsoft's Power Platform FAQ (last updated 2025-05-29) says prompts and responses are not used to train or improve third-party models such as OpenAI's, and are not used to train Microsoft AI models unless your tenant admin opts in to sharing data. See also [Privacy and safety](/basics/05-privacy-safety/). |
+| **Turn off flows you don't need** | A forgotten test flow keeps running when its trigger fires. |
+
+## Quick reference
+
+### Where things are
+
+| What | Where (as of 2026-10-31, per Microsoft Learn) |
+| --- | --- |
+| Start with Copilot | Power Automate > Home > **Create with Copilot** |
+| Edit with Copilot | My flows > ⋮ > **Edit** (new designer; Copilot pane on the right) |
+| Fix errors | **Troubleshoot in Copilot** (new designer) |
+| Turn the feature on or off | Your Power Platform admin (admin center) |
+
+### Licenses (Microsoft Learn, 2026-10-31)
+
+| License | What the page says |
+| --- | --- |
+| **Free** | Included at no cost for work or school accounts in a Microsoft Entra tenant. Creating and running cloud flows (without sharing), standard connectors only. |
+| **Premium** | Full capabilities for cloud and desktop automation including premium connectors. Paid. |
+| **Trial** | 90 days, similar capabilities to Premium (except AI Builder credits and storage capacity). |
+
+Prices, and whether a given license is required for Copilot itself, aren't confirmed here. See Microsoft's Power Automate pricing page and ask your admin.
+
+## Common sticking points
+
+### I don't see Create with Copilot
+
+- **Cause**: Your account may be a personal Microsoft account, your environment may be in a region where an admin must enable it, or your admin may have turned it off.
+- **Fix**: Sign in with a work or school account and ask your admin to check the Copilot setting in the Power Platform admin center.
+
+### Copilot doesn't understand my prompt
+
+- **Cause**: The prompt may be too general, may not name the apps, or may be in a language where support is limited.
+- **Fix**: Rewrite it as "When X happens, do Y" and name the connectors. Try the same prompt in English.
+
+### The connector I need isn't available in the suggestion
+
+- **Cause**: Copilot supports only a subset of connectors.
+- **Fix**: Build the flow in the designer by hand, then use Copilot for the parts it supports.
+
+### A connection shows a red exclamation mark
+
+- **Cause**: The flow isn't signed in to that app yet, or the sign-in needs attention.
+- **Fix**: Select the connection and follow the on-screen instructions.
+
+### Copilot isn't in my old flow editor
+
+- **Cause**: Copilot is available only in the new designer.
+- **Fix**: Switch the flow to the new designer when you edit it.
+
+## Practical tips
+
+- **Start tiny.** One trigger and one action is easier to test than a ten-step flow.
+- **Edit in small steps.** Ask for one change at a time and read the result.
+- **Ask Copilot to explain your flow** before you share it with a teammate.
+- **Keep a prompt library.** Microsoft links a prompt library in its Sample Solutions Gallery for more examples.
+- **Compare tools** if you don't use Microsoft 365: [Zapier and Make](/automation/18-zapier-make/), [n8n](/automation/42-n8n-ai/), and [connectors and MCP](/automation/20-connectors-mcp/).
+
+## Next tutorials
+
+- [7. Working with M365 Copilot](/automation/24-m365-copilot/) — Copilot in Word, PowerPoint, and Outlook
+- [3. Connecting apps with Zapier and Make](/automation/18-zapier-make/) — non-Microsoft automation tools
+- [12. Build AI workflows with n8n](/automation/42-n8n-ai/) — a self-hostable alternative
+- [6. Adding AI to Excel and Google Sheets](/automation/23-spreadsheet-ai/) — AI inside spreadsheets
+- [5. Privacy and safety](/basics/05-privacy-safety/) — handling company data with AI
+- [Office worker guide](/roles/office/) — repetitive work by job role
