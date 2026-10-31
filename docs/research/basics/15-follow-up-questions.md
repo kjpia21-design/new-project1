@@ -1,0 +1,7 @@
+# basics/15 follow-up questions (Q1, 2026-11-01)
+- Claude get-started (support.claude.com/en/articles/8114491): "Tips for getting started: Start simple / Be specific / Iterate: Don't hesitate to refine your prompts or ask follow-up questions."
+- Prompting best practices (platform.claude.com .../claude-prompting-best-practices.md, curl): "Be specific about the output format and constraints you want"; examples "one of the most reliable ways to steer Claude's output format, tone, and structure" (3-5 recommended); context/motivation helps targeted responses (TTS ellipses example); format: tell what to do instead of what not to do; "Ask Claude to self-check ... verify your answer against [criteria]" (Opus 5 exception for coding-style over-verification); Opus 5 default responses longer -> "Prompt explicitly for conciseness".
+- Reduce hallucinations (.../reduce-hallucinations.md): allow "I don't know"; direct quotes for long docs; verify with citations, retract claims without support; best-of-N compare outputs; iterative refinement via follow-up prompts to verify.
+- Site advice, NOT found in official pages read (labelled as such): argue the other side / counterarguments; ask for what it is unsure about as a ranking-style step; one change at a time; numeric length.
+- Not verified: ChatGPT and Gemini official prompting/follow-up guidance; retry/edit-message buttons per service (deliberately not described).
+- Links: basics/03, 04, 05; chat/41; claude/c04.

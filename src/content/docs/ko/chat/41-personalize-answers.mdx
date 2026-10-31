@@ -1,0 +1,198 @@
+---
+title: "내 방식대로 답하게: Claude·ChatGPT·Gemini 개인 맞춤 설정"
+description: "매번 같은 부탁을 반복하지 않도록 고정 지침을 넣는 곳, 세 서비스의 차이, 넣지 말아야 할 내용, 테스트와 끄는 방법"
+sidebar:
+  label: "12. 내 방식대로 답하게"
+level: beginner
+category: chat
+status: published
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "25분"
+prerequisites:
+  - "Claude, ChatGPT, Gemini 중 하나 이상의 개인 계정 (Gemini의 이 기능은 회사·학교·보호자 관리 계정에서는 쓸 수 없어요)"
+lastVerified: 2026-11-01
+sources:
+  - title: "Understanding Claude's personalization features (Claude 지원센터, 영문)"
+    url: "https://support.claude.com/en/articles/10185728-understanding-claude-s-personalization-features"
+  - title: "Use Claude's chat search and memory to build on previous context (Claude 지원센터, 영문)"
+    url: "https://support.claude.com/en/articles/11817273-use-claude-s-chat-search-and-memory-to-build-on-previous-context"
+  - title: "What are skills? (Claude 지원센터, 영문)"
+    url: "https://support.claude.com/en/articles/12512176-what-are-skills"
+  - title: "Personalize ChatGPT (learn.chatgpt.com, 영문)"
+    url: "https://learn.chatgpt.com/docs/personalize"
+  - title: "Memories (learn.chatgpt.com, 영문)"
+    url: "https://learn.chatgpt.com/docs/customization/memories"
+  - title: "Get personalization in Gemini Apps (Gemini 앱 도움말)"
+    url: "https://support.google.com/gemini/answer/15637730"
+  - title: "Manage what Gemini remembers about you and customize responses (Gemini 앱 도움말)"
+    url: "https://support.google.com/gemini/answer/16598625"
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- "짧게 답해 줘", "나는 초보야"를 매번 쓰고 있다면 **고정 지침**에 한 번만 적어 두세요. 세 서비스 모두 이런 자리가 있어요.
+- **Claude**: Settings > Your Claude > Instructions. **ChatGPT**: Settings > Personalization(맞춤 지침, Base style and tone). **Gemini**: Settings & help > Personal Intelligence > Instructions for Gemini. 메뉴 이름은 바뀔 수 있으니 내 화면에서 확인하세요. (2026-11-01 기준)
+- 적는 것은 **"어떻게 답해 달라"는 취향**이에요. 주민등록번호, 계좌번호, 건강 정보, 회사 기밀은 넣지 마세요.
+- 평범한 질문 하나로 테스트하고, 끄는 곳을 알아 두세요. 지금 채팅에서 구체적으로 부탁하면 고정 지침과 다르게 답하게 할 수도 있어요.
+- 사실을 저장하는 "메모리"는 서비스·요금제마다 달라요. Claude는 [C9](/ko/claude/c09-memory-settings/)에서 다뤘으니, 여기서는 지침 중심으로 봐요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 원하는 것이 고정 지침, 프로젝트 지침, 메모리 중 어느 것에 맞는지 구분할 수 있어요.
+- Claude, ChatGPT, Gemini에서 지침 화면을 찾을 수 있어요.
+- 짧고 효과적인 지침을 쓰고 테스트할 수 있어요.
+- 도움이 안 될 때 끄거나 고치고, 민감한 정보를 넣지 않을 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **고정 지침** | 한 번 써 두면 AI가 이후 대화에 적용하는 메모예요. Claude는 "Instructions", ChatGPT는 "custom instructions(맞춤 지침)", Gemini는 "Instructions for Gemini"라고 불러요. |
+| **프로젝트 지침** | 한 프로젝트 안에서만 적용되는 지침이에요(Claude). [C5](/ko/claude/c05-projects/)를 보세요. |
+| **메모리** | AI가 대화에서 알게 된 사실이나 취향을 저장해 다시 쓰는 기능이에요. 지침과는 별개이고 서비스마다 달라요. |
+| **말투·성격** | ChatGPT 웹에서는 "Base style and tone"에서 성격(personality)을 고를 수 있어요. 공식 문서는 이것이 말투와 어조를 바꿀 뿐 능력을 바꾸지는 않는다고 설명해요. |
+
+### 서비스별 공식 안내 비교
+
+| | Claude | ChatGPT | Gemini |
+| --- | --- | --- | --- |
+| 고정 지침 | Settings > Your Claude > Instructions (예전 화면: Settings > Account > Instructions for Claude). 모든 대화에 적용 | 설정(Settings)에서 관리하는 custom instructions (정확한 항목 이름은 확인하지 못했어요. 아래 상자 참고) | Settings & help > Personal Intelligence > Instructions for Gemini. 모든 채팅에 적용 |
+| 말투 설정 | 공식 개인화 안내는 말투·형식 조정에 스킬(skills)을 소개해요 (아래) | Settings > Personalization > Base style and tone (웹) | 별도 설정은 아니에요. 공식 문서가 말투·스타일 요청을 지침 예시로 들어요 |
+| 프로젝트별 | 프로젝트 지침 | 읽은 페이지에는 없어요 | 읽은 페이지에는 없어요 |
+| 메모리 | Settings > Your Claude (C9 참고) | Settings > Personalization | Settings > Personal Intelligence > Memory (Google AI 요금제, 만 18세 초과, 현재 미국만) |
+| 누가 쓸 수 있나 | Claude 안내 기준. 프로젝트 지침의 요금제 조건은 설명이 일관되지 않아요 (아래 참고) | 확인하지 못했어요 | 지침: "모든 사용자". 사실 기억: 아래 조건 참고 |
+
+<Aside type="note" title="확인한 것과 확인하지 못한 것 (2026-11-01)">
+- **Claude**: 개인화 안내 페이지는 Instructions, Project instructions, Skills를 소개해요. 무료 사용자도 프로젝트를 최대 5개 만들 수 있다고 하면서, 다른 줄에서는 프로젝트 지침이 "paid plans only"라고 해서 두 설명이 맞지 않아요. 내 요금제에서 되는지 직접 확인하세요. 현재 기준의 별도 "스타일(styles)" 도움말 페이지는 찾지 못해서 이 글에서는 스타일 기능을 설명하지 않아요. 말투·형식을 조정할 수 있는 스킬은 [C8](/ko/claude/c08-skills/)에서 다뤄요.
+- **ChatGPT**: learn.chatgpt.com을 썼어요. 이 페이지는 custom instructions를 "여러 채팅에서 따르게 하고 싶은 취향"에 쓰라고 하고, 웹 경로로 Settings > Personalization > Base style and tone을 알려 줘요. 맞춤 지침 입력란의 정확한 이름, 어떤 요금제에서 되는지, 채팅 단위 제한은 확인하지 못했어요(help.openai.com은 우리 도구로 접근할 수 없었어요). 그 페이지에는 Codex 내용도 섞여 있어서 ChatGPT에 해당하는 부분만 썼어요.
+- **Gemini**: 지침은 누구나 추가할 수 있어요. Gemini가 특정 사실을 기억하게 하려면 만 18세 초과, Google AI 요금제, 개인 Google 계정(회사·학교·보호자 관리 계정 제외), Memory 켜기가 필요하고, 현재는 미국에서만, 모바일 앱·gemini.google.com·Chrome의 Gemini·스마트워치에서 쓸 수 있다고 해요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '내가 매번 반복하는 부탁을 정했어요 (길이, 말투, 내 수준, 형식)',
+  '짧은 지침 3~5줄을 썼어요',
+  '가장 많이 쓰는 서비스에 저장했어요',
+  '평범한 질문과, 규칙을 깨야 하는 질문으로 테스트했어요',
+  '끄거나 고치는 곳을 알아요',
+  '민감한 내용이 없는지 확인했어요',
+]} />
+
+<Steps>
+
+1. **반복하는 부탁을 적어 보기**
+
+   최근 대화 몇 개를 보세요. 매번 덧붙인 말이 무엇인가요? 예: "짧게", "나는 이 분야 초보야", "결론부터", "쉬운 말로". 이런 것이 지침 후보예요. 한 번만 필요한 부탁은 지침에 넣지 않아요.
+
+2. **짧은 지침 쓰기**
+
+   Claude의 프롬프트 가이드는 "하지 마"보다 "이렇게 해 줘"로 쓰고 이유를 함께 알려 주라고 해요([C4](/ko/claude/c04-prompting/)). 지침도 같은 습관이 잘 통해요. 아래 문구는 이 사이트의 예시이고 공식 문구가 아니에요.
+
+   <PromptBox>
+   나는 전문 용어에 익숙하지 않은 초보자예요. 쉬운 말로 설명하고, 새 용어는 처음 나올 때 한 번 풀어서 알려 주세요. 첫 문장에 결론을 쓰고 그다음에 이유를 써 주세요. 내가 더 달라고 하지 않으면 10줄 안에서 답해 주세요. 확실하지 않은 내용은 추측하지 말고 모른다고 말해 주세요.
+   </PromptBox>
+
+3. **서비스에 저장하기**
+
+   <FlowSteps title="Claude" steps={[
+     { where: '왼쪽 아래 이름 첫 글자', action: 'Settings > Your Claude 열기', result: 'Instructions 입력란' },
+     { where: 'Instructions', action: '내용을 붙여 넣고 저장', result: '모든 대화에 적용' },
+   ]} officialUrl="https://support.claude.com/en/articles/10185728-understanding-claude-s-personalization-features" />
+
+   <FlowSteps title="ChatGPT (웹)" steps={[
+     { where: 'Settings', action: 'Personalization 열기', result: 'Base style and tone 등 개인화 설정' },
+     { where: '맞춤 지침(custom instructions)', action: '내용 입력 (Personalization 안에서 찾아보세요. 항목 이름은 확인하지 못했어요)', result: '여러 채팅에서 따름' },
+   ]} officialUrl="https://learn.chatgpt.com/docs/personalize" />
+
+   <FlowSteps title="Gemini" steps={[
+     { where: 'gemini.google.com: Menu > Settings & help', action: 'Personal Intelligence > Instructions for Gemini 열기', result: '지침 목록' },
+     { where: 'Instructions for Gemini', action: 'Add + 누르고 내용 입력 후 Submit', result: '모든 채팅에 적용' },
+   ]} officialUrl="https://support.google.com/gemini/answer/16598625" />
+
+   Gemini 모바일 앱에서는 공식 경로가 Menu, 프로필 사진 또는 이니셜, Personal Intelligence, Instructions for Gemini 순서예요.
+
+4. **테스트하기**
+
+   새 채팅에서 평범한 질문을 해 보세요. 그다음 규칙을 깨야 하는 질문을 해서, 필요할 때 덮어쓸 수 있는지 확인해요.
+
+   <PromptBox>
+   "펀드"가 뭔지 설명해 주세요.
+   </PromptBox>
+
+   <PromptBox>
+   이번에는 평소의 짧은 형식은 무시하고, 예시를 넣어서 한 페이지 정도로 자세히 설명해 주세요.
+   </PromptBox>
+
+5. **이상하면 고치거나 끄기**
+
+   원하지 않는 말투로 계속 답한다면 지침을 고치거나 지우세요. Gemini 도움말에는 지침별 More > Edit 또는 Delete, 그리고 Instructions for Gemini 전체를 켜고 끄는 스위치가 설명돼 있어요. Claude는 Instructions 내용을 수정하면 돼요. ChatGPT는 공식 문서가 설정에서 어떤 개인화 기능을 켤지 직접 정할 수 있다고 해요.
+
+6. **채팅 중에 기억해 달라고 하기 (선택)**
+
+   Gemini 도움말은 기억 기능이 내게 열려 있다면 "Remember that I am vegetarian"처럼 말하고, "Actually, my daughter is 8, not 7"처럼 고칠 수 있다고 설명해요. Claude도 "기억해 줘" 요청을 받아요([C9](/ko/claude/c09-memory-settings/) 참고).
+
+   <PromptBox>
+   앞으로 선택지를 비교할 때는 표로 정리하는 걸 선호한다는 점을 기억해 주세요.
+   </PromptBox>
+
+</Steps>
+
+## 빠른 참조표
+
+| 원하는 것 | 쓸 것 |
+| --- | --- |
+| 모든 채팅에서 같은 방식 | 고정 지침 |
+| 한 작업에만 쓸 스타일·규칙 | 채팅 안에서 한 줄, 또는 Claude 프로젝트 지침 |
+| 나에 대한 사실 기억 | 메모리 (서비스·요금제·국가마다 달라요) |
+| 말투 바꾸기(격식, 친근함) | ChatGPT: Base style and tone. Gemini·Claude: 지침에 적기 |
+| 개인 맞춤 전부 끄기 | 서비스 설정에서 지침과 메모리 끄기 |
+| 기록 없는 채팅 한 번 | 임시·시크릿 채팅은 [개인정보 설정](/ko/basics/12-privacy-settings/) 참고 |
+
+## 자주 막히는 지점
+
+### 설정을 못 찾겠어요
+
+- **원인**: 메뉴 이름과 배치가 바뀌고, 웹에만 있거나 일부 계정에만 있는 항목도 있어요. Claude 안내에도 예전 설정 화면이 언급돼요.
+- **해결**: 설정 화면에서 "Personalization", "Instructions", "Personal Intelligence"를 찾고, 출처에 있는 공식 페이지와 비교해 보세요.
+
+### 지침을 무시해요
+
+- **원인**: Gemini 도움말은 특정 주제를 잊거나 피하라는 지침이 항상 완벽하게 작동하지는 않는다고 경고해요. 지금 채팅의 부탁이 반대로 작용할 수도 있어요.
+- **해결**: 지침을 짧고 구체적으로 쓰고, 중요한 점은 채팅에서도 다시 말하세요. 지우고 싶은 대화는 활동 기록에서 삭제하세요.
+
+### 긴 목록을 넣었더니 답이 더 나빠졌어요
+
+- **원인**: 규칙이 많으면 서로 부딪칠 수 있어요. 공식 수치가 아니라 이 사이트의 경험 기반 조언이에요.
+- **해결**: 3~5줄로 줄이고, 하나씩 빼면서 문제가 되는 줄을 찾으세요.
+
+### Gemini가 내 정보를 기억하지 않아요
+
+- **원인**: 사실 기억에는 조건이 있어요(Google AI 요금제, 만 18세 초과, 개인 계정, Memory 켜기, 현재 미국만).
+- **해결**: 누구나 추가할 수 있는 Instructions for Gemini를 쓰세요.
+
+### 회사·학교 계정이에요
+
+- **원인**: Gemini의 개인 맞춤은 회사·학교·보호자 관리 계정에서 쓸 수 없어요. 조직 규칙이 따로 있을 수도 있어요.
+- **해결**: 조직의 안내를 따르세요. [개인정보·회사 정보를 지키며 AI 쓰기](/ko/basics/05-privacy-safety/)도 보세요.
+
+## 실전 팁
+
+- **민감한 내용은 넣지 마세요.** 지침과 메모리는 서비스에 저장되고 여러 채팅에 적용돼요. 주민등록번호, 계좌 정보, 비밀번호, 건강 정보, 회사 기밀은 쓰지 마세요. [기초 5편](/ko/basics/05-privacy-safety/)과 [기초 12편](/ko/basics/12-privacy-settings/)을 보세요.
+- **누구인지보다 어떻게 답할지를 쓰세요.** "쉬운 말로, 결론부터"가 긴 자기소개보다 안전해요.
+- **몇 주에 한 번 점검하세요.** 취향은 바뀌는데 오래된 지침이 답을 조용히 이끌어요.
+- **서비스마다 따로 설정해요.** 한 곳을 바꿔도 다른 곳은 그대로예요. 두 곳을 쓰면 같은 문구를 양쪽에 붙여 넣으세요.
+- **사실 확인은 그대로 필요해요.** 맞춤 답변이 더 확신 있게 들릴 수 있어요. [AI 답변 믿어도 될까](/ko/basics/04-fact-checking/)를 보세요.
+
+## 다음에 볼 튜토리얼
+
+- [C9. 메모리와 개인 설정](/ko/claude/c09-memory-settings/) — Claude 메모리, 시크릿 채팅, 가져오기
+- [세 어시스턴트 비교](/ko/chat/05-compare-assistants/) — Claude, ChatGPT, Gemini 차이
+- [12. 개인정보 설정](/ko/basics/12-privacy-settings/) — 내 대화가 학습에 쓰이지 않게
+- [15. 다시 묻기로 더 좋은 답 얻는 법](/ko/basics/15-follow-up-questions/) — 설정을 바꾸지 않고 채팅에서 답 고치기
