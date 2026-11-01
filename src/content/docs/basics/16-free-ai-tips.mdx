@@ -1,0 +1,191 @@
+---
+title: "Getting the Most from Free AI Plans"
+description: "What Claude, ChatGPT, and Gemini free plans include, how usage limits work and reset, ways to stretch your allowance, how temporary chats fit in, and how to combine free tools"
+sidebar:
+  label: "16. Making the most of free AI"
+level: beginner
+category: basics
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "15 min"
+prerequisites:
+  - "At least one AI service account (a free account is enough)"
+lastVerified: 2026-11-01
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "How do usage and length limits work? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work"
+  - title: "Usage limit best practices (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/9797557-usage-limit-best-practices"
+  - title: "Use incognito chats (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12260368-using-incognito-chats"
+  - title: "Google AI plans (Gemini subscriptions)"
+    url: "https://gemini.google/subscriptions/"
+  - title: "Gemini Apps limits & feature availability (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/16275805"
+  - title: "Pricing (OpenAI, ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/pricing"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- **Free plans cover a lot.** Per the official pages (as of 2026-11-01), Claude Free and Gemini's free tier both include chat, web or file features, and tools such as Deep Research (Gemini) or file creation (Claude). The limits, not the features, are what you notice first.
+- **Limits are about how much you use, not how many messages.** Long chats, big files, and heavy features such as Deep Research use your allowance faster. Both Claude and Gemini describe a limit that refreshes every 5 hours, plus a weekly limit.
+- **You can stretch your allowance.** Combine related questions in one message, start a new chat for each new topic, trim what you attach, and turn off tools you do not need.
+- **Spread across services.** Keeping a free account at two or three services means a blocked one does not stop your work.
+- Free plans have limits that can change without notice, so check the official page when exact numbers matter. For a plan-by-plan price comparison, see [Free vs. paid plans](/basics/08-free-vs-paid/).
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Know what each free plan includes, based on the official pages.
+- Understand why you suddenly "hit the limit" and when it resets.
+- Use a few habits that make a free allowance last longer.
+- Choose when to use a temporary chat, and when not to.
+- Combine free tools for different jobs.
+
+This tutorial builds on [Free vs. paid plans](/basics/08-free-vs-paid/), which covers prices and when paying makes sense, and [Which AI should you use?](/basics/11-choose-ai-tool/), which maps jobs to tools. Here we focus on **getting more from what is already free.**
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Usage limit** | How much you can use the AI within a period. When you reach it, you wait for it to reset. |
+| **Session limit / weekly limit** | A short window (5 hours) and a longer one (a week). Claude and Gemini both describe limits that refresh every 5 hours up to a weekly cap. |
+| **Context window** | How much the AI can keep in mind in one chat. A long chat is re-read each time, so it uses more of your allowance. |
+| **Temporary chat** | A chat that is not saved to your history in the usual way. Names differ: Claude calls it an incognito chat, ChatGPT a temporary chat, and Gemini a temporary chat. |
+
+## What the free plans include (as of 2026-11-01)
+
+| Service | What the official page says about the free plan |
+| --- | --- |
+| **Claude Free** | $0. Limited usage every 5 hours and every week. Chat on web, desktop, and mobile; web search, file creation, and code execution; memory; connectors; artifacts; Claude Design, Slides, and Docs. Projects: up to 5. Sonnet and Haiku models; Opus, Research, and Claude Code are listed as not included. Incognito chats are included. |
+| **Gemini free** | $0/month with a Google Account. Gemini app with access to the Flash-Lite model, image generation and editing, Deep Research, Gemini Live, Canvas, Gems, limited Google Flow (the page mentions limited access to Nano Banana Pro), and Gemini Notebook. 15 GB of storage across Gmail, Drive, and Photos. |
+| **ChatGPT Free** | $0/month. The official pricing page we could read is about ChatGPT Work and Codex, and lists Free at $0 with GPT-6 Luna in the desktop app, subject to rollout. It does not give limits for regular chat. |
+
+<Aside type="note" title="What we could not confirm (as of 2026-11-01)">
+- **Exact free limits.** None of the three services publishes how many messages the free plan allows. Claude's pricing page says only "limited usage." Gemini describes limits by relative usage cost, not message counts.
+- **ChatGPT's regular chat features on the free plan.** The pages we could read are written for ChatGPT Work and Codex. help.openai.com returned an access error from our tools, so we did not use it.
+- Features and limits change, and free features can be unavailable at busy times, so check the in-app screens.
+</Aside>
+
+## How limits and resets work
+
+### Claude
+
+- Claude's pricing page lists limited usage for Free "every 5 hours and every week." The help page explains that usage depends on conversation length and complexity, the features you use, the model, and the effort level, and that usage across Claude surfaces counts toward the same limit.
+- The help page describes the 5-hour limit as starting when you send your first message and resetting in full five hours later, and says weekly limits reset at a fixed time assigned to your account. That article is written around paid plans, and we could not confirm a Free usage screen, so judge by the messages you see in the app.
+
+### Gemini
+
+- Gemini's help page says limits are compute-based, factor in prompt complexity, model, features, and chat length, and "refresh every 5 hours until you reach your weekly limit."
+- To check: go to gemini.google.com, and at the bottom left choose Settings, then Usage Limits. It also notifies you when you are close, and tells you when the limit refreshes.
+- Without a Google AI plan, the context window is 32K tokens (128K on Plus, 1M on Pro and Ultra).
+- The help page rates simple chat as very low usage, long conversations and large files as medium, and Deep Research and video generation as high. It also says features that need a lot of compute, such as Deep Research, may be unavailable at busy times for users without a plan.
+
+## Step-by-step
+
+<Checklist items={[
+  'I combined related questions into one message',
+  'I started a new chat for a new topic',
+  'I attached only the pages or files I needed',
+  'I saved heavy features for when I need them',
+  'I tried a second free service when one ran out',
+  'I used a temporary chat for private one-off questions',
+]} />
+
+<Steps>
+
+1. **Plan before you send**
+
+   Claude's official usage tips start with planning: what do you need, can you combine related questions into one message, and what background can you give upfront. That cuts the back-and-forth.
+
+   <PromptBox>
+   I need three things for my trip: (1) a 3-day outline for [city], (2) a packing list for [month], (3) five phrases in [language]. Here is my background: [budget, interests, who is travelling]. Please answer in three labeled sections.
+   </PromptBox>
+
+2. **Start a new chat for each topic**
+
+   Gemini's help page tips: start a new chat when you move to a new topic, so Gemini does not have to re-read a long history. Claude's help page says longer conversations use more of your limit and suggests starting a new one when you are near the limit. When you do, carry over what matters.
+
+   <PromptBox>
+   Summarize our conversation so far in 8 bullet points: decisions made, facts I gave you, and open questions. I will paste it into a new chat.
+   </PromptBox>
+
+3. **Trim what you attach**
+
+   File size and length count toward usage on both services. Attach the pages you need, not a whole document, and ask for one task at a time.
+
+4. **Save heavy features for later**
+
+   Gemini rates Deep Research and video generation as high-usage. Claude lists research and multi-step tasks among the things that affect usage. Try a normal chat first, and use the heavy feature when you really need it.
+
+5. **Turn off what you are not using**
+
+   Claude's help page says connected apps and tools are token-intensive, and suggests turning them off when a chat does not need them, plus asking Claude not to search the web when you do not need current information. Lowering effort or turning off extended thinking also helps, where those options exist.
+
+6. **Reuse material with a project**
+
+   Claude's usage tips say content in a project is cached and counts less when reused. Claude Free allows up to 5 projects. Put documents you keep asking about into a project instead of uploading them again.
+
+7. **Switch to another free service when you hit a limit**
+
+   If one service says to try later, open another. Keep your starter prompt in a note so you can paste it anywhere.
+
+8. **Use temporary chats for private one-off questions**
+
+   Claude's help page says incognito chats are available on all plans including Free, are not saved to your chat history or memory, and are not used for training; they are still retained for 30 days by default. They do not use Claude's memory, so Claude will not know your usual context. For other services and privacy settings, see [privacy settings](/basics/12-privacy-settings/). In ChatGPT's desktop app, the shortcut for a new temporary chat is Ctrl+Shift+N (Windows) or Cmd+Shift+N (Mac), per the official docs.
+
+</Steps>
+
+## Combining free tools
+
+| Job | A reasonable free approach |
+| --- | --- |
+| Everyday questions and writing | One chat AI as your main tool, with a second as a backup |
+| Heavier research | Try a chat first. Use Deep Research (Gemini) only when you need it, since it uses a lot |
+| Long documents | Attach only the needed pages; put reused documents in a Claude project |
+| Private questions | A temporary or incognito chat, and no sensitive details |
+| Anything you will reuse | Save your best prompts in a note, so you can paste them into any service |
+
+For tool choices by job, see [Which AI should you use?](/basics/11-choose-ai-tool/). For a longer writing task, see [Drafting and polishing reports and proposals](/chat/04-write-reports/).
+
+## Common sticking points
+
+### I hit the limit very quickly
+
+- **Cause**: A long chat, large files, or heavy features use more of your allowance.
+- **Fix**: Start a new chat, attach less, and try the simple version of the task first.
+
+### The limit message does not say when it resets
+
+- **Cause**: Free plans show less detail than paid plans.
+- **Fix**: Use another service for now and try again later. For Gemini, check Settings > Usage Limits.
+
+### A feature I used last week is gone
+
+- **Cause**: Features and limits can change, and Google says compute-heavy features may be unavailable at busy times for users without a plan.
+- **Fix**: Check the official page, and wait or try another service.
+
+### My incognito chat forgot everything
+
+- **Cause**: That is by design. Incognito chats do not use or add to memory.
+- **Fix**: Paste the context you need into the chat, with sensitive details removed.
+
+## Practical tips
+
+- **Keep two or three free accounts.** It is the simplest way to avoid being stuck. Do not share passwords, and use only accounts you set up yourself.
+- **Check prices and limits again each quarter.** They change often. Our pages say "as of" for that reason.
+- **Do not put company secrets in a free personal account.** See [privacy and safety](/basics/05-privacy-safety/).
+- **Pay only when free keeps getting in your way.** The steps in [Free vs. paid plans](/basics/08-free-vs-paid/) help you decide.
+
+## What to read next
+
+- [Free vs. paid plans](/basics/08-free-vs-paid/) — prices and when paying makes sense
+- [Which AI should you use?](/basics/11-choose-ai-tool/) — choosing by job
+- [Turn off AI training on your chats](/basics/12-privacy-settings/) — temporary chats and privacy settings

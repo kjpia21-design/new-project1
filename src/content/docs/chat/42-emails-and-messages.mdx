@@ -1,0 +1,201 @@
+---
+title: "Write Better Emails and Messages with AI: Tone, Replies, and Business English"
+description: "How to turn a rough note into a clear email, change the tone, draft a reply to a message you received, and polish business English with Claude, ChatGPT, or Gemini, plus what never to paste in"
+sidebar:
+  label: "13. Emails and messages"
+level: beginner
+category: chat
+tools: ["Claude", "ChatGPT", "Gemini", "Gmail"]
+duration: "20 min"
+prerequisites:
+  - "An account for the chat AI you plan to use (a free account is enough)"
+  - "A real or made-up email you need to write or answer"
+lastVerified: 2026-11-01
+sources:
+  - title: "Get started with Claude (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/8114491-get-started-with-claude"
+  - title: "Draft emails with Gemini in Gmail (Gmail Help)"
+    url: "https://support.google.com/mail/answer/13955415"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- A good email prompt has four parts: **who it goes to, what you want from them, the tone, and the facts the AI must not change.** Give those, and the first draft is usually close.
+- Start from your own rough notes, even messy ones. The AI is good at turning notes into polished text, but it can only use what you tell it, so **it will invent details if you leave gaps.**
+- You can **change the tone** of the same message (warmer, firmer, shorter) without rewriting it. Ask for two versions and pick one.
+- For a **reply**, paste the message you received and say what you want to answer. Ask the AI to list any questions it asked so none gets missed.
+- Before pasting a real email, **remove names, numbers, and anything confidential** (see the box below). Always read the draft and send it yourself.
+- Gmail's built-in "Help me write" can do the same job inside the compose window, but per Gmail Help it needs an eligible Google Workspace or Google AI plan (or a personal Google Account in the US only), as of 2026-11-01.
+</Summary>
+
+## What you'll be able to do
+
+- Turn a few rough lines into a clear email with a subject line.
+- Change the tone of a draft: more polite, more direct, warmer, or shorter.
+- Write a reply to a message you received, covering every question in it.
+- Polish business English you wrote yourself, and learn why it changed.
+- Keep personal and confidential details out of what you paste in.
+
+This tutorial is about **writing itself.** To have AI summarize your inbox, sort labels, or work inside Gmail and Outlook, see [Organizing your inbox with AI](/automation/38-email-ai/). For long reports and proposals, see [Drafting and polishing reports and proposals](/chat/04-write-reports/).
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Draft** | The AI's first version. It is a starting point, not something to send as is. |
+| **Tone** | How the message sounds: formal, friendly, apologetic, firm, and so on. |
+| **Register** | How formal the wording is. A note to a close colleague and a note to a client use different registers. |
+| **Fixed facts** | Dates, amounts, names, and promises that must stay exactly as you wrote them. |
+| **Placeholder** | A bracket like [client name] that you fill in yourself after the AI writes the draft, so you never paste the real value in. |
+
+Claude's official getting-started page gives three tips that fit email writing well: be specific, start simple, and refine with follow-up requests instead of starting over. Gmail Help says the same about "Help me write": the more specific and detailed your prompt, the more relevant the draft. It suggests naming who you are writing to, the subject and required action, and a tone word such as "formal" or "casual."
+
+<Aside type="caution" title="Do not paste these into a chat">
+Real customer or colleague names with contact details, ID, bank, or card numbers, passwords, medical or legal details about a person, and anything your employer has marked confidential. Replace them with placeholders like [Client A], [amount], or [date], then fill the real values back in yourself. For the reasons and for settings that control whether chats are used for training, see [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/).
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I replaced names, numbers, and confidential details with placeholders',
+  'I told the AI who the reader is, what I want, and the tone',
+  'I listed the facts that must not change',
+  'I asked for a version in a different tone and compared them',
+  'I read the final draft aloud and checked every date, amount, and name',
+  'I sent it myself',
+]} />
+
+<Steps>
+
+1. **Write rough notes and get a first draft**
+
+   Do not worry about wording. List what you want to say, then give the AI the reader and the goal.
+
+   <PromptBox>
+   Write a short email from me to my landlord, [Name]. Goal: ask whether the broken kitchen tap can be fixed this week. Facts that must stay exactly as written: the tap has been dripping since Monday, I am home on Thursday afternoon, and I am happy to let the plumber in. Tone: polite and calm, not angry. Under 120 words. Include a subject line.
+   </PromptBox>
+
+2. **Change the tone without rewriting**
+
+   Ask for the same message in a different voice. Seeing two versions side by side makes it easier to decide.
+
+   <PromptBox>
+   Rewrite the email above in two versions. Version A: warmer and more casual, as if I get along well with the landlord. Version B: more formal and firm, as if this is the second time I have asked. Keep every fact the same and keep both under 120 words.
+   </PromptBox>
+
+3. **Write a reply to a message you received**
+
+   Paste the message (after removing private details) and say what you want to answer. Asking for a list of its questions first helps you not miss any.
+
+   <PromptBox>
+   Here is an email I received:
+
+   [Paste the email with names removed]
+
+   First, list every question or request in it as bullet points. Then write a reply for me. My answers: yes to the Tuesday meeting, no to the second request because the budget is closed, and I need until Friday to answer the third. Tone: friendly and professional. Do not promise anything beyond what I listed.
+   </PromptBox>
+
+4. **Say no politely, or ask for something difficult**
+
+   These are the messages people put off. Give the AI your real position, and ask it to keep the reason honest and short.
+
+   <PromptBox>
+   Help me decline an invitation to speak at a community event on March 12 because I have a prior commitment. I want to keep a good relationship and leave the door open for a future event. Write three versions of the message: two sentences, five sentences, and a text-message length. Do not make up an excuse that I did not give you.
+   </PromptBox>
+
+5. **Polish your own business English**
+
+   If English is not your first language, write it your own way first, then ask the AI to improve it. Asking for an explanation of the changes helps you learn the pattern.
+
+   <PromptBox>
+   Below is an email I wrote in English for a client. Improve the grammar and make it sound natural and professional, but keep my meaning and keep it about the same length. Then list the 3 most important changes and explain each in one short sentence, so I can learn from them.
+
+   [Paste your English draft]
+   </PromptBox>
+
+6. **Shorten a long message and make the action clear**
+
+   Long emails get skimmed. Ask the AI to put the request where the reader will see it.
+
+   <PromptBox>
+   Shorten this email to under 100 words. Put the request in the first two sentences, put the deadline in bold, and end with one clear question. Do not remove any date or number.
+
+   [Paste the draft]
+   </PromptBox>
+
+7. **Write a short chat message or follow-up nudge**
+
+   The same skill works for a message in a chat app, not only for email.
+
+   <PromptBox>
+   I sent a document to a colleague three days ago and have not heard back. Write a short, friendly message (two sentences, no pressure) asking whether they had a chance to look, and mention that I need it by Friday. Give me one version for chat and one for email.
+   </PromptBox>
+
+8. **Do a final check yourself**
+
+   Ask the AI to find problems, then read the message once more in your own voice.
+
+   <PromptBox>
+   Check this email for anything that might be misunderstood, sound rude, or leave out information the reader needs. List the problems only; do not rewrite it.
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+| What you want | What to tell the AI |
+| --- | --- |
+| A first draft | Reader, goal, fixed facts, tone, length |
+| A different tone | "Two versions: warmer, and more formal. Same facts." |
+| A reply | Paste the message, list your answers, "do not promise anything else" |
+| A polite refusal | Your real reason (or none), the relationship to keep, several lengths |
+| Better English | "Keep my meaning; list the 3 biggest changes and why" |
+| Shorter | "Under N words, request first, keep all dates and numbers" |
+| A safety check | "List problems only; do not rewrite" |
+
+## Common sticking points
+
+### The draft sounds generic or too stiff
+
+- **Cause**: The prompt did not say who the reader is or how you normally write.
+- **Fix**: Add one or two sentences of your own writing as an example and say "match this style." If you want it to apply every time, see [Personalize AI answers](/chat/41-personalize-answers/).
+
+### The AI added a detail I never gave it
+
+- **Cause**: When a prompt leaves a gap, the AI fills it with something plausible.
+- **Fix**: List the fixed facts and add "Use only these facts. Use [brackets] for anything else." Check every date, amount, and name before sending.
+
+### The English is correct but does not sound like me
+
+- **Cause**: You asked it to "make it professional," which pushes toward formal, long wording.
+- **Fix**: Ask for "plain, friendly business English, short sentences, no jargon."
+
+### The reply misses a question from the original email
+
+- **Cause**: The AI answered the main point and skipped smaller ones.
+- **Fix**: Use the two-step approach in step 3: list every question first, then draft.
+
+### I cannot paste the email because it has private information
+
+- **Cause**: The thread has names, numbers, or confidential content.
+- **Fix**: Describe the situation in your own words with placeholders, or edit the text before pasting. If it is too sensitive, write that one yourself.
+
+## Practical tips
+
+- **Say what you want first.** Even in a short prompt, state the goal before the details.
+- **Ask for a subject line** and for two or three options if the subject matters.
+- **Keep your voice.** After the AI writes, change a few words so it sounds like you. Readers who know you will notice a style that suddenly changes.
+- **Do not let it promise for you.** Add "do not promise anything beyond what I listed" when the message includes commitments or money.
+- **Do not send in a hurry.** Reading the draft aloud once catches most awkward lines.
+
+## What to read next
+
+- [Asking questions well: the basics](/basics/03-asking-well/) — building a clear prompt
+- [Organizing your inbox with AI](/automation/38-email-ai/) — summaries, drafts inside Gmail and Outlook, and labels
+- [Drafting and polishing reports and proposals](/chat/04-write-reports/) — longer documents
+- [Personalize AI answers](/chat/41-personalize-answers/) — save your tone and preferences
