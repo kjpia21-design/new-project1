@@ -16,26 +16,29 @@ const { label = t(lang, 'prompt.label') } = Astro.props;
   prompt-box {
     display: block;
     margin: 1.25rem 0;
-    border: 2px solid var(--ai-coral);
-    border-radius: 14px;
-    background: var(--ai-card-tint);
+    border: 1px solid var(--ai-line);
+    border-radius: var(--ai-radius);
+    background: var(--ai-surface);
     overflow: hidden;
   }
   .head {
     display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
-    padding: 0.5rem 0.9rem;
-    background: var(--ai-coral-soft);
-    font-size: var(--sl-text-sm); font-weight: 700; color: var(--sl-color-white);
+    padding: 0.45rem 0.6rem 0.45rem 1rem;
+    background: var(--ai-surface-2); border-bottom: 1px solid var(--ai-line);
   }
+  .label { display: inline-flex; align-items: center; gap: 0.45rem; font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--sl-color-gray-3); }
+  .label::before { content: ''; width: 6px; height: 6px; border-radius: 999px; background: var(--ai-coral); }
   .copy {
-    flex: none;
-    border: 0; border-radius: 999px; cursor: pointer;
-    padding: 0.2rem 0.9rem;
-    background: var(--sl-color-accent); color: var(--sl-color-text-invert);
-    font: inherit; font-weight: 700;
+    flex: none; display: inline-flex; align-items: center; gap: 0.35rem;
+    border: 1px solid var(--ai-line); border-radius: var(--ai-radius-sm); cursor: pointer;
+    padding: 0.25rem 0.65rem;
+    background: var(--ai-surface); color: var(--sl-color-gray-1);
+    font: inherit; font-size: var(--sl-text-xs); font-weight: 600; line-height: 1.5;
+    transition: border-color 0.15s, color 0.15s, background-color 0.15s;
   }
-  .copy:hover { filter: brightness(1.08); }
-  .body { padding: 0.9rem 1rem; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--sl-color-white); }
+  .copy:hover { border-color: var(--ai-line-strong); color: var(--sl-color-white); }
+  .copy:active { background: var(--ai-surface-2); }
+  .body { padding: 0.9rem 1rem; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--sl-color-white); font-size: var(--sl-text-sm); line-height: 1.7; }
   .body :global(p) { margin: 0; }
 </style>
 

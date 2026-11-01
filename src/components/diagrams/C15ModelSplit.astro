@@ -24,20 +24,20 @@ const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
   <svg viewBox="0 0 360 440" role="img" aria-labelledby="c15-title c15-desc">
     <title id="c15-title">{tx('모델 분담 흐름도')}</title>
     <desc id="c15-desc">{tx('Opus가 요구사항을 정리하고 작업 명세를 쓰면, Sonnet 하위 에이전트들이 구현하고, 결과를 다시 Opus가 검토해 커밋과 PR로 마무리합니다. 검토에서 문제가 나오면 명세를 고쳐 다시 맡깁니다.')}</desc>
-    <g class="box blue"><rect x="30" y="10" width="300" height="100" rx="16" />
+    <g class="box blue"><rect x="30" y="10" width="300" height="100" rx="10" />
       <text x="180" y="44" class="t1">{tx('기획 · Opus 5.5')}</text>
       <text x="180" y="70" class="t2">{tx('질문으로 요구사항 정리 → 계획 → 작업 명세')}</text>
       <text x="180" y="92" class="t3">{tx('무엇을, 어떤 기준으로 만들지 정해요')}</text></g>
     <g class="arrow"><path d="M180 112 V158" /><path d="M171 150 L180 160 L189 150" /></g>
     <text x="196" y="140" class="t3 left">{tx('명세를 넘겨요')}</text>
-    <g class="box coral"><rect x="30" y="162" width="300" height="110" rx="16" />
+    <g class="box coral"><rect x="30" y="162" width="300" height="110" rx="10" />
       <text x="180" y="196" class="t1">{tx('구현 · Sonnet 5.5')}</text>
       <text x="180" y="222" class="t2">{tx('하위 에이전트 여러 명 (병렬 가능)')}</text>
       <text x="180" y="244" class="t3">{tx('명세대로 작성하고 빌드로 확인해요')}</text>
       <text x="180" y="262" class="t3">{tx('커밋은 하지 않아요')}</text></g>
     <g class="arrow"><path d="M180 274 V320" /><path d="M171 312 L180 322 L189 312" /></g>
     <text x="196" y="302" class="t3 left">{tx('결과를 돌려줘요')}</text>
-    <g class="box green"><rect x="30" y="324" width="300" height="100" rx="16" />
+    <g class="box green"><rect x="30" y="324" width="300" height="100" rx="10" />
       <text x="180" y="358" class="t1">{tx('검토 · Opus 5.5')}</text>
       <text x="180" y="384" class="t2">{tx('사실 대조 · 화면 확인 · 작은 수정')}</text>
       <text x="180" y="406" class="t3">{tx('통과하면 커밋 · PR로 마무리해요')}</text></g>
@@ -47,7 +47,7 @@ const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
 <style>
   .diagram { margin: 1.5rem auto; max-width: 400px; }
   svg { width: 100%; height: auto; display: block; }
-  .box rect { stroke-width: 2; }
+  .box rect { stroke-width: 1.5; }
   .blue rect { fill: var(--ai-blue-bg); stroke: var(--ai-blue-fg); }
   .green rect { fill: var(--ai-green-bg); stroke: var(--ai-green-fg); }
   .coral rect { fill: var(--ai-coral-soft); stroke: var(--ai-coral); }
@@ -55,9 +55,9 @@ const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
   .green text { fill: var(--ai-green-fg); }
   .coral text { fill: var(--sl-color-white); }
   text { text-anchor: middle; font-family: var(--sl-font); }
-  .t1 { font-size: 20px; font-weight: 800; }
+  .t1 { font-size: 20px; font-weight: 650; }
   .t2 { font-size: 14px; font-weight: 600; }
   .t3 { font-size: 12.5px; }
   text.left { text-anchor: start; fill: var(--sl-color-gray-2); font-size: 12.5px; }
-  .arrow path { fill: none; stroke: var(--sl-color-gray-2); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .arrow path { fill: none; stroke: var(--sl-color-gray-2); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 </style>

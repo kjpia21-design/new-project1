@@ -23,13 +23,15 @@ const lang = Astro.props.lang ?? getLang(Astro);
 
 <style>
   .sources {
-    margin: 2.5rem 0 1rem; padding: 1rem 1.25rem;
-    border: 1px solid var(--sl-color-gray-5); border-radius: 16px; background: var(--sl-color-bg-nav);
+    margin: 3rem 0 1rem; padding: 1.25rem 0 0;
+    border-top: 1px solid var(--ai-line);
   }
-  h2 { margin: 0 0 0.5rem; font-size: var(--sl-text-h4); border: 0; }
-  .verified, .note, .none { margin: 0.25rem 0; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); }
-  ul { margin: 0.5rem 0; padding-left: 1.2rem; }
-  li { margin: 0.25rem 0; overflow-wrap: anywhere; }
-  a { color: var(--sl-color-text-accent); text-decoration: underline; }
-  .host { margin-left: 0.4rem; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); }
+  h2 { margin: 0 0 0.4rem; font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--sl-color-gray-3); border: 0; }
+  .verified, .note, .none { margin: 0.25rem 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); }
+  .verified strong { color: var(--sl-color-gray-1); font-weight: 600; }
+  ul { margin: 0.5rem 0; padding-left: 1.1rem; font-size: var(--sl-text-sm); }
+  li { margin: 0.2rem 0; overflow-wrap: anywhere; }
+  a { color: var(--sl-color-gray-1); text-decoration: underline; text-decoration-color: var(--ai-line-strong); text-underline-offset: 0.18em; }
+  a:hover { color: var(--ai-coral-ink); text-decoration-color: currentColor; }
+  .host { margin-left: 0.4rem; font-size: var(--sl-text-2xs); color: var(--sl-color-gray-3); }
 </style>

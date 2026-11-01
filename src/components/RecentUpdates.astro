@@ -13,19 +13,36 @@ const items = await getRecentlyVerified(limit, lang);
   <ul class="updates not-content">
     {items.map((e) => (
       <li>
-        <time datetime={e.data.lastVerified!.toISOString().slice(0, 10)}>{lang === 'en' ? `${t(lang, 'recent.verified')} ${formatDate(e.data.lastVerified, lang)}` : `확인 ${formatDate(e.data.lastVerified, lang)}`}</time>
-        {e.data.level && <LevelBadge level={e.data.level} />}
-        <a href={entryUrl(e.id)}>{e.data.title}</a>
+        <a href={entryUrl(e.id)}>
+          <time datetime={e.data.lastVerified!.toISOString().slice(0, 10)}>{lang === 'en' ? `${t(lang, 'recent.verified')} ${formatDate(e.data.lastVerified, lang)}` : `확인 ${formatDate(e.data.lastVerified, lang)}`}</time>
+          <span class="title">{e.data.title}</span>
+          {e.data.level && <LevelBadge level={e.data.level} />}
+          <svg class="arrow" aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
       </li>
     ))}
   </ul>
 )}
 
 <style>
-  .updates { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
-  li { margin: 0; padding: 0.7rem 1rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.8rem; border-radius: 12px; background: var(--ai-card); border: 1px solid var(--sl-color-gray-5); }
-  time { font-size: var(--sl-text-sm); color: var(--sl-color-gray-3); }
-  a { font-weight: 700; color: var(--sl-color-white); text-decoration: none; }
-  a:hover { color: var(--sl-color-accent-high); }
-  .empty { margin: 0; padding: 1rem 1.25rem; border: 2px dashed var(--sl-color-gray-4); border-radius: 14px; color: var(--sl-color-gray-2); }
+  .updates { list-style: none; margin: 0; padding: 0; border: 1px solid var(--ai-line); border-radius: var(--ai-radius-lg); background: var(--ai-surface); overflow: hidden; }
+  li { margin: 0; padding: 0; }
+  li + li { border-top: 1px solid var(--ai-line); }
+  a {
+    display: grid; grid-template-columns: auto 1fr auto auto; align-items: center; gap: 0.5rem 1rem;
+    padding: 0.8rem 1.1rem; text-decoration: none; transition: background-color 0.15s;
+  }
+  a:hover { background: var(--ai-surface-2); }
+  time { font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .title { font-size: var(--sl-text-sm); font-weight: 600; color: var(--sl-color-white); min-width: 0; }
+  .arrow { color: var(--sl-color-gray-4); transition: color 0.15s, transform 0.15s; }
+  a:hover .arrow { color: var(--ai-coral-ink); transform: translateX(2px); }
+  .empty { margin: 0; padding: 1rem 1.25rem; border: 1px dashed var(--ai-line-strong); border-radius: var(--ai-radius); color: var(--sl-color-gray-2); font-size: var(--sl-text-sm); }
+  @media (max-width: 40rem) {
+    a { grid-template-columns: 1fr auto; gap: 0.3rem 0.75rem; }
+    time { grid-column: 1; grid-row: 2; }
+    .title { grid-column: 1 / -1; grid-row: 1; }
+    .arrow { display: none; }
+    a :global(.level-badge) { grid-column: 2; grid-row: 2; justify-self: end; }
+  }
 </style>

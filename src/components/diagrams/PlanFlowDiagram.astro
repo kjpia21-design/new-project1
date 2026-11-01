@@ -23,19 +23,19 @@ const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
   <svg viewBox="0 0 360 420" role="img" aria-labelledby="plan-flow-title plan-flow-desc">
     <title id="plan-flow-title">{tx('사용량 한도 흐름도')}</title>
     <desc id="plan-flow-desc">{tx('세션 한도는 5시간마다 리셋되고, 주간 한도는 주 1회 리셋되며, 둘을 다 쓰면 켜 둔 경우에만 추가 사용량(usage credits)으로 이어집니다.')}</desc>
-    <g class="box blue"><rect x="30" y="10" width="300" height="100" rx="16" />
+    <g class="box blue"><rect x="30" y="10" width="300" height="100" rx="10" />
       <text x="180" y="44" class="t1">{tx('1. 세션 한도')}</text>
       <text x="180" y="70" class="t2">{tx('5시간마다 리셋돼요')}</text>
       <text x="180" y="92" class="t3">{tx('가장 먼저 만나는 한도')}</text></g>
     <g class="arrow"><path d="M180 112 V148" /><path d="M171 140 L180 150 L189 140" /></g>
     <text x="196" y="136" class="t3 left">{tx('계속 쓰면')}</text>
-    <g class="box purple"><rect x="30" y="152" width="300" height="100" rx="16" />
+    <g class="box purple"><rect x="30" y="152" width="300" height="100" rx="10" />
       <text x="180" y="186" class="t1">{tx('2. 주간 한도')}</text>
       <text x="180" y="212" class="t2">{tx('주 1회 리셋돼요 (모든 모델 적용)')}</text>
       <text x="180" y="234" class="t3">{tx('리셋 시각은 계정마다 고정')}</text></g>
     <g class="arrow"><path d="M180 254 V290" /><path d="M171 282 L180 292 L189 282" /></g>
     <text x="196" y="278" class="t3 left">{tx('한도를 다 쓰면')}</text>
-    <g class="box coral"><rect x="30" y="294" width="300" height="100" rx="16" />
+    <g class="box coral"><rect x="30" y="294" width="300" height="100" rx="10" />
       <text x="180" y="328" class="t1">{tx('3. 추가 사용량')}</text>
       <text x="180" y="354" class="t2">{tx('usage credits (직접 켜야 해요)')}</text>
       <text x="180" y="376" class="t3">{tx('꺼져 있으면 리셋까지 대기')}</text></g>
@@ -45,7 +45,7 @@ const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
 <style>
   .diagram { margin: 1.5rem auto; max-width: 380px; }
   svg { width: 100%; height: auto; display: block; }
-  .box rect { stroke-width: 2; }
+  .box rect { stroke-width: 1.5; }
   .blue rect { fill: var(--ai-blue-bg); stroke: var(--ai-blue-fg); }
   .purple rect { fill: var(--ai-purple-bg); stroke: var(--ai-purple-fg); }
   .coral rect { fill: var(--ai-coral-soft); stroke: var(--ai-coral); }
@@ -53,9 +53,9 @@ const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
   .purple text { fill: var(--ai-purple-fg); }
   .coral text { fill: var(--sl-color-white); }
   text { text-anchor: middle; font-family: var(--sl-font); }
-  .t1 { font-size: 20px; font-weight: 800; }
+  .t1 { font-size: 20px; font-weight: 650; }
   .t2 { font-size: 15px; font-weight: 600; }
   .t3 { font-size: 13px; }
   text.left { text-anchor: start; fill: var(--sl-color-gray-2); }
-  .arrow path { fill: none; stroke: var(--sl-color-gray-2); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .arrow path { fill: none; stroke: var(--sl-color-gray-2); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 </style>
