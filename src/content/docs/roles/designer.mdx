@@ -1,0 +1,116 @@
+---
+title: AI Guide for Designers and Visual Content Creators
+description: Image generation, social media sets, promo visuals, slides, and short video. A guide for designers on where AI helps, the order to learn it, and how to handle copyright.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+## Who this is for
+
+This page suits people who make visuals for a living or as part of their job, such as graphic designers, in-house designers, content designers, and people who handle both design and promotion.
+
+- Thumbnails, banners, and promo images are needed again and again, and each one starts from a blank page.
+- You'd like quick rough visuals to show a direction before spending hours on a polished version.
+- You're unsure how far you can go with AI-made images when it comes to copyright and rules.
+
+## Top 5 ways AI helps
+
+### 1. Explore concepts and mood directions
+
+**What it can do**: Turn a vague brief into several directions you can compare, with keywords, color ideas, and layout notes.
+**Suggested tools**: A chat AI. Learn how to structure instructions in [Writing Work Prompts: Setting Role, Context, and Format](/chat/01-prompt-basics/).
+
+<PromptBox label="Explore directions">
+I'm designing [what: e.g., an event poster] for [audience].
+Purpose: [what it should achieve]
+Give me 3 different visual directions. For each, include a mood in one line, color ideas, layout notes, and what to avoid.
+Ask me anything you need to know first.
+</PromptBox>
+
+### 2. Generate business images
+
+**What it can do**: Create thumbnails and promo images from a written description, then refine them step by step.
+**Suggested tools**: An image generation AI. Follow [Business Image Generation: Make Thumbnails and Promo Images](/media/11-business-images/), and go further with [Advanced Image Generation: Get the Images You Want from Gemini and ChatGPT](/media/30-image-generation-advanced/).
+
+<PromptBox label="Image prompt">
+Create an image for [use: e.g., a blog thumbnail].
+Subject: [what to show]
+Style: [flat illustration / photo-like / etc.]
+Colors: [palette]
+Composition: leave empty space on the [left/right] for text.
+Don't include any text or logos in the image.
+</PromptBox>
+
+### 3. Make a set of social media content
+
+**What it can do**: Produce a matching set of posts and cards in one look.
+**Suggested tools**: Canva AI. See [Make a Set of Social Media Content with Canva AI](/media/12-canva-sns/).
+
+<PromptBox label="Plan a post set">
+Plan a set of 5 social media posts about [topic] for [audience].
+For each post, give a headline of 15 characters or fewer, a one-line supporting message, and a visual idea.
+Keep the tone consistent across the set.
+</PromptBox>
+
+### 4. Draft presentation slides
+
+**What it can do**: Build a slide outline and a first draft that you then refine in your own design.
+**Suggested tools**: Presentation AI tools. Compare them in [Make Presentations with AI: Gamma vs. Claude vs. Copilot](/media/25-ai-presentations/).
+
+<PromptBox label="Slide outline">
+I need a [number]-slide presentation about [topic] for [audience].
+Suggest the flow first: one line per slide with its key message and a suggested visual.
+Once I confirm the flow, we'll write each slide.
+</PromptBox>
+
+### 5. Try short video ideas
+
+**What it can do**: Sketch a storyboard and produce short promo clips.
+**Suggested tools**: AI video tools. See [Make a Short Promo Video with AI Video Tools](/media/13-promo-video/) and [Make Short AI Videos with Google's Video Tools](/media/34-ai-video-generation/).
+
+<PromptBox label="Storyboard">
+Write a storyboard for a [length]-second promo video about [product or event].
+For each scene, give the visual, the on-screen text, and the duration.
+Keep it simple enough to produce with an AI video tool.
+</PromptBox>
+
+## A day in the life
+
+<FlowSteps title="A designer's day" steps={[
+  { where: 'Morning', action: 'Turn the brief into a few direction options with a chat AI', result: 'Directions to choose from' },
+  { where: 'Late morning', action: 'Generate rough images for the chosen direction', result: 'Reference visuals for the team' },
+  { where: 'After lunch', action: 'Build the social post set or slide draft', result: 'A consistent first draft' },
+  { where: 'Afternoon', action: 'Refine by hand, and check text, logos, and rights', result: 'A version ready for review' },
+  { where: 'Before leaving', action: 'Note which prompts and tools worked for next time', result: 'A reusable record' },
+]} />
+
+## Recommended learning path
+
+1. [Your first 30 minutes with AI](/basics/01-first-30-minutes/): Get a feel for talking to AI.
+2. [Asking good questions: the basics](/basics/03-asking-well/): Clear instructions shape the result.
+3. [Writing Work Prompts: Setting Role, Context, and Format](/chat/01-prompt-basics/): Structure your instructions.
+4. [Business Image Generation: Make Thumbnails and Promo Images](/media/11-business-images/): Start with images you use most.
+5. [Advanced Image Generation: Get the Images You Want from Gemini and ChatGPT](/media/30-image-generation-advanced/): Get closer to the image you have in mind.
+6. [Make a Set of Social Media Content with Canva AI](/media/12-canva-sns/): Build a consistent set.
+7. [Make Presentations with AI: Gamma vs. Claude vs. Copilot](/media/25-ai-presentations/): Draft slides faster.
+8. [Make a Short Promo Video with AI Video Tools](/media/13-promo-video/): Try short video.
+9. [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/): Know the rules before you publish.
+10. [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/): Set your standards for client materials.
+
+## What to watch out for
+
+<Aside type="caution" title="Before you publish AI-made visuals">
+- **Copyright and rights**: Check how generated images may be used, and don't imitate a specific person's or brand's work. The basics are in [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/).
+- **Client and unreleased materials**: Don't casually upload unreleased designs, client assets, or photos of people. Check your contract and company policy first. The standards are in [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/).
+- **Text in images**: Check any text, logos, and details in generated images yourself, and fix them by hand.
+- **Facts in copy**: Check any claims, numbers, and names in the text you put on visuals. The method is in [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/).
+</Aside>
+
+## Next steps
+
+- If you also write copy and plan campaigns, see the [Guide for marketers and content managers](/roles/marketer/).
+- If you run a small business yourself, the [Guide for solo business owners and small shops](/roles/solo-business/) fits too.
+- Find more prompts in the [Ready-to-use prompt collection](/start/prompts/).
+- You can see all the roles in [AI Guides by Role](/roles/).
