@@ -1,0 +1,126 @@
+---
+title: AI Guide for HR and Recruiting Roles
+description: Meeting notes, document drafts, translation, and scheduling for HR and recruiting staff. Where AI helps, the order to learn it, and how to handle personal data and hiring fairness.
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+## Who this is for
+
+This page suits people who work on people operations, such as HR generalists, recruiters, hiring managers, and training or onboarding staff.
+
+- Interviews, meetings, and one-on-ones leave behind notes that need organizing.
+- Job posts, announcements, policies, and emails take time to write and revise.
+- Much of your work involves sensitive personal information, so you need to be careful about what goes into AI.
+
+## Top 5 ways AI helps
+
+### 1. Organize meeting and interview notes
+
+**What it can do**: Turn your notes or a transcript into a clear summary with decisions, owners, and next steps.
+**Suggested tools**: A chat AI. For recordings, first turn them into text with [Turn Meeting and Lecture Recordings into Organized Text](/media/14-transcribe-recordings/). Summarizing tips are in [Summarizing Meeting Notes and Long Documents, and Pulling Out Action Items](/chat/02-summarize-documents/).
+
+<PromptBox label="Organize notes">
+Below are my notes from a meeting. Organize them in this format.
+1) Purpose in one line
+2) Decisions (numbered list)
+3) Action items table: task, owner, deadline
+4) Open issues
+If something isn't in the notes, write "TBD" and don't make it up.
+I have removed names and other personal details.
+
+[Paste notes]
+</PromptBox>
+
+### 2. Draft job posts, announcements, and policy documents
+
+**What it can do**: Set up an outline and write a first draft that you then edit for accuracy and tone.
+**Suggested tools**: A chat AI. Follow [Drafting and Polishing Reports and Proposals](/chat/04-write-reports/) for the full flow.
+
+<PromptBox label="Draft a document">
+I'm writing a [job post / internal announcement / guideline] for [audience].
+Purpose: [what it should achieve]
+Include: [facts I will provide]
+First suggest an outline. Once I confirm, write the draft. Don't add any conditions, numbers, or rules that I haven't given you.
+</PromptBox>
+
+### 3. Write emails and messages to staff and candidates
+
+**What it can do**: Draft emails with a delicate tone, such as notices, reminders, and replies.
+**Suggested tools**: A chat AI. To use it inside Gmail, see [Using Google Workspace's AI Features (Gemini) at Work](/automation/19-google-workspace-gemini/).
+
+<PromptBox label="Email draft">
+Write an email for the situation below.
+Recipient: [role, relationship]
+Purpose: [scheduling / notice / reminder / reply]
+Must include: [dates, what's being requested]
+Tone: polite and clear, within 5 sentences. Also give me 3 subject line options.
+Don't include any personal details beyond what I wrote here.
+</PromptBox>
+
+### 4. Translate documents for international teams
+
+**What it can do**: Translate work documents and check the results.
+**Suggested tools**: Translation tools and chat AI. See [AI Translation in Practice: Translate Work Documents with DeepL, Papago, and Claude](/media/26-ai-translation/).
+
+<PromptBox label="Translate and check">
+Translate the text below into [language] for [audience].
+Keep the tone [formal / friendly]. Mark any phrases whose meaning is unclear instead of guessing.
+Then list the 3 places I should have a native speaker double-check.
+
+[Paste text with personal details removed]
+</PromptBox>
+
+### 5. Keep documents and schedules organized
+
+**What it can do**: Tidy up accumulated documents and plan your day from your email and calendar.
+**Suggested tools**: Notion AI and connectors. See [Organizing Work Documents and Databases with Notion AI](/automation/16-notion-ai/) and [Connecting Gmail and Calendar to AI for a Morning Briefing](/automation/17-morning-briefing/).
+
+<PromptBox label="Plan today">
+Look at today's schedule and the emails that have come in since yesterday, and organize the following.
+1) The 3 things I must do today
+2) Emails that need a reply, and their priority
+3) What to prepare before each meeting
+Only read my email. Don't send or delete anything.
+</PromptBox>
+
+## A day in the life
+
+<FlowSteps title="An HR staff member's day" steps={[
+  { where: 'Right after arriving', action: 'Check today\'s schedule and emails to reply to', result: 'A day with priorities set' },
+  { where: 'Morning', action: 'Turn meeting notes (with personal details removed) into minutes and action items', result: 'Minutes ready to share' },
+  { where: 'After lunch', action: 'Draft a job post or announcement', result: 'A first draft to edit' },
+  { where: 'Afternoon', action: 'Edit the draft yourself and check facts, rules, and tone', result: 'A document ready for review' },
+  { where: 'Before leaving', action: 'Check that nothing sensitive was pasted into AI', result: 'Ready for tomorrow' },
+]} />
+
+## Recommended learning path
+
+1. [Your first 30 minutes with AI](/basics/01-first-30-minutes/): Get a feel for talking to AI.
+2. [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/): Set your standards before you use any work materials.
+3. [Turn Off AI Training on Your Chats: Privacy Settings in Claude, ChatGPT and Gemini](/basics/12-privacy-settings/): Check your settings.
+4. [Writing Work Prompts: Setting Role, Context, and Format](/chat/01-prompt-basics/): Structure your instructions.
+5. [Summarizing Meeting Notes and Long Documents, and Pulling Out Action Items](/chat/02-summarize-documents/): Start with the summarizing you do most.
+6. [Drafting and Polishing Reports and Proposals](/chat/04-write-reports/): Connect document writing into one flow.
+7. [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/): Build a verification habit before you share.
+8. [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/): Know where the limits are.
+9. [AI Translation in Practice: Translate Work Documents with DeepL, Papago, and Claude](/media/26-ai-translation/): Translate while protecting confidential information.
+10. [Connecting Gmail and Calendar to AI for a Morning Briefing](/automation/17-morning-briefing/): Hand off repetitive work.
+
+## What to watch out for
+
+<Aside type="caution" title="Before you paste in people-related materials">
+- **Personal information**: Don't paste in names, contact details, performance reviews, salaries, health information, or candidate files. Remove or mask details, and check your company's AI usage policy first. The standards are in [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/), and settings are in [Turn Off AI Training on Your Chats: Privacy Settings in Claude, ChatGPT and Gemini](/basics/12-privacy-settings/).
+- **Fairness in hiring and evaluation**: Don't let AI make or decide hiring or evaluation judgments for you. Use it for drafting and organizing, and make the decisions yourself, following your company's rules and the law. Be aware that AI can reflect bias, as noted in [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/).
+- **Facts, rules, and laws**: Check any legal or policy claims against official sources. The method is in [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/).
+- **Email and calendar connections**: Grant read access first, and decide carefully about send and delete permissions. See [How to use personal AI agents safely](/agents/05-agent-safety/).
+</Aside>
+
+## Next steps
+
+- If your work also involves reports and data, see the [Guide for office, planning, and admin roles](/roles/office/).
+- If you manage a team, the [Guide for sales and customer support](/roles/sales-support/) may also help with email and follow-ups.
+- Find more prompts in the [Ready-to-use prompt collection](/start/prompts/).
+- You can see all the roles in [AI Guides by Role](/roles/).

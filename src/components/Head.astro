@@ -32,12 +32,13 @@ const SECTION_NAMES_EN: Record<string, string> = {
 const SECTION_NAMES = lang === 'en' ? SECTION_NAMES_EN : SECTION_NAMES_KO;
 
 const { entry } = Astro.locals.starlightRoute;
-// 한국어 문서 id는 `ko/...`로 시작하므로 접두사를 떼고 섹션을 찾는다. OG 이미지는 두 언어가 같은 파일을 쓴다.
+// 한국어 문서 id는 `ko/...`로 시작하므로 접두사를 떼고 섹션을 찾는다.
 const first = entry.id.replace(/^ko\//, '').split('/')[0];
 // 문서 폴더(id) 우선, 없으면 frontmatter category, 그것도 없으면 사이트 기본 이미지
 const key = first in SECTION_NAMES ? first : entry.data.category && entry.data.category in SECTION_NAMES ? entry.data.category : 'default';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const imageUrl = new URL(`${base}/og/${key}.png`, Astro.site).href;
+// 언어별 이미지: 영어 /og/<key>.png, 한국어 /og/ko/<key>.png (scripts/og-images.mjs가 두 벌을 생성)
+const imageUrl = new URL(`${base}/og/${lang === 'ko' ? 'ko/' : ''}${key}.png`, Astro.site).href;
 const imageAlt = key === 'default' ? SITE_NAME : `${SITE_NAME} - ${SECTION_NAMES[key]}`;
 ---
 

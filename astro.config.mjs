@@ -96,6 +96,8 @@ export default defineConfig({
             { label: 'Solo Business Owners', translations: { ko: '1인 사업자·소상공인' }, slug: 'roles/solo-business' },
             { label: 'Researchers & Grad Students', translations: { ko: '연구자·대학원생' }, slug: 'roles/researcher' },
             { label: 'Sales & Customer Support', translations: { ko: '영업·고객 지원' }, slug: 'roles/sales-support' },
+            { label: 'Designers & Visual Creators', translations: { ko: '디자이너·비주얼 제작자' }, slug: 'roles/designer' },
+            { label: 'HR & Recruiting', translations: { ko: '인사·채용 담당' }, slug: 'roles/hr' },
           ],
         },
         {
