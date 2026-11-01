@@ -21,7 +21,7 @@ const cats = [
   {cats.map((c) => (
     <li>
       <a href={url(c.href, lang)}>
-        <Illustration name={c.key} size={52} />
+        <Illustration name={c.key} size={36} tone="neutral" />
         <div><h3>{c.title}</h3><p>{c.desc}</p></div>
       </a>
     </li>
@@ -29,13 +29,19 @@ const cats = [
 </ul>
 
 <style>
-  .cats { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
-  li { margin: 0; padding: 0; }
-  a {
-    display: flex; align-items: center; gap: 1rem; height: 100%; padding: 1rem 1.2rem; border-radius: 16px; text-decoration: none;
-    background: var(--ai-card); border: 1px solid var(--sl-color-gray-5); box-shadow: var(--ai-shadow); transition: transform 0.15s, border-color 0.15s;
+  .cats {
+    list-style: none; margin: 0; padding: 0; display: grid; gap: 1px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    background: var(--ai-line); border: 1px solid var(--ai-line); border-radius: var(--ai-radius-lg); overflow: hidden;
   }
-  a:hover { transform: translateY(-2px); border-color: var(--ai-coral); }
-  h3 { margin: 0; font-size: var(--sl-text-base); font-weight: 700; color: var(--sl-color-white); }
-  p { margin: 0.15rem 0 0; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); line-height: 1.5; }
+  li { margin: 0; padding: 0; background: var(--ai-surface); }
+  a {
+    display: flex; align-items: flex-start; gap: 0.9rem; height: 100%; padding: 1.1rem 1.2rem; text-decoration: none;
+    transition: background-color 0.15s;
+  }
+  a:hover { background: var(--ai-surface-2); }
+  a:hover :global(.illu) { color: var(--ai-coral-ink); background: var(--ai-coral-soft); }
+  a :global(.illu) { transition: background-color 0.15s, color 0.15s; }
+  h3 { margin: 0.1rem 0 0; font-size: var(--sl-text-base); font-weight: 600; color: var(--sl-color-white); letter-spacing: -0.005em; }
+  p { margin: 0.2rem 0 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); line-height: 1.5; }
 </style>

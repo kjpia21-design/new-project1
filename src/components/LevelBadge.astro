@@ -9,14 +9,17 @@ const lang = getLang(Astro);
 
 <style>
   .level-badge {
-    display: inline-block;
-    padding: 0.1rem 0.65rem;
-    border-radius: 999px;
-    font-size: var(--sl-text-xs);
-    font-weight: 700;
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    padding: 0.1rem 0.5rem;
+    border-radius: var(--ai-radius-sm);
+    font-size: var(--sl-text-2xs);
+    font-weight: 600;
     line-height: 1.6;
+    letter-spacing: 0.01em;
     white-space: nowrap;
+    border: 1px solid transparent;
   }
+  .level-badge::before { content: ''; width: 5px; height: 5px; border-radius: 999px; background: currentColor; opacity: 0.8; }
   .level-beginner { background: var(--ai-green-bg); color: var(--ai-green-fg); }
   .level-practical { background: var(--ai-blue-bg); color: var(--ai-blue-fg); }
   .level-advanced { background: var(--ai-purple-bg); color: var(--ai-purple-fg); }

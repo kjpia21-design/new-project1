@@ -34,18 +34,21 @@ const aria = lang === 'en' ? '한국어 페이지로 보기' : 'View this page i
   .hdr { display: flex; align-items: center; gap: 0.5rem; height: 100%; }
   .hdr > :global(.header) { flex: 1; min-width: 0; }
   .lang-toggle {
-    display: inline-flex; align-items: center; gap: 0.3rem;
+    display: inline-flex; align-items: center; gap: 0.35rem;
     flex: none;
     padding: 0.3rem 0.6rem;
-    border: 1px solid var(--sl-color-gray-5);
-    border-radius: 999px;
-    color: var(--sl-color-white);
+    border: 1px solid var(--ai-line);
+    border-radius: var(--ai-radius-sm);
+    background: var(--sl-color-black);
+    color: var(--sl-color-gray-1);
     font-size: var(--sl-text-xs);
     font-weight: 600;
     text-decoration: none;
     white-space: nowrap;
+    transition: border-color 0.15s, color 0.15s;
   }
-  .lang-toggle:hover { border-color: var(--sl-color-accent); color: var(--sl-color-accent-high); }
+  .lang-toggle svg { color: var(--sl-color-gray-3); }
+  .lang-toggle:hover { border-color: var(--ai-line-strong); color: var(--sl-color-white); }
   /* 넓은 화면에서는 기본 언어 선택기가 보이므로 숨긴다. */
   @media (min-width: 50rem) {
     .lang-toggle { display: none; }

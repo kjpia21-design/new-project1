@@ -75,8 +75,8 @@ const imageAlt = key === 'default' ? SITE_NAME : `${SITE_NAME} - ${SECTION_NAMES
     try { localStorage.setItem('lang-pref', /^\/ko(\/|$)/.test(el.value) ? 'ko' : 'en'); } catch (err) {}
   }, true);
 </script>
-<meta name="theme-color" content="#ff7a59" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#211b19" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#fcfbfa" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)" />
 {/* 검색 엔진 소유 확인. 구글은 Cloudflare DNS의 TXT 레코드로 확인했으므로 태그가 필요 없다. 자세한 방법은 docs/guides/search-registration.md 참고. */}
 <meta name="naver-site-verification" content="9ee5b97dd724c7af3550e14d997fd821609fb721" />
 <meta property="og:image" content={imageUrl} />

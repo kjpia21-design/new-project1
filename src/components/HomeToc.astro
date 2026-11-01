@@ -72,25 +72,30 @@ const groups: { title: string; href?: string; chips?: { label: string; href: str
 </div>
 
 <style>
-  .toc { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); align-items: start; }
-  .grp { padding: 0.9rem 1rem 1rem; border-radius: 16px; background: var(--ai-card); border: 1px solid var(--sl-color-gray-5); box-shadow: var(--ai-shadow); }
+  .toc { display: grid; gap: 0.875rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); align-items: start; }
+  .grp { padding: 1rem 1.1rem 1.1rem; border-radius: var(--ai-radius-lg); background: var(--ai-surface); border: 1px solid var(--ai-line); }
   .grp.wide { grid-column: 1 / -1; }
-  h3 { margin: 0 0 0.1rem; font-size: var(--sl-text-base); font-weight: 800; }
-  h4 { margin: 0; font-size: var(--sl-text-sm); font-weight: 700; }
-  h3 a, h4 a { color: var(--sl-color-white); text-decoration: none; }
-  h3 a:hover, h4 a:hover { color: var(--sl-color-accent-high); }
-  h3 a::after, h4 a::after { content: ' →'; color: var(--ai-coral); }
-  .subs { display: grid; gap: 0.9rem 1.2rem; margin-top: 0.6rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); align-items: start; }
-  .sub { padding-top: 0.6rem; border-top: 1px dashed var(--sl-color-gray-5); }
-  summary { cursor: pointer; margin-top: 0.35rem; padding: 0.2rem 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); }
-  summary:hover { color: var(--sl-color-accent-high); }
-  ul { list-style: none; margin: 0.55rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  h3 { margin: 0; font-size: var(--sl-text-sm); font-weight: 650; color: var(--sl-color-white); letter-spacing: -0.005em; }
+  h4 { margin: 0; font-size: var(--sl-text-sm); font-weight: 600; }
+  h3 a, h4 a { color: var(--sl-color-white); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; }
+  h3 a:hover, h4 a:hover { color: var(--ai-coral-ink); }
+  h3 a::after, h4 a::after { content: '\2192'; font-weight: 400; color: var(--sl-color-gray-4); transition: color 0.15s; }
+  h3 a:hover::after, h4 a:hover::after { color: var(--ai-coral-ink); }
+  .subs { display: grid; gap: 1rem 1.5rem; margin-top: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); align-items: start; }
+  .sub { padding-top: 0.75rem; border-top: 1px solid var(--ai-line); }
+  summary { cursor: pointer; margin-top: 0.4rem; padding: 0.1rem 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); list-style: none; display: inline-flex; align-items: center; gap: 0.3rem; }
+  summary::-webkit-details-marker { display: none; }
+  summary::before { content: ''; width: 0.4rem; height: 0.4rem; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform 0.15s; margin-right: 0.1rem; }
+  details[open] > summary::before { transform: rotate(45deg); }
+  summary:hover { color: var(--sl-color-white); }
+  ul { list-style: none; margin: 0.6rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem; }
   li { margin: 0; padding: 0; }
   li a {
-    display: inline-block; padding: 0.25rem 0.7rem; border-radius: 999px; font-size: var(--sl-text-sm); line-height: 1.5;
-    text-decoration: none; color: var(--sl-color-gray-1); background: var(--ai-card-tint); border: 1px solid var(--sl-color-gray-5);
+    display: inline-block; padding: 0.2rem 0.6rem; border-radius: var(--ai-radius-sm); font-size: var(--sl-text-xs); line-height: 1.5;
+    text-decoration: none; color: var(--sl-color-gray-2); background: var(--ai-surface-2); border: 1px solid var(--ai-line);
+    transition: border-color 0.15s, color 0.15s, background-color 0.15s;
   }
-  li a:hover { border-color: var(--ai-coral); color: var(--sl-color-accent-high); }
+  li a:hover { border-color: var(--ai-line-strong); color: var(--sl-color-white); background: var(--ai-surface); }
 </style>
 
 <script>

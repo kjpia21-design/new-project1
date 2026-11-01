@@ -6,11 +6,11 @@ const lang = getLang(Astro);
 ---
 <section class="hero not-content">
   <div class="text">
-    <p class="kicker">{t(lang, 'hero.kicker')}</p>
-    {lang === 'en' ? <h1>Catch Up on<br />AI Trends</h1> : <h1>최신 AI 트렌드<br />따라 잡기</h1>}
+    <p class="kicker"><span class="dot" aria-hidden="true"></span>{t(lang, 'hero.kicker')}</p>
+    {lang === 'en' ? <h1>Catch up on<br />AI trends</h1> : <h1>최신 AI 트렌드<br />따라 잡기</h1>}
     <p class="lead">{t(lang, 'hero.lead')}</p>
     <div class="actions">
-      <a class="btn primary" href={url('/start/practical/', lang)}>{t(lang, 'hero.start')}</a>
+      <a class="btn primary" href={url('/start/practical/', lang)}>{t(lang, 'hero.start')}<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
       <a class="btn" href={url('/tutorials/', lang)}>{t(lang, 'hero.all')}</a>
     </div>
   </div>
@@ -18,21 +18,35 @@ const lang = getLang(Astro);
 </section>
 
 <style>
-  .hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1.5rem; align-items: center; padding: 1rem 0 0.5rem; }
-  .kicker { margin: 0; font-weight: 700; color: var(--sl-color-accent-high); }
-  h1 { margin: 0.4rem 0 0.8rem; font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1.2; font-weight: 800; color: var(--sl-color-white); }
-  .lead { margin: 0 0 1.25rem; font-size: var(--sl-text-lg); color: var(--sl-color-gray-2); line-height: 1.65; }
-  .actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
-  .btn {
-    display: inline-block; padding: 0.65rem 1.4rem; border-radius: 999px; font-weight: 700; text-decoration: none;
-    border: 2px solid var(--sl-color-accent); color: var(--sl-color-accent-high); background: transparent;
+  .hero {
+    position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 2rem; align-items: center;
+    padding: 2.5rem 0 1.5rem;
   }
-  .btn.primary { background: var(--sl-color-accent); color: var(--sl-color-text-invert); }
-  .btn:hover { filter: brightness(1.08); }
-  .art { display: flex; justify-content: center; }
+  .hero::before {
+    content: ''; position: absolute; inset: -1.5rem -1rem 0 -1rem; z-index: -1; pointer-events: none;
+    background: radial-gradient(closest-side at 78% 30%, color-mix(in srgb, var(--ai-coral) 13%, transparent), transparent);
+  }
+  .kicker { margin: 0 0 1rem; display: inline-flex; align-items: center; gap: 0.5rem; font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ai-coral-ink); }
+  .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--ai-coral); }
+  h1 { margin: 0 0 1rem; font-size: clamp(2.25rem, 5.2vw, 3.5rem); line-height: 1.08; font-weight: 700; letter-spacing: -0.03em; color: var(--sl-color-white); }
+  .lead { margin: 0 0 1.6rem; max-width: 34rem; font-size: var(--sl-text-lg); color: var(--sl-color-gray-2); line-height: 1.65; }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1.1rem; border-radius: var(--ai-radius-sm);
+    font-size: var(--sl-text-sm); font-weight: 600; text-decoration: none; line-height: 1.4;
+    border: 1px solid var(--ai-line-strong); color: var(--sl-color-white); background: var(--ai-surface);
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .btn:hover { border-color: var(--sl-color-gray-3); background: var(--ai-surface-2); }
+  .btn.primary { background: var(--sl-color-accent); border-color: var(--sl-color-accent); color: var(--ai-on-accent); }
+  .btn.primary:hover { background: var(--ai-accent-hover); border-color: var(--ai-accent-hover); }
+  .btn.primary:active { background: var(--ai-accent-active); border-color: var(--ai-accent-active); }
+  .art { display: flex; justify-content: flex-end; }
   @media (max-width: 720px) {
-    .hero { grid-template-columns: 1fr; }
-    .art { order: -1; }
-    .art :global(.hero-art) { max-width: 240px; }
+    .hero { grid-template-columns: 1fr; gap: 0.5rem; padding-top: 1.25rem; }
+    .art { order: -1; justify-content: flex-start; margin: 0 0 0 -0.25rem; }
+    .art :global(.hero-art) { max-width: 200px; }
+    h1 { font-size: clamp(2rem, 9vw, 2.6rem); }
+    .lead { font-size: var(--sl-text-base); }
   }
 </style>

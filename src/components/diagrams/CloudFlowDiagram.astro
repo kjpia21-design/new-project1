@@ -24,14 +24,14 @@ const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
   <svg viewBox="0 0 360 440" role="img" aria-labelledby="cloud-flow-title cloud-flow-desc">
     <title id="cloud-flow-title">{tx('클라우드 세션 구조도')}</title>
     <desc id="cloud-flow-desc">{tx('내 기기의 브라우저, 앱, 터미널에서 작업을 지시하면 클라우드 VM이 GitHub에서 저장소를 복제해 작업하고, 결과는 브랜치와 풀 리퀘스트로 GitHub에 올라갑니다.')}</desc>
-    <g class="box blue"><rect x="30" y="10" width="300" height="100" rx="16" />
+    <g class="box blue"><rect x="30" y="10" width="300" height="100" rx="10" />
       <text x="180" y="44" class="t1">{tx('내 기기')}</text>
       <text x="180" y="70" class="t2">{tx('브라우저 · 앱 · 터미널')}</text>
       <text x="180" y="92" class="t3">{tx('지시하고, 진행을 보고, 결과를 검토해요')}</text></g>
     <g class="arrow"><path d="M150 112 V158" /><path d="M141 150 L150 160 L159 150" /><path d="M210 160 V114" /><path d="M201 122 L210 112 L219 122" /></g>
     <text x="48" y="140" class="t3 left">{tx('지시')}</text>
     <text x="226" y="140" class="t3 left">{tx('진행·결과')}</text>
-    <g class="box coral"><rect x="30" y="162" width="300" height="110" rx="16" />
+    <g class="box coral"><rect x="30" y="162" width="300" height="110" rx="10" />
       <text x="180" y="196" class="t1">{tx('클라우드 VM')}</text>
       <text x="180" y="222" class="t2">{tx('저장소 복제본 + 환경(Environment)')}</text>
       <text x="180" y="244" class="t3">{tx('네트워크 수준 · 환경변수 · 설정 스크립트')}</text>
@@ -39,7 +39,7 @@ const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
     <g class="arrow"><path d="M150 274 V320" /><path d="M141 312 L150 322 L159 312" /><path d="M210 322 V276" /><path d="M201 284 L210 274 L219 284" /></g>
     <text x="48" y="302" class="t3 left">{tx('복제(clone)')}</text>
     <text x="226" y="302" class="t3 left">push · PR</text>
-    <g class="box green"><rect x="30" y="324" width="300" height="100" rx="16" />
+    <g class="box green"><rect x="30" y="324" width="300" height="100" rx="10" />
       <text x="180" y="358" class="t1">GitHub</text>
       <text x="180" y="384" class="t2">{tx('저장소 · 브랜치 · 풀 리퀘스트')}</text>
       <text x="180" y="406" class="t3">{tx('자격 증명은 VM 밖(프록시)에 보관돼요')}</text></g>
@@ -49,7 +49,7 @@ const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
 <style>
   .diagram { margin: 1.5rem auto; max-width: 400px; }
   svg { width: 100%; height: auto; display: block; }
-  .box rect { stroke-width: 2; }
+  .box rect { stroke-width: 1.5; }
   .blue rect { fill: var(--ai-blue-bg); stroke: var(--ai-blue-fg); }
   .green rect { fill: var(--ai-green-bg); stroke: var(--ai-green-fg); }
   .coral rect { fill: var(--ai-coral-soft); stroke: var(--ai-coral); }
@@ -57,9 +57,9 @@ const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
   .green text { fill: var(--ai-green-fg); }
   .coral text { fill: var(--sl-color-white); }
   text { text-anchor: middle; font-family: var(--sl-font); }
-  .t1 { font-size: 20px; font-weight: 800; }
+  .t1 { font-size: 20px; font-weight: 650; }
   .t2 { font-size: 14px; font-weight: 600; }
   .t3 { font-size: 12.5px; }
   text.left { text-anchor: start; fill: var(--sl-color-gray-2); font-size: 12.5px; }
-  .arrow path { fill: none; stroke: var(--sl-color-gray-2); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+  .arrow path { fill: none; stroke: var(--sl-color-gray-2); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 </style>

@@ -1,33 +1,52 @@
 ---
-import { getLang, t } from '../lib/i18n';
-const lang = getLang(Astro);
+// 홈·404 상단의 장식용 추상 그래픽: 점 격자 위에 연결된 노드와 코랄 포인트 하나. 장식이므로 보조기기에는 숨긴다.
 ---
-<svg class="hero-art" viewBox="0 0 360 280" role="img" aria-label={t(lang, 'illu.hero')} focusable="false">
-  <ellipse cx="180" cy="262" rx="120" ry="10" fill="currentColor" opacity="0.12" />
-  <circle cx="180" cy="140" r="118" style="fill:var(--ai-blob)" />
-  <!-- 로봇 -->
-  <line x1="180" y1="62" x2="180" y2="84" stroke="#ff7a59" stroke-width="6" stroke-linecap="round" />
-  <circle cx="180" cy="58" r="10" fill="#ff7a59" />
-  <rect x="116" y="84" width="128" height="104" rx="38" fill="#9ad7f5" />
-  <rect x="132" y="104" width="96" height="62" rx="26" fill="#fff" />
-  <circle cx="157" cy="134" r="11" fill="#2b3a55" /><circle cx="203" cy="134" r="11" fill="#2b3a55" />
-  <circle cx="161" cy="130" r="3.5" fill="#fff" /><circle cx="207" cy="130" r="3.5" fill="#fff" />
-  <path d="M164 152q16 12 32 0" stroke="#2b3a55" stroke-width="5" fill="none" stroke-linecap="round" />
-  <circle cx="126" cy="156" r="7" fill="#ffb59f" /><circle cx="234" cy="156" r="7" fill="#ffb59f" />
-  <rect x="138" y="188" width="84" height="48" rx="20" fill="#cfe9f9" />
-  <circle cx="180" cy="212" r="9" fill="#ff7a59" />
-  <rect x="100" y="196" width="28" height="14" rx="7" fill="#9ad7f5" /><rect x="232" y="196" width="28" height="14" rx="7" fill="#9ad7f5" />
-  <!-- 말풍선 -->
-  <rect x="236" y="30" width="96" height="58" rx="22" fill="#fff" stroke="#ffb59f" stroke-width="3" />
-  <path d="M254 88l-8 20 24-18z" fill="#fff" stroke="#ffb59f" stroke-width="3" stroke-linejoin="round" />
-  <path d="M252 86h20" stroke="#fff" stroke-width="5" />
-  <circle cx="262" cy="59" r="5" fill="#ff7a59" /><circle cx="284" cy="59" r="5" fill="#ffd36e" /><circle cx="306" cy="59" r="5" fill="#7cc98a" />
-  <!-- 반짝이 -->
-  <path d="M60 70l7 19 19 7-19 7-7 19-7-19-19-7 19-7z" fill="#ffd36e" />
-  <path d="M296 180l5 13 13 5-13 5-5 13-5-13-13-5 13-5z" fill="#c9b6f2" />
-  <path d="M84 190l4 10 10 4-10 4-4 10-4-10-10-4 10-4z" fill="#9fdcb0" />
+<svg class="hero-art" viewBox="0 0 320 260" aria-hidden="true" focusable="false">
+  <defs>
+    <pattern id="hero-dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="1.5" cy="1.5" r="1.2" fill="currentColor" opacity="0.18" />
+    </pattern>
+    <radialGradient id="hero-glow" cx="62%" cy="42%" r="55%">
+      <stop offset="0" stop-color="var(--ai-coral)" stop-opacity="0.22" />
+      <stop offset="1" stop-color="var(--ai-coral)" stop-opacity="0" />
+    </radialGradient>
+    <linearGradient id="hero-fade" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity="0" />
+      <stop offset="0.35" stop-color="#fff" stop-opacity="1" />
+      <stop offset="1" stop-color="#fff" stop-opacity="1" />
+    </linearGradient>
+    <mask id="hero-mask"><rect width="320" height="260" fill="url(#hero-fade)" /></mask>
+  </defs>
+  <rect width="320" height="260" fill="url(#hero-glow)" />
+  <rect width="320" height="260" fill="url(#hero-dots)" mask="url(#hero-mask)" />
+  <!-- 연결선 -->
+  <g fill="none" stroke="currentColor" stroke-opacity="0.32" stroke-width="1.25">
+    <path d="M92 182L160 112M160 112L236 150M160 112L224 54M236 150L286 196M92 182L54 118" />
+  </g>
+  <!-- 노드 -->
+  <g fill="var(--ai-surface)" stroke="currentColor" stroke-opacity="0.55" stroke-width="1.5">
+    <circle cx="92" cy="182" r="6" />
+    <circle cx="236" cy="150" r="6" />
+    <circle cx="224" cy="54" r="6" />
+    <circle cx="286" cy="196" r="4.5" />
+    <circle cx="54" cy="118" r="4.5" />
+  </g>
+  <!-- 강조 노드 -->
+  <circle cx="160" cy="112" r="22" fill="var(--ai-coral)" opacity="0.14" />
+  <circle cx="160" cy="112" r="9" fill="var(--ai-coral)" />
+  <path d="M160 105.5l1.7 4.8 4.8 1.7-4.8 1.7-1.7 4.8-1.7-4.8-4.8-1.7 4.8-1.7z" fill="var(--ai-on-accent)" opacity="0.9" />
+  <!-- 카드 모양 -->
+  <g fill="var(--ai-surface)" stroke="currentColor" stroke-opacity="0.28">
+    <rect x="212" y="166" width="78" height="44" rx="8" />
+    <rect x="40" y="36" width="92" height="50" rx="8" />
+  </g>
+  <g stroke="currentColor" stroke-opacity="0.35" stroke-width="3" stroke-linecap="round">
+    <path d="M224 180h34M224 192h50" />
+    <path d="M52 50h44M52 62h64M52 74h30" />
+  </g>
+  <rect x="224" y="178" width="12" height="4" rx="2" fill="var(--ai-coral)" opacity="0.9" />
 </svg>
 
 <style>
-  .hero-art { width: 100%; max-width: 360px; height: auto; color: var(--sl-color-white); }
+  .hero-art { width: 100%; max-width: 340px; height: auto; display: block; color: var(--sl-color-gray-1); }
 </style>

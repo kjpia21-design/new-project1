@@ -27,20 +27,21 @@ const lang = getLang(Astro);
 
 <style>
   .meta {
-    margin: 1rem 0 1.5rem; padding: 1rem 1.25rem;
-    border: 1px solid var(--sl-color-gray-5); border-radius: 16px;
-    background: var(--ai-card-tint); box-shadow: var(--ai-shadow);
+    margin: 1rem 0 1.5rem; padding: 0.9rem 1.1rem;
+    border: 1px solid var(--ai-line); border-radius: var(--ai-radius);
+    background: var(--ai-surface-2);
   }
-  .row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
+  .row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
   .chip {
-    padding: 0.1rem 0.7rem; border-radius: 999px; font-size: var(--sl-text-xs); font-weight: 700; line-height: 1.6;
-    background: var(--sl-color-gray-6); color: var(--sl-color-gray-2); border: 1px solid var(--sl-color-gray-5);
+    display: inline-flex; align-items: center; padding: 0.1rem 0.5rem; border-radius: var(--ai-radius-sm); font-size: var(--sl-text-2xs); font-weight: 600; line-height: 1.6;
+    background: var(--ai-surface); color: var(--sl-color-gray-2); border: 1px solid var(--ai-line);
   }
   .chip.draft { background: var(--ai-yellow-bg); color: var(--ai-yellow-fg); border-color: transparent; }
-  dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.75rem 1.5rem; margin: 0; }
+  dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: 0.6rem 1.5rem; margin: 0; }
   dl > div { min-width: 0; }
   .wide { grid-column: 1 / -1; }
-  dt { font-size: var(--sl-text-xs); font-weight: 700; color: var(--sl-color-gray-3); }
-  dd { margin: 0.1rem 0 0; color: var(--sl-color-white); overflow-wrap: anywhere; }
+  dt { font-size: var(--sl-text-2xs); font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--sl-color-gray-3); }
+  dd { margin: 0.15rem 0 0; font-size: var(--sl-text-sm); color: var(--sl-color-white); overflow-wrap: anywhere; }
   ul { margin: 0; padding-left: 1.1rem; }
+  li { margin: 0.1rem 0; }
 </style>

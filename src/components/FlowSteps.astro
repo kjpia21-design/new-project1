@@ -36,44 +36,42 @@ const lang = getLang(Astro);
 <style>
   .flow {
     margin: 1.5rem 0;
-    padding: 1rem;
-    border: 1px solid var(--sl-color-gray-5);
-    border-radius: 14px;
-    background: var(--ai-card-tint);
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--ai-line);
+    border-radius: var(--ai-radius);
+    background: var(--ai-surface-2);
   }
-  .flow-title { margin: 0 0 0.75rem; font-weight: 700; color: var(--sl-color-white); }
+  .flow-title { margin: 0 0 0.75rem; font-size: var(--sl-text-sm); font-weight: 600; color: var(--sl-color-white); }
   .flow-list {
     list-style: none; margin: 0; padding: 0;
-    display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.5rem;
+    display: flex; flex-wrap: wrap; align-items: stretch; gap: 0.6rem;
   }
   .flow-step {
     flex: 1 1 10rem; min-width: 0;
     display: flex; gap: 0.6rem; align-items: flex-start;
     margin: 0; padding: 0.7rem 0.8rem;
-    border: 1px solid var(--sl-color-gray-5);
-    border-top: 3px solid var(--ai-coral);
-    border-radius: 10px;
-    background: var(--sl-color-bg);
+    border: 1px solid var(--ai-line);
+    border-radius: var(--ai-radius-sm);
+    background: var(--ai-surface);
     position: relative;
   }
   .flow-step:not(:last-child)::after {
-    content: '→'; position: absolute; right: -0.55rem; top: 50%;
-    transform: translateY(-50%); color: var(--ai-coral); font-weight: 700;
+    content: ''; position: absolute; right: -0.6rem; top: 50%; width: 0.6rem; height: 1px; background: var(--ai-line-strong);
   }
   .num {
-    flex: none; width: 1.5rem; height: 1.5rem; border-radius: 999px;
+    flex: none; width: 1.35rem; height: 1.35rem; border-radius: 999px; margin-top: 0.05rem;
     display: inline-flex; align-items: center; justify-content: center;
-    background: var(--ai-coral); color: #fff; font-size: var(--sl-text-xs); font-weight: 700;
+    border: 1.5px solid var(--ai-coral); color: var(--ai-coral-ink); font-size: var(--sl-text-2xs); font-weight: 700; font-variant-numeric: tabular-nums;
   }
-  .body { display: flex; flex-direction: column; gap: 0.15rem; min-width: 0; }
-  .where { font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); overflow-wrap: anywhere; }
+  .body { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+  .where { font-size: var(--sl-text-2xs); color: var(--sl-color-gray-3); overflow-wrap: anywhere; }
   .action { font-size: var(--sl-text-sm); font-weight: 600; color: var(--sl-color-white); overflow-wrap: anywhere; }
   .result { font-size: var(--sl-text-xs); color: var(--sl-color-gray-2); overflow-wrap: anywhere; }
   .flow-note { margin: 0.75rem 0 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); }
+  .flow-note a { color: var(--sl-color-gray-2); }
   @media (max-width: 40rem) {
-    .flow-list { flex-direction: column; }
+    .flow-list { flex-direction: column; gap: 0.6rem; }
     .flow-step { flex: none; }
-    .flow-step:not(:last-child)::after { content: '↓'; right: auto; left: 1.1rem; top: auto; bottom: -0.95rem; transform: none; }
-    .flow-list { gap: 0.9rem; }
+    .flow-step:not(:last-child)::after { right: auto; left: 1.45rem; top: auto; bottom: -0.6rem; width: 1px; height: 0.6rem; }
   }
 </style>

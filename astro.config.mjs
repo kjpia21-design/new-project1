@@ -41,18 +41,10 @@ export default defineConfig({
       },
       favicon: '/favicon.svg',
       head: [
-        // 폰트 CDN에 미리 연결해 글꼴 교체로 인한 화면 밀림(CLS)을 줄인다.
-        { tag: 'link', attrs: { rel: 'preconnect', href: 'https://cdn.jsdelivr.net', crossorigin: '' } },
-        {
-          tag: 'link',
-          attrs: {
-            rel: 'stylesheet',
-            href: 'https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css',
-          },
-        },
+        // 글꼴(Pretendard Variable)은 CDN 대신 node_modules/pretendard 에서 셀프호스팅한다(아래 customCss). 외부 연결 의존과 화면 밀림(CLS)을 줄인다.
       ],
       routeMiddleware: './src/routeMiddleware.ts',
-      customCss: ['./src/styles/custom.css'],
+      customCss: ['pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css', './src/styles/custom.css'],
       components: {
         PageTitle: './src/components/PageTitle.astro',
         Footer: './src/components/Footer.astro',

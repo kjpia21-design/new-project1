@@ -4,16 +4,20 @@ import { url, getLevelLabel } from '../lib/tutorials';
 import { getLang, t } from '../lib/i18n';
 const lang = getLang(Astro);
 const levels = [
-  { key: 'beginner', title: getLevelLabel('beginner', lang), desc: t(lang, 'lv.beginner.desc'), href: '/start/beginner/' },
-  { key: 'practical', title: getLevelLabel('practical', lang), desc: t(lang, 'lv.practical.desc'), href: '/start/practical/' },
-  { key: 'advanced', title: getLevelLabel('advanced', lang), desc: t(lang, 'lv.advanced.desc'), href: '/start/advanced/' },
+  { key: 'beginner', tone: 'green', title: getLevelLabel('beginner', lang), desc: t(lang, 'lv.beginner.desc'), href: '/start/beginner/' },
+  { key: 'practical', tone: 'blue', title: getLevelLabel('practical', lang), desc: t(lang, 'lv.practical.desc'), href: '/start/practical/' },
+  { key: 'advanced', tone: 'purple', title: getLevelLabel('advanced', lang), desc: t(lang, 'lv.advanced.desc'), href: '/start/advanced/' },
 ] as const;
 ---
 <ul class="levels not-content">
-  {levels.map((l) => (
+  {levels.map((l, i) => (
     <li>
       <a href={url(l.href, lang)} class={`lv lv-${l.key}`}>
-        <div class="top"><Illustration name={l.key} size={56} /><h3>{l.title}</h3></div>
+        <div class="top">
+          <Illustration name={l.key} size={40} tone={l.tone} />
+          <span class="step" aria-hidden="true">0{i + 1}</span>
+        </div>
+        <h3>{l.title}</h3>
         <p>{l.desc}</p>
         <span class="go">{t(lang, 'lv.go')}</span>
       </a>
@@ -22,22 +26,19 @@ const levels = [
 </ul>
 
 <style>
-  .levels { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+  .levels { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.875rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
   li { margin: 0; padding: 0; }
   .lv {
-    display: flex; flex-direction: column; gap: 0.35rem; height: 100%; padding: 1.25rem; border-radius: 18px;
-    text-decoration: none; border: 2px solid transparent; box-shadow: var(--ai-shadow); transition: transform 0.15s;
+    display: flex; flex-direction: column; gap: 0.4rem; height: 100%; padding: 1.25rem 1.25rem 1.1rem;
+    border-radius: var(--ai-radius-lg); text-decoration: none;
+    background: var(--ai-surface); border: 1px solid var(--ai-line); box-shadow: var(--ai-shadow);
+    transition: border-color 0.15s, box-shadow 0.15s;
   }
-  .lv:hover { transform: translateY(-3px); }
-  .lv-beginner { background: var(--ai-green-bg); }
-  .lv-practical { background: var(--ai-blue-bg); }
-  .lv-advanced { background: var(--ai-purple-bg); }
-  .top { display: flex; flex-direction: column; gap: 0.3rem; }
-  @media (max-width: 40rem) { .top { flex-direction: row; align-items: center; gap: 0.8rem; } .top :global(svg) { flex: none; width: 44px; height: 44px; } .lv { padding: 1rem 1.1rem; } }
-  h3 { margin: 0.3rem 0 0; font-size: var(--sl-text-h3); font-weight: 800; }
-  .lv-beginner h3, .lv-beginner .go { color: var(--ai-green-fg); }
-  .lv-practical h3, .lv-practical .go { color: var(--ai-blue-fg); }
-  .lv-advanced h3, .lv-advanced .go { color: var(--ai-purple-fg); }
-  p { margin: 0; color: var(--sl-color-white); line-height: 1.55; }
-  .go { margin-top: auto; padding-top: 0.5rem; font-weight: 700; }
+  .lv:hover { border-color: var(--ai-line-strong); box-shadow: var(--ai-shadow-md); }
+  .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; }
+  .step { font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.06em; color: var(--sl-color-gray-4); font-variant-numeric: tabular-nums; }
+  h3 { margin: 0; font-size: 1.1rem; font-weight: 650; color: var(--sl-color-white); letter-spacing: -0.01em; }
+  p { margin: 0; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); line-height: 1.6; }
+  .go { margin-top: auto; padding-top: 0.9rem; display: inline-flex; align-items: center; gap: 0.3rem; font-size: var(--sl-text-sm); font-weight: 600; color: var(--ai-coral-ink); }
+  @media (max-width: 40rem) { .lv { padding: 1rem 1.1rem; } }
 </style>

@@ -7,10 +7,7 @@ const { title = t(lang, 'summary.title') } = Astro.props;
 ---
 <section class="summary not-content" aria-label={title}>
   <div class="head">
-    <svg width="28" height="28" viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-      <circle cx="24" cy="24" r="22" fill="var(--ai-blob)" />
-      <path d="M24 8l3.4 10L38 21.5l-10.6 3.5L24 40l-3.4-15L10 21.5l10.6-3.5z" fill="var(--ai-coral)" />
-    </svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3.5l2.2 6.3L20.5 12l-6.3 2.2L12 20.5l-2.2-6.3L3.5 12l6.3-2.2z" /></svg>
     <strong>{title}</strong>
   </div>
   <div class="body"><slot /></div>
@@ -19,11 +16,12 @@ const { title = t(lang, 'summary.title') } = Astro.props;
 <style>
   .summary {
     margin: 1.25rem 0 1.75rem; padding: 1rem 1.25rem 1.1rem;
-    border: 2px solid var(--ai-coral); border-radius: 16px;
-    background: var(--ai-card-tint); box-shadow: var(--ai-shadow);
+    border: 1px solid var(--ai-line); border-inline-start: 3px solid var(--ai-coral); border-radius: var(--ai-radius);
+    background: var(--ai-surface);
   }
-  .head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; font-size: var(--sl-text-lg); color: var(--sl-color-white); }
-  .body { color: var(--sl-color-white); line-height: 1.7; overflow-wrap: anywhere; }
+  .head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: var(--sl-text-sm); color: var(--ai-coral-ink); letter-spacing: 0.02em; }
+  .head svg { width: 16px; height: 16px; }
+  .body { color: var(--sl-color-gray-1); line-height: 1.7; overflow-wrap: anywhere; font-size: var(--sl-text-base); }
   .body :global(ul), .body :global(ol) { margin: 0; padding-left: 1.2rem; }
   .body :global(li) { margin: 0.25rem 0; }
   .body :global(p) { margin: 0.3rem 0; }

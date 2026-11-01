@@ -1,92 +1,68 @@
 ---
-// 외부 이미지 없이 쓰는 단순한 인라인 SVG 일러스트 모음
-interface Props { name: 'claude' | 'chat' | 'coding' | 'media' | 'automation' | 'agents' | 'dev' | 'basics' | 'robot' | 'sparkle' | 'beginner' | 'practical' | 'advanced'; size?: number }
-const { name, size = 48 } = Astro.props;
+// 외부 이미지 없이 쓰는 인라인 SVG 아이콘 모음. 모두 같은 선 굵기(1.75)의 라인 아이콘으로 통일한다.
+// `tone`으로 아이콘 색을 고른다(기본: 코랄). 단독으로 쓰면 둥근 타일 위에 놓인다.
+interface Props {
+  name: 'claude' | 'chat' | 'coding' | 'media' | 'automation' | 'agents' | 'dev' | 'basics' | 'robot' | 'sparkle' | 'beginner' | 'practical' | 'advanced';
+  size?: number;
+  tone?: 'coral' | 'green' | 'blue' | 'purple' | 'neutral';
+  /** true면 타일 배경 없이 아이콘만 그린다 */
+  bare?: boolean;
+}
+const { name, size = 40, tone = 'coral', bare = false } = Astro.props;
+const icon = size * 0.55;
 ---
-<svg class="illu" width={size} height={size} viewBox="0 0 48 48" aria-hidden="true" focusable="false">
-  {name === 'claude' && (<>
-    <circle cx="24" cy="24" r="22" fill="#ffd9cc" />
-    <path d="M24 7l3.6 10.4L38 21l-10.4 3.6L24 41l-3.6-16.4L10 21l10.4-3.6z" fill="#ff7a59" />
-    <circle cx="36" cy="10" r="2.5" fill="#fff" />
-  </>)}
-  {name === 'chat' && (<>
-    <rect x="5" y="8" width="28" height="20" rx="8" fill="#9ad7f5" />
-    <path d="M12 28l-2 9 9-7z" fill="#9ad7f5" />
-    <rect x="17" y="19" width="26" height="18" rx="8" fill="#ffb59f" />
-    <path d="M37 37l3 7-9-6z" fill="#ffb59f" />
-    <circle cx="14" cy="18" r="2" fill="#fff" /><circle cx="20" cy="18" r="2" fill="#fff" /><circle cx="26" cy="18" r="2" fill="#fff" />
-  </>)}
-  {name === 'coding' && (<>
-    <rect x="5" y="9" width="38" height="30" rx="8" fill="#c9b6f2" />
-    <circle cx="12" cy="15" r="1.8" fill="#fff" /><circle cx="18" cy="15" r="1.8" fill="#fff" />
-    <path d="M17 26l-5 4 5 4M31 26l5 4-5 4M26 24l-4 12" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-  </>)}
-  {name === 'media' && (<>
-    <rect x="5" y="10" width="38" height="28" rx="8" fill="#ffd36e" />
-    <circle cx="16" cy="20" r="4" fill="#fff" />
-    <path d="M7 36l12-10 8 7 6-5 10 8z" fill="#7cc98a" />
-    <path d="M30 14l7 4-7 4z" fill="#ff7a59" />
-  </>)}
-  {name === 'automation' && (<>
-    <circle cx="24" cy="24" r="10" fill="#9fdcb0" />
-    <circle cx="24" cy="24" r="4.5" fill="#fff" />
-    <g fill="#7cc98a">
-      <rect x="21" y="4" width="6" height="9" rx="3" /><rect x="21" y="35" width="6" height="9" rx="3" />
-      <rect x="4" y="21" width="9" height="6" rx="3" /><rect x="35" y="21" width="9" height="6" rx="3" />
-    </g>
-  </>)}
-  {name === 'agents' && (<>
-    <circle cx="24" cy="24" r="21" fill="#ffd9cc" />
-    <circle cx="24" cy="26" r="11" fill="#ff7a59" />
-    <circle cx="20" cy="25" r="2.4" fill="#fff" /><circle cx="28" cy="25" r="2.4" fill="#fff" />
-    <path d="M20 31q4 3 8 0" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" />
-    <path d="M24 15v-5" stroke="#ff7a59" stroke-width="2.6" stroke-linecap="round" />
-    <path d="M24 3l1.8 4.2L30 9l-4.2 1.8L24 15l-1.8-4.2L18 9l4.2-1.8z" fill="#ffd36e" />
-    <path d="M7 24a17 17 0 0 1 4-10M41 24a17 17 0 0 1-4 10" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" />
-  </>)}
-  {name === 'dev' && (<>
-    <rect x="4" y="8" width="40" height="32" rx="8" fill="#2b3a55" />
-    <circle cx="11" cy="15" r="1.8" fill="#ff7a59" /><circle cx="17" cy="15" r="1.8" fill="#ffd36e" /><circle cx="23" cy="15" r="1.8" fill="#7cc98a" />
-    <path d="M17 25l-5 4.5 5 4.5M31 25l5 4.5-5 4.5" stroke="#9ad7f5" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-    <path d="M27 24l-6 11" stroke="#ffb59f" stroke-width="3" stroke-linecap="round" />
-  </>)}
-  {name === 'basics' && (<>
-    <circle cx="24" cy="24" r="21" fill="#e6f6e4" />
-    <path d="M24 40V23" stroke="#4fa36a" stroke-width="3" stroke-linecap="round" />
-    <path d="M24 26C24 17 17 12 9 13c0 9 6 14 15 13z" fill="#7cc98a" />
-    <path d="M24 22C24 14 30 9 38 10c0 8-6 13-14 12z" fill="#a6dc9a" />
-    <path d="M15 40h18" stroke="#b98a5e" stroke-width="3" stroke-linecap="round" />
-  </>)}
-  {name === 'robot' && (<>
-    <line x1="24" y1="5" x2="24" y2="11" stroke="#ff7a59" stroke-width="3" stroke-linecap="round" />
-    <circle cx="24" cy="5" r="3" fill="#ff7a59" />
-    <rect x="7" y="11" width="34" height="28" rx="12" fill="#9ad7f5" />
-    <circle cx="17" cy="25" r="4" fill="#fff" /><circle cx="31" cy="25" r="4" fill="#fff" />
-    <circle cx="18" cy="26" r="2" fill="#2b3a55" /><circle cx="32" cy="26" r="2" fill="#2b3a55" />
-    <path d="M18 33q6 4 12 0" stroke="#2b3a55" stroke-width="2.4" fill="none" stroke-linecap="round" />
-    <circle cx="11" cy="31" r="2.5" fill="#ffb59f" /><circle cx="37" cy="31" r="2.5" fill="#ffb59f" />
-  </>)}
-  {name === 'sparkle' && (<>
-    <path d="M24 5l4 12 12 4-12 4-4 12-4-12-12-4 12-4z" fill="#ffd36e" />
-  </>)}
-  {name === 'beginner' && (<>
-    <circle cx="24" cy="24" r="21" fill="#c8f0d2" />
-    <path d="M24 38V22" stroke="#4fae6a" stroke-width="3" stroke-linecap="round" />
-    <path d="M24 26c-8 0-12-5-12-11 8 0 12 4 12 11zM24 22c0-6 4-10 12-10 0 6-4 10-12 10z" fill="#4fae6a" />
-  </>)}
-  {name === 'practical' && (<>
-    <circle cx="24" cy="24" r="21" fill="#cfe6fb" />
-    <rect x="10" y="17" width="28" height="19" rx="5" fill="#5aa6e8" />
-    <path d="M18 17v-3a3 3 0 013-3h6a3 3 0 013 3v3" stroke="#5aa6e8" stroke-width="3" fill="none" />
-    <rect x="21" y="23" width="6" height="5" rx="2" fill="#fff" />
-  </>)}
-  {name === 'advanced' && (<>
-    <circle cx="24" cy="24" r="21" fill="#e3d9fa" />
-    <path d="M24 9c5 5 7 10 7 16l5 7-8-2h-8l-8 2 5-7c0-6 2-11 7-16z" fill="#9a7be0" />
-    <circle cx="24" cy="21" r="3.5" fill="#fff" />
-  </>)}
-</svg>
+<span class:list={['illu', `tone-${tone}`, { bare }]} style={`--s:${size}px; --i:${icon}px`} aria-hidden="true">
+  <svg width={icon} height={icon} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" focusable="false">
+    {(name === 'claude' || name === 'sparkle') && (
+      <path d="M12 3.5l2.2 6.3L20.5 12l-6.3 2.2L12 20.5l-2.2-6.3L3.5 12l6.3-2.2z" />
+    )}
+    {name === 'chat' && (<>
+      <path d="M20 12a8 8 0 0 1-11.7 7.1L4 20.5l1.4-4.3A8 8 0 1 1 20 12z" />
+      <path d="M8.5 12h.01M12 12h.01M15.5 12h.01" stroke-width="2.4" />
+    </>)}
+    {name === 'coding' && (<path d="M8 8l-4 4 4 4M16 8l4 4-4 4M14 5l-4 14" />)}
+    {name === 'media' && (<>
+      <rect x="3" y="5" width="18" height="14" rx="2.5" />
+      <circle cx="9" cy="10" r="1.6" />
+      <path d="M21 15.5l-4.5-4-6.5 7.5" />
+    </>)}
+    {name === 'automation' && (<path d="M13 2.5L4.5 13.5H11l-1 8 8.5-11H12l1-8z" />)}
+    {name === 'agents' && (<>
+      <rect x="4" y="8.5" width="16" height="11" rx="3" />
+      <path d="M12 8.5V4.5M9.5 4.5h5M2.5 13v3M21.5 13v3" />
+      <path d="M9 14h.01M15 14h.01" stroke-width="2.4" />
+    </>)}
+    {name === 'dev' && (<>
+      <rect x="3" y="4.5" width="18" height="15" rx="2.5" />
+      <path d="M7 9.5l3 3-3 3M13 15.5h4" />
+    </>)}
+    {(name === 'basics' || name === 'beginner') && (<>
+      <path d="M12 21v-8.5" />
+      <path d="M12 12.5C12 8.5 9 6 4.5 6c0 4.5 3 7 7.5 6.5z" />
+      <path d="M12 10.5c0-3.5 2.5-6 7.5-6 0 3.5-2.5 6.5-7.5 6.5z" />
+    </>)}
+    {(name === 'robot' || name === 'practical') && (<>
+      <rect x="3" y="7" width="18" height="13" rx="2.5" />
+      <path d="M8.5 7V5.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2V7M3 12.5h18" />
+    </>)}
+    {name === 'advanced' && (<>
+      <path d="M12 3l8.5 4.5L12 12 3.5 7.5 12 3z" />
+      <path d="M3.5 12l8.5 4.5 8.5-4.5M3.5 16.5L12 21l8.5-4.5" />
+    </>)}
+  </svg>
+</span>
 
 <style>
-  .illu { display: inline-block; flex: none; }
+  .illu {
+    display: inline-flex; align-items: center; justify-content: center; flex: none;
+    width: var(--s); height: var(--s); border-radius: var(--ai-radius-sm);
+    background: var(--tile-bg); color: var(--tile-fg);
+    --tile-bg: var(--ai-coral-soft); --tile-fg: var(--ai-coral-ink);
+  }
+  .illu.bare { background: none; width: var(--i); height: var(--i); border-radius: 0; }
+  .tone-green { --tile-bg: var(--ai-green-bg); --tile-fg: var(--ai-green-fg); }
+  .tone-blue { --tile-bg: var(--ai-blue-bg); --tile-fg: var(--ai-blue-fg); }
+  .tone-purple { --tile-bg: var(--ai-purple-bg); --tile-fg: var(--ai-purple-fg); }
+  .tone-neutral { --tile-bg: var(--sl-color-gray-6); --tile-fg: var(--sl-color-gray-1); }
+  svg { display: block; }
 </style>
