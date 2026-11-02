@@ -1,0 +1,203 @@
+---
+title: "Use Claude with Gmail, Calendar and Drive"
+description: "A practical guide to connecting Claude to Gmail, Google Calendar, Google Drive and live Docs/Sheets/Slides editing, based on official help: what it can read and change, approvals, plans, privacy and troubleshooting"
+sidebar:
+  label: "C23. Claude with Google Workspace"
+level: practical
+category: claude
+tools: ["Claude", "Gmail", "Google Calendar", "Google Drive", "Google Docs"]
+duration: "30 min"
+prerequisites:
+  - "A claude.ai account"
+  - "A Google account (use practice data first, not confidential mail or files)"
+  - "(Team/Enterprise) Your organization Owner has turned the Google connectors on"
+lastVerified: 2026-11-02
+sources:
+  - title: "Use Google Workspace connectors"
+    url: "https://support.claude.com/en/articles/10166901-use-google-workspace-connectors"
+  - title: "Use connectors to extend Claude's capabilities"
+    url: "https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- The Google Workspace connectors (Gmail, Google Calendar, Google Drive) are described as **available for all users** on Claude and Claude Desktop (as of 2026-11-02). On Team and Enterprise, an Owner must enable them for the organization first.
+- Claude can **read** (search mail, view events, read Drive files) and **act** (draft, send, reply, forward; create, update and delete events; share, move and trash files). By default it **asks for your approval** before sending, replying, forwarding, sharing, moving or trashing.
+- Separate **Docs, Sheets and Slides** connectors let Claude edit those files live in a pane beside the chat, on Claude on the web in Chrome or on Claude Desktop with the built-in browser turned on.
+- Claude mirrors your Google permissions and sees only the connected account. Retrieved data stays with its chat, and Anthropic says it does not train on Gmail, Drive or Calendar connector data.
+- Start with read-only requests and ask for **drafts, not sends**. Gmail attachment contents are not readable (metadata only).
+</Summary>
+
+This guide is about *working* with the Google connectors. For the general connector concepts, custom connectors and MCP, see [C7. Connectors](/claude/c07-connectors/). For comparing Gemini in Gmail with Claude, see [Organizing your inbox with AI](/automation/38-email-ai/).
+
+## What you'll be able to do
+
+- Connect Gmail, Calendar and Drive and turn them on per conversation.
+- Hand off read jobs (find mail, find free time, summarize a Drive document) and write jobs (drafts, events, live document edits) with the right approvals.
+- Add Drive files to a chat or a private project, and have Claude edit a Google Doc, Sheet or Slides file in the side pane.
+- Fix common problems: reconnecting, admin blocks, and files Claude can't read.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Google Workspace connectors** | Gmail, Google Calendar and Google Drive connectors from the Claude connector directory. |
+| **Docs / Sheets / Slides connectors** | Separate connectors for live editing in a pane. Google Drive still handles searching, uploading and sharing. |
+| **Approval** | A prompt before an action such as sending an email. Claude asks by default; on Team and Enterprise, Owners decide whether members may let such actions run without asking. |
+| **Permission mirroring** | Claude can only access what your Google account can already access. |
+| **Pane** | The side panel next to the chat where a Google file opens for live editing. |
+
+### What each connector can do (per the official help)
+
+| Connector | Reads | Acts |
+| --- | --- | --- |
+| **Gmail** | Search and read mail with natural-language queries; metadata including attachment metadata (not attachment content); list saved drafts | Draft; send, reply, forward (approval by default); manage labels and threads |
+| **Google Calendar** | View events and calendars, including shared calendars you can access; find mutual availability | Create, update, delete events; manage attendees; respond to invitations; set up recurring meetings |
+| **Google Drive** | Search Docs; read Sheets, Slides, PDFs, images and MS Office files (text only); file metadata; permissions and recent changes | Share, move, trash (approval by default); upload any file type; create folders; save Claude-generated files to Drive (needs code execution and file creation enabled) |
+| **Docs, Sheets, Slides** | Read comments and suggestions in Docs | Edit live in a pane; create new Google files |
+
+<Aside type="note" title="Plans and availability (as of 2026-11-02)">
+The help article says the Google Workspace connectors are available for all users on Claude and Claude Desktop. Live editing works on Claude on the web in Chrome and on Claude Desktop when the built-in browser is turned on. We did not find per-plan differences for these connectors in the article; check the page for any change.
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  '(Team/Enterprise) I confirmed an Owner enabled the Google connectors',
+  'I connected my Google account and gave consent',
+  'I turned the connectors on in a conversation and tried a read request',
+  'I asked for a draft and checked the approval prompt before anything was sent',
+  'I added a Drive document to a chat and asked a question about it',
+  '(Optional) I tried live editing of a practice Google Doc',
+]} />
+
+<Steps>
+
+1. **Enable and connect**
+
+   On Team or Enterprise, an Owner or Primary Owner enables the connector under Organization settings > Connectors first. Then connect from the **+** menu in the chat (or **/**) > Connectors, or in Customize > Connectors, and sign in to Google. Step details are in [C7](/claude/c07-connectors/).
+
+   <ScreenshotPlaceholder caption="Connectors menu in the chat input box" officialUrl="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" />
+
+2. **Toggle individual connectors per conversation**
+
+   Click **+**, hover over **Connectors**, and switch Gmail, Calendar, Drive, Docs, Sheets and Slides on or off. Turn off the ones you don't need for the task.
+
+3. **Start with read requests**
+
+   Claude picks the tools it needs and cites the emails, events or documents it used, with links when available.
+
+   <PromptBox>
+   Search my Gmail for messages from the past 7 days that mention "invoice". List sender, subject and date, and tell me which ones look like they need a reply. Don't draft or send anything.
+   </PromptBox>
+
+   <PromptBox>
+   Look at my calendar for next week and list the free blocks of 45 minutes or longer, by day. Don't create or change any events.
+   </PromptBox>
+
+4. **Move to drafts and events, and read the approval prompt**
+
+   <PromptBox>
+   Draft a reply to the latest email in the "project schedule" thread proposing two meeting times from my free blocks. Leave it as a draft; do not send.
+   </PromptBox>
+
+   <Aside type="caution" title="Check recipients and content before approving">
+   Claude can send, reply to and forward mail, and Google's sign-in screen mentions sending permissions. By default it asks first. Read the recipients, CC and body each time rather than approving by habit.
+   </Aside>
+
+5. **Bring Drive files into a chat or project**
+
+   <FlowSteps title="Add a Google Drive file to a chat" officialUrl="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" steps={[
+     { where: 'Chat input', action: 'Click the plus sign', result: 'Menu opens' },
+     { where: 'Menu', action: 'Select Add from Google Drive' },
+     { where: 'Picker', action: 'Search recent documents or paste the document URL', result: 'Claude reads it when you send your message' },
+   ]} />
+
+   You can add several files if they fit within the conversation's context window. For projects, the Drive option appears under Files in **private** projects only; it is disabled for shared projects. Docs added this way sync with the latest version in Drive. Claude extracts text only; images embedded in documents are not processed. See [C5. Projects](/claude/c05-projects/).
+
+   <PromptBox>
+   Read the attached Google Doc and give me a 5-bullet summary, then list any open comments or suggestions and what each one asks for.
+   </PromptBox>
+
+6. **Edit Google files live (optional)**
+
+   Turn on the Docs, Sheets and Slides connectors, then paste a Google file link or ask for one by name, for example "make a Google Slides deck from these notes." Asking for a generic "doc" or "deck" without naming Google creates a local file you download. The file opens in the pane and you can keep editing while Claude works; Claude re-reads the current content before each change, but check the result in a busy file. If the pane is unavailable, use **Open in Google** on the file card.
+
+   <PromptBox>
+   Create a Google Doc called "Weekly status" with three sections (Done, In progress, Next) and fill it from the notes I pasted above. Keep each section to 3 bullets.
+   </PromptBox>
+
+</Steps>
+
+## Privacy and permissions
+
+- You authenticate directly with your own Google account. Claude can only reach the Gmail, Calendar and Drive data of the account you connected, and mirrors your existing permissions.
+- It accesses data only when you ask for something that needs it, and retrieves the minimum needed.
+- Retrieved data is stored on Anthropic servers and kept with its chat, so deleting the chat deletes it. Data is encrypted at rest and in transit.
+- Anthropic says it does not train on your Gmail, Drive or Calendar connector data. The help article adds a caveat for consumer accounts: if you allowed chats to be used for training, content you copy and paste from those services, or Claude responses that include specific information from them, may be used.
+- Owners on Team and Enterprise can restrict actions per connector (Always allow, Needs approval, Blocked), for example allowing mail search but blocking sending. See [C7](/claude/c07-connectors/). Owners can also disable the Google Workspace connectors in Organization settings > Connectors.
+- Treat text inside emails and documents as untrusted. Don't approve actions you didn't ask for. For general habits, see [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/).
+
+## Quick reference
+
+| I want to... | Do this |
+| --- | --- |
+| Find mail or events | Ask in chat with Gmail or Calendar on |
+| Avoid accidental sends | Say "leave it as a draft"; read the approval prompt |
+| Give Claude a document | **+** > Add from Google Drive, or paste its URL |
+| Have Claude edit a Google file | Turn on Docs/Sheets/Slides connectors; name Google in the request |
+| Turn one connector off | **+** > Connectors > toggle |
+| Reconnect | Customize > Connectors > the Google connector > Disconnect |
+
+## Common sticking points
+
+### "Please try again. You may need to reconnect with your Google Drive account"
+
+- **Fix**: Go to Customize > Connectors, open the Google connector, click Disconnect and confirm. Next time you use a Google feature you'll be sent to Google to sign in again. If it persists, remove the Claude connection at myaccount.google.com/connections ("Delete all connections").
+
+### "Access blocked: your institution's admin needs to review Claude for Google Drive"
+
+- **Fix**: A Google Workspace admin goes to admin.google.com > Security > Access and data control > API controls > Manage third-party app access, adds the app, searches "Claude" and sets it to Trusted. Wait about 15 minutes. Live editing uses the same app, so no separate approval is needed per file type.
+
+### Claude can't read an email attachment or image
+
+- **Cause**: Gmail gives metadata only for attachments, and Drive reads extract text only.
+- **Fix**: Upload the file directly into the chat.
+
+### The live-edit pane doesn't show
+
+- **Cause**: The pane works on Claude on the web in Chrome, or Claude Desktop with the built-in browser on. It also needs a Google session; sign in with the same account you connected.
+- **Fix**: Use **Open in Google** on the file card.
+
+### Edits to a Slides deck or a chart don't work
+
+- **Cause**: Per the official limitations, Claude can't add charts to Google Slides, and Slides edits may not appear live in the pane.
+- **Fix**: Add the chart yourself in Google Slides.
+
+### Results are incomplete
+
+- **Cause**: Some advanced Gmail filters aren't supported, complex queries may need several API calls, Google API quotas apply, and large mailboxes can be slower.
+- **Fix**: Narrow the request (sender, date range, label).
+
+## Practical tips
+
+- Give a scope: sender, date range, label, folder. It beats "check my inbox."
+- Separate reading from writing in two messages, so you can review before any action.
+- Keep one practice Doc for trying live edits before using real files.
+- Turn on only the Google connectors a task needs.
+- Repeat jobs can become a [Skill (C8)](/claude/c08-skills/) or a schedule ([C18](/claude/c18-automate-recurring/)).
+
+## What to read next
+
+- [C7. Connectors](/claude/c07-connectors/) — Connection steps, custom connectors, MCP
+- [Organizing your inbox with AI](/automation/38-email-ai/) — Gemini in Gmail, Copilot in Outlook, and Claude
+- [C5. Projects](/claude/c05-projects/) — Adding Drive files to a private project
+- [C17. A day of work with Claude](/claude/c17-workday-workflow/) — Combining tools in a workday
+- [AI usage guide for office, planning and admin roles](/roles/office/) — Recommended order by job

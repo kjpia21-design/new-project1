@@ -110,6 +110,7 @@
 | C20 | Claude Design으로 시안·프로토타입 만들기 | 실무 |
 | C21 | Claude for Excel·PowerPoint: 오피스 안에서 Claude 쓰기 | 실무 |
 | C22 | Claude 데스크톱 앱 제대로 쓰기: 빠른 입력·음성·파일·확장 프로그램 | 실무 |
+| C23 | Claude에 Gmail·캘린더·드라이브 연결해 일하기 | 실무 |
 
 ## 5. 기술 구성 (제안)
 
