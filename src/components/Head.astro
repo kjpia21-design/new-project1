@@ -80,6 +80,8 @@ const imageAlt = key === 'default' ? SITE_NAME : `${SITE_NAME} - ${SECTION_NAMES
 <meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)" />
 {/* 검색 엔진 소유 확인. 구글은 Cloudflare DNS의 TXT 레코드로 확인했으므로 태그가 필요 없다. 자세한 방법은 docs/guides/search-registration.md 참고. */}
 <meta name="naver-site-verification" content="9ee5b97dd724c7af3550e14d997fd821609fb721" />
+{/* 방문 통계: Cloudflare Web Analytics(쿠키 없음). DNS가 "DNS only"라 자동 삽입이 안 되므로 직접 넣는다. token은 공개 값. */}
+<script is:inline type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "424ea8253cf94b72b9f5dfdb7ee47e00"}'></script>
 <meta property="og:image" content={imageUrl} />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
