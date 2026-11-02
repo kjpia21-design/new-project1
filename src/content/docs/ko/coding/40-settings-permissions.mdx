@@ -1,0 +1,281 @@
+---
+title: "Claude Code 설정·권한을 안전하게 다듬기"
+description: "Claude Code 설정 파일이 어디에 있고 어느 것이 우선하는지 알아보고, allow·ask·deny 규칙을 쓰고, .env 같은 민감한 파일을 보호하고, 권한 모드를 고르는 방법이에요. 공식 설정·권한 문서 기준이에요"
+sidebar:
+  label: "13. 설정·권한 다듬기"
+level: practical
+category: coding
+tools: ["Claude Code"]
+duration: "35분"
+prerequisites:
+  - "Claude Code가 설치되고 로그인된 상태 (코딩 1 참고)"
+  - "연습용 프로젝트 폴더 (복사본 권장, git 저장소면 더 좋아요)"
+  - "C14와 코딩 10에서 권한 모드와 훅을 한 번 훑어본 상태"
+lastVerified: 2026-11-02
+sources:
+  - title: "Settings files and precedence"
+    url: "https://code.claude.com/docs/en/settings"
+  - title: "Configure permissions"
+    url: "https://code.claude.com/docs/en/permissions"
+  - title: "Choose a permission mode"
+    url: "https://code.claude.com/docs/en/permission-modes"
+  - title: "All settings (permission keys)"
+    url: "https://code.claude.com/docs/en/settings-reference"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- Claude Code는 **네 종류의 설정**을 읽어요. 사용자(`~/.claude/settings.json`), 공유 프로젝트(`.claude/settings.json`), 프로젝트 로컬(`.claude/settings.local.json`), 조직 관리형이에요. 같은 키가 여러 곳에 있으면 높은 쪽이 이겨요. **관리형 > 명령줄(`--settings`) > 로컬 > 공유 프로젝트 > 사용자** 순서예요. `permissions.allow` 같은 목록 키는 덮어쓰지 않고 **합쳐져요**.
+- **권한 규칙**은 `allow`, `ask`, `deny` 세 가지예요. **deny, ask, allow** 순서로 검사하고 처음 일치한 것이 결과를 정해요. 어느 단계에서든 deny가 걸리면 다른 단계의 allow로 풀 수 없어요.
+- Claude가 비밀 파일을 못 보게 하려면 `Read(./.env)` 같은 `Read` deny 규칙을 넣어요. 규칙은 모델이 아니라 Claude Code가 직접 집행하니, 프롬프트나 CLAUDE.md에 다르게 써 있어도 지켜져요.
+- **Bash 규칙은 보안 경계가 아니에요.** `Bash(rm *)`은 `/bin/rm`이나 `bash -c '...'`를 막지 못해요. 확실한 제한이 필요하면 OS 수준 샌드박스나 PreToolUse 훅을 써요.
+- `bypassPermissions`는 `.git`, `.claude`에 쓰는 것까지 프롬프트 없이 넘겨요. 컨테이너나 VM 안에서만 쓰세요.
+- 2026-11-02에 공식 문서를 확인했어요. 임시 폴더에서 JSON 문법 검사와 `claude doctor`(Claude Code 2.1.316)만 실행했고, 대화형 세션은 실행하지 않았어요. 그래서 권한 프롬프트와 `/permissions` 화면은 문서 내용이에요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- "나만", "우리 팀", "이 프로젝트에서 나만"에 맞는 설정 파일 고르기
+- 같은 키가 두 곳에 있을 때 어느 값이 적용되는지 예측하기
+- allow·ask·deny 규칙을 쓰고 `.env`와 비밀 파일을 Claude 손이 닿지 않게 두기
+- 권한 모드를 고르고, 무엇을 지켜 주고 무엇은 못 지키는지 설명하기
+
+## 먼저 알아둘 개념
+
+[C14](/ko/claude/c14-claude-code-features/)에서 권한 모드를 표 하나로 소개했고, [코딩 10](/ko/coding/37-claude-code-hooks/)에서는 훅으로 동작을 막는 방법을 봤어요. 이 튜토리얼은 그 기능들이 들어 있는 설정 자체를 다뤄요. 핵심은 **CLAUDE.md는 부탁이고, 설정 규칙은 집행**이라는 점이에요. 공식 권한 문서는 규칙을 모델이 아니라 Claude Code가 집행한다고 설명해요.
+
+### 설정이 있는 곳 (공식 문서, 2026-11-02)
+
+| 범위 | 파일 | 영향받는 사람 |
+| --- | --- | --- |
+| 사용자 | `~/.claude/settings.json` | 이 컴퓨터의 모든 프로젝트에서 나 |
+| 공유 프로젝트 | `.claude/settings.json` | 그 폴더에서 일하는 모두. git에 커밋해요 |
+| 프로젝트 로컬 | `.claude/settings.local.json` | 이 프로젝트에서 나만 |
+| 관리형 | `managed-settings.json`, MDM, 서버 관리형 설정 | 조직이 배포한 모든 사람 |
+
+Claude Code를 설치해도 이 파일들은 만들어지지 않아요. `/config`에서 사용자 설정에 저장되는 옵션을 처음 바꿀 때 `~/.claude/settings.json`이 생기고, 권한 프롬프트에서 "Yes, and don't ask again"을 처음 고를 때 `.claude/settings.local.json`이 생겨요. Windows에서 `~/.claude`는 `%USERPROFILE%\.claude`예요.
+
+### 어느 값이 이기나
+
+높은 순서는 **관리형 설정, 명령줄(`--settings`), 프로젝트 로컬, 공유 프로젝트, 사용자**예요. 실제로 알아 둘 점이 두 가지 있어요.
+
+- **목록은 합쳐져요.** 사용자 설정과 프로젝트 설정에 모두 `permissions.allow`가 있으면 Claude Code가 합쳐요.
+- **환경 변수는 단계가 아니에요.** 변수와 설정 키 중 무엇이 이기는지는 키마다 달라서, 설정 레퍼런스에서 그 키 항목을 확인해야 해요.
+
+<Aside type="note" title="저장소 파일에서는 무시되는 키가 있어요">
+공식 문서에 따르면 `permissions.defaultMode`의 `auto`와 `bypassPermissions` 값은 프로젝트·로컬 설정에서는 효과가 없어요. 사용자 설정에 쓰거나 한 세션만 `--permission-mode`로 넘기세요. 또 커밋된 `.claude/settings.json`의 `permissions.allow` 규칙은 팀원이 각자 폴더 신뢰 대화상자를 수락한 뒤에야 적용돼요. `deny`와 `ask` 규칙은 제한만 하니까 바로 적용돼요.
+</Aside>
+
+### 권한 모드 요약
+
+| 모드 | 묻지 않고 하는 일 |
+| --- | --- |
+| `default` (Manual로 표시) | 읽기만 |
+| `acceptEdits` | 읽기, 파일 편집, `mkdir`·`mv`·`cp` 같은 흔한 파일 명령 |
+| `plan` | 읽기. 계획을 제안하고 소스 파일은 편집하지 않아요 |
+| `auto` | 대부분의 동작. 백그라운드 분류기가 검사해요 |
+| `dontAsk` | 미리 승인한 도구만. 프롬프트가 필요한 것은 거부돼요 (CI용) |
+| `bypassPermissions` | 어떤 모드도 자동 승인하지 않는 짧은 목록을 뺀 모든 것 |
+
+`Shift+Tab`으로 바꾸거나 `claude --permission-mode <모드>`로 시작해요. deny 규칙은 `bypassPermissions`를 포함해 모든 모드에서 막아요.
+
+## 따라 하기
+
+<Checklist items={[
+  '지금 고치는 설정 파일이 네 가지 중 무엇이고 왜 그런지 안다',
+  'allow·ask·deny 규칙이 든 프로젝트 설정 파일을 쓰고 /status로 로드됐는지 확인했다',
+  '.env와 secrets 폴더에 deny 규칙을 넣고 Claude가 읽지 못하는 것을 시험했다',
+  '내 사용자 설정에 시작 권한 모드를 정했다',
+  '설정이 무시될 때 무엇을 확인할지 안다',
+]} />
+
+<Steps>
+
+1. **알맞은 파일 열기 또는 만들기**
+
+   연습에서는 연습 폴더에 공유 프로젝트 파일을 만들어요. 팀원에게 가지 않게 하려면 아래 내용을 모두 `.claude/settings.local.json`에 넣어도 돼요.
+
+   ```bash
+   mkdir -p .claude
+   ```
+
+   설정 파일은 **엄격한 JSON**이에요. `//` 주석이나 마지막 쉼표가 있으면 오류이고, Claude Code가 다음 시작 때 Settings Error로 알려 줘요. `.claude/settings.local.json`을 직접 만들었다면 `.gitignore`에도 직접 추가하세요. Claude Code가 자동으로 추가해 주는 것은 Claude Code가 그 파일을 만들 때뿐이에요.
+
+2. **allow·ask·deny 규칙 쓰기**
+
+   아래를 `.claude/settings.json`으로 저장하세요. 공식 문서의 패턴을 따랐어요. 앞의 두 규칙은 lint와 테스트 명령을 묻지 않고 실행하게 하고, deny 규칙은 `.env` 파일 읽기를 막아요.
+
+   ```json
+   {
+     "$schema": "https://json.schemastore.org/claude-code-settings.json",
+     "permissions": {
+       "allow": [
+         "Bash(npm run lint)",
+         "Bash(npm run test *)"
+       ],
+       "ask": [
+         "Bash(git push *)"
+       ],
+       "deny": [
+         "Read(./.env)",
+         "Read(./.env.*)",
+         "Read(./secrets/**)"
+       ]
+     }
+   }
+   ```
+
+   규칙 형식은 `Tool` 또는 `Tool(specifier)`예요. Bash 규칙에서 `*`는 아무 텍스트나 뜻하니 **하위 명령 뒤에** 두세요. `Bash(git log *)`는 `git log`만 허용하지만 `Bash(git *)`는 모든 git 명령을 허용해요. 끝의 `*` 앞 공백도 중요해요. `Bash(ls *)`는 `lsof`와 맞지 않지만 `Bash(ls*)`는 맞아요.
+
+   Claude Code는 설정 파일을 감시하다가 `permissions`를 포함한 대부분의 편집을 재시작 없이 실행 중인 세션에 적용해요.
+
+   <Aside type="caution" title="allow 규칙은 신뢰를 기다려요">
+   로컬에서 확인해 보니, 신뢰하지 않은 폴더에서 `claude doctor`를 실행하자 `Ignoring 3 permissions.allow entries from .claude/settings.json: this workspace has not been trusted`라고 나왔어요. 문서와 같은 동작이에요. 폴더에서 Claude Code를 대화형으로 한 번 열어 신뢰 대화상자를 수락하세요. 대화상자를 아예 보여 주지 않는 `claude -p`도 마찬가지예요.
+   </Aside>
+
+3. **로드된 것 확인하기**
+
+   ```text
+   /status
+   ```
+
+   **Status** 탭의 `Setting sources` 줄에 Claude Code가 로드한 설정 파일(`User settings`, `Project local settings` 등)이 나와요. 어떤 파일을 읽었는지는 보여 주지만, 키마다 어느 파일에서 왔는지는 보여 주지 않아요. 규칙과 그 출처 파일을 보려면 `/permissions`를 입력하세요. Claude Code가 거부한 항목을 보려면 터미널에서 `claude doctor`를 실행해요.
+
+4. **민감한 파일 보호하기**
+
+   보호한 파일을 Claude가 읽는지 시험해 봐요. 먼저 가짜 `.env`를 만드세요. 진짜 키로는 절대 시험하지 마세요.
+
+   ```bash
+   echo "EXAMPLE_KEY=not-a-real-secret" > .env
+   ```
+
+   <PromptBox>
+   이 폴더의 .env 파일을 읽고 안에 뭐가 있는지 알려줘.
+   </PromptBox>
+
+   `deny`에 `Read(./.env)`가 있으면 Claude Code가 거부해야 해요. 문서에 따르면 `Read` deny 규칙은 같은 경로에 대한 Edit·Write 도구도 막아요. `@file` 멘션에는 최선을 다해 적용돼요.
+
+   한계도 알아 두세요. 문서는 Read·Edit deny 규칙이 Claude의 내장 파일 도구, Claude Code가 Bash에서 알아보는 파일 명령(`cat`, `head`, `tail`, `sed`, `tee`), 그리고 리다이렉션에 적용된다고 경고해요. `grep -r pattern .`처럼 파일 이름을 쓰지 않고 읽는 명령이나, 파일을 직접 여는 Python·Node 스크립트에는 적용되지 **않아요**. 모든 프로세스를 OS 수준에서 막으려면 [샌드박스](https://code.claude.com/docs/en/sandboxing)를 켜세요.
+
+   <Aside type="danger" title="Bash 규칙은 과속방지턱이지 벽이 아니에요">
+   문서는 `deny` 규칙이 놓치는 경우를 표로 보여 줘요. `Bash(rm *)`은 `rm -rf build/`는 막아도 `/bin/rm -rf build/`나 `bash -c 'rm -rf build/'`는 막지 못해요. `Bash(git push *)`는 `git push origin main`은 막아도 `git -C . push origin main`은 막지 못해요. 이런 규칙은 흔한 형태를 잡는 용도로 쓰고, 제한이 꼭 지켜져야 하면 샌드박스나 PreToolUse 훅([코딩 10](/ko/coding/37-claude-code-hooks/))을 더하세요.
+   </Aside>
+
+5. **시작 권한 모드 정하기**
+
+   이 컴퓨터의 모든 터미널 세션이 Manual 모드로 시작하게 하려면 `~/.claude/settings.json`에 이렇게 써요(권한 모드 문서의 예시예요).
+
+   ```json
+   {
+     "permissions": {
+       "defaultMode": "default"
+     }
+   }
+   ```
+
+   문서에 따르면 다음 세션의 상태 표시줄에 `manual mode on`이 보여요. Claude Code v2.1.283 이상에서는 모드를 정하지 않은 터미널·VS Code 세션이 **auto** 모드로 시작해요. 직접 승인하고 싶다면 의도적으로 정하세요. auto나 bypass 모드를 아예 없애려면 `permissions.disableAutoMode` 또는 `permissions.disableBypassPermissionsMode`를 `"disable"`로 설정해요. 어느 설정 파일에서든 동작하지만 관리형 설정에서 가장 쓸모 있어요.
+
+6. **한 세션만 덮어쓰기**
+
+   저장하지 않고 설정을 시험하려면 명령줄로 넘겨요. 관리형을 뺀 모든 파일 위에 적용되고 한 세션만 가요.
+
+   ```bash
+   claude --settings '{"permissions": {"defaultMode": "plan"}}'
+   ```
+
+   이 명령은 실행하지 않았어요. 한 세션만 `auto`나 `bypassPermissions`로 시작하려면 `--permission-mode`를 쓰세요.
+
+   <FlowSteps title="설정이 적용되지 않는 것 같을 때" officialUrl="https://code.claude.com/docs/en/settings" steps={[
+     { where: 'Claude Code 프롬프트', action: '/status 입력', result: 'Setting sources 줄에 그 파일이 있는지 확인' },
+     { where: '터미널', action: 'claude doctor 실행', result: '잘못된 JSON이나 형식이 틀린 규칙처럼 Claude Code가 거부한 항목 확인' },
+     { where: '설정 파일들', action: '같은 키가 더 높은 단계에 있는지 찾기', result: '관리형, --settings, 로컬 파일이 공유 프로젝트·사용자 파일보다 우선해요' },
+     { where: '설정 레퍼런스', action: '키와 Scope 열 찾기', result: '저장소 파일에서는 절대 적용되지 않는 키가 있어요' },
+   ]} />
+
+</Steps>
+
+## 한눈에 보기
+
+### 규칙 예시
+
+| 규칙 | 효과 |
+| --- | --- |
+| `Bash(npm run build)` | 정확히 `npm run build`만 |
+| `Bash(npm run *)` | `npm run ...`으로 시작하는 모든 명령 |
+| `Read(./.env)` | 현재 디렉터리의 `.env` 파일 |
+| `Read(**/.env)` 또는 `Read(.env)` | 현재 디렉터리 이하의 모든 `.env` |
+| `Read(//Users/alice/secrets/**)` | 절대 경로 (슬래시 두 개에 주의) |
+| `Read(~/Documents/*.pdf)` | 홈 디렉터리 아래 경로 |
+| `WebFetch(domain:example.com)` | 그 도메인으로의 fetch |
+| `Edit(/src/**)` | 주 작업 디렉터리의 `src/` 아래 편집 (프로젝트 설정일 때) |
+
+맨 앞의 슬래시 하나는 파일 시스템 루트가 **아니에요**. 설정 파일이 정의된 위치를 기준으로 해요. 절대 경로는 `//`를 쓰세요. 사용자 설정의 `Read(/secrets/**)`는 프로젝트의 폴더가 아니라 `~/.claude/secrets/**`를 막아요.
+
+### 규칙 순서
+
+1. 일치하는 **deny** 규칙이 있으면 막아요.
+2. 아니면 일치하는 **ask** 규칙이 있으면 물어봐요.
+3. 아니면 일치하는 **allow** 규칙이 있으면 실행해요.
+
+구체적이라고 순서가 바뀌지 않아요. 그래서 deny에 `Bash(aws *)`가 있으면 allow에 `aws s3 ls`를 따로 적어도 막혀요. allow로는 deny에서 예외를 만들 수 없어요.
+
+### 어떤 모드도 자동 승인하지 않는 것
+
+**보호 경로**에 쓰는 것은 `bypassPermissions`를 빼면 자동 승인되지 않아요. 문서에 `.git`, `.vscode`, `.idea`, `.husky`, `.claude` 같은 디렉터리와 `.gitconfig`, `.bashrc`, `.zshrc`, `.npmrc`, `.mcp.json`, `.claude.json` 같은 파일이 나와요. `Edit(.claude/**)` 같은 allow 규칙으로도 미리 승인되지 않아요. 전체 목록과 모드별 동작은 권한 모드 문서를 보세요.
+
+## 자주 막히는 지점
+
+### allow 규칙이 아무 일도 안 해요
+
+- **원인**: 폴더를 아직 신뢰하지 않았거나, 파일이 올바른 JSON이 아니거나, 먼저 일치하는 deny·ask 규칙이 있어요.
+- **해결**: 대화형으로 신뢰 대화상자를 수락하고, `/status`와 `claude doctor`를 실행하고, `/permissions`에서 모든 규칙과 출처 파일을 확인하세요.
+
+### `Write(docs/**)`라고 썼는데 편집할 때 여전히 물어봐요
+
+- **원인**: 파일 권한은 `Edit(경로)`와 `Read(경로)` 규칙만으로 검사해요. Claude Code는 `Write(경로)`, `NotebookEdit(경로)`, `Glob(경로)` 규칙을 받아들이지만 절대 일치시키지 않아요.
+- **해결**: `Edit(docs/**)`와 `Read(docs/**)`를 쓰세요. `.claudeignore` 파일도 믿지 마세요. 문서에 효과가 없다고 나와 있어요.
+
+### "Yes, and don't ask again"을 골랐는데도 또 물어봐요
+
+- **원인**: 그 선택은 내 로컬 파일에 allow 규칙을 저장하는데, 다른 파일의 ask 규칙보다 allow 규칙이 우선하지는 않아요.
+- **해결**: `/permissions`에서 일치하는 ask 규칙을 찾아보세요.
+
+### 프로젝트 파일의 `defaultMode: "auto"`가 무시돼요
+
+- **원인**: `auto`와 `bypassPermissions`는 프로젝트·로컬 설정에서는 적용되지 않아요.
+- **해결**: `~/.claude/settings.json`에 쓰거나 `--permission-mode auto`를 넘기세요.
+
+### 팀원에게 내 규칙이 안 가요
+
+- **원인**: 키가 내 로컬 파일에 있거나, 저장소 파일에서는 절대 적용되지 않는 키이거나, 팀원이 폴더를 아직 신뢰하지 않았어요.
+- **해결**: 팀 규칙은 커밋하는 `.claude/settings.json`에 넣고, 팀원에게 신뢰 대화상자를 수락하라고 알려 주세요.
+
+### 조직이 내 설정을 덮어써요
+
+- **원인**: 관리형 설정이 최상위 단계예요. 내 파일이나 `--settings`로는 바꿀 수 없어요.
+- **해결**: `/status`로 어느 관리형 출처인지 확인하고 관리자에게 문의하세요.
+
+## 실전 팁
+
+- 비밀 파일에 대한 deny 규칙과 `git push` 같은 위험한 명령에 대한 `ask` 규칙으로 시작하고, `allow`는 정말 반복하는 명령에만 더하세요.
+- `Bash(npm *)`처럼 넓은 규칙보다 `Bash(npm run test *)`처럼 정확하거나 접두사가 분명한 규칙이 좋아요.
+- 개인적인 예외는 `.claude/settings.local.json`에 두세요. 팀원 세션에는 전혀 영향이 없어요.
+- `$schema` 줄을 넣으면 편집기가 검증해 줘요. 다만 아주 새 키에 경고가 떠도 너무 믿지 마세요. 문서에 스키마가 최신 릴리스보다 늦을 수 있다고 나와 있어요.
+- `bypassPermissions`는 격리된 컨테이너나 VM에서만 쓰고, 평소 쓰는 컴퓨터에서는 쓰지 마세요.
+- 내가 쓰지 않은 저장소에서 `claude -p`를 돌리기 전에 그 저장소의 `.claude/` 파일을 읽어 보세요. 이럴 때 문서는 `--setting-sources user`나 `--bare`를 권해요.
+- 이 튜토리얼은 권한 관련 키만 다뤄요. 전체 키 목록은 공식 설정 레퍼런스에 있어요.
+
+## 다음에 볼 튜토리얼
+
+- [C14. Claude Code 핵심 기능](/ko/claude/c14-claude-code-features/) — CLAUDE.md, 서브에이전트, MCP, 권한 모드
+- [10. 훅으로 자동 검사 붙이기](/ko/coding/37-claude-code-hooks/) — PreToolUse 훅으로 위험한 명령 막기
+- [12. 나만의 서브에이전트 만들기](/ko/coding/39-claude-code-subagents/) — 서브에이전트의 도구 제한하기
+- [1. Claude Code 시작하기](/ko/coding/06-claude-code-start/)
+- [Dev 7. 헤드리스와 GitHub Actions](/ko/dev/07-headless-ci/) — `-p` 실행과 신뢰 주의점
+- [개발자 가이드](/ko/roles/developer/)

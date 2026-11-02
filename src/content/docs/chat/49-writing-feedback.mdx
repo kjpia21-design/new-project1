@@ -1,0 +1,213 @@
+---
+title: "Get Useful Feedback on Your Writing from AI: Ask for Comments, Keep Your Own Voice, and Follow the Rules"
+description: "How to ask an AI assistant for feedback on an essay, application, or report without letting it rewrite your voice, and how to check your school's or contest's AI rules first, with what the official help pages confirm and what we could not confirm"
+sidebar:
+  label: "20. Writing feedback"
+level: beginner
+category: chat
+tools: ["Claude", "Gemini", "ChatGPT"]
+duration: "30 min"
+prerequisites:
+  - "One AI account (any of Claude, Gemini, or ChatGPT)"
+  - "A draft of your own writing, even a rough one, and any rules your school, employer, or contest published"
+lastVerified: 2026-11-02
+sources:
+  - title: "Use Claude for Education at your university (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/11139144-use-claude-for-education-at-your-university"
+  - title: "Learn in creative ways with generative AI (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/15216790"
+  - title: "Upload files to Claude (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/8241126-upload-files-to-claude"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- Asking for **feedback** is different from asking the AI to **write or rewrite** for you. Feedback keeps the words yours; a rewrite replaces them. Decide which one you want before you start.
+- **Check the rules first.** Assignments, scholarships, and contests often have their own rules about AI. The official pages say so too: Claude's university guide says to follow your university's academic integrity policies, and Gemini's learning page says to check and follow your school's policy.
+- Five steps: **read the rules, say who the writing is for, ask for comments (not a rewrite), revise it yourself, then check the result.** Below are 9 prompts you can copy.
+- Per the official pages (as of 2026-11-02): Claude lists "provide feedback on drafts" and "suggest ways to improve clarity and structure" among its writing support uses; Gemini's page says to use suggestions as a starting point and add your own voice.
+- We **could not confirm** a specific rule for your school, employer, or contest. Those come from the organizer, not from the AI service. When the rules are unclear, ask the organizer.
+- Do not paste anything private or confidential, and remember the AI can be wrong about your text.
+</Summary>
+
+## What you'll be able to do
+
+- Find out whether and how AI may be used for your assignment, application, or contest.
+- Ask for specific feedback on a draft, such as structure, clarity, or tone, instead of a full rewrite.
+- Keep your own voice by limiting what the AI is allowed to change.
+- Turn comments into your own revision and say what you did when asked.
+- Know what the official pages confirm about school policy and writing support, and what is still unconfirmed.
+
+This tutorial is about **feedback on writing you already made.** For turning rough notes into emails, see [Write Better Emails and Messages with AI](/chat/42-emails-and-messages/). For long reports and proposals, see [Drafting and Polishing Reports and Proposals](/chat/04-write-reports/). For copyright and ethics questions, see [Can You Use AI Output?](/basics/09-ai-copyright-ethics/).
+
+## Concepts first
+
+| Term | Meaning |
+| --- | --- |
+| **Feedback** | Comments on what works and what does not. The AI points things out; you decide and make the change. |
+| **Rewrite** | The AI produces new wording for you. This can break an assignment or contest rule, so check before asking. |
+| **Your voice** | The word choices, rhythm, and examples that sound like you. Heavy AI rewriting tends to flatten it. |
+| **Rubric** | The grading criteria or contest judging criteria. If you have one, give it to the AI. |
+| **AI-use rules** | What the school, employer, or organizer allows: for example, no AI, AI for feedback only, or AI allowed if you disclose it. These vary and are set by them. |
+| **Disclosure** | A short note saying how you used AI, when the rules ask for one. |
+
+### What the official pages confirm (as of 2026-11-02)
+
+| Item | Claude | ChatGPT | Gemini |
+| --- | --- | --- | --- |
+| Follow your school's policy | The university guide says to follow your university's academic integrity policies, and that Claude should not be used to complete assignments you are expected to do independently | Not confirmed | The learning page says to check and follow your school's policy on using generative AI |
+| Feedback on drafts | The university guide lists "provide feedback on drafts", outlining papers and essays, and suggesting ways to improve clarity and structure as writing support | Not confirmed | The learning page describes brainstorming and getting past writer's block, and says generative AI boosts your process, "not do all the work for you"; it does not list a draft-feedback feature |
+| Keep your own voice | Not confirmed | Not confirmed | The learning page says to use suggestions as a starting point and add your own voice and ideas |
+| Check the answers | Not confirmed on that page | Not confirmed | The learning page says to always evaluate responses and fact-check, because generative AI can make mistakes |
+| Uploading a draft file | Documents such as PDF, DOCX, TXT, and RTF can be uploaded; chat uploads are up to 500MB per file and 20 files per chat | Not confirmed | Not read for this tutorial |
+
+<Aside type="note" title="What we couldn't confirm">
+The Claude university guide describes a university-sponsored account, and the page notes that your university may have customized features or applied its own policies. We did not find an official help page, among the ones we opened, about writing feedback in ChatGPT, so the ChatGPT column is empty. We also could not confirm any service's behavior for a specific school's, employer's, or contest's rules, and we could not confirm that any AI service can detect or certify that text was written by a person or an AI. This tutorial's prompts are ways to try, not confirmed features.
+</Aside>
+
+<Aside type="caution" title="Rules, honesty, and privacy">
+Rules about AI use come from your school, employer, or the contest organizer, and they differ. Read them before you paste anything. If a rule says no AI, do not use it for that piece, even for feedback. If the rules are unclear, ask the teacher, supervisor, or organizer in writing and keep the answer. If disclosure is required, say plainly what you used it for. Do not paste other people's names, contact details, grades, medical or legal details, or unpublished work you do not own; see [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/). This is general help, not legal or academic advice.
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I read the AI-use rules for this piece and wrote down what is allowed',
+  'I decided whether I want feedback only, or also suggested wording',
+  'I removed private details from the draft before pasting it',
+  'I asked for comments and kept the revision in my own words',
+  'I checked facts, quotes, and names against my own sources',
+  'I noted how I used AI in case I am asked or must disclose it',
+]} />
+
+<Steps>
+
+1. **Check the rules and set the limits**
+
+   Open the assignment sheet, application guide, or contest rules and look for the words "AI", "generative", "tools", or "disclose". If you cannot find any, ask. Then tell the AI what it may and may not do.
+
+   <PromptBox label="Ground-rules prompt">
+   I am going to share my own draft and want feedback only. Do not rewrite my sentences or write new paragraphs unless I ask. Point out problems and explain why, and let me fix them. If you suggest wording, give at most one short example and label it as an example. Say "I am not sure" when you are not sure.
+   </PromptBox>
+
+2. **Say who it is for**
+
+   Feedback depends on the reader. Paste the rubric or the question if you have them, with private details removed.
+
+   <PromptBox label="Context prompt">
+   My draft is a [type: school essay / scholarship statement / contest entry / work report] for [reader: a teacher / a review committee / my manager]. The goal is [what it must achieve]. Here are the criteria I was given: [pasted criteria]. The draft is about [number] words and the limit is [limit]. Keep this in mind for all your comments.
+   </PromptBox>
+
+3. **Ask for a big-picture read first**
+
+   <PromptBox label="Big-picture prompt">
+   Here is my draft: [pasted draft]. In five lines, tell me what my main point seems to be, what the strongest part is, what the weakest part is, and what is missing for the criteria above. Do not edit the text yet.
+   </PromptBox>
+
+   If the AI states a main point that is not yours, that is useful: your reader may read it the same way.
+
+4. **Ask for specific comments, one area at a time**
+
+   <PromptBox label="Structure prompt">
+   Look only at the structure. List the order of my paragraphs in one line each, then say where the order confuses you, where a paragraph does not support my main point, and where a transition is missing. Give comments only, no rewriting.
+   </PromptBox>
+
+   <PromptBox label="Clarity prompt">
+   Quote up to five sentences that are hard to follow, and for each say in one line what makes it hard (too long, vague word, unclear subject). Do not rewrite them. I will fix them myself.
+   </PromptBox>
+
+   <PromptBox label="Evidence prompt">
+   List every claim in my draft that needs a source, an example, or a number, and mark which ones already have support in the text. Do not add facts. If I need to look something up, tell me what kind of source to look for.
+   </PromptBox>
+
+5. **Protect your voice**
+
+   <PromptBox label="Voice prompt">
+   Describe my writing voice in three or four lines based on this draft (sentence length, word choice, how formal I am). Then list the places where my voice changes or sounds generic. Do not smooth them out; just show me where they are.
+   </PromptBox>
+
+6. **Revise it yourself, then ask for a second read**
+
+   Make the changes in your own words. Then paste the new version.
+
+   <PromptBox label="Second-read prompt">
+   Here is my revised draft: [pasted draft]. Compare it with the comments you gave before. Which problems are fixed, which remain, and did I introduce any new ones? Keep to comments, no rewriting.
+   </PromptBox>
+
+7. **Check the result and keep a record**
+
+   <PromptBox label="Final check prompt">
+   Give me a final checklist for this piece: facts, quotes, and names I should verify myself, rules from the criteria I may not have met yet, and spelling or formatting items. Also write a two-sentence note I could use to say how I used AI (for feedback on structure and clarity only), in case the rules ask for disclosure.
+   </PromptBox>
+
+   Verify facts and quotes against your own sources; see [Can You Trust AI Answers?](/basics/04-fact-checking/).
+
+</Steps>
+
+## Quick reference
+
+| What you want | Try this |
+| --- | --- |
+| Set limits so it does not rewrite | Ground-rules prompt |
+| Feedback that fits your reader | Context prompt with the criteria |
+| A fast overall verdict | Big-picture prompt |
+| Order and flow | Structure prompt |
+| Hard-to-read sentences | Clarity prompt |
+| Unsupported claims | Evidence prompt |
+| Keep your tone | Voice prompt |
+| Confirm progress | Second-read prompt, then final check prompt |
+
+## Common sticking points
+
+### The AI rewrote my whole text
+
+- **Cause**: The request was open-ended, or it did not know it should only comment.
+- **Fix**: Use the Ground-rules prompt first, and ask again for "comments only, no rewriting." Go back to your own version.
+
+### The feedback is too general ("add more detail")
+
+- **Cause**: It did not know the reader, goal, or criteria.
+- **Fix**: Give the Context prompt, and ask for quoted sentences and one concrete reason per comment.
+
+### The AI praised everything
+
+- **Cause**: Assistants can be agreeable, and a vague request invites flattery.
+- **Fix**: Ask "What would a strict reviewer criticize?" and "What is the weakest paragraph and why?"
+
+### The AI added facts or quotes I never wrote
+
+- **Cause**: It filled a gap with plausible text, and any AI can make mistakes.
+- **Fix**: Remove anything you cannot trace to your own sources. Ask it to mark claims instead of adding them.
+
+### I cannot tell whether AI is allowed
+
+- **Cause**: The rules are missing, vague, or differ by teacher, department, or contest.
+- **Fix**: Ask the organizer in writing, and wait for the answer. Until then, do not paste the draft.
+
+### My draft is too long to paste
+
+- **Cause**: The chat has length limits.
+- **Fix**: Paste one section at a time with a one-line summary of the rest, or upload a file if your service allows it. For Claude, see the supported file types and limits above.
+
+## Practical tips
+
+- **Rules first, prompts second.** An answer the organizer would reject is not a good answer.
+- **Ask for comments, not wording.** Your own sentences are what the reader should see.
+- **One area at a time.** Structure, clarity, and evidence get better feedback when asked separately.
+- **Keep the version history.** Save your draft before and after so you can show your work.
+- **Read it aloud once.** If a sentence does not sound like you, change it back.
+- **Do not share secrets.** Leave out private and confidential details.
+
+## What to read next
+
+- [Write Better Emails and Messages with AI](/chat/42-emails-and-messages/) — tone, replies, and polished business writing
+- [Drafting and Polishing Reports and Proposals](/chat/04-write-reports/) — longer documents
+- [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/) — what to check before sharing
+- [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/) — verify before you rely on it
+- [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/) — what to keep out of chats
+- [Learn a New Subject with an AI Tutor](/chat/47-learn-with-ai-tutor/) — learning, not just fixing

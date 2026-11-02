@@ -1,0 +1,203 @@
+---
+title: "Claude에 Gmail·캘린더·드라이브 연결해 일하기"
+description: "Claude를 Gmail, Google 캘린더, Google 드라이브, 그리고 Docs·Sheets·Slides 실시간 편집에 연결하는 방법을 공식 도움말 기준으로 정리했어요. 읽고 바꿀 수 있는 범위, 승인, 플랜, 개인정보, 문제 해결을 다뤄요"
+sidebar:
+  label: "C23. Claude와 Google Workspace"
+level: practical
+category: claude
+tools: ["Claude", "Gmail", "Google Calendar", "Google Drive", "Google Docs"]
+duration: "30분"
+prerequisites:
+  - "claude.ai 계정"
+  - "Google 계정 (처음에는 기밀 메일·파일 대신 연습용 데이터로 해 보세요)"
+  - "(Team/Enterprise라면) 조직 Owner가 Google 커넥터를 켜 두었는지 확인"
+lastVerified: 2026-11-02
+sources:
+  - title: "Use Google Workspace connectors"
+    url: "https://support.claude.com/en/articles/10166901-use-google-workspace-connectors"
+  - title: "Use connectors to extend Claude's capabilities"
+    url: "https://support.claude.com/en/articles/11176164-use-connectors-to-extend-claude-s-capabilities"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- Google Workspace 커넥터(Gmail, Google 캘린더, Google 드라이브)는 Claude와 Claude Desktop의 **모든 사용자에게 제공**된다고 안내돼 있어요(2026-11-02 기준). Team·Enterprise에서는 Owner가 먼저 조직에서 켜야 해요.
+- Claude는 **읽기**(메일 검색, 일정 보기, 드라이브 파일 읽기)와 **실행**(초안 작성·전송·답장·전달, 일정 만들기·수정·삭제, 파일 공유·이동·휴지통)을 할 수 있어요. 전송·답장·전달·공유·이동·휴지통 전에는 기본적으로 **내 승인**을 물어요.
+- 별도의 **Docs·Sheets·Slides** 커넥터는 채팅 옆 창에서 해당 파일을 실시간으로 편집해요. 웹의 Chrome이나 내장 브라우저를 켠 Claude Desktop에서 동작해요.
+- Claude는 내 Google 권한을 그대로 따르고, 연결한 계정의 데이터만 봐요. 가져온 데이터는 해당 채팅에 저장되고, Anthropic은 Gmail·드라이브·캘린더 커넥터 데이터로 모델을 학습하지 않는다고 밝혀요.
+- 처음에는 읽기 요청부터, 그리고 **전송 말고 초안**으로 시키세요. Gmail 첨부 파일의 내용은 읽을 수 없어요(메타데이터만).
+</Summary>
+
+이 글은 Google 커넥터로 *일하는 법*을 다뤄요. 커넥터의 일반 개념, 커스텀 커넥터, MCP는 [C7. 커넥터](/ko/claude/c07-connectors/)를, Gmail의 Gemini와 Claude 비교는 [메일함 정리 AI](/ko/automation/38-email-ai/)를 보세요.
+
+## 이 글을 읽고 나면
+
+- Gmail, 캘린더, 드라이브를 연결하고 대화마다 켜고 끌 수 있어요.
+- 읽기 작업(메일 찾기, 빈 시간 찾기, 드라이브 문서 요약)과 쓰기 작업(초안, 일정, 문서 실시간 편집)을 알맞은 승인과 함께 맡길 수 있어요.
+- 드라이브 파일을 채팅이나 비공개 프로젝트에 넣고, 옆 창에서 Google 문서·시트·슬라이드를 편집시킬 수 있어요.
+- 재연결, 관리자 차단, 읽지 못하는 파일 같은 문제를 해결할 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **Google Workspace 커넥터** | 커넥터 디렉터리의 Gmail, Google 캘린더, Google 드라이브 커넥터예요. |
+| **Docs / Sheets / Slides 커넥터** | 옆 창에서 실시간 편집을 하는 별도 커넥터예요. 검색·업로드·공유는 여전히 Google 드라이브 커넥터가 맡아요. |
+| **승인** | 메일 전송 같은 동작 전에 뜨는 확인이에요. 기본값은 매번 물어요. Team·Enterprise에서는 Owner가 멤버가 승인 없이 실행하게 할지 정해요. |
+| **권한 그대로 따름** | Claude는 내 Google 계정이 이미 접근할 수 있는 것에만 접근해요. |
+| **옆 창(pane)** | Google 파일을 실시간 편집하려고 채팅 옆에 열리는 패널이에요. |
+
+### 커넥터별로 할 수 있는 일 (공식 도움말 기준)
+
+| 커넥터 | 읽기 | 실행 |
+| --- | --- | --- |
+| **Gmail** | 자연어로 메일 검색·읽기, 첨부 메타데이터(첨부 내용은 제외), 저장된 초안 목록 | 초안 작성, 전송·답장·전달(기본 승인), 라벨·스레드 관리 |
+| **Google 캘린더** | 일정·캘린더 보기(접근 가능한 공유 캘린더 포함), 참석자 공통 가능 시간 찾기 | 일정 만들기·수정·삭제, 참석자 관리, 초대 응답, 반복 회의 설정 |
+| **Google 드라이브** | Docs 검색, Sheets·Slides·PDF·이미지·MS Office 파일 읽기(텍스트만), 파일 메타데이터, 권한·최근 변경 | 공유·이동·휴지통(기본 승인), 모든 형식 업로드, 폴더 만들기, Claude가 만든 파일을 드라이브에 저장(코드 실행·파일 생성이 켜져 있어야 함) |
+| **Docs, Sheets, Slides** | Docs의 댓글·제안 읽기 | 옆 창에서 실시간 편집, 새 Google 파일 만들기 |
+
+<Aside type="note" title="플랜과 제공 범위 (2026-11-02 기준)">
+도움말은 Google Workspace 커넥터가 Claude와 Claude Desktop의 모든 사용자에게 제공된다고 안내해요. 실시간 편집은 웹의 Chrome, 또는 내장 브라우저를 켠 Claude Desktop에서 동작해요. 이 문서에서 플랜별 차이는 확인하지 못했어요. 바뀌었는지 공식 페이지를 확인하세요.
+</Aside>
+
+## 따라하기
+
+<Checklist items={[
+  '(Team/Enterprise) Owner가 Google 커넥터를 켰는지 확인했어요',
+  'Google 계정을 연결하고 동의했어요',
+  '대화에서 커넥터를 켜고 읽기 요청을 해 봤어요',
+  '초안을 요청하고, 전송 전에 승인 창을 확인했어요',
+  '드라이브 문서를 채팅에 넣고 질문해 봤어요',
+  '(선택) 연습용 Google 문서로 실시간 편집을 해 봤어요',
+]} />
+
+<Steps>
+
+1. **켜고 연결하기**
+
+   Team·Enterprise에서는 Owner 또는 Primary Owner가 먼저 Organization settings > Connectors에서 커넥터를 켜요. 그다음 채팅의 **+** 메뉴(또는 **/**) > Connectors, 또는 Customize > Connectors에서 연결하고 Google에 로그인해요. 단계별 설명은 [C7](/ko/claude/c07-connectors/)에 있어요.
+
+   <ScreenshotPlaceholder caption="채팅 입력창의 Connectors 메뉴" officialUrl="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" />
+
+2. **대화마다 커넥터 켜고 끄기**
+
+   **+**를 누르고 **Connectors**에 마우스를 올려 Gmail, 캘린더, 드라이브, Docs, Sheets, Slides를 켜거나 꺼요. 그 작업에 필요 없는 것은 꺼 두세요.
+
+3. **읽기 요청부터 시작하기**
+
+   Claude가 필요한 도구를 알아서 고르고, 사용한 메일·일정·문서를 출처로 보여 줘요(가능하면 원본 링크 포함).
+
+   <PromptBox>
+   Gmail에서 최근 7일 동안 "청구서"가 들어간 메일을 찾아서 보낸 사람, 제목, 날짜로 정리해 주세요. 그중 답장이 필요해 보이는 것도 알려 주세요. 초안이나 전송은 하지 마세요.
+   </PromptBox>
+
+   <PromptBox>
+   내 캘린더에서 다음 주에 45분 이상 비는 시간을 요일별로 알려 주세요. 일정은 만들거나 바꾸지 마세요.
+   </PromptBox>
+
+4. **초안·일정으로 넘어가고, 승인 창 읽기**
+
+   <PromptBox>
+   "프로젝트 일정" 스레드의 가장 최근 메일에 답장 초안을 써 주세요. 내가 비는 시간 중 두 개를 회의 후보로 제안해 주세요. 초안으로만 남기고 보내지는 마세요.
+   </PromptBox>
+
+   <Aside type="caution" title="승인하기 전에 받는 사람과 내용을 확인하세요">
+   Claude는 메일을 보내고, 답장하고, 전달할 수 있어요. Google 로그인 화면에도 전송 권한이 나와요. 기본값은 먼저 묻는 것이에요. 습관처럼 누르지 말고 받는 사람, 참조, 본문을 매번 읽으세요.
+   </Aside>
+
+5. **드라이브 파일을 채팅이나 프로젝트에 넣기**
+
+   <FlowSteps title="채팅에 Google 드라이브 파일 추가하기" officialUrl="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" steps={[
+     { where: '채팅 입력창', action: '더하기(+) 버튼 누르기', result: '메뉴가 열려요' },
+     { where: '메뉴', action: 'Add from Google Drive 선택' },
+     { where: '선택 창', action: '최근 문서를 검색하거나 문서 URL 붙여넣기', result: '메시지를 보내면 Claude가 문서를 읽어요' },
+   ]} />
+
+   대화의 컨텍스트 창에 들어가는 만큼 여러 파일을 넣을 수 있어요. 프로젝트에서는 **비공개** 프로젝트의 Files에서만 드라이브 옵션이 보이고, 공유 프로젝트에서는 꺼져 있어요. 이렇게 넣은 Docs는 드라이브의 최신 버전과 동기화돼요. Claude는 텍스트만 추출하고 문서에 삽입된 이미지는 처리하지 않아요. [C5. 프로젝트](/ko/claude/c05-projects/)도 보세요.
+
+   <PromptBox>
+   첨부한 Google 문서를 5개 항목으로 요약해 주세요. 그리고 열려 있는 댓글과 제안이 있으면 각각 무엇을 요청하는지 정리해 주세요.
+   </PromptBox>
+
+6. **Google 파일 실시간 편집하기 (선택)**
+
+   Docs, Sheets, Slides 커넥터를 켜고, Google 파일 링크를 붙여넣거나 "이 메모로 Google 슬라이드 만들어 줘"처럼 이름을 붙여 요청해요. Google을 말하지 않고 그냥 "문서"나 "슬라이드"라고 하면 내려받는 로컬 파일이 만들어져요. 파일은 옆 창에 열리고, Claude가 작업하는 동안 같이 편집할 수 있어요. Claude는 매번 변경 전에 현재 내용을 다시 읽지만, 복잡한 파일은 결과를 확인하세요. 옆 창이 안 되면 파일 카드의 **Open in Google**을 누르세요.
+
+   <PromptBox>
+   "주간 현황"이라는 Google 문서를 만들어 주세요. 완료, 진행 중, 다음 계획 세 섹션으로 나누고, 위에 붙여넣은 메모로 채워 주세요. 섹션마다 3줄 이내로요.
+   </PromptBox>
+
+</Steps>
+
+## 개인정보와 권한
+
+- Google 계정으로 직접 인증해요. Claude는 연결한 계정의 Gmail·캘린더·드라이브 데이터에만 접근하고, 기존 권한을 그대로 따라요.
+- 내가 그 정보가 필요한 질문이나 요청을 할 때만 접근하고, 필요한 최소한의 정보를 가져와요.
+- 가져온 데이터는 Anthropic 서버에 저장되고 해당 채팅과 함께 보관돼요. 채팅을 지우면 함께 지워져요. 데이터는 저장 시와 전송 시 암호화돼요.
+- Anthropic은 Gmail·드라이브·캘린더 커넥터 데이터로 모델을 학습하지 않는다고 밝혀요. 다만 도움말은 개인용 계정에서 채팅을 학습에 쓰도록 허용했다면, 이 서비스에서 복사해 붙여넣은 내용이나 그 정보가 들어간 Claude 응답은 모델 개선에 쓰일 수 있다고 덧붙여요.
+- Team·Enterprise Owner는 커넥터별로 동작을 제한할 수 있어요(Always allow, Needs approval, Blocked). 예를 들어 메일 검색은 허용하고 전송은 막을 수 있어요. [C7](/ko/claude/c07-connectors/)을 보세요. Owner는 Organization settings > Connectors에서 Google Workspace 커넥터를 조직 전체에서 끌 수도 있어요.
+- 메일과 문서 안의 글은 믿을 수 없는 입력으로 보세요. 내가 시키지 않은 동작은 승인하지 마세요. 일반 습관은 [개인정보·회사 정보 지키며 AI 쓰기](/ko/basics/05-privacy-safety/)를 보세요.
+
+## 한눈에 보는 정리
+
+| 하고 싶은 일 | 방법 |
+| --- | --- |
+| 메일·일정 찾기 | Gmail·캘린더를 켜고 채팅으로 요청 |
+| 실수로 보내지 않기 | "초안으로만 남겨 줘"라고 말하고 승인 창 읽기 |
+| 문서를 Claude에게 보여 주기 | **+** > Add from Google Drive, 또는 문서 URL 붙여넣기 |
+| Google 파일을 Claude가 편집하게 하기 | Docs/Sheets/Slides 커넥터를 켜고 요청에 Google을 명시 |
+| 커넥터 하나만 끄기 | **+** > Connectors > 토글 |
+| 다시 연결하기 | Customize > Connectors > Google 커넥터 > Disconnect |
+
+## 자주 막히는 지점
+
+### "Please try again. You may need to reconnect with your Google Drive account"가 떠요
+
+- **해결**: Customize > Connectors에서 Google 커넥터를 열어 Disconnect를 누르고 확인해요. 다음에 Google 기능을 쓰면 Google 로그인으로 이동해요. 그래도 안 되면 myaccount.google.com/connections에서 Claude 연결을 찾아 "Delete all connections"를 선택하세요.
+
+### "Access blocked: your institution's admin needs to review Claude for Google Drive"가 떠요
+
+- **해결**: Google Workspace 관리자가 admin.google.com > Security > Access and data control > API controls > Manage third-party app access에서 앱을 추가하고 "Claude"를 찾아 Trusted로 설정해요. 약 15분 기다려요. 실시간 편집도 같은 앱이라 파일 형식별 승인은 따로 필요 없어요.
+
+### 첨부 파일이나 이미지를 못 읽어요
+
+- **원인**: Gmail은 첨부 파일의 메타데이터만 보여 주고, 드라이브 읽기는 텍스트만 추출해요.
+- **해결**: 파일을 채팅에 직접 업로드하세요.
+
+### 옆 창이 안 보여요
+
+- **원인**: 옆 창은 웹의 Chrome, 또는 내장 브라우저를 켠 Claude Desktop에서 동작해요. 또 Google 세션이 필요하니, 연결한 계정과 같은 계정으로 로그인하세요.
+- **해결**: 파일 카드의 **Open in Google**을 쓰세요.
+
+### 슬라이드나 차트 편집이 안 돼요
+
+- **원인**: 공식 제한 사항에 따르면 Claude는 Google 슬라이드에 차트를 추가할 수 없고, 슬라이드 편집이 옆 창에 실시간으로 안 보일 수 있어요.
+- **해결**: 차트는 직접 Google 슬라이드에서 넣으세요.
+
+### 결과가 빠진 것 같아요
+
+- **원인**: 일부 고급 Gmail 필터는 지원되지 않고, 복잡한 질의는 API 호출이 여러 번 필요할 수 있고, Google API 할당량이 적용되며, 큰 메일함은 느릴 수 있어요.
+- **해결**: 보낸 사람, 기간, 라벨로 범위를 좁혀 요청하세요.
+
+## 실전 팁
+
+- 범위를 주세요. 보낸 사람, 기간, 라벨, 폴더를 말하면 "받은편지함 좀 봐줘"보다 훨씬 나아요.
+- 읽기와 쓰기를 메시지 두 개로 나누면, 동작 전에 결과를 검토할 수 있어요.
+- 실제 파일에 쓰기 전에 연습용 문서 하나로 실시간 편집을 먼저 해 보세요.
+- 그 작업에 필요한 Google 커넥터만 켜세요.
+- 반복하는 일은 [스킬(C8)](/ko/claude/c08-skills/)이나 예약 실행([C18](/ko/claude/c18-automate-recurring/))으로 만들 수 있어요.
+
+## 다음에 볼 튜토리얼
+
+- [C7. 커넥터](/ko/claude/c07-connectors/) — 연결 절차, 커스텀 커넥터, MCP
+- [메일함 정리 AI](/ko/automation/38-email-ai/) — Gmail의 Gemini, Outlook의 Copilot, Claude 비교
+- [C5. 프로젝트](/ko/claude/c05-projects/) — 비공개 프로젝트에 드라이브 파일 넣기
+- [C17. Claude로 업무 하루 굴리기](/ko/claude/c17-workday-workflow/) — 하루 업무에서 도구 조합하기
+- [사무·기획·행정 직무를 위한 AI 활용 가이드](/ko/roles/office/) — 직무별 추천 순서

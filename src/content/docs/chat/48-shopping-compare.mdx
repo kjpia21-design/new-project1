@@ -1,0 +1,189 @@
+---
+title: "Compare Products Before You Buy with AI: Criteria, Comparison Tables, and Re-checking Price and Stock"
+description: "How to use an AI assistant to decide what matters, build a side-by-side comparison, read reviews critically, and then re-check price, stock, and reviews at the seller, with what the official web search pages confirm and what we could not confirm about shopping features"
+sidebar:
+  label: "19. Compare products"
+level: beginner
+category: chat
+tools: ["Claude", "Gemini", "ChatGPT"]
+duration: "30 min"
+prerequisites:
+  - "One AI account (any of Claude, Gemini, or ChatGPT)"
+  - "A product you are thinking of buying and a rough budget"
+lastVerified: 2026-11-02
+sources:
+  - title: "Enable and use web search (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/10684626-enable-and-use-web-search"
+  - title: "Web search (ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/web-search.md"
+  - title: "Connected apps in Gemini Apps (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/13695044"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- AI is a good **shopping helper for thinking**: it can turn a vague wish into a list of criteria, explain jargon, and lay out a side-by-side table. It is not a live price list or a stock checker.
+- Five steps: **decide what matters, find candidates, build a comparison table, read reviews critically, then re-check price, stock, and return terms at the seller.** Below are 6 prompts you can copy.
+- Per the official pages (as of 2026-11-02): Claude can search the web and every response includes citations; ChatGPT has a first-party web search tool and the docs say to treat web results as untrusted input; Gemini's connected-apps page describes using public information from Google Search and other Google services.
+- We **could not confirm** any official, dedicated shopping or price-tracking feature for these three services, so this tutorial does not claim one. Prices, stock, and reviews can change at any time.
+- Watch for ads and affiliate links, and do not paste card numbers, addresses, or order details into a chat.
+</Summary>
+
+## What you'll be able to do
+
+- Turn "I need a good vacuum" into a short list of criteria and a budget.
+- Get a comparison table of candidates, with unknowns marked instead of guessed.
+- Read review summaries critically and spot what a summary cannot tell you.
+- Know which facts to re-check at the seller before you pay.
+- Know what the official pages say about web search for Claude, ChatGPT, and Gemini, and what is still unconfirmed.
+
+This tutorial is about **comparing before you buy**. For searching with AI in general, see [Using AI search well](/chat/22-ai-search/). For checking facts, see [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/). For what to keep out of chats, see [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/).
+
+## Concepts first
+
+| Term | Meaning |
+| --- | --- |
+| **Criteria** | The things that decide your choice (budget, size, battery life, warranty). Fix them before comparing. |
+| **Must-have vs. nice-to-have** | A must-have rules a product out if missing; a nice-to-have only breaks ties. |
+| **Comparison table** | Candidates in rows, criteria in columns. Mark unknown cells as "unknown" rather than guessing. |
+| **Web search** | A mode where the AI looks up current pages and shows sources. Names and switches differ by service (see below). |
+| **Affiliate link / sponsored result** | A link where the site may earn money if you buy. Not necessarily bad, but it can bias a "best of" list. |
+| **Re-check at the seller** | Opening the store or maker page yourself to confirm the current price, stock, specs, and return policy. |
+
+### What the official pages confirm about search (as of 2026-11-02)
+
+| Item | Claude | ChatGPT | Gemini |
+| --- | --- | --- | --- |
+| Web search | Claude can search the internet for up-to-date information. Every response includes citations so you can verify sources. With the new Claude experience there is no toggle and Claude searches when it helps; otherwise "+" then "Web search". Team and Enterprise need an owner to enable it first | A first-party web search tool. In ChatGPT web, search results and citations appear in the chat when search is used. Workspace settings can limit availability. The docs say to treat all web results as untrusted input | The connected-apps page says Gemini can use public information from Google Search and other Google services (flights, hotels, maps, YouTube). Some of these need Keep Activity on |
+| Reading a page you give it | With web search on, Claude can retrieve a page when you give a URL. Long pages use a lot of your usage limit | Not confirmed | Not confirmed |
+| Shopping or price-tracking feature | Not confirmed | Not confirmed | Not confirmed |
+| Live price, stock, and review accuracy | Not confirmed | Not confirmed | Not confirmed |
+
+<Aside type="note" title="What we couldn't confirm">
+We did not find an official help page, among the ones we opened, that describes a dedicated shopping, price comparison, or price-drop feature for Claude, ChatGPT, or Gemini, so we make no claim about one. We also could not confirm how accurate or current any service's prices, stock, or review summaries are. The Gemini connected-apps page mentions shopping for groceries only as an example of a task, and does not say which apps or countries support it. Everything below about prompts is a way to try, not a confirmed feature. Check each service's current help page.
+</Aside>
+
+<Aside type="caution" title="Price, stock, reviews, and ads">
+Prices, stock, coupons, and shipping change quickly, and an AI answer may be out of date or wrong even when it cites a page. Reviews can be fake, paid for, or about a different model. Sponsored and affiliate links can shape "best of" lists. Before you pay, open the seller yourself and check the current price, exact model, stock, delivery, and return terms. Do not paste card numbers, passwords, your home address, or order confirmations into a chat; see [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/). For scam shops and fake offers, see [AI Scams and Deepfakes](/basics/10-ai-scams-deepfakes/). This is general help, not financial advice.
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I wrote my budget, must-haves, and nice-to-haves',
+  'I asked for 3 to 5 candidates and noted which sources were cited',
+  'I built a comparison table and marked unknowns',
+  'I read review summaries critically and opened a few real reviews',
+  'I re-checked price, stock, and return terms at the seller',
+  'I did not share payment or private details in the chat',
+]} />
+
+<Steps>
+
+1. **Decide what matters**
+
+   Swap the bracketed parts for your own. For general prompt structure, see [Asking Well](/basics/03-asking-well/).
+
+   <PromptBox label="Criteria prompt">
+   I want to buy [product type] for [use, e.g. a small apartment / daily commute / a gift for a teenager]. Budget: [amount and currency]. Before suggesting anything, ask me up to 6 questions that would change the choice (size, brand preferences, features I need, where I will use it). Then summarize my must-haves and nice-to-haves in two short lists.
+   </PromptBox>
+
+2. **Find candidates, with sources**
+
+   If your service has web search, turn it on or say so in the prompt. Ask for sources and for unknowns to be marked.
+
+   <PromptBox label="Candidates prompt">
+   Using my must-haves and budget, suggest 3 to 5 candidate [product type] models available in [country]. For each, give the maker's own product page or another source you used. If you are not sure a model exists or is sold in [country], say so. Do not invent model names, specs, or prices. Mark anything that may change as [CHECK AT SELLER].
+   </PromptBox>
+
+   Open the sources yourself. If a model name returns nothing at the maker's site, drop it.
+
+3. **Build the comparison table**
+
+   <PromptBox label="Comparison table prompt">
+   Make a table with these candidates in rows and these columns: price range, size or weight, key specs that matter for my must-haves, warranty, and what people commonly complain about. Write "unknown" where you do not have a source. Then tell me which candidate is best for my must-haves and which is the best value, and why in two sentences each.
+   </PromptBox>
+
+4. **Read reviews critically**
+
+   Paste a few reviews you copied yourself (leave out names and personal details), or ask the AI how to read them.
+
+   <PromptBox label="Review check prompt">
+   Here are reviews I copied for [model]: [pasted reviews]. Summarize the repeated praise and the repeated complaints. Point out reviews that look suspicious (very short, generic, all the same phrasing, or about a different product). Tell me what a review summary cannot tell me, such as long-term durability, and what to look for in the 1-star and 3-star reviews.
+   </PromptBox>
+
+5. **Test the trade-offs**
+
+   <PromptBox label="Trade-off prompt">
+   If I give up [nice-to-have] to save money, which candidate still meets all my must-haves? And if I raise the budget by [amount], what would I gain? Keep it to a short list and name any assumption you made.
+   </PromptBox>
+
+6. **Re-check at the seller before you pay**
+
+   <PromptBox label="Final check prompt">
+   Make a pre-purchase checklist for [model]: the exact model number to match, specs to confirm on the product page, what to check about the return window, warranty, delivery time, and the seller (official store or a third party). Add three questions to ask the seller if anything is unclear.
+   </PromptBox>
+
+   Then open the store yourself and go through the list. Compare the same model at one or two other sellers. If a price looks too good to be true, see [AI Scams and Deepfakes](/basics/10-ai-scams-deepfakes/).
+
+</Steps>
+
+## Quick reference
+
+| What you want | Try this |
+| --- | --- |
+| To know what to look for | Criteria prompt |
+| A short list of models | Candidates prompt, then open the sources |
+| A side-by-side view | Comparison table prompt with "unknown" for gaps |
+| To understand reviews | Review check prompt with reviews you copied |
+| To decide between two options | Trade-off prompt |
+| To avoid surprises | Final check prompt, then verify at the seller |
+
+## Common sticking points
+
+### The AI recommends a model I cannot find
+
+- **Cause**: It may have mixed up names or described a model that is not sold in your country.
+- **Fix**: Search the maker's site. Ask the AI for a source for each model, and drop any it cannot support.
+
+### The price in the answer is different at the store
+
+- **Cause**: Prices change, and a cited page may be old or from another country.
+- **Fix**: Treat the store page as the truth. Use the AI for criteria and comparison, not for today's price.
+
+### Every recommendation looks like an ad
+
+- **Cause**: "Best of" lists can be sponsored or affiliate-driven.
+- **Fix**: Ask for the maker's spec page and for complaints, not only praise. Compare more than one source.
+
+### The review summary sounds too positive
+
+- **Cause**: Reviews can be fake or paid, and a summary hides the details.
+- **Fix**: Read the 1-star and 3-star reviews yourself and look for repeated, specific problems.
+
+### I am not sure whether web search is on
+
+- **Cause**: Switches and names differ by service and plan.
+- **Fix**: Ask for sources in the prompt. If none are given, assume the answer is not current. See the table above and each service's help page.
+
+## Practical tips
+
+- **Fix the budget and must-haves first.** It stops the list from growing.
+- **Ask for sources and unknowns.** "Unknown" is a better answer than a guess.
+- **Use the AI for thinking, the seller for facts.** Price, stock, and returns come from the store.
+- **Compare the same exact model** across sellers, including the model number.
+- **Keep private data out.** No card numbers, passwords, or order details in chats.
+- **Wait a day for big purchases.** Come back and re-run the final check.
+
+## What to read next
+
+- [Using AI Search Well: Perplexity vs. ChatGPT Search vs. Claude Web Search](/chat/22-ai-search/) — search with sources
+- [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/) — verify before you rely on it
+- [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/) — what to keep out of chats
+- [Plan Trips with AI](/chat/45-travel-planning/) — the same re-check habit for travel
+- [Asking Well: The Basics Worth Remembering](/basics/03-asking-well/) — give the AI what it needs

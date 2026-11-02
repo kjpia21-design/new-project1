@@ -1,0 +1,279 @@
+---
+title: "Send Images and PDFs to the Claude API"
+description: "Put images and PDFs into Messages API requests: base64, URL, and Files API sources, supported formats, size and page limits, how image tokens are counted, and the accuracy limits, from the official docs"
+sidebar:
+  label: "18. Images and PDFs"
+level: advanced
+category: dev
+tools: ["Claude API", "Messages API", "Python", "anthropic SDK"]
+duration: "40 min"
+prerequisites:
+  - "You've finished C16. Getting started with the Claude API (API key, environment variable setup)"
+  - "Python 3.10 or later, pip install anthropic"
+  - "You've read Dev 9 (Files API and citations) and Dev 14 (token counting)"
+lastVerified: 2026-11-02
+sources:
+  - title: "Vision"
+    url: "https://platform.claude.com/docs/en/build-with-claude/vision"
+  - title: "PDF support"
+    url: "https://platform.claude.com/docs/en/build-with-claude/pdf-support"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- Images go into a message as `image` content blocks and PDFs as `document` blocks. Both accept three source types: base64 data in the request, a URL, or a `file_id` from the Files API. On Amazon Bedrock and Claude Models on Google Cloud (Google managed), only base64 is available.
+- Images: JPEG, PNG, GIF, and WebP (GIF animation is unsupported; only the first frame is used). Up to 10 MB per image (base64-encoded) on the Claude API, maximum 8000x8000 px, and up to 600 images per request (100 for models with a 200k-token context window).
+- PDFs: standard PDFs only (no passwords or encryption), up to 600 pages per request (100 when the request's context window is under 1M tokens), and 128 MB request size on the first-party Claude API. Both limits count the whole request payload.
+- Image cost is counted in 28x28-pixel patches: width/28 rounded up, times height/28 rounded up. Large images are downscaled first. Claude 4.7 and later models allow a larger long edge (2,576 px, up to 4,784 tokens) than other models (1,568 px, 1,568 tokens).
+- A PDF page is processed as extracted text plus a page image. The docs say pages typically use 1,500 to 3,000 text tokens, plus the image cost, with no extra PDF fee.
+- Put images and PDFs before your question. Claude cannot name people in images, may miscount or misread small or rotated images, and is not a substitute for medical diagnosis.
+- We read two official pages on 2026-11-02 and ran our script's block-building logic against a local stub. We **made no real API call** (no API key, no `anthropic` package here), so the SDK code follows the docs but is not tested end to end.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Build a request that carries one or more images, a PDF, or both, plus a question.
+- Choose between base64, URL, and `file_id` sources.
+- Check your files against the documented format, size, and page limits before sending.
+- Estimate image tokens by hand and know when a file will be downscaled.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **`image` block** | A content block holding one image (JPEG, PNG, GIF, or WebP). |
+| **`document` block** | A content block holding a PDF (or a plain-text file via the Files API). |
+| **Source** | Where the bytes come from: `base64`, `url`, or `file` (a Files API `file_id`). |
+| **Visual token** | One 28x28-pixel patch of an image. Image cost is the number of patches. |
+
+[Dev 9](/dev/09-rag-files-citations/) already covers uploading documents with the Files API and getting citations. This tutorial stays on the other half of the job: sending images and PDFs inline, the limits that apply, and the token math. For input-cost estimates before you send, see [Dev 14](/dev/14-token-counting/); the PDF page says token counting works for your specific PDFs.
+
+<Aside type="caution" title="Do not send what you may not share">
+The docs say uploaded images are ephemeral and not stored beyond the API request, and that Anthropic does not use uploaded images to train models. That does not make it safe to send anything. IDs, medical images, other people's photos, and confidential documents still need your own permission and your organization's rules. Check the data-handling notes on the PDF page (zero data retention and HIPAA eligibility have conditions) before using real documents.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I know which source type my platform supports (base64, URL, or file_id)',
+  'My images are JPEG, PNG, GIF, or WebP and under the size limit',
+  'My PDF has no password and is within the page and request-size limits',
+  'I put the files before the question in the content list',
+  'I labeled multiple files so I can refer to them by name',
+  'I checked usage.input_tokens after the first run',
+  'I verified the answer by looking at the file myself',
+]} />
+
+<Steps>
+
+1. **Pick a source type**
+
+   | Source | Use it when | Notes from the docs |
+   | --- | --- | --- |
+   | `base64` | The file is local, or no URL exists | Works on every platform. Image bytes are resent on every turn of a conversation. |
+   | `url` | The file is hosted online | Not available on Amazon Bedrock or Claude Models on Google Cloud (Google managed). |
+   | `file` (`file_id`) | You reuse the same file many times | Upload once with the Files API, then reference it. Keeps payloads small. On Microsoft Foundry, PDF `file_id` sources need a Hosted on Anthropic deployment. |
+
+   In multi-turn chats and agent loops, each request resends the full history. The docs say base64 images then inflate request size and latency, so the Files API is the better fit there. For the upload code, see [Dev 9](/dev/09-rag-files-citations/).
+
+2. **Check the limits before you send**
+
+   | Item | Limit (official docs) |
+   | --- | --- |
+   | Image formats | JPEG, PNG, GIF, WebP (`image/jpeg`, `image/png`, `image/gif`, `image/webp`) |
+   | Image size | 10 MB (base64-encoded) on the Claude API; 5 MB on Amazon Bedrock |
+   | Image dimensions | 8000x8000 px maximum |
+   | Images per request | 600; 100 for models with a 200k-token context window; 20 per message on claude.ai |
+   | Many images | Over 20 images in one request: a stricter per-image dimension limit applies. Keep each side at 3,000 px or less, or send 20 or fewer image and document blocks. |
+   | PDF format | Standard PDF, no password or encryption |
+   | PDF pages | 600 per request (100 when the request's context window is under 1M tokens) |
+   | Request size | 128 MB on the first-party Claude API (varies by platform) |
+
+   Dense PDFs (small fonts, complex tables, heavy graphics) can fill the context window before they reach the page limit. The docs suggest splitting the document into sections, and downsampling embedded images for large files. Even with the Files API, requests with many large images can fail before reaching 600.
+
+3. **Write the script**
+
+   Save this as `vision_demo.py`. It takes image and PDF paths on the command line, labels each file, puts the files before the question, and prints the answer and token usage.
+
+   ```python
+   import base64
+   import sys
+   from pathlib import Path
+
+   import anthropic
+
+   IMAGE_TYPES = {
+       ".jpg": "image/jpeg",
+       ".jpeg": "image/jpeg",
+       ".png": "image/png",
+       ".gif": "image/gif",
+       ".webp": "image/webp",
+   }
+   MAX_IMAGE_B64 = 10_000_000  # docs: 10 MB per image (base64) on the Claude API
+
+
+   def visual_tokens(width, height):
+       """Docs formula: ceil(w / 28) * ceil(h / 28). Ignores downscaling."""
+       return -(-width // 28) * -(-height // 28)
+
+
+   def build_block(path):
+       p = Path(path)
+       suffix = p.suffix.lower()
+       if suffix != ".pdf" and suffix not in IMAGE_TYPES:
+           raise SystemExit(f"{p.name}: use jpg, png, gif, webp, or pdf")
+       data = base64.standard_b64encode(p.read_bytes()).decode("utf-8")
+       if suffix == ".pdf":
+           return {
+               "type": "document",
+               "source": {"type": "base64", "media_type": "application/pdf", "data": data},
+           }
+       if suffix in IMAGE_TYPES:
+           if len(data) > MAX_IMAGE_B64:
+               raise SystemExit(f"{p.name}: over 10 MB after base64, shrink it first")
+           return {
+               "type": "image",
+               "source": {"type": "base64", "media_type": IMAGE_TYPES[suffix], "data": data},
+           }
+       raise SystemExit(f"{p.name}: use jpg, png, gif, webp, or pdf")
+
+
+   def main(paths, question):
+       content = []
+       for i, path in enumerate(paths, start=1):
+           content.append({"type": "text", "text": f"File {i}: {Path(path).name}"})
+           content.append(build_block(path))
+       content.append({"type": "text", "text": question})  # files first, question last
+
+       client = anthropic.Anthropic()
+       message = client.messages.create(
+           model="claude-opus-5-5",
+           max_tokens=1024,
+           messages=[{"role": "user", "content": content}],
+       )
+       for block in message.content:
+           if block.type == "text":
+               print(block.text)
+       print("stop_reason:", message.stop_reason)
+       print("input_tokens:", message.usage.input_tokens)
+       print("output_tokens:", message.usage.output_tokens)
+
+
+   if __name__ == "__main__":
+       main(sys.argv[1:], "Describe each file in two sentences and say what is hard to read.")
+   ```
+
+   The request shape (`image` and `document` blocks with a `base64` source, model `claude-opus-5-5`) follows the docs' own examples. The `File 1:` labels follow the docs' advice for multiple images ("Image 1:", "Image 2:"). The `visual_tokens` helper is just the docs' formula, and our 10,000,000-byte image check is a conservative reading of "10 MB (base64-encoded)": the docs do not say whether MB means 10^6 or 2^20 bytes (unconfirmed).
+
+   Run it with `python vision_demo.py chart.png report.pdf` after setting `ANTHROPIC_API_KEY` as in C16. We did not run it against the real API.
+
+4. **Estimate image tokens**
+
+   The docs give the cost as `ceil(width / 28) x ceil(height / 28)` visual tokens, after any downscaling. Images over the model's limit are scaled down to the largest size that fits, keeping the aspect ratio.
+
+   | Tier | Models | Max long edge | Max visual tokens |
+   | --- | --- | --- | --- |
+   | High-resolution | Claude 4.7 and later models | 2,576 px | 4,784 |
+   | Standard | All other models | 1,568 px | 1,568 |
+
+   Examples from the docs' table: 1000x1000 px costs 1,296 tokens on both tiers (our `visual_tokens(1000, 1000)` gives 1,296 in the stub run, matching it). A 1920x1080 image is downsized to 1456x819 and costs 1,560 on the standard tier, but is not resized and costs 2,691 on the high-resolution tier. The docs warn that high-resolution images can use up to about three times more tokens, so downsample before sending if you do not need the extra detail (for example, for photos that are only categorized). They also say the exact resize rule lives in the coordinates guide, which we did not open (unconfirmed details).
+
+   For money, multiply tokens by the model's per-token price on the official pricing page. The Vision page gives examples (Opus 5.5 at 4 USD per million input tokens, high-resolution tier: about 5.18 USD per thousand 1000x1000 images). Prices change; check the page. We did not open the pricing page itself.
+
+5. **Estimate PDF tokens**
+
+   Each PDF page becomes an image, and its text is extracted alongside. So you pay for both: text typically 1,500 to 3,000 tokens per page depending on density (standard API pricing, no additional PDF fee), plus the image cost above. The docs recommend token counting to estimate costs for your specific PDFs; see [Dev 14](/dev/14-token-counting/). We did not test whether the token counting endpoint accepts `document` blocks (unconfirmed; check the token counting page).
+
+6. **Get better results**
+
+   Official tips, condensed:
+
+   - **Order**: files first, question after. Other orders still work, but the docs prefer image-then-text.
+   - **Images**: keep them clear, upright, and not tiny. Text should be legible. Do not crop away context just to enlarge text. Heavy lossy compression (JPEG, lossy WebP) can make text unreadable.
+   - **PDFs**: standard fonts, clear text, upright pages. Refer to pages by the logical page numbers shown in a PDF viewer. Split large PDFs. Enable prompt caching for repeated questions about the same PDF (add `cache_control` to the document block).
+   - **High volume**: the PDF page shows document blocks inside Message Batches requests; see [Dev 16](/dev/16-batch-api/) for the batch workflow.
+
+   <PromptBox>
+   Write a Python function for the anthropic SDK that takes a list of file paths (png, jpg, webp, gif, pdf) and a question, builds one user message with a short text label before each file, puts the question last, sends it to claude-opus-5-5, and prints the answer plus input and output token counts. Use only content block shapes documented on the official Vision and PDF support pages, and refuse files that exceed the documented size limits.
+   </PromptBox>
+
+</Steps>
+
+## Know the limits of image understanding
+
+The Vision page lists these limitations. Review the output before you rely on it.
+
+- **People**: Claude cannot be used to name people in images and refuses to.
+- **Accuracy**: it may hallucinate or make mistakes on low-quality, rotated, or very small images (under 200 px).
+- **Counting and positions**: counts are approximate, especially for many small objects. Coordinates and locations are approximate.
+- **AI-generated images**: it cannot tell whether an image is AI-generated. Do not use it to detect fakes.
+- **Medical images**: general images can be analyzed, but it is not designed to interpret complex scans such as CT or MRI, and output is not a substitute for professional medical advice or diagnosis.
+- **Metadata and generation**: it does not read image metadata, and it cannot generate or edit images; it only understands them.
+
+## Quick reference
+
+| Item | Value (official docs, 2026-11-02) |
+| --- | --- |
+| Image block | `{"type": "image", "source": ...}` with `base64` (plus `media_type`), `url`, or `file` |
+| PDF block | `{"type": "document", "source": ...}` with `base64` (`application/pdf`), `url`, or `file` |
+| Image formats | JPEG, PNG, GIF (first frame only), WebP |
+| Image limits | 10 MB (base64), 8000x8000 px, 600 per request (100 on 200k-context models) |
+| PDF limits | 600 pages (100 under 1M context), 128 MB request, no password or encryption |
+| Image tokens | ceil(w/28) x ceil(h/28), after downscaling |
+| Standard / high-resolution cap | 1,568 px and 1,568 tokens / 2,576 px and 4,784 tokens (4.7 and later) |
+| PDF text tokens | About 1,500 to 3,000 per page, plus page-image tokens |
+| Platforms | Bedrock and Google-managed Google Cloud: base64 only |
+
+## Common sticking points
+
+### An `invalid_request_error` mentioning "many-image requests"
+
+- **Cause**: The request has more than 20 images, so the stricter dimension limit applies to every image (images from earlier turns and in `tool_result` content count too).
+- **Fix**: Resize each image to 3,000 px or less per side, or keep the request to 20 or fewer image and document blocks.
+
+### The request is too large or fails with many images
+
+- **Cause**: Request size limit (128 MB on the first-party API) can be reached before the image count limit.
+- **Fix**: Downsample images, and upload through the Files API to keep payloads small.
+
+### A PDF fails or answers poorly
+
+- **Cause**: Password or encryption, too many pages, a dense layout that fills the context, or a skewed scan.
+- **Fix**: Remove protection, split the file into sections, rotate pages upright. PDF support relies on vision, so the same image limitations apply.
+
+### A URL source is rejected
+
+- **Cause**: You may be on Amazon Bedrock or Claude Models on Google Cloud (Google managed), where only base64 is available.
+- **Fix**: Download the file and send it as base64. We did not test URL fetching limits (for example private or login-protected URLs); the docs excerpt we read does not say.
+
+### The answer misreads small text
+
+- **Cause**: The image was downscaled or compressed, or the text was small.
+- **Fix**: Crop to the relevant area instead of shrinking, avoid heavy compression, and check the sent file.
+
+### An Excel or Word file is rejected as a document
+
+- **Cause**: Binary formats such as .xlsx and .docx are not supported in document blocks.
+- **Fix**: Convert them to text or PDF first. Plain .txt, .csv, or .md can be sent through the Files API with MIME type `text/plain`.
+
+## Practical tips
+
+- Start with one small image and read `usage.input_tokens` to see the real cost before you batch up.
+- Downsample screenshots and photos you only need to categorize. Keep full resolution for dense documents.
+- Label each file ("File 1: invoice.pdf") so follow-up turns can point to it. Claude keeps access to images from earlier turns without resending them in the new turn's content.
+- Ask for evidence ("quote the line you read this from") and check it against the file yourself.
+- We did not run this against the real API. Treat your first run as a test and check the results by hand.
+
+## Next tutorials
+
+- [9. Document Q&A with the Files API and citations](/dev/09-rag-files-citations/) — upload once, cite sources
+- [14. Token counting API](/dev/14-token-counting/) — estimate input cost before you send
+- [16. Large jobs with the Batches API](/dev/16-batch-api/) — many documents at once
+- [2. Cut API costs with prompt caching, batches, and effort](/dev/02-cost-optimization/)
+- [C16. Getting started with the Claude API](/claude/c16-api/)
+- [Developer guide](/roles/developer/)

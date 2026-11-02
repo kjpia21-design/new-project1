@@ -1,0 +1,188 @@
+---
+title: "Build and Analyze Surveys with AI"
+description: "How to use AI to draft survey questions, build them in Google Forms or Microsoft Forms, and summarize the results, with respondent privacy and result-checking cautions"
+sidebar:
+  label: "19. Surveys with AI"
+level: practical
+category: automation
+tools: ["Claude", "Gemini", "Microsoft Copilot", "Google Forms", "Microsoft Forms"]
+duration: "30 min"
+prerequisites:
+  - "A Google account (Google Forms) or a Microsoft 365 account (Microsoft Forms)"
+  - "A small, low-stakes survey topic to practice on, such as event feedback"
+lastVerified: 2026-11-02
+sources:
+  - title: "How to use Google Forms (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/6281888?hl=en"
+  - title: "Publish & share your form with responders (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/2839588?hl=en"
+  - title: "View & manage form responses (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/139706?hl=en"
+  - title: "Use the AI function in Google Sheets (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/15877199?hl=en"
+  - title: "Welcome to Copilot in Forms (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/forms/welcome-to-copilot-in-forms"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- A simple, reliable pattern: have a chat AI (Claude, Gemini or similar) draft and critique your questions, build the form in Google Forms or Microsoft Forms, then summarize the responses and check the summary against the real data.
+- **Microsoft Forms** has Copilot built in: per Microsoft, it can generate a draft survey, suggest improvements, and summarize results into key findings. It needs a Microsoft 365 account and a Copilot license.
+- **Google Forms** shows a Summary tab with charts and lets you link responses to Google Sheets or download a CSV. We did not find an official Gemini-in-Forms help page, so this guide does not describe one.
+- Responses are other people's data. Collect only what you need, tell respondents how it will be used, and do not paste identifiable answers into an AI you have not checked.
+</Summary>
+
+## What you'll be able to do
+
+- Turn a goal ("find out what attendees thought") into a short, unbiased list of survey questions.
+- Build the form and decide whether to collect email addresses.
+- Get a draft summary of open-ended answers and verify it against the numbers.
+- Avoid the main privacy and interpretation mistakes.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Responder / respondent** | A person who fills out your form. |
+| **Summary tab** | In Google Forms, the Responses view that shows charts or full text for each question. It appears only once there is at least one response. |
+| **Linked spreadsheet** | A Google Sheet that receives every response. Useful for further analysis. |
+| **Copilot in Forms** | Microsoft's built-in AI for drafting forms and summarizing responses. |
+| **Leading question** | A question worded so that it pushes people toward one answer. |
+
+<Aside type="note" title="Things to keep in mind (as of 2026-11-02)">
+- This guide is based on the five official pages listed in the front matter. We did not run these steps in real accounts, so menu names and results come from the help text only.
+- We did not find an official help page for Gemini inside Google Forms (for example a "help me create a form" feature), so we do not describe one. For Google Forms, the AI step in this guide happens in a separate chat or in Sheets.
+- The Google Sheets AI function page says it requires an eligible Google Workspace or Google AI plan. Which plans exactly was not confirmed here.
+- For Microsoft, we read only the Copilot in Forms overview. We did not read its FAQ, the Smart Reminders page, or any page on pricing or data handling.
+- Features and menus change often. Check them on screen.
+</Aside>
+
+## Step-by-step
+
+Use a practice survey first. Do not send it to real people until you have read the whole form once.
+
+<Checklist items={[
+  'I wrote down the one decision this survey should help me make',
+  'I asked the AI to review my questions for leading or double-barreled wording',
+  'I decided whether I really need names or email addresses',
+  'I told respondents who sees the answers and how they are used',
+  'I sent a test response to myself before sharing',
+  'I checked the AI summary against the raw responses',
+]} />
+
+<Steps>
+
+1. **Start from the decision, not the questions**
+
+   <PromptBox>
+   I run a small community workshop and want to know whether attendees would come again and what to improve. Suggest 8 to 10 survey questions in a sensible order. Mix rating questions and 2 open-ended questions. Avoid leading or double-barreled questions. Tell me why each question is there.
+   </PromptBox>
+
+   Cut anything you would not act on. Short surveys are easier to finish and easier to analyze.
+
+2. **Have the AI critique the draft**
+
+   <PromptBox label="Example prompt">
+   Here is my draft survey. Find questions that are leading, ambiguous, or ask two things at once, and suggest a neutral rewrite for each. Do not add new questions.
+   </PromptBox>
+
+   Microsoft says Copilot in Forms can help you avoid common survey pitfalls such as leading questions, double-barreled questions and ambiguous wording. With other tools, you can ask any chat AI to do this review.
+
+3. **Build the form**
+
+   - **Google Forms**: create the form and add your questions; the help page lists the question types you can choose. Before sharing, publish the form. Under the response settings you can limit users to one response (responders must then sign in to a Google Account), allow response editing, and show a summary of responses.
+   - **Microsoft Forms**: per Microsoft, when you create a new form, Copilot prompts you to describe what you want. Select **Generate**, then refine, or **Keep and continue with Copilot**. A Microsoft 365 account and a Copilot license are required.
+
+4. **Decide what to collect about people**
+
+   Google Forms can record respondents' email addresses, either verified (the Google Account email) or entered manually. If you do not need to know who answered, do not turn this on. Microsoft's page also notes you can ask Copilot to change form settings to match a goal such as anonymity; check the resulting settings yourself.
+
+   <Aside type="caution" title="Response summaries can be visible to responders">
+   Google's page warns that if you turn on "Show a summary of responses", respondents get a link to the results, and the summary is visible to anyone who can respond to the form. Do not enable it if answers are sensitive.
+   </Aside>
+
+5. **Share and collect**
+
+   Share through a link, email, social media or an embedded page. In Microsoft Forms, Copilot can also help draft invitations and reminders, per the overview page. Send a test response to yourself first.
+
+6. **Look at the raw results first**
+
+   In Google Forms, open **Responses**: the **Summary** tab shows charts or text per question, and the **Individual** view shows one person at a time. To analyze further, use **Link to Sheets** or download a **CSV** from the More menu. In Microsoft Forms, open **View responses** and open Copilot to get a summary of key findings and ask follow-up questions.
+
+7. **Summarize the open-ended answers**
+
+   Take out names, email addresses and anything identifying before you paste answers into a chat AI. Then:
+
+   <PromptBox>
+   Below are anonymous answers to the question: what should we improve? Group them into themes, give a count for each theme, and quote one short example answer per theme. If an answer fits no theme, list it under Other. Do not guess at numbers you cannot count.
+   </PromptBox>
+
+   In Google Sheets, the AI function (an eligible Google Workspace or Google AI plan is required) can summarize, categorize and analyze sentiment of text in cells. The page shows it used as a formula such as `=AI("...", A2)`.
+
+8. **Verify before you report**
+
+   Recount a few themes by hand, compare totals with the Summary tab, and ask the AI which answers support each claim. Treat the result as a draft. See [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/).
+
+</Steps>
+
+## Quick reference
+
+### What each route can do (per the official pages)
+
+| | Google Forms | Microsoft Forms with Copilot |
+| --- | --- | --- |
+| Draft a survey with AI | Not confirmed in the pages we read (use a chat AI) | Yes, generates title, description and questions |
+| Built-in results view | Summary tab, Individual view | View responses |
+| AI summary of results | Not confirmed in Forms; Sheets AI function is separate | Yes, summary of key findings and insights |
+| Export | Link to Sheets, CSV download | Not covered in the page we read |
+| Requirement noted | Google Account | Microsoft 365 account and Copilot license for the chat experience |
+
+### Limits noted by Google
+
+| Item | What the page says |
+| --- | --- |
+| Responses per form | Up to 500k; download and delete responses to continue after that |
+| Features may stop working on large forms | Summary may be missing above 50,000 responses, Sheets sync above 100,000, CSV sorting above 10,000 |
+
+## Common sticking points
+
+### The Summary tab is missing
+
+- **Cause**: Google says it shows only when there is at least one response. It may also be missing above 50,000 responses.
+- **Fix**: Submit a test response, or use the linked spreadsheet or CSV.
+
+### The AI summary does not match the numbers
+
+- **Cause**: Chat AI can miscount or merge themes.
+- **Fix**: Ask for counts, then recount a sample by hand. Use the form's own charts for totals.
+
+### Copilot is not available in Forms
+
+- **Cause**: Microsoft says you need a Microsoft 365 account and a Copilot license. It also says the chat experience is limited to commercial Copilot-licensed users, while consumer users get a refinement bar at the top of the design page.
+- **Fix**: Check with your administrator, or draft the questions in a chat AI instead.
+
+### Someone else can see the linked spreadsheet
+
+- **Cause**: Google notes that a collaborator on the form may also have access to the linked spreadsheet, and you must remove them from each separately.
+- **Fix**: Review who has access to both the form and the sheet.
+
+## Practical tips
+
+- **Treat responses as personal data.** Ask only what you need, say who will see the answers, and delete what you no longer need. Check your organization's rules and local privacy law; this guide is not legal advice. See [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/).
+- **Check your AI's training setting** before pasting any responses. See [Turn Off AI Training on Your Chats](/basics/12-privacy-settings/).
+- **Be careful with small groups.** If only a handful of people answer, an "anonymous" comment can identify its author by detail alone.
+- **Do not over-read the results.** Few responses, or only the people who chose to answer, may not represent everyone. A theme that comes up often is a lead, not proof.
+- **Keep sensitive topics out.** Health, legal and money questions are better handled with care; see [Asking AI About Health, Legal and Money Questions Safely](/basics/13-sensitive-questions/).
+- **Go further in spreadsheets.** See [Adding AI to Excel and Google Sheets: Copilot, Gemini, and Claude](/automation/23-spreadsheet-ai/).
+
+## What to read next
+
+- [Adding AI to Excel and Google Sheets: Copilot, Gemini, and Claude](/automation/23-spreadsheet-ai/) — analyze exported responses
+- [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/) — verify summaries
+- [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/) — what not to paste
+- [Organizing Your Inbox with AI](/automation/38-email-ai/) — drafting survey invitations and reminders

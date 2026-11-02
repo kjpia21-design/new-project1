@@ -1,0 +1,182 @@
+---
+title: "Build Reusable Document Templates with AI"
+description: "How to turn a document you write again and again into a reusable template with AI, using Claude Projects, Skills and Google Docs templates, with cautions on company forms and personal data"
+sidebar:
+  label: "20. Document templates with AI"
+level: practical
+category: automation
+tools: ["Claude", "Google Docs"]
+duration: "30 min"
+prerequisites:
+  - "A Claude account (Projects work on free plans too)"
+  - "One document you write repeatedly, such as a weekly report, meeting notes or a client email"
+lastVerified: 2026-11-02
+sources:
+  - title: "What are projects? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/9517075-what-are-projects"
+  - title: "How can I create and manage projects? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects"
+  - title: "Use skills in Claude (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12512180-use-skills-in-claude"
+  - title: "How to create custom skills (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12512198-how-to-create-custom-skills"
+  - title: "Use templates (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/148819?hl=en"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- Write the template once (fixed sections, fill-in fields, tone, an example), then reuse it instead of rewriting the same prompt every time.
+- **Claude Projects** keep documents and instructions together. Per Anthropic, you upload files to project knowledge and set project instructions that apply to every chat in the project. Projects are available to all users, with a maximum of five on free accounts.
+- **Claude Skills** package a repeatable workflow. A skill is a folder with a skill.md file that you upload as a ZIP in Customize > Skills. Skills require code execution to be enabled.
+- **Google Docs** has its own template gallery for documents you want to fill in by hand.
+- Templates should hold structure, not people's data. Never put real personal data, passwords or confidential company forms into a template you share.
+</Summary>
+
+## What you'll be able to do
+
+- Turn a document you keep rewriting into a template with clear fill-in fields.
+- Choose between a plain saved prompt, a Claude Project, a Claude Skill and a Google Docs template.
+- Test the template with realistic but made-up inputs.
+- Keep personal data and company-owned forms out of the wrong places.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Template** | A fixed structure with blanks (fields) to fill in each time. |
+| **Fill-in field** | A marked blank in the template, such as DATE or CLIENT NAME. |
+| **Project knowledge** | Files you upload to a Claude Project. Claude uses them in every chat in that project. |
+| **Project instructions** | Text you set once per project, applied to all its chats. |
+| **Skill** | A folder with a skill.md file that teaches Claude a specific, repeatable workflow. |
+
+<Aside type="note" title="Things to keep in mind (as of 2026-11-02)">
+- This guide is based on the five official pages in the front matter. We did not run these steps in real accounts, so menu names come from the help text only.
+- Anthropic's Projects page says a new version of projects is rolling out in beta in stages. This guide describes the current version, as that page does. Your screen may differ.
+- We did not read official help for template or reuse features in ChatGPT, Gemini or Microsoft Word, so we do not describe them. Google Docs templates are covered only from one help page.
+- Skill file naming: the help page writes the file as skill.md. We did not check whether other Claude products expect a different capitalization.
+- Features and menus change often. Check them on screen.
+</Aside>
+
+## Step-by-step
+
+Pick one document first. A template for a document you write every week pays off fastest.
+
+<Checklist items={[
+  'I picked one document I write repeatedly',
+  'I collected two or three real past examples and removed names and private details',
+  'I marked which parts change each time (fields) and which stay fixed',
+  'I checked whether my company or client requires its own official form',
+  'I tested the template with made-up inputs before using real ones',
+]} />
+
+<Steps>
+
+1. **Gather examples and remove private details**
+
+   Collect two or three finished versions of the document. Replace real names, numbers, addresses and anything confidential with placeholders before you upload or paste them anywhere.
+
+2. **Let the AI find the pattern**
+
+   <PromptBox>
+   Below are three past versions of my weekly status report, with private details already removed. Find what stays the same every time and what changes. Propose a template with fixed section headings, fill-in fields in capital letters, a target length for each section, and the tone I use. Show me the template only, then list questions you would need answered to fill it.
+   </PromptBox>
+
+3. **Write the fill-in fields clearly**
+
+   Keep the field list short. For each field, say what belongs in it and when it can be left blank. Avoid curly braces inside the prompt box on this page; use words such as DATE or CLIENT NAME instead.
+
+4. **Save it where you will reuse it**
+
+   - **Plain saved prompt**: keep the template in a note. Simple, works in any chat AI.
+   - **Claude Project**: go to claude.ai/projects, click **+ New Project**, and name it. Note that Claude does not have access to the project name and description. Upload your examples with the **+** button in project knowledge, then choose **Set project instructions**, paste your template and rules, and click **Save instructions**. Anthropic says Claude uses these instructions for all chats in the project, and that context is not shared across chats unless it is in project knowledge.
+   - **Claude Skill**: for a workflow that is bigger than a prompt. See the Skill step below.
+   - **Google Docs template**: for documents people fill in by hand. In Docs, **File > New > From a template** inserts a template, and **File > Make a copy** duplicates a document you can use as your own master.
+
+5. **Use it with fresh content**
+
+   <PromptBox>
+   Use the saved template to write this week's report. Here are my raw notes: (paste notes here). Fill every field you can from the notes. For any field the notes do not cover, write NEEDS INPUT instead of guessing.
+   </PromptBox>
+
+   The NEEDS INPUT rule matters: it is how you stop the AI from inventing numbers, dates or names.
+
+6. **Optional: package the template as a Skill**
+
+   Per Anthropic, a skill is a directory with at least a skill.md file. The file starts with YAML front matter containing a name (64 characters maximum) and a description (200 characters maximum), because Claude uses the description to decide when to use the skill. Put the template, rules and an example in the body. To add it, package the folder as a ZIP with the skill folder as its root, then go to **Customize > Skills**, click the **+** button, choose **+ Create skill**, and select **Upload a skill**. Skills require code execution to be enabled, and a custom skill you upload is not visible to colleagues until you share it.
+
+   <PromptBox>
+   Help me write a skill.md file for my weekly status report. It should have a name, a one-sentence description saying when to use it, the fixed section headings, the fill-in fields, the rule to write NEEDS INPUT for missing information, and one short example with made-up data.
+   </PromptBox>
+
+7. **Test, then improve**
+
+   Run the template on two or three different sets of made-up input. For a skill, Anthropic suggests trying several prompts that should trigger it and rewording the description if Claude does not use it when expected. Fix the template, not just the output.
+
+8. **Review every output**
+
+   A template gives consistent structure, not correct content. Read each document before sending it, and check facts, numbers and names against your source. See [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/).
+
+</Steps>
+
+## Quick reference
+
+### Which storage fits which job
+
+| Option | Good for | Notes from official pages |
+| --- | --- | --- |
+| Saved prompt in a note | One-off or any chat AI | No setup |
+| Claude Project | Same documents and instructions across many chats | All users, free accounts limited to five projects; paid plans use RAG when knowledge nears the limit |
+| Claude Skill | A repeatable workflow with rules or files | Needs code execution; upload as ZIP; test after uploading |
+| Google Docs template | Documents people fill in by hand | Copy opens as a new file; some template features need a work or school account |
+
+### Sharing
+
+| Where | What the help pages say |
+| --- | --- |
+| Projects (Team and Enterprise) | Can share with members; Can view or Can edit; owners can turn sharing off |
+| Skills (Team and Enterprise) | Shared skills are view-only for recipients; owners can publish to the organization |
+| Skills (individual plans) | Custom skills are not visible to colleagues until shared |
+
+## Common sticking points
+
+### Claude ignores my template
+
+- **Cause**: The instructions are vague, or the template is only in an old chat. Anthropic says context is not shared across chats in a project unless it is in project knowledge.
+- **Fix**: Put the template in project instructions or project knowledge, and start a new chat in the project.
+
+### My skill never triggers
+
+- **Cause**: The description is unclear about when to use it. Anthropic says Claude uses the description to decide when to invoke a skill.
+- **Fix**: Make the description specific, and test with several different prompts.
+
+### The ZIP upload is rejected or the skill does not appear
+
+- **Cause**: Anthropic says the folder name should match the skill name and the ZIP must contain the skill folder as its root, not loose files.
+- **Fix**: Re-package the folder following that structure. Also check that code execution is enabled.
+
+### The output has made-up details
+
+- **Cause**: The AI filled gaps with plausible guesses.
+- **Fix**: Add the NEEDS INPUT rule, give more source notes, and check each fact.
+
+## Practical tips
+
+- **Respect official forms.** If your employer, school or a client requires an official document format, use theirs. Use AI to draft the content, not to redesign a required form. Check your organization's AI rules first.
+- **Never put personal data in a template.** Templates are reused and sometimes shared. Keep names, ID numbers, health or financial details out. See [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/).
+- **Do not record secrets.** Anthropic warns not to type passwords or show sensitive information while recording a skill, and not to hardcode API keys or passwords in skills. Review any skill you download before enabling it.
+- **Share deliberately.** On Team and Enterprise plans, check who can see a shared project or skill before adding company material.
+- **Keep one template per document type.** Anthropic's advice for skills is to stay focused on one workflow.
+- **Keep a version note.** Add a date at the top of the template and update it when your format changes.
+
+## What to read next
+
+- [Managing Materials and Instructions with Projects](/claude/c05-projects/) — set up a project step by step
+- [Using and building Skills](/claude/c08-skills/) — more on skills
+- [Drafting and Polishing Reports and Proposals](/chat/04-write-reports/) — write the content that goes in the template
+- [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/) — what not to paste

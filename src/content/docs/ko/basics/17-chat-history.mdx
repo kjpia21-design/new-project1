@@ -1,0 +1,173 @@
+---
+title: "AI 대화 기록 찾기·정리·내보내기"
+description: "Claude와 Gemini에서 지난 대화를 찾고 이름 바꾸고 삭제하고 내려받는 위치, 그리고 ChatGPT에서 확인하지 못한 점"
+sidebar:
+  label: "17. 대화 기록"
+level: beginner
+category: basics
+status: published
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "15분"
+prerequisites: ["Claude, ChatGPT, Gemini 중 하나 이상의 계정"]
+lastVerified: 2026-11-02
+sources:
+  - title: "Claude 지원센터: 채팅 검색과 메모리로 이전 맥락 이어가기 (영문)"
+    url: "https://support.claude.com/en/articles/11817273"
+  - title: "Claude 지원센터: 대화 삭제·이름 바꾸기 (영문)"
+    url: "https://support.claude.com/en/articles/8230524-how-can-i-delete-or-rename-a-conversation"
+  - title: "Claude 지원센터: Claude 데이터 내보내기 (영문)"
+    url: "https://support.claude.com/en/articles/9450526-how-can-i-export-my-claude-data"
+  - title: "Gemini 앱 도움말: Gemini 앱 활동 관리·삭제 (영문)"
+    url: "https://support.google.com/gemini/answer/13278892"
+  - title: "Gemini 앱 도움말: Gemini 앱 데이터 다운로드 (영문)"
+    url: "https://support.google.com/gemini/answer/16920332"
+  - title: "ChatGPT 문서 (임시 채팅 단축키, 영문)"
+    url: "https://learn.chatgpt.com/llms-full.txt"
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- 지난 대화는 금방 묻혀요. **중요한 대화는 알아보기 쉬운 이름**을 붙여 두고, 필요할 때 검색해서 찾으세요.
+- **Claude**는 부탁하면 지난 대화를 검색해 줘요(유료 플랜). 이름 바꾸기·삭제·내보내기(설정 > Privacy > Export data, 웹·데스크톱 앱)도 돼요. **Gemini**는 Gemini 앱 활동에서 기록을 보고 지울 수 있고, Google Takeout으로 내려받아요.
+- **내보내기는 복사본이에요.** 삭제는 따로 해야 해요.
+- ChatGPT의 검색·삭제·내보내기 방법은 제가 열 수 있는 공식 페이지에서 **확인하지 못했어요.** 앱의 설정 > Data controls를 직접 보세요.
+- 내보낸 파일에는 개인 대화가 들어 있어요. 비공개 장소에 보관하세요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- Claude에게 예전 대화를 찾아 달라고 하고, Gemini에서는 어디를 봐야 하는지 알 수 있어요.
+- Claude와 Gemini에서 대화 이름을 바꾸고, 지우고, 내려받을 수 있어요.
+- 무엇을 남기고 무엇을 지울지, 내보낸 파일을 어디에 둘지 정할 수 있어요.
+
+## 먼저 알아둘 개념
+
+[12편](/ko/basics/12-privacy-settings/)에서 학습 설정과 임시 채팅을 다뤘어요. 이 글은 그 실전 후속편이에요.
+
+| 용어 | 쉬운 뜻 |
+| --- | --- |
+| **대화 기록** | 계정에 저장된 지난 대화 목록이에요. |
+| **내보내기(Export)** | 내 데이터를 내려받을 수 있는 복사본이에요. 원본은 계정에 그대로 남아요. |
+| **활동(Gemini)** | Gemini 대화 기록을 Google이 부르는 이름이에요. 내 활동(My Activity)에 보여요. |
+
+공식 페이지가 안내하는 내용이에요. (2026-11-02 기준, 개인 계정 기준이며 플랜·지역에 따라 다를 수 있어요.)
+
+| | Claude | Gemini | ChatGPT |
+| --- | --- | --- | --- |
+| **찾기** | Claude에게 지난 대화 검색을 부탁(Pro, Max, Ultra, Team, Enterprise) | Gemini 앱 활동(Settings & help > Activity) | 확인 못 함 |
+| **이름 바꾸기** | 가능: "⋮" 메뉴 > Rename | 확인 못 함 | 확인 못 함 |
+| **삭제** | 가능(한 개 또는 여러 개) | 가능(기간별·항목별) | 확인 못 함 |
+| **내보내기** | 설정 > Privacy > Export data | Google Takeout | 확인 못 함 |
+
+<Aside type="caution" title="확인하지 못한 점">
+OpenAI 도움말(help.openai.com)은 접근이 막혀 있었고, 제가 열 수 있었던 ChatGPT 문서(learn.chatgpt.com)에는 일반 채팅의 검색·삭제·내보내기 방법이 나오지 않았어요. Claude나 Gemini 안에 키워드 검색창이 있다는 공식 설명도 찾지 못했어요. 앱에 검색창이 보이면 쓰셔도 되지만, 이 글은 그 부분을 보증하지 않아요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '가장 중요한 대화의 이름을 바꿨어요',
+  'Claude에게 부탁하거나 Gemini 활동에서 예전 대화를 찾아 봤어요',
+  '지울 대화를 정했어요',
+  '남기고 싶은 데이터를 내보내기로 요청했어요',
+  '내보낸 파일을 비공개 장소에 보관했어요',
+]} />
+
+<Steps>
+
+1. **Claude: 예전 대화 찾아 달라고 하기**
+
+   유료 플랜에서는 웹, Claude 데스크톱, 모바일 앱에서 Claude가 이전 대화를 검색해 줘요. 새 대화에서 그냥 물어보면 되고, 도구 호출로 표시돼요. 프로젝트 밖의 대화와, 각 프로젝트 안의 대화(그 프로젝트 안에서만)를 검색해요. 시크릿 채팅은 가져오지 않아요.
+
+   <PromptBox>
+   우리가 나눴던 여행 예산 대화를 찾아 줘. 대략 언제 얘기했고 무엇을 정했는지 알려줘.
+   </PromptBox>
+
+   끄려면 설정 > Your Claude(예전 설정 화면에서는 설정 > Memory)에서 "Search and reference chats" 토글을 꺼요. 고객 관리형 암호화 키를 쓰는 Enterprise 플랜에서는 검색할 수 없어요.
+
+2. **Claude: 이름 바꾸기·삭제**
+
+   웹(claude.ai)에서 왼쪽 사이드바의 "Chats and tasks"를 열고, 대화 위에 마우스를 올려 "⋮"를 눌러 Rename 또는 Delete를 골라요. 여러 개를 한꺼번에 지우려면 "Select"를 누르고 대화에 체크(또는 "Select all")한 뒤 Delete를 눌러요. iOS는 대화를 길게 누르고, Android는 "⋮" 메뉴나 여러 개용 체크리스트 아이콘을 써요.
+
+   <ScreenshotPlaceholder caption="Claude: Chats and tasks > ⋮ > Rename / Delete" officialUrl="https://support.claude.com/en/articles/8230524-how-can-i-delete-or-rename-a-conversation" officialLabel="Claude 지원센터에서 보기" />
+
+   삭제한 대화는 기록에서 바로 사라지고, Anthropic 내부 저장소에서는 30일 안에 지워져요. 프로젝트와 계정 정보는 직접 지울 때까지 남아요.
+
+3. **Claude: 데이터 내보내기**
+
+   웹 앱이나 Claude 데스크톱에서 설정 > Privacy로 가서 "Export data"를 눌러요. iOS·Android 앱에서는 내보내기를 시작할 수 없어요. 다운로드 링크가 계정 이메일로 오고, 받은 뒤 24시간이 지나면 만료돼요. 만료되면 다시 요청하면 돼요. 내보낸 데이터는 다른 개인 Claude 계정으로 가져올 수 없어요.
+
+   Team·Enterprise에서는 소유자가 "Allow members to export their own data"를 켠 경우에만 구성원이 자기 대화를 내보낼 수 있어요. 올린 파일의 내용은 내보내기에 포함되지 않아요.
+
+4. **Gemini: 활동 찾기·삭제**
+
+   컴퓨터에서 gemini.google.com을 열고 Settings & help > Activity를 눌러요(myactivity.google.com/product/gemini로도 갈 수 있어요). 전체, 최근 1시간·1일, 직접 지정한 기간, 특정 날짜, 항목 하나를 골라 지울 수 있어요. Gem과 한 대화를 지워도 Gem은 삭제되지 않고, 공유한 대화를 지워도 공개 링크는 삭제되지 않아요.
+
+   <ScreenshotPlaceholder caption="Gemini: Settings & help > Activity" officialUrl="https://support.google.com/gemini/answer/13278892" officialLabel="Google 도움말에서 보기" />
+
+   자동 삭제는 기본 18개월이에요. 3개월·36개월 또는 "Don't auto-delete activity"를 고를 수 있어요. 회사·학교 계정은 관리자가 이 설정을 정해요.
+
+5. **Gemini: 대화 내려받기**
+
+   takeout.google.com에서 전체 선택을 해제한 뒤 "My Activity"를 체크하고 "Gemini Apps"를 선택해요(Gem까지 받으려면 "Gemini"도 체크). 받는 방법(이메일 링크, Drive, Dropbox, OneDrive, Box), 한 번만 또는 정기 내보내기, 파일 형식(.zip 또는 .tgz)을 고르세요. 몇 시간에서 며칠 걸릴 수 있고, 이메일 링크는 7일간 유효해요. 내려받아도 Google에서 삭제되지는 않아요.
+
+6. **ChatGPT: 앱에서 직접 확인**
+
+   공식 페이지에서 방법을 확인하지 못했어요. 앱의 설정 > Data controls를 열어 각 옵션 설명을 읽어 보세요. 제가 열 수 있었던 문서에는 일회성 대화용 "새 임시 채팅" 단축키(Windows Ctrl+Shift+N, Mac Command+Shift+N)가 나와요.
+
+</Steps>
+
+<Aside type="note">
+기록 관리는 이름 붙이는 습관이 절반이에요. 쓸모 있어진 대화는 바로 "2026 여행 예산 - 최종"처럼 이름을 바꿔 두세요. 이건 공식 권고가 아니라 이 사이트의 팁이에요.
+</Aside>
+
+## 빠른 참조표
+
+| 하고 싶은 일 | Claude | Gemini |
+| --- | --- | --- |
+| 예전 대화 찾기 | Claude에게 검색 부탁(유료 플랜) | Settings & help > Activity |
+| 대화 하나 삭제 | "⋮" > Delete | 활동 항목 삭제 |
+| 여러 개 삭제 | Select > Delete | 기간·날짜·전체 삭제 |
+| 자동 삭제 | 확인 못 함 | 자동 삭제 기간 |
+| 전부 내려받기 | 설정 > Privacy > Export data | takeout.google.com |
+
+## 자주 막히는 지점
+
+### "Export data" 버튼이 안 보여요
+
+- **원인**: 모바일 앱이거나, 소유자가 켜지 않은 Team·Enterprise 플랜일 수 있어요. Primary Owner는 대신 Organization settings > Data and privacy에서 내보내요.
+- **해결**: 웹 앱이나 Claude 데스크톱을 쓰세요. 회사 플랜이면 소유자에게 물어보세요.
+
+### Claude가 그 대화를 못 찾아요
+
+- **원인**: 지난 대화 검색은 유료 플랜용이고 시크릿 채팅은 볼 수 없어요. 프로젝트 대화는 해당 프로젝트 안에서만 검색돼요.
+- **해결**: 프로젝트를 열어 그 안에서 물어보거나 "Chats and tasks"에서 직접 찾으세요.
+
+### 대화를 지웠는데 되살리고 싶어요
+
+- **원인**: 삭제하면 기록에서 바로 사라져요.
+- **해결**: 제가 읽은 공식 페이지에는 되돌리는 방법이 없어요. 복사본이 필요할 수 있으면 먼저 내보내세요.
+
+### 내보내기 링크가 만료됐어요
+
+- **원인**: Claude 링크는 받은 뒤 24시간, Google 링크는 7일 후 만료돼요.
+- **해결**: 내보내기를 다시 요청하세요.
+
+## 실전 팁
+
+- **지우기 전에 먼저 내보내세요.** 내려받은 뒤에 정리하세요.
+- 내보낸 파일은 개인정보가 담긴 문서처럼 다루세요. 공유 드라이브에는 두지 마세요([5편](/ko/basics/05-privacy-safety/) 참고).
+- 가끔 짧게 정리하세요. 기록은 메모리 기능이 떠올리는 내용에도 영향을 줄 수 있어요([C9](/ko/claude/c09-memory-settings/) 참고).
+- 페이지와 메뉴 이름은 바뀌어요. 이 글은 2026-11-02 기준이에요.
+
+## 다음에 볼 튜토리얼
+
+- [12. 내 대화가 AI 학습에 쓰이지 않게](/ko/basics/12-privacy-settings/) — 학습 설정과 임시 채팅
+- [5. 개인정보·회사 정보 안전하게 지키며 쓰기](/ko/basics/05-privacy-safety/) — 넣지 말아야 할 정보
+- [C9. 메모리와 개인 설정](/ko/claude/c09-memory-settings/) — Claude 메모리
+- [C5. 프로젝트(Projects)로 자료와 지침 관리하기](/ko/claude/c05-projects/) — 관련 대화를 한곳에

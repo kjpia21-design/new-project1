@@ -1,0 +1,305 @@
+---
+title: "Claude API 응답을 실시간 스트리밍으로 받기"
+description: "Messages API 스트리밍을 켜고, 서버 전송 이벤트(SSE) 흐름을 읽고, 도구 호출 JSON과 생각(thinking) 델타를 모으고, 오류와 끊긴 스트림을 다루는 방법을 공식 문서 기준으로 정리해요"
+sidebar:
+  label: "15. 스트리밍 응답(실시간 출력)"
+level: advanced
+category: dev
+tools: ["Claude API", "Streaming", "Python", "anthropic SDK"]
+duration: "40분"
+prerequisites:
+  - "C16. Claude API 시작하기를 끝낸 상태 (API 키, 환경 변수 설정)"
+  - "Python 3.10 이상, pip install anthropic"
+  - "tool_use / tool_result 루프를 아는 상태(개발 1)"
+lastVerified: 2026-11-02
+sources:
+  - title: "Streaming messages"
+    url: "https://platform.claude.com/docs/en/build-with-claude/streaming"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- 메시지를 만들 때 `"stream": true`를 주면, 완성된 응답 하나 대신 답변을 조각조각 **서버 전송 이벤트(SSE)**로 보내줘요.
+- 공식 문서는 **SDK** 사용을 권해요. Python에서는 `client.messages.stream(...)`과 `stream.text_stream`으로 글자가 도착하는 대로 출력하고, 조각이 필요 없으면 `stream.get_final_message()`로 완성된 `Message`를 받아요.
+- 이벤트 흐름: `message_start`, 그다음 콘텐츠 블록마다 `content_block_start`, 하나 이상의 `content_block_delta`, `content_block_stop`, 이어서 하나 이상의 `message_delta`, 마지막에 `message_stop`이에요. `ping`은 어디서든 나올 수 있어요. `message_delta`의 `usage` 토큰 수는 **누적값**이에요.
+- 델타 종류: `text_delta`, `input_json_delta`(도구 입력을 **부분 JSON 문자열**로 전달), `thinking_delta`, `signature_delta`예요. 새 이벤트 종류가 나중에 추가될 수 있으니 모르는 이벤트는 무시하세요.
+- 도구를 쓰면 입력이 부분 JSON으로 와요. 문자열을 모았다가 `content_block_stop` 뒤에 파싱하세요. 모델이 작업하는 동안 이벤트 사이에 지연이 있을 수 있다고 공식 문서가 알려줘요.
+- 오류가 스트림 **안에서** 올 수 있어요(예: `overloaded_error`). 끊긴 스트림의 복구 방법도 문서에 있고, Claude 4.5 이하와 4.6 이상이 서로 달라요.
+- 2026-11-02에 공식 스트리밍 페이지를 읽었고, 문서의 예시 이벤트로 작은 SSE 파서를 로컬에서 실행했어요. 하지만 **실제 API 호출은 하지 못했어요**(API 키와 `anthropic` 패키지가 없었어요). SDK 코드는 "문서대로"이지 끝까지 실행해 본 것이 아니에요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 답변 전체를 기다리지 않고 Claude의 답을 터미널이나 앱에 글자 단위로 바로 보여줘요.
+- 원시 이벤트 스트림을 읽고 이벤트 종류별 뜻을 구분해요.
+- 도구 호출 입력을 부분 JSON에서 모으고, 생각(thinking) 텍스트를 답변과 따로 보여줘요.
+- 스트림 도중에 생기는 오류에 대비해요.
+
+## 먼저 알아둘 개념
+
+일반 호출은 답이 다 만들어질 때까지 기다려요. 스트리밍 호출은 작은 조각으로 보내줘서 진행 상황을 일찍 보여줄 수 있어요. 공식 문서에 따르면 `max_tokens`가 큰 요청에서는 **HTTP 시간 초과를 피하려고 SDK가 스트리밍을 요구**해요. 최종 메시지만 받고 싶을 때도 스트리밍을 쓸 수 있어요(2단계).
+
+| 용어 | 뜻 |
+| --- | --- |
+| **SSE(서버 전송 이벤트)** | 서버가 HTTP 연결 하나를 열어 둔 채 이름 붙은 이벤트를 계속 보내는 웹 표준이에요. |
+| **콘텐츠 블록** | 답변의 한 부분이에요. 텍스트 블록, `tool_use` 블록, `thinking` 블록 등이 있고, 각각 최종 `content` 목록의 위치와 같은 `index`를 가져요. |
+| **델타(delta)** | 해당 `index`의 콘텐츠 블록에 대한 작은 갱신이에요. |
+| **부분 JSON** | 도구 `input`의 조각이에요. 조각을 모두 이어 붙이기 전에는 올바른 JSON이 아니에요. |
+
+스트리밍은 모든 모델에서 쓸 수 있고, 문서에 적힌 Claude API와 클라우드 플랫폼에서 지원해요. 문서의 참고: 예전 Amazon Bedrock InvokeModel 연동은 일반 서버 전송 이벤트로 스트리밍하지 않아요. 문서의 예시는 [개발 1](/ko/dev/01-tool-use/)과 같은 API라서 도구 정의도 이미 아는 방식 그대로예요.
+
+<Aside type="note" title="꼭 필요할 때가 아니면 SDK를 쓰세요">
+공식 문서는 스트리밍할 때 클라이언트 SDK를 쓰라고 해요. API를 직접 연동할 때만 원시 이벤트를 직접 처리하면 돼요. 3단계는 원시 형식을 읽고, 디버깅하고, 파서를 직접 만들 수 있도록 보여줘요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '스트리밍으로 답변을 받아 글자가 도착하는 대로 출력했어요',
+  '스트림 이벤트의 순서를 말할 수 있어요',
+  'input_json_delta 조각을 이어 붙이고 content_block_stop 뒤에 파싱했어요',
+  'ping, error, 모르는 이벤트가 와도 멈추지 않게 처리했어요',
+  '내 모델 버전에 맞는 끊긴 스트림 복구 방법을 알아요',
+]} />
+
+<Steps>
+
+1. **SDK로 텍스트 스트리밍하기**
+
+   C16처럼 `ANTHROPIC_API_KEY`를 설정하세요. 공식 문서의 Python 예제예요.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   with client.messages.stream(
+       max_tokens=1024,
+       messages=[{"role": "user", "content": "Hello"}],
+       model="claude-opus-5-5",
+   ) as stream:
+       for text in stream.text_stream:
+           print(text, end="", flush=True)
+   ```
+
+   `flush=True`는 조각이 도착하자마자 화면에 나오게 해요. 문서에는 TypeScript, C#, Go, Java, PHP, Ruby 예제와 CLI 형태(`ant messages create --stream --model ... --max-tokens ... --message '{role: user, content: "Hello"}'`)도 있어요. 언어별 세부 사항은 각 SDK 문서를 확인하세요.
+
+2. **이벤트 처리 없이 최종 메시지만 받기**
+
+   도착하는 글자가 필요 없다면, SDK가 내부적으로 스트리밍하고 `client.messages.create()`가 돌려주는 것과 같은 완성된 `Message`를 줄 수 있어요. 문서는 `max_tokens`가 큰 요청에서 특히 유용하다고 해요.
+
+   ```python
+   with client.messages.stream(
+       max_tokens=128000,
+       messages=[{"role": "user", "content": "Write a detailed analysis..."}],
+       model="claude-opus-5-5",
+   ) as stream:
+       message = stream.get_final_message()
+
+   for block in message.content:
+       if block.type == "text":
+           print(block.text)
+   ```
+
+   메서드 이름은 언어마다 달라요(문서에는 TypeScript는 `stream.finalMessage()`, Ruby는 `stream.accumulated_message` 등이 나와 있어요).
+
+3. **원시 이벤트 흐름 읽기**
+
+   일반 HTTP 요청(문서의 cURL 예제는 `"stream": true`를 줘요)으로 받으면 응답이 아래처럼 보여요. 짧은 "Hello" 답변에 대한 문서의 예시예요.
+
+   ```text
+   event: message_start
+   data: {"type": "message_start", "message": {"id": "msg_...", "type": "message", "role": "assistant", "content": [], "model": "claude-opus-5-5", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "output_tokens": 1}}}
+
+   event: content_block_start
+   data: {"type": "content_block_start", "index": 0, "content_block": {"type": "text", "text": ""}}
+
+   event: ping
+   data: {"type": "ping"}
+
+   event: content_block_delta
+   data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Hello"}}
+
+   event: content_block_stop
+   data: {"type": "content_block_stop", "index": 0}
+
+   event: message_delta
+   data: {"type": "message_delta", "delta": {"stop_reason": "end_turn", "stop_sequence":null}, "usage": {"output_tokens": 15}}
+
+   event: message_stop
+   data: {"type": "message_stop"}
+   ```
+
+   (예시의 메시지 ID는 줄였고 두 번째 텍스트 델타는 뺐어요.) 위에서 아래로 읽으면 이래요.
+
+   | 이벤트 | 알려주는 것 |
+   | --- | --- |
+   | `message_start` | `content`가 빈 `Message` 객체예요. |
+   | `content_block_start` / `content_block_delta` / `content_block_stop` | 콘텐츠 블록 하나의 열기, 갱신, 닫기예요. |
+   | `message_delta` | `stop_reason` 같은 최종 Message의 최상위 변경이에요. `usage`는 **누적값**이에요. |
+   | `message_stop` | 스트림이 끝났어요. |
+   | `ping` | 몇 번이든 나올 수 있어요. 무시하세요. |
+   | `error` | 스트림 안의 실패예요(6단계). |
+
+4. **부분 JSON에서 도구 입력 모으기**
+
+   `tool_use` 블록의 델타는 `partial_json`에 문자열 조각을 담은 `input_json_delta` 이벤트예요. 최종 `tool_use.input`은 항상 객체예요. 문서는 문자열을 모았다가 `content_block_stop`을 받은 뒤 파싱하거나, SDK의 스트리밍 도우미를 쓰라고 해요(Python·TypeScript SDK에서는 파싱된 `input`을 점진적으로 볼 수도 있어요).
+
+   문서의 주의 두 가지가 더 있어요. 현재 모델은 `input`의 **키와 값을 한 쌍씩 완성해서** 내보내서, 모델이 작업하는 동안 이벤트 사이에 멈춤이 있을 수 있어요. 또 도구 사용은 매개변수 값의 **세밀한 스트리밍(fine-grained streaming)**을 지원하고, 도구마다 `eager_input_streaming`으로 켜요(쓰기 전에 공식 Fine-grained tool streaming 페이지를 확인하세요).
+
+   아래는 문서의 이벤트 형식을 따라 그대로 처리하는 작은 파서예요. `assemble.py`로 저장하세요.
+
+   ```python
+   import json
+
+
+   def assemble(lines):
+       """Rebuild content blocks from raw SSE lines."""
+       blocks, partial = {}, {}
+       stop_reason = None
+       for line in lines:
+           if not line.startswith("data:"):
+               continue
+           ev = json.loads(line[5:])
+           t = ev.get("type")
+           if t == "content_block_start":
+               blocks[ev["index"]] = ev["content_block"]
+               partial[ev["index"]] = ""
+           elif t == "content_block_delta":
+               d, i = ev["delta"], ev["index"]
+               if d["type"] == "text_delta":
+                   blocks[i]["text"] += d["text"]
+               elif d["type"] == "input_json_delta":
+                   partial[i] += d["partial_json"]
+           elif t == "content_block_stop":
+               i = ev["index"]
+               if blocks[i]["type"] == "tool_use":
+                   blocks[i]["input"] = json.loads(partial[i])  # only now is it complete
+           elif t == "message_delta":
+               stop_reason = ev["delta"]["stop_reason"]
+           elif t == "error":
+               raise RuntimeError(ev["error"]["message"])
+           # ping and unknown event types: ignore
+       return [blocks[i] for i in sorted(blocks)], stop_reason
+   ```
+
+   **실행한 것:** `python -m py_compile`이 통과했고, 문서의 도구 사용 예시를 줄인 것(텍스트 블록 하나, 그리고 JSON 조각 세 개로 나뉜 `get_weather` 도구 호출)을 넣어 돌렸어요. `stop_reason`은 `tool_use`, 입력은 `{"location": "San Francisco, CA"}`로 나왔어요. **실행하지 못한 것:** 실제 스트림, 그리고 문서의 웹 검색 예시에 나오는 `server_tool_use`·`web_search_tool_result` 같은 서버 도구 블록(이 파서는 처리하지 않아요)이에요. SDK를 쓰면 이 파서는 필요 없어요.
+
+   스트림이 `stop_reason` `tool_use`로 끝나면 [개발 1](/ko/dev/01-tool-use/)처럼 이어가요. 도구를 실행하고 `tool_result`를 돌려보내요. 믿을 수 있는 JSON이 필요하면 [개발 13](/ko/dev/13-structured-outputs/)을 보세요.
+
+5. **생각(thinking)과 답변을 따로 보여주기**
+
+   스트리밍과 함께 thinking을 켜면 생각 텍스트가 `thinking` 블록 안의 `thinking_delta` 이벤트로 오고, 그 블록의 `content_block_stop` 바로 앞에 `signature_delta` 이벤트가 와요. 이 서명은 thinking 블록의 무결성을 확인하는 데 쓰여요. 문서의 Python 예제는 두 델타를 모두 출력해요.
+
+   ```python
+   with client.messages.stream(
+       model="claude-opus-5-5",
+       max_tokens=20000,
+       thinking={"type": "adaptive", "display": "summarized"},
+       messages=[{"role": "user", "content": "What is the greatest common divisor of 1071 and 462?"}],
+   ) as stream:
+       for event in stream:
+           if event.type == "content_block_delta":
+               delta = event.delta
+               match delta.type:
+                   case "thinking_delta":
+                       print(delta.thinking, end="", flush=True)
+                   case "text_delta":
+                       print(delta.text, end="", flush=True)
+   ```
+
+   문서에 따르면 `display: "summarized"`는 전체 사고 과정 대신 추론의 요약본을 스트리밍해요. `display: "omitted"`이면 생각 텍스트는 스트리밍되지 않아요. 블록이 열리고, 빈 `thinking_delta`와 `signature_delta` 하나를 받고, 닫혀요. 베타인 `display: "updates"` 설정도 문서에 언급돼요. 나머지 thinking 설정은 스트리밍 페이지가 링크한 공식 Thinking 페이지를 보세요. 내 화면에서는 생각과 답변을 다른 곳에 출력해야 읽는 사람이 헷갈리지 않아요.
+
+6. **오류와 끊긴 스트림에 대비하기**
+
+   이미 시작된 스트림 안에서도 오류가 이벤트로 올 수 있어요. 문서의 예시는 사용량이 많을 때의 `overloaded_error`이고, 스트리밍이 아닐 때라면 보통 HTTP 529에 해당한다고 해요.
+
+   ```text
+   event: error
+   data: {"type": "error", "error": {"type": "overloaded_error", "message": "Overloaded"}}
+   ```
+
+   그러니 처음에 HTTP 상태가 200이었다고 해서 스트림이 끝까지 간다는 보장은 없어요. 항상 `error` 이벤트와 연결 끊김을 살피세요.
+
+   복구는 문서에 이렇게 나와요. (1) 오류 전에 받은 내용을 저장하고, (2) 거기서 이어가는 새 요청을 보내고, (3) 스트리밍을 계속해요. 2단계는 모델에 따라 달라요.
+
+   - **Claude 4.5 이하**: 부분 응답을 새 요청의 시작으로 assistant 메시지에 넣어요.
+   - **Claude 4.6 이상**: 대신 부분 응답과 "이어서 써 달라"는 지시를 담은 **user** 메시지를 추가해요. 문서의 예시 프롬프트는 "Your previous response was interrupted and ended with [previous_response]. Continue from where you left off."예요.
+
+   문서의 모범 사례: SDK의 내장 누적·오류 처리 기능을 쓰고, 메시지에 콘텐츠 블록이 여러 개일 수 있음을 기억하세요. **tool use와 thinking 블록은 부분 복구가 안 돼요.** 가장 최근 텍스트 블록에서부터 스트리밍을 이어갈 수 있어요.
+
+   <PromptBox>
+   [언어/프레임워크]로 만든 내 Claude API 앱에 스트리밍을 붙이려고 해요. 지금의 비스트리밍 코드는 이거예요: [붙여넣기]. 공식 SDK의 스트리밍 도우미를 쓰도록 바꿔서, 텍스트가 도착하는 대로 출력하고 error 이벤트나 끊긴 연결도 처리해 주세요. 공식 스트리밍 페이지에 있는 기능만 쓰고, 배포 전에 실제 API 키로 시험해 봐야 할 부분을 알려 주세요.
+   </PromptBox>
+
+</Steps>
+
+## 빠른 참고
+
+| 항목 | 값 (공식 문서, 2026-11-02) |
+| --- | --- |
+| 켜기 | `"stream": true` (SDK: `client.messages.stream(...)`) |
+| Python 텍스트만 | `for text in stream.text_stream:` |
+| 최종 메시지만 | `stream.get_final_message()` (Python) |
+| 이벤트 순서 | `message_start`, 블록(`content_block_start`, `content_block_delta`..., `content_block_stop`), `message_delta`, `message_stop` |
+| 델타 종류 | `text_delta`, `input_json_delta`, `thinking_delta`, `signature_delta` |
+| 그 밖의 이벤트 | `ping`(몇 번이든), `error`, 앞으로 추가될 종류(무시) |
+| `message_delta` usage | 누적값 |
+| 도구 입력 | `partial_json`을 이어 붙이고 `content_block_stop` 뒤에 파싱 |
+| 복구 | 4.5 이하: assistant 메시지, 4.6 이상: 이어서 쓰라는 user 메시지 |
+| 지원 범위 | 모든 모델. 예전 Bedrock InvokeModel 연동은 일반 SSE 스트리밍 안 함 |
+
+## 자주 막히는 부분
+
+### 끝날 때까지 아무것도 안 나와요
+
+- **원인**: 출력이 버퍼에 쌓이고 있거나, 텍스트 스트림 대신 최종 메시지를 읽고 있어요.
+- **해결**: `flush=True`(Python)를 쓰고 `stream.text_stream`을 순회하세요. 앱 앞단의 프록시나 웹 서버가 응답을 버퍼링하지 않는지도 확인하세요. 프록시 버퍼링은 문서에 없는 내용이라 내 환경에서 직접 시험해야 해요.
+
+### 도구 입력에서 `json.loads`가 실패해요
+
+- **원인**: `partial_json` 조각 하나만 파싱했거나 `content_block_stop` 전에 파싱했어요.
+- **해결**: 같은 블록 `index`의 조각을 모두 이어 붙이고 블록이 닫힌 뒤에 한 번 파싱하거나, SDK 도우미를 쓰세요.
+
+### 도구 호출 이벤트가 느리거나 한꺼번에 와요
+
+- **원인**: 문서에 따르면 현재 모델은 `input`의 키와 값을 한 쌍씩 완성해 내보내서, 모델이 작업하는 동안 지연이 있을 수 있어요.
+- **해결**: 정상이에요. 화면에 "작업 중" 상태를 보여주세요. 문서의 Fine-grained tool streaming 페이지에 지연을 줄이는 옵션이 설명돼 있어요.
+
+### 새 이벤트 종류 때문에 코드가 죽었어요
+
+- **원인**: 문서에 따르면 버전 정책에 따라 새 이벤트 종류가 추가될 수 있어요.
+- **해결**: 모르는 이벤트는 오류를 내지 말고 무시하세요.
+
+### `message_delta`의 토큰 사용량을 더했더니 너무 커요
+
+- **원인**: `message_delta`의 `usage`는 이벤트별 값이 아니라 누적값이에요.
+- **해결**: 합계를 내지 말고 마지막 값을 쓰세요.
+
+### 스트림이 중간에 멈췄어요
+
+- **원인**: 네트워크 문제, 시간 초과, 또는 `error` 이벤트예요.
+- **해결**: 6단계에서 내 모델 버전에 맞는 복구 절차를 따르세요. `tool_use`나 `thinking` 블록이 잘렸다면 이어가기보다 그 블록을 다시 시작해야 할 수 있어요.
+
+## 실무 팁
+
+- 먼저 SDK 도우미로 시작하고, 언어나 프레임워크 때문에 어쩔 수 없을 때만 원시 SSE로 넘어가세요.
+- 화면 표시 코드와 누적 코드를 나누세요. 전체 메시지는 항상 뒤에서 만들어 두고, 사용자에게 무엇을 보일지는 그 위에서 정하세요.
+- `error` 이벤트와 모르는 이벤트 처리는 처음부터 넣으세요. 잊기 쉽고 재현하기 어려워요.
+- 중간 텍스트를 보여주지 않더라도 긴 출력에는 스트리밍을 쓰세요. 문서에 따르면 `max_tokens`가 클 때 HTTP 시간 초과를 피하는 데 도움이 돼요.
+- 마지막 `message_delta`의 `stop_reason`을 기록하세요. 도구를 실행할지, 이어갈지, 멈출지 알려줘요.
+- 연결을 일부러 한 번 끊어서 복구 경로를 시험하세요. 우리는 실행해 보지 못했으니 직접 해 보기 전에는 동작한다고 가정하지 마세요.
+
+## 다음에 볼 튜토리얼
+
+- [1. 도구 사용(Tool use)으로 업무 봇 만들기](/ko/dev/01-tool-use/) — 스트리밍이 끼어드는 도구 루프
+- [13. 구조화 출력(정확한 JSON)](/ko/dev/13-structured-outputs/) — API에서 믿을 수 있는 JSON 받기
+- [14. 토큰 세기 API(비용 미리 계산)](/ko/dev/14-token-counting/) — 보내기 전에 입력 비용 추정
+- [2. 프롬프트 캐싱·배치·effort로 API 비용 줄이기](/ko/dev/02-cost-optimization/) — 실시간 응답이 필요 없다면 배치가 더 저렴해요
+- [C16. API 시작하기](/ko/claude/c16-api/)
+- [개발자 가이드](/ko/roles/developer/)

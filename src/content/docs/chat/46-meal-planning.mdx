@@ -1,0 +1,191 @@
+---
+title: "Plan Meals and Recipes with AI: Fridge Photos, Weekly Menus, Shopping Lists, and Budgets"
+description: "How to turn what you have at home into a weekly menu, a grouped shopping list, and a budget-friendly plan with an AI assistant, including photo upload limits from the official help pages and why allergies and health conditions need a professional, not a chatbot"
+sidebar:
+  label: "17. Plan meals"
+level: beginner
+category: chat
+tools: ["Claude", "Gemini", "ChatGPT"]
+duration: "30 min"
+prerequisites:
+  - "One AI account (any of Claude, Gemini, or ChatGPT)"
+  - "A rough idea of who you cook for and what you usually have at home"
+lastVerified: 2026-11-02
+sources:
+  - title: "Upload files to Claude (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/8241126-upload-files-to-claude"
+  - title: "Upload & analyze files in Gemini Apps (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/14903178"
+  - title: "Image inputs (ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/image-inputs.md"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- AI is a handy **menu brainstormer**: give it what is in your fridge, your budget, and your household, and it drafts a week of meals, a recipe, and a shopping list in minutes.
+- Five jobs to hand over: **say what you have, set the rules, draft the week, build the shopping list, and fit the budget.** Below are 6 prompts you can copy.
+- **This is not medical or nutrition advice.** For allergies, intolerances, pregnancy, diabetes, kidney disease, or any other health condition, ask a doctor or a registered dietitian. Do not rely on an AI's ingredient or calorie claims for safety.
+- Photo upload is described on each service's official help page: Claude takes JPEG, PNG, GIF, and WebP images; Gemini lets you add images in the same prompt (up to 10 files, subject to availability); ChatGPT lets you attach, paste, or drag an image into the web composer. (as of 2026-11-02)
+- We **could not confirm** in the docs how accurately any assistant recognizes food in a photo, or how accurate its calorie, nutrient, or price figures are. Treat those as estimates.
+</Summary>
+
+## What you'll be able to do
+
+- Photograph or list what you have and get recipe ideas that use it.
+- Get a week of meals that fits your household, time, and taste.
+- Turn the menu into a shopping list grouped by store section, with what you already have removed.
+- Fit a menu to a budget, with your own prices marked as the real numbers.
+- Know where AI is a draft helper and where you need food-safety rules or a professional.
+
+This tutorial is about **planning meals**. For how to ask well, see [Asking Well: The Basics Worth Remembering](/basics/03-asking-well/). For checking claims before you rely on them, see [Fact-checking](/basics/04-fact-checking/). For tracking what you spend, see [Organize household budgets and receipts with AI](/automation/46-budget-sheet/).
+
+## Concepts first
+
+| Term | Meaning |
+| --- | --- |
+| **Constraints** | The fixed facts: number of people, diet rules, allergies, budget, cooking time, equipment (oven, rice cooker, one pan). |
+| **Pantry list** | What you already have. Giving it to the AI cuts waste and the shopping list. |
+| **Weekly menu** | A day-by-day plan for meals, ideally reusing ingredients across days. |
+| **Shopping list** | Ingredients you still need, grouped (produce, dairy, dry goods) so the trip is quick. |
+| **Estimate** | A number the AI gives from general knowledge (price, calories, time). It is not measured or verified. |
+| **Verify tag** | A marker like [VERIFY] you ask the AI to add to anything that matters for safety or cost. |
+
+### Photo upload: the scope we confirmed (as of 2026-11-02)
+
+| Item | Claude | Gemini | ChatGPT |
+| --- | --- | --- | --- |
+| How to add a photo | Click "+" in the lower left of the chat box and choose "Add files or photos", or drag and drop. You can also paste an image from the clipboard | In the web app, click Add files, then Upload Files. Gemini in Chrome also lets you drag or paste images from a page | In the web composer, attach, paste, or drag an image into the prompt |
+| Image formats | JPEG, PNG, GIF, WebP | "Most file types" are supported; a per-format list was not on the page we read | Not listed on the page we read (the page says to explain what to inspect) |
+| Limits | Up to 20 files per chat, 500MB per file, images up to 8000x8000 pixels. Images of 1000x1000 pixels or larger work best | Up to 10 files per prompt (subject to availability); other file types up to 100 MB each | Not confirmed |
+| Account | Pages do not restrict this to a specific plan | You must be signed in. Higher limits are offered with a Google AI plan | Not confirmed |
+
+<Aside type="note" title="What we couldn't confirm">
+The official pages we read do not say how well an assistant **recognizes foods, quantities, or freshness** from a photo, and we did not test it. They do not describe any recipe, calorie, nutrient, or grocery-price feature, so those numbers are general-knowledge estimates, not verified data. We also did not check any assistant's handling of allergens, medical diets, or food-safety rules. Check ingredient labels yourself.
+</Aside>
+
+<Aside type="caution" title="Health, allergies, and food safety">
+This tutorial is not medical or nutritional advice. If you or someone you cook for has a food allergy, a medical condition, is pregnant, is a young child, or follows a prescribed diet, ask a doctor or a registered dietitian. An AI can miss hidden ingredients, mix up substitutions, or sound sure when it is wrong. Always read the label, and follow the safe cooking temperatures and storage guidance from your local food-safety authority. Keep photos free of faces, addresses, and mail. For privacy basics, see [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/).
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I listed the people, diet rules, allergies, budget, and cooking time',
+  'I took a clear photo of the fridge or wrote a pantry list',
+  'I asked for a weekly menu that reuses ingredients',
+  'I asked for a shopping list that leaves out what I already have',
+  'I replaced the AI price estimates with my own store prices',
+  'I read labels myself for allergens and checked safety rules',
+  'I kept faces, addresses, and mail out of any photo',
+]} />
+
+<Steps>
+
+1. **Say what you have and set the rules**
+
+   Take a photo with good light, or type the list. Put the rules in the prompt in your own words. Swap the bracketed parts for your own. For general prompt structure, see [Writing prompts](/chat/01-prompt-basics/).
+
+   <PromptBox label="Constraints prompt">
+   I am planning meals for [number] people. Diet rules: [vegetarian / no pork / none]. Allergies or conditions I have told you about: [list, or none]. Weekly food budget: [amount and currency]. Time to cook on weekdays: [30 minutes]. Equipment: [stove, oven, rice cooker]. Before you plan, ask me up to 5 questions that would most change your suggestions. Don't plan yet.
+   </PromptBox>
+
+2. **Turn a fridge photo into ideas**
+
+   Attach the photo, then ask for a list first, so you can fix mistakes before any recipe is written.
+
+   <PromptBox label="Fridge photo prompt">
+   Here is a photo of my fridge and pantry. First, list the foods you can see and mark any you are unsure about with a question mark. Don't guess quantities. Then wait for me to correct the list. After that, suggest 5 dinners that mostly use these items, each in one line.
+   </PromptBox>
+
+   Correct what the AI got wrong. If a photo is blurry or crowded, a typed list works better. We did not verify how accurately any assistant reads food in photos.
+
+3. **Draft the weekly menu**
+
+   <PromptBox label="Weekly menu prompt">
+   Using my corrected list and constraints, draft a 7-day dinner menu (and lunches that use leftovers). Reuse ingredients across days to reduce waste. Put the quickest meals on busy days. Put a [VERIFY] tag next to any step involving allergens, raw meat or fish, reheating, or storage times, and don't state food-safety rules as facts.
+   </PromptBox>
+
+4. **Get one recipe at a time**
+
+   <PromptBox label="Recipe prompt">
+   Write the recipe for [dish] for [number] servings. Give ingredients with amounts, numbered steps, and total time. Tell me which ingredients can be swapped and what the swap changes. Mark anything about allergens or doneness temperature with [VERIFY].
+   </PromptBox>
+
+   Cook it once and tell the AI what to change ("too salty", "took 50 minutes"). Ask it to rewrite the recipe with your notes.
+
+5. **Build the shopping list**
+
+   <PromptBox label="Shopping list prompt">
+   From this week's menu, make a shopping list. Remove what is already in my pantry list. Group by store section (produce, meat and fish, dairy, dry goods, frozen). Merge duplicates and show total amounts. Add a short "optional" section for nice-to-haves.
+   </PromptBox>
+
+6. **Fit the budget**
+
+   <PromptBox label="Budget prompt">
+   My weekly food budget is [amount]. I will paste the prices I see at my store: [item: price, ...]. Use my prices for those items. For anything missing, don't invent a price; mark it "price needed". Add up the total, then suggest the 3 swaps that cut the cost the most while keeping the meals similar.
+   </PromptBox>
+
+   Prices the AI states without a source are guesses. Use the real prices from your store or its app. This is planning help, not financial advice.
+
+</Steps>
+
+## Quick reference
+
+| What you want | Try this |
+| --- | --- |
+| Ideas from what you have | Fridge photo prompt: list foods first, correct, then suggest |
+| Less food waste | Pantry list plus "reuse ingredients across days" |
+| A quick weeknight plan | Set cooking time and equipment in the constraints prompt |
+| A short shopping trip | Shopping list prompt: remove what you have, group by section |
+| A realistic budget | Paste your own prices, mark missing ones "price needed" |
+| Allergy or health question | Ask a doctor or registered dietitian, not the AI |
+| Safer answers | Ask for [VERIFY] tags, then check labels and official food-safety guidance |
+
+## Common sticking points
+
+### The AI misread my fridge photo
+
+- **Cause**: Blurry, crowded, or poorly lit photos are hard to read, and similar-looking items get mixed up.
+- **Fix**: Ask for the list first and correct it. Use a clearer photo, or type the list instead.
+
+### The menu uses ingredients I dislike or can't eat
+
+- **Cause**: The constraints were missing or too vague.
+- **Fix**: Add a "never use" list and repeat allergies in every new chat. Check labels yourself either way.
+
+### The calorie or nutrient numbers look too precise
+
+- **Cause**: The AI is giving general estimates, and the help pages we read do not describe a verified nutrition feature.
+- **Fix**: Treat the numbers as rough. For medical or weight-related goals, ask a doctor or registered dietitian.
+
+### The shopping list is too long or duplicates items
+
+- **Cause**: The AI didn't know what you already have, or the menu uses many different ingredients.
+- **Fix**: Give the pantry list and ask to "merge duplicates and prefer ingredients used in at least two meals".
+
+### The prices are way off
+
+- **Cause**: The AI doesn't know your store, city, or this week's sales.
+- **Fix**: Paste your own prices and ask it to use only those. Mark missing ones "price needed".
+
+## Practical tips
+
+- **Start from what you have.** It is the quickest way to cut waste and cost.
+- **Repeat allergies in every new chat.** Don't assume the AI remembers.
+- **Cook it once, then tell the AI.** Feedback makes the next recipe better.
+- **Plan a leftover night.** Ask for a menu with one "use it up" meal.
+- **Keep the photo plain.** Frame the shelves, not faces or mail.
+- **Ask a person for high-stakes diets.** A doctor or dietitian can do what an AI cannot.
+
+## What to read next
+
+- [Asking Well: The Basics Worth Remembering](/basics/03-asking-well/) — give the AI what it needs
+- [Fact-checking](/basics/04-fact-checking/) — how to check what the AI tells you
+- [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/) — what to keep out of chats and photos
+- [Organize household budgets and receipts with AI](/automation/46-budget-sheet/) — track the spending
+- [16. Plan trips](/chat/45-travel-planning/) — the same draft-then-verify approach

@@ -1,0 +1,221 @@
+---
+title: "Rehearse Presentations and Speeches with AI: Script Polish, Likely Questions, and Feedback"
+description: "How to tighten a speech script, practice out loud with a voice feature, prepare for tough audience questions, and get structured feedback from Claude, Gemini, or ChatGPT, plus what the official docs confirm about voice"
+sidebar:
+  label: "15. Rehearse presentations"
+level: beginner
+category: chat
+tools: ["Claude", "Gemini", "ChatGPT"]
+duration: "30 min"
+prerequisites:
+  - "A presentation or speech you need to give (a rough script or outline is enough)"
+  - "One AI account (any of Claude, Gemini, or ChatGPT). For voice practice, a phone app and a microphone (see [Using AI on your phone](/basics/07-ai-on-phone/))"
+lastVerified: 2026-11-02
+sources:
+  - title: "Use voice mode (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/11101966-using-voice-mode"
+  - title: "Talk naturally with Gemini Live (Google Help)"
+    url: "https://support.google.com/gemini/answer/15274899"
+  - title: "ChatGPT Voice (ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/features/voice"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+<Summary>
+- AI works well as a **rehearsal partner**: it can tighten your script, play a skeptical audience, ask the questions you dread, and give feedback on structure. It cannot replace saying the talk out loud to real people.
+- Four jobs to hand over: **polish the script, practice out loud, rehearse Q&A, and get feedback.** Below are 7 prompts you can copy.
+- For **voice practice**, the official pages confirm Claude's voice mode (all plans, beta; practicing for "important conversations" is one of its listed uses) and Gemini Live on Android (its help page lists "Practice aloud"). ChatGPT Voice is documented for the desktop app and mainly for directing tasks. (as of 2026-11-02)
+- We **could not confirm** in the docs that any of them measures your speaking time, pace, filler words, or delivery. Use a phone timer, and treat the AI's comments about delivery as an opinion, not a measurement.
+- Feedback comes from text or a transcript. The AI **does not see an audience or your body language**, and it can be wrong about facts in your content. Check numbers and claims yourself.
+- Do not paste confidential material (unreleased numbers, client names, personal data) into a script you share with an AI. Use placeholders.
+</Summary>
+
+## What you'll be able to do
+
+- Turn a rough script into one that is clearer and easier to say out loud.
+- Practice delivering it by voice and review the written transcript afterward.
+- Prepare answers for likely and difficult audience questions.
+- Get specific feedback on opening, structure, and ending, and decide what to change.
+- Know what the voice features can and cannot do, and what to keep private.
+
+This tutorial is about **rehearsing and delivering.** To have AI build the slides themselves, see [Making presentations with AI](/media/25-ai-presentations/). For practicing a foreign language, see [Studying a foreign language with AI](/chat/31-language-learning/).
+
+## Concepts first
+
+| Term | Meaning |
+| --- | --- |
+| **Script** | The text you plan to say. A full script and a bullet outline both work for rehearsal. |
+| **Spoken style** | Writing meant to be heard: shorter sentences, simple words, one idea at a time. Text that reads well on a page can sound stiff aloud. |
+| **Role-play** | You ask the AI to act as a specific audience, such as a skeptical manager or a first-year student, and you present to it. |
+| **Q&A rehearsal** | Practicing answers to questions the audience might ask, before the real event. |
+| **Voice mode** | A feature where you talk and the AI talks back. It is different from dictation, which only turns your speech into text. |
+| **Transcript** | The text record of a voice conversation. It is what you review afterward. |
+
+### Voice features: the scope we confirmed (as of 2026-11-02)
+
+| Item | Claude | Gemini | ChatGPT |
+| --- | --- | --- | --- |
+| Name | Voice mode, beta | Gemini Live | ChatGPT Voice |
+| Where | Mobile app, desktop, web (built to work best from your phone) | The Gemini mobile app on Android phones and tablets. Not available in the Gemini web app | ChatGPT desktop app (also via Codex on iOS after pairing with a desktop host) |
+| Plans | Free, Pro, Max, Ultra, Team, and Enterprise | The help page lists a Google account with access to Gemini Apps, and doesn't list a paid plan | Plus, Pro, Business, Edu, Enterprise |
+| How to start | The sound-wave icon in the input box | **Live** at the bottom of the app (or swipe left) | **Start voice chat** / **Start new voice chat** |
+| Related wording in the docs | "Preparation: practice for interviews or important conversations through natural dialogue" | "Practice aloud: rehearse for important moments in a more natural and conversational way" | Described mainly for directing and checking on tasks, not for rehearsal |
+| Interrupting | If Claude interrupts you, start speaking again and it stops and listens. Push-to-talk mode is available for noisy places | You can interrupt Gemini. You can put Live on hold or mute it | You can interrupt during a response |
+| After the session | A text transcript is saved in your chat history | Tap End to review the transcript | Not confirmed |
+
+<Aside type="note" title="What we couldn't confirm">
+The official pages do not say whether any of these voice features can **time your talk, count filler words, or judge your pace, volume, or pronunciation.** They also don't say how well they hear a long, uninterrupted talk, or how Gemini Live and ChatGPT Voice handle languages other than English for rehearsal. For Claude, voice in languages other than English is in beta, and you choose the voice language in settings. Check the in-app guidance for the service you use. If you want timing, use your phone's timer.
+</Aside>
+
+<Aside type="caution" title="Keep confidential material out">
+Do not paste unreleased figures, client names, or personal data into a script you share with an AI. Replace them with placeholders like [Client A] and [Q3 revenue], and fill them in yourself. If you use Gemini Live, its help page also advises asking permission before recording or including other people in a Live chat. For privacy settings and what to keep out of chats, see [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/).
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I wrote down the audience, the time limit, and my main message in one line',
+  'I replaced confidential details with placeholders',
+  'I had the AI tighten my script and kept my own voice',
+  'I practiced the talk out loud at least once, with a timer',
+  'I rehearsed the audience questions I am most afraid of',
+  'I asked for feedback and chose only 2 or 3 things to change',
+  'I checked every number and claim in the final script myself',
+]} />
+
+<Steps>
+
+1. **Set the situation first**
+
+   Write down who will listen, how long you have, and the one thing you want them to remember. The AI can only help with what it knows. Swap the bracketed parts below for your own situation. For general prompt structure, see [Asking questions well](/basics/03-asking-well/) and [Writing prompts](/chat/01-prompt-basics/).
+
+2. **Tighten the script for speaking**
+
+   <PromptBox label="Script polish prompt">
+   Here is the script for my talk. Audience: [colleagues who don't know the project]. Time limit: [5 minutes]. Main message: [we should extend the pilot by one month]. Rewrite it in a spoken style: short sentences, plain words, no jargon. Keep every fact and number exactly as I wrote it. If something is unclear or missing, put [brackets] instead of inventing it. Then list the 3 places where I'm most likely to lose the audience.
+
+   [My script here]
+   </PromptBox>
+
+   Read the result aloud before you accept it. If a sentence makes you stumble, it will make the audience stumble too. Change it into words you would actually say.
+
+3. **Check the opening and the ending**
+
+   <PromptBox label="Opening and ending prompt">
+   Give me three different openings for this talk (a question, a short story, a surprising fact) and two different endings (a call to action, a one-sentence summary). Use only facts from my script. For each, say in one line when it works well and when it could feel awkward.
+   </PromptBox>
+
+4. **Practice out loud with the AI as your audience**
+
+   Start in writing if you are nervous, then move to voice. Tell the AI to stay quiet while you present, so it doesn't break your flow.
+
+   <PromptBox label="Audience role-play prompt (type it, or say it at the start of a voice session)">
+   Act as [a skeptical manager who has 10 minutes] listening to my talk. I will present in sections. After each section, reply with at most two sentences: what was clear and what confused you. Don't give long advice during the talk. When I say "that's the end," give me a summary of what you understood, and what you would still want to ask.
+   </PromptBox>
+
+   <FlowSteps title="Starting a voice rehearsal" officialUrl="https://support.claude.com/en/articles/11101966-using-voice-mode" steps={[
+     { where: 'In the app (Claude / Gemini)', action: 'In Claude, tap the sound-wave icon in the input box; in Gemini (Android), tap Live at the bottom', result: 'If it\'s your first time, allow microphone permission' },
+     { where: 'Quiet room, or switch modes', action: 'In Claude, if the AI cuts in on background noise, switch to push-to-talk (hold a button while you speak)', result: 'Hands-free is the default and works best in quiet places' },
+     { where: 'During the session', action: 'Say your audience prompt, then present one section at a time', result: 'Start a phone timer yourself; the docs don\'t say the AI times you' },
+     { where: 'After the session', action: 'Open the transcript (Claude: your chat history; Gemini: tap End)', result: 'Use the written record to review what was said' },
+   ]} />
+
+   Ask for short replies. Long spoken answers are hard to take in while you are trying to remember your own talk.
+
+5. **Rehearse the questions you dread**
+
+   <PromptBox label="Q&A rehearsal prompt">
+   Based on my script, list the 8 questions the audience is most likely to ask, including 3 hard or skeptical ones. Then ask me them one at a time. After each answer of mine, tell me in two sentences whether it answered the question, and what to add. If a question depends on a fact that isn't in my script, say so instead of guessing the answer.
+   </PromptBox>
+
+   When the AI suggests an answer, check it against your own data. It can state a plausible number or claim that is not true.
+
+6. **Get structured feedback**
+
+   Paste your transcript (or the final script) and ask for feedback in a fixed format. A fixed format makes the feedback easier to act on.
+
+   <PromptBox label="Feedback prompt">
+   Below is the transcript of my practice talk. Give feedback in this format: (1) the main message as you understood it, in one sentence, (2) the two strongest parts, (3) the two weakest parts and how to fix each, (4) any place where I repeated myself or ran long, (5) anything that sounded unsupported. You can only judge from the text, so don't comment on my voice, tone, or body language.
+
+   [Paste the transcript]
+   </PromptBox>
+
+   Pick **two or three** changes, not all of them. Too many edits the night before can hurt more than they help.
+
+7. **Do a final run and make a cue card**
+
+   <PromptBox label="Cue card prompt">
+   Turn my final script into a one-page cue card: the opening line word for word, one short line for each section, the numbers I must get right, the transition sentence between sections, and the closing line word for word. Keep it under 150 words.
+   </PromptBox>
+
+   Then give the talk once more with only the cue card and a timer. Whatever the AI says, your own timed run is the real check.
+
+</Steps>
+
+## Quick reference
+
+| What you want | Try this |
+| --- | --- |
+| A clearer script | Script polish prompt: audience, time limit, "keep every number" |
+| A strong start and finish | Ask for 3 openings and 2 endings, with when each fits |
+| Practice out loud | Claude voice mode, or Gemini Live on Android |
+| A tough audience | Role-play prompt with a named audience and "two sentences per section" |
+| Prepared answers | Q&A rehearsal prompt, one question at a time |
+| Feedback you can use | Fixed format, from the transcript, text only |
+| Timing | Your phone's timer. We couldn't confirm that the voice features time you |
+| Noisy room | In Claude, switch to push-to-talk |
+| Worried about limits | Claude voice conversations count toward your normal usage limit. See [Claude plans and limits](/claude/c02-plans-limits/) |
+
+## Common sticking points
+
+### The AI keeps giving long advice in the middle of my talk
+
+- **Cause**: The prompt didn't say when to speak and how long to talk.
+- **Fix**: Say "at most two sentences after each section, and save the full feedback until I say 'that's the end.'" In voice, you can also just start talking and the AI will stop and listen.
+
+### The rewritten script doesn't sound like me
+
+- **Cause**: The AI aimed for a generic polished style.
+- **Fix**: Paste a few lines you wrote or said naturally and add "match this voice." Then keep only the changes you could say comfortably. See [Personalize AI answers](/chat/41-personalize-answers/) to save your style.
+
+### The AI changed a number or added a fact
+
+- **Cause**: When a prompt leaves a gap, the AI fills it with something plausible.
+- **Fix**: Add "keep every fact and number exactly; use [brackets] for anything missing," and check the final script against your source.
+
+### The voice feature doesn't hear me well
+
+- **Cause**: Background noise, microphone permission, or the voice language setting may be off.
+- **Fix**: Move somewhere quiet and check your phone's microphone permission. In Claude, try push-to-talk, check your connection, and make sure the voice language is set (Settings > Capabilities > Voice > Spoken language; if Voice isn't there, Settings > General > Voice > Language). If it still struggles, rehearse in writing.
+
+### The feedback feels too nice, or too harsh
+
+- **Cause**: Without a role or a standard, the AI defaults to a gentle tone.
+- **Fix**: Say who the audience is and what counts as success, and ask "what would make you stop listening?" Then compare with a person's opinion.
+
+### I get more nervous practicing with the AI
+
+- **Cause**: Role-playing a tough audience can raise pressure.
+- **Fix**: Start with a friendly audience, then raise the difficulty. You can say "one level easier" at any time.
+
+## Practical tips
+
+- **Practice out loud at least once.** Reading a script silently hides the sentences that are hard to say.
+- **Time yourself.** Use a phone timer and cut content, not speed, if you run over.
+- **Rehearse with a person if you can.** A colleague or friend can react to your voice and presence, which the AI cannot judge from text.
+- **Verify the content.** AI can be wrong about facts and figures. See [Fact-checking](/basics/04-fact-checking/).
+- **Be careful where others can hear you.** Voice practice in public places can expose what you say. Use earphones or practice in writing.
+- **Keep voice sessions short.** Claude voice conversations count toward your usage limit and use more battery than text.
+
+## What to read next
+
+- [Making presentations with AI](/media/25-ai-presentations/) — build the slides themselves
+- [Studying a foreign language with AI](/chat/31-language-learning/) — more voice practice and corrections
+- [7. Using AI on your phone](/basics/07-ai-on-phone/) — installing the app and turning on voice conversation
+- [AI guide for students](/roles/student/) — more scenes for using AI to study and present

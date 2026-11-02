@@ -1,0 +1,188 @@
+---
+title: "AI로 설문 만들고 결과 분석하기"
+description: "AI로 설문 문항 초안을 만들고 Google Forms·Microsoft Forms에 옮긴 뒤 결과를 요약하는 방법과 응답자 개인정보·결과 검증 주의점"
+sidebar:
+  label: "19. AI로 설문 만들고 분석하기"
+level: practical
+category: automation
+tools: ["Claude", "Gemini", "Microsoft Copilot", "Google Forms", "Microsoft Forms"]
+duration: "30분"
+prerequisites:
+  - "Google 계정(Google Forms) 또는 Microsoft 365 계정(Microsoft Forms)"
+  - "연습용으로 쓸 부담 없는 설문 주제 (예: 행사 후기)"
+lastVerified: 2026-11-02
+sources:
+  - title: "How to use Google Forms (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/6281888?hl=en"
+  - title: "Publish & share your form with responders (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/2839588?hl=en"
+  - title: "View & manage form responses (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/139706?hl=en"
+  - title: "Use the AI function in Google Sheets (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/15877199?hl=en"
+  - title: "Welcome to Copilot in Forms (Microsoft Support)"
+    url: "https://support.microsoft.com/en-us/forms/welcome-to-copilot-in-forms"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- 간단하고 믿을 만한 흐름은 이래요. 채팅 AI(Claude, Gemini 등)로 문항을 초안 잡고 검토하게 한 다음, Google Forms나 Microsoft Forms에 만들고, 응답을 요약하게 한 뒤 실제 데이터와 맞춰 봐요.
+- **Microsoft Forms**에는 Copilot이 들어 있어요. Microsoft 설명으로는 설문 초안 생성, 개선 제안, 결과를 핵심 내용으로 요약하는 일을 해요. Microsoft 365 계정과 Copilot 라이선스가 필요해요.
+- **Google Forms**는 차트가 있는 요약 탭을 보여 주고, 응답을 Google 스프레드시트에 연결하거나 CSV로 내려받을 수 있어요. Forms 안의 Gemini를 설명하는 공식 도움말은 찾지 못해서 이 글에서는 다루지 않아요.
+- 응답은 다른 사람의 데이터예요. 꼭 필요한 것만 받고, 어떻게 쓰는지 알리고, 확인하지 않은 AI에 신원이 드러나는 답변을 붙여 넣지 마세요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- "참석자 반응을 알고 싶다" 같은 목표를 짧고 편향 없는 설문 문항으로 바꿀 수 있어요.
+- 폼을 만들고 이메일 주소를 받을지 정할 수 있어요.
+- 주관식 응답의 요약 초안을 얻고 숫자와 맞춰 확인할 수 있어요.
+- 개인정보와 해석에서 흔한 실수를 피할 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **응답자** | 폼을 작성하는 사람. |
+| **요약 탭** | Google Forms 응답 화면에서 질문별 차트나 전체 답변을 보여 주는 탭. 응답이 하나 이상 있을 때만 나와요. |
+| **연결된 스프레드시트** | 모든 응답을 받는 Google 스프레드시트. 추가 분석에 유용해요. |
+| **Copilot in Forms** | 폼 초안 작성과 응답 요약을 돕는 Microsoft의 내장 AI. |
+| **유도 질문** | 한쪽 답으로 몰고 가도록 쓴 질문. |
+
+<Aside type="note" title="참고할 점 (2026-11-02 기준)">
+- 이 글은 머리말에 적은 공식 문서 5개를 바탕으로 해요. 실제 계정에서 단계를 실행해 보지는 않았으니, 메뉴 이름과 결과는 도움말 내용 기준이에요.
+- Google Forms 안의 Gemini(예: 폼 만들기를 도와주는 기능)에 대한 공식 도움말은 찾지 못해서 설명하지 않아요. Google Forms에서는 AI 단계를 별도 채팅이나 스프레드시트에서 하는 것으로 안내해요.
+- Google 스프레드시트 AI 함수 페이지는 해당되는 Google Workspace 또는 Google AI 플랜이 필요하다고 해요. 정확히 어떤 플랜인지는 확인하지 못했어요.
+- Microsoft는 Copilot in Forms 소개 페이지만 읽었어요. FAQ, 스마트 알림 페이지, 가격·데이터 처리 문서는 읽지 않았어요.
+- 기능과 메뉴는 자주 바뀌어요. 화면에서 직접 확인하세요.
+</Aside>
+
+## 따라 하기
+
+먼저 연습용 설문으로 해 보세요. 폼 전체를 한 번 읽어 보기 전에는 실제 사람에게 보내지 마세요.
+
+<Checklist items={[
+  '이 설문으로 내릴 결정 한 가지를 적어 두었다',
+  'AI에게 유도 질문이나 한 문항에 두 가지를 묻는 표현이 없는지 검토시켰다',
+  '이름이나 이메일 주소가 정말 필요한지 정했다',
+  '응답을 누가 보고 어떻게 쓰는지 응답자에게 알렸다',
+  '공유하기 전에 나에게 테스트 응답을 보냈다',
+  'AI 요약을 원래 응답과 맞춰 확인했다',
+]} />
+
+<Steps>
+
+1. **문항이 아니라 결정에서 출발하기**
+
+   <PromptBox>
+   작은 지역 워크숍을 운영하고 있고, 참석자가 다시 올지와 개선점을 알고 싶어요. 설문 문항을 8~10개, 자연스러운 순서로 제안해 주세요. 평점형 질문과 주관식 2개를 섞어 주세요. 유도 질문이나 한 번에 두 가지를 묻는 질문은 피하고, 각 문항이 왜 필요한지도 알려 주세요.
+   </PromptBox>
+
+   결과로 행동하지 않을 문항은 지우세요. 짧은 설문이 끝까지 답하기도, 분석하기도 쉬워요.
+
+2. **초안을 AI에게 검토시키기**
+
+   <PromptBox label="예시 프롬프트">
+   아래는 제 설문 초안이에요. 유도 질문, 모호한 질문, 한 번에 두 가지를 묻는 질문을 찾아 중립적인 표현으로 고쳐 주세요. 새 문항은 추가하지 마세요.
+   </PromptBox>
+
+   Microsoft는 Copilot in Forms가 유도 질문, 이중 질문, 모호한 표현 같은 흔한 설문 설계 실수를 피하도록 돕는다고 설명해요. 다른 도구라면 아무 채팅 AI에게 같은 검토를 시킬 수 있어요.
+
+3. **폼 만들기**
+
+   - **Google Forms**: 폼을 만들고 질문을 추가해요. 도움말에 고를 수 있는 질문 유형이 나와 있어요. 공유 전에 폼을 게시해야 해요. 응답 설정에서 응답을 1회로 제한(이 경우 응답자는 Google 계정으로 로그인해야 해요), 응답 수정 허용, 응답 요약 표시를 정할 수 있어요.
+   - **Microsoft Forms**: Microsoft 설명으로는 새 폼을 만들 때 Copilot이 만들고 싶은 내용을 물어요. **Generate**를 선택하고 다듬거나 **Keep and continue with Copilot**을 선택해요. Microsoft 365 계정과 Copilot 라이선스가 필요해요.
+
+4. **사람에 대해 무엇을 받을지 정하기**
+
+   Google Forms는 응답자의 이메일 주소를 기록할 수 있어요. Google 계정 이메일을 확인하는 방식과 직접 입력받는 방식이 있어요. 누가 답했는지 알 필요가 없다면 켜지 마세요. Microsoft 페이지는 익명성 같은 목표에 맞게 폼 설정을 바꿔 달라고 Copilot에 요청할 수 있다고도 해요. 바뀐 설정은 직접 확인하세요.
+
+   <Aside type="caution" title="응답 요약이 응답자에게 보일 수 있어요">
+   Google 페이지는 "응답 요약 표시"를 켜면 응답자가 결과 링크를 받고, 그 요약은 폼에 응답할 수 있는 누구에게나 보인다고 경고해요. 민감한 답변이라면 켜지 마세요.
+   </Aside>
+
+5. **공유하고 응답 받기**
+
+   링크, 이메일, 소셜 미디어, 웹페이지 삽입으로 공유해요. Microsoft 소개 페이지에 따르면 Microsoft Forms에서는 Copilot이 초대 문구와 알림 초안도 도와줘요. 먼저 나에게 테스트 응답을 보내 보세요.
+
+6. **원본 결과부터 보기**
+
+   Google Forms에서는 **응답(Responses)**을 열어요. **요약(Summary)** 탭은 질문별 차트나 텍스트를, **개별(Individual)** 보기는 한 사람씩 보여 줘요. 더 분석하려면 **Sheets에 연결(Link to Sheets)**을 쓰거나 더보기 메뉴에서 **CSV**로 내려받아요. Microsoft Forms에서는 **View responses**를 열고 Copilot으로 핵심 내용 요약을 받거나 추가 질문을 할 수 있어요.
+
+7. **주관식 답변 요약하기**
+
+   채팅 AI에 붙여 넣기 전에 이름, 이메일 주소, 신원을 알 수 있는 내용을 지우세요. 그다음에는 이렇게 해요.
+
+   <PromptBox>
+   아래는 "무엇을 개선하면 좋을까요?"라는 질문에 대한 익명 답변이에요. 주제별로 묶고, 주제마다 개수와 짧은 예시 답변 하나를 인용해 주세요. 어느 주제에도 맞지 않는 답은 기타로 따로 모아 주세요. 세지 못하는 숫자는 추측하지 마세요.
+   </PromptBox>
+
+   Google 스프레드시트의 AI 함수(해당되는 Google Workspace 또는 Google AI 플랜 필요)는 셀 안의 텍스트를 요약, 분류하고 감정을 분석할 수 있어요. 페이지에는 `=AI("...", A2)` 같은 수식으로 쓰는 예가 나와요.
+
+8. **보고하기 전에 검증하기**
+
+   몇몇 주제는 직접 다시 세고, 총합은 요약 탭과 비교하고, 각 주장을 뒷받침하는 답변이 무엇인지 AI에게 물어보세요. 결과는 초안으로 다루세요. [AI 답변 믿어도 될까: 사실 확인하는 법](/ko/basics/04-fact-checking/)을 참고하세요.
+
+</Steps>
+
+## 빠른 참고
+
+### 길별로 할 수 있는 일 (공식 문서 기준)
+
+| | Google Forms | Copilot이 있는 Microsoft Forms |
+| --- | --- | --- |
+| AI로 설문 초안 | 읽은 페이지에서 확인 못 함 (채팅 AI 사용) | 가능. 제목·설명·질문 생성 |
+| 기본 결과 보기 | 요약 탭, 개별 보기 | View responses |
+| 결과 AI 요약 | Forms에서는 확인 못 함. 스프레드시트 AI 함수는 별도 | 가능. 핵심 내용과 인사이트 요약 |
+| 내보내기 | Sheets 연결, CSV 다운로드 | 읽은 페이지에 설명 없음 |
+| 명시된 조건 | Google 계정 | 채팅 경험에는 Microsoft 365 계정과 Copilot 라이선스 |
+
+### Google이 밝힌 한도
+
+| 항목 | 페이지 내용 |
+| --- | --- |
+| 폼당 응답 수 | 최대 50만 개. 이후에도 받으려면 응답을 내려받고 삭제 |
+| 응답이 많은 폼에서 안 될 수 있는 기능 | 요약은 5만 개 초과, Sheets 동기화는 10만 개 초과, CSV 정렬은 1만 개 초과에서 문제가 생길 수 있음 |
+
+## 자주 막히는 곳
+
+### 요약 탭이 안 보여요
+
+- **원인**: Google은 응답이 하나 이상 있을 때만 나온다고 해요. 응답이 5만 개를 넘어도 안 보일 수 있어요.
+- **해결**: 테스트 응답을 하나 제출하거나 연결된 스프레드시트·CSV를 쓰세요.
+
+### AI 요약이 숫자와 안 맞아요
+
+- **원인**: 채팅 AI는 개수를 잘못 세거나 주제를 합칠 수 있어요.
+- **해결**: 개수를 달라고 한 뒤 일부를 직접 다시 세어 보세요. 총합은 폼의 차트를 쓰세요.
+
+### Forms에서 Copilot을 쓸 수 없어요
+
+- **원인**: Microsoft는 Microsoft 365 계정과 Copilot 라이선스가 필요하다고 해요. 채팅 경험은 상업용 Copilot 라이선스 사용자에게 한정되고, 개인 사용자는 디자인 페이지 위쪽의 다듬기 바를 쓴다고 해요.
+- **해결**: 관리자에게 확인하거나, 채팅 AI로 문항을 초안 잡으세요.
+
+### 다른 사람이 연결된 스프레드시트를 볼 수 있어요
+
+- **원인**: Google은 폼 공동 작업자가 연결된 스프레드시트에도 접근할 수 있고, 제거하려면 폼과 스프레드시트에서 각각 제거해야 한다고 해요.
+- **해결**: 폼과 시트 양쪽의 공유 대상을 확인하세요.
+
+## 실전 팁
+
+- **응답은 개인 정보로 다루세요.** 필요한 것만 묻고, 누가 보는지 알리고, 필요 없어진 응답은 지우세요. 소속 기관 규정과 지역 개인정보 법을 확인하세요. 이 글은 법률 조언이 아니에요. [개인정보·회사 정보 안전하게 지키며 쓰기](/ko/basics/05-privacy-safety/)를 참고하세요.
+- **응답을 붙여 넣기 전에 AI의 학습 설정을 확인하세요.** [내 대화가 AI 학습에 쓰이지 않게](/ko/basics/12-privacy-settings/)를 참고하세요.
+- **작은 집단은 조심하세요.** 응답자가 몇 명뿐이면 "익명" 의견도 내용만으로 작성자가 드러날 수 있어요.
+- **결과를 과하게 해석하지 마세요.** 응답이 적거나 답하기로 한 사람만 답했다면 전체를 대표하지 않을 수 있어요. 자주 나오는 주제는 단서이지 증거가 아니에요.
+- **민감한 주제는 조심하세요.** 건강·법률·돈 문제는 [건강·법률·돈 문제를 AI에 물을 때 주의할 점](/ko/basics/13-sensitive-questions/)를 참고하세요.
+- **스프레드시트에서 더 해 보세요.** [엑셀·구글 시트에 AI 붙이기](/ko/automation/23-spreadsheet-ai/)를 참고하세요.
+
+## 다음으로 읽을 글
+
+- [엑셀·구글 시트에 AI 붙이기](/ko/automation/23-spreadsheet-ai/) — 내려받은 응답 분석
+- [AI 답변 믿어도 될까: 사실 확인하는 법](/ko/basics/04-fact-checking/) — 요약 검증
+- [개인정보·회사 정보 안전하게 지키며 쓰기](/ko/basics/05-privacy-safety/) — 붙여 넣으면 안 되는 것
+- [메일함 정리를 AI로](/ko/automation/38-email-ai/) — 설문 초대·알림 메일 초안

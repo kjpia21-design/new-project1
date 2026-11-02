@@ -1,0 +1,258 @@
+---
+title: "토큰 세기 API로 보내기 전에 비용 미리 계산하기"
+description: "무료 count_tokens 엔드포인트로 요청의 입력 토큰을 미리 재고, 공식 가격표로 비용 추정치를 만들고, 세지 못하는 입력이 무엇인지 공식 문서 기준으로 정리해요"
+sidebar:
+  label: "14. 토큰 세기 API(비용 미리 계산)"
+level: advanced
+category: dev
+tools: ["Claude API", "Token counting", "Python", "anthropic SDK"]
+duration: "30분"
+prerequisites:
+  - "C16. Claude API 시작하기를 끝낸 상태 (API 키, 환경 변수 설정)"
+  - "Python 3.10 이상, pip install anthropic"
+  - "프롬프트 캐싱·배치에 대한 대략적인 이해(개발 2)"
+lastVerified: 2026-11-02
+sources:
+  - title: "Token counting"
+    url: "https://platform.claude.com/docs/en/build-with-claude/token-counting"
+  - title: "Count tokens in a Message (API reference)"
+    url: "https://platform.claude.com/docs/en/api/messages/count_tokens"
+  - title: "Pricing"
+    url: "https://platform.claude.com/docs/en/about-claude/pricing"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- **토큰 세기**(`POST /v1/messages/count_tokens`)는 일반 메시지와 같은 입력(시스템 프롬프트, 메시지, 도구, 이미지, PDF)을 받아 메시지를 만들지 않고 `{"input_tokens": N}`을 돌려줘요. 모델을 실행하지 않으니 출력은 없어요.
+- **무료**로 쓸 수 있고, 사용 등급별 분당 요청 한도(Start 5,000, Build 10,000, Scale 20,000)가 메시지 생성 한도와 따로 있어요.
+- 이 값은 **추정치**예요. 실제 입력 토큰은 조금 다를 수 있고, 시스템이 자동으로 더한 토큰은 청구되지 않아요.
+- **실제로 쓸 모델로 세세요.** Claude 4.7 이후 모델은 새 토크나이저를 써서 같은 글에서 토큰이 약 30% 더 나와요.
+- 서버 도구(웹 검색 등), MCP 커넥터, `url`이나 파일 ID로 준 이미지·문서는 오류가 나요. 이미지와 PDF는 base64로 보내세요.
+- 비용 추정 = 입력 토큰 x 입력 단가 + 예상 출력 토큰 x 출력 단가예요. 아래 가격은 공식 가격 페이지 기준이고 **2026-11-02 기준**이에요.
+- 공식 페이지 세 곳을 2026-11-02에 읽었고, 비용 계산 함수는 임의로 정한 토큰 수로 로컬에서 실행했어요. 하지만 **실제 API 호출은 하지 못했어요**(API 키와 `anthropic` 패키지가 없었어요). API 코드는 "문서대로"이지 끝까지 실행해 본 것이 아니에요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 실제 호출 비용을 내기 전에 프롬프트가 입력 토큰을 얼마나 쓸지 재기
+- 그 수를 모델별 1회·월간 비용 추정치로 바꾸기
+- 큰 프롬프트, 이미지, PDF가 들어가는지 보내기 전에 확인하기
+- 세지 못하는 요청이 무엇인지, 그때 무엇을 쓸지 알기
+
+## 먼저 알아둘 개념
+
+[개발 2](/ko/dev/02-cost-optimization/)에서 `count_tokens`를 한 단계로 잠깐 다뤘어요. 이 튜토리얼은 그 전체 정리예요. 무엇을 받고, 무엇을 거부하고, 추정치를 어떻게 만드는지 봐요. 이 값은 **입력**만 세요. 출력 토큰은 모델이 답하는 내용에 달려 있어서 직접 추정해야 해요(`max_tokens`나 지난 답변 길이로).
+
+| 용어 | 뜻 |
+| --- | --- |
+| **입력 토큰** | 내가 보내는 모든 것: 시스템 프롬프트, 메시지, 도구 정의, 이미지, PDF. `count_tokens`가 돌려주는 값이에요. |
+| **출력 토큰** | Claude가 써서 돌려주는 내용. 미리 세지 못해요. |
+| **MTok** | 백만 토큰. `$2 / MTok`은 백만 토큰에 2달러라는 뜻이에요. |
+| **토크나이저** | 글을 토큰으로 나누는 규칙. Claude 4.7 이후 모델과 Claude Mythos Preview는 새 토크나이저를 써요. |
+
+### 제공 범위 (공식 문서, 2026-11-02 기준)
+
+- 현재 제공되는 모든 모델이 토큰 세기를 지원하고, Claude API와 문서에 나열된 다른 플랫폼에서 쓸 수 있어요.
+- Managed Agents에서는 **쓸 수 없어요**. 제로 데이터 보존(Covered Models 제외)과 HIPAA 준비 대상이에요.
+- 토큰 세기와 메시지 생성은 한도가 따로 독립이에요. 더 높은 한도가 필요하면 Claude Console의 Rate limits 페이지에서 **Request tier increase**를 쓰세요.
+
+<Aside type="note" title="이 값은 추정치예요">
+공식 문서는 메시지를 실제로 만들 때 쓰는 입력 토큰이 조금 다를 수 있다고 설명해요. 값에는 Anthropic이 시스템 최적화를 위해 자동으로 더한 토큰이 들어갈 수 있고, **시스템이 더한 토큰은 청구되지 않아요**. 청구는 내 내용만 반영해요. 계획에는 이 값을, 정산에는 실제 응답의 `usage` 객체를 쓰세요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '일반 메시지의 토큰을 세고 input_tokens를 읽었다',
+  '검토 중인 모든 모델로 각각 세어 봤다',
+  '가격표로 토큰 수를 비용 추정치로 바꿨다',
+  'count_tokens가 오류를 내는 입력이 무엇인지 안다',
+  '추정치를 실제 호출의 usage와 비교했다',
+]} />
+
+<Steps>
+
+1. **메시지 세기**
+
+   C16처럼 `ANTHROPIC_API_KEY`를 설정하세요. 공식 문서의 cURL 예시와 같은 요청이에요.
+
+   ```bash
+   curl https://api.anthropic.com/v1/messages/count_tokens \
+     -H "x-api-key: $ANTHROPIC_API_KEY" \
+     -H "content-type: application/json" \
+     -H "anthropic-version: 2023-06-01" \
+     -d '{
+       "model": "claude-opus-5-5",
+       "system": "You are a scientist",
+       "messages": [{"role": "user", "content": "Hello, Claude"}]
+     }'
+   ```
+
+   문서는 응답을 `{ "input_tokens": 14 }`로 보여 줘요. 같은 호출을 Python으로 하면 이래요.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   response = client.messages.count_tokens(
+       model="claude-opus-5-5",
+       system="You are a scientist",
+       messages=[{"role": "user", "content": "Hello, Claude"}],
+   )
+   print(response.input_tokens)
+   ```
+
+   API 레퍼런스는 `input_tokens`를 "제공한 메시지 목록, 시스템 프롬프트, 도구 전체의 토큰 수"라고 설명해요. 문서 예시는 `response.json()`을 출력하는데, 여기서는 레퍼런스에 적힌 `input_tokens` 필드를 읽었어요.
+
+2. **도구·이미지·PDF·생각(thinking) 세기**
+
+   같은 엔드포인트가 글 말고도 받아요. 문서가 `claude-opus-5-5`로 보여 주는 예시 값은 이래요.
+
+   | 입력 | 문서 예시 값 |
+   | --- | --- |
+   | 시스템 프롬프트가 있는 기본 메시지 | 14 |
+   | 비슷한 메시지에 `get_weather` 도구 하나 추가 | 403 |
+   | 이미지 하나 + "Describe this image" | 1,028 |
+   | thinking을 켠 메시지 | 88 |
+   | base64 PDF | 2,188 |
+
+   서로 다른 예시 요청이라서 한 프롬프트의 비교로 읽으면 안 돼요. 결과의 모양을 보여 줄 뿐이에요. 도구 정의도 토큰을 더하니 **실제로 쓸 도구를 붙여서 세세요.** thinking은 **현재** 어시스턴트 턴의 것은 입력 토큰에 들어가고, 이전 턴의 thinking 블록은 이전 턴을 모두 유지하는 모델에서만 들어가요.
+
+3. **실제로 쓸 모델로 세기**
+
+   Claude 4.7 이후 모델과 Claude Mythos Preview는 새 토크나이저를 써요. 같은 글에서 이전 모델보다 토큰이 약 30% 더 나오고, 정확한 증가폭은 내용에 따라 달라요. 문서는 이전 모델에서 잰 값을 재사용하지 말고, 쓸 모델로 다시 세라고 해요. Fable·Mythos 모델에 대해서는 같은 요청을 현재 모델과 옮겨 갈 모델로 두 번 세어 두 `input_tokens` 값을 비교하라고 안내해요.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   messages = [{"role": "user", "content": "Summarize this refund policy in 3 bullets: ..."}]
+
+   for model in ["claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5"]:
+       n = client.messages.count_tokens(model=model, messages=messages).input_tokens
+       print(model, n)
+   ```
+
+4. **토큰 수를 비용 추정치로 바꾸기**
+
+   가격 페이지 기준(**2026-11-02 기준**, 백만 토큰당 USD)이에요.
+
+   | 모델 | 입력 | 출력 |
+   | --- | --- | --- |
+   | Claude Opus 5.5 | $4 | $20 |
+   | Claude Sonnet 5.5 | $2 | $10 |
+   | Claude Haiku 5.5 (프롬프트 100,000 토큰 이하) | $0.10 | $0.50 |
+   | Claude Haiku 5.5 (프롬프트 100,000 토큰 초과) | $0.50 | $2.50 |
+
+   페이지는 Haiku 5.5가 프롬프트 길이로 가격이 달라진다고 설명해요. 프롬프트가 100,000 토큰을 넘는 요청(캐시 읽기·쓰기 포함)은 더 높은 가격을 내요. Batch API는 입력과 출력 모두 50% 할인이라고도 해요. 가격 페이지가 가장 최신 가격은 claude.com/pricing을 보라고 안내하니, 숫자를 믿기 전에 확인하세요.
+
+   `estimate.py`를 만드세요.
+
+   ```python
+   import anthropic
+
+   # 백만 토큰당 USD (입력, 출력). 가격 페이지에서 복사하고 날짜를 적어 두세요.
+   PRICES = {
+       "claude-opus-5-5": (4.00, 20.00),
+       "claude-sonnet-5-5": (2.00, 10.00),
+       "claude-haiku-5-5": (0.10, 0.50),  # 프롬프트 100,000 토큰 이하일 때만
+   }
+
+
+   def estimate(input_tokens, expected_output_tokens, model, batch=False):
+       price_in, price_out = PRICES[model]
+       cost = (input_tokens * price_in + expected_output_tokens * price_out) / 1_000_000
+       return cost * 0.5 if batch else cost
+
+
+   if __name__ == "__main__":
+       client = anthropic.Anthropic()
+       system_prompt = "You are a support assistant for a small shop."
+       messages = [{"role": "user", "content": "Summarize this refund policy in 3 bullets: ..."}]
+       for model in PRICES:
+           n = client.messages.count_tokens(model=model, system=system_prompt, messages=messages).input_tokens
+           per_call = estimate(n, 300, model)
+           print(f"{model}: {n} input tokens, about ${per_call:.6f} per call, ${per_call * 10_000:.2f} per 10,000 calls")
+   ```
+
+   **실행한 것:** `python -m py_compile`이 통과했고, `anthropic` 가짜 모듈과 **임의로 정한** 입력 1,200·출력 300 토큰으로 `estimate()`를 실행했어요. 1만 호출당 Opus 5.5 $108.00, Sonnet 5.5 $54.00, Haiku 5.5 $2.70이 나왔고 `batch=True`면 정확히 절반이었어요. **실행하지 못한 것:** 실제 `count_tokens` 호출이라서 진짜 토큰 수는 갖고 있지 않아요.
+
+   <PromptBox>
+   Claude API 기능의 월간 비용을 추정하고 싶어요. 프롬프트 템플릿과 대표 입력은 이거예요: [붙여넣기]. 한 달에 약 [숫자]번 호출하고 답변은 약 [숫자] 토큰이에요. count_tokens 엔드포인트로 얻은 입력 토큰 수와 공식 가격 페이지에서 붙여 넣은 현재 가격으로 Opus, Sonnet, Haiku를 비교하는 표를 만들어 주세요. 가정을 함께 보여 주고, 아직 직접 재야 할 숫자가 무엇인지 알려 주세요.
+   </PromptBox>
+
+5. **세지 못하는 것 알기**
+
+   Messages API는 받아 주지만 이 엔드포인트가 `invalid_request_error`를 돌려주는 입력이 있어요.
+
+   - **서버 도구**: 웹 검색, 웹 가져오기, 코드 실행, 도구 검색 등(advisor 도구를 뺀 모든 서버 도구). 클라이언트 도구는 지원돼요. advisor 도구는 실행자의 첫 샘플링 호출만 센다고 해요.
+   - **MCP 커넥터.**
+   - **`url`이나 `file` 출처의 `image`·`document` 블록.** 이미지와 PDF는 base64로 보내야 셀 수 있어요.
+
+   이런 요청은 Messages API 응답의 `usage` 객체가 사용한 토큰을 알려 줘요. 관련해서 `cache_control` 블록은 받지만 "프롬프트 캐싱은 실제 메시지 생성 때만 일어나요". 그래서 토큰 세기로는 캐시 효과를 볼 수 없어요. 캐싱은 [개발 2](/ko/dev/02-cost-optimization/), 웹 도구가 청구에 더하는 것은 [개발 12](/ko/dev/12-web-search-fetch-tools/)를 보세요. `"oversized_image": "error"`를 지정한 이미지 블록은 Messages API가 거부하는 것과 똑같이 세는 단계에서도 거부돼요.
+
+6. **추정치를 현실과 비교하기**
+
+   실제 호출을 한 번 하고 `response.usage.input_tokens`를 센 값과 비교하세요. 작은 차이는 예상할 수 있어요. 크게 다르면 thinking, 서버 도구, 바뀐 시스템 프롬프트처럼 추정에서 빠진 입력이 없는지 보세요. 팀 전체의 실제 지출을 추적하려면 [개발 11](/ko/dev/11-usage-cost-api/)의 사용량 데이터를 쓰세요.
+
+</Steps>
+
+## 빠른 참조
+
+| 항목 | 값 (공식 문서, 2026-11-02 기준) |
+| --- | --- |
+| 엔드포인트 | `POST /v1/messages/count_tokens` |
+| 반환 | `input_tokens` (메시지 + 시스템 + 도구) |
+| Python | `client.messages.count_tokens(model=..., system=..., messages=...)` |
+| 비용 | 무료 |
+| 분당 요청 한도 | Start 5,000, Build 10,000, Scale 20,000 |
+| 정확도 | 추정치, 조금 다를 수 있음 |
+| 오류가 나는 입력 | 서버 도구(advisor 제외), MCP 커넥터, 이미지·문서의 `url`/파일 출처 |
+| 토크나이저 참고 | Claude 4.7 이후: 이전 모델보다 토큰 약 30% 더 |
+| Managed Agents | 쓸 수 없음 |
+
+## 자주 막히는 부분
+
+### `messages.create`는 되는데 count_tokens에서는 `invalid_request_error`가 나요
+
+- **원인**: 요청에 서버 도구, MCP 커넥터, 또는 `url`이나 파일 출처의 이미지·문서가 있어요.
+- **해결**: 세는 동안은 그 부분을 빼거나, 이미지와 PDF를 base64로 바꾸거나, 실제 응답의 `usage`를 읽으세요.
+
+### 추정치가 청구서보다 훨씬 낮아요
+
+- **원인**: 출력 토큰, thinking, 루프에서 나중에 붙는 도구 결과, 여러 턴을 빼고 셌어요. 이 값은 내가 넘긴 입력만 세요.
+- **해결**: 출력 추정치를 더하고, 대화가 길어지는 대로 전체를 다시 세고, 실제 호출의 `usage`와 비교하세요.
+
+### 모델을 바꿨더니 토큰 수가 달라졌어요
+
+- **원인**: Claude 4.7 이후의 새 토크나이저는 같은 글에서 토큰이 약 30% 더 나와요.
+- **해결**: 비용을 추정하거나 컨텍스트에 들어가는지 볼 때는 새 모델 ID로 다시 세세요.
+
+### 많은 프롬프트를 셀 때 요청이 실패하기 시작해요
+
+- **원인**: 이 엔드포인트의 사용 등급별 분당 요청 한도를 넘었을 수 있어요.
+- **해결**: 속도를 늦추거나, 모든 요청 대신 표본만 세거나, Console Rate limits 페이지의 **Request tier increase**를 쓰세요. 토큰 세기 페이지에는 이 경우의 오류 코드와 메시지가 없어서 정확한 내용은 확인하지 못했어요.
+
+## 실무 팁
+
+- 요청마다 세지 말고, 프롬프트 템플릿의 고정 부분은 한 번 세서 그 숫자를 재사용하세요.
+- 비용표에는 토큰 수 옆에 항상 모델 ID를 함께 적으세요. 토크나이저가 다르면 값을 옮겨 쓸 수 없어요.
+- 가격표와 날짜를 코드의 한 곳에 두고, 가격 페이지를 다시 확인할 때 같이 고치세요.
+- 라우팅 결정에도 쓸 수 있어요. 긴 입력은 내 작업에 더 알맞은 가격의 모델로 보내세요.
+- 추정치는 예산 가이드이지 청구서가 아니에요. 청구는 실제 `usage`로 나와요.
+
+## 다음에 볼 튜토리얼
+
+- [2. 프롬프트 캐싱·배치·effort로 API 비용 줄이기](/ko/dev/02-cost-optimization/) — 캐싱과 배치
+- [11. 사용량·비용 분석 API로 팀 사용 현황 대시보드 만들기](/ko/dev/11-usage-cost-api/) — 실제로 얼마 썼는지 보기
+- [13. 구조화 출력(정확한 JSON)](/ko/dev/13-structured-outputs/) — 공식 문서상 구조화 출력과 토큰 세기를 함께 쓸 수 있어요
+- [12. 웹 검색·웹 가져오기 도구](/ko/dev/12-web-search-fetch-tools/) — 세지 못하는 도구
+- [C16. API 시작하기](/ko/claude/c16-api/)
+- [개발자 가이드](/ko/roles/developer/)

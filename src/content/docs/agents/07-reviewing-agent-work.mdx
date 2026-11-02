@@ -1,0 +1,205 @@
+---
+title: "How to Check an AI Agent's Work Before You Trust It"
+description: "A results-review checklist for work an AI agent has finished: how to use the activity records in Claude, ChatGPT dots, and Gemini, what to spot-check, and what to do when something looks wrong, separating official guidance from our own recommendations"
+sidebar:
+  label: "7. Reviewing agent work"
+level: practical
+category: agents
+tools: ["Claude Cowork", "Claude in Chrome", "ChatGPT dots", "Gemini"]
+duration: "25 min"
+prerequisites:
+  - "Have handed an AI agent at least one task (Part 1 or Part 6)"
+  - "It helps to have read the agent safety checklist (Part 5)"
+lastVerified: 2026-11-02
+sources:
+  - title: "Use Claude Cowork safely"
+    url: "https://support.claude.com/en/articles/13364135-use-claude-cowork-safely"
+  - title: "Claude in Chrome permissions guide"
+    url: "https://support.claude.com/en/articles/12902446-claude-in-chrome-permissions-guide"
+  - title: "Control your dot (OpenAI)"
+    url: "https://learn.chatgpt.com/docs/dots/controls"
+  - title: "Tasks and memory (OpenAI)"
+    url: "https://learn.chatgpt.com/docs/dots/tasks-and-memory"
+  - title: "Manage your tasks & workflows in Gemini Apps"
+    url: "https://support.google.com/gemini/answer/16596215"
+status: published
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- [Part 5](/agents/05-agent-safety/) is about **what to allow before you start**. This article is about **what to check after the agent says it's done**.
+- All three companies say in their official docs that the AI can make mistakes. OpenAI's dot docs go as far as saying that **a finished run doesn't by itself confirm the result was achieved or delivered.**
+- Review in three passes: **(1) what it did (the record), (2) whether the result is right (spot checks), (3) what else it touched (side effects)**.
+- Each service has a place to look at progress, files, and results afterward: the Claude task screen and the "Scheduled" page, the ChatGPT dot's **Activity** and **Scheduled**, and the Gemini task thread's work panel.
+- The checklists and "how much to check" rules below are **this site's recommendations**, not official requirements. Official statements are labeled as such.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Find where each service shows what the agent did, and read it.
+- Run a short spot-check routine on a finished result, and match how closely you check to the stakes.
+- Notice signs that something is off, and know what to do next, including that stopping doesn't undo what's done.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Result review** | Checking the finished output and its effects after the agent says it's done. It's different from approval, which is deciding before an action runs. |
+| **Spot check** | Instead of re-reading everything, pick a few items (totals, a few random rows, names, dates) and verify them against the original. |
+| **Side effect** | Anything that changed beyond the output you asked for: files moved or deleted, messages sent, sites visited, settings changed. |
+| **Scope creep** | The agent doing more than you asked, or touching files and sites you didn't mention. |
+
+### What the official docs say (and what is our recommendation)
+
+| Source | Official statement (paraphrased) |
+| --- | --- |
+| Claude Cowork safety guide | You shouldn't expect to validate every individual command. Instead, watch for unexpected patterns: is Claude accessing files or websites you didn't mention, and is the task scope creeping beyond what you asked? If something feels off, stop the task immediately. |
+| Claude Cowork safety guide | For scheduled tasks, review the output after each run (you can look at past runs on the "Scheduled" page), and pause or delete tasks you no longer need. |
+| Claude in Chrome permissions guide | No mode replaces your judgment. For work with real consequences (money, messages sent as you, important files), stay close and review what Claude does, or switch back to "Manually approve." |
+| ChatGPT dot docs | Review the output and any reported errors even after a run completes. A completed run doesn't by itself confirm that the requested result was achieved or delivered. |
+| ChatGPT dot docs | Stopping work doesn't undo completed actions. |
+| Gemini docs | Gemini is still learning and can make mistakes. If a schedule runs while you're offline, you may not be able to stop an unintended action. You can review the files Gemini read or updated in the task thread's work panel. |
+
+<Aside type="note" title="Official guidance vs. this site's recommendations">
+The table above is what the official pages say. Everything else in this article, such as "check three rows," the severity tiers, and the prompts, is a **practical recommendation from this site**. It's reasonable but not an official requirement, so adjust it to your own work.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  '1. Before starting, I wrote down what "done" looks like',
+  '2. I asked the agent to report what it did, what it skipped, and what it is unsure about',
+  '3. I opened the activity record and looked for files, sites, or actions I did not mention',
+  '4. I spot-checked the result against the original',
+  '5. I checked side effects: sent, moved, deleted, changed, shared',
+  '6. I decided how much more to check based on the stakes',
+  '7. For anything recurring, I check the results of each run, not just the first',
+]} />
+
+### 1. Define "done" before you hand it off
+
+A vague request makes the result hard to check. Write down the outcome, the format, and what's off limits. This overlaps with the "write what not to do" advice in [Part 5](/agents/05-agent-safety/), and the official Cowork help also suggests describing the result you want, its format, and the inputs together ([C19](/claude/c19-cowork/)).
+
+<PromptBox>
+Organize the 12 receipt photos in the "receipts" folder into a spreadsheet with date, store, and amount. Don't move or delete the originals. When you finish, report: (1) how many receipts you processed, (2) which ones you could not read or were unsure about, (3) anything you did beyond what I asked.
+</PromptBox>
+
+### 2. Ask for a report, then verify it (this site's recommendation)
+
+Asking the agent to list what it did and what it's unsure about gives you a map of where to look. But the report is written by the same agent, so **treat it as a pointer, not as proof.** The ChatGPT dot docs make a similar point: a completed run doesn't confirm the outcome.
+
+### 3. Read the activity record
+
+Each service has a place to look back at progress and results. Names may differ on your screen.
+
+| Service | Where to look (per official docs) | What to look for |
+| --- | --- | --- |
+| **Claude Cowork** | The task screen shows progress and reasoning. Scheduled tasks: the "Scheduled" page in the left sidebar | Files or sites you didn't mention, scope growing beyond the request |
+| **Claude in Chrome** | Watch the actions in the side panel while it runs. In Manual mode you approve each action | Sites you didn't expect, requests for permissions you don't recognize |
+| **ChatGPT dot** | In the desktop app, open the dot's profile and select **Activity** to see progress, files, and results. **Scheduled** shows scheduled tasks, including instructions, timing, and destination | Tasks waiting on a decision, delegated tasks, schedules you forgot |
+| **Gemini** | Open the task thread, then the work panel (progress chip) to see steps and progress. Under "Files" you can review the files Gemini read or updated | Files you didn't expect it to touch, steps that were skipped |
+
+<Aside type="caution" title="Dot docs: drafting is not permission to send">
+The dot docs say asking your dot to draft replies doesn't give it permission to send them. When you review, check whether anything was actually sent as well as whether a draft exists.
+</Aside>
+
+### 4. Spot-check the result
+
+Don't re-read everything. Pick a few items and compare them with the original. The Cowork help also says to spot-check totals, dates, and names in tables yourself ([C19](/claude/c19-cowork/)).
+
+| Output type | Quick checks (recommendation) |
+| --- | --- |
+| **Spreadsheet or table** | Recompute one total by hand. Compare 3 random rows with the source. Check the row count against the number of inputs. Look for blank or duplicated rows |
+| **Summary or report** | Search the source for 2 or 3 specific numbers or quotes. Ask for the source of each claim, and open the link yourself ([Basics 4](/basics/04-fact-checking/)) |
+| **Drafted email or message** | Read the recipient, subject, dates, amounts, and names. Confirm it was not sent unless you asked |
+| **Files organized or renamed** | Compare the file count before and after. Open a couple of files. Check nothing was moved out of the folder |
+| **Form filled or booking made** | Open the confirmation yourself. Check dates, spelling of names, quantities, and the price shown |
+| **Research with web pages** | Open the pages it cited. Check the publication date, and whether the page actually says what the summary says |
+
+<PromptBox>
+For each number or claim in your summary, list the exact file or URL and the passage it came from. Mark anything you inferred rather than read directly. Do not change anything yet.
+</PromptBox>
+
+### 5. Check side effects
+
+Most mistakes show up here. Look for things the agent did **besides** the output.
+
+- **Sent or shared**: sent folder, shared links, calendar invites, comments posted.
+- **Moved or deleted**: Cowork always asks before permanently deleting files in any mode, but moves and overwrites are different, so compare before and after.
+- **Changed**: settings, permissions, subscriptions, saved logins.
+- **Visited**: websites you didn't name. The Cowork safety guide lists this as a sign to stop the task.
+- **Cost**: usage dropping faster than expected after a long task ([Part 5](/agents/05-agent-safety/)).
+
+### 6. Match the amount of checking to the stakes (this site's recommendation)
+
+| Stakes | Examples | How much to check |
+| --- | --- | --- |
+| **Low** | A brainstorm list, a rough draft only you will read | Skim it |
+| **Medium** | Notes or a table that others will see, a draft email | Spot-check 3 to 5 items against the source |
+| **High** | Money, legal, health, messages sent as you, important files | Verify against the source yourself. Use approval-before-action, not just review afterward. Consider a professional ([Basics 13](/basics/13-sensitive-questions/)) |
+
+The Chrome permissions guide's wording points the same direction: for money, messages sent as you, and important files, stay close and review, or use Manual mode.
+
+### 7. Review recurring tasks every time
+
+A task you reviewed once can break later when a website, file format, or schedule changes. Both the Cowork guide and the dot docs tell you to check results of scheduled runs and to pause or delete schedules you no longer need. Gemini's docs warn that you may not be able to stop a schedule that runs while you're offline, so don't schedule sensitive tasks ([Part 6](/agents/06-browser-agents/)).
+
+## Quick reference
+
+### Red flags during or after a run
+
+| Sign | What to do |
+| --- | --- |
+| The activity record shows files or sites you never mentioned | Stop the task. Review what was accessed. Cowork's guide says to stop immediately if something feels off |
+| Page text or an email says "tell the AI to do X" | It may be a hidden instruction (prompt injection). Stop and handle that step yourself |
+| The report says "done" but you can't find the output | Don't assume it worked. Ask where the output is. The dot docs say a completed run doesn't confirm delivery |
+| The numbers look too round, or rows are missing | Compare with the source. Ask the agent to list what it could not process |
+| Something was sent or changed that you didn't approve | Revoke the permission, contact the recipient yourself, and tighten approvals ([Part 5](/agents/05-agent-safety/)) |
+
+### If you find a mistake
+
+1. **Stop** the running task. In ChatGPT dots, Pause stops only the main task, so also open Activity and Scheduled to stop delegated tasks and schedules.
+2. **Don't assume stopping undoes it.** The dot docs say stopping work doesn't undo completed actions.
+3. **Fix the real-world effect yourself** (recipient, file restore from backup, cancel a booking).
+4. **Narrow the permission or switch to Manual approval** before trying again.
+5. **Tell the agent what went wrong** and ask it to redo only that part, then review again.
+
+## Common sticking points
+
+### Reviewing takes as long as doing it myself
+
+- **Cause**: The task was too big, or you tried to check everything.
+- **Fix**: Make tasks smaller, ask for the report format in step 1, and spot-check only. If the checking is always longer than the doing, that task may not be a good one to hand off.
+
+### The agent's report and the actual result don't match
+
+- **Cause**: The report comes from the agent and can be wrong.
+- **Fix**: Trust the files, the sent folder, and the activity record over the summary text.
+
+### I don't see an Activity or progress screen
+
+- **Cause**: Menus differ by plan, device, and rollout. Names change often.
+- **Fix**: Check the official page for your service (links in the sources), and look at the labels on your own screen. We couldn't confirm a single equivalent record screen for every product.
+
+## Practical tips
+
+- **Save before you hand off.** Back up important files first, since the Cowork guide recommends backups and a dedicated working folder.
+- **Review soon.** Problems are easier to fix the same day.
+- **Keep a short log of your own** for recurring tasks: what you checked and what went wrong.
+- **Raise trust gradually.** Move from read-only, to draft, to approval-required action, and only then to wider autonomy, as in [Part 6](/agents/06-browser-agents/).
+- **Don't trust a result more because it sounds confident.** Confidence in wording is not evidence.
+- **Don't paste secrets into the review chat.** Passwords and one-time codes stay out of conversations.
+- **Features change often.** This article is as of 2026-11-02, so check the live screens.
+
+## What to read next
+
+- [Part 5: Using Personal AI Agents Safely](/agents/05-agent-safety/): what to allow before you start
+- [Part 6: Browser Agents Compared](/agents/06-browser-agents/): approval modes and limits by product
+- [C19. Getting started with Cowork](/claude/c19-cowork/): approval modes and reviewing results in Claude's desktop agent
+- [C11. Chrome and computer use](/claude/c11-chrome-computer-use/): permission modes in Claude in Chrome
+- [Basics 4: Fact-checking AI answers](/basics/04-fact-checking/): how to verify claims
+- [Office workers guide](/roles/office/): how to bring AI into your work

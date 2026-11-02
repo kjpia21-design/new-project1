@@ -1,0 +1,211 @@
+---
+title: "Summarize Books and Long Reads into Study Notes"
+description: "Turn a book chapter, long article, or report into reading notes you can study from: chapter outlines, key terms, questions, and a one-page review sheet, with a check against the original"
+sidebar:
+  label: "14. Reading notes"
+level: beginner
+category: chat
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "25 min"
+prerequisites:
+  - "An account for the chat AI you plan to use (a free account is enough to try)"
+  - "A chapter, article, or report you have the right to use (your own copy, a public document, or your own notes), with personal information removed"
+lastVerified: 2026-11-02
+sources:
+  - title: "Upload files to Claude (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/8241126-upload-files-to-claude"
+  - title: "Upload & analyze files in Gemini Apps (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/14903178"
+  - title: "Use ChatGPT (OpenAI, ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/use-chatgpt"
+  - title: "Projects and chats (OpenAI, ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/projects"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+<Summary>
+- A good reading note is not a shorter copy of the text. Ask for a **study-note format**: main idea, key terms, chapter outline, your own questions, and a one-page review sheet.
+- **Work one chapter at a time.** Short inputs are easier to check, and the official help pages say large uploads can miss details (Gemini) or should be divided into smaller sections (Claude).
+- Upload limits differ by service. Claude: 20 files and 500MB per file in a chat, PDFs up to 1,000 pages. Gemini: up to 10 files per prompt, 100MB per non-video file (all as of 2026-11-02). We couldn't find ChatGPT's app upload numbers in OpenAI's public docs, so we list none.
+- **Check the notes against the book.** Ask for page or chapter references, then look a few of them up yourself.
+- Only upload what you have the right to use. This guide gives general information, not legal advice (see the box below).
+</Summary>
+
+## What you'll be able to do
+
+- Turn one chapter or article into notes you can study from, not just a summary.
+- Build key-term lists, review questions, and a one-page sheet from your notes.
+- Keep a running note for a whole book without uploading the whole book at once.
+- Check AI notes against the original so errors don't end up in your memory.
+
+This tutorial is about the **finished notes**. For summarizing meeting notes into action items, see [Summarizing meeting notes and long documents](/chat/02-summarize-documents/). To study only from sources you choose, with a citation on every answer, see [Gemini Notebook (formerly NotebookLM)](/chat/21-notebooklm/).
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Study note** | Notes written so you can learn from them later: main points, terms, and questions, not only a short retelling. |
+| **Chapter-by-chapter** | Giving the AI one chapter (or one section) at a time and building the notes up as you go. |
+| **Running note** | One note you keep updating: paste your last version and add the new chapter. |
+| **Reference check** | Asking the AI to say where in the text each point comes from, so you can find it yourself. |
+| **Review sheet** | A one-page version for revising before a test or a discussion. |
+
+### Where each service stands (as of 2026-11-02)
+
+| Item | Claude | Gemini | ChatGPT |
+| --- | --- | --- | --- |
+| Where to upload | "+" at the lower left of the chat box, then "Add files or photos" | Add files in the text box (web app), then Upload Files | Upload or attach files in a chat |
+| Files per chat or prompt | Up to 20 per chat | Up to 10 per prompt (subject to availability) | Not found in OpenAI's public docs |
+| Size | 500MB per file; PDFs up to 1,000 pages | 100MB per file (video 2GB) | Not found in OpenAI's public docs |
+| E-books and documents | PDF, DOCX, TXT, HTML, RTF, EPUB and others | "Most file types" | Documents, presentations, spreadsheets, PDFs, images, data exports |
+| Keep material across chats | Upload to a project's Files section (30MB per file) | Not covered on the page we read | Project Sources section |
+
+<Aside type="note" title="What the official pages say about long inputs">
+Claude's page suggests dividing larger documents into smaller sections to stay within limits. Gemini's page warns that when an upload is too large, the answer may miss connections or details, especially when the question depends on details scattered across the material, and suggests uploading smaller files. Gemini also has a rolling limit on chats with files, and a Google AI Pro or Ultra plan raises the limits. Both pages are the reason this tutorial works one chapter at a time.
+</Aside>
+
+<Aside type="caution" title="Books, copyright, and sharing your notes">
+This is general information, not legal advice. Our copyright tutorial ([Can you use AI output?](/basics/09-ai-copyright-ethics/)) covers AI output and explains that the existing standards for copying someone else's work apply, and that making something for yourself differs from posting it publicly. **We did not find an official statement about uploading a whole book to an AI service**, so we don't say whether it is allowed. Practical habits: upload only copies you are entitled to use, read the terms of the service you use, keep the notes for your own study, and if you want to post or share them, write them in your own words and quote only short passages with credit. For anything beyond that, ask the publisher, your school or library, or a professional.
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I picked one chapter or article I have the right to use',
+  'I removed or masked personal information',
+  'I asked for a study-note format, not just a summary',
+  'I asked for page or section references and checked a few',
+  'I made questions and a one-page review sheet',
+  'I kept a running note for the next chapter',
+]} />
+
+<Steps>
+
+1. **Prepare one chapter**
+
+   Pick one chapter, one article, or one report section. Upload it as a file, or paste the text into the chat box. If you only have a long PDF, split it by chapter first (Claude's page says PDFs over 100 pages are processed as text only, so tables and figures may be missed).
+
+   <Aside type="caution" title="Before you upload">
+   Remove personal information such as names, contact details, and ID numbers. If the material belongs to your school or employer, check their rules first. See [Privacy and safety basics](/basics/05-privacy-safety/).
+   </Aside>
+
+2. **Ask for study notes, not a summary**
+
+   Say what the notes are for and what shape you want. Telling the AI your level and your goal makes the notes much more useful.
+
+   <PromptBox>
+   I'm studying this chapter for [a class / a book club / my own interest]. My level: [beginner / some background].
+
+   [Paste or attach the chapter]
+
+   Make study notes in this format:
+   1) Main idea in two sentences
+   2) Chapter outline: each section with a one-line summary and its page or section reference
+   3) Key terms: a table with Term / Plain-language meaning / Where it appears
+   4) Examples or evidence the author uses
+   5) Points I might disagree with or want to question
+   Use only what is in the text. If something is unclear, write "unclear in the text" instead of guessing.
+   </PromptBox>
+
+3. **Check the notes against the original**
+
+   Pick three or four items and find them in the text yourself. Then ask the AI to mark its own weak spots.
+
+   <PromptBox>
+   Go through the notes you just wrote. Mark each point as "stated in the text," "my interpretation," or "not sure." For the "stated in the text" points, give the exact short quote and where it is. List anything you may have added that the author didn't say.
+   </PromptBox>
+
+4. **Turn the notes into study tools**
+
+   Now use the notes to practice, not just to read.
+
+   <PromptBox>
+   Using the notes above, make:
+   - 8 review questions: 4 recall questions and 4 "explain in your own words" questions, with answers hidden in a separate list at the end
+   - A one-page review sheet: the main idea, 6 key terms, and 3 things to remember
+   - 3 discussion questions I could bring to a study group
+   Quiz me one question at a time first, and tell me whether my answer matches the text.
+   </PromptBox>
+
+5. **Keep a running note across chapters**
+
+   Rather than uploading the whole book, carry a short note forward. This also keeps the chat short.
+
+   <PromptBox>
+   Here is my running note so far:
+   [Paste your current note]
+
+   Here is the next chapter:
+   [Paste or attach the next chapter]
+
+   Add this chapter to the running note in the same format. Then add a short section called "How this chapter connects to earlier ones," and update the key-term table. Don't change what is already in the note unless the new chapter contradicts it; if so, point it out.
+   </PromptBox>
+
+   If you want the material to stay available across chats, use a project: Claude has a project's Files section, and ChatGPT's project has a Sources section for uploaded files (per OpenAI's docs, project instructions apply to every chat in the project). See [C5. Projects](/claude/c05-projects/) for Claude.
+
+   <FlowSteps title="Add a chapter to your running note" steps={[
+     { where: 'Chat box', action: 'Paste your current running note', result: 'The AI sees your notes so far' },
+     { where: 'Chat box', action: 'Attach or paste the next chapter and ask it to extend the note', result: 'A new section appears in the same format' },
+     { where: 'Original book', action: 'Check three or four items against the text', result: 'Errors are caught before you save the note' },
+   ]} />
+
+</Steps>
+
+## Quick reference
+
+| Goal | Ask for | Why |
+| --- | --- | --- |
+| Understand a chapter | Main idea, outline, key terms | Gives a map before the details |
+| Trust the notes | Quotes and page or section references | Lets you check against the original |
+| Remember it | Review questions, one-page sheet | Practice sticks better than rereading |
+| Cover a whole book | A running note, one chapter at a time | Keeps each input short and checkable |
+| Avoid inventions | "Use only the text; say 'unclear' if unsure" | Reduces made-up details |
+| Share with others | Your own wording, short quotes with credit | See the copyright box above |
+
+## Common sticking points
+
+### The notes sound right but include things the author never said
+
+- **Cause**: The AI may add background knowledge or fill gaps with something plausible.
+- **Fix**: Add "use only the text" to the prompt, ask for exact short quotes, and run the check in step 3.
+
+### The upload is rejected or only part of the file seems to be used
+
+- **Cause**: The file may be over a limit (for example Claude's 1,000-page PDF limit or Gemini's 100MB per file), or too large for good results.
+- **Fix**: Split the file by chapter and upload one at a time. Gemini also asks you to wait when you reach its rolling limit for chats with files.
+
+### Later chapters get thin or mixed up with earlier ones
+
+- **Cause**: The chat has become long, or the AI is trying to cover too much at once.
+- **Fix**: Start a new chat for each chapter and paste in your running note instead of the whole conversation.
+
+### Scanned pages or tables come out wrong
+
+- **Cause**: Claude's page says that for non-PDF documents only text is extracted, and for PDFs over 100 pages only text is processed. Pictures and tables may be missed.
+- **Fix**: Paste the important tables as text, or split the PDF into pieces under 100 pages.
+
+### I'm not sure whether I can upload this book
+
+- **Cause**: Rules depend on the book, where you got the copy, and the service's terms. We did not find an official statement to settle this.
+- **Fix**: Use material you are clearly entitled to use, such as your own notes, public documents, or sections you are allowed to copy. When in doubt, ask the publisher, your school or library.
+
+## Practical tips
+
+- **Read first, then ask.** Notes work best as a second pass after you've read the chapter yourself.
+- **Write one sentence yourself.** After the AI's notes, add your own one-line takeaway. That's the part you'll remember.
+- **Ask for questions, not just answers.** Being quizzed finds the gaps that rereading hides.
+- **Keep a short glossary.** The key-term table in your running note becomes a personal glossary for the whole book.
+- **Treat notes as a draft.** Before you rely on a quote, a date, or a number in an essay or exam answer, check the original.
+
+## What to read next
+
+- [Summarizing meeting notes and long documents](/chat/02-summarize-documents/) — summaries and action items from documents
+- [Gemini Notebook (formerly NotebookLM)](/chat/21-notebooklm/) — answers only from your own sources, with citations
+- [Can you use AI output? Copyright and ethics basics](/basics/09-ai-copyright-ethics/) — what to check before sharing or posting
+- [Student guide](/roles/student/) — the order for using AI to study

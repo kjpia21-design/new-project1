@@ -1,0 +1,166 @@
+---
+title: "Shape how Claude responds: output styles and personalization"
+description: "A beginner guide to controlling Claude's tone, length and format based on official pages: Claude Code output styles (built-in and custom), account Instructions, project instructions and skills, and when to use which"
+sidebar:
+  label: "C27. Response styles"
+level: beginner
+category: claude
+tools: ["Claude", "Claude Code"]
+duration: "20 min"
+prerequisites:
+  - "A Claude account"
+  - "For the Claude Code part: Claude Code installed (see coding/06)"
+  - "A short text or a small practice project with nothing private in it"
+lastVerified: 2026-11-02
+sources:
+  - title: "Output styles (Claude Code Docs)"
+    url: "https://code.claude.com/docs/en/output-styles"
+  - title: "Understanding Claude's personalization features"
+    url: "https://support.claude.com/en/articles/10185728-understanding-claude-s-personalization-features"
+  - title: "Use incognito chats"
+    url: "https://support.claude.com/en/articles/12260368-use-incognito-chats"
+  - title: "Adapt to new model personas after deprecations"
+    url: "https://support.claude.com/en/articles/12738598-adapt-to-new-model-personas-after-deprecations"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- **Output styles in Claude Code** are confirmed on an official page: a style is a set of instructions for Claude's role, tone and response format for a whole session. Built-in: **Proactive, Concise, Explanatory, Learning**, plus the standard **Default**.
+- Switch with `/output-style <style>` or `/config` > Output style. You can also write a **custom style** as a Markdown file.
+- In the Claude apps, the official personalization page lists three tools: **Instructions** (account-wide), **project instructions** (paid plans) and **skills** (tone and format on demand).
+- A style is an instruction Claude follows, not a guarantee. For something that must happen every time, the docs point to a hook.
+- Scope note: we could not find an official help page for a separate "styles" picker in the chat apps, so this guide does not describe one (as of 2026-11-02).
+</Summary>
+
+If your answers are too long, too stiff or too chatty, you can tell Claude once instead of in every prompt. For writing better prompts, see [C4. Prompting](/claude/c04-prompting/). For what Claude remembers, see [C9. Memory and settings](/claude/c09-memory-settings/).
+
+## What you'll be able to do
+
+- Pick a built-in output style in Claude Code and know what each one changes.
+- Write a small custom output style.
+- Choose between Instructions, project instructions, skills and an output style.
+- Know what we could not confirm.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Output style** | In Claude Code, instructions that set Claude's role, tone and response format for every response in a session. |
+| **Instructions (account)** | Account-wide settings that Claude applies to all your conversations. |
+| **Project instructions** | Guidance that applies only to chats inside one project. |
+| **Skill** | A packaged behavior that can adjust tone and format, or add expertise, when you use it. |
+| **Frontmatter** | The block between `---` lines at the top of a Markdown file that holds its settings. |
+
+## Step-by-step
+
+<Checklist items={[
+  'I know whether I am using Claude Code (output styles) or a Claude chat app (Instructions, projects, skills)',
+  'I tried one built-in style on a harmless task',
+  'I wrote my preference as a short, clear instruction',
+  'I know a style is guidance, not a guarantee',
+]} />
+
+<Steps>
+
+1. **See the four built-in styles**
+
+   Claude Code starts in the Default style, its standard software engineering instructions. Each other built-in style keeps those and adds its own. Per the official table: **Proactive** starts work right away and makes reasonable assumptions on routine decisions. **Concise** leads with the result and drops preamble, narration and recaps (needs Claude Code v2.1.237 or later). **Explanatory** adds short "Insight" blocks explaining its choices. **Learning** adds the same blocks and leaves small pieces of code, marked `TODO(human)`, for you to write.
+
+2. **Switch styles**
+
+   In the terminal, run `/output-style concise` (any style name; with no argument it lists the styles and marks the current one), or run `/config` and choose Output style. The choice is saved to `.claude/settings.local.json` for that project. Claude uses the new style from your next message. You can also set `outputStyle` in a settings file; the value is case-sensitive, so a mismatch such as `explanatory` gives the Default style. For a default across projects, set it in `~/.claude/settings.json`.
+
+   <PromptBox label="Try Explanatory on a small task">
+   Add a function that returns the average of a list of numbers, with a check for an empty list. Then tell me what I should review.
+   </PromptBox>
+
+3. **Write a custom output style**
+
+   A custom style is a Markdown file with frontmatter and then your instructions. Save it in `~/.claude/output-styles` (user) or `.claude/output-styles` (project). The file name becomes the style name unless you set `name`. Optional fields include `description` and `keep-coding-instructions`; set the latter to `true` if you only change how Claude communicates and still want it coding as usual. The docs' example leads every explanation with a Mermaid diagram. In the terminal, restart Claude Code after creating or editing a style file so it is read.
+
+   ```md
+   ---
+   name: Plain words
+   description: Short answers in everyday language
+   keep-coding-instructions: true
+   ---
+   Answer in everyday language. Define any technical term the first time you use it. Keep answers under ten lines unless I ask for more.
+   ```
+
+4. **In the Claude apps: Instructions, projects and skills**
+
+   The official personalization page says: open your initials, then Settings > "Your Claude" (or "Account" in the older layout) and write your Instructions; they apply to all conversations. Project instructions apply only to chats in that project (the page says paid plans for this use; projects themselves are available to free accounts, up to five). Skills adjust tone and format or apply your own communication patterns when you use them. See [C5. Projects](/claude/c05-projects/) and [C8. Skills](/claude/c08-skills/).
+
+   <PromptBox label="A starter instruction to adapt">
+   Use plain, friendly language. Put the answer first, then up to three supporting points. Ask me one question if my request is unclear instead of guessing.
+   </PromptBox>
+
+5. **Pick the right tool**
+
+   The Claude Code page compares features: an output style for every response in a certain voice, length or format; CLAUDE.md for what Claude should know about your project; a skill for one kind of task; a hook for something that must happen every time. They can be combined.
+
+</Steps>
+
+<Aside type="caution" title="Do not put secrets in instructions">
+Instructions and style files are plain text that Claude reads. Do not write passwords, keys or private personal details into them. The incognito page says Claude can still use profile information such as custom styles and personal preferences inside an incognito chat. For the basics, see [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/).
+</Aside>
+
+## Limits and good to know
+
+- **Not a guarantee**: the docs say an output style gives Claude instructions to follow and does not guarantee that something always or never happens.
+- **Safety text stays full length**: in Concise, error reports, failing test output, security warnings and confirmations for destructive actions keep their full content.
+- **Proactive and permissions**: switching to Proactive does not change your permission mode; permission prompts appear as before.
+- **Precedence**: a project's own settings files take precedence over `outputStyle` in your user settings.
+- **Other surfaces**: per the page, `/output-style` also works from the mobile app or web via Remote Control (built-in styles only, v2.1.269 or later), and in the VS Code extension through the Output styles menu (v2.1.257 or later).
+
+<Aside type="note" title="What we could not confirm">
+We could not find an official help-center article for a "styles" picker in the Claude chat apps (a guessed article URL returned 404, and help-center search did not list one). The only mention we found is a line in the incognito page about "custom styles" in profile information. So this guide covers the output styles of Claude Code and the Instructions, project instructions and skills described on the personalization page, and does not describe a chat style menu, its preset names or which plans have it. We did not run Claude Code ourselves; the commands and behavior are from the official page. Versions and menus change; recheck the links.
+</Aside>
+
+## Quick reference
+
+| I want to... | Do this |
+| --- | --- |
+| Shorter answers in Claude Code | `/output-style concise` |
+| Reasons explained as I go | `/output-style explanatory` |
+| Practice by writing some code | `/output-style learning` |
+| Go back to normal | `/output-style default` |
+| My own voice or format | Markdown file in `.claude/output-styles` |
+| A rule for all my chats | Settings > Your Claude > Instructions |
+| A rule for one project | Project instructions |
+
+## Common sticking points
+
+### The style name does not take effect
+
+- **Cause**: In a settings file, `outputStyle` is case-sensitive.
+- **Fix**: Write `Concise`, not `concise`, or use the `/output-style` command, which ignores case.
+
+### My new style file is not listed
+
+- **Cause**: In the terminal, style files are read when Claude Code starts.
+- **Fix**: Restart Claude Code and check the folder (`~/.claude/output-styles` or `.claude/output-styles`).
+
+### Claude ignored part of my style
+
+- **Cause**: A style is guidance, not enforcement.
+- **Fix**: Make the instruction shorter and more specific. For something required every time, the docs suggest a hook.
+
+## Practical tips
+
+- Change one thing at a time (length, tone or format) and see what happens.
+- Write instructions as positive, concrete rules, such as "answer first, then three points".
+- Keep project facts in CLAUDE.md or project instructions and keep styles about voice and format.
+- Review custom style files now and then and delete ones you no longer use.
+
+## What to read next
+
+- [C4. Prompting](/claude/c04-prompting/) — Say what you want in each request
+- [C9. Memory and settings](/claude/c09-memory-settings/) — What Claude remembers and where to change it
+- [C8. Skills](/claude/c08-skills/) — Repeatable behaviors on demand
+- [Claude Code settings and permissions](/coding/40-settings-permissions/) — Where settings files live

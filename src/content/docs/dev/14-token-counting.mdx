@@ -1,0 +1,258 @@
+---
+title: "Estimate Costs Before You Send with the Token Counting API"
+description: "Use the free count_tokens endpoint to measure a request's input tokens, turn the count into a cost estimate with the official price list, and learn what it cannot count, from the official docs"
+sidebar:
+  label: "14. Token counting API (estimate costs first)"
+level: advanced
+category: dev
+tools: ["Claude API", "Token counting", "Python", "anthropic SDK"]
+duration: "30 min"
+prerequisites:
+  - "You've finished C16. Getting started with the Claude API (API key, environment variable setup)"
+  - "Python 3.10 or later, pip install anthropic"
+  - "A rough idea of prompt caching and batches (Dev 2)"
+lastVerified: 2026-11-02
+sources:
+  - title: "Token counting"
+    url: "https://platform.claude.com/docs/en/build-with-claude/token-counting"
+  - title: "Count tokens in a Message (API reference)"
+    url: "https://platform.claude.com/docs/en/api/messages/count_tokens"
+  - title: "Pricing"
+    url: "https://platform.claude.com/docs/en/about-claude/pricing"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- **Token counting** (`POST /v1/messages/count_tokens`) takes the same inputs as a normal message (system prompt, messages, tools, images, PDFs) and returns `{"input_tokens": N}` without creating a message. It does not run the model, so it produces no output.
+- It is **free to use**, with its own requests-per-minute limits by usage tier (Start 5,000, Build 10,000, Scale 20,000), separate from message-creation limits.
+- The count is an **estimate**; the real input can differ by a small amount. You aren't billed for tokens the system adds.
+- **Count with the model you will use.** Claude 4.7 and later models use a newer tokenizer that makes about 30 percent more tokens for the same text.
+- It returns an error for server tools (web search and similar), the MCP connector, and images or documents given by `url` or file ID. Send images and PDFs as base64.
+- Cost estimate = input tokens x input price + expected output tokens x output price. Prices below are from the official pricing page, **as of 2026-11-02**.
+- We read the three official pages on 2026-11-02 and ran the cost function locally with made-up token counts, but **made no real API call** (no API key or `anthropic` package here). Treat the API code as documented, not tested end to end.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Measure how many input tokens a prompt will use before you pay for a real call.
+- Turn that count into a per-call and per-month cost estimate for different models.
+- Check whether a large prompt, image, or PDF fits before you send it.
+- Know which requests cannot be counted and what to use instead.
+
+## Concepts to know first
+
+[Dev 2](/dev/02-cost-optimization/) mentioned `count_tokens` in one step. This tutorial is the full reference: what it accepts, what it refuses, and how to build an estimate. The count only covers **input**. Output tokens are decided by the model's reply, so you estimate them yourself (from `max_tokens` or from past replies).
+
+| Term | Meaning |
+| --- | --- |
+| **Input tokens** | Everything you send: system prompt, messages, tool definitions, images, PDFs. This is what `count_tokens` returns. |
+| **Output tokens** | What Claude writes back. Not counted ahead of time. |
+| **MTok** | A million tokens. A price of `$2 / MTok` means $2 per million tokens. |
+| **Tokenizer** | The rule that splits text into tokens. Claude 4.7 and later models and Claude Mythos Preview use a newer one. |
+
+### Availability (official docs, 2026-11-02)
+
+- All active models support token counting, on the Claude API and the other listed platforms.
+- It is **not available** in Managed Agents. It is eligible for zero data retention (excluding Covered Models) and HIPAA readiness.
+- Token counting and message creation have separate, independent rate limits. For higher limits, use **Request tier increase** on the Rate limits page in the Claude Console.
+
+<Aside type="note" title="The count is an estimate">
+The docs say the actual input tokens used when creating a message may differ by a small amount. Counts may include tokens added by Anthropic for system optimizations, and **you are not billed for system-added tokens**. Billing reflects only your content. Use the count for planning, and use the `usage` object of real responses for accounting.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I counted tokens for a plain message and read input_tokens',
+  'I counted with every model I am considering',
+  'I turned the count into a cost estimate with the price table',
+  'I know which inputs make count_tokens return an error',
+  'I compared the estimate with usage from a real call',
+]} />
+
+<Steps>
+
+1. **Count a message**
+
+   Set `ANTHROPIC_API_KEY` as in C16. The docs' cURL example (shortened here to the same request) shows the request format:
+
+   ```bash
+   curl https://api.anthropic.com/v1/messages/count_tokens \
+     -H "x-api-key: $ANTHROPIC_API_KEY" \
+     -H "content-type: application/json" \
+     -H "anthropic-version: 2023-06-01" \
+     -d '{
+       "model": "claude-opus-5-5",
+       "system": "You are a scientist",
+       "messages": [{"role": "user", "content": "Hello, Claude"}]
+     }'
+   ```
+
+   The docs show the response as `{ "input_tokens": 14 }`. The same call in Python:
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   response = client.messages.count_tokens(
+       model="claude-opus-5-5",
+       system="You are a scientist",
+       messages=[{"role": "user", "content": "Hello, Claude"}],
+   )
+   print(response.input_tokens)
+   ```
+
+   The API reference lists `input_tokens` as "the total number of tokens across the provided list of messages, system prompt, and tools". The docs' own example prints `response.json()`; we read the number from the `input_tokens` field named in the API reference.
+
+2. **Count tools, images, PDFs, and thinking**
+
+   The same endpoint takes more than text. The docs give example counts for `claude-opus-5-5`:
+
+   | Input | Docs' example count |
+   | --- | --- |
+   | Basic message with a system prompt | 14 |
+   | The same kind of message plus one `get_weather` tool | 403 |
+   | One image plus "Describe this image" | 1,028 |
+   | A message with thinking enabled | 88 |
+   | A base64 PDF | 2,188 |
+
+   These come from different example requests, so don't compare them as if they were one prompt. They only show the shape of the result. Tool definitions add tokens, so **count with your real tools attached**. For thinking: thinking from the **current** assistant turn counts toward input tokens, and thinking blocks from earlier turns count only on models that keep all prior turns.
+
+3. **Count with the model you will use**
+
+   Claude 4.7 and later models and Claude Mythos Preview use a newer tokenizer: the same text produces about 30 percent more tokens than on earlier models, and the exact increase depends on the content. The docs say to recount prompts against the model you plan to use instead of reusing old counts. For Fable and Mythos models, they suggest counting the same request twice, with your current model and with the model you plan to move to, and comparing the two `input_tokens` values.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   messages = [{"role": "user", "content": "Summarize this refund policy in 3 bullets: ..."}]
+
+   for model in ["claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5"]:
+       n = client.messages.count_tokens(model=model, messages=messages).input_tokens
+       print(model, n)
+   ```
+
+4. **Turn the count into a cost estimate**
+
+   Per the pricing page (**as of 2026-11-02**, USD per million tokens):
+
+   | Model | Input | Output |
+   | --- | --- | --- |
+   | Claude Opus 5.5 | $4 | $20 |
+   | Claude Sonnet 5.5 | $2 | $10 |
+   | Claude Haiku 5.5 (prompts up to 100,000 tokens) | $0.10 | $0.50 |
+   | Claude Haiku 5.5 (prompts over 100,000 tokens) | $0.50 | $2.50 |
+
+   The page says Haiku 5.5 is priced by prompt length: a request whose prompt is over 100,000 tokens (counting cache reads and writes) pays the higher prices. It also says the Batch API gives a 50 percent discount on both input and output. The pricing page points to claude.com/pricing for the most current prices, so check it before you rely on these numbers.
+
+   Create `estimate.py`:
+
+   ```python
+   import anthropic
+
+   # USD per million tokens (input, output). Copy from the pricing page and note the date.
+   PRICES = {
+       "claude-opus-5-5": (4.00, 20.00),
+       "claude-sonnet-5-5": (2.00, 10.00),
+       "claude-haiku-5-5": (0.10, 0.50),  # prompts up to 100,000 tokens only
+   }
+
+
+   def estimate(input_tokens, expected_output_tokens, model, batch=False):
+       price_in, price_out = PRICES[model]
+       cost = (input_tokens * price_in + expected_output_tokens * price_out) / 1_000_000
+       return cost * 0.5 if batch else cost
+
+
+   if __name__ == "__main__":
+       client = anthropic.Anthropic()
+       system_prompt = "You are a support assistant for a small shop."
+       messages = [{"role": "user", "content": "Summarize this refund policy in 3 bullets: ..."}]
+       for model in PRICES:
+           n = client.messages.count_tokens(model=model, system=system_prompt, messages=messages).input_tokens
+           per_call = estimate(n, 300, model)
+           print(f"{model}: {n} input tokens, about ${per_call:.6f} per call, ${per_call * 10_000:.2f} per 10,000 calls")
+   ```
+
+   **What we ran:** `python -m py_compile` passed, and we ran `estimate()` with a stub `anthropic` module and **made-up** counts of 1,200 input and 300 output tokens. That gave $108.00 (Opus 5.5), $54.00 (Sonnet 5.5), and $2.70 (Haiku 5.5) per 10,000 calls, and exactly half with `batch=True`. **What we did not run:** the real `count_tokens` calls, so we have no real token counts.
+
+   <PromptBox>
+   I want to estimate the monthly cost of a Claude API feature. Here is my prompt template and a typical input: [paste]. We expect about [number] calls per month and replies of about [number] tokens. Help me build a table that compares Opus, Sonnet, and Haiku using the input token counts I get from the count_tokens endpoint and the current prices I paste from the official pricing page. Show the assumptions and tell me which numbers I still need to measure.
+   </PromptBox>
+
+5. **Know what it cannot count**
+
+   The endpoint returns an `invalid_request_error` for some inputs the Messages API accepts:
+
+   - **Server tools** such as web search, web fetch, code execution, and tool search (every server tool except the advisor tool). Client tools are supported. For the advisor tool, the count covers the executor's first sampling call only.
+   - **The MCP connector.**
+   - **`image` or `document` blocks with a `url` or `file` source.** Send images and PDFs as base64 to count them.
+
+   For those requests, the Messages API response reports the tokens used in its `usage` object. A related caveat: `cache_control` blocks are accepted, but "prompt caching only occurs during actual message creation", so token counting doesn't show cache effects. See [Dev 2](/dev/02-cost-optimization/) for caching, and [Dev 12](/dev/12-web-search-fetch-tools/) for what web tools add to a bill. An image block that sets `"oversized_image": "error"` is rejected at count time just as the Messages API would reject it.
+
+6. **Check the estimate against reality**
+
+   Make one real call and compare `response.usage.input_tokens` with your count. Expect a small difference. If it is large, look for inputs the estimate left out, such as thinking, server tools, or a changed system prompt. To track real spend across a team, use the usage data in [Dev 11](/dev/11-usage-cost-api/).
+
+</Steps>
+
+## Quick reference
+
+| Item | Value (official docs, 2026-11-02) |
+| --- | --- |
+| Endpoint | `POST /v1/messages/count_tokens` |
+| Returns | `input_tokens` (messages + system + tools) |
+| Python | `client.messages.count_tokens(model=..., system=..., messages=...)` |
+| Cost | Free |
+| Rate limit (requests per minute) | Start 5,000, Build 10,000, Scale 20,000 |
+| Accuracy | Estimate; may differ by a small amount |
+| Errors for | Server tools (except advisor), MCP connector, `url`/file sources for images and documents |
+| Tokenizer note | Claude 4.7 and later: about 30% more tokens than earlier models |
+| Managed Agents | Not available |
+
+## Common sticking points
+
+### Error: `invalid_request_error` from count_tokens, but the same request works with `messages.create`
+
+- **Cause**: The request uses a server tool, the MCP connector, or an image or document with a `url` or file source.
+- **Fix**: Remove those parts for counting, switch to base64 for images and PDFs, or read `usage` from a real response.
+
+### My estimate is much lower than the invoice
+
+- **Cause**: Output tokens, thinking, tool results added later in a loop, or multiple turns were not counted. The count covers only the input you pass.
+- **Fix**: Add an output estimate, count the full conversation as it grows, and compare with `usage` from real calls.
+
+### Counts changed after I switched models
+
+- **Cause**: The newer tokenizer in Claude 4.7 and later gives about 30 percent more tokens for the same text.
+- **Fix**: Recount with the new model's ID before you estimate cost or check context fit.
+
+### Requests start failing when I count many prompts
+
+- **Cause**: You may have passed the requests-per-minute limit of your usage tier for this endpoint.
+- **Fix**: Slow down, count a sample instead of every request, or use **Request tier increase** on the Rate limits page in the Console. The token counting page doesn't give the error code or message for this case, so we haven't confirmed it.
+
+## Practical tips
+
+- Count once per prompt template and reuse the number for the fixed part, rather than counting every request.
+- Always keep the model ID in the cost table next to the count; counts are not portable across tokenizers.
+- Put the price table and its date in one place in your code, and update it when you re-check the pricing page.
+- Use the count to decide on routing too: send long inputs to a model with a better price for your workload.
+- Treat the estimate as a budget guide, not a bill. Your invoice comes from real `usage`.
+
+## Next tutorials
+
+- [2. Cut API costs with prompt caching, batches, and effort](/dev/02-cost-optimization/) — caching and batches
+- [11. Usage and cost analytics API](/dev/11-usage-cost-api/) — see what you actually spent
+- [13. Structured outputs](/dev/13-structured-outputs/) — token counting works with structured outputs per its docs
+- [12. Web search and web fetch tools](/dev/12-web-search-fetch-tools/) — tools that cannot be counted
+- [C16. Getting started with the Claude API](/claude/c16-api/)
+- [Developer guide](/roles/developer/)

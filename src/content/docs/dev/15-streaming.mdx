@@ -1,0 +1,305 @@
+---
+title: "Stream Claude API Responses in Real Time"
+description: "Turn on streaming for the Messages API, read the server-sent event flow, collect tool-call JSON and thinking deltas, and handle errors and interrupted streams, from the official docs"
+sidebar:
+  label: "15. Streaming responses (real-time output)"
+level: advanced
+category: dev
+tools: ["Claude API", "Streaming", "Python", "anthropic SDK"]
+duration: "40 min"
+prerequisites:
+  - "You've finished C16. Getting started with the Claude API (API key, environment variable setup)"
+  - "Python 3.10 or later, pip install anthropic"
+  - "You know the tool_use / tool_result loop (Dev 1)"
+lastVerified: 2026-11-02
+sources:
+  - title: "Streaming messages"
+    url: "https://platform.claude.com/docs/en/build-with-claude/streaming"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- Set `"stream": true` when creating a Message and the API sends the reply piece by piece as **server-sent events (SSE)** instead of one finished response.
+- The official docs recommend the **SDKs**. In Python, `client.messages.stream(...)` with `stream.text_stream` prints text as it arrives; `stream.get_final_message()` gives you the complete `Message` when you don't need the pieces.
+- Event flow: `message_start`, then for each content block a `content_block_start`, one or more `content_block_delta`, and a `content_block_stop`, then one or more `message_delta`, then `message_stop`. `ping` events can appear anywhere. The `usage` token counts in `message_delta` are **cumulative**.
+- Delta types: `text_delta`, `input_json_delta` (tool input as **partial JSON strings**), `thinking_delta`, and `signature_delta`. New event types can be added later, so your code should ignore unknown ones.
+- With tools, the input arrives as partial JSON. Collect the strings and parse them after `content_block_stop`. The docs add that there can be delays between events while the model works.
+- Errors can arrive **inside** the stream (for example `overloaded_error`). The docs describe a recovery method for interrupted streams, and it differs between Claude 4.5 and earlier versus 4.6 and later.
+- We read the official streaming page on 2026-11-02 and ran a small SSE parser locally on the docs' own sample events. We **made no real API call** (no API key and no `anthropic` package here), so the SDK code is documented, not tested end to end.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Show Claude's answer word by word in a terminal or app instead of waiting for the whole reply.
+- Read the raw event stream and tell what each event type means.
+- Collect a tool call's input from partial JSON, and display thinking text separately from the answer.
+- Plan for errors that happen in the middle of a stream.
+
+## Concepts to know first
+
+A normal call waits until the whole answer is ready. A streamed call sends it in small pieces so you can show progress early. The docs also say that for requests with large `max_tokens` values, **the SDK requires streaming to avoid HTTP timeouts**. You can still use streaming just to get the final message (step 2).
+
+| Term | Meaning |
+| --- | --- |
+| **SSE (server-sent events)** | A web standard where the server keeps one HTTP connection open and sends named events. |
+| **Content block** | One piece of the reply, such as a text block, a `tool_use` block, or a `thinking` block. Each has an `index` that matches its position in the final `content` list. |
+| **Delta** | A small update to the content block at a given `index`. |
+| **Partial JSON** | A fragment of a tool's `input` that is not valid JSON until all fragments are joined. |
+
+Streaming is available on every model, and on the Claude API and the cloud platforms the page lists. One note from the docs: the older Amazon Bedrock InvokeModel integration does not stream plain server-sent events. The page's examples come from the same API as [Dev 1](/dev/01-tool-use/), so tool definitions work as you already know them.
+
+<Aside type="note" title="Use the SDKs unless you must not">
+The docs say to use the client SDKs when streaming. You only need to handle raw events yourself if you build a direct API integration. Step 3 shows the raw format so you can read it, debug it, or write your own parser.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I streamed a reply and printed text as it arrived',
+  'I can name the order of events in a stream',
+  'I joined input_json_delta pieces and parsed them after content_block_stop',
+  'I handle ping, error, and unknown events without crashing',
+  'I know how to recover an interrupted stream for my model version',
+]} />
+
+<Steps>
+
+1. **Stream text with the SDK**
+
+   Set `ANTHROPIC_API_KEY` as in C16. This is the docs' Python example:
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   with client.messages.stream(
+       max_tokens=1024,
+       messages=[{"role": "user", "content": "Hello"}],
+       model="claude-opus-5-5",
+   ) as stream:
+       for text in stream.text_stream:
+           print(text, end="", flush=True)
+   ```
+
+   `flush=True` makes each piece show up immediately. The docs also show the TypeScript, C#, Go, Java, PHP, and Ruby versions, and a CLI form: `ant messages create --stream --model ... --max-tokens ... --message '{role: user, content: "Hello"}'`. Check your SDK's own documentation for the details of each language.
+
+2. **Get the final message without handling events**
+
+   If you don't need the text as it arrives, the SDK can stream internally and give you the complete `Message`, the same object `client.messages.create()` returns. The docs say this is especially useful for large `max_tokens` values.
+
+   ```python
+   with client.messages.stream(
+       max_tokens=128000,
+       messages=[{"role": "user", "content": "Write a detailed analysis..."}],
+       model="claude-opus-5-5",
+   ) as stream:
+       message = stream.get_final_message()
+
+   for block in message.content:
+       if block.type == "text":
+           print(block.text)
+   ```
+
+   The method name differs by language (the docs list `stream.finalMessage()` for TypeScript and `stream.accumulated_message` for Ruby, among others).
+
+3. **Read the raw event flow**
+
+   With a plain HTTP request (the docs' cURL example sets `"stream": true`), the response looks like this. This is the docs' sample for a short "Hello" reply:
+
+   ```text
+   event: message_start
+   data: {"type": "message_start", "message": {"id": "msg_...", "type": "message", "role": "assistant", "content": [], "model": "claude-opus-5-5", "stop_reason": null, "stop_sequence": null, "usage": {"input_tokens": 25, "output_tokens": 1}}}
+
+   event: content_block_start
+   data: {"type": "content_block_start", "index": 0, "content_block": {"type": "text", "text": ""}}
+
+   event: ping
+   data: {"type": "ping"}
+
+   event: content_block_delta
+   data: {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Hello"}}
+
+   event: content_block_stop
+   data: {"type": "content_block_stop", "index": 0}
+
+   event: message_delta
+   data: {"type": "message_delta", "delta": {"stop_reason": "end_turn", "stop_sequence":null}, "usage": {"output_tokens": 15}}
+
+   event: message_stop
+   data: {"type": "message_stop"}
+   ```
+
+   (We shortened the sample's message ID and left out its second text delta.) Reading it from top to bottom:
+
+   | Event | What it tells you |
+   | --- | --- |
+   | `message_start` | A `Message` object with empty `content`. |
+   | `content_block_start` / `content_block_delta` / `content_block_stop` | One content block, opened, updated, closed. |
+   | `message_delta` | Top-level changes to the final Message, such as `stop_reason`. Its `usage` is **cumulative**. |
+   | `message_stop` | The stream is complete. |
+   | `ping` | Can appear any number of times. Ignore it. |
+   | `error` | A failure inside the stream (step 6). |
+
+4. **Collect tool input from partial JSON**
+
+   For a `tool_use` block, the deltas are `input_json_delta` events whose `partial_json` values are string fragments. The final `tool_use.input` is always an object. The docs say to accumulate the strings and parse once you receive `content_block_stop`, or to use the SDK's streaming helpers (in the Python and TypeScript SDKs they also expose the parsed `input` incrementally).
+
+   The docs add two cautions: current models emit **one complete key and value at a time**, so there can be pauses between events while the model works, and tool-use streaming supports **fine-grained streaming** of parameter values, enabled per tool with `eager_input_streaming` (see the docs' Fine-grained tool streaming page before relying on it).
+
+   Here is a small parser that follows the docs' event format and does exactly that. Save it as `assemble.py`:
+
+   ```python
+   import json
+
+
+   def assemble(lines):
+       """Rebuild content blocks from raw SSE lines."""
+       blocks, partial = {}, {}
+       stop_reason = None
+       for line in lines:
+           if not line.startswith("data:"):
+               continue
+           ev = json.loads(line[5:])
+           t = ev.get("type")
+           if t == "content_block_start":
+               blocks[ev["index"]] = ev["content_block"]
+               partial[ev["index"]] = ""
+           elif t == "content_block_delta":
+               d, i = ev["delta"], ev["index"]
+               if d["type"] == "text_delta":
+                   blocks[i]["text"] += d["text"]
+               elif d["type"] == "input_json_delta":
+                   partial[i] += d["partial_json"]
+           elif t == "content_block_stop":
+               i = ev["index"]
+               if blocks[i]["type"] == "tool_use":
+                   blocks[i]["input"] = json.loads(partial[i])  # only now is it complete
+           elif t == "message_delta":
+               stop_reason = ev["delta"]["stop_reason"]
+           elif t == "error":
+               raise RuntimeError(ev["error"]["message"])
+           # ping and unknown event types: ignore
+       return [blocks[i] for i in sorted(blocks)], stop_reason
+   ```
+
+   **What we ran:** `python -m py_compile` passed, and we fed it a shortened copy of the docs' tool-use sample (a text block, then a `get_weather` tool call split into three JSON fragments). It returned `stop_reason` `tool_use` and the input `{"location": "San Francisco, CA"}`. **What we did not run:** any live stream, and server-tool blocks such as `server_tool_use` or `web_search_tool_result`, which the docs' web search sample shows and this parser does not handle. With the SDK you don't need this parser at all.
+
+   After a stream ends with `stop_reason` `tool_use`, you continue as in [Dev 1](/dev/01-tool-use/): run the tool and send back a `tool_result`. Tools that must return reliable JSON are covered in [Dev 13](/dev/13-structured-outputs/).
+
+5. **Show thinking separately from the answer**
+
+   When you enable thinking with streaming, thinking text arrives as `thinking_delta` events in a `thinking` block, and a `signature_delta` event comes just before that block's `content_block_stop`; the signature verifies the integrity of the thinking block. The docs' Python example prints both kinds of delta:
+
+   ```python
+   with client.messages.stream(
+       model="claude-opus-5-5",
+       max_tokens=20000,
+       thinking={"type": "adaptive", "display": "summarized"},
+       messages=[{"role": "user", "content": "What is the greatest common divisor of 1071 and 462?"}],
+   ) as stream:
+       for event in stream:
+           if event.type == "content_block_delta":
+               delta = event.delta
+               match delta.type:
+                   case "thinking_delta":
+                       print(delta.thinking, end="", flush=True)
+                   case "text_delta":
+                       print(delta.text, end="", flush=True)
+   ```
+
+   The docs say `display: "summarized"` streams a condensed summary of the reasoning rather than the full chain of thought. With `display: "omitted"`, no thinking text is streamed: the block opens, gets an empty `thinking_delta` and a single `signature_delta`, and closes. The docs also mention a beta `display: "updates"` setting. For the rest of the thinking settings, see the official Thinking page that the streaming page links to. In your own UI, print thinking and answer in different places so readers don't mix them up.
+
+6. **Plan for errors and interrupted streams**
+
+   Errors can arrive as events inside a stream that already started. The docs' example is an `overloaded_error` during high usage, which "would normally correspond to an HTTP 529 in a non-streaming context":
+
+   ```text
+   event: error
+   data: {"type": "error", "error": {"type": "overloaded_error", "message": "Overloaded"}}
+   ```
+
+   So an HTTP status of 200 at the start does not guarantee the stream will finish. Always watch for `error` events and for connections that drop.
+
+   For recovery, the docs describe: (1) save the content you received before the error, (2) send a new request that continues from it, (3) keep streaming. Step 2 depends on the model:
+
+   - **Claude 4.5 and earlier**: put the partial response in an assistant message as the start of the new request.
+   - **Claude 4.6 and later**: instead, add a **user** message with the partial response and an instruction to continue. The docs' example prompt is: "Your previous response was interrupted and ended with [previous_response]. Continue from where you left off."
+
+   Best practices from the docs: use the SDK's built-in accumulation and error handling, and remember that messages can have several content blocks. **Tool use and thinking blocks cannot be partially recovered**; you can resume streaming from the most recent text block.
+
+   <PromptBox>
+   I'm adding streaming to my Claude API app, written in [language/framework]. Here is my current non-streaming code: [paste]. Rewrite it to use the official SDK's streaming helper, print text as it arrives, and handle an error event or a dropped connection. Use only features documented on the official streaming page, and tell me which parts I should test with a real API key before shipping.
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+| Item | Value (official docs, 2026-11-02) |
+| --- | --- |
+| Turn on | `"stream": true` (SDKs: `client.messages.stream(...)`) |
+| Python text only | `for text in stream.text_stream:` |
+| Final message only | `stream.get_final_message()` (Python) |
+| Event order | `message_start`, blocks (`content_block_start`, `content_block_delta`..., `content_block_stop`), `message_delta`, `message_stop` |
+| Delta types | `text_delta`, `input_json_delta`, `thinking_delta`, `signature_delta` |
+| Other events | `ping` (any number), `error`, and future types to ignore |
+| `message_delta` usage | Cumulative |
+| Tool input | Join `partial_json`, parse after `content_block_stop` |
+| Recovery | 4.5 and earlier: assistant message; 4.6 and later: user message that asks to continue |
+| Availability | Every model; the older Bedrock InvokeModel integration does not stream plain SSE |
+
+## Common sticking points
+
+### Nothing prints until the end
+
+- **Cause**: Output is buffered, or you read the final message instead of the text stream.
+- **Fix**: Use `flush=True` (Python) and iterate `stream.text_stream`. Check that no proxy or web server in front of your app buffers the response. The docs don't cover proxy buffering, so test it in your own setup.
+
+### `json.loads` fails on a tool's input
+
+- **Cause**: You parsed one `partial_json` fragment, or parsed before `content_block_stop`.
+- **Fix**: Join all fragments for that block `index` and parse once the block is closed, or use the SDK helper.
+
+### Tool-call events come slowly or in bursts
+
+- **Cause**: The docs say current models emit one complete key and value from the input at a time, so there can be delays while the model works.
+- **Fix**: This is expected. Show a "working" state in your UI. The docs' Fine-grained tool streaming page describes an option for lower latency.
+
+### My code crashed on a new event type
+
+- **Cause**: The docs say new event types may be added under the versioning policy.
+- **Fix**: Ignore event types you don't know instead of raising an error.
+
+### Token usage looks too high when I add up `message_delta` events
+
+- **Cause**: The `usage` counts in `message_delta` are cumulative, not per event.
+- **Fix**: Use the last value, not the sum.
+
+### The stream stopped halfway
+
+- **Cause**: A network problem, a timeout, or an `error` event.
+- **Fix**: Follow the recovery steps for your model version in step 6. If a `tool_use` or `thinking` block was cut off, expect to restart that block rather than resume it.
+
+## Practical tips
+
+- Start with the SDK helper. Move to raw SSE only when your language or framework gives you no choice.
+- Keep display code and accumulation code separate: always build the full message in the background, and decide what the user sees on screen on top of that.
+- Handle `error` events and unknown events from day one. They are easy to forget and hard to reproduce.
+- Use streaming for long outputs even if you don't show partial text; the docs say it helps avoid HTTP timeouts with large `max_tokens`.
+- Record `stop_reason` from the final `message_delta`. It tells you whether to run a tool, continue, or stop.
+- Test your recovery path on purpose by cutting the connection once. We haven't run it, so don't assume it works until you do.
+
+## Next tutorials
+
+- [1. Build a work bot with tool use](/dev/01-tool-use/) — the tool loop that streaming plugs into
+- [13. Structured outputs](/dev/13-structured-outputs/) — reliable JSON from the API
+- [14. Token counting API](/dev/14-token-counting/) — estimate input cost before you send
+- [2. Cut API costs with prompt caching, batches, and effort](/dev/02-cost-optimization/) — when you don't need real-time replies, batches are cheaper
+- [C16. Getting started with the Claude API](/claude/c16-api/)
+- [Developer guide](/roles/developer/)

@@ -1,0 +1,256 @@
+---
+title: "Use Adaptive Thinking and Effort in the Claude API"
+description: "Turn on Claude's thinking in the Messages API: adaptive thinking versus the legacy budget_tokens mode, the display and effort settings, reading thinking blocks and token usage, and the cost, caching, and streaming cautions, from the official docs"
+sidebar:
+  label: "17. Adaptive thinking and effort"
+level: advanced
+category: dev
+tools: ["Claude API", "Messages API", "Python", "anthropic SDK"]
+duration: "40 min"
+prerequisites:
+  - "You've finished C16. Getting started with the Claude API (API key, environment variable setup)"
+  - "Python 3.10 or later, pip install anthropic"
+  - "You've read Dev 2 (cost basics) and Dev 15 (streaming)"
+lastVerified: 2026-11-02
+sources:
+  - title: "Thinking"
+    url: "https://platform.claude.com/docs/en/build-with-claude/thinking"
+  - title: "Steering thinking"
+    url: "https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost"
+  - title: "Effort"
+    url: "https://platform.claude.com/docs/en/build-with-claude/effort"
+  - title: "Extended thinking (legacy manual mode)"
+    url: "https://platform.claude.com/docs/en/build-with-claude/extended-thinking"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- "Extended thinking" is the older name for letting Claude reason before it answers. The docs now call the current approach **adaptive thinking**: `thinking: {"type": "adaptive"}`, and Claude decides per request whether and how much to think.
+- The old manual form, `thinking: {"type": "enabled", "budget_tokens": N}`, is labeled **legacy and deprecated**. The docs say Claude 4.7 and later models reject it with a **400 error**, including Opus 5.5, Sonnet 5.5, and Haiku 5.5.
+- On Claude 5 models (including Opus 5.5, Sonnet 5.5, Haiku 5.5) thinking is **on by default**. Their thinking text is hidden unless you set `display: "summarized"`. Hiding it speeds up streaming but does **not** lower the bill.
+- Depth is controlled with `output_config.effort` (`low`, `medium`, `high`, `xhigh`, `max`), not with a token budget. Opus 5.5 and Haiku 5.5 default to `medium`; most other models default to `high`. Effort is soft guidance; `max_tokens` is the hard cap.
+- Thinking tokens are **billed as output tokens** and count toward `max_tokens`. The response's `usage.output_tokens_details.thinking_tokens` tells you how many were spent thinking.
+- Changing the thinking mode, `budget_tokens`, or the top-level effort **invalidates prompt-cache breakpoints**. Opus 5.5 cannot turn thinking off; Sonnet 5.5 and Haiku 5.5 have their own rules (see the table).
+- We read four official pages on 2026-11-02 and ran our script's printing logic against a local stub. We **made no real API call** (no API key, no `anthropic` package here), so the SDK code follows the docs but is not tested end to end.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Explain the difference between adaptive thinking and the legacy `budget_tokens` mode, and pick the right one for your model.
+- Make a request with thinking on, read the thinking and text blocks, and see how many tokens went to thinking.
+- Tune depth and cost with `effort` and `max_tokens` instead of a token budget.
+- Avoid the common traps: a 400 error from the old syntax, an empty thinking field, truncated answers, and lost cache hits.
+
+## Concepts to know first
+
+A model that answers in one pass has to get everything right on the first try. With thinking on, Claude works through the problem first (restating the question, trying approaches, checking intermediate results) and then answers. The docs say this helps on complex work such as math, coding, analysis, and long agentic tasks. It costs tokens and time, so you do not want it on every request.
+
+| Term | Meaning |
+| --- | --- |
+| **Thinking block** | A `thinking` content block that arrives before the `text` block. It has a `thinking` field and an encrypted `signature`. |
+| **Adaptive thinking** | `thinking: {"type": "adaptive"}`. Claude decides for each request whether to think and how deeply. |
+| **Extended thinking (manual mode)** | `thinking: {"type": "enabled", "budget_tokens": N}`. A fixed budget. Legacy and deprecated, per the docs. |
+| **`display`** | `"summarized"` returns a readable summary of the reasoning; `"omitted"` returns an empty `thinking` field. |
+| **`effort`** | `output_config.effort`. How much work Claude puts into the whole response, including how often and how deeply it thinks. |
+
+What you read in a thinking block is **never the raw chain of thought**: the docs say it is a summary, produced by a different model. You are billed for the full thinking, not for the summary you see.
+
+This tutorial builds on [Dev 2](/dev/02-cost-optimization/), where effort is introduced as a cost lever, and on [Dev 15](/dev/15-streaming/), which shows the `thinking_delta` stream events. If you use batches, thinking works there too ([Dev 16](/dev/16-batch-api/)).
+
+<Aside type="caution" title="Which tutorial text still says 'budget_tokens'?">
+Older articles, blog posts, and sample code use `budget_tokens`. The current docs mark that mode as legacy. If you copy it onto a newer model, you get a 400 error. Check the model table in step 1 first.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I checked what my model does with each thinking setting',
+  'I set max_tokens high enough for thinking plus the answer',
+  'I chose display on purpose (summarized or omitted)',
+  'I set effort explicitly and measured it on my own task',
+  'I read thinking_tokens from usage to see the real cost',
+  'I kept thinking and effort settings steady inside cached conversations',
+]} />
+
+<Steps>
+
+1. **Check what your model does with each setting**
+
+   The docs have a per-model table. These are the rows for the models this site uses most (a 400 error means the API rejects the request):
+
+   | Model | No `thinking` field | `"adaptive"` | `"enabled"` + `budget_tokens` | `"disabled"` |
+   | --- | --- | --- | --- | --- |
+   | Opus 5.5 | Adaptive thinking | Adaptive thinking | 400 error | 400 error |
+   | Sonnet 5.5 | Adaptive thinking | Adaptive thinking | 400 error | 400 error (use `"between_tools"`) |
+   | Haiku 5.5 | Adaptive thinking | Adaptive thinking | 400 error | Thinking off at `high` effort or below |
+   | Opus 4.8 / 4.7 | Thinking off | Adaptive thinking | 400 error | Thinking off |
+   | Opus 4.6 / Sonnet 4.6 | Thinking off | Adaptive thinking | Extended thinking (deprecated) | Thinking off |
+   | Opus 4.5 / Sonnet 4.5 / Haiku 4.5 | Thinking off | 400 error | Extended thinking | Thinking off |
+
+   Read it as: on the Claude 5.5 models you do not need to configure anything to get thinking, and the old budget syntax is rejected. Only the 4.5 generation still takes `budget_tokens` without a deprecation note, and on those models `"adaptive"` is the one that errors. Sonnet 5.5's lowest setting is `thinking: {"type": "between_tools"}`, which turns off up-front thinking (accepted at `high` effort or below). The docs also say you can read `capabilities.thinking.types` from the Models API to check support before sending; we did not open that page (unconfirmed details).
+
+2. **Make a request and read the blocks**
+
+   Save this as `think_demo.py`. It asks for a summarized thinking text, sets a medium effort, and prints the blocks and the token split.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()
+
+   response = client.messages.create(
+       model="claude-opus-5-5",
+       max_tokens=16000,  # thinking tokens count toward this limit
+       thinking={"type": "adaptive", "display": "summarized"},
+       output_config={"effort": "medium"},
+       messages=[
+           {
+               "role": "user",
+               "content": "What is the greatest common divisor of 1071 and 462?",
+           }
+       ],
+   )
+
+
+   def show(response):
+       saw_thinking = False
+       for block in response.content:
+           if block.type == "thinking":
+               saw_thinking = True
+               print("Thinking summary:", block.thinking or "(empty)")
+           elif block.type == "text":
+               print("Answer:", block.text)
+       if not saw_thinking:
+           print("(Claude chose not to think on this request)")
+
+       usage = response.usage
+       details = getattr(usage, "output_tokens_details", None)
+       thinking_tokens = getattr(details, "thinking_tokens", None)
+       print("stop_reason:", response.stop_reason)
+       print("billed output_tokens:", usage.output_tokens)
+       print("of which thinking_tokens:", thinking_tokens)
+
+
+   show(response)
+   ```
+
+   The request shape (`thinking` with `type` and `display`, and `max_tokens: 16000`, model `claude-opus-5-5`) is the docs' own example. The docs show the summary as short text such as the Euclidean algorithm steps, followed by the answer, but the exact wording differs on every run. Putting `effort` in `output_config` alongside `thinking` is documented on the effort page; we did not find a page example that combines both in one request, so treat the combination as our composition of two documented parameters.
+
+3. **Choose `display` on purpose**
+
+   `display` has two stable values:
+
+   - `"summarized"`: the `thinking` field holds a readable summary. This is the default on Opus 4.6, Sonnet 4.6, and earlier models.
+   - `"omitted"`: the `thinking` field is empty, but the encrypted `signature` is still there. This is the default on the Claude 5.5 models, Opus 4.8, and Opus 4.7. The docs say its benefit is a faster time to the first text token when streaming, because no thinking text is streamed.
+
+   Billing is identical either way: you pay for the full thinking tokens, and "omitting reduces latency, not cost." A third value, `"updates"`, is marked beta and needs a beta header; we do not cover it. If Claude skips thinking on an easy request, there is simply no thinking block, whatever `display` says. Never write code that assumes every answer starts with one.
+
+4. **Tune depth with `effort`, not a budget**
+
+   In adaptive mode you do not set a thinking token budget. The docs name two controls:
+
+   | Control | What it does |
+   | --- | --- |
+   | `output_config.effort` | **Soft** guidance on how often and how deeply Claude thinks (and how verbose the whole response is). |
+   | `max_tokens` | A **hard cap** on total output, thinking plus answer. |
+
+   The levels, from the docs: `low` minimizes thinking and may skip it on simple tasks; `medium` is moderate and may skip thinking on simple queries; `high` thinks on most requests that benefit; `xhigh` and `max` go deeper (availability varies by model). Opus 5.5 and Haiku 5.5 default to `medium`, other models to `high`, and setting the default explicitly behaves the same as leaving it out. The docs advise setting effort explicitly and testing on your own task, and say lowering effort is the first lever to try when thinking costs too much. `adaptive` is a thinking mode, not an effort value; never pass it as `effort`.
+
+   Prompt wording can steer too (for example "respond directly when in doubt" in the system prompt), but the docs call it wording-sensitive and say lowering effort is usually the better first lever. They also note that on Sonnet 5.5 and Haiku 5.5, telling the model in the prompt to think less is not reliable.
+
+5. **Watch the token and cost side**
+
+   Thinking tokens are billed as output tokens even when the text is omitted, and they count toward `max_tokens`. If `stop_reason` is `max_tokens`, the answer was cut off. The docs give two fixes: raise `max_tokens`, or lower the effort. Raise the cap if those requests need the reasoning; lower effort if they were over-thought.
+
+   The response's `usage.output_tokens_details.thinking_tokens` is the part of `output_tokens` spent on reasoning (the docs' sample: 348 output tokens, 312 of them thinking). `output_tokens` remains the billed total. When streaming, this breakdown appears only on the final `message_delta` event. For prices, use the official pricing page; we did not open it, so this tutorial gives no price table (unconfirmed).
+
+6. **Use it with streaming, tools, and caching**
+
+   - **Streaming** ([Dev 15](/dev/15-streaming/)): thinking blocks arrive as `thinking_delta` events, then one `signature_delta` just before the block ends. With `display: "omitted"` each thinking block sends a `thinking_delta` with an empty string, then its signature. The docs also say the SDK requires streaming when `max_tokens` is greater than 21,333, a client-side check to avoid HTTP timeouts. You can call the SDK's `.stream()` and take the final message if you do not need events.
+   - **Tools**: within a tool-use turn you must pass the assistant's thinking blocks back **complete and unmodified**, next to the `tool_use` block; modified blocks are rejected with a 400 error. If you filter blocks by type, also keep `redacted_thinking` blocks. Whether older turns' thinking stays in context depends on the model; the API filters it for you, so passing everything back is the docs' recommendation. Do not switch thinking on or off in the middle of a tool-use turn; the docs say the API silently disables thinking for that request.
+   - **Forced tool use**: adaptive thinking allows `tool_choice` of `any` or a named tool, except on Opus 5.5, Sonnet 5.5, Fable 5.1, and Mythos 5.1, which reject it with a 400 error. Use `auto` with strict tool use or structured outputs there.
+   - **Caching** ([Dev 2](/dev/02-cost-optimization/)): switching thinking modes, changing `budget_tokens`, or changing top-level effort starts a new cache prefix, and message-level breakpoints always miss. Pick one setting per cached conversation. The docs also suggest the 1-hour cache duration for thinking-heavy work.
+   - **Batches** ([Dev 16](/dev/16-batch-api/)): Dev 16 reports that the official batch page lists extended thinking among the batchable features. We did not reopen that page for this tutorial, and the Thinking page itself only recommends batches for legacy budgets above 32k.
+
+   <PromptBox>
+   I'm calling the Claude API from Python with the anthropic SDK on the model claude-opus-5-5. Write a small script that sends one hard reasoning question with thinking type adaptive and display summarized, and output_config effort set to low, then the same question at high. Print each answer, whether a thinking block appeared, output_tokens, and usage.output_tokens_details.thinking_tokens, and give me a short table comparing the two runs. Use only parameters documented on the official thinking and effort pages.
+   </PromptBox>
+
+</Steps>
+
+## Other limits to know (from the Thinking page)
+
+- **Sampling parameters**: on the listed newer models, including Opus 5.5, Sonnet 5.5, and Haiku 5.5, non-default `temperature`, `top_p`, or `top_k` return a 400 error whether or not thinking is used. The docs also say that starting with API version `2026-10-21` these parameters return a 400 error on every model. We did not open that migration page.
+- **Prefill**: Claude 4.6 and later reject a prefilled final assistant turn with a 400 error, thinking or not.
+- **Maximum output**: the table lists 128K output tokens for Opus 5.5, Sonnet 5.5, and Haiku 5.5, and 64K for the 4.5 models.
+- **Legacy mode rules** (only if you stay on a 4.5-generation model): `budget_tokens` must be at least 1,024 and less than `max_tokens`; it is a target, not a strict cap. The docs suggest starting near 1,024 for simple tasks and 16,000 or more for complex ones, and using batch processing for budgets above 32k.
+- **Migrating**: remove `budget_tokens`, set `thinking: {"type": "adaptive"}`, and control depth with `output_config: {"effort": ...}`. The docs warn it is a behavior change, not only syntax: a fixed budget thinks on every request, while adaptive may skip thinking on easy ones.
+
+## Quick reference
+
+| Item | Value (official docs, 2026-11-02) |
+| --- | --- |
+| Turn on (current) | `thinking: {"type": "adaptive"}` (on by default for Claude 5 models) |
+| Legacy | `thinking: {"type": "enabled", "budget_tokens": N}`, deprecated; 400 error on Claude 4.7 and later |
+| Show text | `thinking: {"type": "adaptive", "display": "summarized"}` |
+| Effort | `output_config: {"effort": "low" \| "medium" \| "high" \| "xhigh" \| "max"}` |
+| Defaults | `medium` on Opus 5.5 and Haiku 5.5; `high` on other models |
+| Hard cap | `max_tokens` (thinking plus answer) |
+| Billing | Thinking is billed as output tokens, full amount, whatever `display` is |
+| Token split | `usage.output_tokens_details.thinking_tokens` |
+| Cache | Changing thinking mode, `budget_tokens`, or effort invalidates cache breakpoints |
+| Managed Agents | Thinking is always on and set by Managed Agents; the agent has no `thinking` field |
+
+## Common sticking points
+
+### A 400 error mentioning `budget_tokens` or `type: "enabled"`
+
+- **Cause**: The model is Claude 4.7 or later, which rejects the legacy form.
+- **Fix**: Use `thinking: {"type": "adaptive"}` and set `output_config.effort`. The docs' troubleshooting page maps each error message to its fix; we did not open it.
+
+### The `thinking` field is empty
+
+- **Cause**: `display` is `"omitted"`, which is the default on the Claude 5.5 models.
+- **Fix**: Set `display: "summarized"` if you want to read it. The thinking is still billed either way.
+
+### There is no thinking block at all
+
+- **Cause**: Adaptive thinking is optional for the model. On easy requests, or at low effort, Claude can skip it.
+- **Fix**: This is normal. Raise `effort` if you need more thinking, and do not assume a block exists.
+
+### The answer is cut off (`stop_reason: "max_tokens"`)
+
+- **Cause**: Thinking used up `max_tokens` before the answer finished.
+- **Fix**: Raise `max_tokens`, or lower `effort`.
+
+### Cache hits disappeared
+
+- **Cause**: The thinking mode, `budget_tokens`, or top-level effort changed between requests.
+- **Fix**: Hold those steady inside one cached conversation. Some models support a per-message effort change (beta) that keeps the cache; see the effort page.
+
+### My thinking text does not match the billed tokens
+
+- **Cause**: The visible text is a summary. You are billed for the full thinking.
+- **Fix**: Use `usage.output_tokens_details.thinking_tokens` for the real number.
+
+## Practical tips
+
+- Start with the model's default, then compare `low` and `high` on a small sample of your own tasks. Measure quality, latency, and `output_tokens`.
+- Keep `max_tokens` generous when thinking is on. A value sized for a short answer is often too small.
+- Use `display: "omitted"` when your app never shows the reasoning, mainly to speed up streaming.
+- Do not ask the model to write out its reasoning in the answer text to read it. The docs say some models may refuse such requests (`reasoning_extraction`); read the thinking blocks instead.
+- We did not run this against the real API. Treat your first run as a test and check the results by hand.
+
+## Next tutorials
+
+- [2. Cut API costs with prompt caching, batches, and effort](/dev/02-cost-optimization/) — effort and caching as cost levers
+- [15. Streaming responses](/dev/15-streaming/) — read `thinking_delta` events live
+- [16. Large jobs with the Batches API](/dev/16-batch-api/) — thinking inside batches
+- [14. Token counting API](/dev/14-token-counting/) — estimate input cost before you send
+- [C16. Getting started with the Claude API](/claude/c16-api/)
+- [Developer guide](/roles/developer/)
