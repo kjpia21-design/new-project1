@@ -11,7 +11,7 @@ prerequisites:
   - "A paid Claude plan (scheduled tasks and routines are on Pro, Max, Ultra, Team, and Enterprise)"
   - "It helps if you've read C13 (cloud session and routine basics)"
   - "One recurring task you want to automate (one you've done by hand at least once)"
-lastVerified: 2026-10-31
+lastVerified: 2026-11-02
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -36,7 +36,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 - There are broadly **four** official ways to run recurring work automatically in Claude: (1) scheduled tasks in the Claude app, (2) Claude Code cloud **routines** (the official docs' new name is cloud scheduled tasks, as of 2026-10-26), (3) Claude Code desktop **local scheduled tasks**, and (4) **`/loop`**, which runs inside a session.
 - The criteria for choosing are **where it runs, whether your computer has to be on, and whether it needs your local files**. If it has to run even when your computer is off, use the cloud (routines or app scheduled tasks); if it needs local files, use a desktop task; to check on something briefly, use `/loop`.
 - Automatic runs happen **while no one is watching**. Design prompts to be self-contained, results to be reversible (drafts, branches, PRs), and the final commit to be made by a person.
-- Routines are a **research preview**, so behavior and limits can change (as of 2026-10-13).
+- Routines are a **research preview**, so behavior and limits can change (as of 2026-11-02).
 - The basics of routines (creating them, triggers, environments) are in [C13](/claude/c13-cloud-sessions/). This article focuses on **what to choose, how to design safely, and how to verify**.
 </Summary>
 
@@ -146,7 +146,7 @@ App scheduled tasks save a prompt in Claude (Cowork) and run it on a set schedul
 
 ## Quick reference
 
-### Limits and expiration (as of 2026-10-13, subject to change)
+### Limits and expiration (as of 2026-11-02, subject to change)
 
 | Method | Things to know |
 | --- | --- |
@@ -232,7 +232,7 @@ Check the official pages [list of URLs] that this repository's [list of docs to 
 - **Use API triggers carefully.** The token is shown only once, and text you pass in is wrapped as untrusted data, so it takes effect only if the prompt explicitly references it. Keep the token secret.
 
 <Aside type="caution" title="Prices and limits change">
-Routines are a research preview, so behavior, limits, and the API shape can change. The figures in this article are as of 2026-10-13. The official docs that are checked often are in the sources list.
+Routines are a research preview, so behavior, limits, and the API shape can change. The figures in this article are as of 2026-11-02. The official docs that are checked often are in the sources list.
 </Aside>
 
 ## What to read next

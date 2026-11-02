@@ -11,7 +11,7 @@ prerequisites:
   - "A paid Claude plan (Pro, Max, Ultra, Team, Enterprise) or an Anthropic Console account"
   - "One code project folder to work in"
   - "A terminal (macOS, Linux, WSL, Windows PowerShell or CMD)"
-lastVerified: 2026-10-31
+lastVerified: 2026-11-02
 sources:
   - title: "Use Claude Code with your Pro, Max, or Ultra plan"
     url: "https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan"
@@ -45,7 +45,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - You can use it in the terminal (CLI), in IDEs (VS Code, JetBrains), in the Code tab of the desktop app, and on the web (claude.ai/code). They all run on the same engine, so CLAUDE.md, settings, and MCP servers work the same everywhere.
 - Installation is one line. On macOS/Linux/WSL it's `curl -fsSL https://claude.ai/install.sh | bash`, and on Windows PowerShell it's `irm https://claude.ai/install.ps1 | iex`.
 - After installing, run `claude` in your project folder, sign in, and ask for things in plain language.
-- It's available on paid plans from Pro up, and not on Free (as of 2026-10-10).
+- It's available on paid plans from Pro up, and not on Free (as of 2026-11-02).
 </Summary>
 
 ## What you'll be able to do
@@ -155,7 +155,7 @@ Here we'll follow along with the most basic way, the terminal. If you're using t
 
    For a project instructions file, you can create CLAUDE.md with the `/init` command. Details are in [C14](/claude/c14-claude-code-features/).
 
-   **If you're using the desktop app**: Install the app (macOS Intel/Apple Silicon, Windows x64/ARM64), sign in, and click the **Code** tab to start. The app includes Claude Code, so you don't need to install the CLI separately. To move a terminal session into the app, use `/desktop`.
+   **If you're using the desktop app**: Install the app (macOS Intel/Apple Silicon, Windows x64/ARM64; on Ubuntu/Debian it's in beta and installs via apt), sign in, and click the **Code** tab to start. The app includes Claude Code, so you don't need to install the CLI separately. To move a terminal session into the app, use `/desktop`.
 
 5. **Ask for a small code change**
 
@@ -177,7 +177,7 @@ Here we'll follow along with the most basic way, the terminal. If you're using t
 
 ## Quick reference
 
-### Install methods (as of 2026-10-10)
+### Install methods (as of 2026-11-02)
 
 | Method | Command | Auto-updates |
 | --- | --- | --- |
@@ -266,7 +266,7 @@ tail -200 app.log | claude -p "Summarize the cause of the errors in this log"
 
 ### It doesn't work with a Free account
 
-- **Cause**: Claude Code is available on paid plans from Pro up (as of 2026-10-10). You can confirm this on the official pricing page.
+- **Cause**: Claude Code is available on paid plans from Pro up (as of 2026-11-02). You can confirm this on the official pricing page.
 - **Fix**: Check your plan. There are also Console account and supported cloud provider routes. For pricing, see [C2](/claude/c02-plans-limits/).
 
 ### I can't use the Bash tool on Windows

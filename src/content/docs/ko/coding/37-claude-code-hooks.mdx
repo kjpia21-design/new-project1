@@ -11,7 +11,7 @@ prerequisites:
   - "Claude Code가 설치된 상태 (코딩 6 참고)"
   - "연습용 프로젝트 폴더 (복사본 권장)"
   - "jq 설치 (예제가 JSON을 jq로 읽어요), Prettier 예제에는 Node.js"
-lastVerified: 2026-10-31
+lastVerified: 2026-11-02
 sources:
   - title: "Automate actions with hooks (hooks guide)"
     url: "https://code.claude.com/docs/en/hooks-guide"
@@ -239,7 +239,7 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 | 2 | 차단(막을 수 있는 이벤트에서). stderr는 이벤트에 따라 Claude나 사용자에게 가요 |
 | 그 밖 | 대부분의 이벤트에서 차단하지 않는 오류이고 동작은 계속돼요 |
 
-기본 시간 제한(가이드): command·http·mcp_tool 훅은 10분(`UserPromptSubmit`은 30초), prompt 훅은 30초, agent 훅은 60초예요. `timeout`(초)으로 바꿀 수 있어요. 명령 훅은 `/` 명령이나 도구를 호출할 수 없어요. `PostToolUse`는 이미 실행된 도구의 결과를 되돌릴 수 없어요.
+기본 시간 제한(가이드): command·http·mcp_tool 훅은 10분(`UserPromptSubmit`·`PreModelSwitch`·`PostModelSwitch`는 30초, `MessageDisplay`는 10초), prompt 훅은 30초, agent 훅은 60초예요. `timeout`(초)으로 바꿀 수 있어요. 명령 훅은 `/` 명령이나 도구를 호출할 수 없어요. `PostToolUse`는 이미 실행된 도구의 결과를 되돌릴 수 없어요.
 
 ## 자주 막히는 지점
 

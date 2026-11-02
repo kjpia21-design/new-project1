@@ -11,7 +11,7 @@ prerequisites:
   - "A paid Claude plan (Pro or higher) or a Console account"
   - "Claude Code installed and logged in (see C12)"
   - "A practice copy of a folder (you won't touch the originals)"
-lastVerified: 2026-10-26
+lastVerified: 2026-11-02
 sources:
   - title: "Checkpointing"
     url: "https://code.claude.com/docs/en/checkpointing"
@@ -40,7 +40,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - **The very first thing to do is back up by copying the folder.** File renames and deletions may not come back with `/rewind` (the reason is explained below).
 - The order is **check the plan in plan mode → test with 3 files → read the approval screen → open the result yourself → run on everything**.
 - Installation and login are in [C12](/claude/c12-claude-code-overview/), the first-exercise flow is in [Tutorial 6](/coding/06-claude-code-start/), and general safety habits are in [Tutorial 27](/coding/27-first-app-with-claude-code/). This tutorial doesn't repeat them.
-- Claude Code is available on paid plans (Pro or higher) ([C2](/claude/c02-plans-limits/), as of 2026-10-26).
+- Claude Code is available on paid plans (Pro or higher) ([C2](/claude/c02-plans-limits/), as of 2026-11-02).
 </Summary>
 
 ## What you'll be able to do after this tutorial
@@ -76,7 +76,7 @@ We couldn't confirm in official documentation how Claude Code reads and writes E
 
 ### Why is backup first?
 
-[Tutorial 27](/coding/27-first-app-with-claude-code/) introduced `/rewind`, but for file-organizing work you need to know its limits. According to the official checkpointing docs (checked 2026-10-26):
+[Tutorial 27](/coding/27-first-app-with-claude-code/) introduced `/rewind`, but for file-organizing work you need to know its limits. According to the official checkpointing docs (checked 2026-11-02):
 
 - Things changed by Claude's **file-editing tools** are tracked and can be undone.
 - However, **files changed only by commands** like `rm` (delete), `mv` (move or rename), and `cp` (copy) **aren't tracked and can't be undone with `/rewind`.** (If a file was already edited by Claude's editing tools, changes made by commands afterward are said to be undone along with it.) Bulk file renaming is usually done only by commands, so it isn't covered by undo.
@@ -109,7 +109,7 @@ So for file work, **copying the folder before you start is a more reliable safeg
 
 2. **Start Claude Code in the practice folder and switch to plan mode**
 
-   Open a terminal in the `practice` folder and run `claude`. If the terminal is new to you, read [Tutorial 6](/coding/06-claude-code-start/) first. Start in the default mode that asks for confirmation on every change, then press `Shift+Tab` to switch to **plan mode**. According to the official permission modes docs (checked 2026-10-26), the default (Manual) mode runs reads without asking, and plan mode investigates files and proposes a plan but doesn't edit source until you approve.
+   Open a terminal in the `practice` folder and run `claude`. If the terminal is new to you, read [Tutorial 6](/coding/06-claude-code-start/) first. Start in the default mode that asks for confirmation on every change, then press `Shift+Tab` to switch to **plan mode**. According to the official permission modes docs (checked 2026-11-02), the default (Manual) mode runs reads without asking, and plan mode investigates files and proposes a plan but doesn't edit source until you approve.
 
    ```sh
    cd ~/Desktop/practice
@@ -140,7 +140,7 @@ So for file work, **copying the folder before you start is a more reliable safeg
 
 5. **Open the result yourself and double-check**
 
-   Don't just trust Claude saying "done"; **open `merged-result.xlsx` yourself in Excel.** The official best practices also recommend giving Claude a way to check its own work and asking for evidence instead of claims of success (checked 2026-10-26). Check the following four things.
+   Don't just trust Claude saying "done"; **open `merged-result.xlsx` yourself in Excel.** The official best practices also recommend giving Claude a way to check its own work and asking for evidence instead of claims of success (checked 2026-11-02). Check the following four things.
 
    - Does the total row count match the number Claude reported? (Add up the per-file row counts yourself.)
    - Is the amount total right? In Excel, if you select the column, the total appears at the bottom of the screen.
@@ -210,7 +210,7 @@ So for file work, **copying the folder before you start is a more reliable safeg
 
 ### Go slowly with auto-approval modes
 
-The many approval questions can be frustrating. According to the official permission modes docs (checked 2026-10-26), `acceptEdits` mode runs file edits and ordinary file commands like `mkdir`, `touch`, `mv`, and `cp` without asking. That's convenient, but it also means **a rename runs immediately without asking**. The same doc says auto mode doesn't guarantee safety either and advises using it for tasks whose direction you trust. Use it only after you've made a backup and confirmed in the practice folder that the rules are right. The kinds of modes are summarized in [C14](/claude/c14-claude-code-features/).
+The many approval questions can be frustrating. According to the official permission modes docs (checked 2026-11-02), `acceptEdits` mode runs file edits and ordinary file commands like `mkdir`, `touch`, `mv`, and `cp` without asking. That's convenient, but it also means **a rename runs immediately without asking**. The same doc says auto mode doesn't guarantee safety either and advises using it for tasks whose direction you trust. Use it only after you've made a backup and confirmed in the practice folder that the rules are right. The kinds of modes are summarized in [C14](/claude/c14-claude-code-features/).
 
 ## Quick reference
 
