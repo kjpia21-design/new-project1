@@ -11,7 +11,7 @@ prerequisites:
   - "Claude Code installed (see Coding 6)"
   - "A practice project folder (a copy is best)"
   - "jq installed (the examples parse JSON with it); Node.js for the Prettier example"
-lastVerified: 2026-10-31
+lastVerified: 2026-11-02
 sources:
   - title: "Automate actions with hooks (hooks guide)"
     url: "https://code.claude.com/docs/en/hooks-guide"
@@ -239,7 +239,7 @@ The official reference warns that command hooks execute shell commands with your
 | 2 | Block (on events that can be blocked). stderr goes to Claude or the user, depending on the event |
 | Other | Non-blocking error on most events; the action proceeds |
 
-Default timeouts (guide): 10 minutes for command, http and mcp_tool hooks (30 seconds for `UserPromptSubmit`), 30 seconds for prompt hooks, 60 seconds for agent hooks. Override with `timeout` (seconds). Command hooks can't call `/` commands or tools. `PostToolUse` can't undo what the tool already did.
+Default timeouts (guide): 10 minutes for command, http and mcp_tool hooks (30 seconds for `UserPromptSubmit`, `PreModelSwitch`, and `PostModelSwitch`; 10 seconds for `MessageDisplay`), 30 seconds for prompt hooks, 60 seconds for agent hooks. Override with `timeout` (seconds). Command hooks can't call `/` commands or tools. `PostToolUse` can't undo what the tool already did.
 
 ## Common sticking points
 

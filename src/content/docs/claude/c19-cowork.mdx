@@ -11,7 +11,7 @@ prerequisites:
   - "A paid Claude plan (Cowork is on Pro, Max, Ultra, Team, and Enterprise)"
   - "(To use your computer's files and browser) the Claude Desktop app on macOS or Windows"
   - "It helps if you've read C3 (Getting started with the Claude app)"
-lastVerified: 2026-10-31
+lastVerified: 2026-11-02
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -37,10 +37,10 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - **Cowork** brings Claude Code's agentic approach to **general work instead of coding**. You describe the outcome (what the result should look like), and Claude makes a plan, carries out multiple steps on its own, and hands back documents, spreadsheets, or organized files. You don't need a terminal.
-- You can use it on **paid plans (Pro, Max, Ultra, Team, Enterprise)**. For work that uses folders, the browser, or apps on your computer, the **Claude Desktop app on macOS or Windows** has to be open (as of 2026-10-15).
-- On Pro and Max, starting 2026-10-06, **new Cowork tasks run in the cloud**. They keep going even if you close your laptop, and you can follow along from your phone or the web. However, steps that access your folders work only while the desktop app is open.
+- You can use it on **paid plans (Pro, Max, Ultra, Team, Enterprise)**. For work that uses folders, the browser, or apps on your computer, the **Claude Desktop app on macOS or Windows** has to be open (as of 2026-11-02).
+- On Pro, Max, and Ultra, starting 2026-10-06, **new Cowork tasks run in the cloud**. They keep going even if you close your laptop, and you can follow along from your phone or the web. However, steps that access your folders work only while the desktop app is open.
 - Cowork and chat are **being merged into one Claude**. The timing varies by account, so if you still see a "Chat" / "Cowork" choice in the input box, you're on the earlier screen.
-- There are two approval modes: **Manual (default)** and **Auto**. Use Manual for anything involving money, sending messages, or important files, and the surest safety rule is to **not connect sensitive folders at all**.
+- There are three approval modes: **Manual**, **Auto**, and **Skip**. Auto is the default on Pro, Max, Ultra, and Team, and Manual is the default on Enterprise (as of 2026-11-02). Use Manual for anything involving money, sending messages, or important files, and the surest safety rule is to **not connect sensitive folders at all**.
 </Summary>
 
 ## What you'll be able to do after this tutorial
@@ -71,11 +71,11 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 | **Claude Code cloud sessions** | You want to hand off code work in a GitHub repository | [C13](/claude/c13-cloud-sessions/) |
 | **Recurring runs** | You want something to run automatically on a set schedule | [C18](/claude/c18-automate-recurring/) |
 
-<Aside type="note" title="Cowork is now just Claude (as of 2026-10-15)">
-The official help says "Claude Cowork is now just Claude." When you ask a question, Claude decides on its own whether to give a quick answer or do a longer task. It's rolling out in stages starting with Pro and Max, and on Enterprise an admin has to turn on the beta setting. If you still see a "Chat" / "Cowork" choice in the input box, that's the earlier screen, and once you move to the new experience, it's noted that you can't go back. This article is written to work for both screens. If your screen is different, check the [official help](https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude).
+<Aside type="note" title="Cowork is now just Claude (as of 2026-11-02)">
+The official help says "Claude Cowork is now just Claude." When you ask a question, Claude decides on its own whether to give a quick answer or do a longer task. It's rolling out in stages to Pro, Max, and Ultra, on Team (beta) and Enterprise only where "Chat and Cowork unified" is turned on. If you still see a "Chat" / "Cowork" choice in the input box, that's the earlier screen, and once you move to the new experience, it's noted that you can't go back. This article is written to work for both screens. If your screen is different, check the [official help](https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude).
 </Aside>
 
-### Where can you use it? (as of 2026-10-31)
+### Where can you use it? (as of 2026-11-02)
 
 | Device | Availability |
 | --- | --- |
@@ -83,14 +83,14 @@ The official help says "Claude Cowork is now just Claude." When you ask a questi
 | Web (claude.ai) and mobile (iOS, Android) | Pro, Max, Ultra, Team (beta on Team). Enterprise if an owner has turned it on |
 | Chrome side panel | All paid plans. On Enterprise, an owner has to turn on Claude in Chrome and Cowork in the cloud |
 
-As of 2026-10-31, the Cowork getting-started guide lists the desktop app as "Linux (beta)". The same guide says local file access, browser use, and computer use need the Claude Desktop app for macOS or Windows, so check the on-screen prompts and the official help for what works on Linux. [C11](/claude/c11-chrome-computer-use/) notes that computer use works only on macOS and Windows. As for Cowork availability in Korea (for users in Korea), we only confirmed that Claude itself is available in Korea (South Korea is on Anthropic's supported countries list, confirmed 2026-10-15), and Anthropic's supported-countries policy page treats Cowork as subject to the same rules and doesn't list any Cowork-specific regional restrictions (confirmed 2026-10-19).
+As of 2026-11-02, the Cowork getting-started guide lists the desktop app as "Linux (beta)". The same guide says local file access, browser use, and computer use need the Claude Desktop app for macOS or Windows, so check the on-screen prompts and the official help for what works on Linux. [C11](/claude/c11-chrome-computer-use/) notes that computer use works only on macOS and Windows. As for Cowork availability in Korea (for users in Korea), we only confirmed that Claude itself is available in Korea (South Korea is on Anthropic's supported countries list, confirmed 2026-11-02), and Anthropic's supported-countries policy page treats Cowork as subject to the same rules and doesn't list any Cowork-specific regional restrictions (confirmed 2026-10-19).
 
 ## Step by step
 
 <Checklist items={[
   'I installed Claude Desktop and logged in with a paid-plan account',
   'I made a dedicated working folder and didn\'t put sensitive files in it',
-  'I left the approval mode on Manual (default) and started my first task',
+  'I set the approval mode to Manual and started my first task',
   'I watched the progress and changed direction when needed',
   'I reviewed the result myself before using it',
   '(Optional) I scheduled only a low-risk recurring task',
@@ -124,9 +124,9 @@ As of 2026-10-31, the Cowork getting-started guide lists the desktop app as "Lin
 
    | Mode | Behavior |
    | --- | --- |
-   | **Manual (default)** | Asks you to allow or deny each action. The older name is "Ask before acting." |
-   | **Auto** | Proceeds without stopping, but runs a safety check on every action and blocks risky ones. If blocks keep happening, it goes back to asking one at a time. It's noted that the extra checks **use more of your usage**. |
-   | **Skip all approvals** | Neither asks nor checks. Use it only when you fully trust every element involved. |
+   | **Manual** | Asks you to allow or deny each action. The older name is "Ask before acting." Default on Enterprise. |
+   | **Auto** (default on Pro, Max, Ultra, and Team) | Proceeds without stopping, but runs a safety check on every action and blocks risky ones. If blocks keep happening, it goes back to asking one at a time. It's noted that the extra checks **use more of your usage**. |
+   | **Skip** (older name: "Act without asking") | Neither asks nor checks. Use it only when you fully trust every element involved. |
 
    In any mode, **it always asks for permission before permanently deleting files**. Start with Manual.
 
@@ -149,7 +149,7 @@ As of 2026-10-31, the Cowork getting-started guide lists the desktop app as "Lin
 
 ## Quick reference
 
-### What you can use and what's required (as of 2026-10-15)
+### What you can use and what's required (as of 2026-11-02)
 
 | Feature | Where | Desktop app required? |
 | --- | --- | --- |
@@ -159,9 +159,9 @@ As of 2026-10-31, the Cowork getting-started guide lists the desktop app as "Lin
 | Projects | Everywhere | Projects tied to local folders: desktop only |
 | Folders and files on your computer | Tasks started on desktop, and when following along from web or mobile | **Yes.** Only while the app is open |
 | Browser use (built-in browser, Claude in Chrome) | Mainly desktop | **Yes** |
-| Computer use | Pro and Max beta | **Yes** |
+| Computer use | Beta on Pro, Max, and Ultra | **Yes** |
 
-### Limitations to know (as of 2026-10-15)
+### Limitations to know (as of 2026-11-02)
 
 - **Sessions can't be shared**: You can't share a session itself with others. Artifacts you create can be shared individually.
 - **Some features are desktop-only** (live artifacts made before 2026-08-19, plugins that include local MCP servers).
@@ -196,7 +196,7 @@ Multi-step tasks use more of your usage than quick questions. If you hit your li
 
 ### What happens to my earlier local-only tasks?
 
-- After 2026-10-06, new tasks on Pro and Max run in the cloud, and the "Only on your computer" option is gone. Local tasks you already started stay local until they finish. To run something only on your own computer, you're directed to use Claude Code on the desktop ([C12](/claude/c12-claude-code-overview/)). The official docs also describe the procedure for downloading Cowork task data and bringing it into Claude Code.
+- After 2026-10-06, new tasks on Pro, Max, and Ultra run in the cloud, and the "Only on your computer" option is gone. Local tasks you already started stay local until they finish. To run something only on your own computer, you're directed to use Claude Code on the desktop ([C12](/claude/c12-claude-code-overview/)). The official docs also describe the procedure for downloading Cowork task data and bringing it into Claude Code.
 
 ## Practical tips
 
@@ -209,7 +209,7 @@ Multi-step tasks use more of your usage than quick questions. If you hit your li
 - **Decide the scope of memory.** Cloud sessions carry over your chat memory. To run once without memory, turn Memory off from the "+" menu before you start. You can't change it after starting ([C9](/claude/c09-memory-settings/)).
 - **You can delete things.** You can delete a task at any time, and it's noted that it's removed from backend storage within 30 days.
 
-<Aside type="caution" title="Items we couldn't confirm (as of 2026-10-31)">
+<Aside type="caution" title="Items we couldn't confirm (as of 2026-11-02)">
 We couldn't confirm in the official help articles we read this time the exact menu name and order for connecting folders, or exactly which features work in the Linux beta. Defer to the on-screen prompts and the official help.
 </Aside>
 

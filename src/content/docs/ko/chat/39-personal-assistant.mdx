@@ -10,7 +10,7 @@ duration: "30분"
 prerequisites:
   - "Claude, Gemini, ChatGPT 중 하나 이상의 계정"
   - "캘린더 반영은 Google 계정과 Google Calendar가 있으면 따라 하기 쉬워요 (없어도 1~3단계, 5~6단계는 가능해요)"
-lastVerified: 2026-10-26
+lastVerified: 2026-11-02
 status: published
 sources:
   - title: "Claude 지원센터: Google Workspace 커넥터 사용하기"
@@ -70,7 +70,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 
 <Aside type="note" title="이 글에서 확인하지 못한 점">
 - **ChatGPT의 Google Calendar 연동**: 확인한 공식 문서(Plugins)에는 Gmail과 Google Drive 플러그인이 예로 나와요. Google Calendar는 이 문서에서 확인하지 못했어요.
-- **ChatGPT 예약된 작업의 요금제 조건**: 공식 문서에는 "해당되는 플랜(eligible plans)", "워크스페이스에서 활성화된 경우"라고만 나와 있어서 어느 요금제에서 쓰는지는 확인하지 못했어요.
+- **ChatGPT 예약된 작업의 요금제 조건**: 공식 문서는 예약된 작업이 ChatGPT 웹·모바일·데스크톱 앱에서 제공되고, 이용 가능 여부가 플랜과 워크스페이스 설정에 따라 달라지며, Gmail·Slack·GitHub 이벤트 같은 이벤트 기반 작업만 "해당되는 플랜(eligible plan)"이 필요하다고 안내해요(2026-11-02 기준). 어느 요금제인지는 적혀 있지 않아서 확인하지 못했어요.
 - 항공권·숙소·식당을 **AI가 대신 예약**해 주는 기능은 이 글에서 확인하지 않았어요. 계획 초안과 확인 목록을 만드는 데까지만 다뤄요.
 - 화면의 메뉴 이름은 계정, 기기, 시기에 따라 달라요. 아래 경로는 도움말에 적힌 예시예요.
 </Aside>
@@ -209,8 +209,8 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 
    비서를 쓰다 보면 AI가 내 정보를 많이 알게 돼요. 한 번씩 점검하세요.
 
-   - **연결 해제**: Gemini는 연결된 앱 설정에서 언제든 연결하거나 해제할 수 있다고 안내해요(웹: 설정 및 도움말 > 연결된 앱, 모바일: 메뉴 > 맞춤설정 > 커넥터. 메뉴 이름은 기기와 계정에 따라 달라요). Claude는 [커넥터 편](/ko/claude/c07-connectors/)에서 해제 방법을 다뤘어요.
-   - **메모리**: Claude는 Free, Pro, Max에서 메모리가 기본으로 켜져 있고, 설정(Settings) > Your Claude의 "Memory from chats"에서 끌 수 있어요(예전 화면은 설정 > 메모리(Memory)의 "Generate memory from chats"). 기록을 남기고 싶지 않은 대화는 새 채팅 오른쪽 위의 유령 아이콘으로 시크릿 채팅을 쓸 수 있고, 무료 플랜을 포함한 모든 사용자가 쓸 수 있다고 안내돼요. 자세한 내용은 [메모리와 개인 설정](/ko/claude/c09-memory-settings/)에 있어요.
+   - **연결 해제**: Gemini는 연결된 앱 설정에서 언제든 연결하거나 해제할 수 있다고 안내해요(웹: 사이드바 > 맞춤설정(Customize) > 커넥터(Connectors)에서 앱의 더보기 > 연결 해제, 모바일: 메뉴 > 맞춤설정 > 커넥터. 메뉴 이름은 기기와 계정에 따라 달라요). Claude는 [커넥터 편](/ko/claude/c07-connectors/)에서 해제 방법을 다뤘어요.
+   - **메모리**: Claude는 Free, Pro, Max, Ultra에서 메모리가 기본으로 켜져 있고, 설정(Settings) > Your Claude의 "Memory from chats"에서 끌 수 있어요(예전 화면은 설정 > 메모리(Memory)의 "Generate memory from chats"). 기록을 남기고 싶지 않은 대화는 새 채팅 오른쪽 위의 유령 아이콘으로 시크릿 채팅을 쓸 수 있고, 무료 플랜을 포함한 모든 사용자가 쓸 수 있다고 안내돼요. 자세한 내용은 [메모리와 개인 설정](/ko/claude/c09-memory-settings/)에 있어요.
    - **ChatGPT**: 설정(Settings)에서 개인화 기능과 메모리를 켜고 끌 수 있다고 공식 문서가 안내해요.
    - 서비스별 학습·기록 설정은 [5편: 개인정보·안전](/ko/basics/05-privacy-safety/)에서 다뤘어요.
 

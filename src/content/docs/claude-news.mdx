@@ -7,7 +7,7 @@ import NewsItem from '../../components/NewsItem.astro';
 
 This collects Claude updates from Anthropic's official channels, newest first. We picked only what matters to people who actually use Claude, such as model releases, pricing, and new features in Claude Code and the app, and left out minor bug fixes. We keep checking the official channels and updating this page.
 
-**Last updated: 2026-10-30**
+**Last updated: 2026-11-02**
 
 ## Official channels we monitor
 
@@ -16,6 +16,16 @@ This collects Claude updates from Anthropic's official channels, newest first. W
 - [Claude Code CHANGELOG.md (raw source)](https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md)
 - [Claude app release notes](https://support.claude.com/en/articles/12138966-release-notes): claude.ai, desktop, Cowork, plans
 - [Anthropic News](https://www.anthropic.com/news): policy, partnerships, model announcements
+
+## November 2026
+
+<NewsItem date="Oct 31" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+Versions 2.1.314 (Oct 30) and 2.1.316 (Oct 31) are out. You can now set the effort level subagents run at with the `CLAUDE_CODE_SUBAGENT_EFFORT` environment variable, and turn off the `ultrathink` keyword with `CLAUDE_CODE_DISABLE_ULTRATHINK`. The `permissions.blockWritesOutsideWorkingDirectories` setting makes Write, Edit and NotebookEdit refuse paths outside the working directories in every permission mode. In the VS Code extension and the Desktop Code tab, long conversations left idle are now summarized (compacted) automatically. Server-managed settings for Team and Enterprise logins now apply without an approval prompt.
+</NewsItem>
+
+<NewsItem date="Oct 30" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c16-api/" tutorialLabel="C16 Claude API basics">
+Fast mode for Claude Opus 4.8 is deprecated and will be removed on Nov 30, 2026. After that, requests to `claude-opus-4-8` with `speed: "fast"` return an error. To keep using fast mode, migrate to Claude Opus 5.5 (see the migration guide and the fast mode page in the developer docs). Claude Code 2.1.316 carries the same notice.
+</NewsItem>
 
 ## October 2026
 

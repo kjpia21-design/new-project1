@@ -11,7 +11,7 @@ prerequisites:
   - "Claude Console 계정 (platform.claude.com)"
   - "API 사용을 위한 결제 설정 (Pro/Max/Ultra 구독과 별개예요)"
   - "터미널, Python 3.10 이상 (Python 예제용)"
-lastVerified: 2026-10-31
+lastVerified: 2026-11-02
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -48,7 +48,7 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 - 키는 Console의 Settings > API keys에서 만들어요. `sk-ant-`로 시작하고, **만들 때 한 번만** 전체가 보여요.
 - 키를 환경변수 `ANTHROPIC_API_KEY`에 넣으면 SDK가 자동으로 읽어요. **키를 코드에 직접 적지 마세요.**
 - 모델 ID는 `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5`, `claude-fable-5-1`이에요.
-- 가격은 100만 토큰당 입력/출력 기준으로 Opus 5.5 $4/$20, Sonnet 5.5 $2/$10이에요 (2026-10-10 기준).
+- 가격은 100만 토큰당 입력/출력 기준으로 Opus 5.5 $4/$20, Sonnet 5.5 $2/$10이에요 (2026-11-02 기준).
 - 예제의 모델 ID만 바꿔 돌릴 때 **모델마다 막히는 파라미터가 달라요.** Opus 5.5는 thinking을 끌 수 없고, Haiku 5.5는 `budget_tokens`와 샘플링 파라미터가 400 오류예요. 자세한 표는 빠른 참조표에 있어요.
 </Summary>
 
@@ -82,7 +82,7 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 | 워크스페이스 키 | 레거시예요. |
 
 <Aside type="note" title="티어와 결제 참고">
-속도 제한은 사용 티어(Start, Build, Scale, Custom)로 정해지고 조직이 사용 이력에 따라 자동 배치돼요(공식 Rate limits 문서, 2026-10-10). 월 지출 상한은 Start $500, Build $1,000, Scale $200,000이고, 모델별 분당 요청·토큰 한도는 티어마다 달라요. 예를 들어 Start 티어의 Sonnet 5.5는 분당 요청 1,000, 입력 토큰 2,000,000, 출력 토큰 400,000이에요. 새 조직은 이보다 낮은 Evaluation 티어에서 시작할 수 있어요. 크레딧 충전은 공식 결제 도움말에 따라 Admin 또는 Billing 역할로 Console에 로그인해 Settings > Billing에서 "Buy credits"를 누르고 금액을 입력해 확정해요. 구매한 크레딧은 바로 적용돼요(2026-10-13 확인). 구매한 크레딧은 구매일로부터 1년 뒤 만료되고 만료일은 연장할 수 없으며 환불되지 않아요(2026-10-19 확인). 최소·최대 구매 금액은 이 도움말에 적혀 있지 않아요. 청구서(인보이스) 계약 조직은 월 단위로 청구돼요. 결제 수단 등록 화면은 Console 안내를 따르세요.
+속도 제한은 사용 티어(Start, Build, Scale, Custom)로 정해지고 조직이 사용 이력에 따라 자동 배치돼요(공식 Rate limits 문서, 2026-11-02). 월 지출 상한은 Start $500, Build $1,000, Scale $200,000이고, 모델별 분당 요청·토큰 한도는 티어마다 달라요. 예를 들어 Start 티어의 Sonnet 5.5는 분당 요청 4,000, 입력 토큰 2,000,000, 출력 토큰 400,000이에요. 새 조직은 이보다 낮은 Evaluation 티어에서 시작할 수 있어요. 크레딧 충전은 공식 결제 도움말에 따라 Admin 또는 Billing 역할로 Console에 로그인해 Settings > Billing에서 "Buy credits"를 누르고 금액을 입력해 확정해요. 구매한 크레딧은 바로 적용돼요(2026-10-13 확인). 구매한 크레딧은 구매일로부터 1년 뒤 만료되고 만료일은 연장할 수 없으며 환불되지 않아요(2026-10-19 확인). 최소·최대 구매 금액은 이 도움말에 적혀 있지 않아요. 청구서(인보이스) 계약 조직은 월 단위로 청구돼요. 결제 수단 등록 화면은 Console 안내를 따르세요.
 </Aside>
 
 ## 단계별 따라하기
@@ -211,7 +211,7 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 
 ## 빠른 참조표
 
-### 모델 ID와 가격 (100만 토큰당 입력/출력, 2026-10-10 기준)
+### 모델 ID와 가격 (100만 토큰당 입력/출력, 2026-11-02 기준)
 
 가격은 미국 달러 기준이에요. 자세한 내용은 [공식 pricing 페이지](https://platform.claude.com/docs/en/about-claude/pricing)를 확인하세요.
 
@@ -234,14 +234,14 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 | 헤더 | `content-type: application/json`, `x-api-key: $ANTHROPIC_API_KEY`, `anthropic-version: 2023-06-01` (공식 quickstart 기준. 새 API 버전은 아래 설명 참고. 2026-10-26 기준 마이그레이션 문서는 API가 키를 `X-Api-Key`와 `Authorization: Bearer <키>` 두 헤더 모두로 받는다고 안내해요) |
 | 본문 | `model`, `max_tokens`, `messages` (시스템 프롬프트는 `system`) |
 
-### 모델별 요청 제한 (400 오류 주의, 2026-10-11 기준)
+### 모델별 요청 제한 (400 오류 주의, 2026-11-02 기준)
 
 예제의 `model`만 바꿔 쓰면 아래 이유로 400 오류가 날 수 있어요. 공식 릴리스 노트 기준이에요.
 
 | 모델 | 제한 |
 | --- | --- |
-| Opus 5.5 | thinking을 끌 수 없어요. `thinking: {"type": "disabled"}`와 `{"type": "enabled", ...}`는 400 오류예요. `thinking` 필드를 빼고 `effort`로 깊이를 조절하세요. `tool_choice`의 `any`, `tool`도 400 오류라서 `auto`와 strict tool use를 쓰세요. |
-| Sonnet 5.5 | `tool_choice`의 `any`, `tool`은 400 오류예요. `auto`와 strict tool use를 쓰세요. (샘플링 파라미터 400 제약은 Sonnet 5.5가 아니라 이전 세대 Sonnet 5와 Haiku 5.5에 해당해요.) |
+| Opus 5.5 | 샘플링 파라미터(`temperature`, `top_p`, `top_k`)와 어시스턴트 메시지 prefill도 400 오류예요. thinking을 끌 수 없어요. `thinking: {"type": "disabled"}`와 `{"type": "enabled", ...}`는 400 오류예요. `thinking` 필드를 빼고 `effort`로 깊이를 조절하세요. `tool_choice`의 `any`, `tool`도 400 오류라서 `auto`와 strict tool use를 쓰세요. |
+| Sonnet 5.5 | 다섯 가지 설정이 400 오류예요: thinking 예산(`budget_tokens`), 샘플링 파라미터(`temperature`, `top_p`, `top_k`), 어시스턴트 메시지 prefill, `tool_choice`의 `any`/`tool`(`auto`와 strict tool use를 쓰세요), `thinking: {"type": "disabled"}`(처음부터 생각하는 단계를 끄려면 `thinking: {"type": "between_tools"}`를 쓰세요). |
 | Fable 5.1, Mythos 5.1 | `tool_choice`의 `any`, `tool`은 지원되지 않고 400 오류예요(`auto`, `none`은 그대로). 스키마에 맞는 도구 입력이 필요하면 strict tool use를 쓰세요. |
 | Haiku 5.5 | Haiku 4.5 방식 코드가 깨질 수 있어요. `budget_tokens`(수동 확장 사고), `temperature`·`top_p`·`top_k`, assistant 메시지 prefill이 각각 400 오류를 낼 수 있어요. 적응형 사고가 기본이라 응답이 `thinking` 블록으로 시작할 수 있고, 그 텍스트는 `thinking.display`를 `"summarized"`로 정하지 않으면 생략돼요. |
 
@@ -281,7 +281,7 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 
 ### Opus 5.5나 Haiku 5.5로 바꿨더니 400 오류가 나요
 
-- **원인**: Opus 5.5는 thinking 끄기·고정과 `tool_choice`의 `any`/`tool`이, Haiku 5.5는 `budget_tokens`·샘플링 파라미터·prefill이 허용되지 않아요.
+- **원인**: Opus 5.5는 thinking 끄기·고정, `tool_choice`의 `any`/`tool`, 샘플링 파라미터, prefill이, Haiku 5.5는 `budget_tokens`·샘플링 파라미터·prefill이 허용되지 않아요.
 - **해결**: 빠른 참조표의 "모델별 요청 제한"을 보고 해당 파라미터를 빼세요. 오류 메시지의 파라미터 이름이 단서예요.
 
 ### Python SDK를 올렸더니 `temperature`가 오류예요 (SDK 1.0)
