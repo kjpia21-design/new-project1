@@ -1,0 +1,215 @@
+---
+title: "Review Code with AI Before You Merge"
+description: "Use /code-review in Claude Code, the managed Code Review service, a GitHub Actions workflow and GitHub Copilot code review to get an AI first pass on a pull request, and keep a human in charge of the merge. Based on the official docs"
+sidebar:
+  label: "15. AI code review"
+level: practical
+category: coding
+tools: ["Claude Code", "GitHub Copilot"]
+duration: "30 min"
+prerequisites:
+  - "A Git repository with a branch or pull request to review (a practice repository is best)"
+  - "Claude Code installed and signed in for the /code-review part (see Getting started with Claude Code)"
+  - "A GitHub account; Copilot code review needs Copilot access"
+lastVerified: 2026-11-02
+sources:
+  - title: "Review code locally (/code-review)"
+    url: "https://code.claude.com/docs/en/code-review-local"
+  - title: "Code Review (managed service)"
+    url: "https://code.claude.com/docs/en/code-review"
+  - title: "Claude Code GitHub Actions"
+    url: "https://code.claude.com/docs/en/github-actions"
+  - title: "Using GitHub Copilot code review"
+    url: "https://docs.github.com/en/copilot/using-github-copilot/code-review/using-copilot-code-review"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- AI review is a **first pass**, not a replacement for a human reviewer. The official Claude docs say it "may miss bugs, security vulnerabilities, or other issues", and a review with no findings does not mean the code is error-free or secure. The merge decision stays with your team.
+- Four routes are covered: `/code-review` in your own Claude Code session (any plan), the managed **Code Review** service (Team and Enterprise plans, GitHub repositories, an Owner turns it on), your own **GitHub Actions** workflow, and **GitHub Copilot code review** on a pull request.
+- Where your code goes differs by route. The managed Code Review runs on Anthropic infrastructure; a GitHub Actions run uses GitHub runners plus the Claude API; Copilot code review runs through GitHub. Check your company's rules and never put secrets in code you send for review.
+- You can steer reviews with files in the repository: `CLAUDE.md` and `REVIEW.md` for Claude, `.github/copilot-instructions.md` and others for Copilot.
+- We read the official pages on 2026-11-02. We did not run `/code-review`, set up a workflow, or request a Copilot review, so every command and behavior below comes from the docs.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Run `/code-review` on a branch, a pull request number or a folder, and know what `--fix` and `--comment` change.
+- Tell the four review routes apart: where each runs, who can use it, and what it can touch.
+- Write review guidance files so reviews focus on what your team cares about.
+- Treat AI findings as leads to verify, and keep a person responsible for the merge.
+
+## Concepts to know first
+
+A **pull request** (PR) is a proposal to merge your branch into another one, and review is the step where someone reads the change before it lands. [Coding 3](/coding/08-cloud-github/) shows Claude Code working with GitHub. [Coding 13](/coding/40-settings-permissions/) explains the permission modes that decide whether `--fix` can edit your files. [Dev 7](/dev/07-headless-ci/) covers running Claude Code unattended in GitHub Actions.
+
+### Compare the routes (official docs, 2026-11-02)
+
+| Route | What starts it | Where it runs | Who can use it |
+| --- | --- | --- | --- |
+| `/code-review` | You type it in Claude Code | Your own Claude Code session | Anyone, on any plan |
+| Code Review (managed) | PR activity as set per repository, or an `@claude review` comment | Anthropic infrastructure | Team or Enterprise plan, GitHub repositories, after an Owner turns it on |
+| Claude in your own CI | Your pipeline's events, such as every PR | Your own CI runners (for example GitHub Actions) | Anyone with a Claude API key or cloud provider credentials |
+| Copilot code review | You request Copilot as a reviewer on the PR, or it is set to run automatically | GitHub | People with Copilot access (details in step 5) |
+
+<Aside type="caution" title="AI review does not replace a person">
+The managed Code Review posts comments and a check run, and the docs say a review never approves or blocks the pull request. Copilot leaves a "Comment" review by default, not an "Approve" one, and its approvals are off unless an administrator enables them. Even where an AI approval can be enabled, decide on purpose whether it should count. For anything important, a teammate still reads the change.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I know what I am allowed to send to an AI service for this repository',
+  'I ran or planned a /code-review and checked what --fix would edit',
+  'I know which review route my team can use',
+  'I wrote down what reviews should focus on (CLAUDE.md, REVIEW.md or Copilot instructions)',
+  'I verified each finding myself before changing code, and a person approves the merge',
+]} />
+
+<Steps>
+
+1. **Decide what may leave your computer**
+
+   Code under review is read by an AI service, so settle this first. Ask your company whether this repository may be used with AI tools (see [Basics 5](/basics/05-privacy-safety/) and [Basics 12](/basics/12-privacy-settings/)). Remove API keys, passwords and personal data from the branch before you review it; if a secret was already committed, rotate it. The official docs describe the routes this way:
+
+   - The managed Code Review runs on Anthropic infrastructure and reaches your repository through the Claude GitHub App. Inside a review the access is read-only, and it does not push commits.
+   - The managed service is not available to organizations with Zero Data Retention or the HIPAA configuration, and it is not covered under Anthropic's Business Associate Agreement.
+   - `/code-review` runs in your own session, and its usage counts toward your plan or API billing like the rest of the session.
+
+   We did not confirm every retention detail for Copilot, so check GitHub's own pages for your plan.
+
+2. **Run a first review in Claude Code with `/code-review`**
+
+   Open `claude` in your repository on the branch you want reviewed and type:
+
+   ```text
+   /code-review
+   ```
+
+   With no target, the docs say it reviews your branch's commits ahead of its upstream plus your uncommitted changes (if there is no upstream, it compares against `main` or the previous commit). The review runs as a background subagent with its own context window, and the findings arrive in your conversation when it finishes. `/review` is an alias.
+
+   To review something else, add a target:
+
+   | To review | Type |
+   | --- | --- |
+   | A pull request by number | `/code-review 1234` |
+   | One branch against another | `/code-review main...my-feature` |
+   | Your last 15 commits | `/code-review HEAD~15..HEAD` |
+   | A file or folder | `/code-review src/auth` |
+
+   Two flags change what happens next. `--fix` also asks Claude to apply the findings to your working tree, and those edits go through your permission mode. `--comment` posts the findings on a GitHub pull request as inline comments (or as one note on a GitLab merge request). Start without either flag so you can read the findings first. The docs add that a background review applies `--fix` edits outside your session's checkpoints, so `/rewind` may not undo them; use git to revert.
+
+   One more detail from the docs: a local review follows your `CLAUDE.md` but does not read `REVIEW.md`, which configures the managed service.
+
+3. **Read the findings critically**
+
+   Treat each finding as a lead. Open the file and line, reproduce or reason about the problem, then decide. Useful follow-up prompts:
+
+   <PromptBox>
+   For finding 2, show me the exact input that triggers the bug and the line where it goes wrong. If you cannot, say so.
+   </PromptBox>
+
+   <PromptBox>
+   Which parts of this change did the review not cover (tests, config, generated files)? List them so I can read those myself.
+   </PromptBox>
+
+   A long list is not a better review. The docs describe a verification step in the managed service that filters false positives, but they also say it can miss issues, so a clean result is not proof.
+
+4. **Use Claude's managed review or your own workflow for every pull request**
+
+   *Managed Code Review.* An Owner of your Claude organization sets it up; it is for Team and Enterprise plans with GitHub-hosted repositories. Per the docs, each repository can run reviews once when a PR opens, after every push, or only on request, and anyone with write access can comment `@claude review` to start one. Findings appear as inline comments ranked by severity, plus a check run named "Claude Code Review" that does not conclude as a failure. Review depth has three levels (Quick, Standard as the default, Deep), and a deeper review costs more. It does not build or run your code. It reads `REVIEW.md` from the base or default branch, never from the PR's own changes. Costs and spend limits are on the official costs page; we did not read it.
+
+   *Your own GitHub Actions workflow.* Run `/install-github-app` in Claude Code (github.com repositories, repository admin access needed) to install the Claude GitHub App, store an authentication secret, and open a pull request that adds the workflow files. The docs' review example installs the `code-review` plugin and runs it when a PR is opened, updated, reopened or marked ready for review. Two lines matter: `--comment` in the prompt makes Claude post on the PR (without it, findings appear only in the workflow log), and `claude_args` must keep the `--allowedTools` line that names the inline-comment tool.
+
+   ```yaml
+   # abridged from the official GitHub Actions page; read the page for the full file
+   - uses: anthropics/claude-code-action@v1
+     with:
+       anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+       plugin_marketplaces: "https://github.com/anthropics/claude-plugins-official.git"
+       plugins: "code-review@claude-plugins-official"
+       prompt: "/code-review:code-review --comment ${{ github.repository }}/pull/${{ github.event.pull_request.number }}"
+       claude_args: '--allowedTools "mcp__github_inline_comment__create_inline_comment"'
+   ```
+
+   <Aside type="danger" title="Keep keys in GitHub Secrets">
+   The docs say never to commit API keys or OAuth tokens. Store them as GitHub Secrets and reference them as `${{ secrets.NAME }}`, give the workflow only the permissions it needs, and review Claude's changes before merging. The workflow also uses GitHub Actions minutes and API tokens, which cost money. On public repositories, GitHub withholds secrets from runs triggered by fork pull requests, so that review runs only for same-repository branches.
+   </Aside>
+
+5. **Request a Copilot review on GitHub**
+
+   On GitHub.com, open a pull request, find **Reviewers** in the right sidebar, and click **Request** next to Copilot. The docs say a review usually takes under 30 seconds, and each comment is labeled High, Medium or Low severity. Where possible a comment includes a suggested change you can apply with a couple of clicks, and **Fix with Copilot** can ask the cloud agent to implement a fix (this needs Copilot code review and the cloud agent enabled).
+
+   Other facts from the docs: Copilot does not re-review new pushes unless an automatic-review setting is on or you request a re-review; it can repeat comments you already resolved; and in VS Code you can review a selection or your uncommitted changes before you even open a PR. Effort levels (Lite, Balanced, Max) trade thoroughness for cost; the page gives rough per-review averages, which can change, so check it before relying on them.
+
+   To steer Copilot, add `.github/copilot-instructions.md` (repository-wide) or `.github/instructions/**/*.instructions.md` (path-specific). The docs add that Copilot code review also reads `AGENTS.md`, `CLAUDE.md`, `GEMINI.md` and `REVIEW.md` if they exist, and takes instructions from the head branch (your changes), not the base branch. We did not confirm which Copilot plans include code review; see GitHub's plans page.
+
+6. **Write review guidance, then finish with a person**
+
+   By default the managed Claude service focuses on correctness, not formatting or missing tests. Tell it what else matters in the files it reads. A starter `REVIEW.md` might say:
+
+   ```markdown
+   # Review guidance
+   - Flag any change that logs request bodies or tokens.
+   - Database queries must use parameters, never string concatenation.
+   - Skip style nits; our formatter handles them.
+   ```
+
+   Before you merge: have the author explain each finding they accepted or rejected, run the tests yourself, and let a human reviewer approve. If the AI and the human disagree, the human decides.
+
+</Steps>
+
+## Quick reference
+
+| Task | Command or place |
+| --- | --- |
+| Review current branch | `/code-review` |
+| Review a PR by number | `/code-review 1234` |
+| Apply fixes after reviewing | `/code-review --fix` |
+| Post findings on a PR | `/code-review --comment 1234` |
+| Set up the GitHub Action | `/install-github-app` |
+| Start a managed review on a PR | comment `@claude review` (write access) |
+| Request Copilot review | PR page, Reviewers, Request next to Copilot |
+
+## Common problems
+
+### The review found nothing
+
+- **Cause**: There may be nothing to find, or the review missed it. The docs say a review with no findings is not proof.
+- **Fix**: Read the risky parts yourself and run the tests.
+
+### `--fix` edited files I did not expect
+
+- **Cause**: `--fix` applies findings to your working tree through your permission mode.
+- **Fix**: Check `git diff`, and revert with git if needed. A background review's edits may not be undone by `/rewind`.
+
+### The workflow ran but nothing appeared on the pull request
+
+- **Cause**: Without `--comment`, the findings stay in the workflow run log.
+- **Fix**: Add `--comment` and the `--allowedTools` line shown above.
+
+### Copilot did not review my new commits
+
+- **Cause**: Copilot does not re-review pushes unless automatic review of new pushes is configured.
+- **Fix**: Click the re-review button next to Copilot in the Reviewers menu.
+
+## Practical tips
+
+- Keep pull requests small. A reviewer, human or AI, finds more in a focused change.
+- Run the AI review before you ask a teammate, so people spend their time on design and intent.
+- Never paste a finding into a fix without understanding it.
+- Do not put customer data, keys or private documents in the code you send for review.
+- Re-check prices, plan conditions and limits on the official pages before you rely on them; they change.
+
+## Next tutorials
+
+- [13. Tune settings and permissions](/coding/40-settings-permissions/) — how `--fix` edits are allowed or blocked
+- [14. Connect MCP servers](/coding/41-claude-code-mcp/) — give reviews more context
+- [Dev 7. Headless and GitHub Actions](/dev/07-headless-ci/) — run Claude Code unattended
+- [Coding 3. Handing off work to cloud sessions](/coding/08-cloud-github/)
+- [Developer guide](/roles/developer/)

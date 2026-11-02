@@ -1,0 +1,193 @@
+---
+title: "Learn a New Subject with an AI Tutor: Ask Questions, Practice, and Check What You Learned"
+description: "How to use an AI assistant as a tutor for a new subject: set your goal and level, learn by explaining back and being quizzed, and verify what you learned, with the learning modes the official pages confirm for Claude and Gemini and what we could not confirm"
+sidebar:
+  label: "18. Learn with an AI tutor"
+level: beginner
+category: chat
+tools: ["Claude", "Gemini", "ChatGPT"]
+duration: "40 min"
+prerequisites:
+  - "One AI account (any of Claude, Gemini, or ChatGPT)"
+  - "A subject you want to learn and roughly how much time you have"
+lastVerified: 2026-11-02
+sources:
+  - title: "Introducing Claude for Education (Anthropic)"
+    url: "https://www.anthropic.com/news/introducing-claude-for-education"
+  - title: "Higher Education (Claude)"
+    url: "https://claude.com/solutions/education"
+  - title: "Use learning tools in Gemini Apps (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/16448384"
+  - title: "Learn in creative ways with generative AI (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/15216790"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- An AI assistant can act like a **patient tutor**: it explains at your level, asks you questions, gives practice, and answers "why" as many times as you like. It can also be wrong, so you stay in charge of checking.
+- Five habits: **state your goal and level, ask for a short plan, learn by explaining back, get quizzed, and verify with a trusted source.** Below are 6 prompts you can copy.
+- Learning modes exist but differ by service. Anthropic describes a "Learning mode" in Claude for Education that guides with questions instead of giving answers (announced 2025-04-02). Google's Gemini Apps Help describes "Guided Learning" (Add Files, More tools, Guided Learning on the web). (as of 2026-11-02)
+- We **could not confirm** a ChatGPT study mode, because the official pages we tried would not open with plain curl. We also could not confirm how to turn on Claude's learning mode on a personal account. You can get a similar effect with the prompts below on any service.
+- Do not hand the thinking over. Copying answers you do not understand does not teach you. Follow your school's or employer's rules on AI use.
+</Summary>
+
+## What you'll be able to do
+
+- Turn a vague goal ("I want to understand investing basics, or statistics, or a language") into a small plan.
+- Make the AI teach by asking you questions instead of only handing over answers.
+- Practice with quizzes, flashcards, and explain-it-back checks.
+- Spot when an explanation may be wrong and check it against a reliable source.
+- Know what the official pages say about learning modes for Claude and Gemini, and what is still unconfirmed.
+
+This tutorial is about **learning a new subject**. For how to ask well, see [Asking Well: The Basics Worth Remembering](/basics/03-asking-well/). For checking answers, see [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/). For turning books and long texts into notes, see [Summarize Books and Long Reads into Study Notes](/chat/43-reading-notes/). For language study specifically, see [Studying English and Other Foreign Languages with AI](/chat/31-language-learning/).
+
+## Concepts first
+
+| Term | Meaning |
+| --- | --- |
+| **Tutor mode** | Asking the AI to teach step by step and ask you questions, rather than giving the whole answer at once. |
+| **Learning mode / Guided Learning** | A feature some services offer for this style of teaching. Names, places, and availability differ by service (see below). |
+| **Socratic questioning** | Teaching by asking questions ("What evidence supports your conclusion?") so you work out the answer yourself. |
+| **Explain it back** | You explain the idea in your own words and the AI points out gaps. A quick test of whether you understood. |
+| **Retrieval practice** | Trying to recall something from memory (quiz, flashcard) before looking at the answer. |
+| **Verify** | Checking an explanation against a textbook, official source, or teacher before you rely on it. |
+
+### Learning modes: the scope we confirmed (as of 2026-11-02)
+
+| Item | Claude | Gemini | ChatGPT |
+| --- | --- | --- | --- |
+| Named feature | "Learning mode" in Claude for Education (Anthropic announcement, 2025-04-02) | "Guided Learning" in Gemini Apps | Not confirmed |
+| What the page says it does | Guides reasoning rather than giving answers: asks questions like "How would you approach this problem?", uses Socratic questioning, emphasizes core concepts, offers templates such as study guides and outlines. The announcement says it works within Projects | Gemini Apps can act as a tutor with guided learning, visual aids, and educational resources | Not confirmed |
+| How to start | Not confirmed for personal accounts. The announcement describes it inside Claude for Education | On a computer at gemini.google.com: click Add Files, then More tools, then Guided Learning; type a question or prompt about your topic; optionally upload files or an image | Not confirmed |
+| Sign-in and rollout | Not confirmed | You must be signed in. The page says features are being released gradually in the mobile app; if you do not see them, try again later or use gemini.google.com | Not confirmed |
+| Extras | Claude's education page says its learning mode "works like a good tutor" that asks questions to help you find answers yourself | Ask for images or diagrams; Gemini may include YouTube videos when Gemini Apps Activity is on; ask for practice questions with feedback and hints; type @OpenStax to use OpenStax textbooks. The OpenStax and practice features are, for now, English and US only, and not for users under 18 or on work or school accounts | Not confirmed |
+
+<Aside type="note" title="What we couldn't confirm">
+We could not open ChatGPT's official study-mode pages with plain curl (they returned a block page), so we make no claim about a ChatGPT study mode, its name, or its plans. We also did not find an official help page that says how to switch on Claude's learning mode in a personal Claude account, or which plans include it. We did not test how well any learning mode teaches. Check each service's current help page before relying on a feature name.
+</Aside>
+
+<Aside type="caution" title="Wrong explanations and your own rules">
+An AI tutor can state wrong facts with confidence, mix up steps in math, or invent sources. For anything that matters (exams, medicine, law, money, safety), check with a textbook, an official source, or a teacher. Schools and employers may have rules on using AI for assignments; Google's help page also says to check your school's policy. Do not paste private information such as grades, ID numbers, or other people's details. For privacy basics, see [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/). This is learning support, not professional advice.
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I wrote down my goal, my starting level, and how much time I have',
+  'I asked for a short learning plan and trimmed it',
+  'I asked the AI to teach with questions, one small step at a time',
+  'I explained ideas back in my own words and fixed the gaps',
+  'I asked for a quiz and tried the answers before looking',
+  'I checked key facts against a textbook or official source',
+  'I followed my school or workplace rules on AI use',
+]} />
+
+<Steps>
+
+1. **Set your goal and level**
+
+   Tell the AI what you want and what you already know. Swap the bracketed parts for your own. For general prompt structure, see [Writing prompts](/chat/01-prompt-basics/).
+
+   <PromptBox label="Goal and level prompt">
+   I want to learn [subject] so that I can [goal, e.g. read a financial statement / pass an intro exam / follow a talk]. My level: [complete beginner / know the basics of X]. I have [3 hours a week] for [4 weeks]. Before you teach anything, ask me up to 5 questions about my background and how I like to learn. Don't start the lesson yet.
+   </PromptBox>
+
+2. **Ask for a short plan**
+
+   <PromptBox label="Learning plan prompt">
+   Based on my answers, outline a 4-week plan for [subject]: each week's topic, 3 key ideas, and one small practice task. Keep it to what a beginner needs for my goal, and name what you are leaving out. Tell me which parts are well-established and which are debated or change over time.
+   </PromptBox>
+
+   Trim the plan to fit your time. If your service has a learning mode (see the table above), you can switch it on here; otherwise the next step gives the same effect.
+
+3. **Learn by being asked, not told**
+
+   <PromptBox label="Tutor mode prompt">
+   Act as my tutor for week 1 of [subject]. Teach one small idea at a time. After each idea, ask me one question to check my understanding and wait for my answer. Don't give the answer until I try. If I'm wrong, give a hint first, then explain. Use simple words and one everyday example per idea.
+   </PromptBox>
+
+   Answer in your own words, even if you are unsure. A wrong attempt tells the tutor (and you) where the gap is.
+
+4. **Explain it back**
+
+   <PromptBox label="Explain-back prompt">
+   Here is my explanation of [concept] in my own words: [your explanation]. Tell me what is correct, what is missing, and what is wrong. Then ask me one harder follow-up question.
+   </PromptBox>
+
+5. **Get quizzed and revisit**
+
+   <PromptBox label="Quiz prompt">
+   Quiz me on what we covered so far: 8 questions, mixed multiple choice and short answer, one at a time. Don't show the answer until I reply. After the quiz, list the topics I missed and make 5 flashcards (question on one side, answer on the other) for them. Tomorrow I will ask you to quiz me again on the missed topics only.
+   </PromptBox>
+
+   Gemini's help page also describes asking for practice questions with feedback and hints. Spaced repetition, meaning quizzing yourself again after a day or a week, is something you can ask for in any service.
+
+6. **Verify and mark what to double-check**
+
+   <PromptBox label="Verify prompt">
+   List the 5 most important facts, formulas, or rules you taught me today. For each, say how confident you are, and tell me what kind of source I should check it against (textbook chapter, official standard, teacher). Mark with [VERIFY] anything that depends on a country, a date, or a recent change. Don't invent references or page numbers.
+   </PromptBox>
+
+   Then check them yourself. See [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/).
+
+</Steps>
+
+## Quick reference
+
+| What you want | Try this |
+| --- | --- |
+| A starting plan | Goal and level prompt, then the learning plan prompt |
+| To actually understand, not just read | Tutor mode prompt: one idea, one question, wait for my answer |
+| To test your understanding | Explain-back prompt |
+| To remember it later | Quiz prompt with flashcards for the topics you missed |
+| To lower the risk of wrong facts | Verify prompt, then check a textbook or official source |
+| A built-in learning mode | Gemini: Add Files, More tools, Guided Learning (web). Claude: Learning mode is described for Claude for Education; ChatGPT: not confirmed |
+
+## Common sticking points
+
+### The AI gives the whole answer right away
+
+- **Cause**: By default, assistants often try to answer fully.
+- **Fix**: Use the tutor mode prompt: "one idea, one question, don't give the answer until I try." Or use a learning mode if your service has one.
+
+### The explanation is too hard or too easy
+
+- **Cause**: The AI guessed your level.
+- **Fix**: State your level and ask for "explain like I'm new to this" or "go one level deeper". Ask for a different everyday example.
+
+### I think the explanation is wrong
+
+- **Cause**: AI can state wrong facts confidently, especially on recent, local, or very specific topics.
+- **Fix**: Ask how sure it is and what to check, then check a textbook or official source. See [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/).
+
+### I forget everything the next day
+
+- **Cause**: Reading an explanation is not the same as recalling it.
+- **Fix**: Use the quiz prompt, wait a day, and quiz yourself again on the missed topics.
+
+### I cannot find the learning mode
+
+- **Cause**: Names, places, and availability differ, and some features roll out gradually or only for certain accounts.
+- **Fix**: Check the service's current help page. Meanwhile, the tutor mode prompt works anywhere.
+
+## Practical tips
+
+- **Start small.** One topic per session beats a huge plan you drop.
+- **Try before you peek.** Answer first, then read the explanation.
+- **Teach it back.** Explaining is the fastest test of understanding.
+- **Use a real source too.** Pair the AI with a textbook, course, or teacher.
+- **Keep a running list** of what you missed and quiz on it again.
+- **Respect the rules.** Use AI to learn, not to do work you are meant to do yourself.
+
+## What to read next
+
+- [Asking Well: The Basics Worth Remembering](/basics/03-asking-well/) — give the AI what it needs
+- [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/) — check what the tutor teaches
+- [Summarize Books and Long Reads into Study Notes](/chat/43-reading-notes/) — turn texts into notes
+- [Studying English and Other Foreign Languages with AI](/chat/31-language-learning/) — practice a language
+- [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/) — what to keep out of chats

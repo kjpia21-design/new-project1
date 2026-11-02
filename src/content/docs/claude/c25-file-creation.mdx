@@ -1,0 +1,181 @@
+---
+title: "Create and edit files with Claude (Excel, Word, slides, PDF)"
+description: "A practical guide to having Claude build Excel, Word, PowerPoint and PDF files in a chat: turning the feature on, what to ask for, file size limits, network access and security settings for Team and Enterprise, and common sticking points, based on official help"
+sidebar:
+  label: "C25. Create and edit files"
+level: practical
+category: claude
+tools: ["Claude"]
+duration: "25 min"
+prerequisites:
+  - "A Claude account (the official page says the feature is available on Free, Pro, Max, Ultra, Team and Enterprise)"
+  - "Code execution and file creation switched on in your settings (or by your organization's owner)"
+  - "A small practice file with no confidential data, such as a CSV or a plain document"
+lastVerified: 2026-11-02
+sources:
+  - title: "Create and edit files with Claude"
+    url: "https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- Claude can run code in a private sandbox and hand you **Excel (.xlsx), PowerPoint (.pptx), Word (.docx) and PDF** files to download. You can also save them to Google Drive. The official page lists it for **all plans** (Free, Pro, Max, Ultra, Team, Enterprise) on web, Claude Desktop and Claude Mobile (as of 2026-11-02).
+- On Free, Pro, Max and Ultra it is enabled by default; on Team and Enterprise an organization owner can disable it in **Organization settings > Capabilities**. If you need to switch it on yourself, use **Settings > Capabilities > Code execution and file creation** (shown as "Create and edit files" in the updated Settings layout).
+- The maximum file size is **30MB per file**, for both uploads and downloads.
+- It draws from your normal plan usage limits, and creating files uses more of your limit than ordinary chats.
+- Network access is a security trade-off. Read the security notes below, and always check the file Claude made before you use it.
+</Summary>
+
+This guide is about *chat-based* file creation. For working inside Excel and PowerPoint themselves, see [C21. Excel and PowerPoint](/claude/c21-office-agents/). For interactive pages and apps, see [C6. Artifacts](/claude/c06-artifacts/).
+
+## What you'll be able to do
+
+- Turn file creation on (or find out why it is off).
+- Ask for a spreadsheet, a report, a slide deck or a PDF in plain language, and download it.
+- Convert a document from one format to another, or pull data out of a PDF.
+- Understand the network access setting and the security caveats before you upload anything sensitive.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Code execution and file creation** | The setting that gives Claude a private computing environment (a sandbox) where it writes and runs code, such as Python or JavaScript, to build documents, spreadsheets and slides. |
+| **Sandbox** | An isolated container. Per the official page, sandbox environments are never shared between users. |
+| **Network egress** | Whether the sandbox can reach the internet. It can be off, limited to package managers, limited to package managers plus chosen domains, or open to all domains. |
+| **Supported file types** | Excel (.xlsx), PowerPoint (.pptx), Word (.docx) and PDF. Charts can be produced as image files such as PNG. |
+
+<Aside type="caution" title="Why this matters">
+The official page warns that someone could hide instructions in an external file or website that trick Claude into running untrusted code or sending data from your conversation to an outside server. It recommends you watch what Claude does and stop it if it accesses data unexpectedly. Do not upload confidential files while you are still learning.
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I know whether my plan is Free/Pro/Max/Ultra or Team/Enterprise',
+  'I checked that Code execution and file creation is on',
+  'I used a practice file with no confidential data',
+  'I opened the downloaded file and checked numbers and formulas myself',
+  'I know where to look if my organization turned it off',
+]} />
+
+<Steps>
+
+1. **Turn the feature on**
+
+   On web and desktop with a Free, Pro, Max or Ultra plan, open **Settings > Capabilities** and switch on **Code execution and file creation** (called **Create and edit files** in the updated Settings layout). On Claude for iOS or Android, tap your initials or name in the left sidebar, open Settings, choose **Capabilities** and toggle it on or off. On Team and Enterprise, an organization owner controls it in **Organization settings > Capabilities**.
+
+   <ScreenshotPlaceholder caption="Code execution and file creation toggle in Settings > Capabilities" officialUrl="https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude" />
+
+2. **Describe the file you want**
+
+   Simply say what you need, for example "Create an Excel spreadsheet to track monthly expenses" or "Convert this document into a PowerPoint presentation." Be specific about structure, content and formatting. Claude generates the file and you download it from the conversation.
+
+   <PromptBox label="A spreadsheet with working formulas">
+   Create an Excel workbook for a monthly household budget. Sheet 1: income and expense categories with a column for planned and actual amounts. Sheet 2: a summary with totals and the difference between planned and actual, using formulas, not typed numbers. Add one chart of spending by category. Use sample numbers I can replace.
+   </PromptBox>
+
+3. **Start from your own material**
+
+   Upload a CSV, a document or a PDF and ask for a result in another format. The official page gives examples such as turning a CSV into a Word or PDF report with charts, converting a Word document to a presentation, explaining a spreadsheet in a Word report, and extracting the data from a PDF into an Excel sheet with a summary chart.
+
+   <PromptBox label="Turn a document into slides">
+   Convert the attached Word document into a PowerPoint deck of about 8 slides. One main message per slide, short bullets, and a final slide listing open questions. Tell me which parts of the document you left out.
+   </PromptBox>
+
+4. **Refine in the same conversation**
+
+   The official page says you may need to review and refine the output to meet your exact requirements, and that Claude can handle several files in one chat, with files available for download throughout the conversation. Ask for changes in plain language ("make the headers bold", "move the summary to the first slide") and download the new version.
+
+   <FlowSteps title="Review loop" officialUrl="https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude" steps={[
+     { where: 'Chat', action: 'Ask for the file and download it' },
+     { where: 'Your Office app or PDF viewer', action: 'Open it and check numbers, formulas, names and layout' },
+     { where: 'Chat', action: 'Describe what to fix and ask for a new version', result: 'Download the updated file' },
+   ]} />
+
+5. **Save or share the file**
+
+   You can download the file, or save it directly to Google Drive. On a phone, tapping Download opens the file in the system preview or a separate app (for example the Word app for .docx). Public sharing of conversations that include these file outputs is disabled for Free, Pro, Max and Ultra users, per the official page.
+
+</Steps>
+
+## Plans and organization settings
+
+| Plan | Default (per official help) | Network access |
+| --- | --- | --- |
+| Free, Pro, Max, Ultra | Enabled by default | Enabled, so Claude can install packages from approved sources |
+| Team | Enabled by default; owners can disable | The page gives conflicting defaults: one section says off by default, another says on for package managers only |
+| Enterprise | Enabled by default for new organizations; owners can disable | Off by default; owners can turn it on and set domain controls |
+
+Owners can choose among four network settings in Organization settings > Capabilities: off (pre-installed packages only), package managers only, package managers plus specific domains you list, or all domains except Anthropic's legal blocklist. The official page calls "All domains" the riskiest option and suggests starting with network access off and widening step by step. It also notes that if MCP integrations are enabled, network communication remains possible through them regardless of this setting.
+
+## Limits and good to know
+
+- **File size**: 30MB per file for uploads and downloads. For PDFs over 30MB, Claude can process them in its computing environment without loading them into the context window.
+- **Usage**: counts toward your plan limits, more than normal chats.
+- **Artifacts**: still work with file creation on, though Claude now uses the computing environment to create them, so the experience may look slightly different.
+- **Languages**: the page says Claude supports multiple languages in the interface and generated files with proper formatting and regional standards. It gives no per-language list, so test with a small file first.
+- **Data analysis**: the same environment can run Python for analysis, make PNG charts and read CSV and TSV files.
+
+<Aside type="note" title="What we could not confirm">
+The page title says "create and edit", but the page mostly describes creating files and converting between formats. It does not give a step-by-step description of editing an uploaded Excel, Word or PowerPoint file in place, nor what is preserved when Claude changes an existing file. Treat edits to important files as new versions: keep your original and compare. This guide did not run the feature itself; everything here comes from the official page.
+</Aside>
+
+## Quick reference
+
+| I want to... | Do this |
+| --- | --- |
+| Turn it on (individual plans) | Settings > Capabilities > Code execution and file creation |
+| Turn it on or off on mobile | Initials or name > Settings > Capabilities |
+| Turn it off for my organization | Owner: Organization settings > Capabilities |
+| Keep data inside the sandbox | Owner: switch Allow network egress off |
+| Get a report from a CSV | Upload it and ask for a Word or PDF report with charts |
+| Change a format | Upload the file and ask for the target format |
+
+## Common sticking points
+
+### I don't see the option, or Claude won't create files
+
+- **Cause**: The setting is off for you, or an organization owner turned it off.
+- **Fix**: Check Settings > Capabilities. On Team or Enterprise, ask your owner to check Organization settings > Capabilities.
+
+### Claude can't install a package or fetch data
+
+- **Cause**: Network egress is off or limited, which is the default on Enterprise.
+- **Fix**: Ask your owner whether package managers or specific domains can be allowed, or provide the data in the chat.
+
+### I hit my usage limit quickly
+
+- **Cause**: File creation uses more of your limit than normal chats.
+- **Fix**: Ask for fewer, more precise outputs; combine changes into one request.
+
+### A number or formula looks wrong
+
+- **Cause**: Model output can contain mistakes.
+- **Fix**: Recalculate in the file, ask Claude to explain each formula, and verify against your source data before sharing.
+
+### A file over 30MB
+
+- **Cause**: The limit is 30MB per file for uploads and downloads.
+- **Fix**: Split or compress the file. For large PDFs, the page says Claude can still process them in its computing environment.
+
+## Practical tips
+
+- Describe structure first (sheets, columns, slide count), then style.
+- Start from a practice file with fake numbers; replace them afterwards.
+- Keep your original file and treat Claude's output as a draft to check.
+- Never upload credentials, customer personal data or HR files. See [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/).
+- If your organization restricts network access, work from files you upload rather than expecting Claude to fetch data.
+
+## What to read next
+
+- [C21. Excel and PowerPoint](/claude/c21-office-agents/) — Using Claude inside the Office apps
+- [C6. Artifacts](/claude/c06-artifacts/) — Interactive pages and apps instead of files
+- [C23. Claude with Google Workspace](/claude/c23-google-workspace/) — Connecting Drive
+- [C24. Sharing projects and chats](/claude/c24-sharing-projects/) — Sharing results with your team

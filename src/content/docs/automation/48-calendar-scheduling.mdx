@@ -1,0 +1,168 @@
+---
+title: "Plan Your Schedule and Meetings with AI"
+description: "How to ask Claude, Gemini and Copilot in Outlook to check your calendar, find a meeting time and draft invitations, with permission, privacy and double-booking cautions"
+sidebar:
+  label: "18. Schedule and meetings with AI"
+level: practical
+category: automation
+tools: ["Claude", "Gemini", "Microsoft Copilot", "Google Calendar", "Outlook"]
+duration: "25 min"
+prerequisites:
+  - "A calendar you can safely practice on (Google Calendar or Outlook), ideally with test events"
+  - "An account for at least one of: Claude with the Google Calendar connector, the Gemini app, or Copilot in new Outlook"
+lastVerified: 2026-11-02
+sources:
+  - title: "Use Google Workspace connectors (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/10166901-use-google-workspace-connectors"
+  - title: "Create & manage your calendar events with Gemini Apps"
+    url: "https://support.google.com/gemini/answer/15305236?hl=en"
+  - title: "Connect the Google Workspace app to Gemini Apps"
+    url: "https://support.google.com/gemini/answer/15229592?hl=en"
+  - title: "Welcome to Copilot in Outlook"
+    url: "https://support.microsoft.com/en-us/outlook/welcome-to-copilot-in-outlook"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- Three official routes: **Claude** with its Google Calendar connector, the **Gemini** app with the Google Workspace app connected, and **Copilot in Outlook** for turning an email thread into a meeting invitation.
+- Claude's connector can view events (including shared calendars you can access), create, update and delete events, find mutual availability, manage attendees and set up recurring meetings. By default Claude asks for your approval before each action.
+- Gemini can create, find, edit and cancel events and works on secondary and shared calendars. It creates events on your default calendar unless you name another one.
+- AI can misread dates, time zones and who is meant. Read every event and invitation before it goes out, and keep other people's details out of prompts you do not need.
+</Summary>
+
+## What you'll be able to do
+
+- Ask an AI what is on your calendar and where the free gaps are.
+- Draft and create an event, or a meeting invitation, from a short sentence or an email thread.
+- Write prompts that carry the details a scheduler needs (length, time zone, who, deadline).
+- Spot the permission and privacy limits before you use this on a work calendar.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Connector** | A link that lets Claude use another service. Google Calendar is one of three Google Workspace connectors (with Gmail and Drive). See [Use Claude with Gmail, Calendar and Drive](/claude/c23-google-workspace/). |
+| **Google Workspace app (Gemini)** | The connected app that lets the Gemini app reach Gmail, Docs, Drive, Tasks, Keep and Calendar. |
+| **Mutual availability** | Times when every attendee is free. Claude's connector lists "Find mutual availability across attendees" as a capability. |
+| **Approval prompt** | A confirmation before an action that changes something. |
+
+<Aside type="note" title="Things to keep in mind (as of 2026-11-02)">
+- This guide is based on the four official pages listed in the front matter. We did not run these steps in real calendars, so menu names and results come from the help text only.
+- We did not find or read an official page for "Gemini in Google Calendar" (the side panel inside Calendar itself), so this guide does not describe it. The Gemini section below covers the Gemini app only.
+- We did not read Microsoft's separate page on creating a meeting and agenda with Copilot in Outlook, nor any page on Copilot licensing or price. Check Microsoft's own pages for whether your account includes Copilot.
+- Plan and price details for Gemini and Copilot were not confirmed here. Claude's page says Google Workspace connectors are available for all users on Claude and Claude Desktop; Team and Enterprise need an Owner to enable them first.
+- Features and menus change often. Check them on screen.
+</Aside>
+
+## Step-by-step
+
+Use a practice calendar or a few test events first.
+
+<Checklist items={[
+  'I connected the calendar to the AI service I chose',
+  'I asked what is on my calendar and compared it with the real calendar',
+  'I asked for free slots with the length and time zone stated',
+  'I reviewed the event or invitation before approving it',
+  'I checked attendees, date, time and time zone one more time',
+  'I decided what the AI may and may not do on my own',
+]} />
+
+<Steps>
+
+1. **Connect your calendar**
+
+   - **Claude**: connect Google Calendar from the connectors menu. You must sign in to your Google account directly. On Team and Enterprise plans an Owner or Primary Owner must first enable the connectors for the organization. Claude can only reach the data of the Google account you connected, and it mirrors your existing permissions.
+   - **Gemini**: at gemini.google.com, sign in with the same account you use for Google Workspace and ask for a calendar action. If Google Workspace is not connected, Gemini offers to connect it. **Keep Activity** must be on, or Gemini cannot connect. You can disconnect later in Connected Apps settings.
+   - **Copilot in Outlook**: used inside new Outlook (see step 5). Nothing to connect beyond having Copilot available in your Outlook.
+
+2. **Ask what is on your calendar**
+
+   <PromptBox>
+   What is on my calendar this week? List the days with the most meetings, and show gaps of 60 minutes or more between 9:00 and 18:00. Do not change anything.
+   </PromptBox>
+
+   Compare the answer with the real calendar. Gemini's help page itself warns it can hallucinate or give outdated information, and suggests checking the sources listed after the response.
+
+3. **Find a time and create the event**
+
+   <PromptBox label="Example prompt">
+   I need a 45-minute meeting with Minjun and Sora next week, mornings only, in Seoul time (KST). Check my availability and suggest three slots. Wait for my choice before creating anything.
+   </PromptBox>
+
+   For Gemini, add `@Google Calendar` to the prompt to make it use Google Calendar. Gemini's help page gives sample prompts such as "Add [event name] to my calendar on [day] at [time]". With a photo or pasted text of event details, ask it to add them to the calendar.
+
+4. **Edit or cancel**
+
+   Both Claude's connector and Gemini can update and cancel events. Gemini's page suggests adding the word "event" or "calendar" so it knows you mean an update, and says that for calendar apps other than Google Calendar it cannot edit some details such as location or description.
+
+5. **Turn an email thread into a meeting (Outlook)**
+
+   In new Outlook, the **Schedule with Copilot** option in the toolbar creates a meeting invitation from inside an email thread. Per Microsoft's page, the title and agenda are filled in, the thread is attached, and the people on the thread become attendees. You review, edit and send it yourself.
+
+6. **Approve deliberately**
+
+   Claude asks for approval before each action by default. On Team and Enterprise plans, owners decide whether members can let certain actions run without asking. Keeping the approval prompt on is the safer choice for anything that notifies other people.
+
+</Steps>
+
+## Quick reference
+
+### What each route can do (per the official pages)
+
+| | Claude (Google Calendar connector) | Gemini app | Copilot in new Outlook |
+| --- | --- | --- | --- |
+| Read events | Yes, including shared calendars you can access | Yes | Not described on the page we read |
+| Create events | Yes | Yes | Creates a meeting invitation from an email thread |
+| Edit or delete | Yes | Yes (limits outside Google Calendar) | Not described on the page we read |
+| Mutual availability | Yes, "across attendees" | Not described on the pages we read | Not described on the page we read |
+| Recurring meetings | Yes | Not described on the pages we read | Not described on the page we read |
+
+### Prompt details that prevent mistakes
+
+| Detail | Why it matters |
+| --- | --- |
+| Length of the meeting | Otherwise the AI picks a default |
+| Time zone of each person | Dates shift across zones |
+| Which calendar | Gemini uses your default calendar unless you name another |
+| "Suggest, do not create" | Keeps a human decision before invitations go out |
+
+## Common sticking points
+
+### Gemini cannot connect to the calendar
+
+- **Cause**: The help page says **Keep Activity** must be on, and you must be signed in to the same account as Google Workspace.
+- **Fix**: Turn Keep Activity on and check the account. Also note the supported calendar apps are not available in Gemini in Google Messages.
+
+### "Access blocked" or no connector on a work account
+
+- **Cause**: On Team and Enterprise plans an Owner must enable the connectors. Your Google Workspace admin may also need to allow the app.
+- **Fix**: Ask the Claude Owner and your Google Workspace admin.
+
+### The event landed on the wrong calendar or time
+
+- **Cause**: Gemini defaults to your default calendar, and time zones or relative dates ("next Friday") can be misread.
+- **Fix**: Name the calendar and give dates and time zones explicitly. Edit the event, or ask for the change.
+
+### The AI wants to invite someone it should not
+
+- **Cause**: A vague name or a long thread can point to the wrong person.
+- **Fix**: Give full names or addresses, and check the attendee list before sending.
+
+## Practical tips
+
+- **Protect other people's information.** Claude's page says it retrieves only the minimum information needed, and stores retrieved data with the chat, so deleting the chat deletes it. Still, do not paste colleagues' private details into prompts, and be careful before sharing a summary of someone else's schedule.
+- **Do not train on connector data by accident.** The Claude page notes that on consumer plans, if you allowed chat training, content you copy and paste from Calendar may be used to improve models. Check your setting in [Turn Off AI Training on Your Chats](/basics/12-privacy-settings/).
+- **Start read-only.** Ask for suggestions first, then let the AI create events once the answers are consistently right.
+- **Link your mail and calendar.** Email threads often contain the details of a meeting. See [Organizing Your Inbox with AI](/automation/38-email-ai/).
+- **Keep a human check** on times, attendees and anything legal or financial. See [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/).
+
+## What to read next
+
+- [Use Claude with Gmail, Calendar and Drive](/claude/c23-google-workspace/) — the connector setup in detail
+- [Organizing Your Inbox with AI](/automation/38-email-ai/) — draft replies that propose times
+- [Turn Off AI Training on Your Chats](/basics/12-privacy-settings/) — privacy settings

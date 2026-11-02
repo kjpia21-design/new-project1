@@ -1,0 +1,281 @@
+---
+title: "Tune Claude Code Settings and Permissions Safely"
+description: "Learn where Claude Code settings files live and which one wins, write allow, ask and deny rules, protect .env and other sensitive files, and pick a permission mode. Based on the official settings and permissions docs"
+sidebar:
+  label: "13. Tune settings and permissions"
+level: practical
+category: coding
+tools: ["Claude Code"]
+duration: "35 min"
+prerequisites:
+  - "Claude Code installed and signed in (see Coding 1)"
+  - "A practice project folder (a copy is best, ideally a git repository)"
+  - "A first look at permission modes and hooks in C14 and Coding 10"
+lastVerified: 2026-11-02
+sources:
+  - title: "Settings files and precedence"
+    url: "https://code.claude.com/docs/en/settings"
+  - title: "Configure permissions"
+    url: "https://code.claude.com/docs/en/permissions"
+  - title: "Choose a permission mode"
+    url: "https://code.claude.com/docs/en/permission-modes"
+  - title: "All settings (permission keys)"
+    url: "https://code.claude.com/docs/en/settings-reference"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+<Summary>
+- Claude Code reads **four kinds of settings**: user (`~/.claude/settings.json`), shared project (`.claude/settings.json`), project local (`.claude/settings.local.json`) and organization-managed. When a key is set in several places, the higher level wins: **managed > command line (`--settings`) > local > shared project > user**. List keys such as `permissions.allow` are **merged**, not replaced.
+- **Permission rules** have three kinds: `allow`, `ask` and `deny`. They are checked in the order **deny, then ask, then allow**, and the first match decides. A deny at any level cannot be undone by an allow at another level.
+- To keep Claude away from secrets, add `Read` deny rules such as `Read(./.env)`. Rules are enforced by Claude Code itself, not by the model, so they hold even if a prompt or CLAUDE.md says otherwise.
+- A **Bash rule is not a security boundary**. `Bash(rm *)` does not stop `/bin/rm` or `bash -c '...'`. For hard limits, use the OS-level sandbox or a PreToolUse hook.
+- `bypassPermissions` skips prompts, even for writes to `.git` and `.claude`. Use it only inside a container or VM.
+- We checked the official docs on 2026-11-02. We ran only a JSON syntax check and `claude doctor` (Claude Code 2.1.316) in a temporary folder. We did not run an interactive session, so prompts and the `/permissions` screen come from the docs.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Tell which settings file to edit for "just me", "my team" and "just this project".
+- Predict which value wins when the same key is set in two places.
+- Write allow, ask and deny rules, and keep `.env` and secrets out of Claude's reach.
+- Choose a permission mode and explain what it does and does not protect.
+
+## Concepts to know first
+
+[C14](/claude/c14-claude-code-features/) introduced permission modes in one table, and [Coding 10](/coding/37-claude-code-hooks/) showed how a hook can block an action. This tutorial covers the settings those features live in. The key idea: **CLAUDE.md is a request, settings rules are enforcement.** The official permissions page says rules are enforced by Claude Code, not by the model.
+
+### Where settings live (official docs, 2026-11-02)
+
+| Scope | File | Who it affects |
+| --- | --- | --- |
+| User | `~/.claude/settings.json` | You, in every project on this machine |
+| Shared project | `.claude/settings.json` | Everyone who works in that folder. Commit it to git |
+| Project local | `.claude/settings.local.json` | You, in this one project only |
+| Managed | `managed-settings.json`, MDM or server-managed settings | Everyone your organization deploys it to |
+
+Installing Claude Code does not create any of these files. Claude Code creates `~/.claude/settings.json` the first time you change a `/config` option stored there, and `.claude/settings.local.json` the first time you pick "Yes, and don't ask again" on a permission prompt. On Windows, `~/.claude` means `%USERPROFILE%\.claude`.
+
+### Which value wins
+
+From highest to lowest: **managed settings, then the command line (`--settings`), then project local, then shared project, then user.** Two details matter in practice:
+
+- **Lists merge.** If user settings and project settings both have `permissions.allow`, Claude Code combines them.
+- **Environment variables are not a level.** Whether a variable or a settings key wins is decided key by key; check the key's entry in the settings reference.
+
+<Aside type="note" title="Some keys are ignored in a repository file">
+The docs say `permissions.defaultMode` values `auto` and `bypassPermissions` do not take effect from project or local settings. Set them in your user settings, or pass `--permission-mode` for one session. Also, `permissions.allow` rules in a committed `.claude/settings.json` apply only after each teammate accepts the folder-trust dialog. `deny` and `ask` rules apply right away because they only restrict.
+</Aside>
+
+### Permission modes in short
+
+| Mode | What runs without asking |
+| --- | --- |
+| `default` (shown as Manual) | Reads only |
+| `acceptEdits` | Reads, file edits and common file commands such as `mkdir`, `mv`, `cp` |
+| `plan` | Reads; Claude proposes a plan and does not edit your source files |
+| `auto` | Most actions, with a background classifier checking them |
+| `dontAsk` | Only pre-approved tools; anything that would prompt is denied (for CI) |
+| `bypassPermissions` | Everything, except a short list that no mode auto-approves |
+
+Switch with `Shift+Tab` or start with `claude --permission-mode <mode>`. Deny rules block in every mode, including `bypassPermissions`.
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I know which of the four settings files I am editing and why',
+  'I wrote a project settings file with allow, ask and deny rules and confirmed it loads with /status',
+  'I added deny rules for .env and a secrets folder and tested that Claude cannot read them',
+  'I set the starting permission mode in my user settings',
+  'I know what to check when a setting is ignored',
+]} />
+
+<Steps>
+
+1. **Open or create the right file**
+
+   For this practice, create the shared project file in your practice folder. Everything below is also fine in `.claude/settings.local.json` if you do not want teammates to get it.
+
+   ```bash
+   mkdir -p .claude
+   ```
+
+   Settings files are **strict JSON**: a `//` comment or a trailing comma is an error, and Claude Code reports it as a Settings Error at the next start. If you create `.claude/settings.local.json` by hand, add it to `.gitignore` yourself. Claude Code only does that automatically when it creates the file.
+
+2. **Write allow, ask and deny rules**
+
+   Save this as `.claude/settings.json`. It follows the pattern in the official docs. The first two rules let Claude run your lint and test commands without asking, and the deny rules stop it reading `.env` files.
+
+   ```json
+   {
+     "$schema": "https://json.schemastore.org/claude-code-settings.json",
+     "permissions": {
+       "allow": [
+         "Bash(npm run lint)",
+         "Bash(npm run test *)"
+       ],
+       "ask": [
+         "Bash(git push *)"
+       ],
+       "deny": [
+         "Read(./.env)",
+         "Read(./.env.*)",
+         "Read(./secrets/**)"
+       ]
+     }
+   }
+   ```
+
+   Rule format is `Tool` or `Tool(specifier)`. In a Bash rule, `*` matches any text, so put it **after the subcommand**: `Bash(git log *)` allows only `git log`, while `Bash(git *)` allows every git command. The space before a trailing `*` matters: `Bash(ls *)` does not match `lsof`, but `Bash(ls*)` does.
+
+   Claude Code watches settings files and applies most edits, including `permissions`, to the running session without a restart.
+
+   <Aside type="caution" title="Allow rules wait for trust">
+   In our local check, `claude doctor` run in a folder we had not trusted printed `Ignoring 3 permissions.allow entries from .claude/settings.json: this workspace has not been trusted`. That matches the docs. Open Claude Code in the folder interactively once and accept the trust dialog. The same applies to `claude -p`, which never shows the dialog.
+   </Aside>
+
+3. **Confirm what loaded**
+
+   ```text
+   /status
+   ```
+
+   The **Status** tab has a `Setting sources` line that lists each settings file Claude Code loaded, such as `User settings` or `Project local settings`. It shows which files were read, not which file supplied each key. To see rules and where each came from, type `/permissions`. To list entries Claude Code rejected, run `claude doctor` in the terminal.
+
+4. **Protect sensitive files**
+
+   Ask Claude to read a file you protected. Create a dummy `.env` first. Never test with a real key.
+
+   ```bash
+   echo "EXAMPLE_KEY=not-a-real-secret" > .env
+   ```
+
+   <PromptBox>
+   Read the .env file in this folder and tell me what is in it.
+   </PromptBox>
+
+   With `Read(./.env)` in `deny`, Claude Code should refuse. Per the docs, a `Read` deny rule also blocks the Edit and Write tools on the same path. It applies to `@file` mentions on a best-effort basis.
+
+   Know the limits. The docs warn that Read and Edit deny rules cover Claude's built-in file tools and the file commands Claude Code recognizes in Bash (`cat`, `head`, `tail`, `sed`, `tee`) plus redirections. They do **not** cover a command that reads files without naming them, such as `grep -r pattern .`, or a Python or Node script that opens files itself. For OS-level blocking of all processes, enable the [sandbox](https://code.claude.com/docs/en/sandboxing).
+
+   <Aside type="danger" title="A Bash rule is a speed bump, not a wall">
+   The docs list what `deny` rules miss. `Bash(rm *)` stops `rm -rf build/` but not `/bin/rm -rf build/` or `bash -c 'rm -rf build/'`. `Bash(git push *)` stops `git push origin main` but not `git -C . push origin main`. Use these rules to catch the usual form, then add the sandbox or a PreToolUse hook (see [Coding 10](/coding/37-claude-code-hooks/)) when the limit must hold.
+   </Aside>
+
+5. **Set the starting permission mode**
+
+   To make every terminal session on your machine start in Manual mode, put this in `~/.claude/settings.json` (an example from the permission-modes page):
+
+   ```json
+   {
+     "permissions": {
+       "defaultMode": "default"
+     }
+   }
+   ```
+
+   The next session shows `manual mode on` in the status bar, according to the docs. With Claude Code v2.1.283 or later, a terminal or VS Code session with no mode set starts in **auto** mode, so choose deliberately if you prefer to approve things yourself. To remove auto or bypass mode entirely, set `permissions.disableAutoMode` or `permissions.disableBypassPermissionsMode` to `"disable"`. They work in any settings file but are most useful in managed settings.
+
+6. **Try a one-session override**
+
+   To test a setting without saving it, pass it on the command line. It sits above your files (except managed) and lasts one session.
+
+   ```bash
+   claude --settings '{"permissions": {"defaultMode": "plan"}}'
+   ```
+
+   We did not run this command. If you set `auto` or `bypassPermissions` for one session, use `--permission-mode` instead.
+
+   <FlowSteps title="When a setting does not seem to apply" officialUrl="https://code.claude.com/docs/en/settings" steps={[
+     { where: 'Claude Code prompt', action: 'Type /status', result: 'Check that the file appears in the Setting sources line' },
+     { where: 'Terminal', action: 'Run claude doctor', result: 'See entries Claude Code rejected, such as bad JSON or a malformed rule' },
+     { where: 'Your settings files', action: 'Look for the same key at a higher level', result: 'Managed, --settings and local files outrank shared project and user files' },
+     { where: 'Settings reference', action: 'Look up the key and its Scope column', result: 'Some keys never apply from a repository file' },
+   ]} />
+
+</Steps>
+
+## Quick reference
+
+### Rule examples
+
+| Rule | Effect |
+| --- | --- |
+| `Bash(npm run build)` | Exactly `npm run build` |
+| `Bash(npm run *)` | Any `npm run ...` command |
+| `Read(./.env)` | The `.env` file in the current directory |
+| `Read(**/.env)` or `Read(.env)` | Any `.env` at or under the current directory |
+| `Read(//Users/alice/secrets/**)` | An absolute path (note the double slash) |
+| `Read(~/Documents/*.pdf)` | A path under your home directory |
+| `WebFetch(domain:example.com)` | Fetches to that domain |
+| `Edit(/src/**)` | Edits under `src/` in the primary working directory (project settings) |
+
+A single leading slash is **not** the filesystem root. It anchors at the settings source. Use `//` for absolute paths. In user settings, `Read(/secrets/**)` blocks `~/.claude/secrets/**`, not a folder in your project.
+
+### Rule order
+
+1. A matching **deny** rule blocks the call.
+2. Otherwise a matching **ask** rule prompts.
+3. Otherwise a matching **allow** rule lets it run.
+
+Specificity does not change the order, so `Bash(aws *)` in deny also blocks `aws s3 ls` even when an allow rule names it. An allow rule cannot carve an exception out of a deny.
+
+### Things Claude Code does not auto-approve
+
+Writes to **protected paths** are never auto-approved except in `bypassPermissions`. The docs list directories such as `.git`, `.vscode`, `.idea`, `.husky` and `.claude`, and files such as `.gitconfig`, `.bashrc`, `.zshrc`, `.npmrc`, `.mcp.json` and `.claude.json`. An allow rule such as `Edit(.claude/**)` does not pre-approve them. See the permission-modes page for the full list and per-mode behavior.
+
+## Common sticking points
+
+### My allow rule does nothing
+
+- **Cause**: The folder is not trusted yet, the file is not valid JSON, or a deny or ask rule matches first.
+- **Fix**: Accept the trust dialog interactively, run `/status` and `claude doctor`, and open `/permissions` to see every rule and its file.
+
+### I wrote `Write(docs/**)` and edits still prompt
+
+- **Cause**: File permissions are checked against `Edit(path)` and `Read(path)` rules only. Claude Code accepts `Write(path)`, `NotebookEdit(path)` and `Glob(path)` rules but never matches them.
+- **Fix**: Use `Edit(docs/**)` and `Read(docs/**)`. Do not rely on a `.claudeignore` file either; the docs say it has no effect.
+
+### I chose "Yes, and don't ask again" but still get asked
+
+- **Cause**: That choice saves an allow rule to your local file, and an allow rule does not outrank an ask rule from another file.
+- **Fix**: Look in `/permissions` for the matching ask rule.
+
+### My `defaultMode: "auto"` in the project file is ignored
+
+- **Cause**: `auto` and `bypassPermissions` do not take effect from project or local settings.
+- **Fix**: Put it in `~/.claude/settings.json`, or pass `--permission-mode auto`.
+
+### A teammate does not get my rules
+
+- **Cause**: The key is in your local file, or the key never applies from a repository file, or the teammate has not trusted the folder.
+- **Fix**: Put team rules in the committed `.claude/settings.json`, and tell teammates to accept the trust dialog.
+
+### My organization overrides my setting
+
+- **Cause**: Managed settings are the top level. Nothing in your files or `--settings` changes them.
+- **Fix**: Run `/status` to see the managed source, and ask your administrator.
+
+## Practical tips
+
+- Start with deny rules for secrets and `ask` rules for risky commands such as `git push`, then add `allow` rules only for commands you really repeat.
+- Prefer exact or prefix rules (`Bash(npm run test *)`) over broad ones such as `Bash(npm *)`.
+- Keep personal exceptions in `.claude/settings.local.json` so they never reach your teammates' sessions.
+- Add the `$schema` line so your editor can validate the file, but treat a warning on a brand-new key with care: the docs say the schema can lag behind the newest releases.
+- Use `bypassPermissions` only in an isolated container or VM, never on your everyday machine.
+- Before you run `claude -p` over a repository you did not write, read its `.claude/` files. The docs suggest `--setting-sources user` or `--bare` for that case.
+- This tutorial covers the permission keys only. The full key list is in the official settings reference.
+
+## Next tutorials
+
+- [C14. Claude Code key features](/claude/c14-claude-code-features/) — CLAUDE.md, subagents, MCP and permission modes
+- [10. Automate checks with hooks](/coding/37-claude-code-hooks/) — block risky commands with a PreToolUse hook
+- [12. Create your own subagents](/coding/39-claude-code-subagents/) — limit a subagent's tools
+- [1. Getting started with Claude Code](/coding/06-claude-code-start/)
+- [Dev 7. Headless and GitHub Actions](/dev/07-headless-ci/) — `-p` runs and the trust caution
+- [Developer guide](/roles/developer/)

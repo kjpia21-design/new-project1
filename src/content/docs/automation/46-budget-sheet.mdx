@@ -1,0 +1,207 @@
+---
+title: "Organize Household Budgets and Receipts with AI"
+description: "Turn receipt photos and card statement exports into a categorized budget sheet with AI, with a template prompt, privacy masking for card numbers, and a checklist for verifying the totals yourself"
+sidebar:
+  label: "16. Budget sheet and receipts with AI"
+level: beginner
+category: automation
+tools: ["Claude", "ChatGPT", "Gemini", "Google Sheets"]
+duration: "40 min"
+prerequisites:
+  - "An account with Claude, ChatGPT, or Gemini (a free account is enough to start)"
+  - "A few receipt photos or a spending list. Practice with made-up or masked data first"
+lastVerified: 2026-11-02
+sources:
+  - title: "Upload files to Claude (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/8241126-uploading-files-to-claude"
+  - title: "Create and edit files with Claude (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude"
+  - title: "Upload & analyze files in Gemini Apps (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/14903178?hl=en"
+  - title: "Collaborate with Gemini in Google Sheets (Google Docs Editors Help)"
+    url: "https://support.google.com/docs/answer/14356410?hl=en"
+  - title: "Image inputs (ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/image-inputs.md"
+  - title: "Work with files (ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/artifacts-viewer.md"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- The flow is **hide sensitive details → give AI the receipt photos or a spending list → have it fill a table with the columns you chose → check the totals yourself → keep the result as a sheet**.
+- All three chat assistants can take files or images: Claude (PDF, CSV, XLSX, JPEG, PNG and more), Gemini (up to 10 files per prompt), and ChatGPT (images attached in the web composer). Limits are in the table below (checked 2026-11-02).
+- **Hide card numbers, account numbers, names, and addresses before uploading.** Crop or cover them on the photo first. See [Privacy and safety](/basics/05-privacy-safety/).
+- **This is bookkeeping help, not financial advice.** AI can misread a blurry receipt or add wrong, so a person confirms every total.
+- We did not run this exercise with real receipts for this page. The prompts and the sample table are examples made by this site, and what your AI produces will differ.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Turn a pile of receipt photos or a card-statement export into **one table** with date, store, category, and amount.
+- Get a **household budget template** (categories, monthly totals, a summary) as a spreadsheet you can keep editing.
+- **Hide sensitive details** on a receipt before it ever reaches an AI service.
+- **Check the AI's totals** so a misread digit doesn't end up in your records.
+
+## Concepts to know first
+
+| Term | What it means here |
+| --- | --- |
+| **Receipt extraction** | Having AI read the store, date, items, and total from a photo or PDF and put them in table form. It is reading text from an image, so mistakes happen. |
+| **Category** | A label such as groceries, transport, or dining out. You decide the list; AI only sorts rows into it. |
+| **Masking** | Covering or cropping details you don't want to share, such as a card number, before uploading. |
+| **Statement export** | A CSV or spreadsheet file you download from your bank or card company's own site or app. Often easier and more accurate than photos. |
+| **Spot check** | Recalculating a few numbers by hand, or with a simple `SUM`, to see whether the AI's table is right. |
+
+<Aside type="caution" title="Not financial advice">
+This tutorial is about **organizing records**. It doesn't tell you how to save, invest, borrow, or file taxes. If you ask AI for advice on money decisions, read [Asking AI about health, legal and money questions safely](/basics/13-sensitive-questions/) first, and for big decisions talk to a qualified professional.
+</Aside>
+
+### What each service accepts (checked 2026-11-02)
+
+| Service | What the official help says | What we couldn't confirm |
+| --- | --- | --- |
+| **Claude** | Documents: PDF, DOCX, CSV, TXT, HTML, ODT, RTF, EPUB, JSON, XLSX (XLSX needs code execution and file creation turned on). Images: JPEG, PNG, GIF, WebP. Chat uploads: up to 500 MB per file, up to 20 files per chat, images up to 8000x8000 pixels. Tip for images: 1000x1000 pixels or larger, avoid small or low-resolution pictures. | Accuracy of reading handwritten or crumpled receipts, and Korean-language receipt accuracy. |
+| **Gemini** | Up to 10 files in the same prompt (subject to availability); most file types supported; non-video files up to 100 MB each. Rolling limits apply, and higher limits come with a Google AI plan. Gemini can chart an uploaded spreadsheet. | Receipt-reading accuracy. |
+| **ChatGPT** | The ChatGPT docs say you can attach, paste, or drag an image into the web composer, and should tell it what to inspect and what result you want. | File size and count limits for consumer accounts: the official help page (help.openai.com) was not readable from our environment (it returned an access error), so we did not use it. |
+
+<Aside type="note" title="What we couldn't confirm">
+We could not find official numbers for how accurately any of these services read receipt photos, and we did not test them on real receipts. Treat every extracted amount as a draft until you've checked it against the paper receipt.
+</Aside>
+
+## Step-by-step guide
+
+Practice first with 3 to 5 receipts you don't mind sharing, or with receipts you've masked. A made-up spending list also works.
+
+<Checklist items={[
+  'I covered or cropped card numbers, account numbers, names, and addresses on every photo',
+  'I decided my categories before asking AI to sort',
+  'I asked for a table, not a long paragraph',
+  'I compared the AI total with the total printed on at least two receipts',
+  'I fixed any row that was wrong and asked for a recount',
+  'I saved the result as a spreadsheet and kept the original receipts',
+]} />
+
+<Steps>
+
+1. **Hide sensitive details first**
+
+   Before uploading, look at each photo. Receipts can show a card number (often partly masked, but not always), a name, a phone number, a loyalty account, or an address. Crop the image, or cover those parts with a markup or editing tool on your phone, and save a copy. Upload the copy, not the original. If a bank statement export has account numbers, delete that column in your spreadsheet before uploading. The reasons and the training settings are in [Privacy and safety](/basics/05-privacy-safety/) and [Turn off AI training on your chats](/basics/12-privacy-settings/).
+
+   Use a temporary or incognito chat if you don't want the conversation kept in your history. Where that option is depends on the service, so check its help page.
+
+2. **Decide the columns and categories**
+
+   Write down what you want before AI guesses for you. For example: date, store, category, amount, payment method (cash or card, never the number), and a note column for anything the AI wasn't sure about.
+
+3. **Upload the receipts or the statement and ask for a table**
+
+   In Claude, click the **+** button at the lower left of the chat box and choose **Add files or photos**, or drag files in or paste an image from the clipboard (official upload help, checked 2026-11-02). In Gemini, enter your prompt and click **Add files** (up to 10 files per prompt). In ChatGPT, attach, paste, or drag the image into the web composer.
+
+   <PromptBox>
+   I'm attaching photos of 5 receipts (card numbers are covered). For each receipt, make a table with these columns: date, store, category, amount, payment method (cash or card only), and a "check" column. Use only these categories: Groceries, Dining out, Transport, Health, Household, Other. If a value is hard to read or you're guessing, write "?" in the cell and put the reason in the "check" column. Don't invent anything you can't see. At the end, show the total amount per category and the grand total.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Attaching images or files from the + button in the Claude chat box" officialUrl="https://support.claude.com/en/articles/8241126-uploading-files-to-claude" officialLabel="See it in the Claude Help Center" />
+
+4. **Check the numbers**
+
+   Don't stop at the table. Pick two or three receipts and compare the date, store, and total with the paper. Then add up the amount column yourself, for example with `=SUM()` in a spreadsheet, and compare it with the grand total the AI gave you. Look at every row that has a "?".
+
+   <PromptBox>
+   The total on the second receipt is 23.40, but your table says 28.40. Look at that receipt again and tell me which digits you were unsure about. Then correct the table, recalculate the category totals and the grand total, and list every cell you changed.
+   </PromptBox>
+
+5. **Ask for a budget template you can keep using**
+
+   <PromptBox>
+   Create a monthly household budget spreadsheet I can keep using. Sheet 1 "Transactions": date, store, category, amount, payment method, note. Sheet 2 "Summary": for each category, the monthly total and its share of all spending, using formulas that read from the Transactions sheet. Include an empty "Planned amount" column for each category so I can compare planned and actual. Fill in the example rows from the table above. Tell me what each formula does.
+   </PromptBox>
+
+   If you use Claude and want it to hand you an actual `.xlsx` file, the official help says code execution and file creation is available on Free, Pro, Max, Ultra, Team, and Enterprise plans (checked 2026-11-02). On Free, Pro, Max, and Ultra it's under **Settings > Capabilities**, where the toggle is called "Code execution and file creation" (called "Create and edit files" in the updated Settings layout). On Team and Enterprise it's an organization setting. ChatGPT's docs describe creating spreadsheets and downloading them from the chat, and Gemini's Sheets help describes building tables and formulas in the Ask Gemini side panel. Pick whichever you already use.
+
+   <FlowSteps title="From receipts to a budget sheet" officialUrl="https://support.claude.com/en/articles/8241126-uploading-files-to-claude" steps={[
+     { where: 'Your phone or computer', action: 'Crop or cover card numbers, names, and addresses; save a copy', result: 'A masked copy of each receipt' },
+     { where: 'AI chat', action: 'Attach the copies and ask for a table with your columns and categories', result: 'A draft table with "?" where it was unsure' },
+     { where: 'Spreadsheet or calculator', action: 'Compare two or three receipts and the grand total by hand', result: 'You know which rows to fix' },
+     { where: 'AI chat', action: 'Ask it to correct the rows and recalculate', result: 'A corrected table' },
+     { where: 'Spreadsheet', action: 'Ask for a template with Transactions and Summary sheets, then download or paste it', result: 'A sheet you can add to every month' },
+   ]} />
+
+6. **Move it into your spreadsheet and keep the originals**
+
+   Paste or open the result in Excel or Google Sheets. In Google Sheets, the Ask Gemini panel (top right) can also build tables and formulas and summarize your data, and it requires an eligible Google Workspace or Google AI plan (checked 2026-11-02). Gemini features work best on native Google Sheets files, so for an `.xlsx` use **File > Save as Google Sheets**. For more on AI inside spreadsheets, see [Adding AI to Excel and Google Sheets](/automation/23-spreadsheet-ai/).
+
+   Keep your paper or original photos until you've closed the month. If you later want a repeatable script that reads a CSV and writes a report, see [Analyze CSV and Excel data with Claude Code](/coding/38-data-analysis-claude-code/).
+
+</Steps>
+
+## Quick reference
+
+### Prompt patterns
+
+| Situation | Try saying this |
+| --- | --- |
+| Receipts to a table | "Make a table with columns [..]. Use only these categories: [..]. Write ? where you're unsure." |
+| Statement export | "Here is a CSV of my card transactions. Add a category column using only [list], and don't change any amount." |
+| Recount | "Total is [x] by my count but [y] in your table. Show the rows behind your total." |
+| Template | "Create a monthly budget sheet with Transactions and Summary sheets, with formulas, and explain each formula." |
+| Rules for next time | "List the rules you used to pick categories, so I can reuse them next month." |
+
+### Receipt photo vs. statement export
+
+| | Receipt photos | Statement export (CSV) |
+| --- | --- | --- |
+| Good for | Cash, small stores, itemized lists | Card and bank spending |
+| Main risk | Misread digits, blurry text | Account numbers and names left in the file |
+| Before upload | Crop or cover card numbers and names | Delete columns you don't need |
+| Check | Compare with the paper receipt | Compare the total with the statement's own total |
+
+## Common sticking points
+
+### The AI misread a number on the receipt
+
+- **Cause**: Photos with small print, shadows, folds, or low resolution are harder to read. The official Claude upload help advises images of 1000x1000 pixels or larger and warns against small, low-resolution pictures.
+- **Fix**: Retake the photo in good light, flat and straight, and ask the AI to point out which values it wasn't sure about.
+
+### Categories keep changing between months
+
+- **Cause**: The AI chose categories on its own each time.
+- **Fix**: Give a fixed category list in every prompt, and ask it to apply the same rules. Save the prompt in a note so you can reuse it.
+
+### The totals don't match my bank statement
+
+- **Cause**: A receipt may be missing, a refund or tip may differ from the receipt, or a row may be duplicated.
+- **Fix**: Ask the AI to list rows that look like duplicates, then compare against the statement line by line yourself.
+
+### The file won't upload, or it says I hit a limit
+
+- **Cause**: The file may be too large or there may be too many files. Gemini mentions rolling limits for chats with files, and Claude lists per-file and per-chat limits.
+- **Fix**: Split the receipts into smaller batches, or check the service's current limits on its help page.
+
+### I'm worried I uploaded a card number
+
+- **Cause**: A photo can show more than you noticed.
+- **Fix**: Delete that conversation. You can't be sure that what was already processed is completely gone, so if a full card number was visible, ask your card company about replacing it. See [Privacy and safety](/basics/05-privacy-safety/).
+
+## Practical tips
+
+- **Batch by month.** A small batch is easier to check than a year of receipts.
+- **Keep the AI's table next to the originals** until the month is closed.
+- **Ask for "?" instead of guesses.** A visible gap is better than a confident wrong number.
+- **Use a statement export when you have one.** It's usually more reliable than reading photos, and it gives you fewer files to mask.
+- **Don't treat the sheet as advice.** A spending summary shows what happened. Decisions about saving or borrowing are yours, ideally with a professional.
+
+## What to read next
+
+- [6. Adding AI to Excel and Google Sheets](/automation/23-spreadsheet-ai/) — AI inside the spreadsheet you keep editing
+- [11. Analyzing data with Claude Code](/coding/38-data-analysis-claude-code/) — a rerunnable script and report for a CSV
+- [5. Privacy and safety](/basics/05-privacy-safety/) — what not to upload, and the training settings
+- [3. Getting AI to analyze data](/chat/03-data-analysis/) — uploading a data file to a chat assistant
+- [An AI usage guide for office, planning, and admin roles](/roles/office/) — repetitive paperwork from a job-role view

@@ -1,0 +1,184 @@
+---
+title: "Get the most from the Claude mobile app"
+description: "A beginner guide to Claude on iPhone and Android based on official help: installing, dictation vs. voice mode, uploading photos and files, the iOS widget, Ask Claude shortcut and control, Claude with Android apps, and privacy cautions"
+sidebar:
+  label: "C26. Mobile app"
+level: beginner
+category: claude
+tools: ["Claude"]
+duration: "20 min"
+prerequisites:
+  - "A Claude account (the voice and dictation pages say all plans, including Free)"
+  - "An iPhone or iPad on iOS/iPadOS 18.0 or later, or an Android phone on Android 8.0 or later"
+  - "A practice photo or document with nothing private in it"
+lastVerified: 2026-11-02
+sources:
+  - title: "Install Claude for iOS"
+    url: "https://support.claude.com/en/articles/9266462-install-claude-for-ios"
+  - title: "Install Claude for Android"
+    url: "https://support.claude.com/en/articles/9612887-install-claude-for-android"
+  - title: "Use voice mode"
+    url: "https://support.claude.com/en/articles/11101966-use-voice-mode"
+  - title: "Use dictation on Claude Mobile"
+    url: "https://support.claude.com/en/articles/10065434-use-dictation-on-claude-mobile"
+  - title: "Use Claude app intents, shortcuts, and widgets on iOS"
+    url: "https://support.claude.com/en/articles/10263469-use-claude-app-intents-shortcuts-and-widgets-on-ios"
+  - title: "Use Claude with Android apps"
+    url: "https://support.claude.com/en/articles/11869629-use-claude-with-android-apps"
+  - title: "Upload files to Claude"
+    url: "https://support.claude.com/en/articles/8241126-upload-files-to-claude"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- Install **Claude by Anthropic** from the App Store or Play Store. The official pages list **iOS/iPadOS 18.0+** and **Android 8.0 (Oreo)+** (as of 2026-11-02).
+- **Dictation** turns your speech into a typed prompt and Claude replies in text. **Voice mode** is a spoken two-way conversation (beta). Both are listed for all plans.
+- Voice conversations count toward your normal usage limits. Text transcripts are saved in your chat history.
+- iPhone extras: a **widget** (new chat, dictation, camera), an **"Ask Claude"** intent for Siri, Spotlight, Share and Shortcuts, and an **"Analyze Photo with Claude"** control. Android: Claude can hand work to your **messaging, email, calendar, clock and maps apps**.
+- Always review what Claude drafts in the destination app before you send or save it.
+</Summary>
+
+This guide covers the phone apps. For a first look at AI on a phone, see [Using AI on your phone](/basics/07-ai-on-phone/). For the computer app, see [C22. The desktop app](/claude/c22-desktop-app/).
+
+## What you'll be able to do
+
+- Install the right app and know if your phone is supported.
+- Choose between dictation and voice mode, and set the language.
+- Send a photo or file and ask about it.
+- Set up the iPhone widget and shortcut, or use Claude with Android apps.
+- Keep private information out of the chat.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Dictation** | Speech turned into text in the input box. You send a written prompt and Claude answers in text. |
+| **Voice mode** | A full spoken conversation: you talk, Claude talks back. Beta. It can use web search and connected tools. |
+| **Hands-free / push-to-talk** | Two ways to talk in voice mode. Hands-free listens continuously (default); push-to-talk means you hold a button while speaking. |
+| **App intent / Shortcut (iOS)** | "Ask Claude" is an action that Siri, Spotlight, the Share menu and the Shortcuts app can call without opening the app. |
+| **Widget** | A Home Screen or Today View tile with buttons for chat, dictation and camera (iOS). |
+
+## Step-by-step
+
+<Checklist items={[
+  'I installed "Claude by Anthropic" and logged in',
+  'I know whether I want dictation (text reply) or voice mode (spoken reply)',
+  'I set my speech or voice language in the app settings',
+  'I tried a photo or file with nothing private in it',
+  'I read the destination app before sending anything Claude drafted',
+]} />
+
+<Steps>
+
+1. **Install the app**
+
+   Search for "Claude by Anthropic" in the App Store (iOS) or Play Store (Android), then tap Get or Install. The iOS page also lists "Claude for Intune", a managed version for Enterprise organizations that use Microsoft Intune; if your organization has not asked for it, install the standard app. If you cannot find the app, the official pages say you may be in an unsupported region or using an unsupported device or OS version.
+
+   <ScreenshotPlaceholder caption="Claude by Anthropic in the App Store and Play Store" officialUrl="https://support.claude.com/en/articles/9266462-install-claude-for-ios" />
+
+2. **Speak your prompt with dictation**
+
+   Start a new chat, tap the microphone icon on the right of the input field, and pick your language the first time. Speak, then tap the arrow to send, or the X to cancel. To change the language later, tap your initials in the upper right and choose "Speech Input Language". The page lists English, French, German, Hindi, Italian, Japanese, Korean, Portuguese, Russian, Spanish, Turkish and Ukrainian, with non-English support in beta. Per the page, the audio recording is deleted after conversion and is not kept or used to train generative models.
+
+3. **Talk with voice mode**
+
+   Tap the voice mode icon (a sound wave next to the microphone) in the input field and choose a voice. Hands-free is the default and works best in a quiet place; if Claude mishears you, switch to push-to-talk. You can move between text and voice in the same conversation. Voice mode can use connected tools such as Gmail, Google Calendar, Google Docs and Slack (the Free plan can connect one tool). To change the spoken language, go to Settings > Capabilities > Voice > Spoken language (or Settings > General > Voice > Language). Changing the app's display language does not change the voice language.
+
+   <PromptBox label="A hands-busy question">
+   I'm cooking and can't type. Walk me through swapping butter for olive oil in a muffin recipe, one step at a time, and ask me before moving to the next step.
+   </PromptBox>
+
+4. **Send photos and files**
+
+   The upload page lists JPEG, PNG, GIF and WebP images and documents such as PDF, DOCX, CSV, TXT, HTML, ODT, RTF, EPUB, JSON and XLSX (XLSX needs code execution and file creation turned on). Chat uploads are up to 500MB per file, 20 files per chat, images up to 8000x8000 pixels, and PDFs up to 1000 pages. The page describes the button for desktop browsers ("+" at lower left); the exact phone menu is not described there, so look for the same attach option in your app.
+
+   <PromptBox label="Ask about a photo">
+   This is a photo of a handwritten shopping list. Type it out as a checklist, grouped by store section, and point out anything you could not read clearly.
+   </PromptBox>
+
+5. **iPhone: widget, Ask Claude and the photo control**
+
+   Add the Claude widget from the Home Screen edit mode (Edit > Add Widget > Claude). Its buttons start a new chat, open the app in dictation mode, or take a photo to share. The "Ask Claude" intent works from Siri, Spotlight and the Share menu, and can be a building block in the Shortcuts app (for example, a "Summarize with Claude" shortcut that sends the shared text). "Analyze Photo with Claude" can be added to Control Center or the Lock Screen. These features need iOS 18 or later, use the default model shown when you open the app, and count toward your usage limit.
+
+6. **Android: Claude with your phone's apps**
+
+   The official page says Claude can draft messages and emails (opened pre-filled in your app), show places on a map, read and create calendar events, and set alarms and timers. Claude does not read existing messages or emails, does not have direct access to your contacts, and cannot create reminders on Android. Health Connect reading is in beta, on Pro, Max and Ultra only, requires Android 14+, and is limited to the US. The page says Claude is not a medical device; consult a licensed professional for health questions.
+
+   <FlowSteps title="Safe hand-off on Android" officialUrl="https://support.claude.com/en/articles/11869629-use-claude-with-android-apps" steps={[
+     { where: 'Claude chat', action: 'Ask for a draft with recipient, date and time spelled out' },
+     { where: 'Card in the conversation', action: 'Tap the card to open your messaging or email app' },
+     { where: 'Your messaging or email app', action: 'Read and edit the pre-filled text yourself', result: 'Send only when it is right' },
+   ]} />
+
+</Steps>
+
+<Aside type="caution" title="Before you talk or share">
+Voice transcripts are saved in your chat history like text chats. Do not read out or photograph passwords, card numbers, ID numbers or other people's private information. For the basics, see [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/).
+</Aside>
+
+## Limits and good to know
+
+- **Usage**: voice conversations and the iOS "Ask Claude" and widget interactions count toward your usage limit.
+- **Voice mode and models**: it follows the models your plan offers. The page notes one named model is not available in voice mode.
+- **Cowork and Claude Code**: dictation is available there, voice mode is not (per the voice page).
+- **Enterprise**: owners who want voice mode disabled are told to contact Support.
+- **Android location**: Team and Enterprise members cannot use the location tool at this time.
+
+<Aside type="note" title="What we could not confirm">
+We did not install or run the apps. The official pages we read do not describe the exact phone menus for attaching photos or files, so check your own screen. We did not find an iOS counterpart to the Android "apps" page in the pages we read, so we make no claim about iOS calendar, message or Health actions. Feature names, plans and menu paths change often; recheck the linked pages.
+</Aside>
+
+## Quick reference
+
+| I want to... | Do this |
+| --- | --- |
+| Speak and get a text answer | Microphone icon in the input field (dictation) |
+| Have a spoken conversation | Sound wave icon (voice mode) |
+| Change dictation language | Initials > Speech Input Language |
+| Change voice language | Settings > Capabilities > Voice (or Settings > General) |
+| Noisy room | Switch voice mode to push-to-talk |
+| Quick text summary on iPhone | Share menu or Shortcuts > Ask Claude |
+| Draft an email on Android | Ask in chat, then tap the card |
+
+## Common sticking points
+
+### I can't find the app in the store
+
+- **Cause**: Unsupported region, device or OS version (iOS 18.0+ or Android 8.0+ required).
+- **Fix**: Check your OS version. Enterprise users on Intune should ask IT which app to install.
+
+### Claude doesn't hear me correctly
+
+- **Cause**: Noise, microphone permission or the wrong language.
+- **Fix**: Move somewhere quiet or use push-to-talk, check microphone permission, and set the voice language in Settings.
+
+### Voice stops or sounds choppy
+
+- **Cause**: Weak connection, low battery or reaching your usage limit.
+- **Fix**: Check your connection, leave and re-enter voice mode, and check your limits.
+
+### Claude interrupts me
+
+- **Cause**: Pauses or background noise.
+- **Fix**: Pause less, or switch to push-to-talk.
+
+## Practical tips
+
+- Use dictation for a long typed-style prompt and voice mode for brainstorming or practice.
+- Start the day with a short voice briefing, but verify any times and names yourself.
+- Say who, when and how long in any request to draft a message or event.
+- Keep practice photos free of faces and documents with personal details.
+
+## What to read next
+
+- [Using AI on your phone](/basics/07-ai-on-phone/) — Your first steps on a phone
+- [C22. The desktop app](/claude/c22-desktop-app/) — Quick Entry, voice and files on a computer
+- [C7. Connectors](/claude/c07-connectors/) — The tools voice mode can use
+- [C23. Claude with Google Workspace](/claude/c23-google-workspace/) — Gmail, Calendar and Drive

@@ -1,0 +1,280 @@
+---
+title: "Claude API에 이미지·PDF 보내기"
+description: "Messages API 요청에 이미지와 PDF 넣기: base64·URL·Files API 소스, 지원 형식, 크기·페이지 한도, 이미지 토큰 계산, 정확도 한계를 공식 문서 기준으로 정리해요"
+sidebar:
+  label: "18. 이미지·PDF 보내기"
+level: advanced
+category: dev
+tools: ["Claude API", "Messages API", "Python", "anthropic SDK"]
+duration: "40분"
+prerequisites:
+  - "C16. Claude API 시작하기를 끝낸 상태 (API 키, 환경 변수 설정)"
+  - "Python 3.10 이상, pip install anthropic"
+  - "개발 9(Files API와 인용)와 개발 14(토큰 세기)를 읽은 상태"
+lastVerified: 2026-11-02
+sources:
+  - title: "Vision"
+    url: "https://platform.claude.com/docs/en/build-with-claude/vision"
+  - title: "PDF support"
+    url: "https://platform.claude.com/docs/en/build-with-claude/pdf-support"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- 이미지는 `image` 콘텐츠 블록, PDF는 `document` 블록으로 메시지에 넣어요. 둘 다 소스 종류가 세 가지예요: 요청에 담는 base64 데이터, URL, Files API의 `file_id`. Amazon Bedrock과 Claude Models on Google Cloud(Google managed)에서는 base64만 쓸 수 있어요.
+- 이미지: JPEG, PNG, GIF, WebP(GIF 애니메이션은 지원하지 않고 첫 프레임만 써요). Claude API에서 이미지 하나당 10MB(base64 인코딩 기준), 최대 8000x8000px, 요청당 최대 600장(컨텍스트 윈도우가 200k 토큰인 모델은 100장)이에요.
+- PDF: 일반 PDF만(비밀번호·암호화 없음), 요청당 최대 600쪽(요청의 컨텍스트 윈도우가 1M 토큰보다 작으면 100쪽), 1st-party Claude API에서 요청 크기 128MB예요. 두 한도 모두 요청 전체 페이로드를 기준으로 해요.
+- 이미지 비용은 28x28픽셀 패치로 세요: 가로/28 올림 곱하기 세로/28 올림. 큰 이미지는 먼저 축소돼요. Claude 4.7 이후 모델은 긴 변 2,576px(최대 4,784토큰)까지, 그 밖의 모델은 1,568px(1,568토큰)까지예요.
+- PDF 한 쪽은 추출된 텍스트와 쪽 이미지로 처리돼요. 문서에 따르면 한 쪽에 보통 텍스트 1,500~3,000토큰에 이미지 비용이 더해지고, PDF 추가 요금은 없어요.
+- 이미지와 PDF는 질문보다 앞에 두세요. Claude는 이미지 속 사람의 이름을 말하지 않고, 작거나 회전된 이미지는 잘못 읽거나 세어 틀릴 수 있어요. 의료 진단을 대신하지도 않아요.
+- 2026-11-02에 공식 페이지 2개를 읽었고, 스크립트의 블록 만들기 로직을 로컬 스텁으로 실행했어요. 하지만 **실제 API 호출은 하지 못했어요**(API 키와 `anthropic` 패키지가 없었어요). SDK 코드는 문서 기준이고 끝까지 테스트하지 않았어요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 이미지 한 장 이상, PDF, 또는 둘 다에 질문을 붙인 요청을 만들어요.
+- base64, URL, `file_id` 소스 중에서 고르는 기준을 알아요.
+- 보내기 전에 문서에 나온 형식·크기·페이지 한도를 확인해요.
+- 이미지 토큰을 손으로 어림하고, 파일이 언제 축소되는지 알아요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **`image` 블록** | 이미지 한 장(JPEG, PNG, GIF, WebP)을 담는 콘텐츠 블록. |
+| **`document` 블록** | PDF(또는 Files API로 올린 일반 텍스트 파일)를 담는 콘텐츠 블록. |
+| **소스(source)** | 바이트가 오는 곳: `base64`, `url`, `file`(Files API의 `file_id`). |
+| **시각 토큰** | 이미지의 28x28픽셀 패치 하나. 이미지 비용은 패치 수예요. |
+
+[개발 9](/ko/dev/09-rag-files-citations/)는 Files API로 문서를 올리고 인용을 받는 법을 이미 다뤘어요. 이 편은 나머지 절반, 곧 이미지와 PDF를 요청에 직접 담아 보내는 법, 적용되는 한도, 토큰 계산에 집중해요. 보내기 전에 입력 비용을 어림하려면 [개발 14](/ko/dev/14-token-counting/)를 보세요. PDF 페이지는 내 PDF에 대해 토큰 세기를 쓸 수 있다고 안내해요.
+
+<Aside type="caution" title="공유하면 안 되는 것은 보내지 마세요">
+문서에 따르면 업로드한 이미지는 일시적이라 API 요청이 끝나면 저장되지 않고, Anthropic은 업로드한 이미지를 모델 학습에 쓰지 않아요. 그렇다고 아무거나 보내도 안전하다는 뜻은 아니에요. 신분증, 의료 이미지, 타인의 사진, 기밀 문서는 여전히 본인의 허락과 소속 기관의 규칙이 필요해요. 실제 문서를 쓰기 전에 PDF 페이지의 데이터 처리 안내(제로 데이터 보존과 HIPAA 적격성에는 조건이 있어요)를 확인하세요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '내 플랫폼이 지원하는 소스 종류(base64, URL, file_id)를 안다',
+  '이미지가 JPEG, PNG, GIF, WebP이고 크기 한도 안이다',
+  'PDF에 비밀번호가 없고 페이지·요청 크기 한도 안이다',
+  '콘텐츠 목록에서 파일을 질문보다 앞에 뒀다',
+  '파일이 여러 개면 이름표를 붙여 구분할 수 있게 했다',
+  '첫 실행 뒤 usage.input_tokens를 확인했다',
+  '답을 파일과 직접 대조해 확인했다',
+]} />
+
+<Steps>
+
+1. **소스 종류 고르기**
+
+   | 소스 | 이럴 때 | 문서의 설명 |
+   | --- | --- | --- |
+   | `base64` | 파일이 내 컴퓨터에 있거나 URL이 없을 때 | 모든 플랫폼에서 돼요. 대화가 이어지면 이미지 바이트를 매 턴 다시 보내요. |
+   | `url` | 파일이 온라인에 올라 있을 때 | Amazon Bedrock과 Claude Models on Google Cloud(Google managed)에서는 쓸 수 없어요. |
+   | `file`(`file_id`) | 같은 파일을 여러 번 쓸 때 | Files API로 한 번 올리고 참조해요. 페이로드가 작게 유지돼요. Microsoft Foundry에서 PDF의 `file_id` 소스는 Hosted on Anthropic 배포가 필요해요. |
+
+   여러 턴 대화와 에이전트 루프에서는 요청마다 전체 대화 기록을 다시 보내요. 문서는 이때 base64 이미지가 요청 크기와 지연을 키우므로 Files API가 낫다고 해요. 업로드 코드는 [개발 9](/ko/dev/09-rag-files-citations/)를 보세요.
+
+2. **보내기 전에 한도 확인하기**
+
+   | 항목 | 한도 (공식 문서) |
+   | --- | --- |
+   | 이미지 형식 | JPEG, PNG, GIF, WebP (`image/jpeg`, `image/png`, `image/gif`, `image/webp`) |
+   | 이미지 크기 | Claude API는 10MB(base64 인코딩 기준), Amazon Bedrock은 5MB |
+   | 이미지 해상도 | 최대 8000x8000px |
+   | 요청당 이미지 수 | 600장. 컨텍스트 윈도우 200k 토큰 모델은 100장. claude.ai는 메시지당 20장 |
+   | 이미지가 많을 때 | 한 요청에 20장을 넘으면 더 엄격한 이미지별 해상도 한도가 적용돼요. 각 변을 3,000px 이하로 줄이거나, 이미지·문서 블록을 20개 이하로 유지하세요. |
+   | PDF 형식 | 일반 PDF, 비밀번호·암호화 없음 |
+   | PDF 쪽수 | 요청당 600쪽 (요청의 컨텍스트 윈도우가 1M 토큰 미만이면 100쪽) |
+   | 요청 크기 | 1st-party Claude API는 128MB (플랫폼마다 달라요) |
+
+   빽빽한 PDF(작은 글씨, 복잡한 표, 무거운 그래픽)는 쪽수 한도에 닿기 전에 컨텍스트 윈도우가 찰 수 있어요. 문서는 문서를 구간으로 나누고, 큰 파일은 안에 든 이미지를 줄이라고 권해요. Files API를 써도 큰 이미지가 많은 요청은 600장에 닿기 전에 실패할 수 있어요.
+
+3. **스크립트 쓰기**
+
+   `vision_demo.py`로 저장하세요. 명령줄에서 이미지·PDF 경로를 받아 파일마다 이름표를 붙이고, 파일을 질문보다 앞에 두고, 답과 토큰 사용량을 출력해요.
+
+   ```python
+   import base64
+   import sys
+   from pathlib import Path
+
+   import anthropic
+
+   IMAGE_TYPES = {
+       ".jpg": "image/jpeg",
+       ".jpeg": "image/jpeg",
+       ".png": "image/png",
+       ".gif": "image/gif",
+       ".webp": "image/webp",
+   }
+   MAX_IMAGE_B64 = 10_000_000  # docs: 10 MB per image (base64) on the Claude API
+
+
+   def visual_tokens(width, height):
+       """Docs formula: ceil(w / 28) * ceil(h / 28). Ignores downscaling."""
+       return -(-width // 28) * -(-height // 28)
+
+
+   def build_block(path):
+       p = Path(path)
+       suffix = p.suffix.lower()
+       if suffix != ".pdf" and suffix not in IMAGE_TYPES:
+           raise SystemExit(f"{p.name}: use jpg, png, gif, webp, or pdf")
+       data = base64.standard_b64encode(p.read_bytes()).decode("utf-8")
+       if suffix == ".pdf":
+           return {
+               "type": "document",
+               "source": {"type": "base64", "media_type": "application/pdf", "data": data},
+           }
+       if suffix in IMAGE_TYPES:
+           if len(data) > MAX_IMAGE_B64:
+               raise SystemExit(f"{p.name}: over 10 MB after base64, shrink it first")
+           return {
+               "type": "image",
+               "source": {"type": "base64", "media_type": IMAGE_TYPES[suffix], "data": data},
+           }
+       raise SystemExit(f"{p.name}: use jpg, png, gif, webp, or pdf")
+
+
+   def main(paths, question):
+       content = []
+       for i, path in enumerate(paths, start=1):
+           content.append({"type": "text", "text": f"File {i}: {Path(path).name}"})
+           content.append(build_block(path))
+       content.append({"type": "text", "text": question})  # files first, question last
+
+       client = anthropic.Anthropic()
+       message = client.messages.create(
+           model="claude-opus-5-5",
+           max_tokens=1024,
+           messages=[{"role": "user", "content": content}],
+       )
+       for block in message.content:
+           if block.type == "text":
+               print(block.text)
+       print("stop_reason:", message.stop_reason)
+       print("input_tokens:", message.usage.input_tokens)
+       print("output_tokens:", message.usage.output_tokens)
+
+
+   if __name__ == "__main__":
+       main(sys.argv[1:], "Describe each file in two sentences and say what is hard to read.")
+   ```
+
+
+   요청 모양(`base64` 소스의 `image`·`document` 블록, 모델 `claude-opus-5-5`)은 문서의 예제를 따랐어요. `File 1:` 이름표는 여러 이미지에 "Image 1:", "Image 2:"를 붙이라는 문서의 권고를 따른 거예요. `visual_tokens` 함수는 문서의 공식 그대로예요. 이미지 크기 검사를 10,000,000바이트로 둔 것은 "10 MB (base64-encoded)"를 보수적으로 읽은 것이고, 문서는 MB가 10^6인지 2^20바이트인지 밝히지 않았어요(확인하지 못함).
+
+   먼저 C16처럼 `ANTHROPIC_API_KEY`를 설정한 뒤 `python vision_demo.py chart.png report.pdf`로 실행해요. 실제 API로는 실행하지 못했어요.
+
+4. **이미지 토큰 어림하기**
+
+   문서에 따르면 비용은 축소 후 기준 `ceil(가로 / 28) x ceil(세로 / 28)` 시각 토큰이에요. 모델 한도를 넘는 이미지는 가로세로 비율을 유지한 채 한도에 맞는 가장 큰 크기로 줄어요.
+
+   | 등급 | 모델 | 긴 변 최대 | 시각 토큰 최대 |
+   | --- | --- | --- | --- |
+   | 고해상도 | Claude 4.7 이후 모델 | 2,576px | 4,784 |
+   | 표준 | 그 밖의 모델 | 1,568px | 1,568 |
+
+   문서 표의 예: 1000x1000px는 두 등급 모두 1,296토큰이에요(스텁 실행에서 우리 `visual_tokens(1000, 1000)`도 1,296이 나와 일치했어요). 1920x1080 이미지는 표준 등급에서 1456x819로 줄어 1,560토큰이고, 고해상도 등급에서는 줄지 않아 2,691토큰이에요. 문서는 고해상도 이미지가 최대 세 배 가까이 토큰을 쓸 수 있으니, 추가 디테일이 필요 없으면(예: 분류만 하는 사진) 보내기 전에 줄이라고 경고해요. 정확한 축소 규칙은 좌표 가이드에 있다고 하는데 그 페이지는 열어 보지 않았어요(세부 내용은 확인하지 못함).
+
+   금액은 토큰 수에 공식 가격 페이지의 모델별 토큰 단가를 곱해요. Vision 페이지에 예가 있어요(Opus 5.5 입력 100만 토큰당 4달러, 고해상도 등급에서 1000x1000 이미지 1,000장에 약 5.18달러). 가격은 바뀌니 페이지를 확인하세요. 가격 페이지 자체는 열어 보지 않았어요.
+
+5. **PDF 토큰 어림하기**
+
+   PDF 한 쪽은 이미지로 바뀌고 텍스트도 함께 추출돼요. 그래서 둘 다 비용이 들어요: 텍스트는 밀도에 따라 한 쪽에 보통 1,500~3,000토큰(표준 API 가격, PDF 추가 요금 없음), 여기에 위의 이미지 비용이 더해져요. 문서는 내 PDF의 비용을 어림하려면 토큰 세기를 쓰라고 해요. [개발 14](/ko/dev/14-token-counting/)를 보세요. 토큰 세기 엔드포인트가 `document` 블록을 받는지는 직접 확인하지 못했어요(토큰 세기 페이지에서 확인하세요).
+
+6. **결과 좋게 만들기**
+
+   공식 팁을 줄이면 이래요.
+
+   - **순서**: 파일 먼저, 질문은 뒤에. 다른 순서도 되지만 문서는 이미지 다음 텍스트를 선호해요.
+   - **이미지**: 선명하고, 바로 세워져 있고, 너무 작지 않게. 글자는 읽을 수 있어야 해요. 글자를 키우려고 맥락을 잘라 내지 마세요. 강한 손실 압축(JPEG, 손실 WebP)은 글자를 읽을 수 없게 만들 수 있어요.
+   - **PDF**: 표준 글꼴, 또렷한 글자, 바로 세운 페이지. 프롬프트에서 쪽은 PDF 뷰어에 보이는 논리적 쪽 번호로 가리키세요. 큰 PDF는 나누고, 같은 PDF에 반복 질문하면 프롬프트 캐싱을 켜세요(document 블록에 `cache_control` 추가).
+   - **대량 처리**: PDF 페이지에 Message Batches 요청 안에 document 블록을 넣는 예가 있어요. 배치 흐름은 [개발 16](/ko/dev/16-batch-api/)을 보세요.
+
+   <PromptBox>
+   anthropic SDK용 Python 함수를 써 줘. 파일 경로 목록(png, jpg, webp, gif, pdf)과 질문을 받아서, 파일마다 앞에 짧은 텍스트 이름표를 붙인 사용자 메시지 하나를 만들고, 질문은 맨 끝에 두고, claude-opus-5-5로 보내서 답과 입력·출력 토큰 수를 출력해야 해. 공식 Vision, PDF support 페이지에 나온 콘텐츠 블록 모양만 쓰고, 문서에 나온 크기 한도를 넘는 파일은 거부해 줘.
+   </PromptBox>
+
+</Steps>
+
+## 이미지 이해의 한계
+
+Vision 페이지가 나열한 한계예요. 결과를 믿기 전에 꼭 검토하세요.
+
+- **사람**: Claude로 이미지 속 사람의 이름을 알아내는 일은 할 수 없고, 거부해요.
+- **정확도**: 품질이 낮거나 회전됐거나 아주 작은(200px 미만) 이미지는 지어내거나 틀릴 수 있어요.
+- **개수·위치**: 개수는 근사치예요. 작은 물체가 많을수록 더 그래요. 좌표와 위치도 근사치예요.
+- **AI 생성 이미지**: AI가 만든 이미지인지 판별하지 못해요. 가짜 탐지에 쓰지 마세요.
+- **의료 이미지**: 일반적인 의료 이미지는 분석할 수 있지만 CT·MRI 같은 복잡한 영상을 해석하도록 설계되지 않았고, 결과는 전문가의 의학적 조언이나 진단을 대신하지 못해요.
+- **메타데이터와 생성**: 이미지 메타데이터는 읽지 않고, 이미지를 만들거나 편집하지 못해요. 이해만 해요.
+
+## 한눈에 보기
+
+| 항목 | 값 (공식 문서, 2026-11-02) |
+| --- | --- |
+| 이미지 블록 | `base64`(와 `media_type`), `url`, `file` 소스를 가진 `image` 타입 블록 |
+| PDF 블록 | `base64`(`application/pdf`), `url`, `file` 소스를 가진 `document` 타입 블록 |
+| 이미지 형식 | JPEG, PNG, GIF(첫 프레임만), WebP |
+| 이미지 한도 | 10MB(base64), 8000x8000px, 요청당 600장(200k 컨텍스트 모델은 100장) |
+| PDF 한도 | 600쪽(1M 미만 컨텍스트는 100쪽), 요청 128MB, 비밀번호·암호화 없음 |
+| 이미지 토큰 | 축소 후 ceil(가로/28) x ceil(세로/28) |
+| 표준 / 고해상도 상한 | 1,568px·1,568토큰 / 2,576px·4,784토큰(4.7 이후 모델) |
+| PDF 텍스트 토큰 | 한 쪽에 약 1,500~3,000 + 쪽 이미지 토큰 |
+| 플랫폼 | Bedrock, Google managed Google Cloud: base64만 |
+
+## 자주 막히는 부분
+
+### "many-image requests"가 언급된 `invalid_request_error`
+
+- **원인**: 요청에 이미지가 20장을 넘어서 모든 이미지에 더 엄격한 해상도 한도가 적용돼요(이전 턴의 이미지와 `tool_result` 안의 이미지도 세어요).
+- **해결**: 각 이미지의 변을 3,000px 이하로 줄이거나, 이미지·문서 블록을 20개 이하로 유지하세요.
+
+### 요청이 너무 크거나 이미지가 많을 때 실패해요
+
+- **원인**: 이미지 수 한도보다 요청 크기 한도(1st-party API 128MB)에 먼저 닿을 수 있어요.
+- **해결**: 이미지를 줄이고, Files API로 올려 페이로드를 작게 유지하세요.
+
+### PDF가 실패하거나 답이 부실해요
+
+- **원인**: 비밀번호나 암호화, 너무 많은 쪽수, 컨텍스트를 채우는 빽빽한 레이아웃, 기울어진 스캔.
+- **해결**: 보호를 풀고, 구간으로 나누고, 페이지를 바로 세우세요. PDF 지원은 비전에 기대므로 같은 이미지 한계가 적용돼요.
+
+### URL 소스가 거부돼요
+
+- **원인**: base64만 되는 Amazon Bedrock이나 Claude Models on Google Cloud(Google managed)일 수 있어요.
+- **해결**: 파일을 내려받아 base64로 보내세요. 비공개·로그인 필요 URL 같은 URL 가져오기 제한은 테스트하지 못했고, 읽은 문서 부분에는 나와 있지 않아요.
+
+### 작은 글씨를 잘못 읽어요
+
+- **원인**: 이미지가 축소·압축됐거나 글씨가 작았어요.
+- **해결**: 줄이지 말고 필요한 부분만 잘라서 보내고, 강한 압축을 피하고, 실제로 보낸 파일을 확인하세요.
+
+### 엑셀·워드 파일이 문서로 거부돼요
+
+- **원인**: .xlsx, .docx 같은 바이너리 형식은 document 블록에서 지원하지 않아요.
+- **해결**: 텍스트나 PDF로 먼저 바꾸세요. 일반 .txt, .csv, .md는 MIME 타입 `text/plain`으로 Files API를 통해 보낼 수 있어요.
+
+## 실전 팁
+
+- 작은 이미지 하나로 시작해서 `usage.input_tokens`로 실제 비용을 본 다음에 늘리세요.
+- 분류만 하면 되는 스크린샷·사진은 줄여 보내고, 빽빽한 문서만 원본 해상도를 유지하세요.
+- 파일마다 이름표("File 1: invoice.pdf")를 붙이면 다음 턴에서 가리키기 쉬워요. 이전 턴의 이미지는 새 턴에 다시 넣지 않아도 Claude가 접근할 수 있어요.
+- 근거("이 값을 읽은 줄을 인용해 줘")를 요구하고 파일과 직접 대조하세요.
+- 실제 API로는 실행하지 못했어요. 첫 실행은 테스트로 여기고 결과를 직접 확인하세요.
+
+## 다음에 볼 튜토리얼
+
+- [9. Files API와 인용으로 사내 문서 Q&A 만들기](/ko/dev/09-rag-files-citations/) — 한 번 올리고 출처 달기
+- [14. 토큰 세기 API(비용 미리 계산)](/ko/dev/14-token-counting/) — 보내기 전에 입력 비용 추정
+- [16. Batches API로 대량 작업(반값)](/ko/dev/16-batch-api/) — 문서를 한꺼번에
+- [2. 프롬프트 캐싱·배치·effort로 API 비용 줄이기](/ko/dev/02-cost-optimization/)
+- [C16. API 시작하기](/ko/claude/c16-api/)
+- [개발자 가이드](/ko/roles/developer/)

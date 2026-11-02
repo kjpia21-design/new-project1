@@ -1,0 +1,199 @@
+---
+title: "Airtable AI로 데이터 정리하기"
+description: "Airtable의 Omni와 필드 에이전트로 표를 만들고, 기록을 분류하고, 문서에서 값을 뽑는 방법과 크레딧·권한·정확성 주의점을 정리한 참고서"
+sidebar:
+  label: "17. Airtable AI로 데이터 정리"
+level: practical
+category: automation
+tools: ["Airtable"]
+duration: "30분"
+prerequisites:
+  - "Airtable 계정과 연습용 베이스 (가상의 데이터로 만든 베이스가 안전해요)"
+  - "Airtable AI가 켜져 있고 AI 크레딧이 남아 있는 워크스페이스"
+lastVerified: 2026-11-02
+sources:
+  - title: "Using Omni AI in Airtable"
+    url: "https://support.airtable.com/articles/1744327578-using-omni-ai-in-airtable"
+  - title: "Using Airtable AI in fields"
+    url: "https://support.airtable.com/articles/8052242094-using-airtable-ai-in-fields"
+  - title: "Airtable AI billing"
+    url: "https://support.airtable.com/articles/3378106230-Airtable-AI-billing"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../../components/FlowSteps.astro';
+
+<Summary>
+- Airtable AI는 크게 두 가지예요. **Omni**는 표를 만들고 고치고 데이터에 대한 질문에 답하는 채팅 도우미이고, **필드 에이전트(field agent)**는 기록마다 값을 채워 주는 AI 필드예요.
+- 둘 다 워크스페이스가 함께 쓰는 **AI 크레딧**을 써요. 무료 크레딧이 플랜에 따라 매달 주어지고, Omni로 만드는 작업은 무료예요(2026-11-02 기준).
+- 필드 에이전트는 **자신이 실행되는 기록 하나만** 봐요. 합계나 정확한 계산은 정확하고 크레딧도 들지 않는 수식·롤업을 쓰세요.
+- AI 결과는 초안이에요. 믿기 전에 표본을 확인하고, 연습용 베이스에는 민감한 데이터를 넣지 마세요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 업로드한 CSV를 Omni에게 시켜 정리된 표로 만들 수 있어요.
+- 고객 의견을 분류하는 필드 에이전트를 추가할 수 있어요.
+- 결과가 안정적인 사용자 지정 지시문을 쓰고, 소량 시험으로 크레딧 사용량을 가늠할 수 있어요.
+- 실제 업무 데이터에 쓰기 전에 권한·크레딧·정확성의 한계를 알 수 있어요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **Omni** | Airtable에 내장된 AI 도우미예요. 평범한 말로 베이스 만들기, 기록 만들기·수정, 데이터 분석, 질문 답변을 맡길 수 있어요. |
+| **필드 에이전트(Field agent)** | 셀 단위로 데이터를 가져오고 분석하고 만들어 내는 AI 필드예요. AI가 들어간 필드 대부분을 이렇게 불러요. |
+| **사용자 지정 지시문(Custom instructions)** | 필드 에이전트에게 할 일을 알려 주는 프롬프트예요. 같은 기록의 다른 필드를 끼워 넣을 수 있어요. |
+| **AI 크레딧** | AI 작업의 사용 단위예요. 워크스페이스나 조직 전체가 풀(pool)로 함께 써요. |
+
+<Aside type="note" title="참고할 점 (2026-11-02 기준)">
+- 이 글은 Airtable 도움말 3개 페이지를 근거로 해요. Airtable 요금제 페이지, 다른 AI 문서(Slack의 Airtable AI, Airtable MCP 서버 등), 개인정보·모델 학습 약관은 확인하지 않았으니 이 글에서는 말하지 않아요.
+- 결제 도움말은 "Plan availability" 칸에 Team·Business·Enterprise Scale을 적었지만, 본문에는 모든 Airtable 플랜에 매달 무료 AI 크레딧이 있다고 쓰고 Free 플랜은 Editor 이상 사용자당 500크레딧이라고 적었어요. Omni 문서는 "All plan types", 필드 문서는 "All paid plans"라고 해요. 어느 쪽이 최신인지 확인하지 못했으니 내 워크스페이스에서 확인하세요.
+- 크레딧 수량, 메뉴 이름, 쓸 수 있는 모델은 자주 바뀌어요. 화면에서 확인하세요.
+- 이 글을 쓰며 실제 Airtable 계정에서 직접 실행해 보지는 않았어요. 메뉴 이름은 공식 도움말 문구를 따랐어요.
+</Aside>
+
+## 단계별 따라하기
+
+가상의 데이터로 만든 베이스에서 연습하세요. 가짜 고객 의견 10~20개 정도면 충분해요.
+
+<Checklist items={[
+  '내 워크스페이스에서 Airtable AI가 켜져 있는지 확인했어요',
+  'Omni에게 CSV를 표로 만들어 달라고 했어요',
+  '의견을 분류하는 필드 에이전트를 추가했어요',
+  '몇 개 기록에 먼저 실행하고 크레딧 미리보기를 확인했어요',
+  '결과를 원문과 비교하고 지시문을 고쳤어요',
+  '수식이나 롤업이 더 맞는 작업을 구분했어요',
+]} />
+
+<Steps>
+
+1. **AI가 켜져 있는지 확인하기**
+
+   워크스페이스 Owner가 Airtable 계정 페이지에서 워크스페이스를 고르고 "Workspace AI permissions" 구역의 "Turn on Airtable AI for all bases within this workspace" 스위치를 확인해요. 공식 도움말에 따르면 AI는 모든 플랜에서 기본으로 켜져 있지만 EU/GDPR 고객은 직접 켜야 해요. Business·Enterprise Scale 플랜은 관리자 패널에서도 허용되어 있어야 할 수 있어요.
+
+2. **Omni로 CSV를 표로 만들기**
+
+   Airtable 홈 화면 오른쪽 아래의 **+ Create**를 누르고 **Build an app with Omni**를 골라요. CSV를 올리고 원하는 구조를 설명하세요. Omni는 CSV, Excel, PDF, Word 등을 읽을 수 있고 한 번에 10개, 파일당 10MB까지 올릴 수 있어요. 공식 문서는 "파일을 표로 바꾸기" 기능이 아직 순차 제공 중이라 모두에게 보이지는 않는다고 해요.
+
+   <PromptBox>
+   첨부한 CSV로 "고객"과 "의견" 두 개의 표를 만들어 줘. 의견의 각 행이 알맞은 고객과 연결되게 하고, 두 표를 파일의 데이터로 채워 줘. 불분명한 부분은 추측하지 말고 먼저 물어봐 줘.
+   </PromptBox>
+
+   <Aside type="tip">
+   표를 만드는 요청과 채우는 요청이 따로 처리될 수 있어요. 새 표가 비어 있으면 그 표를 파일에서 채워 달라고 이어서 요청하세요. CSV에는 스프레드시트의 탭 하나만 담기니 탭이 여러 개면 따로 올리세요.
+   </Aside>
+
+3. **의견을 분류하는 필드 에이전트 추가하기**
+
+   표의 마지막 필드 옆 **+** 버튼을 눌러요. "Field agents" 구역에서 자주 쓰는 사용 사례, **Build a field agent**, **Browse catalog** 중 하나를 골라요. 직접 만들려면 **Build a field agent**를 선택하고 필드 유형(분류 선택지가 필요하면 Single select 계열)을 고른 뒤 사용자 지정 지시문을 쓰고 **Create field**를 눌러요.
+
+   <PromptBox label="사용자 지정 지시문 예시">
+   너는 고객 지원 분석가야. 아래 의견을 읽고 배송, 품질, 가격, 기타 중 정확히 하나로 분류해 줘.
+   분류를 새로 만들지 마. 판단이 안 되면 기타로 답해.
+   의견: \{의견 내용\}
+   </PromptBox>
+
+   지시문에서 중괄호 `{`를 입력하거나 **+ Insert field**를 누르면 같은 기록의 필드를 넣을 수 있어요. 필드는 토큰으로 표시되고 나중에 필드 이름을 바꿔도 따라가요.
+
+   <ScreenshotPlaceholder caption="표에 필드 에이전트를 추가하는 화면" officialUrl="https://support.airtable.com/articles/8052242094-using-airtable-ai-in-fields" />
+
+   <FlowSteps title="필드 에이전트 추가하기" officialUrl="https://support.airtable.com/articles/8052242094-using-airtable-ai-in-fields" steps={[
+     { where: '표 머리글', action: '마지막 필드 옆 + 버튼 클릭' },
+     { where: 'Field agents 구역', action: 'Build a field agent 선택', result: '필드 설정 창이 열리고 기본 유형은 Long text' },
+     { where: '필드 설정', action: '필드 유형을 고르고 사용자 지정 지시문을 쓴 뒤 Create field 클릭' },
+   ]} />
+
+4. **크레딧 미리보기를 보고 소량으로 시험하기**
+
+   "Custom instructions" 아래의 "Preview" 창에 현재 설정의 크레딧 사용량이 보여요. 저장하기 전에 확인하세요. 모델을 바꾸면 실행당 비용이 달라지고, 도움말은 "Low cost" 표시가 붙은 모델이 크레딧을 덜 쓴다고 해요. 그다음 몇 개 기록에 먼저 실행하세요. 셀에서 **Run agent**를 누르거나, 필드 이름 옆 드롭다운의 **Run field agent**에서 일괄 실행 옵션(보기의 모든 셀, 오래된 셀 등)을 골라요.
+
+5. **결과 검수하고 다듬기**
+
+   결과를 원문과 비교하세요. 분류가 어긋나면 선택지와 애매할 때의 규칙을 지시문에 구체적으로 적어요. 도움말은 "Do"·"Do Not" 문장과 원하는 답의 예시를 넣으라고도 권해요. **Edit with AI**는 짧은 설명으로 더 자세한 지시문 초안을 만들어 주지만 결과는 직접 검토하세요. 지시문을 고쳐도 이미 채워진 셀은 다시 생성되지 않아요.
+
+6. **"Run automatically"는 신중하게**
+
+   이 설정은 입력값이 바뀌면 에이전트가 자동 실행돼요. 도움말은 그 출력을 쓰는 다른 필드 에이전트·수식·자동화에 연쇄 영향이 갈 수 있다고 경고해요. 사람이 고친 셀은 Airtable이 자동으로 덮어쓰지 않고, 셀을 비우는 것도 고친 것으로 쳐요. 값을 바꾸려면 셀을 비우지 말고 **Run agent**를 쓰세요.
+
+</Steps>
+
+## 빠른 참조표
+
+### 작업별로 무엇을 쓸까 (공식 도움말 기준)
+
+| 작업 | 추천 도구 | 이유 |
+| --- | --- | --- |
+| 글 분류·요약·태그 | 필드 에이전트 | 글을 해석하고, 의견 분류 한 번은 약 1크레딧이에요 |
+| 합계·개수·정확한 계산 | 롤업·수식 필드 | 정확하고 AI 크레딧이 들지 않아요 |
+| 여러 기록 비교·순위 | Find records와 Generate with AI를 쓴 자동화 | 필드 에이전트는 자기 기록만 봐요 |
+| 표 만들기, 데이터 질문 | Omni | Omni로 만드는 작업은 무료이고 질문은 약 10크레딧이에요 |
+| 첨부 파일 읽기 | Analyze attachment 필드 에이전트 | PDF, DOCX, PPTX, JPG, PNG, TIFF, BMP, XLSX, WEBP를 지원하고 제한이 있어요 |
+
+### 크레딧 (Airtable AI billing 문서, 2026-11-02 기준)
+
+| 항목 | 내용 |
+| --- | --- |
+| 사용자당 월 크레딧 | Free: Editor 이상 사용자당 500. Team: 결제 협업자당 15,000. Business(셀프서브·영업 계약): 유료 사용자당 20,000. Enterprise Scale: 정가 기준 유료 사용자당 25,000 |
+| 공유 방식 | 워크스페이스(Free, Team) 또는 조직(Business, Enterprise Scale)의 사용자가 함께 써요 |
+| 실행당 대략 비용 | 의견 분류 약 1, 웹 검색 약 10, 10쪽 계약서 분석 약 200 |
+| 추가 크레딧 | 셀프서브 플랜은 팩을 구매해요. 예: 월 10,000크레딧 $20(월 결제) 또는 연 $200. Free 플랜은 Team으로 올려야 해요 |
+| 알림 | Team 워크스페이스나 Business·Enterprise Scale 조직이 한도의 75%를 넘으면 이메일 알림 |
+
+이 수치는 모델, 입력 크기, 출력에 따라 달라지는 추정치예요. 먼저 소량으로 시험하세요.
+
+### 알아둘 한계
+
+| 항목 | 내용 |
+| --- | --- |
+| 단어 수 한도 | 지시문, 참조한 필드, 응답을 합쳐 저성능 모델은 약 12,000단어, 고성능 모델은 약 90,000단어 |
+| Omni 파일 업로드 | 최대 10개, 파일당 10MB |
+| 권한 | Omni는 쓰는 사람의 권한을 그대로 따라요. 필드 에이전트의 모델·지시문은 Owner와 Creator만 바꿀 수 있고, Editor는 Generate·Run agent를 누를 수 있어요 |
+| Omni가 못 하는 것 | 새 보기 만들기, 표 동기화 설정, 데이터 내보내기, 권한 설정 (공식 목록 참고) |
+| 삭제와 게시 | 기록·표·페이지를 지우기 전에 Omni가 확인을 물어요. 인터페이스 게시와 자동화 켜기는 사람이 직접 해요 |
+
+## 자주 막히는 지점
+
+### Omni나 필드 에이전트 메뉴가 안 보여요
+
+- **원인**: 워크스페이스 설정이나 관리자 패널에서 AI가 꺼져 있거나, 베이스에서 Omni가 꺼져 있을 수 있어요.
+- **해결**: 워크스페이스 Owner나 관리자에게 물어보세요. 베이스 Owner·Creator는 채팅 이름 옆 드롭다운에서 Omni 설정을 확인할 수 있어요.
+
+### "Unknown error while using tools with the agent" 같은 오류가 나요
+
+- **원인**: 도움말에 따르면 성능이 낮은 모델에 도구를 쓰는 복잡한 프롬프트를 주면 이런 오류가 날 수 있어요.
+- **해결**: 더 높은 성능의 모델로 바꾸고 직접적인 문장으로 프롬프트를 단순하게 만드세요.
+
+### 필드 에이전트가 어떤 기록은 안 채워요
+
+- **원인**: 누군가 그 셀을 고치거나 비워서 자동 생성이 건너뛰고 있을 수 있어요.
+- **해결**: 셀을 클릭하고 **Run agent**를 누르세요. 여러 셀이면 **Run field agent**의 **Cells never modified**를 쓰세요.
+
+### 합계나 비교 결과가 틀려요
+
+- **원인**: 필드 에이전트는 자기 기록만 읽어서 기록 사이의 합계나 순위를 낼 수 없어요. 도움말에 따르면 저비용 모델은 산술에도 약해요.
+- **해결**: 정확한 결과가 필요하면 롤업이나 수식 필드를 쓰세요.
+
+### 내 데이터가 인터페이스에 드러날까 걱정돼요
+
+- **원인**: 도움말은 프롬프트에 참조된 필드의 데이터가 AI 긴 텍스트 필드를 볼 수 있는 사람에게 보일 수 있다고 경고해요. 인터페이스에서 원본 필드를 숨겨도 마찬가지예요.
+- **해결**: 연봉 같은 민감한 필드는 다른 사람에게 보이는 필드의 프롬프트에 넣지 마세요.
+
+## 실전 팁
+
+- **소량으로 시험하세요.** 표 전체를 돌리기 전에 몇 개 기록에 실행하고 크레딧 미리보기를 확인하세요.
+- **모델은 의도해서 고르세요.** 모델을 바꾸면 같은 프롬프트도 다르게 동작할 수 있으니 다시 시험하세요.
+- **규칙은 수식으로 하세요.** 모든 기록이 같은 패턴이면 수식이 더 안정적이고 크레딧도 들지 않아요.
+- **사람이 확인하세요.** 숫자, 분류, 법률·금융 관련 내용은 사람이 검증하세요. [AI 결과물, 써도 될까? 저작권·윤리 기초](/ko/basics/09-ai-copyright-ethics/)와 [내 대화가 AI 학습에 쓰이지 않게](/ko/basics/12-privacy-settings/)도 보세요.
+- **Notion AI와 비교해 보세요.** Notion의 AI도 데이터베이스 속성을 채워 줘요. 플랜·크레딧·기능 비교는 [Notion AI로 업무 문서와 데이터베이스 정리하기](/ko/automation/16-notion-ai/)를, 스프레드시트는 [엑셀·구글 시트에 AI 붙이기](/ko/automation/23-spreadsheet-ai/)를 보세요.
+
+## 다음에 볼 튜토리얼
+
+- [16. AI로 가계부·영수증 정리](/ko/automation/46-budget-sheet/) — AI로 데이터 정리 연습
+- [1. Notion AI로 문서 정리](/ko/automation/16-notion-ai/) — 데이터베이스 AI 기능 비교
+- [6. 엑셀·시트에 AI 붙이기](/ko/automation/23-spreadsheet-ai/) — 스프레드시트의 수식·표 정리

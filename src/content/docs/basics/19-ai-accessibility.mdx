@@ -1,0 +1,175 @@
+---
+title: "Use AI for Accessibility: Reading, Listening, and Simpler Text"
+description: "Talk instead of typing, listen to answers, ask an AI to describe a photo, and turn hard text into plainer language, with notes on what each service officially says it supports"
+sidebar:
+  label: "19. AI for accessibility"
+level: beginner
+category: basics
+status: published
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "20 min"
+prerequisites: ["Basic experience asking an AI tool a question", "A phone or computer with the Claude, ChatGPT, or Gemini app or website"]
+lastVerified: 2026-11-02
+sources:
+  - title: "Claude Help Center: Use voice mode"
+    url: "https://support.claude.com/en/articles/11101966-using-voice-mode"
+  - title: "Claude Help Center: Uploading files to Claude (images)"
+    url: "https://support.claude.com/en/articles/8241126-uploading-files-to-claude"
+  - title: "Gemini Apps Help: Talk naturally with Gemini Live"
+    url: "https://support.google.com/gemini/answer/15274899"
+  - title: "Gemini Apps Help: Get audio descriptions with Guided Vision in Gemini Live"
+    url: "https://support.google.com/gemini/answer/18365638"
+  - title: "Gemini Apps Help: Change Gemini's voice"
+    url: "https://support.google.com/gemini/answer/15277943"
+  - title: "ChatGPT docs: ChatGPT Voice"
+    url: "https://learn.chatgpt.com/docs/features/voice.md"
+  - title: "ChatGPT docs: Image inputs"
+    url: "https://learn.chatgpt.com/docs/image-inputs.md"
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- **Three ways AI can help**: talk instead of typing, listen instead of reading, and ask for plainer wording or a description of a picture.
+- **Claude** has voice mode (a beta feature on all plans, per its help page) and accepts image uploads. **Gemini** has Gemini Live (Android app) and a Guided Vision feature that is still rolling out. **ChatGPT** details I could confirm are limited (see the note below).
+- Features and plan limits change often. Check the official page for your device before relying on a feature.
+- AI descriptions and simplified text can be wrong. For medicine, money, legal, or safety information, **check with the original source or a professional**.
+- This is **not a medical device or assistive technology replacement**. If you use a screen reader or similar tool, keep using it.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Speak your question and listen to the answer instead of typing and reading.
+- Ask an AI to describe a photo or read the text in it, and know the limits of that.
+- Turn a long or difficult text into plainer language, and check that nothing important was lost.
+- Find, on the official pages, which of these features your service supports.
+
+## Concepts to know first
+
+This builds on [tutorial 7](/basics/07-ai-on-phone/) (the phone apps and voice conversations). For narrating text with a dedicated voice tool, see [AI voice narration](/media/15-voice-narration/).
+
+| Term | Plain meaning |
+| --- | --- |
+| **Dictation** | Your speech is turned into typed text. You still read the answer. |
+| **Voice mode / Live** | A spoken two-way conversation: you talk, the AI talks back. |
+| **Image description** | You give the AI a photo and ask it to say what it shows. |
+| **Plain language** | Shorter sentences and everyday words, without changing the meaning. |
+
+What the official pages say (as of 2026-11-02; availability varies by plan, device, language, and rollout):
+
+| | Voice conversation | Pictures |
+| --- | --- | --- |
+| **Claude** | Voice mode is a beta feature on all plans (Free to Enterprise) on the mobile apps, desktop app, and web, and is "built to work best from your phone." Hands-free and push-to-talk modes. Transcripts are saved in your chat history. | You can upload JPEG, PNG, GIF, or WebP, or paste an image from the clipboard. Chat uploads allow up to 8000x8000 pixels. The help page suggests images of 1000x1000 pixels or larger. |
+| **Gemini** | Gemini Live is for Android phones and tablets in the Gemini mobile app. The page says it is not available in the Gemini web app. You can mute, put Live on hold, and switch between voice and text in the same chat. | In Live you can turn on your camera. Guided Vision (rolling out slowly, Android) gives audio descriptions such as reading fine print on labels. |
+| **ChatGPT** | The voice page I could read describes ChatGPT Voice in the ChatGPT desktop app for Plus, Pro, Business, Edu, and Enterprise plans. | The docs say you can attach, paste, or drag an image into the ChatGPT web composer and say what to inspect. |
+
+<Aside type="caution" title="What I could not confirm">
+The ChatGPT docs pages I could open focus on the desktop app and developer tools. I could **not confirm** how ChatGPT voice works in the phone app, whether it has a read-aloud button, or its accessibility settings. I also did not confirm a "read aloud" feature for Claude or Gemini, or how well any of them handle handwriting or low-quality photos. Dictation on Claude Mobile has its own help page that I did not read. I did not test any of this with a screen reader.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I checked which voice and image features my service and device support',
+  'I tried a spoken question and listened to the answer',
+  'I asked for a plain-language version of a hard text',
+  'I compared the plain version with the original for missing details',
+  'I did not rely on an AI description for anything risky',
+]} />
+
+<Steps>
+
+1. **Check what your service supports**
+
+   Open the official page for your service from the Sources list above. Look at three things: your device (phone, computer, web), your plan, and your language. Gemini Live, for example, is documented for Android, and Claude lists its non-English voice support as beta.
+
+2. **Talk instead of typing**
+
+   In Claude on the web or desktop app, click the sound wave symbol in the lower right of the chat. On the phone app, tap the sound wave icon next to the microphone in the text box. In Gemini on Android, open the Gemini app and tap Live. If you only want your speech turned into typed text, Claude's page says that is dictation, which is different from voice mode.
+
+   <PromptBox>
+   I will talk to you out loud. Please answer in short sentences, one idea at a time, and wait for me before you continue.
+   </PromptBox>
+
+3. **Adjust for noise and pace**
+
+   Claude's help page says hands-free mode works best in quiet places and push-to-talk helps in noisy ones. You can pick a voice and, on mobile, a pace in the voice settings. Gemini lets you change its voice on the mobile app. If the AI interrupts you, start speaking again. Claude's page says it stops and listens, and Gemini's page says you can interrupt Live.
+
+4. **Listen while you do something else**
+
+   Voice conversations count toward your usage limits on Claude, according to its help page. You can switch between text and voice in the same conversation, so you can type a web address or a number and then go back to talking.
+
+5. **Ask for a plain-language version**
+
+   Paste the text, or upload it, and say who you are writing for. Keep the original next to the result.
+
+   <PromptBox>
+   Rewrite the text below in plain language for a reader with a reading level of about age 12. Use short sentences and everyday words. Keep every date, amount, and deadline exactly as written. After the rewrite, list anything you were unsure about.
+   </PromptBox>
+
+6. **Ask for a description of a picture**
+
+   Upload a photo, or share your camera in Gemini Live, and say what you need. Describe the purpose, not just "what is this."
+
+   <PromptBox>
+   Describe this photo for someone who cannot see it. First give one sentence on what it shows, then list the visible text exactly as written. If any text is blurry or unclear, say so instead of guessing.
+   </PromptBox>
+
+7. **Check what matters**
+
+   For medicine labels, bills, forms, and signs, confirm with the original or a person you trust. If the AI says it could not read something, believe it. See [tutorial 4](/basics/04-fact-checking/) for ways to check an answer.
+
+</Steps>
+
+<Aside type="note">
+Camera and voice features send what you capture to the service. Avoid pointing the camera at documents with account numbers, passwords, or other people's private details. Ask permission before recording others. Gemini's own page asks you to do this before including people in a Live chat. See [tutorial 5](/basics/05-privacy-safety/).
+</Aside>
+
+## Quick reference
+
+| I want to... | Try |
+| --- | --- |
+| Ask without typing | Voice mode (Claude) or Live (Gemini on Android) |
+| Turn speech into typed text only | Dictation (Claude describes it as a separate feature) |
+| Get a hard text in plainer words | The plain-language prompt in step 5 |
+| Have a photo described | Upload it, or use the camera in Gemini Live |
+| Make the AI slower or shorter | Ask for short sentences and one idea at a time |
+
+## Common sticking points
+
+### I cannot find the voice button
+
+- **Cause**: The feature may be unavailable on your device, plan, language, or app version. Some features roll out gradually.
+- **Fix**: Update the app, then check the official page in the Sources list. Gemini Live is documented for the Android mobile app and not the web app.
+
+### The AI does not understand my speech
+
+- **Cause**: Background noise, a weak connection, or microphone permission.
+- **Fix**: Move somewhere quieter or use push-to-talk (Claude), check microphone permission, and speak at a normal pace. Claude's page lists the same steps.
+
+### The plain version left something out
+
+- **Cause**: Simplifying removes detail, and the AI may drop a condition or exception.
+- **Fix**: Ask it to list what it removed, and compare with the original. Keep dates and amounts unchanged, as the prompt in step 5 asks.
+
+### The photo description was wrong
+
+- **Cause**: Blur, glare, small print, or handwriting can cause mistakes. I did not test these cases.
+- **Fix**: Retake the photo in better light, ask the AI to quote only text it can read, and verify anything important.
+
+## Practical tips
+
+- Set up voice when you are not in a hurry, so the first try is relaxed.
+- Keep your normal assistive tools. AI is an extra, not a replacement.
+- Save prompts that work for you, such as your plain-language request, and reuse them.
+- Settings and features change. This page is accurate as of 2026-11-02.
+
+## What to read next
+
+- [7. Using AI on your phone](/basics/07-ai-on-phone/) — Installing the apps and voice conversations
+- [4. Can you trust AI answers? How to fact-check](/basics/04-fact-checking/) — Check before you act
+- [5. Using AI while protecting personal and company information](/basics/05-privacy-safety/) — What not to share
+- [5. AI voice narration](/media/15-voice-narration/) — Turning a script into spoken audio

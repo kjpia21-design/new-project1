@@ -1,0 +1,255 @@
+---
+title: "Process Large Jobs with the Message Batches API"
+description: "Send thousands of Messages requests as one asynchronous batch at half price: build the request list, poll for completion, match results by custom_id, handle errors, and know the limits, from the official docs"
+sidebar:
+  label: "16. Large jobs with the Batches API (half price)"
+level: advanced
+category: dev
+tools: ["Claude API", "Message Batches API", "Python", "anthropic SDK"]
+duration: "40 min"
+prerequisites:
+  - "You've finished C16. Getting started with the Claude API (API key, environment variable setup)"
+  - "Python 3.10 or later, pip install anthropic"
+  - "You've read Dev 2 (cost basics) and Dev 14 (token counting)"
+lastVerified: 2026-11-02
+sources:
+  - title: "Batch processing"
+    url: "https://platform.claude.com/docs/en/build-with-claude/batch-processing"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- The Message Batches API takes a list of Messages requests, processes them **asynchronously**, and charges **50 percent** of standard prices for input and output. The docs say most batches finish in under 1 hour.
+- Each request has a unique `custom_id` (1 to 64 characters: letters, digits, hyphens, underscores) and a `params` object with normal Messages parameters.
+- Limits from the docs: up to **100,000 requests or 256 MB** per batch (whichever comes first); a batch **expires after 24 hours**; results stay downloadable for **29 days** after creation.
+- Flow: create the batch, poll `processing_status` until `ended`, then read the `.jsonl` results. Results can come back **in any order**, so match them by `custom_id`.
+- Result types: `succeeded`, `errored`, `canceled`, `expired`. The last three are **not billed**. Not allowed in a batch: `stream: true`, `speed`, `fallbacks`, and `max_tokens: 0`.
+- Batches are not eligible for zero data retention (29-day retention) and not available for Managed Agents, per the docs.
+- We read the official batch processing page on 2026-11-02 and ran our script's matching logic against a local stub. We **made no real API call** (no API key, no `anthropic` package here), so the SDK code is documented, not tested end to end. Prices are as of 2026-11-02.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Decide whether a job fits a batch (large, not urgent) or needs a normal call.
+- Submit many requests at once and collect their answers safely.
+- Handle failed, canceled, and expired requests without paying for them or losing track.
+- Estimate what a batch saves you.
+
+## Concepts to know first
+
+A normal call sends one request and waits for the answer. A batch sends many requests together; Anthropic processes each one independently and you come back for the results. It suits bulk work such as evaluations, content moderation, data analysis, and bulk content generation (the docs' own examples). It does not suit anything a person is waiting for.
+
+| Term | Meaning |
+| --- | --- |
+| **Batch** | A set of Messages requests submitted together. It has an `id` starting with `msgbatch_`. |
+| **`custom_id`** | Your own label for one request. It is the only reliable way to match a result to its request. |
+| **`processing_status`** | `in_progress`, then `ended`. (After a cancel request it shows `canceling` first.) |
+| **`request_counts`** | How many requests are processing, succeeded, errored, canceled, or expired. |
+| **Workspace** | Batches belong to the Console Workspace they were created in. Only that Workspace can see them. |
+
+This builds on [Dev 2](/dev/02-cost-optimization/), which introduced the 50 percent discount, and on [Dev 14](/dev/14-token-counting/), where you estimate cost before you send. Streaming ([Dev 15](/dev/15-streaming/)) is the opposite trade: fast and live. A batch is slow and cheap.
+
+<Aside type="caution" title="Check privacy before you batch">
+The docs list the Message Batches API as **not eligible for zero data retention** and **not eligible for HIPAA**. Batch inputs and outputs are stored for up to 29 days. If your organization has special data rules, check with them and with the docs' data handling page before sending sensitive data.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I chose a job that is large and not urgent',
+  'I gave every request a unique custom_id',
+  'I tested one request shape with the normal Messages API first',
+  'I polled until the status was ended',
+  'I matched results by custom_id, not by order',
+  'I know which result types are billed and which are not',
+]} />
+
+<Steps>
+
+1. **Check that the job fits**
+
+   Good fits: many independent requests, no one waiting. Poor fits: a chat, anything interactive. Limits to remember: **100,000 requests or 256 MB** per batch, and a batch that is not finished within **24 hours** expires. For very large datasets the docs suggest splitting into several batches. Your limits on how many requests can wait in the queue are on a separate rate-limits page that we did not open (unconfirmed).
+
+   Almost any Messages request can be batched: vision, tool use (including server tools), system messages, multi-turn conversations, and extended thinking. You can mix different kinds in one batch. The exceptions are `stream: true`, `speed` (fast mode), `fallbacks` (server-side fallback), and `max_tokens: 0`. Each request needs `max_tokens` of at least 1.
+
+2. **Test one request first**
+
+   The docs warn that each request's `params` are validated **asynchronously**, so mistakes only show up after the whole batch has ended. Send one request of the same shape to the normal Messages API first.
+
+3. **Create the batch**
+
+   Each item is a `Request` with a `custom_id` and `params`. Here the model reads three short product reviews. Save this as `run_batch.py`; it covers steps 3 to 5.
+
+   ```python
+   import time
+
+   import anthropic
+   from anthropic.types.message_create_params import MessageCreateParamsNonStreaming
+   from anthropic.types.messages.batch_create_params import Request
+
+   client = anthropic.Anthropic()
+
+   reviews = {
+       "review-001": "The battery lasts two days, but the strap broke in a week.",
+       "review-002": "Fast shipping and the screen is gorgeous.",
+       "review-003": "Support never answered my refund request.",
+   }
+
+   # 1. Create the batch: one Request per item, with a unique custom_id
+   batch = client.messages.batches.create(
+       requests=[
+           Request(
+               custom_id=cid,
+               params=MessageCreateParamsNonStreaming(
+                   model="claude-opus-5-5",
+                   max_tokens=200,
+                   messages=[{
+                       "role": "user",
+                       "content": f"Classify this review as positive, negative, or mixed. One word only.\n\n{text}",
+                   }],
+               ),
+           )
+           for cid, text in reviews.items()
+       ]
+   )
+   print("Created", batch.id, batch.processing_status)
+
+   # 2. Poll until the whole batch has ended
+   while True:
+       batch = client.messages.batches.retrieve(batch.id)
+       if batch.processing_status == "ended":
+           break
+       print("Still processing...", batch.request_counts)
+       time.sleep(60)
+
+   # 3. Read results. Order is NOT guaranteed, so match on custom_id.
+   labels, to_retry = {}, []
+   for result in client.messages.batches.results(batch.id):
+       outcome = result.result
+       if outcome.type == "succeeded":
+           labels[result.custom_id] = outcome.message.content[0].text
+       elif outcome.type == "errored" and outcome.error.error.type != "invalid_request_error":
+           to_retry.append(result.custom_id)  # server error: can be retried
+       else:
+           print("Needs a look:", result.custom_id, outcome.type)
+
+   print(labels)
+   print("Retry later:", to_retry)
+   ```
+
+   The `create` call returns right away with `processing_status: "in_progress"` and a `results_url` of `null`. The cURL form posts `{"requests": [...]}` to `https://api.anthropic.com/v1/messages/batches` with the `x-api-key` and `anthropic-version: 2023-06-01` headers. The docs also show the `ant messages:batches create` CLI.
+
+4. **Wait for the batch to end**
+
+   The loop above is the docs' polling pattern (they sleep 60 seconds between checks). You can also watch batches in the Console. Most batches finish within an hour, but the docs say processing can be slowed by demand and your request volume, in which case more requests may expire after 24 hours.
+
+5. **Read the results and match by `custom_id`**
+
+   Results are `.jsonl`, one line per request. The docs' sample shows the second request answered before the first, and say plainly that order may not match. There are four result types:
+
+   | Result | Meaning | Billed? |
+   | --- | --- | --- |
+   | `succeeded` | A message was created. | Yes |
+   | `errored` | Invalid request or internal error. | No |
+   | `canceled` | You canceled before it was sent to the model. | No |
+   | `expired` | The 24 hours ran out first. | No |
+
+   For `errored`, the docs' sample treats `invalid_request_error` as "fix the request body before resending" and other errors as "can be retried directly". One failed request does not affect the others. Batch results use the API version of the request that created the batch.
+
+6. **Cancel, delete, and cleanup**
+
+   `POST /v1/messages/batches/{id}/cancel` (SDK: `client.messages.batches.cancel(id)`) moves the batch to `canceling`, then `ended`, possibly with partial results. A submitted batch **cannot be edited**; cancel and resubmit instead. Cancellation may not be immediate. After processing, `DELETE /v1/messages/batches/{id}` removes a batch; cancel an in-progress one first. The docs also describe a list endpoint with pagination (`has_more`, `after_id`; the SDKs page automatically).
+
+7. **Save more with caching (optional)**
+
+   Prompt caching works in batches and the discounts can stack, but cache hits are **best effort** because requests run concurrently and in any order; the docs say hit rates typically range from 30 to 98 percent. They advise identical `cache_control` blocks in every request and, since batches can take longer than 5 minutes, the 1-hour cache duration. See [Dev 2](/dev/02-cost-optimization/) for caching basics.
+
+   <PromptBox>
+   I have [N] items in [CSV/JSON/database] and I want Claude to [task] for each one. Write a Python script with the anthropic SDK that builds one Message Batch with a unique custom_id per item, polls until it ends, then writes results to a file keyed by custom_id and lists every item that errored or expired. Use only features documented on the official batch processing page and use the model claude-opus-5-5.
+   </PromptBox>
+
+</Steps>
+
+## What a batch saves (as of 2026-11-02)
+
+The docs say batch usage is charged at **50 percent of standard prices**, for input tokens, output tokens, and special tokens. Batch prices from the docs' table, per million tokens:
+
+| Model | Standard input / output (Dev 2) | Batch input / output |
+| --- | --- | --- |
+| Opus 5.5 (`claude-opus-5-5`) | $4 / $20 | $2 / $10 |
+| Sonnet 5.5 (`claude-sonnet-5-5`) | $2 / $10 | $1 / $5 |
+| Haiku 5.5, prompts up to 100,000 tokens | $0.10 / $0.50 | $0.05 / $0.25 |
+| Haiku 5.5, prompts over 100,000 tokens | $0.50 / $2.50 | $0.25 / $1.25 |
+
+**Worked example (our arithmetic, not an API result):** 10,000 requests, each about 1,000 input tokens and 200 output tokens, on Sonnet 5.5. That is 10 million input and 2 million output tokens. Standard: 10 x $2 + 2 x $10 = **$40**. Batch: 10 x $1 + 2 x $5 = **$20**. Use [Dev 14](/dev/14-token-counting/) for real token counts. Prices change; check the official pricing page (the batch page itself points to claude.com/pricing) before you rely on them. We did not open the separate pricing pages.
+
+## Quick reference
+
+| Item | Value (official docs, 2026-11-02) |
+| --- | --- |
+| Endpoint | `POST /v1/messages/batches` |
+| Python | `client.messages.batches.create / retrieve / results / cancel` |
+| Request | `custom_id` + `params` |
+| `custom_id` | 1 to 64 chars, `^[a-zA-Z0-9_-]{1,64}$`, unique |
+| Size | 100,000 requests or 256 MB |
+| Speed | Most done within 1 hour; expires after 24 hours |
+| Results kept | 29 days after creation |
+| Discount | 50 percent on all usage |
+| Not allowed | `stream: true`, `speed`, `fallbacks`, `max_tokens: 0` |
+| Order of results | Not guaranteed; use `custom_id` |
+| Availability | Every model; Claude API, Claude Platform on AWS, Claude Models on Google Cloud (Anthropic managed) |
+| Data | Not eligible for zero data retention or HIPAA; 29-day storage |
+
+## Common sticking points
+
+### Validation errors show up hours later
+
+- **Cause**: `params` are validated asynchronously, after the batch ends.
+- **Fix**: Send one request of the same shape to the normal Messages API first.
+
+### I get a 413 `request_too_large` error
+
+- **Cause**: The batch is over 256 MB (or 100,000 requests).
+- **Fix**: Split it into several smaller batches.
+
+### Results are in the wrong order
+
+- **Cause**: The docs say results can come back in any order.
+- **Fix**: Always look up results by `custom_id`.
+
+### Many requests came back `expired`
+
+- **Cause**: They were not sent to the model within 24 hours. The docs say demand and your volume can slow processing.
+- **Fix**: Resubmit only the expired ones in a new batch. You were not billed for them.
+
+### I can't download results
+
+- **Cause**: More than 29 days passed since the batch was **created** (not since it ended), or Console downloads were disabled by your organization or workspace.
+- **Fix**: Save results to your own storage soon after the batch ends.
+
+### The total was a bit over my spend limit
+
+- **Cause**: The docs say high throughput and concurrent processing can take a batch slightly over the Workspace spend limit.
+- **Fix**: Leave headroom in the limit.
+
+## Practical tips
+
+- Use meaningful `custom_id` values (for example the row ID) so you can find any item later.
+- Write results to disk as you read the stream, keyed by `custom_id`, and keep a list of what still needs a retry.
+- Keep real-time features on the normal API. Batches are for work nobody is waiting on.
+- Estimate with Dev 14 before a big batch, and try a tiny batch (a few requests) first.
+- We did not run a real batch. Treat the first run as a test and check the results by hand.
+
+## Next tutorials
+
+- [2. Cut API costs with prompt caching, batches, and effort](/dev/02-cost-optimization/) — where the 50 percent discount is introduced
+- [14. Token counting API](/dev/14-token-counting/) — estimate input cost before you send
+- [15. Streaming responses](/dev/15-streaming/) — the real-time alternative
+- [13. Structured outputs](/dev/13-structured-outputs/) — get reliable JSON for bulk jobs
+- [C16. Getting started with the Claude API](/claude/c16-api/)
+- [Developer guide](/roles/developer/)

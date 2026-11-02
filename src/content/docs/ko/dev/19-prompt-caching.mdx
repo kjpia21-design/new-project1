@@ -1,0 +1,295 @@
+---
+title: "프롬프트 캐싱으로 비용·지연 줄이기"
+description: "비용 개요보다 깊게: 캐시 브레이크포인트 위치, 자동 캐싱과 명시 브레이크포인트, 5분·1시간 수명, 최소 길이, 캐시가 무효화되는 조건, usage 필드, 캐시 진단을 공식 문서 기준으로 정리해요"
+sidebar:
+  label: "19. 프롬프트 캐싱"
+level: advanced
+category: dev
+tools: ["Claude API", "Messages API", "Python", "anthropic SDK"]
+duration: "50분"
+prerequisites:
+  - "C16. Claude API 시작하기를 끝낸 상태 (API 키, 환경 변수 설정)"
+  - "Python 3.10 이상, pip install anthropic"
+  - "개발 2(비용 줄이기)를 훑어본 상태. 이 편은 그 캐싱 부분을 더 깊게 다뤄요"
+lastVerified: 2026-11-02
+sources:
+  - title: "Prompt caching"
+    url: "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
+  - title: "Cache diagnostics"
+    url: "https://platform.claude.com/docs/en/build-with-claude/cache-diagnostics"
+  - title: "Pricing"
+    url: "https://platform.claude.com/docs/en/about-claude/pricing"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- 캐시는 프롬프트의 처리된 **앞부분(접두사)**을 저장해요. 접두사는 `tools`, `system`, `messages` 순서로 이어지고, `cache_control`을 붙인 블록까지 포함해요. 캐시 히트는 접두사가 100% 똑같아야 해요.
+- 켜는 방법은 두 가지예요. **자동 캐싱**(요청 최상위에 `cache_control` 하나, 대화가 길어지면 브레이크포인트가 마지막 캐시 가능 블록으로 따라가요)과 콘텐츠 블록에 붙이는 **명시 브레이크포인트**(요청당 최대 4개)예요. 캐시 쓰기는 브레이크포인트에서만 일어나요.
+- 기본 수명은 5분이고, 히트할 때마다 무료로 갱신돼요. 수명은 요청이 **시작된 시점**부터 재요. 1시간 수명(`"ttl": "1h"`)은 쓰기 비용이 더 비싸요.
+- 가격(2026-11-02 기준): 5분 쓰기는 기본 입력의 1.25배, 1시간 쓰기는 2배, 읽기는 0.1배예요(Claude Opus 5.5·Sonnet 5.5는 0.05배, Claude Fable 5.1은 0.025배). 문서에 따르면 5분 캐시는 읽기 한 번, 1시간 캐시는 읽기 두 번이면 본전이에요.
+- 캐시할 수 있는 최소 프롬프트 길이: Claude Opus 5.5, Sonnet 5.5, Haiku 5.5는 512토큰이에요(다른 모델은 달라요). 더 짧으면 캐시 없이 처리되고 **오류도 나오지 않아요**.
+- `usage`를 확인하세요. `cache_creation_input_tokens`(쓴 양), `cache_read_input_tokens`(읽은 양), `input_tokens`(마지막 브레이크포인트 뒤 부분만)이에요. 총 입력은 세 값의 합이에요.
+- 2026-11-02에 공식 페이지 3개를 읽었고, 로컬 가격 계산기와 데모 스크립트의 스텁 테스트만 실행했어요. **실제 API 호출은 하지 못했어요**(API 키와 `anthropic` 패키지가 없었어요). 그래서 캐시 히트는 여기서 확인하지 못했어요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 바뀌는 질문이 캐시를 깨지 않도록 브레이크포인트 위치를 정해요.
+- 자동 캐싱과 명시 브레이크포인트, 5분과 1시간 수명 중에서 골라요.
+- `usage`의 입력 필드 세 개를 읽고, 요청이 캐시를 읽었는지·썼는지·건너뛰었는지 알아봐요.
+- 캐시 미스의 흔한 원인을 짚고, 문서의 진단 도구가 어디에 쓰이는지 알아요.
+
+## 먼저 알아둘 개념
+
+[개발 2](/ko/dev/02-cost-optimization/)가 돈 이야기의 개요를 이미 다뤘어요. 캐싱, 배치, effort, 모델 선택 순서예요. 이 편은 캐싱만 깊게 봐요.
+
+| 용어 | 뜻 |
+| --- | --- |
+| **접두사(prefix)** | 요청 맨 앞에서 표시한 블록까지의 모든 내용. 순서는 `tools`, `system`, `messages`. |
+| **브레이크포인트** | `cache_control`이 붙은 블록. 캐시 항목은 정확히 여기에서 쓰이고, 그 블록까지 전체 접두사의 해시예요. |
+| **캐시 쓰기** | 접두사를 처음 저장하는 것. 일반 입력보다 비싸요. |
+| **캐시 읽기(히트)** | 저장된 접두사를 다시 쓰는 것. 일반 입력의 일부 가격이고 수명을 갱신해요. |
+| **룩백 윈도우** | 브레이크포인트에 항목이 없으면 이전 요청이 쓴 항목을 찾아 앞쪽 블록 위치를 최대 20곳(브레이크포인트 포함) 살펴봐요. |
+
+100만 토큰당 가격이에요. 가격 페이지와 캐싱 페이지 기준(2026-11-02)이고, 항상 [공식 가격 페이지](https://platform.claude.com/docs/en/about-claude/pricing)로 확인하세요.
+
+| 모델 | 기본 입력 | 5분 쓰기 | 1시간 쓰기 | 읽기 | 최소 길이 |
+| --- | --- | --- | --- | --- | --- |
+| Claude Fable 5.1 (`claude-fable-5-1`) | $10 | $12.50 | $20 | $0.25 | 512 |
+| Claude Opus 5.5 (`claude-opus-5-5`) | $4 | $5 | $8 | $0.20 | 512 |
+| Claude Sonnet 5.5 (`claude-sonnet-5-5`) | $2 | $2.50 | $4 | $0.10 | 512 |
+| Claude Haiku 5.5 (`claude-haiku-5-5`), 프롬프트 10만 토큰 이하 | $0.10 | $0.125 | $0.20 | $0.01 | 512 |
+
+이 배수는 배치 할인 같은 다른 수정자와 곱해져요. Claude Haiku 5.5는 캐시 읽기·쓰기 토큰도 프롬프트 길이에 들어가서 어느 가격 구간에 속할지를 정해요.
+
+<Aside type="note" title="이 편에서 확인한 것과 못 한 것">
+사실은 front matter에 적은 공식 페이지를 2026-11-02에 읽은 내용이에요. 가격 계산기(`cache_breakeven.py`)는 로컬에서 실행했고, 데모 스크립트(`cache_demo.py`)는 지어낸 usage 숫자를 돌려주는 로컬 스텁으로 실행했어요. 실제 요청은 **한 번도 보내지 못했어요.** 처음 실행할 때는 시험이라고 생각하고, 출력된 숫자를 내 청구서와 비교해 보세요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '프롬프트에서 절대 안 바뀌는 부분(도구, 지침, 문서)을 안다',
+  '바뀌는 부분(질문, 날짜, 사용자 ID)은 브레이크포인트 뒤에 있다',
+  '캐시할 접두사가 내 모델의 최소 길이보다 길다',
+  '접두사 재사용 빈도에 맞춰 5분 또는 1시간을 골랐다',
+  '호출마다 usage의 입력 필드 세 개를 출력한다',
+  '수명 안에 보낸 두 번째 호출에서 캐시 읽기가 0이 아니다',
+]} />
+
+<Steps>
+
+1. **프롬프트 순서 잡기: 안 바뀌는 것 먼저, 바뀌는 것 마지막**
+
+   캐시는 접두사에 적용되니, 브레이크포인트 앞에서 한 바이트만 달라져도 해시가 달라져 히트가 안 나요. 도구 정의, 시스템 지침, 긴 문서, 예시를 앞에 두세요. 질문, 시각, 요청별 맥락은 맨 뒤에 두세요.
+
+   문서가 소개하는 흔한 실수가 있어요. 큰 고정 시스템 컨텍스트(블록 1~5) 뒤에 시각과 사용자 메시지가 든 블록(블록 6)이 오고, `cache_control`을 블록 6에 단 경우예요. 요청마다 새 항목을 쓰기만 하고 읽지는 못해요. 룩백은 이전 요청이 자기 브레이크포인트에 써 둔 항목만 찾기 때문이에요. 해결은 브레이크포인트를 마지막으로 똑같이 유지되는 블록인 블록 5로 옮기는 거예요.
+
+2. **자동 캐싱과 명시 브레이크포인트 고르기**
+
+   | | 자동 캐싱 | 명시 브레이크포인트 |
+   | --- | --- | --- |
+   | 방법 | 요청 최상위에 `"cache_control": {"type": "ephemeral"}` 하나 | 개별 콘텐츠 블록에 `cache_control` |
+   | 브레이크포인트 | 마지막 캐시 가능 블록에 놓이고 턴마다 앞으로 이동 | 내가 놓은 곳, 요청당 최대 4개 |
+   | 잘 맞는 경우 | 기록이 계속 늘어나는 여러 턴 대화 | 고정 접두사 뒤에 바뀌는 부분이 오는 경우, 바뀌는 속도가 다른 구간 |
+
+   둘을 함께 쓸 수 있고, 그러면 자동 브레이크포인트가 4개 슬롯 중 하나를 써요. 문서의 예외 상황: 마지막 블록에 이미 다른 TTL의 `cache_control`이 있으면 API가 400 오류를 돌려주고, 명시 브레이크포인트가 이미 4개면 자동 캐싱도 400 오류예요. 자동 캐싱은 Opus 4.6 이하용 옛 Amazon Bedrock 연동에서는 쓸 수 없고, 거기서 최상위 `cache_control`을 보내면 400 오류가 나요.
+
+   자동 캐싱으로 대화가 길어질 때는 한 턴에 늘어나는 블록이 20개 미만이면 안전해요. 그보다 많이 늘면 룩백이 이전 항목을 놓칠 수 있어서, 문서는 그 가까이에 브레이크포인트를 하나 더 두라고 해요.
+
+3. **데모 스크립트 쓰기**
+
+   길고 안 바뀌는 텍스트를 `company_manual.txt`로 저장하세요(이 모델은 512토큰 이상이어야 해요). 그리고 아래를 `cache_demo.py`로 저장하세요. 매뉴얼을 `system`에 넣고 그 블록에 브레이크포인트를 달며, 질문은 브레이크포인트 뒤인 사용자 메시지로 보내요.
+
+   ```python
+   import sys
+   from pathlib import Path
+
+   import anthropic
+
+   MODEL = "claude-opus-5-5"
+   # Long, unchanging text (a manual, a policy). It must be at least 512 tokens
+   # for this model, or nothing is cached and no error is raised.
+   MANUAL = Path("company_manual.txt").read_text(encoding="utf-8")
+
+   client = anthropic.Anthropic()
+
+
+   def ask(question):
+       response = client.messages.create(
+           model=MODEL,
+           max_tokens=300,
+           system=[
+               {"type": "text", "text": "You answer questions using only the manual below."},
+               {
+                   "type": "text",
+                   "text": MANUAL,
+                   # Breakpoint on the LAST block that stays identical across requests.
+                   "cache_control": {"type": "ephemeral"},
+               },
+           ],
+           # The part that changes goes after the breakpoint.
+           messages=[{"role": "user", "content": question}],
+       )
+       u = response.usage
+       written = u.cache_creation_input_tokens or 0
+       read = u.cache_read_input_tokens or 0
+       total = read + written + u.input_tokens
+       print(f"uncached input {u.input_tokens} | cache write {written} | cache read {read} | total input {total}")
+       if written == 0 and read == 0:
+           print("  Not cached. Is the prefix under the model minimum (512 tokens here)?")
+       return response
+
+
+   if __name__ == "__main__":
+       for q in sys.argv[1:] or ["How many vacation days do I get?", "What is the remote work policy?"]:
+           ask(q)  # first call should show a cache write, the second a cache read
+   ```
+
+   블록 모양(마지막 text 블록에 `cache_control`을 단 `system` 리스트)은 문서의 대용량 컨텍스트 예제를 따랐어요. C16처럼 `ANTHROPIC_API_KEY`를 설정하고 `python cache_demo.py`로 실행해요. **실제 API로는 실행하지 못했어요.** 로컬 스텁으로만 돌려서 출력 로직과 브레이크포인트가 마지막 system 블록에 붙는지만 확인했어요.
+
+   기대하는 모양: 첫 호출에서 캐시 쓰기, 수명 안에 시작한 두 번째 호출에서 캐시 읽기가 찍혀요. 문서는 캐시 항목이 첫 응답이 **시작된 뒤에야** 쓸 수 있게 된다고도 알려요. 병렬 요청에서 히트가 필요하면 첫 응답을 기다린 뒤 나머지를 보내세요.
+
+4. **`usage` 필드 읽기**
+
+   | 필드 | 뜻(문서) |
+   | --- | --- |
+   | `cache_creation_input_tokens` | 이번 요청이 캐시에 쓴 토큰 |
+   | `cache_read_input_tokens` | 캐시에서 읽은 토큰 |
+   | `input_tokens` | 마지막 브레이크포인트 **뒤**의 토큰만. 전체 입력이 아니에요 |
+
+   총 입력은 `cache_read_input_tokens + cache_creation_input_tokens + input_tokens`예요. 문서의 예: 캐시에서 10만 토큰을 읽고 질문이 50토큰이면 `input_tokens`는 50이고 처리된 토큰은 100,050이에요. 캐시 필드가 둘 다 0이면 캐시되지 않은 거예요. 대개 최소 길이에 못 미쳐서예요. 1시간 항목을 쓰면 응답에 `ephemeral_5m_input_tokens`, `ephemeral_1h_input_tokens`가 든 `cache_creation` 객체도 들어 있고, 기존 필드는 이 둘의 합과 같아요.
+
+5. **수명 고르고 본전 확인하기**
+
+   기본은 5분이에요. 히트할 때마다 추가 요금 없이 갱신되고, 요청이 **시작된** 시점부터 재요. 응답을 4분 동안 스트리밍하면 후속 요청이 쓸 수 있는 시간은 약 1분만 남아요. 같은 접두사를 5분보다 드물게, 하지만 한 시간보다는 자주 재사용한다면 1시간 수명을 쓰세요. 예를 들어 5분 넘게 도는 보조 에이전트가 있는 경우예요. 문서는 캐시 히트가 속도 제한(rate limit)에서 차감되지 않는다고도 하는데, 이것도 1시간 수명을 고르는 이유가 될 수 있어요.
+
+   한 요청에 두 수명을 섞어 쓸 수 있어요. 단 1시간 항목이 5분 항목보다 앞에 와야 해요.
+
+   `cache_breakeven.py`로 저장하세요. 가격만 계산하니 API 키가 필요 없어요. 새 입력과 출력은 무시하고, 요청 사이에 캐시가 만료되지 않는다고 가정해요.
+
+   ```python
+   # Prices in USD per million tokens, from the official pricing page (as of 2026-11-02).
+   # (base input, 5m cache write, 1h cache write, cache read)
+   PRICES = {
+       "claude-opus-5-5": (4.00, 5.00, 8.00, 0.20),
+       "claude-sonnet-5-5": (2.00, 2.50, 4.00, 0.10),
+   }
+
+
+   def prefix_cost(model, prefix_tokens, requests, mode):
+       """Cost of the shared prefix only (new input and output are ignored).
+       mode: "none", "5m", or "1h". Assumes the cache never expires between requests."""
+       base, w5, w1h, read = PRICES[model]
+       m = prefix_tokens / 1_000_000
+       if mode == "none":
+           return requests * m * base
+       write = w5 if mode == "5m" else w1h
+       return m * write + (requests - 1) * m * read
+
+
+   if __name__ == "__main__":
+       model, tokens = "claude-opus-5-5", 20_000
+       print(f"{model}, {tokens} cached tokens, prefix cost only")
+       for n in (1, 2, 3, 5, 10):
+           row = {mode: prefix_cost(model, tokens, n, mode) for mode in ("none", "5m", "1h")}
+           print(f"requests={n:2d}  none=${row['none']:.4f}  5m=${row['5m']:.4f}  1h=${row['1h']:.4f}")
+   ```
+
+   실제로 실행했어요. Claude Opus 5.5에서 접두사 20,000토큰의 결과예요.
+
+   | 요청 수 | 캐시 없음 | 5분 | 1시간 |
+   | --- | --- | --- | --- |
+   | 1 | $0.0800 | $0.1000 | $0.1600 |
+   | 2 | $0.1600 | $0.1040 | $0.1640 |
+   | 3 | $0.2400 | $0.1080 | $0.1680 |
+   | 10 | $0.8000 | $0.1360 | $0.1960 |
+
+   가격 페이지의 설명과 맞아요. 5분 캐시는 읽기 한 번, 1시간 캐시는 읽기 두 번이면 본전이에요. 요청이 한 번뿐이면 캐싱이 오히려 더 비싸니, 다시 안 쓸 접두사는 캐시하지 마세요.
+
+6. **캐시가 왜 빗나갔는지 찾기**
+
+   문서는 어떤 변경이 어느 단계를 무효화하는지 표로 알려요(`tools`, `system`, `messages` 순서이고, 변경은 그 단계와 뒤의 모든 단계를 무효화해요).
+
+   | 변경 | 영향 |
+   | --- | --- |
+   | 도구 정의(이름, 설명, 파라미터) | 캐시 전체 |
+   | 웹 검색·인용 토글, 속도 설정(`fast`와 표준) | system과 messages |
+   | `tool_choice`, 프롬프트 어디서든 이미지 추가·삭제 | messages |
+   | thinking 파라미터, `output_config.effort` | messages는 항상, tools·system은 모델에 따라 달라요 |
+
+   문제 해결 목록의 다른 점검 항목: 캐시할 구간이 호출마다 똑같은지, 요청이 수명 안에 오는지, 접두사가 최소 길이를 넘는지, `tool_use` 블록의 키 순서가 안정적인지(Swift, Go처럼 JSON 변환 때 키 순서를 무작위로 하는 언어가 있어요). Claude API, Claude Platform on AWS, Microsoft Foundry에서는 캐시가 워크스페이스별로 분리되니, 같은 접두사라도 워크스페이스가 다르면 캐시를 공유하지 않아요. 캐시를 수동으로 비우는 방법은 없어요.
+
+   더 어려운 경우를 위해 문서에는 **캐시 진단(cache diagnostics)**이 있어요. 요청에 `diagnostics` 객체를 넣고 `previous_message_id`에 직전 응답의 `id`를 넣으면(첫 턴은 `null`), 응답이 요청이 어디서 처음 달라졌는지 알려요. `cache_miss_reason`은 `model_changed`, `system_changed`, `tools_changed`, `messages_changed`, `previous_message_not_found`, `unavailable` 중 하나예요. Claude API에서만 쓸 수 있고(Bedrock과 Google managed Google Cloud는 안 돼요), 문서의 Python 예제는 `client.beta.messages`로 호출해요. 페이지는 읽었지만 실행하지는 못했어요.
+
+7. **선택: 사용자가 오기 전에 캐시 데워 두기**
+
+   `max_tokens: 0`으로 보내면 API가 프롬프트를 읽어 브레이크포인트에 캐시를 쓰고, 비어 있는 `content` 배열과 `stop_reason: "max_tokens"`로 바로 돌려줘요. 출력 토큰은 청구되지 않아요. 접두사가 캐시에 없었다면 쓰기 비용은 그대로 청구돼요. 브레이크포인트는 실제 요청과 공유하는 마지막 블록에 두고(`"warmup"` 같은 임시 사용자 메시지에 두지 마세요), thinking과 `effort` 설정도 똑같이 맞추세요. `stream: true`, 확장 사고, 구조화 출력, 강제 `tool_choice`가 있거나 Message Batches 요청 안이면 거절돼요.
+
+   <PromptBox>
+   내 Claude API 요청을 프롬프트 캐싱 관점에서 검토해 줘. 어느 블록이 절대 안 바뀌고 어느 블록이 요청마다 바뀌는지, cache_control 브레이크포인트 하나를 어디에 둬야 하는지, 캐시되는 부분이 claude-opus-5-5의 최소 512토큰을 넘을 가능성이 큰지, 내 파라미터(도구, tool_choice, 이미지, thinking, effort) 중 어떤 것이 조용히 캐시를 깰 수 있는지 알려 줘. 토큰 수를 지어내지 말고 확인하는 방법을 알려 줘. 비밀 정보를 지운 내 요청은 아래와 같아: (요청 본문을 붙여넣기)
+   </PromptBox>
+
+</Steps>
+
+## 한눈에 보기
+
+| 항목 | 값 (공식 문서, 2026-11-02 기준) |
+| --- | --- |
+| 켜기 | 최상위 `"cache_control": {"type": "ephemeral"}` 또는 콘텐츠 블록에 같은 값 |
+| 접두사 순서 | `tools`, `system`, `messages` |
+| 브레이크포인트 | 명시 브레이크포인트 요청당 최대 4개, 브레이크포인트마다 룩백 20곳 |
+| 수명 | 기본 5분(히트할 때마다 갱신), `"ttl": "1h"`면 1시간 |
+| 쓰기·읽기 가격 | 5분 1.25배, 1시간 2배, 읽기 0.1배(Opus 5.5·Sonnet 5.5 0.05배, Fable 5.1 0.025배) |
+| 최소 길이 | Fable 5.1, Opus 5.5, Opus 5, Sonnet 5.5, Haiku 5.5는 512토큰. Sonnet 5와 Opus 4.8은 1,024, 일부 구형 모델은 더 커요 |
+| 직접 캐시할 수 없는 것 | thinking 블록(이전 assistant 턴에 실려서는 캐시돼요), 인용 같은 하위 콘텐츠(최상위 문서 블록을 캐시하세요), 빈 text 블록 |
+| 데이터 | 데이터 제로 보존(ZDR) 대상(Covered Models 제외). KV 캐시와 해시는 수명 동안 메모리에만 있어요 |
+
+## 자주 막히는 부분
+
+### `cache_read_input_tokens`가 계속 0이에요
+
+- **원인**: 접두사가 최소 길이보다 짧거나, 브레이크포인트 앞의 값이 요청마다 바뀌거나, 브레이크포인트가 바뀌는 블록에 있거나, 요청 간격이 수명보다 길어요.
+- **해결**: usage 필드 세 개를 모두 출력하고, 브레이크포인트를 고정 접두사의 끝으로 옮기고, 두 번째 요청을 첫 요청 직후에 보내세요. Claude API라면 캐시 진단을 써 보세요.
+
+### 병렬 요청이 전부 캐시를 새로 써요
+
+- **원인**: 캐시 항목은 첫 응답이 시작된 뒤에야 쓸 수 있어요.
+- **해결**: 요청 하나를 보내 응답이 시작되기를 기다린 뒤 나머지를 보내세요.
+
+### 브레이크포인트를 추가했더니 400 오류가 나요
+
+- **원인**: 마지막 블록에 다른 TTL이 있거나, 자동 캐싱이 하나를 더 추가하는데 이미 명시 브레이크포인트가 4개인 경우 등 문서에 적힌 충돌이에요.
+- **해결**: TTL을 똑같이 맞추거나 명시 브레이크포인트 하나를 빼세요.
+
+### effort나 thinking을 바꿨더니 캐시가 빗나갔어요
+
+- **원인**: 이 설정은 프롬프트에 포함되어 렌더링되니, 바꾸면 캐시된 messages가 무효화돼요.
+- **해결**: 캐시되는 대화 안에서는 일정하게 유지하세요. 메시지별 effort를 지원하는 모델은 `role: "system"` 메시지로 변경을 실어 보내면 캐시된 접두사를 유지해요.
+
+### 배치에서 캐싱 효과가 기대보다 작아요
+
+- **원인**: 배치 요청은 동시에, 순서 없이 처리돼서 문서는 캐시 히트가 best-effort라고 해요.
+- **해결**: [개발 16](/ko/dev/16-batch-api/)을 보세요. 문서는 공통 접두사와 1시간 캐시 블록이 든 요청 하나를 먼저 보내고, 끝나면 나머지를 보내라고 해요.
+
+## 실전 팁
+
+- 캐시 필드 세 개를 [개발 11](/ko/dev/11-usage-cost-api/)의 사용량 데이터와 함께 로그로 남기면 히트율을 계속 볼 수 있어요.
+- 고정 접두사 끝에 브레이크포인트 하나로 시작하세요. 구간마다 바뀌는 속도가 다르거나 한 턴에 20블록 넘게 늘 때만 더 추가하세요.
+- 캐시되는 부분에 시각, 요청 ID, 사용자 이름을 넣지 마세요.
+- 캐싱은 모델의 출력을 바꾸지 않아요. 문서에 따르면 캐싱을 쓰지 않았을 때와 응답이 같아요.
+- 캐시된 내용은 수명 동안 메모리에만 있지만, 보낼 필요가 없는 비밀 정보는 그래도 프롬프트에 넣지 마세요.
+
+## 다음에 볼 튜토리얼
+
+- [2. 프롬프트 캐싱·배치·effort로 API 비용 줄이기](/ko/dev/02-cost-optimization/) — 비용 전체 그림
+- [14. 토큰 세기 API(비용 미리 계산)](/ko/dev/14-token-counting/) — 보내기 전에 접두사 길이 확인
+- [16. Batches API로 대량 작업(반값)](/ko/dev/16-batch-api/) — 배치 안의 캐싱
+- [17. 적응형 사고·effort](/ko/dev/17-extended-thinking/) — thinking 설정이 캐시에 주는 영향
+- [11. 사용량·비용 분석 API로 팀 사용 현황 대시보드 만들기](/ko/dev/11-usage-cost-api/) — 시간에 따른 지출 추적
+- [C16. API 시작하기](/ko/claude/c16-api/)

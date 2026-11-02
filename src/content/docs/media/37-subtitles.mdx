@@ -1,0 +1,209 @@
+---
+title: "Make and Translate Video Subtitles with AI"
+description: "How to create subtitles for your own video with YouTube's automatic captions, fix them by hand, export an SRT file, and use Claude to polish and translate the text, based on official help pages"
+sidebar:
+  label: "14. Video subtitles"
+level: beginner
+category: media
+tools: ["YouTube Studio", "Claude"]
+duration: "30 min"
+prerequisites:
+  - "A video you own or have permission to caption"
+  - "A YouTube channel (to use YouTube Studio) and a Claude account"
+lastVerified: 2026-11-02
+sources:
+  - title: "Add subtitles & captions (YouTube Help)"
+    url: "https://support.google.com/youtube/answer/2734796"
+  - title: "Use automatic captioning (YouTube Help)"
+    url: "https://support.google.com/youtube/answer/6373554"
+  - title: "Edit or remove captions (YouTube Help)"
+    url: "https://support.google.com/youtube/answer/2734705"
+  - title: "Supported subtitle and closed caption files (YouTube Help)"
+    url: "https://support.google.com/youtube/answer/2734698"
+  - title: "Upload files to Claude (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/8241126-uploading-files-to-claude"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+<Summary>
+- On YouTube, **automatic captions are made by speech recognition and may be wrong** because of accents, dialects, mispronunciations or background noise. YouTube says to always review and edit them.
+- A subtitle file holds the spoken text plus **timestamps**. **SubRip (.srt)** is one of the basic formats YouTube accepts: plain UTF-8, no style markup.
+- Workflow in this tutorial: get a draft, **correct it by hand**, export the file, then have **Claude polish or translate the text** while keeping the timestamps.
+- Claude's help page does not list .srt among supported upload types (it lists TXT and others). Pasting the text into the chat is this site's suggestion, not something the page confirms.
+- Only caption and translate videos you own or may use. AI translation is a draft: have a fluent speaker check anything public.
+</Summary>
+
+<Aside type="caution" title="Rights and accuracy come first">
+Subtitles reproduce the words in a video, so they belong to the same rights situation as the video itself. Do not upload or translate someone else's video without permission. See [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/). Automatic text can misreport names, numbers and sensitive statements, so check these before publishing. This is general information, not legal advice.
+</Aside>
+
+## What you'll be able to do after this tutorial
+
+- Turn on and review automatic captions for a video in YouTube Studio.
+- Correct captions in YouTube's editor and download a caption file.
+- Understand what an SRT file looks like, and keep its structure intact.
+- Ask Claude to polish or translate the text and then check the result.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Subtitles / captions** | Text shown with a video. YouTube's help says they help deaf or hard-of-hearing viewers and viewers who speak another language. |
+| **Automatic captions** | Captions YouTube creates with speech recognition. Quality varies. |
+| **Caption file** | A file with the spoken text and time codes. Some formats also hold position and style. |
+| **SRT (.srt)** | SubRip file. Each block has a number, a start and end time, and text. |
+| **Dubbing** | Replacing the audio with another language. This is different from subtitles and is not covered here. |
+
+### What YouTube's pages say about automatic captions
+
+| Item | What the page says |
+| --- | --- |
+| Quality | Machine learning makes them, so quality may vary. Always review and edit |
+| Languages | A long list, including English and Korean (see the page for the full list) |
+| When they appear | If available, they are published on the video automatically. They may not be ready at upload time |
+| Why none appear | Complex audio still processing, unsupported language, video too long, poor sound, speech not recognized, long silence at the start, overlapping speakers or several languages at once |
+| Live streams | English only, on individual live streams |
+
+The page does not give a length limit or accuracy percentage. It only says "too long", so check your own video in YouTube Studio.
+
+## Step by step
+
+The example is "captioning a 3-minute product demo in Korean for English-speaking viewers."
+
+<Checklist items={[
+  'The video is mine, or I have permission to caption and translate it',
+  'I know which language is spoken in the video',
+  'I opened the automatic captions and read every line',
+  'I fixed names, numbers and technical terms',
+  'I kept the numbers and timestamps when sending a file to an AI tool',
+  'A person who knows the target language checked the translation',
+]} />
+
+<Steps>
+
+1. **Open the video's subtitles in YouTube Studio**
+
+   Sign in to YouTube Studio, choose Subtitles in the left menu, and pick the video. If automatic captions are available, they appear under "Subtitles" in the video's default language. You can also add your own captions by uploading a file, using Auto-sync with a transcript, or typing manually.
+
+   <FlowSteps title="Review automatic captions in YouTube Studio" officialUrl="https://support.google.com/youtube/answer/6373554" steps={[
+     { where: 'YouTube Studio, left menu', action: 'Select Subtitles', result: 'A list of your videos' },
+     { where: 'Video list', action: 'Click the video', result: 'The video\'s subtitle page' },
+     { where: 'Under Subtitles', action: 'Click More next to the automatic captions', result: 'Options to review, edit or remove them' },
+   ]} />
+
+2. **Fix the automatic captions by hand**
+
+   The help page says to review automatic captions and edit anything not transcribed properly. In the captions editor, click a line and change the text, then click Publish. For automatic captions, choose Duplicate and edit and Continue to make a draft you can change. Add sound cues such as [applause] where they help viewers.
+
+   Look hard at proper nouns, product names, numbers and anything where a wrong word changes the meaning.
+
+3. **Download the caption file**
+
+   In Subtitles, click Edit next to the language, open Options, and select Download subtitles. The file-format page lists the basic formats YouTube accepts: SubRip (.srt), SubViewer (.sbv or .sub), MPsub, LRC and Videotron Lambda (.cap). SRT and SBV only need basic timing and can be opened in any plain text editor. Which format the download button offers was not confirmed on the pages we read.
+
+   An SRT block looks like this (example from YouTube's page):
+
+   ```text
+   1
+   00:00:00,599 --> 00:00:04,160
+   >> ALICE: Hi, my name is Alice Miller and this is John Brown
+   ```
+
+4. **Polish or translate the text with Claude**
+
+   Paste the lines into Claude with a clear rule: change only the text, never the numbers or time codes. Claude's help lists document types such as TXT, PDF and DOCX for upload and does not list .srt, so pasting is the safe route. You can also try saving a copy as .txt; this works only if Claude reads it correctly, which the page does not promise.
+
+   <PromptBox>
+   Below is an SRT subtitle file in Korean. Translate only the text lines into natural English. Keep every block number and every timestamp line exactly as is, with the same number of blocks. Keep each subtitle short enough to read in two lines. Do not translate product names; keep them as they are: [list names]. If a line is unclear, write [?] after your best guess instead of making something up.
+
+   [paste SRT here]
+   </PromptBox>
+
+   For very long files, send a few dozen blocks at a time. Claude's help also advises splitting large documents into smaller sections.
+
+5. **Check the translation**
+
+   <Aside type="caution" title="AI translation is a draft">
+   Machine translation can miss tone, idioms, units and names. If you publish the subtitles, have someone who knows the language read them. Check that the block count and timestamps still match the original.
+   </Aside>
+
+   - **Counts.** The number of blocks should match the original file.
+   - **Timing.** Lines that become too long may be hard to read in the time shown. Shorten them.
+   - **Terms.** Search for product names and numbers.
+   - **Encoding.** YouTube's page says basic SRT and SBV files must be plain UTF-8. Save your edited file as UTF-8.
+
+6. **Add the translated subtitles back**
+
+   In YouTube Studio, choose Subtitles, click the video, then ADD LANGUAGE and pick the language. Under "Subtitles" click ADD and choose Upload file. Pick With timing (for example, SRT) or Without timing, click Continue, choose the file and click Save. If you only have a transcript without timing, the page describes Auto-sync, which needs the transcript to be in a language its speech recognition supports and to match the spoken language.
+
+</Steps>
+
+## Quick reference
+
+### Where each job is done
+
+| Job | Tool |
+| --- | --- |
+| Get a first draft of captions | YouTube automatic captions |
+| Fix wording and timing | YouTube captions editor |
+| Edit offline | Download the file and edit it in a plain text editor |
+| Polish or translate text | Claude (paste the text) |
+| Final check | A person who knows the language |
+
+### Prompt wording
+
+| Need | Wording to try |
+| --- | --- |
+| Keep structure | "Keep every block number and timestamp exactly as is" |
+| Shorten | "Each subtitle must fit on two short lines" |
+| Protect names | "Do not translate these names: ○○, ○○" |
+| Flag doubt | "Mark unclear lines with [?] instead of guessing" |
+| Tone | "Use a friendly, plain style for a product demo" |
+
+## Common sticking points
+
+### No automatic captions appear
+
+- **Cause**: YouTube lists several reasons: still processing, unsupported language, video too long, poor audio, long silence at the start, overlapping speakers or mixed languages.
+- **Fix**: Wait a while, then check again. Otherwise upload a file, use Auto-sync with a transcript, or type captions manually.
+
+### Claude will not accept my .srt file
+
+- **Cause**: The help page's list of supported document types does not include .srt.
+- **Fix**: Paste the text into the chat, or try a .txt copy. Whether a .txt copy keeps the structure is not guaranteed by the page.
+
+### Timestamps were changed or lines went missing
+
+- **Cause**: The request did not say to keep the structure, or the file was too long for one message.
+- **Fix**: Repeat the "keep every number and timestamp" rule and send smaller batches. Compare block counts afterward.
+
+### The upload fails
+
+- **Cause**: The page says basic SRT files must be plain UTF-8 with no style markup, and the format must be supported.
+- **Fix**: Resave as UTF-8, remove styling, and check the format list.
+
+### The translation sounds stiff
+
+- **Cause**: A literal translation, or the context was missing.
+- **Fix**: Tell Claude who the viewers are and what the video is about, then have a fluent speaker review it.
+
+## Practical tips
+
+- **Keep the original-language track.** Fix it first; translations built on a wrong source repeat the mistakes.
+- **Keep a glossary.** A short list of names and terms makes later videos consistent.
+- **Work in small batches.** It is easier to catch mistakes.
+- **Do not rely on dubbing.** YouTube has separate multi-language audio and automatic dubbing features; this tutorial covers text subtitles only.
+- **Private recordings.** Pasting a meeting transcript into an AI tool sends that text to the service. See [Privacy and Safety Basics](/basics/05-privacy-safety/).
+
+## What to read next
+
+- [Turn Meeting and Lecture Recordings into Organized Text](/media/14-transcribe-recordings/) — speech to text for recordings
+- [AI Translation in Practice](/media/26-ai-translation/) — translating documents and checking quality
+- [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/) — rights and disclosure
+- [Privacy and Safety Basics](/basics/05-privacy-safety/) — what not to upload

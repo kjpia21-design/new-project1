@@ -1,0 +1,199 @@
+---
+title: "Organize Data with Airtable AI"
+description: "A reference for using Omni and field agents in Airtable to build tables, categorize records, and extract data from documents, with credit, permission, and accuracy cautions"
+sidebar:
+  label: "17. Organize data with Airtable AI"
+level: practical
+category: automation
+tools: ["Airtable"]
+duration: "30 min"
+prerequisites:
+  - "An Airtable account and a practice base (a base made of made-up data is safest)"
+  - "A workspace where Airtable AI is turned on and AI credits remain"
+lastVerified: 2026-11-02
+sources:
+  - title: "Using Omni AI in Airtable"
+    url: "https://support.airtable.com/articles/1744327578-using-omni-ai-in-airtable"
+  - title: "Using Airtable AI in fields"
+    url: "https://support.airtable.com/articles/8052242094-using-airtable-ai-in-fields"
+  - title: "Airtable AI billing"
+    url: "https://support.airtable.com/articles/3378106230-Airtable-AI-billing"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+<Summary>
+- Airtable AI has two main parts. **Omni** is a chat assistant that builds and edits tables and answers questions about your data. **Field agents** are AI fields that fill in a value for each record.
+- Both use **AI credits** that the whole workspace shares. Free credits come monthly with your plan, and building with Omni is free (as of 2026-11-02).
+- A field agent **only sees the record it runs on**. Use formulas or rollups for totals and exact calculations, because they are exact and cost no credits.
+- AI output is a draft. Spot-check a sample before you rely on it, and keep sensitive data out of practice bases.
+</Summary>
+
+## What you'll be able to do
+
+- Ask Omni to turn an uploaded CSV into organized tables.
+- Add a field agent that sorts customer feedback into categories.
+- Write custom instructions that give steady results, and estimate credit use with a small test run.
+- Know the permission, credit, and accuracy limits before you use it on real work data.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Omni** | The AI assistant built into Airtable. In plain language you can ask it to build bases, create and update records, analyze data, and answer questions. |
+| **Field agent** | An AI-powered field that can retrieve, analyze, or generate data at the cell level. Most AI-enabled fields are called field agents. |
+| **Custom instructions** | The prompt that tells a field agent what to do. You can insert other fields of the same record into it. |
+| **AI credits** | The usage unit for AI actions. Credits are pooled and shared across a workspace or organization. |
+
+<Aside type="note" title="Things to keep in mind (as of 2026-11-02)">
+- This guide is based on three Airtable help pages. We did not check the Airtable pricing page, other AI pages (for example, Airtable AI in Slack or the Airtable MCP server), or the privacy and model-training terms, so this guide makes no claims about them.
+- On the billing page, the "Plan availability" box lists Team, Business, and Enterprise Scale, but the text says all Airtable plans include AI with free monthly credits, and it lists 500 credits per Editor-or-above user on the Free plan. The Omni page says "All plan types", and the fields page says "All paid plans". We could not tell which is current, so check your own workspace.
+- Credit amounts, menu names, and available models change often. Check them on screen.
+- We did not run these steps in a real Airtable account while writing this. Menu names come from the official help text.
+</Aside>
+
+## Step-by-step
+
+Practice on a base of made-up data. A list of 10 to 20 pieces of fake customer feedback works well.
+
+<Checklist items={[
+  'I confirmed that Airtable AI is turned on for my workspace',
+  'I asked Omni to turn a CSV into a table',
+  'I added a field agent that categorizes feedback',
+  'I ran it on a few records first and checked the credit preview',
+  'I compared the results with the originals and fixed the instructions',
+  'I decided which jobs belong to formulas or rollups instead',
+]} />
+
+<Steps>
+
+1. **Check that AI is on**
+
+   A workspace Owner opens the Airtable account page, selects the workspace, and checks the "Workspace AI permissions" section for the "Turn on Airtable AI for all bases within this workspace" toggle. According to the official help, AI is on by default for all plans, but EU/GDPR customers choose to turn it on themselves. On Business and Enterprise Scale plans, an admin may also have to allow it in the admin panel.
+
+2. **Turn a CSV into tables with Omni**
+
+   From the Airtable home screen, click **+ Create** in the lower-right corner, then **Build an app with Omni**. Upload your CSV and describe the structure you want. Omni can read CSV, Excel, PDF, Word, and more, up to 10 files at a time and 10 MB each. The official page says this "turn files into tables" feature is still rolling out, so not everyone has it yet.
+
+   <PromptBox>
+   From the attached CSV, create two tables: "Customers" and "Feedback". Link each feedback row to the right customer, and fill both tables with the data in the file. If something is unclear, ask me before you guess.
+   </PromptBox>
+
+   <Aside type="tip">
+   Creating a table and filling it can be separate requests. If a new table comes back empty, follow up and ask Omni to fill that specific table from your file. A CSV holds only one tab of a spreadsheet, so upload each tab separately.
+   </Aside>
+
+3. **Add a field agent that categorizes feedback**
+
+   Click the **+** button next to the last field in the table. In the "Field agents" section, pick a common use case, **Build a field agent**, or **Browse catalog**. To build one yourself, choose **Build a field agent**, pick a field type (for category choices, a Single select field type), enter custom instructions, and click **Create field**.
+
+   <PromptBox label="Example custom instructions">
+   You are a customer support analyst. Read the feedback below and choose exactly one category: Delivery, Quality, Price, or Other.
+   Do not add categories of your own. If you can't tell, choose Other.
+   Feedback: \{Feedback text\}
+   </PromptBox>
+
+   In the instructions, type a curly bracket `{` or click **+ Insert field** to add a field of the same record. The field appears as a token and keeps working if the field is renamed later.
+
+   <ScreenshotPlaceholder caption="Adding a field agent to a table" officialUrl="https://support.airtable.com/articles/8052242094-using-airtable-ai-in-fields" />
+
+   <FlowSteps title="Adding a field agent" officialUrl="https://support.airtable.com/articles/8052242094-using-airtable-ai-in-fields" steps={[
+     { where: 'Table header', action: 'Click the + button next to the last field' },
+     { where: 'Field agents section', action: 'Choose Build a field agent', result: 'The field settings window opens, with Long text as the default type' },
+     { where: 'Field settings', action: 'Pick a field type, enter custom instructions, then click Create field' },
+   ]} />
+
+4. **Check the credit preview, then run a small test**
+
+   Under "Custom instructions" there is a "Preview" window that shows credit usage for the current setup. Check it before you save. Changing the model changes the cost per run. The help page says a model tagged "Low cost" uses fewer credits. Then run a few records first: click **Run agent** in a cell, or use the field's dropdown menu and **Run field agent** for bulk options (all cells in the view, outdated cells, and others).
+
+5. **Review the results and refine**
+
+   Compare the output with the originals. If categories are off, spell out the choices and the rule for unclear cases in the instructions. The help page also suggests "Do" and "Do Not" statements and examples with the desired answers. **Edit with AI** can draft fuller instructions from a short description, but review the result yourself. Editing instructions does not regenerate cells that already hold content.
+
+6. **Be careful with "Run automatically"**
+
+   This setting runs the agent when input values change. The help page warns about downstream effects on other field agents, formulas, and automations that use the output. Airtable never automatically overwrites a cell a person has edited, and clearing a cell counts as an edit. To replace a value, use **Run agent** on the cell instead of clearing it.
+
+</Steps>
+
+## Quick reference
+
+### What to use for which job (per the official help pages)
+
+| Job | Suggested tool | Why |
+| --- | --- | --- |
+| Categorize, summarize, or tag text | Field agent | It interprets text, and a small categorization run costs about 1 credit |
+| Total, count, or exact math | Rollup or formula field | Exact results with no AI credits |
+| Compare or rank many records | Automation with Find records and Generate with AI | A field agent sees only its own record |
+| Build tables, ask about your data | Omni | Building with Omni is free; a question costs about 10 credits |
+| Read an attachment | Field agent with Analyze attachment | PDF, DOCX, PPTX, JPG, PNG, TIFF, BMP, XLSX, and WEBP formats are supported, with limits |
+
+### Credits (Airtable AI billing page, as of 2026-11-02)
+
+| Item | Details |
+| --- | --- |
+| Monthly credits per user | Free: 500 per Editor-or-above user. Team: 15,000 per billable collaborator. Business (self-serve and sales-led): 20,000 per paid user. Enterprise Scale: 25,000 per paid user at list price |
+| Pooling | Shared by users across the workspace (Free, Team) or organization (Business, Enterprise Scale) |
+| Typical cost per run | Feedback categorization about 1, web search about 10, analyzing a 10-page contract about 200 |
+| Extra credits | Self-serve plans buy packs, for example 10,000 credits for $20 per month or $200 per year. Free plan users must upgrade to Team |
+| Alerts | Email alert when a Team workspace or Business or Enterprise Scale organization passes 75% of its credit limit |
+
+These amounts are estimates that change with model, input size, and output. Run a small test first.
+
+### Limits worth knowing
+
+| Item | Details |
+| --- | --- |
+| Word limits | About 12,000 words for lower-powered models and about 90,000 words for higher-powered models, counting instructions, referenced fields, and the response |
+| Omni file upload | Up to 10 files, 10 MB each |
+| Permissions | Omni mirrors the permissions of the person using it. Only Owners and Creators can change a field agent's model or instructions. Editors can click Generate or Run agent |
+| What Omni can't do | Create new views, set up table syncs, export data, or change permissions (see the official list) |
+| Deleting and publishing | Omni asks you to confirm before deleting records, tables, or pages. It leaves publishing an interface and turning on an automation to you |
+
+## Common sticking points
+
+### I can't find Omni or the field agent menu
+
+- **Cause**: AI may be turned off in the workspace settings or the admin panel, or Omni may be turned off for the base.
+- **Fix**: Ask a workspace Owner or admin. A base Owner or Creator can check Omni's settings from the dropdown next to the chat name.
+
+### The agent errors out, such as "Unknown error while using tools with the agent"
+
+- **Cause**: The help page says a low-power model with a complex prompt that uses tools can fail this way.
+- **Fix**: Switch to a more capable model and simplify the prompt with direct instructions.
+
+### A field agent stopped filling in a record
+
+- **Cause**: Someone edited or cleared that cell, so automatic generation skips it.
+- **Fix**: Click into the cell and click **Run agent**. For many cells, use **Run field agent** then **Cells never modified**.
+
+### The totals or comparisons are wrong
+
+- **Cause**: A field agent reads only its own record and can't total or rank across records. Low-cost models are also less reliable at arithmetic, according to the help page.
+- **Fix**: Use a rollup or formula field for exact results.
+
+### My data could be exposed in an interface
+
+- **Cause**: The help page warns that data in fields referenced in a prompt may be shown to anyone who can view the AI long text field, even if the interface hides the source field.
+- **Fix**: Don't put sensitive fields (for example, salary) into prompts for fields shown to others.
+
+## Practical tips
+
+- **Test small.** Run on a few records and check the credit preview before you run a whole table.
+- **Choose a model deliberately.** Test again after any model change, because the same prompt can behave differently.
+- **Use formulas for rules.** If every record follows the same pattern, a formula is steadier and costs no credits.
+- **Keep a human check.** Have a person verify numbers, categories, and anything legal or financial. Also see [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/) and [Turn Off AI Training on Your Chats](/basics/12-privacy-settings/).
+- **Compare with Notion AI.** Notion's AI also fills database properties. See [Organizing Work Documents and Databases with Notion AI](/automation/16-notion-ai/) to compare plans, credits, and features. For spreadsheets, see [Adding AI to Excel and Sheets](/automation/23-spreadsheet-ai/).
+
+## What to read next
+
+- [16. Budget sheet and receipts with AI](/automation/46-budget-sheet/) — practice organizing data with AI
+- [1. Organize docs with Notion AI](/automation/16-notion-ai/) — compare database AI features
+- [6. Adding AI to Excel and Sheets](/automation/23-spreadsheet-ai/) — formulas and table cleanup in spreadsheets

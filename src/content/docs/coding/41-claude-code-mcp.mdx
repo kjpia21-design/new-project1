@@ -1,0 +1,274 @@
+---
+title: "Connect MCP Servers to Claude Code"
+description: "Add a remote or local MCP server with claude mcp add, choose a scope (local, project, user), sign in with OAuth, check status with /mcp, and stay safe with third-party servers. Based on the official Claude Code MCP docs"
+sidebar:
+  label: "14. Connect MCP servers"
+level: practical
+category: coding
+tools: ["Claude Code"]
+duration: "35 min"
+prerequisites:
+  - "Claude Code installed and signed in (see Getting started with Claude Code)"
+  - "A practice project folder (a copy is best)"
+  - "Node.js 18 or later if you try the local npx example"
+  - "A first look at what MCP is in Automation 5"
+lastVerified: 2026-11-02
+sources:
+  - title: "Connect Claude Code to tools via MCP"
+    url: "https://code.claude.com/docs/en/mcp"
+  - title: "Connect to MCP servers (quickstart)"
+    url: "https://code.claude.com/docs/en/mcp-quickstart"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+<Summary>
+- MCP (Model Context Protocol) is an open standard that lets Claude Code read and act on outside tools such as issue trackers, databases and design tools, so you stop copying data into chat.
+- Add a server with `claude mcp add`. For a **remote** server use `--transport http <name> <url>` (recommended). For a **local** program use `claude mcp add <name> -- <command> [args]` (stdio). The `--` separates Claude's options from the server's command.
+- **Scope** decides who gets the server: `local` (default, only you, only this project, stored in `~/.claude.json`), `project` (shared via `.mcp.json` in the project root), `user` (only you, all projects).
+- Check with `claude mcp list` or `/mcp` inside a session. A server that needs sign-in shows `! Needs authentication`; run `/mcp` or `claude mcp login <name>` to complete OAuth.
+- **Safety**: the docs say to verify you trust each server, because servers that fetch outside content can expose you to prompt injection. Project servers from `.mcp.json` ask for your approval first. Use a read-only database user, and keep tokens out of committed files.
+- We read the official pages on 2026-11-02. We did not run `claude mcp` commands or connect any server, so every command and output below comes from the docs.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Add a hosted (HTTP) server and a local (stdio) server to Claude Code.
+- Pick the right scope and know which file holds the server.
+- Sign in to a server that needs OAuth, and check or remove servers.
+- List the safety checks to do before connecting a server you did not write.
+
+## Concepts to know first
+
+[Automation 5](/automation/20-connectors-mcp/) explains MCP in plain words: a shared plug that lets AI use your tools. [Dev 5](/dev/05-mcp-server/) shows how to build your own server. This tutorial is the Claude Code side: the commands and files for connecting servers. Permission rules for MCP tools follow the same system as [Coding 13](/coding/40-settings-permissions/).
+
+### Three ways to connect (official docs, 2026-11-02)
+
+| Kind | When | Command shape |
+| --- | --- | --- |
+| Remote HTTP | A hosted service with a URL. The docs call HTTP the recommended option | `claude mcp add --transport http <name> <url>` |
+| Local stdio | A program that runs on your machine (needs local access) | `claude mcp add [options] <name> -- <command> [args...]` |
+| Remote SSE | Deprecated. Use HTTP where available | `claude mcp add --transport sse <name> <url>` |
+
+The docs also describe WebSocket servers (`"type": "ws"`), which you configure in `.mcp.json` or with `claude mcp add-json`; the `--transport` flag does not accept `ws`. This tutorial does not go further into it.
+
+### Scopes
+
+| Scope | Loads in | Shared with team | Stored in |
+| --- | --- | --- | --- |
+| Local (default) | Current project only | No | `~/.claude.json` |
+| Project | Current project only | Yes, via version control | `.mcp.json` in the project root |
+| User | All your projects | No | `~/.claude.json` |
+
+Note that "local scope" for MCP is stored in `~/.claude.json`, not in `.claude/settings.local.json` (the general local settings file from Coding 13). If the same server name exists in several scopes, Claude Code connects once, using the highest-precedence definition: local, then project, then user, then plugin servers, then claude.ai connectors. Fields are not merged across scopes.
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I added a remote server and saw it in claude mcp list or /mcp',
+  'I know which scope I used and where the entry is stored',
+  'I know how to sign in to a server that needs OAuth',
+  'I checked a server for trust before connecting it',
+  'I know how to remove a server I no longer use',
+]} />
+
+<Steps>
+
+1. **Check that the server is worth trusting**
+
+   Before you add anything, decide whether you trust it. The official docs say: "Verify you trust each server before connecting it. Servers that fetch external content can expose you to prompt injection risk." Prefer servers from the provider's own docs or from reviewed connectors in the Anthropic Directory, and read what tools the server offers.
+
+2. **Add a hosted (HTTP) server**
+
+   The official quickstart connects Anthropic's own docs server, which needs no sign-in. Run this in your terminal, not inside a Claude session:
+
+   ```bash
+   claude mcp add --transport http claude-code-docs https://code.claude.com/docs/mcp
+   ```
+
+   The command prints an `Added ...` line, which means the configuration was written, not that the server connects. By default it uses local scope.
+
+3. **Check the connection**
+
+   ```bash
+   claude mcp list
+   ```
+
+   Each server shows a status. The docs list these:
+
+   | Status | Meaning |
+   | --- | --- |
+   | `✔ Connected` | Ready to use |
+   | `! Needs authentication` | Reachable, but needs a browser sign-in or a token passed with `--header` |
+   | `✘ Failed to connect` | The server did not respond |
+   | `⏸ Pending approval` | A project-scoped server you have not approved yet |
+   | `✘ Blocked by enterprise managed policy` | Your organization blocks it. Ask your administrator |
+
+   Inside a session, `/mcp` shows the same panel. `claude mcp get <name>` shows details and which scope holds the server.
+
+4. **Use it**
+
+   Start `claude` and ask for something that needs the server. Naming the server makes sure the answer comes from it and not from another tool.
+
+   <PromptBox>
+   Use the claude-code-docs server to look up what MCP_TIMEOUT does
+   </PromptBox>
+
+   If Claude Code asks for permission the first time Claude calls the server, read the prompt and approve it. Tool calls in Claude's output are labeled with the server name, which is how you confirm the answer came from the server.
+
+5. **Add a server that needs sign-in (OAuth)**
+
+   Hosted services such as Sentry, Linear and Notion put their MCP servers behind OAuth. The docs example uses Sentry:
+
+   ```bash
+   claude mcp add --transport http sentry https://mcp.sentry.dev/mcp
+   ```
+
+   After adding, `claude mcp list` shows `! Needs authentication`, which the docs say is expected. Then open `/mcp` in a session, select the server, choose **Authenticate**, and approve in the browser. You can also run `claude mcp login sentry` from your shell, and `claude mcp logout sentry` clears stored credentials. The docs say tokens are stored securely and refreshed automatically.
+
+   For a server that uses a static token instead of OAuth, pass it at add time:
+
+   ```bash
+   claude mcp add --transport http secure-api https://api.example.com/mcp \
+     --header "Authorization: Bearer your-token"
+   ```
+
+   <Aside type="caution" title="Do not paste real tokens into shared files">
+   A header you pass with `--header` is saved in your configuration. At local or user scope that is `~/.claude.json`, outside your repository. At project scope it would land in `.mcp.json`, which you commit. The docs let `.mcp.json` reference environment variables, so write `"Authorization": "Bearer ${API_KEY}"` there and keep the real value in your shell environment. A `${VAR}` that is not set and has no `:-default` triggers a warning in `claude mcp list` and `/mcp`.
+   </Aside>
+
+6. **Add a local (stdio) server**
+
+   The official quickstart uses the Playwright server, which gives Claude a browser. It runs through `npx`, so it needs Node.js 18 or later:
+
+   ```bash
+   claude mcp add playwright -- npx -y @playwright/mcp@latest
+   ```
+
+   Everything after `--` is the command Claude Code runs to start the server. There is no `--transport` flag because stdio is the default. The first `claude mcp list` can show `✘ Failed to connect` while npx downloads the package; the docs say to wait and run it again.
+
+   If you add environment variables, the docs warn that the server name must not come right after `--env`; put another option such as `--transport stdio` between them:
+
+   ```bash
+   claude mcp add --env AIRTABLE_API_KEY=YOUR_KEY --transport stdio airtable \
+     -- npx -y airtable-mcp-server
+   ```
+
+   <Aside type="danger" title="A local server is a program on your computer">
+   A stdio server runs with your user's access. Only add a command whose package and publisher you trust, and never paste a command from an unknown source. The docs' own database example uses a read-only database user so that queries cannot change data; do the same for any database server.
+   </Aside>
+
+7. **Share a server with your team (project scope)**
+
+   ```bash
+   claude mcp add --transport http shared-server --scope project https://example.com/mcp
+   ```
+
+   This writes `.mcp.json` in the project root, which you commit:
+
+   ```json
+   {
+     "mcpServers": {
+       "shared-server": {
+         "type": "http",
+         "url": "https://example.com/mcp"
+       }
+     }
+   }
+   ```
+
+   In interactive sessions, Claude Code asks each person to approve a project-scoped server before using it, so a cloned repository cannot launch processes without your consent. To reset those approvals, run `claude mcp reset-project-choices`. A JSON entry that has a `url` but no `type` is an error, because an entry with no type is read as stdio.
+
+   <Aside type="caution" title="Unattended runs do not ask">
+   The docs say that in `claude -p` runs, Agent SDK sessions and some cloud sessions, Claude Code cannot show the approval prompt and loads project-scoped servers without asking. To keep a server out, add it to `disabledMcpjsonServers`, exclude project settings with `--setting-sources`, or start with `--strict-mcp-config`. Read a repository's `.mcp.json` before you run Claude Code unattended on it.
+   </Aside>
+
+8. **Remove a server**
+
+   ```bash
+   claude mcp remove claude-code-docs
+   ```
+
+   For a remote server, Claude Code also deletes the OAuth tokens and client registration it stored. It does not revoke the tokens at the service that issued them. If the service supports revocation, run `claude mcp logout <name>` first. The docs also note that each connected server takes some space in Claude's context window, so remove servers you no longer use.
+
+   <FlowSteps title="When a server will not connect" officialUrl="https://code.claude.com/docs/en/mcp" steps={[
+     { where: 'Terminal', action: 'Run claude mcp list', result: 'Read the status next to the server' },
+     { where: 'Terminal', action: 'Run claude mcp get <name>', result: 'See the Issue line with the HTTP status or error code, and the scope' },
+     { where: 'Claude Code prompt', action: 'Type /mcp', result: 'Authenticate or re-authenticate if it says Needs authentication' },
+     { where: 'Your config', action: 'Check the URL, the type field and any ${VAR} values', result: 'Fix a missing type, a hidden space or an unset variable' },
+   ]} />
+
+</Steps>
+
+## Quick reference
+
+### Commands from the official docs
+
+| Command | What it does |
+| --- | --- |
+| `claude mcp add --transport http <name> <url>` | Add a remote HTTP server |
+| `claude mcp add <name> -- <command> [args]` | Add a local stdio server |
+| `claude mcp add-json <name> '<json>'` | Add from a JSON block (escape it for your shell) |
+| `claude mcp add-from-claude-desktop` | Import from Claude Desktop (macOS and WSL only) |
+| `claude mcp list` / `get <name>` | List servers with status / show details |
+| `claude mcp login <name>` / `logout <name>` | Run or clear the OAuth sign-in |
+| `claude mcp remove <name>` | Remove a server (add `--scope <scope>` if needed) |
+| `/mcp` | Status and sign-in panel inside a session |
+
+### Output size
+
+The docs say Claude Code warns when a tool's output exceeds 10,000 tokens and limits it to 25,000 tokens by default. You can change the limit with the `MAX_MCP_OUTPUT_TOKENS` environment variable before starting Claude Code. A very large result is saved to a file instead of the conversation.
+
+### Organization control
+
+Administrators can deploy or restrict servers with managed MCP configuration (`managed-mcp.json`, `allowedMcpServers`, `deniedMcpServers`). A blocked server can show `Blocked by enterprise managed policy`. This tutorial does not cover that setup; see the official managed MCP page.
+
+## Common sticking points
+
+### `claude mcp add` printed "Added" but the server does not work
+
+- **Cause**: The command saves the configuration without checking credentials or whether the command runs.
+- **Fix**: Run `claude mcp list` or `/mcp`. Wait and retry if a stdio package is still downloading.
+
+### Status shows "Needs authentication"
+
+- **Cause**: The server answered with 401 or 403 and wants you to sign in.
+- **Fix**: Run `/mcp` and choose Authenticate, or `claude mcp login <name>`. Note that `claude -p` has no `/mcp` panel, so sign in from an interactive session first.
+
+### I added the server but a project folder does not see it
+
+- **Cause**: Local scope is the default, so the server loads only in the project where you added it.
+- **Fix**: Re-add it with `--scope user` for all projects, or `--scope project` to share it. A server's scope is fixed when you add it, so remove and re-add it.
+
+### Status shows "Pending approval"
+
+- **Cause**: A `.mcp.json` server you have not approved yet.
+- **Fix**: Run `claude` interactively in the folder and approve it. In an untrusted folder, approvals committed to the repository are ignored.
+
+### The add command fails with "already exists"
+
+- **Cause**: Same name at the same scope.
+- **Fix**: Remove the old entry first, or pick another name. Names can contain only letters, numbers, hyphens and underscores.
+
+## Practical tips
+
+- Add servers you actually use. Every connected server adds tool names and instructions to Claude's context.
+- Use `--scope project` only for servers the whole team needs and that need no personal secrets.
+- Prefer OAuth over pasting a long-lived token, and use the narrowest access the server offers (for example a fine-grained token limited to chosen repositories, as in the docs' GitHub example).
+- Start with read-only access. Give database servers a read-only user.
+- Treat text that a server returns as untrusted input. If Claude suddenly proposes an odd action after reading outside content, stop and check.
+- MCP tools go through the permission system, so you can allow or deny them with rules; see [Coding 13](/coding/40-settings-permissions/).
+- Version details in the docs change (for example the automatic HTTP-to-SSE fallback needs v2.1.265 or later). If a flag is missing, check `claude --version` against the docs.
+
+## Next tutorials
+
+- [Automation 5. Connecting with connectors (MCP)](/automation/20-connectors-mcp/) — the idea behind MCP
+- [Dev 5. Build your own MCP server](/dev/05-mcp-server/) — write a server and connect it
+- [13. Tune settings and permissions](/coding/40-settings-permissions/) — allow and deny rules
+- [C14. Claude Code key features](/claude/c14-claude-code-features/)
+- [Developer guide](/roles/developer/)

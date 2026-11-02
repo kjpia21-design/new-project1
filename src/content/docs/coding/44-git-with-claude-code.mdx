@@ -1,0 +1,200 @@
+---
+title: "Commit, Branch and Open PRs with Claude Code"
+description: "Let Claude Code draft commit messages, work on a branch and write a pull request, while you check the diff, undo mistakes and decide when anything is pushed. Based on the official Claude Code docs"
+sidebar:
+  label: "17. Commit, branch and PR"
+level: practical
+category: coding
+tools: ["Claude Code", "Git"]
+duration: "40 min"
+prerequisites:
+  - "A Git repository you can practice in (a practice project is best)"
+  - "Claude Code installed and signed in (see Getting started with Claude Code)"
+  - "For the PR step: a GitHub account and the gh command-line tool signed in (optional)"
+lastVerified: 2026-11-02
+sources:
+  - title: "Common workflows (Create pull requests, Run parallel sessions with worktrees)"
+    url: "https://code.claude.com/docs/en/common-workflows"
+  - title: "Best practices for Claude Code"
+    url: "https://code.claude.com/docs/en/best-practices"
+  - title: "Checkpointing"
+    url: "https://code.claude.com/docs/en/checkpointing"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- The official pull request workflow is three prompts: summarize your changes, then "create a pr", then ask Claude to enhance the PR description. The docs add one rule: review Claude's generated PR before submitting, and ask Claude to highlight risks.
+- Claude Code links the session to the PR when it creates one with `gh pr create` (or `glab mr create`). Later, `claude --from-pr 1234` (your own number) reopens the sessions linked to that PR.
+- For parallel work on separate branches, `claude --worktree feature-auth` gives each session its own checkout on its own branch. The repository needs at least one commit first.
+- Undo in two layers. `/rewind` (or `Esc` twice on an empty prompt) rolls back files Claude edited with its own tools, but the checkpointing page says changes made only by Bash commands are not tracked, and tells you to use Git for those and for permanent history.
+- The best-practices page shows a rule that asks before every push: `"ask": ["Bash(git push *)"]` in `.claude/settings.json`.
+- We read three official pages on 2026-11-02. We did not run Claude Code for this tutorial. The Git commands are standard Git; the prompts and the commit-message advice are our own.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Ask Claude to look at your changes and draft a clear commit message, then commit only after you have read it.
+- Work on a separate branch so the main line stays safe.
+- Ask for a pull request description that says what changed, why and how it was tested.
+- Undo a bad change with `/rewind` or Git, and check the diff before anything is pushed.
+
+## Concepts to know first
+
+A **commit** is a saved snapshot of your changes with a message. A **branch** is a separate line of work, so experiments do not touch `main`. A **pull request (PR)** is a request to merge your branch into another one, with a page where others can review it. A **diff** is the list of changed lines. [1. Getting started with Claude Code](/coding/06-claude-code-start/) shows how to start. [Coding 13](/coding/40-settings-permissions/) covers allow, ask and deny rules. [Coding 15](/coding/42-code-review-ai/) shows how to have a change reviewed. For GitHub work in the cloud, see [Coding 3](/coding/08-cloud-github/), and for checks that run automatically, [Coding 10](/coding/37-claude-code-hooks/).
+
+<Aside type="caution" title="Push is the step you cannot fully take back">
+Commits and branches on your own computer are easy to undo. A push shares your work, and a force push can overwrite other people's. Keep secrets such as `.env` files out of commits, read the diff first, and decide yourself when to push. The best-practices page says auto mode already blocks things like a force push over someone's work, and that your own "never" rules belong in deny rules or hooks.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I am working in a practice repository or on a branch, not directly on main',
+  'I ran git status and git diff myself before committing',
+  'I read the commit message and it matches what really changed',
+  'No secrets or generated files are in the commit',
+  'I read the PR description before opening it, and I decide when to push',
+]} />
+
+<Steps>
+
+1. **Start on a branch**
+
+   Create a branch for the task before you ask Claude to edit anything. In your own terminal:
+
+   ```bash
+   git switch -c fix-login-redirect
+   git status
+   ```
+
+   Branch names are your choice; a short description is easiest to find later. To run two tasks at once, the common-workflows page offers worktrees: `claude --worktree feature-auth` starts a session in an isolated checkout on its own branch, and a second terminal with a different name starts another one. The repository needs at least one commit first; in a repository with no commits the command fails with `Failed to resolve base branch "HEAD"`. The page links to a Worktrees page for cleanup, which we did not read.
+
+2. **Set a safety rule for pushes (optional)**
+
+   The best-practices page shows a permissions example where `Bash(git push *)` is in the `ask` list, so Claude asks before every push. It also shows `deny` entries like `Read(./.env)` to keep secret files out of Claude's reach. Put rules in `.claude/settings.json`, as explained in [Coding 13](/coding/40-settings-permissions/):
+
+   ```json
+   {
+     "permissions": {
+       "ask": ["Bash(git push *)"],
+       "deny": ["Read(./.env)", "Read(./secrets/**)"]
+     }
+   }
+   ```
+
+   Rules match tool calls, not intent, so treat them as one layer of protection and read the page for the limits.
+
+3. **Make a small change, then look at it yourself**
+
+   Ask Claude for one small, clear change, using a prompt like our example below. Then, before any commit, check what changed in your own terminal:
+
+   ```bash
+   git status   # which files changed or are new
+   git diff     # every changed line
+   ```
+
+   Look for files you did not expect, such as logs, build output or `.env`.
+
+4. **Ask for a commit message, then commit**
+
+   Claude can read the diff and draft the message. We prefer to review it first:
+
+   <PromptBox>
+   Look at my current changes with git diff. Draft a commit message: a first line of at most 50 characters in the imperative mood (for example "Fix login redirect"), then a short body saying why the change was needed. Do not commit yet. Show me the message and list any file that looks unrelated.
+   </PromptBox>
+
+   If the message is accurate, either commit it yourself (`git add <files>` then `git commit -m "..."`) or tell Claude "commit only these files with that message". The 50-character line and imperative mood are common Git conventions, not rules from the Claude Code docs. Stage specific files rather than everything, so unrelated changes do not slip in.
+
+5. **Keep commits small and separate**
+
+   One commit per idea makes history readable and makes undoing easy. If your changes mix two ideas, ask:
+
+   <PromptBox>
+   My working tree has two kinds of changes: a bug fix and a formatting cleanup. Suggest how to split them into two commits, which files belong in each, and a message for each. Do not run any git command until I agree.
+   </PromptBox>
+
+6. **Write the pull request**
+
+   The official page says you can ask directly ("create a pr for my changes") or go step by step: summarize your changes, run "create a pr", then refine, for example "enhance the PR description with more context about the security improvements". Creating a PR needs a remote and, in our understanding, the `gh` tool signed in; the best-practices page says that with `gh` installed and signed in, Claude will open pull requests and read review comments without explanation. We have not confirmed other setups. A prompt to use first:
+
+   <PromptBox>
+   Summarize the changes on this branch compared with main in plain words. Then draft a PR description with these sections: what changed, why, how I tested it, risks, and anything reviewers should check. Show it to me and do not open the PR yet. If something was not tested, say so instead of claiming it was.
+   </PromptBox>
+
+   When the description is right, ask Claude to open the PR (or run `gh pr create` yourself). The page says to review the generated PR before submitting and ask Claude to highlight potential risks or considerations.
+
+7. **Push on purpose, then review**
+
+   Pushing sends your branch to the remote. With the `ask` rule from step 2, Claude has to ask first; if you are not sure, push yourself with `git push -u origin <branch>`. After the PR exists, run `/code-review` for a review by a fresh subagent that did not see your conversation (see [Coding 15](/coding/42-code-review-ai/)), then read the PR page as your reviewers will.
+
+8. **Undo what went wrong**
+
+   Pick the layer that matches the damage:
+
+   | Situation | What to use |
+   | --- | --- |
+   | Claude drifted in this session | `Esc` to stop; it keeps everything up to that point |
+   | Claude's file edits in this session were wrong | `/rewind`, or `Esc` twice on an empty prompt, to roll back code, conversation or both |
+   | A file was changed only by a Bash command | `/rewind` does not track it; use Git (`git restore <file>`) |
+   | Last commit message or content is wrong, not pushed | `git commit --amend` (standard Git) |
+   | A commit is already pushed or shared | Use `git revert` (standard Git) to add a new undoing commit rather than rewriting shared history |
+
+   The checkpointing page says checkpoints are for quick session-level recovery and that you should keep using Git for commits, branches and long-term history. Rewinding does not replace your commits.
+
+</Steps>
+
+## Quick reference
+
+| Task | Command or place |
+| --- | --- |
+| New branch | `git switch -c <name>` |
+| Isolated parallel session | `claude --worktree <name>` |
+| See what changed | `git status`, `git diff` |
+| Ask before pushing | `"ask": ["Bash(git push *)"]` in `.claude/settings.json` |
+| Create a PR | ask "create a pr" (Claude uses `gh pr create`) |
+| Reopen a PR's session | `claude --from-pr 1234` (your own number) |
+| Roll back Claude's edits | `/rewind` or `Esc` twice on an empty prompt |
+| Review before merge | `/code-review` |
+
+## Common problems
+
+### The commit contains files I did not mean to include
+
+- **Cause**: Everything was staged at once.
+- **Fix**: Run `git status` before committing and stage named files. To remove one from staging, use `git restore --staged <file>`.
+
+### The commit message says more than the change does
+
+- **Cause**: The message was drafted from the goal, not the actual diff.
+- **Fix**: Ask Claude to base the message only on `git diff`, and edit it yourself.
+
+### Claude could not create the PR
+
+- **Cause**: No remote, no signed-in `gh`, or no commits pushed yet. We have not confirmed the exact error messages.
+- **Fix**: Check `git remote -v` and `gh auth status` yourself, push the branch, then ask again.
+
+### /rewind did not undo a change
+
+- **Cause**: The file was changed only by a Bash command, which checkpoints do not track.
+- **Fix**: Use Git: `git restore <file>` or `git switch` back to a clean branch.
+
+## Practical tips
+
+- Practice in a throwaway repository first, then move to real work.
+- Commit before you start a big Claude task, so you have a clean point to return to.
+- Read every diff yourself. A commit message that sounds right can still describe the wrong change.
+- Never commit secrets. If one was committed or pushed, treat it as exposed and rotate it.
+- Re-check commands against the official pages, since Claude Code changes often.
+
+## Next tutorials
+
+- [1. Getting started with Claude Code](/coding/06-claude-code-start/)
+- [3. Handing off work to cloud sessions](/coding/08-cloud-github/)
+- [13. Tune settings and permissions](/coding/40-settings-permissions/) — ask and deny rules
+- [15. AI code review](/coding/42-code-review-ai/)
+- [Developer guide](/roles/developer/)

@@ -1,0 +1,194 @@
+---
+title: "Compare Deep Research Agents: Claude, Gemini and ChatGPT"
+description: "How to start a research report in Claude, Gemini and ChatGPT, what each official page confirms about sources, plans and availability, and a routine for checking a long report before you rely on it"
+sidebar:
+  label: "8. Deep research agents"
+level: practical
+category: agents
+tools: ["Claude Research", "Gemini Deep Research", "ChatGPT deep research"]
+duration: "30 min"
+prerequisites:
+  - "Have used web search in at least one AI service"
+  - "It helps to have read the fact-checking article (Basics 4)"
+lastVerified: 2026-11-02
+sources:
+  - title: "Use research on Claude"
+    url: "https://support.claude.com/en/articles/11088861-use-research-on-claude"
+  - title: "When should I use web search, extended thinking, and research?"
+    url: "https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research"
+  - title: "Use Deep Research in Gemini Apps"
+    url: "https://support.google.com/gemini/answer/15719111"
+  - title: "Web search (OpenAI, ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/web-search"
+status: published
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- Claude, Gemini and ChatGPT each have a mode that runs many searches and returns **a report with sources**. The names are Research, Deep Research, and deep research.
+- Where to start it differs: Claude's **+** menu then Research (web search must be on), Gemini's **Add Files** menu then Deep Research, and ChatGPT's **+** menu then Deep research inside Work, if it's available to your account.
+- Gemini shows you a **research plan you can edit** before it starts. Claude's and ChatGPT's pages we read don't describe a plan step.
+- The report is a draft written by an AI. This article's main routine is **checking the sources, then the key claims, then what's missing**.
+- Plan and limit details change often and some official pages were blocked, so anything we could not confirm is marked as unconfirmed.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Pick the right mode for a question: quick answer, or multi-source report.
+- Start a research report in each of the three services and know what to set first.
+- Check a finished report in three passes instead of trusting it as is.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Research agent** | A mode where the AI runs many searches, decides what to look into next from what it finds, and writes a longer report. It's different from a normal chat answer or a single web search. |
+| **Source** | A web page, file or connected app item the report draws on. Good reports let you open each one. |
+| **Research plan** | A list of what the AI intends to look into. Gemini shows one before it starts. |
+| **Unsupported claim** | A statement in the report that the cited page doesn't actually say. |
+
+For single-service details, see [C10. Claude Research](/claude/c10-research/) and [AI search compared](/chat/22-ai-search/). This article focuses on **comparing the three and checking the output**.
+
+### What the official pages confirm
+
+| Service | Official statement (paraphrased) |
+| --- | --- |
+| Claude | Research investigates a question in depth with multiple searches that build on each other. It's available on paid plans (Pro, Max, Ultra, Team, Enterprise) on the web, Claude Desktop and Claude Mobile. Web search must be on. Research can use connectors such as Google Workspace, but a research started in Claude Mobile searches only the web, with no error shown. |
+| Claude | Research is subject to the same limits as normal conversations, but can use them up faster. It runs on Claude Opus 5.5, falling back to Claude Opus 4.8, whichever model you picked for the chat. |
+| Claude | The "when to use" page says research suits gathering that needs five or more tool calls over 1 to 3 minutes, and synthesizes sources with citations into a longer report. Web search suits simple factual questions. |
+| Gemini | Deep Research needs you to be 18 or over and signed in. Google Search is a source by default, and you can add Gmail, Drive, uploaded files and NotebookLM notebooks. Gmail and Drive need the Google Workspace app connected. |
+| Gemini | Gemini makes a research plan you can change with **Edit plan**, then you click **Start research**. A report usually takes about 5 to 10 minutes, longer if complex, and you can leave the chat. |
+| Gemini | Daily and simultaneous request limits exist; Pro and Ultra users get higher limits. Past reports can be found only if Keep Activity is on. Reports can be shared, exported to Docs or copied. |
+| ChatGPT | The ChatGPT docs describe deep research in Work for questions that need investigation across multiple sources and a report you can review. On the web, open the **+** menu and select Deep research, if available for your account and workspace. In the desktop app it's a Deep research plugin. Results show sources, and you can ask follow-up questions. |
+| ChatGPT | Treat all web results as untrusted input. |
+
+<Aside type="note" title="Official statements vs. this site's recommendations">
+The table above is what the pages said when we read them on 2026-11-02. The routines, prompts and the "which to use" suggestions below are **this site's recommendations**, not official requirements.
+</Aside>
+
+### What we could not confirm
+
+- **ChatGPT plan eligibility and usage limits for deep research.** OpenAI's help-center article and announcement page returned a block page to a plain request, and we did not work around it. The docs page we read says only that it depends on your account and workspace.
+- **Typical ChatGPT report time**, and whether ChatGPT shows an editable plan first.
+- **Exact Gemini daily numbers.** The page says limits exist but the figures are on a separate page we did not open.
+- **Claude's report time** beyond the "1 to 3 minutes" the guidance page gives for research-style work.
+- Features and model names change often, so check your own screen.
+
+## Step by step
+
+<Checklist items={[
+  '1. I decided whether a quick search or a full report fits',
+  '2. I wrote the question, scope, time range and output format',
+  '3. I chose the sources: web only, or also my files and apps',
+  '4. I started the research and reviewed the plan if the service shows one',
+  '5. I opened the cited sources for the key claims',
+  '6. I asked what was left out or disagreed',
+  '7. I saved the final version with the date and sources',
+]} />
+
+### 1. Decide: quick search or full report
+
+By the Claude guidance, simple factual questions fit web search and multi-source comparison fits research. A report takes minutes and, in Claude, can use up your limit faster, so don't use it for a question one search can answer. This is the same split as in [AI search compared](/chat/22-ai-search/).
+
+### 2. Write a clear brief (this site's recommendation)
+
+A vague question gives a long, vague report. State the question, who it's for, the time range, regions, and what format you want.
+
+<PromptBox>
+Research whether a small team of 10 people should move from spreadsheets to a project management tool. Compare three common options on price, learning time and data export. Use sources from the last 12 months. Return a table first, then a short recommendation, and list every source with its date. Mark anything you could not verify.
+</PromptBox>
+
+### 3. Start it in each service
+
+| Service | How to start (per the pages we read) | Set first |
+| --- | --- | --- |
+| **Claude** | Turn on web search. Click **+** at the bottom left of the chat, then **Research**. A blue indicator appears. If Claude doesn't research, say "please use the research tool to..." | Start on web or Desktop (not Mobile) if you want connectors used |
+| **Gemini** | On gemini.google.com, open **Add Files** then **Deep Research**. Optionally add files and choose **Sources**. Submit, then **Edit plan** if needed, then **Start research** | Sources: deselect Google Search to limit to other sources. Gmail and Drive need Workspace connected |
+| **ChatGPT** | Web: start a chat in **Work**, open **+**, pick **Deep research**. Desktop: Work, Plugins, Deep research | Describe the question, scope and result. Add files or connected app context |
+
+<Aside type="caution" title="Connected apps and private data">
+Claude's help page says research can use connector tools automatically without asking each time, and Gemini can use Gmail and Drive as sources. If your question doesn't need private mail or files, leave them off ([Basics 12](/basics/12-privacy-settings/)).
+</Aside>
+
+### 4. Review the plan if there is one
+
+Gemini shows a plan before it starts. Remove topics you don't want and add ones you do. We did not find a plan step described on the Claude and ChatGPT pages we read, so for those, put the scope in your brief instead.
+
+### 5. Check the report in three passes (this site's recommendation)
+
+1. **Sources.** Open at least five cited links. Is each real, relevant, recent, and from an original or reputable source?
+2. **Claims.** For the three or four claims your decision depends on, find the sentence on the source page that supports it. If you can't, treat the claim as unsupported ([Basics 4](/basics/04-fact-checking/)).
+3. **Gaps.** What did the report not cover? Which sources disagree? Were any of the key sources behind a paywall or unreachable?
+
+<PromptBox>
+For each numbered claim in your report, give the source URL, the exact sentence you relied on, and whether you read the page directly or inferred it. Then list the questions you could not answer and any sources that disagree with each other.
+</PromptBox>
+
+### 6. Run the same question in two services
+
+For an important decision, run the same brief in two services and compare. Differences point to where to look harder. Agreement isn't proof either, because they may rely on the same popular pages.
+
+| Compare | What to notice |
+| --- | --- |
+| Sources used | Overlap, and sources only one service found |
+| Numbers | Any figure that differs, and which page each came from |
+| Conclusion | Whether the recommendation changes with the evidence |
+| Dates | Which pages are old |
+
+### 7. Save and date it
+
+Reports can be shared or exported in Gemini (Docs export), and past reports are found only with Keep Activity on. Copy the final text and its sources into your own notes with today's date, since the live page may change.
+
+## Quick reference
+
+| Situation | Suggestion (this site's recommendation) |
+| --- | --- |
+| One fact, one answer | Normal web search |
+| Compare options, 5 or more sources | Research mode |
+| Need to steer the topic list | Gemini's Edit plan, or a detailed brief elsewhere |
+| Need your own files in it | Check each service's source options first |
+| Money, health, legal | Use the report only as a starting point; verify yourself ([Basics 13](/basics/13-sensitive-questions/)) |
+
+## Common sticking points
+
+### Claude doesn't seem to be researching
+
+- **Cause**: Research is on but Claude answered normally, or web search is off.
+- **Fix**: Turn on web search, and say "please use the research tool to..." as the help page suggests.
+
+### My connectors weren't used
+
+- **Cause**: Research started in Claude Mobile only searches the web, with no error.
+- **Fix**: Start it in Claude on the web or Desktop.
+
+### I can't find an old Gemini report
+
+- **Cause**: Past reports can be found only if Keep Activity is on.
+- **Fix**: Check that setting, and export important reports when they finish.
+
+### The report cites a page that doesn't say that
+
+- **Cause**: AI can misread or over-summarize a source.
+- **Fix**: Ask for the exact sentence, open the page, and drop unsupported claims.
+
+## Practical tips
+
+- **Narrow the scope.** One focused question beats "everything about X."
+- **Give dates.** Say "from the last 12 months" to avoid stale pages.
+- **Ask for disagreement.** A report that never disagrees may be hiding gaps.
+- **Don't paste secrets** into a research prompt.
+- **Copyright.** Summaries are fine to read, but don't republish long passages ([Basics 9](/basics/09-ai-copyright-ethics/)).
+- **Features change often.** This article is as of 2026-11-02, so check the live screens.
+- We read the help pages only and did not run a research report for this article, so the step lists reflect the official wording, not our own test.
+
+## What to read next
+
+- [C10. Claude Research](/claude/c10-research/): Claude's research in more detail
+- [AI search compared](/chat/22-ai-search/): quick search across services
+- [Part 7: Reviewing agent work](/agents/07-reviewing-agent-work/): checking results after an agent finishes
+- [Basics 4: Fact-checking AI answers](/basics/04-fact-checking/): how to verify claims
+- [Basics 9: AI, copyright and ethics](/basics/09-ai-copyright-ethics/): using results responsibly
