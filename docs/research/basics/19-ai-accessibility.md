@@ -1,0 +1,13 @@
+# basics/19 AI for accessibility (Y1, 2026-11-02)
+All pages fetched one at a time with plain curl (-sSL, no UA change). Tags = what the page said.
+- support.claude.com/en/articles/11101966-using-voice-mode (200): voice mode is beta on all plans (Free..Enterprise) on mobile, desktop, web, "built to work best from your phone"; web: sound wave symbol lower right; mobile: sound wave icon next to mic; hands-free (default) and push-to-talk; voice + pace settings (Settings > Capabilities > Voice settings on web; settings button in voice mode on mobile); counts toward usage limits; text<->voice in same conversation; transcripts saved in chat history; dictation = speech to text vs voice mode two-way; non-English support is beta; dictation (not voice mode) in Cowork/Code.
+- support.claude.com/en/articles/8241126-uploading-files-to-claude (200): images JPEG/PNG/GIF/WebP; "+" > Add files or photos, drag/drop, paste from clipboard; chat image dimensions up to 8000x8000; use 1000x1000+ images.
+- support.google.com/gemini/answer/15274899 (200): Gemini Live needs Android phone/tablet + Gemini mobile app; not in Gemini web app; mute, hold, switch Live/text; camera and screen sharing; ask permission before recording others; Guided Vision link; features released gradually.
+- support.google.com/gemini/answer/18365638 (200): Guided Vision in Live, rolling out slowly; audio descriptions (fine print on labels, colors, low-lit menus, household objects); setting "Use Guided Vision in Live" on Android; accessibility shortcut.
+- support.google.com/gemini/answer/15277943 (200): Gemini voice can be changed; only in the Gemini mobile app for now; not in all languages. (Read header only.)
+- learn.chatgpt.com/docs/features/voice.md (200): ChatGPT Voice, GPT-Live, in the ChatGPT desktop app for Plus/Pro/Business/Edu/Enterprise; focused on Chat/Work/Codex tasks; Codex on iOS mention.
+- learn.chatgpt.com/docs/image-inputs.md (200): attach/paste/drag image into ChatGPT web composer; say what to inspect.
+- Also fetched, not cited: support.google.com/gemini/answer/14579631 (what you can do with Gemini mobile app; general voice text only); first guesses support.google.com/gemini/answer/15280307 (404).
+## Unconfirmed
+- ChatGPT phone-app voice, read-aloud button, accessibility settings; any Claude/Gemini read-aloud (text-to-speech of written answers) feature; accuracy on handwriting/low-quality photos; behavior with screen readers (VoiceOver/TalkBack); Claude Mobile dictation page not read; help.openai.com not tried (blocked in earlier notes).
+- No code/commands run; no features tested; build only.
