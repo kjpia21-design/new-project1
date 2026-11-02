@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 유료 플랜 (Cowork는 Pro, Max, Ultra, Team, Enterprise)"
   - "(내 컴퓨터의 파일·브라우저를 쓰려면) macOS 또는 Windows의 Claude Desktop 앱"
   - "C3(Claude 앱 시작하기)를 읽어 봤다면 더 수월해요"
-lastVerified: 2026-10-31
+lastVerified: 2026-11-02
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -37,10 +37,10 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 
 <Summary>
 - **Cowork**는 Claude Code의 에이전트 방식을 **코딩이 아닌 일반 업무**에 가져온 기능이에요. 결과물(결과 형태)을 말하면 Claude가 계획을 세우고, 여러 단계를 스스로 실행해서 문서·스프레드시트·정리된 파일로 돌려줘요. 터미널은 필요 없어요.
-- **유료 플랜(Pro, Max, Ultra, Team, Enterprise)**에서 쓸 수 있어요. 내 컴퓨터의 폴더·브라우저·앱을 쓰는 작업은 **macOS 또는 Windows의 Claude Desktop 앱**이 열려 있어야 해요(2026-10-15 기준).
-- Pro와 Max에서는 2026-10-06부터 **새 Cowork 작업이 클라우드에서 실행**돼요. 노트북을 닫아도 계속 돌고, 폰·웹에서 이어 볼 수 있어요. 단, 내 폴더에 접근하는 단계는 데스크톱 앱이 열려 있을 때만 돼요.
+- **유료 플랜(Pro, Max, Ultra, Team, Enterprise)**에서 쓸 수 있어요. 내 컴퓨터의 폴더·브라우저·앱을 쓰는 작업은 **macOS 또는 Windows의 Claude Desktop 앱**이 열려 있어야 해요(2026-11-02 기준).
+- Pro, Max, Ultra에서는 2026-10-06부터 **새 Cowork 작업이 클라우드에서 실행**돼요. 노트북을 닫아도 계속 돌고, 폰·웹에서 이어 볼 수 있어요. 단, 내 폴더에 접근하는 단계는 데스크톱 앱이 열려 있을 때만 돼요.
 - Cowork와 채팅은 **하나의 Claude로 합쳐지는 중**이에요. 계정마다 시점이 달라서, 입력창에 "Chat"·"Cowork" 선택이 보이면 아직 이전 화면이에요.
-- 승인 방식은 **Manual(기본)**과 **Auto**가 있어요. 돈·메시지 발송·중요한 파일이 걸린 일은 Manual로, 그리고 **민감한 폴더는 아예 연결하지 않는** 것이 가장 확실한 안전 수칙이에요.
+- 승인 방식은 **Manual**, **Auto**, **Skip** 세 가지예요. Pro, Max, Ultra, Team은 Auto가 기본이고 Enterprise는 Manual이 기본이에요(2026-11-02 기준). 돈·메시지 발송·중요한 파일이 걸린 일은 Manual로, 그리고 **민감한 폴더는 아예 연결하지 않는** 것이 가장 확실한 안전 수칙이에요.
 </Summary>
 
 ## 이 튜토리얼로 할 수 있게 되는 것
@@ -71,11 +71,11 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 | **Claude Code 클라우드 세션** | GitHub 저장소의 코드 작업을 맡길 때 | [C13](/ko/claude/c13-cloud-sessions/) |
 | **반복 실행** | 정해진 일정에 자동으로 돌릴 때 | [C18](/ko/claude/c18-automate-recurring/) |
 
-<Aside type="note" title="Cowork는 이제 그냥 Claude예요 (2026-10-15 기준)">
-공식 도움말은 "Claude Cowork is now just Claude"라고 안내해요. 질문을 하면 Claude가 빠른 답변으로 할지 긴 작업으로 할지 스스로 정해요. Pro와 Max부터 단계적으로 열리고 있고, Enterprise에서는 관리자가 베타 설정을 켜야 해요. 입력창에 "Chat"과 "Cowork" 선택이 아직 보이면 이전 화면이고, 한번 새 경험으로 넘어가면 되돌릴 수 없다고 안내돼요. 이 글은 두 화면 모두에 통하게 썼어요. 내 화면이 다르면 [공식 도움말](https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude)을 확인하세요.
+<Aside type="note" title="Cowork는 이제 그냥 Claude예요 (2026-11-02 기준)">
+공식 도움말은 "Claude Cowork is now just Claude"라고 안내해요. 질문을 하면 Claude가 빠른 답변으로 할지 긴 작업으로 할지 스스로 정해요. Pro, Max, Ultra에 단계적으로 열리고 있고, Team(베타)과 Enterprise에서는 "Chat and Cowork unified" 설정이 켜진 곳에서만 쓸 수 있어요. 입력창에 "Chat"과 "Cowork" 선택이 아직 보이면 이전 화면이고, 한번 새 경험으로 넘어가면 되돌릴 수 없다고 안내돼요. 이 글은 두 화면 모두에 통하게 썼어요. 내 화면이 다르면 [공식 도움말](https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude)을 확인하세요.
 </Aside>
 
-### 어디서 쓸 수 있나요? (2026-10-31 기준)
+### 어디서 쓸 수 있나요? (2026-11-02 기준)
 
 | 기기 | 제공 |
 | --- | --- |
@@ -83,14 +83,14 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 | 웹 (claude.ai)·모바일 (iOS, Android) | Pro, Max, Ultra, Team(Team은 베타). Enterprise는 관리자가 켠 경우 |
 | Chrome 사이드 패널 | 모든 유료 플랜. Enterprise는 관리자가 Claude in Chrome과 클라우드 Cowork를 켜야 해요 |
 
-Linux 데스크톱은 2026-10-31 기준 Cowork 시작 가이드에 "Linux (beta)"로 올라 있어요. 같은 문서가 로컬 파일·브라우저·컴퓨터 사용에는 macOS 또는 Windows의 Claude Desktop 앱이 필요하다고 안내하니, Linux에서 되는 범위는 화면 안내와 공식 도움말로 확인하세요. 컴퓨터 사용은 macOS·Windows만 된다고 [C11](/ko/claude/c11-chrome-computer-use/)에 정리돼 있어요. 한국에서의 Cowork 제공은 Claude 자체가 한국에서 제공되는지(Anthropic 제공 국가 목록에 South Korea 포함, 2026-10-15 확인)까지만 확인했고, Anthropic 제공 국가 정책 페이지는 Cowork도 같은 규칙의 적용 대상으로 두고 Cowork만의 지역 제한은 적지 않았어요(2026-10-19 확인).
+Linux 데스크톱은 2026-11-02 기준 Cowork 시작 가이드에 "Linux (beta)"로 올라 있어요. 같은 문서가 로컬 파일·브라우저·컴퓨터 사용에는 macOS 또는 Windows의 Claude Desktop 앱이 필요하다고 안내하니, Linux에서 되는 범위는 화면 안내와 공식 도움말로 확인하세요. 컴퓨터 사용은 macOS·Windows만 된다고 [C11](/ko/claude/c11-chrome-computer-use/)에 정리돼 있어요. 한국에서의 Cowork 제공은 Claude 자체가 한국에서 제공되는지(Anthropic 제공 국가 목록에 South Korea 포함, 2026-11-02 확인)까지만 확인했고, Anthropic 제공 국가 정책 페이지는 Cowork도 같은 규칙의 적용 대상으로 두고 Cowork만의 지역 제한은 적지 않았어요(2026-10-19 확인).
 
 ## 단계별 따라하기
 
 <Checklist items={[
   'Claude Desktop을 설치하고 유료 플랜 계정으로 로그인했어요',
   '작업용 폴더를 따로 만들고 민감한 파일은 넣지 않았어요',
-  '승인 방식을 Manual(기본)로 두고 첫 작업을 시작했어요',
+  '승인 방식을 Manual로 설정하고 첫 작업을 시작했어요',
   '진행 상황을 지켜보며 필요한 순간에 방향을 바꿨어요',
   '결과물을 내가 검토한 뒤 사용했어요',
   '(선택) 낮은 위험의 반복 작업만 예약해 봤어요',
@@ -124,9 +124,9 @@ Linux 데스크톱은 2026-10-31 기준 Cowork 시작 가이드에 "Linux (beta)
 
    | 방식 | 동작 |
    | --- | --- |
-   | **Manual (기본)** | 행동마다 허용·거부를 물어요. 예전 이름은 "Ask before acting"이에요. |
-   | **Auto** | 멈추지 않고 진행하되, 매 행동을 안전 검사하고 위험하면 막아요. 막힘이 반복되면 다시 하나씩 물어요. 추가 검사 때문에 **사용량을 더 쓴다**고 안내돼요. |
-   | **Skip all approvals** | 묻지도, 검사하지도 않아요. 모든 요소를 완전히 믿을 때만 쓰세요. |
+   | **Manual** | 행동마다 허용·거부를 물어요. 예전 이름은 "Ask before acting"이에요. Enterprise의 기본값이에요. |
+   | **Auto** (Pro, Max, Ultra, Team의 기본) | 멈추지 않고 진행하되, 매 행동을 안전 검사하고 위험하면 막아요. 막힘이 반복되면 다시 하나씩 물어요. 추가 검사 때문에 **사용량을 더 쓴다**고 안내돼요. |
+   | **Skip** (예전 이름: "Act without asking") | 묻지도, 검사하지도 않아요. 모든 요소를 완전히 믿을 때만 쓰세요. |
 
    어떤 방식에서든 **파일 영구 삭제 전에는 항상 허락을 물어요**. 처음에는 Manual로 시작하세요.
 
@@ -149,7 +149,7 @@ Linux 데스크톱은 2026-10-31 기준 Cowork 시작 가이드에 "Linux (beta)
 
 ## 빠른 참조표
 
-### 사용할 수 있는 것과 필요한 것 (2026-10-15 기준)
+### 사용할 수 있는 것과 필요한 것 (2026-11-02 기준)
 
 | 기능 | 어디서 | 데스크톱 앱 필요? |
 | --- | --- | --- |
@@ -159,9 +159,9 @@ Linux 데스크톱은 2026-10-31 기준 Cowork 시작 가이드에 "Linux (beta)
 | 프로젝트 | 모든 곳 | 로컬 폴더와 묶인 프로젝트는 데스크톱만 |
 | 내 컴퓨터의 폴더·파일 | 데스크톱 시작 작업, 웹·모바일에서 이어 볼 때 | **예.** 앱이 열려 있을 때만 |
 | 브라우저 사용(내장 브라우저, Claude in Chrome) | 데스크톱 중심 | **예** |
-| 컴퓨터 사용 | Pro·Max 베타 | **예** |
+| 컴퓨터 사용 | Pro·Max·Ultra 베타 | **예** |
 
-### 알아둘 한계 (2026-10-15 기준)
+### 알아둘 한계 (2026-11-02 기준)
 
 - **세션 공유 불가**: 세션 자체는 다른 사람과 공유할 수 없어요. 만든 아티팩트는 개별로 공유할 수 있어요.
 - **데스크톱 전용 기능**이 일부 있어요(2026-08-19 이전에 만든 라이브 아티팩트, 로컬 MCP 서버가 든 플러그인).
@@ -196,7 +196,7 @@ Linux 데스크톱은 2026-10-31 기준 Cowork 시작 가이드에 "Linux (beta)
 
 ### 이전에 쓰던 로컬 전용 작업은 어떻게 되나요?
 
-- 2026-10-06 이후 Pro·Max의 새 작업은 클라우드에서 돌고, "Only on your computer" 옵션은 없어졌어요. 이미 시작한 로컬 작업은 끝낼 때까지 로컬에 남아요. 내 컴퓨터에서만 돌리려면 데스크톱의 Claude Code를 쓰라고 안내돼요([C12](/ko/claude/c12-claude-code-overview/)). Cowork 작업 데이터를 내려받아 Claude Code로 가져가는 절차도 공식 문서에 있어요.
+- 2026-10-06 이후 Pro·Max·Ultra의 새 작업은 클라우드에서 돌고, "Only on your computer" 옵션은 없어졌어요. 이미 시작한 로컬 작업은 끝낼 때까지 로컬에 남아요. 내 컴퓨터에서만 돌리려면 데스크톱의 Claude Code를 쓰라고 안내돼요([C12](/ko/claude/c12-claude-code-overview/)). Cowork 작업 데이터를 내려받아 Claude Code로 가져가는 절차도 공식 문서에 있어요.
 
 ## 실전 팁
 
@@ -209,7 +209,7 @@ Linux 데스크톱은 2026-10-31 기준 Cowork 시작 가이드에 "Linux (beta)
 - **기억 범위를 정하세요.** 클라우드 세션은 채팅의 메모리를 이어 써요. 메모리 없이 한 번만 돌리려면 시작 전에 "+" 메뉴에서 Memory를 끄세요. 시작 후에는 바꿀 수 없어요([C9](/ko/claude/c09-memory-settings/)).
 - **지울 수 있어요.** 작업은 언제든 삭제할 수 있고, 백엔드 저장소에서는 30일 안에 지워진다고 안내돼요.
 
-<Aside type="caution" title="확인하지 못한 항목 (2026-10-31 기준)">
+<Aside type="caution" title="확인하지 못한 항목 (2026-11-02 기준)">
 폴더를 연결하는 정확한 메뉴 이름과 순서, 그리고 Linux 베타에서 정확히 어떤 기능이 되는지는 이번에 읽은 공식 도움말에서 확인하지 못했어요. 화면 안내와 공식 도움말을 우선하세요.
 </Aside>
 

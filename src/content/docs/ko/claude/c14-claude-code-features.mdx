@@ -11,7 +11,7 @@ prerequisites:
   - "Claude Code가 설치된 터미널 (설치는 C12 참고)"
   - "작업할 프로젝트 폴더 하나"
   - "(훅 예제를 따라 한다면) jq와 Node.js(npx)"
-lastVerified: 2026-10-26
+lastVerified: 2026-11-02
 sources:
   - title: "How Claude remembers your project (CLAUDE.md, auto memory)"
     url: "https://code.claude.com/docs/en/memory"
@@ -314,7 +314,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 | --- | --- | --- |
 | local (기본) | `~/.claude.json` | 나만, 이 프로젝트에서 |
 | project | `.mcp.json` | 팀과 공유 |
-| user | 사용자 설정 | 내 모든 프로젝트 |
+| user | `~/.claude.json` | 내 모든 프로젝트 |
 
 claude.ai 계정으로 로그인하면 claude.ai/customize/connectors의 커넥터가 `/mcp`에 자동으로 보여요(Team/Enterprise는 관리자만 추가해요). SSE 방식은 deprecated예요.
 

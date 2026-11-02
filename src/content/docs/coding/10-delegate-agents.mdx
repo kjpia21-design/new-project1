@@ -11,7 +11,7 @@ prerequisites:
   - "A paid Claude plan (routines are on Pro, Max, Ultra, Team, and Enterprise)"
   - "A GitHub account and one practice repository"
   - "Experience with Tutorials 6 and 8 (or C12 and C13)"
-lastVerified: 2026-10-31
+lastVerified: 2026-11-02
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -39,7 +39,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 - The order for delegating recurring work is **① do it by hand once → ② lock in the format with a skill → ③ split research and review with a subagent → ④ run it automatically with a routine**.
 - A **skill** is an instruction sheet (`SKILL.md`) that says "do it this way, in this format". A **subagent** is a helper agent with its own context and tool permissions. A **routine** is a feature that saves a prompt, repositories, and connectors and runs them automatically in the cloud.
 - Routines run autonomously while no one is watching. Keep the **prompt self-contained, and include only the connectors and repositories you need**.
-- Routines are currently a research preview (as of 2026-10-26). Behavior and limits may change.
+- Routines are currently a research preview (as of 2026-11-02). Behavior and limits may change.
 - The official docs now call this feature **scheduled tasks (formerly routines)**. This tutorial keeps saying "routines", but you may see either name on screen and in the docs. The address (claude.ai/code/routines) and `/schedule` (alias `/routines`) are unchanged.
 - The scenarios in this tutorial (weekly report, docs check) are **examples** made by this site. They aren't cases of the same name in the official docs.
 </Summary>
@@ -71,7 +71,7 @@ The three tools complement each other. A skill handles **how**, a subagent handl
 | The material is in a repository or connector | The material is only in your head or on paper |
 
 <Aside type="caution" title="Routines run while no one is watching">
-You don't choose a permission mode when creating a routine. According to the official docs (as of 2026-10-26), sessions that run in Anthropic's cloud start in auto mode, where a classifier allows or blocks actions waiting for approval (if auto mode isn't available, they keep the permission mode they started with). So running shell commands and writes through connected connectors can proceed without a person's approval. However, if an action hits an ask rule or there are repeated blocks, the run stops and waits for an answer. So have it produce **reversible outputs (a branch and a draft)**, and design it so a person does the final send or merge. Commits and PRs made by a routine are recorded under your GitHub username.
+You don't choose a permission mode when creating a routine. According to the official docs (as of 2026-11-02), sessions that run in Anthropic's cloud start in auto mode, where a classifier allows or blocks actions waiting for approval (if auto mode isn't available, they keep the permission mode they started with). So running shell commands and writes through connected connectors can proceed without a person's approval. However, if an action hits an ask rule or there are repeated blocks, the run stops and waits for an answer. So have it produce **reversible outputs (a branch and a draft)**, and design it so a person does the final send or merge. Commits and PRs made by a routine are recorded under your GitHub username.
 </Aside>
 
 ## Step-by-step guide
@@ -209,7 +209,7 @@ This scenario is **"Every Friday afternoon, gather the week's notes and make a w
 
 ## Quick reference
 
-### Comparing the three tools (as of 2026-10-26)
+### Comparing the three tools (as of 2026-11-02)
 
 | | Skill | Subagent | Routine |
 | --- | --- | --- | --- |

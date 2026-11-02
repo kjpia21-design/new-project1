@@ -11,7 +11,7 @@ prerequisites:
   - "A Claude Console account (platform.claude.com)"
   - "Billing set up for API use (separate from a Pro/Max/Ultra subscription)"
   - "A terminal, and Python 3.10 or later (for the Python examples)"
-lastVerified: 2026-10-31
+lastVerified: 2026-11-02
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -48,7 +48,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 - You create keys in the Console under Settings > API keys. They start with `sk-ant-`, and the full key is shown **only once, when you create it**.
 - If you put the key in the `ANTHROPIC_API_KEY` environment variable, the SDK reads it automatically. **Never write the key directly in your code.**
 - The model IDs are `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5`, and `claude-fable-5-1`.
-- Prices per 1M tokens (input/output) are $4/$20 for Opus 5.5 and $2/$10 for Sonnet 5.5 (as of 2026-10-10).
+- Prices per 1M tokens (input/output) are $4/$20 for Opus 5.5 and $2/$10 for Sonnet 5.5 (as of 2026-11-02).
 - If you only swap the model ID in an example, **each model blocks different parameters.** Opus 5.5 can't turn thinking off, and Haiku 5.5 returns a 400 error for `budget_tokens` and sampling parameters. See the quick reference tables for details.
 </Summary>
 
@@ -82,7 +82,7 @@ The screen formerly called Workbench was renamed **Playground** on 2026-08-18 (p
 | Workspace key | Legacy. |
 
 <Aside type="note" title="Tiers and billing notes">
-Rate limits are set by usage tier (Start, Build, Scale, Custom), and your organization is placed automatically based on usage history (official Rate limits docs, 2026-10-10). Monthly spend caps are $500 for Start, $1,000 for Build, and $200,000 for Scale, and per-model requests-per-minute and token limits differ by tier. For example, Sonnet 5.5 on the Start tier allows 1,000 requests, 2,000,000 input tokens, and 400,000 output tokens per minute. New organizations may start on an Evaluation tier that's lower than this. To add credits, per the official billing help, sign in to the Console with the Admin or Billing role, go to Settings > Billing, click "Buy credits," enter an amount, and confirm. Purchased credits apply right away (confirmed 2026-10-13). Purchased credits expire one year after the purchase date, the expiration date can't be extended, and they are non-refundable (confirmed 2026-10-19). The minimum and maximum purchase amounts aren't stated in this help article. Organizations on invoice (billed) contracts are billed monthly. For adding a payment method, follow the prompts in the Console.
+Rate limits are set by usage tier (Start, Build, Scale, Custom), and your organization is placed automatically based on usage history (official Rate limits docs, 2026-11-02). Monthly spend caps are $500 for Start, $1,000 for Build, and $200,000 for Scale, and per-model requests-per-minute and token limits differ by tier. For example, Sonnet 5.5 on the Start tier allows 4,000 requests, 2,000,000 input tokens, and 400,000 output tokens per minute. New organizations may start on an Evaluation tier that's lower than this. To add credits, per the official billing help, sign in to the Console with the Admin or Billing role, go to Settings > Billing, click "Buy credits," enter an amount, and confirm. Purchased credits apply right away (confirmed 2026-10-13). Purchased credits expire one year after the purchase date, the expiration date can't be extended, and they are non-refundable (confirmed 2026-10-19). The minimum and maximum purchase amounts aren't stated in this help article. Organizations on invoice (billed) contracts are billed monthly. For adding a payment method, follow the prompts in the Console.
 </Aside>
 
 ## Step by step
@@ -211,7 +211,7 @@ Rate limits are set by usage tier (Start, Build, Scale, Custom), and your organi
 
 ## Quick reference
 
-### Model IDs and prices (per 1M tokens, input/output, as of 2026-10-10)
+### Model IDs and prices (per 1M tokens, input/output, as of 2026-11-02)
 
 Prices are in US dollars. For details, check the [official pricing page](https://platform.claude.com/docs/en/about-claude/pricing).
 
@@ -234,14 +234,14 @@ Prices are in US dollars. For details, check the [official pricing page](https:/
 | Headers | `content-type: application/json`, `x-api-key: $ANTHROPIC_API_KEY`, `anthropic-version: 2023-06-01` (per the official quickstart. See below for the new API version. As of 2026-10-26, the migration docs say the API accepts the key through both the `X-Api-Key` and `Authorization: Bearer <key>` headers) |
 | Body | `model`, `max_tokens`, `messages` (the system prompt goes in `system`) |
 
-### Per-model request restrictions (watch for 400 errors, as of 2026-10-11)
+### Per-model request restrictions (watch for 400 errors, as of 2026-11-02)
 
 If you only change `model` in an example, you can hit a 400 error for the reasons below. This follows the official release notes.
 
 | Model | Restriction |
 | --- | --- |
-| Opus 5.5 | You can't turn thinking off. `thinking: {"type": "disabled"}` and `{"type": "enabled", ...}` return a 400 error. Leave out the `thinking` field and control depth with `effort`. `tool_choice` of `any` or `tool` also returns a 400 error, so use `auto` and strict tool use. |
-| Sonnet 5.5 | `tool_choice` of `any` or `tool` returns a 400 error. Use `auto` and strict tool use. (The 400 restriction on sampling parameters applies to the earlier-generation Sonnet 5 and Haiku 5.5, not Sonnet 5.5.) |
+| Opus 5.5 | Sampling parameters (`temperature`, `top_p`, `top_k`) and assistant message prefill also return a 400 error. You can't turn thinking off. `thinking: {"type": "disabled"}` and `{"type": "enabled", ...}` return a 400 error. Leave out the `thinking` field and control depth with `effort`. `tool_choice` of `any` or `tool` also returns a 400 error, so use `auto` and strict tool use. |
+| Sonnet 5.5 | Five settings return a 400 error: thinking budgets (`budget_tokens`), sampling parameters (`temperature`, `top_p`, `top_k`), assistant message prefill, `tool_choice` of `any` or `tool` (use `auto` and strict tool use), and `thinking: {"type": "disabled"}` (to turn off up-front thinking, use `thinking: {"type": "between_tools"}`). |
 | Fable 5.1, Mythos 5.1 | `tool_choice` of `any` or `tool` is not supported and returns a 400 error (`auto` and `none` still work). If you need tool input that matches a schema, use strict tool use. |
 | Haiku 5.5 | Code written the Haiku 4.5 way may break. `budget_tokens` (manual extended thinking), `temperature`, `top_p`, `top_k`, and assistant message prefill can each cause a 400 error. Adaptive thinking is the default, so the response may start with a `thinking` block, and that text is omitted unless you set `thinking.display` to `"summarized"`. |
 
@@ -281,7 +281,7 @@ If you only change `model` in an example, you can hit a 400 error for the reason
 
 ### I switched to Opus 5.5 or Haiku 5.5 and got a 400 error
 
-- **Cause**: Opus 5.5 doesn't allow turning off or fixing thinking, or `tool_choice` of `any`/`tool`, and Haiku 5.5 doesn't allow `budget_tokens`, sampling parameters, or prefill.
+- **Cause**: Opus 5.5 doesn't allow turning off or fixing thinking, `tool_choice` of `any`/`tool`, sampling parameters, or prefill, and Haiku 5.5 doesn't allow `budget_tokens`, sampling parameters, or prefill.
 - **Fix**: Look at "Per-model request restrictions" in the quick reference and remove the parameter in question. The parameter name in the error message is your clue.
 
 ### After upgrading the Python SDK, `temperature` gives an error (SDK 1.0)

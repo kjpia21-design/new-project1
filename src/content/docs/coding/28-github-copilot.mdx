@@ -11,7 +11,7 @@ prerequisites:
   - "A GitHub account"
   - "A Copilot plan (Free included; see the plan table below)"
   - "Visual Studio Code installed"
-lastVerified: 2026-10-26
+lastVerified: 2026-11-02
 sources:
   - title: "Quickstart for using GitHub Copilot in your IDE"
     url: "https://docs.github.com/en/copilot/get-started/quickstart-for-using-github-copilot-in-your-ide"
@@ -42,7 +42,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 <Summary>
 - GitHub Copilot is an AI tool that, inside your editor, **suggests code (inline suggestions), answers questions (Ask), makes plans (Plan), and edits files directly (Agent)**.
 - This tutorial is **based on VS Code** and goes in this order: install → inline suggestions → chat → agent mode → custom instructions.
-- Code completion (inline suggestions) doesn't use credits and is unlimited on paid plans. Chat and agents use **GitHub AI Credits** (as of 2026-10-26).
+- Code completion (inline suggestions) doesn't use credits and is unlimited on paid plans. Chat and agents use **GitHub AI Credits** (as of 2026-11-02).
 - You **review and accept** the changes the agent makes. By default, commands also ask for approval before they run.
 - Prices are in US dollars. We couldn't confirm in official documentation whether it's offered in Korea or what the KRW price is.
 </Summary>
@@ -69,7 +69,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 In one line, the difference from Claude Code is that Copilot is a **tool you use inside an editor (IDE)**, while Claude Code is an agent-style coding tool you use in the terminal, apps, and so on. We couldn't find an official basis in this tutorial to compare the two on performance or price. Choose according to your purpose. For Claude Code, see [C12](/claude/c12-claude-code-overview/) and [Tutorial 6](/coding/06-claude-code-start/); for editor-style AI tools, see [Tutorial 9, Cursor](/coding/09-cursor/).
 
-### Plan summary (as of 2026-10-26, US dollars)
+### Plan summary (as of 2026-11-02, US dollars)
 
 | Plan | Price | Monthly credits | Notes |
 | --- | --- | --- | --- |
@@ -82,7 +82,7 @@ In one line, the difference from Claude Code is that Copilot is a **tool you use
 | Enterprise | $39/month per seat | 3,900 per user | For GitHub Enterprise Cloud |
 
 <Aside type="note" title="What we couldn't confirm">
-According to the official plan table (as of 2026-10-26), agent mode is included in Free (limited), Student, Pro, Pro+, Max, Business, and Enterprise. However, agents are limited on Free, and Student can't use third-party agents. To see whether other features are on your plan, check the [official plans page](https://docs.github.com/en/copilot/get-started/plans) yourself. We also couldn't confirm in official documentation whether it's offered in Korea, the KRW price, or Korean menu labels. This tutorial uses the English menu names as they are.
+According to the official plan table (as of 2026-11-02), agent mode is included in Free (limited), Student, Pro, Pro+, Max, Business, and Enterprise. However, agents are limited on Free, and Student can't use third-party agents. To see whether other features are on your plan, check the [official plans page](https://docs.github.com/en/copilot/get-started/plans) yourself. We also couldn't confirm in official documentation whether it's offered in Korea, the KRW price, or Korean menu labels. This tutorial uses the English menu names as they are.
 </Aside>
 
 ## Step-by-step guide
@@ -118,7 +118,7 @@ According to the official plan table (as of 2026-10-26), agent mode is included 
    Copilot suggests the function body in **gray text**. If you like it, accept it with `Tab`; if not, ignore it and keep typing. The suggestion may differ every time. If you're not used to coding, ask what the accepted code does in the chat in the next step.
 
    <Aside type="tip" title="Cost">
-   According to the official docs, code completion and next edit suggestions aren't billed as AI credits and are unlimited on paid plans. On Free, code completion is limited to 2,000 per month (as of 2026-10-26).
+   According to the official docs, code completion and next edit suggestions aren't billed as AI credits and are unlimited on paid plans. On Free, code completion is limited to 2,000 per month (as of 2026-11-02).
    </Aside>
 
 3. **Ask about code in Ask mode**
@@ -147,7 +147,7 @@ According to the official plan table (as of 2026-10-26), agent mode is included 
    Create a task manager web app with the ability to add, delete, and mark tasks as completed. Plan which files you will create before changing anything.
    </PromptBox>
 
-   Read the list and order of files to be created in the plan, and if you don't like it, fix it with a follow-up message. According to the official Plan mode docs (checked 2026-10-26), Plan mode analyzes the codebase with read-only tools and creates a plan with a summary, a step-by-step plan, and open questions, and it doesn't change code until you approve. If you like the plan, you can choose **Start Implementation** (switches to agent mode and implements) or **Open in Editor** (opens the plan as Markdown). Plan mode is available in VS Code, JetBrains, Xcode, and Eclipse, and not in Visual Studio. The Xcode and Eclipse docs mark it as a public preview.
+   Read the list and order of files to be created in the plan, and if you don't like it, fix it with a follow-up message. According to the official Plan mode docs (checked 2026-11-02), Plan mode analyzes the codebase with read-only tools and creates a plan with a summary, a step-by-step plan, and open questions, and it doesn't change code until you approve. If you like the plan, you can choose **Start Implementation** (switches to agent mode and implements) or **Open in Editor** (opens the plan as Markdown). Plan mode is available in VS Code, JetBrains, Xcode, and Eclipse, and not in Visual Studio. The Xcode and Eclipse docs mark it as a public preview.
 
 5. **Hand off a task in Agent mode**
 
@@ -225,7 +225,7 @@ According to the official plan table (as of 2026-10-26), agent mode is included 
 ### There's no Agent in the mode selector
 
 - **Cause**: An organization or enterprise administrator may have turned off agent mode in your IDE.
-- **Fix**: Contact your administrator. With a personal account, agent mode is included in all personal plans (limited on Free, as of 2026-10-26).
+- **Fix**: Contact your administrator. With a personal account, agent mode is included in all personal plans (limited on Free, as of 2026-11-02).
 
 ### Chat doesn't work because I'm on an organization account
 
@@ -245,15 +245,15 @@ According to the official plan table (as of 2026-10-26), agent mode is included 
 ### Credits drop quickly
 
 - **Cause**: Agent mode and long conversations consume a lot.
-- **Fix**: Try using Ask or inline suggestions for small tasks, and switch to a lighter model. When credits run out, you choose between upgrading your plan, setting an extra usage budget, and waiting until next month (per the official docs, as of 2026-10-26).
+- **Fix**: Try using Ask or inline suggestions for small tasks, and switch to a lighter model. When credits run out, you choose between upgrading your plan, setting an extra usage budget, and waiting until next month (per the official docs, as of 2026-11-02).
 
 ## Practical tips
 
 - **Start by handing off small tasks.** One feature at a time is easier to review than a whole app at once.
 - **Make requests specific.** Include file names, constraints to follow, and an example of the result you want.
 - **Don't commit without reviewing.** Read the changes and run them yourself before saving or committing.
-- **Don't put secrets in code files.** If a file with passwords or API keys is in your working folder, it can be used as chat context. In the official plan table, file exclusion (content exclusion) isn't included on personal plans (Free through Max) and is included on Business and Enterprise (as of 2026-10-26). We couldn't confirm how to use it in this tutorial.
-- **Can I use Claude models?** According to the model table on the official plans page (as of 2026-10-26), Pro includes the Claude Haiku and Sonnet families, and Pro+, Max, Business, and Enterprise include up through the Opus and Fable families (Free and Student get automatic model selection only). The model list changes often, so check the exact model names in the official table. Claude's own plans are separate from this; see [C2](/claude/c02-plans-limits/).
+- **Don't put secrets in code files.** If a file with passwords or API keys is in your working folder, it can be used as chat context. In the official plan table, file exclusion (content exclusion) isn't included on personal plans (Free through Max) and is included on Business and Enterprise (as of 2026-11-02). We couldn't confirm how to use it in this tutorial.
+- **Can I use Claude models?** According to the model table on the official plans page (as of 2026-11-02), Pro includes the Claude Haiku and Sonnet families, and Pro+, Max, Business, and Enterprise include up through the Opus and Fable families (Free and Student get automatic model selection only). The model list changes often, so check the exact model names in the official table. Claude's own plans are separate from this; see [C2](/claude/c02-plans-limits/).
 - **A role-splitting idea**: Use inline suggestions while typing code, Ask and Plan for explanations and plans, and Agent for multi-file work, and you can save credits too. For a feel for dividing roles among models, see [C15](/claude/c15-model-division/).
 
 ## Next tutorials

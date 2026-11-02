@@ -7,7 +7,7 @@ import NewsItem from '../../../components/NewsItem.astro';
 
 Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 모았어요. 모델 출시, 가격, Claude Code와 앱의 새 기능처럼 실제로 쓰는 분에게 의미 있는 것만 골랐고, 사소한 버그 수정은 뺐어요. 공식 채널을 점검해 계속 갱신해요.
 
-**마지막 업데이트: 2026-10-30**
+**마지막 업데이트: 2026-11-02**
 
 ## 모니터링하는 공식 채널
 
@@ -16,6 +16,16 @@ Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 �
 - [Claude Code CHANGELOG.md 원문](https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md)
 - [Claude 앱 릴리스 노트](https://support.claude.com/en/articles/12138966-release-notes): claude.ai, 데스크톱, Cowork, 플랜
 - [Anthropic 뉴스](https://www.anthropic.com/news): 정책, 파트너십, 모델 발표
+
+## 2026년 11월
+
+<NewsItem date="10월 31일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/ko/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
+2.1.314(10월 30일)과 2.1.316(10월 31일) 버전이 나왔어요. 서브에이전트가 일하는 노력 수준(effort)을 `CLAUDE_CODE_SUBAGENT_EFFORT` 환경 변수로 정할 수 있고, `CLAUDE_CODE_DISABLE_ULTRATHINK`로 `ultrathink` 키워드를 끌 수 있어요. `permissions.blockWritesOutsideWorkingDirectories` 설정을 켜면 모든 권한 모드에서 Write, Edit, NotebookEdit가 작업 디렉터리 밖 경로를 거부해요. VS Code 확장과 데스크톱 앱 Code 탭에서는 오래 방치된 긴 대화를 자동으로 요약(압축)해요. Team·Enterprise 로그인의 서버 관리 설정은 이제 승인 창 없이 적용돼요.
+</NewsItem>
+
+<NewsItem date="10월 30일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/ko/claude/c16-api/" tutorialLabel="C16 Claude API 기초">
+Claude Opus 4.8의 빠른 모드(fast mode)가 지원 중단(deprecated)되어 2026년 11월 30일에 제거돼요. 그 뒤에는 `claude-opus-4-8`에 `speed: "fast"`를 붙여 보내는 요청이 오류를 돌려줘요. 빠른 모드를 계속 쓰려면 Claude Opus 5.5로 옮겨야 해요(개발자 문서의 마이그레이션 가이드와 빠른 모드 페이지 참고). Claude Code 2.1.316에도 같은 안내가 실렸어요.
+</NewsItem>
 
 ## 2026년 10월
 

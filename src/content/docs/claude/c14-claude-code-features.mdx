@@ -11,7 +11,7 @@ prerequisites:
   - "A terminal with Claude Code installed (see C12 for installation)"
   - "One project folder to work in"
   - "(If you follow the hook example) jq and Node.js (npx)"
-lastVerified: 2026-10-26
+lastVerified: 2026-11-02
 sources:
   - title: "How Claude remembers your project (CLAUDE.md, auto memory)"
     url: "https://code.claude.com/docs/en/memory"
@@ -314,7 +314,7 @@ You switch with `Shift+Tab` in the CLI, `claude --permission-mode <mode>` at sta
 | --- | --- | --- |
 | local (default) | `~/.claude.json` | Just you, in this project |
 | project | `.mcp.json` | Shared with your team |
-| user | User settings | All your projects |
+| user | `~/.claude.json` | All your projects |
 
 When you sign in with a claude.ai account, the connectors at claude.ai/customize/connectors show up automatically in `/mcp` (on Team/Enterprise only admins add them). The SSE method is deprecated.
 

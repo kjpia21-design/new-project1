@@ -10,7 +10,7 @@ duration: "30 min"
 prerequisites:
   - "A Claude Code environment (terminal or cloud session)"
   - "Basic subagent concepts (see C14)"
-lastVerified: 2026-10-31
+lastVerified: 2026-11-02
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -48,7 +48,7 @@ import C15ModelSplit from '../../../components/diagrams/C15ModelSplit.astro';
 - You don't need the biggest model for every job. If you split the work, **Opus for the hard judgment calls (planning and review) and Sonnet for the bulk of the work (implementation)**, you save cost and usage.
 - The easiest way is `/model opusplan`. It switches automatically: Opus in plan mode, Sonnet during execution.
 - A subagent's model is decided by a fixed **four-step order**. If you switch to Opus with `/model`, subagents that inherit the model also become Opus.
-- On the API, Sonnet 5.5 costs half as much as Opus 5.5 (as of 2026-10-10, see the table below).
+- On the API, Sonnet 5.5 costs half as much as Opus 5.5 (as of 2026-11-02, see the table below).
 - This site was built exactly this way. Check the case study below and the spec template you can follow along with.
 </Summary>
 
@@ -71,7 +71,7 @@ import C15ModelSplit from '../../../components/diagrams/C15ModelSplit.astro';
 | **effort** | The level that sets how deeply the model thinks (low, medium, high, xhigh, max). |
 | **orchestrator / worker** | A model-combination pattern from the official docs. It refers to a structure that delegates bulk work to a lower-cost model (the worker). |
 
-### Model choice according to the official guide (as of 2026-10-10)
+### Model choice according to the official guide (as of 2026-11-02)
 
 | What you need | Recommended model |
 | --- | --- |
@@ -82,7 +82,7 @@ import C15ModelSplit from '../../../components/diagrams/C15ModelSplit.astro';
 
 The official docs say to "start with Opus 5.5 for most workloads." They also say that adjusting effort is often a better lever than switching models. There are two starting strategies. If you prioritize efficiency, start with Haiku 5.5 and move up when it falls short. If you prioritize performance, start with Opus 5.5 and optimize by lowering effort or dropping to a smaller model.
 
-### Price differences (API, per 1M tokens, input/output, as of 2026-10-10)
+### Price differences (API, per 1M tokens, input/output, as of 2026-11-02)
 
 | Model | Input / Output |
 | --- | --- |
@@ -96,7 +96,7 @@ Sonnet costs half as much as Opus, and Fable costs 2.5 times as much as Opus. Su
 The Claude Code cost guide recommends: "Sonnet handles most coding tasks well and costs less than Opus. Save Opus for complex architectural decisions or multi-step reasoning." For simple subagents, it suggests `model: haiku`.
 
 <Aside type="note" title="Aliases can change">
-`opusplan` uses the `opus` alias in plan mode and the `sonnet` alias during execution. According to the table in the Claude Code model configuration docs (2026-10-10), on the Anthropic API `opus` resolves to Opus 5.5 and `sonnet` resolves to Sonnet 5.5. On other providers such as Bedrock or Foundry the versions may differ, and aliases change over time. To pin a version, use the full model name or the `ANTHROPIC_DEFAULT_OPUS_MODEL` and `ANTHROPIC_DEFAULT_SONNET_MODEL` environment variables.
+`opusplan` uses the `opus` alias in plan mode and the `sonnet` alias during execution. According to the table in the Claude Code model configuration docs (2026-11-02), on the Anthropic API `opus` resolves to Opus 5.5 and `sonnet` resolves to Sonnet 5.5. On other providers such as Bedrock or Foundry the versions may differ, and aliases change over time. To pin a version, use the full model name or the `ANTHROPIC_DEFAULT_OPUS_MODEL` and `ANTHROPIC_DEFAULT_SONNET_MODEL` environment variables.
 </Aside>
 
 ## Step by step

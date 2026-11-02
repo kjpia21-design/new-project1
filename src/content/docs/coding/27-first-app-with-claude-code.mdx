@@ -11,7 +11,7 @@ prerequisites:
   - "A paid Claude plan (Pro or higher) or a Console account"
   - "Claude Code installed and logged in (see C12)"
   - "One empty folder and a web browser"
-lastVerified: 2026-10-26
+lastVerified: 2026-11-02
 sources:
   - title: "Quickstart"
     url: "https://code.claude.com/docs/en/quickstart"
@@ -34,7 +34,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - Installation and login are covered in [C12](/claude/c12-claude-code-overview/). This tutorial doesn't repeat them.
 - There are three tricks. **Skeleton first → one feature at a time → check with your own eyes every time.** Several small requests work much better than one big one.
 - You'll also learn safety habits: check the changes, never put in secrets (passwords, API keys), undo when needed, and don't touch anything outside your working folder.
-- Claude Code is available on paid plans (Pro or higher) ([C2](/claude/c02-plans-limits/), as of 2026-10-26).
+- Claude Code is available on paid plans (Pro or higher) ([C2](/claude/c02-plans-limits/), as of 2026-11-02).
 </Summary>
 
 ## What you'll be able to do after this tutorial
@@ -56,7 +56,7 @@ This approach is often called **vibe coding**. It's a way of working where you d
 | **Checkpoint** | A restore point Claude leaves before changing files. Open it with `/rewind`. |
 | **How to verify** | A way to see whether the result is right. In this exercise, it's "click through it yourself in the browser". |
 
-The official docs recommend **giving Claude a way to check its own work**. When there's a signal it can read the result from, like tests, a build, or a screenshot, the quality of the result improves. They also say, "if you can't verify it, don't ship it" (checked 2026-10-26). That's why the prompts in this tutorial include "after you build it, test it like this".
+The official docs recommend **giving Claude a way to check its own work**. When there's a signal it can read the result from, like tests, a build, or a screenshot, the quality of the result improves. They also say, "if you can't verify it, don't ship it" (checked 2026-11-02). That's why the prompts in this tutorial include "after you build it, test it like this".
 
 <Aside type="note" title="The expense tracker in this exercise is for practice">
 It's a very simple app that stores data in the browser. It has no real bank connection, login, or multi-device sync. Don't enter real personal financial information; test only with **sample practice data**.
@@ -152,7 +152,7 @@ The folder name `gaegebu` below is Korean for "household ledger". You can name y
 
 7. **Undo if you don't like it**
 
-   Try asking for a strange change on purpose, then undo it. In a session, press `Esc` twice or type `/rewind` and a menu opens for restoring the conversation and code to an earlier checkpoint. You can choose what to restore: the conversation only, the code only, or both (as of the official docs, 2026-10-26).
+   Try asking for a strange change on purpose, then undo it. In a session, press `Esc` twice or type `/rewind` and a menu opens for restoring the conversation and code to an earlier checkpoint. You can choose what to restore: the conversation only, the code only, or both (as of the official docs, 2026-11-02).
 
    <FlowSteps title="When you don't like a change" officialUrl="https://code.claude.com/docs/en/best-practices" steps={[
      { where: 'Browser', action: 'Refresh and click through it yourself', result: 'You spot a problem' },

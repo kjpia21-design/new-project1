@@ -8,10 +8,10 @@ category: claude
 tools: ["Claude in Chrome", "Claude Desktop", "Claude Code"]
 duration: "30 min"
 prerequisites:
-  - "A paid Claude plan (the Chrome extension: Pro, Max, Team, Enterprise; computer use: Pro, Max)"
+  - "A paid Claude plan (the Chrome extension: Pro, Max, Ultra, Team, Enterprise; computer use: Pro, Max, Ultra)"
   - "Google Chrome and an environment where you can install from the Chrome Web Store"
   - "(Computer use) The Claude Desktop app on macOS or Windows"
-lastVerified: 2026-10-31
+lastVerified: 2026-11-02
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -41,7 +41,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - **Claude in Chrome** is an extension that lets Claude read pages in Chrome and click, type, and navigate for you. It works on all paid plans. The new Cowork-based side panel is rolling out in stages (as of 2026-10-26; the help doesn't label Claude in Chrome itself as beta).
-- **Computer use** lets Claude operate apps on your computer screen directly when connectors or the browser won't do. It's in beta on Pro and Max, and the help says it's currently unavailable on Team and Enterprise (as of 2026-10-10).
+- **Computer use** lets Claude operate apps on your computer screen directly when connectors or the browser won't do. It's in beta on Pro, Max, and Ultra, and the help says it's currently unavailable on Team and Enterprise (as of 2026-11-02).
 - Computer use runs inside the Claude Desktop app (Cowork, Claude Code) on macOS and Windows. It doesn't work on Linux desktops.
 - The tool priority is **connectors, then the browser, then screen control**. Screen control is the slowest and most error-prone.
 - **Don't use it with banking, medical, or government apps, financial accounts, or legal documents.** Computer use has no sandbox, so Claude can see everything on your screen.
@@ -76,7 +76,7 @@ Claude is set up to try the faster, more reliable method first whenever possible
 
 <Aside type="caution" title="Where the docs disagree (as of 2026-10-10)">
 - **Supported browsers**: The Help Center doc says it's Chrome only, with no support for other Chromium browsers or mobile. The Claude Code doc, on the other hand, says it works in Chrome and Edge, and that other Chromium browsers such as Brave and Arc can be set up to connect. Check each official doc for the latest on the environment you plan to use.
-- **Plans for computer use**: The Help Center doc says Pro and Max beta, not available on Team or Enterprise. Availability by plan changes often, so check what actually shows in Claude Desktop's settings.
+- **Plans for computer use**: The Help Center doc says Pro, Max, and Ultra beta, not available on Team or Enterprise. Availability by plan changes often, so check what actually shows in Claude Desktop's settings.
 </Aside>
 
 <Aside type="note" title="Chrome extension usage">
@@ -136,7 +136,7 @@ How much usage the Chrome extension consumes isn't given as a number in the offi
 
    <ScreenshotPlaceholder caption="The New permissions required window and the Your approved sites list" officialUrl="https://support.claude.com/en/articles/12902446-claude-in-chrome-permissions-guide" />
 
-5. **Turn on computer use (optional, Pro/Max)**
+5. **Turn on computer use (optional, Pro/Max/Ultra)**
 
    Update Claude Desktop to the latest version, then turn on "Enable computer use" in Settings > Capabilities. If you don't see a Computer use item, it's under This computer in Settings > System (as of 2026-10-26). Then ask for an app-related task in a Cowork or Claude Code session, and Claude asks for access approval for each app.
 
@@ -165,7 +165,7 @@ How much usage the Chrome extension consumes isn't given as a number in the offi
 | Item | Claude in Chrome | Computer use |
 | --- | --- | --- |
 | Target | Tasks inside the web browser | App screens on your computer |
-| Plans | All paid plans (Pro, Max, Ultra, Team, Enterprise) | Pro, Max (not Team or Enterprise) |
+| Plans | All paid plans (Pro, Max, Ultra, Team, Enterprise) | Pro, Max, Ultra (not Team or Enterprise) |
 | Status | New side panel rolling out in stages | Beta |
 | OS / browser | Chrome (see above for where the docs differ). Not on mobile | Claude Desktop on macOS and Windows. Not on Linux desktops. Works in the background on macOS 15 and later |
 | Where it's used | Cowork, Claude Code, the Chrome side panel | Cowork and Claude Code in Claude Desktop |
@@ -199,14 +199,14 @@ How much usage the Chrome extension consumes isn't given as a number in the offi
 
 ### Using Chrome with Claude Code
 
-If you're a developer, you can also connect Chrome to Claude Code to test local web apps and debug while looking at console errors. According to the Claude Code docs, the requirements are the Claude in Chrome extension, Claude Code, and a direct Anthropic plan (Pro, Max, Team, Enterprise). Start the connection with `claude --chrome`, and use `/chrome` to check status and reconnect. You can't use this feature with just an API key or a third-party provider (such as Bedrock). Claude Code's Chrome integration follows your organization's Claude in Chrome admin settings (2.1.260), so if an admin turns it off, you can't use `--chrome`, `/chrome`, or the browser tools. Also, it can't be turned on through a project settings file (2.1.290); you turn it on only with `--chrome`, `/chrome`, or user settings (as of 2026-10-11). Claude Code as a whole is covered in [C12. Claude Code overview](/claude/c12-claude-code-overview/).
+If you're a developer, you can also connect Chrome to Claude Code to test local web apps and debug while looking at console errors. According to the Claude Code docs, the requirements are the Claude in Chrome extension, Claude Code, and a direct Anthropic plan (Pro, Max, Ultra, Team, Enterprise). Start the connection with `claude --chrome`, and use `/chrome` to check status and reconnect. You can't use this feature with just an API key or a third-party provider (such as Bedrock). Claude Code's Chrome integration follows your organization's Claude in Chrome admin settings (2.1.260), so if an admin turns it off, you can't use `--chrome`, `/chrome`, or the browser tools. Also, it can't be turned on through a project settings file (2.1.290); you turn it on only with `--chrome`, `/chrome`, or user settings (as of 2026-10-11). Claude Code as a whole is covered in [C12. Claude Code overview](/claude/c12-claude-code-overview/).
 
 ## Where people get stuck
 
 ### I don't see the computer use menu
 
 - **Cause**: You may be on a Team or Enterprise plan, on a Linux desktop, or Claude Desktop may not be up to date.
-- **Fix**: Check that you're on Pro/Max and on macOS or Windows, and update Claude Desktop. Availability by plan can change, so check the official help for the latest.
+- **Fix**: Check that you're on Pro/Max/Ultra and on macOS or Windows, and update Claude Desktop. Availability by plan can change, so check the official help for the latest.
 
 ### Claude clicks the wrong thing or repeats the same action
 

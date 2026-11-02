@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 유료 플랜 (Pro, Max, Ultra, Team, Enterprise) 또는 Anthropic Console 계정"
   - "작업할 코드 프로젝트 폴더 하나"
   - "터미널 (macOS, Linux, WSL, Windows PowerShell 또는 CMD)"
-lastVerified: 2026-10-31
+lastVerified: 2026-11-02
 sources:
   - title: "Use Claude Code with your Pro, Max, or Ultra plan"
     url: "https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan"
@@ -45,7 +45,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 - 터미널(CLI), IDE(VS Code·JetBrains), 데스크톱 앱의 Code 탭, 웹(claude.ai/code)에서 쓸 수 있어요. 모두 같은 엔진이라 CLAUDE.md, 설정, MCP 서버가 공통으로 동작해요.
 - 설치는 한 줄이에요. macOS/Linux/WSL은 `curl -fsSL https://claude.ai/install.sh | bash`, Windows PowerShell은 `irm https://claude.ai/install.ps1 | iex`예요.
 - 설치 후 프로젝트 폴더에서 `claude`를 실행하고 로그인한 다음 자연어로 요청하면 돼요.
-- Pro 이상 유료 플랜에서 쓸 수 있고 Free는 안 돼요(2026-10-10 기준).
+- Pro 이상 유료 플랜에서 쓸 수 있고 Free는 안 돼요(2026-11-02 기준).
 </Summary>
 
 ## 이 튜토리얼로 할 수 있게 되는 것
@@ -155,7 +155,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 
    프로젝트용 지침 파일은 `/init` 명령으로 CLAUDE.md를 만들 수 있어요. 자세한 내용은 [C14](/ko/claude/c14-claude-code-features/)에서 다뤄요.
 
-   **데스크톱 앱을 쓴다면**: 앱(macOS Intel/Apple Silicon, Windows x64/ARM64)을 설치하고 로그인한 뒤 **Code** 탭을 눌러 시작해요. 앱에 Claude Code가 포함되어 있어서 CLI를 따로 설치할 필요가 없어요. 터미널 세션을 앱으로 옮기고 싶다면 `/desktop`을 써요.
+   **데스크톱 앱을 쓴다면**: 앱(macOS Intel/Apple Silicon, Windows x64/ARM64. Ubuntu/Debian은 베타이고 apt로 설치)을 설치하고 로그인한 뒤 **Code** 탭을 눌러 시작해요. 앱에 Claude Code가 포함되어 있어서 CLI를 따로 설치할 필요가 없어요. 터미널 세션을 앱으로 옮기고 싶다면 `/desktop`을 써요.
 
 5. **작은 코드 수정 요청하기**
 
@@ -177,7 +177,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 
 ## 빠른 참조표
 
-### 설치 방법 (2026-10-10 기준)
+### 설치 방법 (2026-11-02 기준)
 
 | 방법 | 명령 | 자동 업데이트 |
 | --- | --- | --- |
@@ -266,7 +266,7 @@ tail -200 app.log | claude -p "이 로그에서 오류 원인을 요약해 줘"
 
 ### Free 계정으로는 안 돼요
 
-- **원인**: Claude Code는 Pro 이상 유료 플랜에서 쓸 수 있어요(2026-10-10 기준). 공식 가격 페이지에서 확인할 수 있어요.
+- **원인**: Claude Code는 Pro 이상 유료 플랜에서 쓸 수 있어요(2026-11-02 기준). 공식 가격 페이지에서 확인할 수 있어요.
 - **해결**: 플랜을 확인하세요. Console 계정이나 지원되는 클라우드 제공자 경로도 있어요. 요금은 [C2](/ko/claude/c02-plans-limits/)를 참고하세요.
 
 ### Windows에서 Bash 도구를 못 써요

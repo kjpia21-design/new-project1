@@ -10,7 +10,7 @@ duration: "30분"
 prerequisites:
   - "Claude Code 사용 환경 (터미널 또는 클라우드 세션)"
   - "서브에이전트 기본 개념 (C14 참고)"
-lastVerified: 2026-10-31
+lastVerified: 2026-11-02
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -48,7 +48,7 @@ import C15ModelSplit from '../../../../components/diagrams/C15ModelSplit.astro';
 - 모든 일에 가장 큰 모델을 쓸 필요는 없어요. **어려운 판단(기획·검토)은 Opus, 많은 작업(구현)은 Sonnet**으로 나누면 비용과 사용량을 아낄 수 있어요.
 - 가장 쉬운 방법은 `/model opusplan`이에요. 계획 모드에서는 Opus, 실행 단계에서는 Sonnet으로 자동 전환돼요.
 - 서브에이전트의 모델은 정해진 **네 단계 순서**로 결정돼요. `/model`로 Opus로 바꾸면 모델을 상속하는 서브에이전트도 Opus가 돼요.
-- API 가격은 Sonnet 5.5가 Opus 5.5의 절반이에요 (2026-10-10 기준, 아래 표).
+- API 가격은 Sonnet 5.5가 Opus 5.5의 절반이에요 (2026-11-02 기준, 아래 표).
 - 이 사이트가 바로 이 방식으로 만들어졌어요. 아래 사례와 따라 해 볼 수 있는 명세 템플릿을 확인하세요.
 </Summary>
 
@@ -71,7 +71,7 @@ import C15ModelSplit from '../../../../components/diagrams/C15ModelSplit.astro';
 | **effort** | 모델이 얼마나 깊게 생각할지 정하는 수준이에요 (low, medium, high, xhigh, max). |
 | **orchestrator / worker** | 공식 문서의 모델 조합 패턴이에요. 대량 작업을 저비용 모델(worker)에게 위임하는 구조를 가리켜요. |
 
-### 공식 가이드가 말하는 모델 선택 (2026-10-10 기준)
+### 공식 가이드가 말하는 모델 선택 (2026-11-02 기준)
 
 | 필요한 것 | 권장 모델 |
 | --- | --- |
@@ -82,7 +82,7 @@ import C15ModelSplit from '../../../../components/diagrams/C15ModelSplit.astro';
 
 공식 문서는 "대부분의 워크로드는 Opus 5.5로 시작"하라고 안내해요. 그리고 effort를 조정하는 것이 모델을 바꾸는 것보다 나은 수단인 경우가 많다고 해요. 시작 전략은 두 가지예요. 효율 우선이면 Haiku 5.5로 시작해 부족할 때 올리고, 성능 우선이면 Opus 5.5로 시작해 effort를 낮추거나 모델을 내려 최적화해요.
 
-### 가격 차이 (API, 100만 토큰당 입력/출력, 2026-10-10 기준)
+### 가격 차이 (API, 100만 토큰당 입력/출력, 2026-11-02 기준)
 
 | 모델 | 입력 / 출력 |
 | --- | --- |
@@ -96,7 +96,7 @@ Sonnet은 Opus의 절반, Fable은 Opus의 2.5배예요. 구독 사용량도 대
 Claude Code 비용 가이드는 이렇게 권해요. "Sonnet은 대부분의 코딩 작업을 잘 처리하고 Opus보다 저렴하다. Opus는 복잡한 아키텍처 결정이나 다단계 추론에 아껴 써라." 단순한 서브에이전트에는 `model: haiku`를 쓰라고 해요.
 
 <Aside type="note" title="별칭은 바뀔 수 있어요">
-`opusplan`은 계획 모드에서 `opus`, 실행에서 `sonnet` 별칭을 쓰는 방식이에요. Claude Code 모델 설정 문서(2026-10-10)의 표를 보면 Anthropic API에서는 `opus`가 Opus 5.5, `sonnet`이 Sonnet 5.5로 풀려요. Bedrock이나 Foundry 같은 다른 제공처에서는 버전이 달라질 수 있고 별칭은 시간이 지나면 바뀌어요. 버전을 고정하려면 전체 모델 이름이나 `ANTHROPIC_DEFAULT_OPUS_MODEL`, `ANTHROPIC_DEFAULT_SONNET_MODEL` 환경 변수를 쓰세요.
+`opusplan`은 계획 모드에서 `opus`, 실행에서 `sonnet` 별칭을 쓰는 방식이에요. Claude Code 모델 설정 문서(2026-11-02)의 표를 보면 Anthropic API에서는 `opus`가 Opus 5.5, `sonnet`이 Sonnet 5.5로 풀려요. Bedrock이나 Foundry 같은 다른 제공처에서는 버전이 달라질 수 있고 별칭은 시간이 지나면 바뀌어요. 버전을 고정하려면 전체 모델 이름이나 `ANTHROPIC_DEFAULT_OPUS_MODEL`, `ANTHROPIC_DEFAULT_SONNET_MODEL` 환경 변수를 쓰세요.
 </Aside>
 
 ## 단계별 따라하기
