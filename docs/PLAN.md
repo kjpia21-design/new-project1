@@ -111,6 +111,7 @@
 | C21 | Claude for Excel·PowerPoint: 오피스 안에서 Claude 쓰기 | 실무 |
 | C22 | Claude 데스크톱 앱 제대로 쓰기: 빠른 입력·음성·파일·확장 프로그램 | 실무 |
 | C23 | Claude에 Gmail·캘린더·드라이브 연결해 일하기 | 실무 |
+| C24 | Claude 프로젝트·대화를 팀과 공유하기 | 실무 |
 
 ## 5. 기술 구성 (제안)
 

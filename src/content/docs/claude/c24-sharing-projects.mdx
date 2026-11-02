@@ -1,0 +1,187 @@
+---
+title: "Share Claude projects and chats with your team"
+description: "A practical guide to sharing Claude projects and chats on Team and Enterprise: public vs. private projects, Can view vs. Can edit, group sharing, chat snapshots, what stays private, and what admins can turn off, based on official help"
+sidebar:
+  label: "C24. Sharing projects and chats"
+level: practical
+category: claude
+tools: ["Claude"]
+duration: "25 min"
+prerequisites:
+  - "A Claude Team or Enterprise account (project sharing is described as a Team/Enterprise feature)"
+  - "A project with a little practice material (no confidential files at first)"
+  - "Project sharing not turned off by your organization's admin"
+lastVerified: 2026-11-02
+sources:
+  - title: "Manage project visibility and sharing"
+    url: "https://support.claude.com/en/articles/9519189-manage-project-visibility-and-sharing"
+  - title: "Share and unshare chats"
+    url: "https://support.claude.com/en/articles/10593882-share-and-unshare-chats"
+  - title: "Control project sharing for your organization"
+    url: "https://support.claude.com/en/articles/9927533-control-project-sharing-for-your-organization"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- Project visibility and sharing are available on **Team and Enterprise** (as of 2026-11-02). A new project is either **Public** (everyone in your organization can view and use it) or **Private** (only invited members). You can switch later with the **Share** button.
+- Two permissions: **Can view** (see contents, knowledge and instructions, and chat, but not edit) and **Can edit** (change instructions and knowledge, update member settings). Enterprise can also share with a **group** (beta).
+- **Chats are private by default**, even inside a shared project. Sharing a chat creates a **snapshot** link; messages sent afterward stay private unless you update or re-share.
+- Attached files are not included in a shared chat snapshot, and raw MCP tool-call data stays hidden.
+- Owners can turn project sharing (and public projects) off in Organization settings. Existing shares stay, but public projects become private.
+</Summary>
+
+This guide is about *sharing*. For creating a project and writing knowledge and instructions, see [C5. Projects](/claude/c05-projects/).
+
+## What you'll be able to do
+
+- Choose between a public and a private project, and change it later.
+- Invite people (or a group) with the right permission, and remove access.
+- Share a single chat as a snapshot, update it, and unshare it.
+- Know what stays private, and what to do when the Share menu says sharing is off.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Public project** | Everyone in your organization can find it in the Organization tab of Projects, view it and start chats in it. |
+| **Private project** | Only invited members can view and use it. By default only you. |
+| **Can view / Can edit** | View: see contents, knowledge and instructions, and chat. Edit: also modify instructions and knowledge and update member settings. |
+| **Group sharing** | Share with an Enterprise group instead of individuals. Beta. Access follows group membership. |
+| **Chat snapshot** | A copy of a chat as of the moment you shared it, opened through a link. |
+
+<Aside type="caution" title="What members can see">
+Per the official help, a public project's chats stay private unless you share them. But everything else in the project (knowledge, instructions) is visible to people who can view it. In a private project, chats, project knowledge and artifacts are inaccessible to others unless they are invited. Check what is in the project before widening access.
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I know whether my plan is Team or Enterprise',
+  'I checked the project contents before changing who can see it',
+  'I invited a colleague with Can view first',
+  'I confirmed my own chats stayed private',
+  'I shared one chat as a snapshot and tried unsharing it',
+]} />
+
+<Steps>
+
+1. **Choose visibility**
+
+   When you create a project on Team or Enterprise you pick Public or Private. To change it later, open the project and click **Share** to the right of the project name. Under General access, change **Everyone at [your organization]** to **Only people invited** (or the reverse).
+
+   <ScreenshotPlaceholder caption="General access in the project's Share window" officialUrl="https://support.claude.com/en/articles/9519189-manage-project-visibility-and-sharing" />
+
+2. **Invite people with a permission**
+
+   Click **Share**, add people by name or email address, pick **Can view** or **Can edit**, and share. You can paste a list of email addresses to add several people at once. The project and its knowledge base are shared; your chats remain private. Invitees get an email, and the project appears in their **Shared with you** tab.
+
+3. **(Enterprise, beta) Share with a group**
+
+   <FlowSteps title="Share a project with a group" officialUrl="https://support.claude.com/en/articles/9519189-manage-project-visibility-and-sharing" steps={[
+     { where: 'Project page', action: 'Click Share next to the project name' },
+     { where: 'Add people or groups', action: 'Type the group name and select it from the results (marked with a group icon and "Group")' },
+     { where: 'Permission', action: 'Choose Can view or Can edit, then click Share', result: 'Access follows group membership; changes can take up to five minutes' },
+   ]} />
+
+   An admin must first turn on **Share resources with this group** in the group's visibility settings. A newly visible group can take a few minutes to appear. Members who leave the group lose access unless they have it another way.
+
+4. **Remove access**
+
+   A member with **Can edit** opens **Share**, clicks the role to the right of a name, and selects **Remove access**.
+
+5. **Share a chat**
+
+   Click **Share** in the upper right of the chat, then **Share** again in the pop-up to create a link. On Team and Enterprise, chats can be shared only with members of the same organization, not publicly. Messages sent after sharing stay private. The project article says to use **Update** next to "New messages since last shared"; the chat article says unsharing and sharing again refreshes the snapshot. Use whichever your Share menu shows.
+
+   <PromptBox label="Before you share a chat, ask Claude to check it">
+   Read this conversation as if a colleague were seeing it for the first time. List anything that looks like personal data, customer names, credentials, or confidential figures, so I can decide whether to share it. Don't rewrite anything.
+   </PromptBox>
+
+6. **Unshare a chat**
+
+   Open **Share**, use the visibility dropdown, and change the chat to **Private** (the chat article says "from Public to Private"; the project article says "from Shared to Private"). This disables the direct link.
+
+</Steps>
+
+## What stays private
+
+| Item | Behavior (per official help) |
+| --- | --- |
+| Your chats inside a shared project | Private unless you share them |
+| Attached files in a shared chat | Not included in the snapshot |
+| MCP tool-call data in a shared chat | Raw data hidden; only the conversation and final output are visible |
+| Chats with synced connector content | Cannot be shared (see [C5](/claude/c05-projects/) and [C7](/claude/c07-connectors/)) |
+| Drive files in projects | The Drive option is for private projects only (see [C23](/claude/c23-google-workspace/)) |
+
+## When sharing is off
+
+Owners and Primary Owners can turn sharing off in Organization settings > Data and privacy > Sharing. There are two settings: **Share projects**, and **Public projects** (a sub-setting; turning off the first turns off both). On Enterprise, **Share projects** can also be turned off per role under Organization settings > Roles.
+
+When project sharing is off:
+
+- You can still open **Share** but see "Project sharing is turned off by your administrator" and can't add users or groups. You can still change or remove existing access.
+- Projects already shared stay shared; existing public projects become private and stay private if sharing is turned back on.
+- Turning off only Public projects keeps sharing with specific people and groups.
+
+## Quick reference
+
+| I want to... | Do this |
+| --- | --- |
+| Make a project org-wide | Share > General access > Everyone at [organization] |
+| Make it invite-only | Share > General access > Only people invited |
+| Give read-and-chat access | Add person > Can view |
+| Let someone edit | Add person > Can edit |
+| Add many people | Paste a list of emails in Add people or groups |
+| Share a chat | Chat Share > Share |
+| Review shared chats (Free, Pro, Max, Ultra) | Settings > Privacy > Shared chats > Manage |
+
+The shared-chat log in Settings > Privacy is described for individual plans (Free, Pro, Max, Ultra); we did not find it described for Team or Enterprise.
+
+## Common sticking points
+
+### "Project sharing is turned off by your administrator"
+
+- **Cause**: An Owner turned off Share projects, or it is off for your role.
+- **Fix**: Ask your admin. Existing access can still be changed or removed.
+
+### A colleague can't find the project
+
+- **Cause**: It is private, or a newly visible group can take a few minutes to appear; access changes can take up to five minutes.
+- **Fix**: Invite them directly, wait a few minutes, and have them check the **Shared with you** tab.
+
+### A public project became private
+
+- **Cause**: Sharing or Public projects was turned off. Those who only had access because it was public lost it.
+- **Fix**: Invite people individually, or ask the admin about turning Public projects back on. Projects that became private stay private.
+
+### The shared chat doesn't show my newer messages
+
+- **Cause**: A snapshot covers only messages sent before sharing.
+- **Fix**: Update the snapshot or unshare and share again.
+
+### The file I attached is missing in the shared chat
+
+- **Cause**: Attached files are not included in snapshots.
+- **Fix**: Add the file to the project's knowledge (if appropriate) or send it separately.
+
+## Practical tips
+
+- Start with **Private** and **Can view**; widen only when needed.
+- Keep one project per audience, so knowledge for one team isn't visible to another.
+- Never put credentials, customer personal data or HR files in a project you plan to share. See [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/).
+- Prefer chat snapshots for one-off results; prefer a project when people need the same background repeatedly.
+- Tell your team before turning sharing off, because public projects become private.
+
+## What to read next
+
+- [C5. Projects](/claude/c05-projects/) — Creating projects, knowledge and instructions
+- [C7. Connectors](/claude/c07-connectors/) — Why connector content limits sharing
+- [C23. Claude with Google Workspace](/claude/c23-google-workspace/) — Drive files in private projects
+- [C9. Memory and personal settings](/claude/c09-memory-settings/) — Project memory
