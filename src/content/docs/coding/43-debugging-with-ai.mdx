@@ -1,0 +1,182 @@
+---
+title: "Debug Errors with AI and Prove the Fix"
+description: "Share an error message safely, let Claude Code find the cause, apply a small fix and confirm it with a test you run yourself. Based on the official Claude Code docs"
+sidebar:
+  label: "16. Debug errors with AI"
+level: practical
+category: coding
+tools: ["Claude Code"]
+duration: "30 min"
+prerequisites:
+  - "A project that fails with an error you can reproduce (a practice project is best)"
+  - "Claude Code installed and signed in (see Getting started with Claude Code)"
+  - "A Git repository, so you can revert changes"
+lastVerified: 2026-11-02
+sources:
+  - title: "Common workflows (Fix bugs efficiently, Plan before editing, Work with images)"
+    url: "https://code.claude.com/docs/en/common-workflows"
+  - title: "Best practices for Claude Code"
+    url: "https://code.claude.com/docs/en/best-practices"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- The official workflow for an error has three moves: share the error with Claude, ask for fix recommendations, then apply the fix. The docs' tips: give the command that reproduces the problem and a stack trace, say what steps trigger it, and say whether it happens every time or only sometimes.
+- A specific prompt saves rounds of correction. The best-practices page says to name the file, describe the symptom, and say what "fixed" looks like.
+- Give Claude a check that comes back pass or fail (a test, a build's exit code, a linter). Then Claude can run it, read the output and fix what broke by itself. Ask for the command and its output as evidence, and run the check yourself too.
+- Error messages and logs can contain secrets (keys, tokens, passwords, personal data). Remove them before you paste, and keep secret files out of Claude's reach with deny rules.
+- We read the two official pages on 2026-11-02. We did not run Claude Code for this tutorial, so every command and behavior below comes from the docs. The prompts are our own examples.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Hand Claude an error in the form that helps most: the error text, the command that triggers it, and what you expect instead.
+- Remove secrets from an error message or log before you share it.
+- Choose between "explain first" (plan mode) and "fix directly", and know how to step back (`Esc`, `/rewind`, git).
+- Confirm a fix with a test that failed before and passes after, and review the diff.
+
+## Concepts to know first
+
+A **stack trace** is the list of function calls printed when a program crashes; its top lines usually point at the file and line where it failed. A **regression test** is a test that fails because of the bug and keeps passing once it is fixed. [1. Getting started with Claude Code](/coding/06-claude-code-start/) shows how to start it. [Coding 13](/coding/40-settings-permissions/) covers the permission modes and deny rules used below. [Coding 15](/coding/42-code-review-ai/) shows how to have the change reviewed before you merge it.
+
+<Aside type="caution" title="Errors can carry secrets">
+Logs and stack traces sometimes include API keys, tokens, passwords, connection strings, customer names or email addresses. Anything you paste goes to the AI service. Replace them with placeholders like `REDACTED` first, and if a real secret was already shared, rotate it. See [Basics 5](/basics/05-privacy-safety/) and [Basics 12](/basics/12-privacy-settings/).
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I can reproduce the error with one command',
+  'I removed keys, tokens and personal data from what I will share',
+  'I told Claude what "fixed" means and gave it a test or command to run',
+  'I read the proposed cause and the diff before accepting it',
+  'I ran the test myself and know how to revert (git)',
+]} />
+
+<Steps>
+
+1. **Reproduce the error and note what you see**
+
+   Write down the exact command that fails (for example `npm test`), the full error text, and whether it happens every time or only sometimes. The official tips say to tell Claude the command to reproduce the issue and get a stack trace, mention the steps to reproduce it, and say whether it is intermittent or consistent. Work in a Git repository, on a branch, so you can undo.
+
+2. **Clean the message before you share it**
+
+   Copy the error text into a scratch file and replace anything private: keys, tokens, passwords, URLs with credentials, user names, emails. Keep the parts that matter: the error type, the message, the file names and line numbers. Do not paste whole `.env` files or log dumps; paste the relevant lines.
+
+   You can also keep Claude away from secret files. The best-practices page shows a `permissions.deny` list in `.claude/settings.json` with entries such as `Read(./.env)`, `Read(./.env.local)` and `Read(./secrets/**)`, and says that with it asking Claude what is in `.env` fails, through the Read tool and through `cat .env` alike. It also says rules match tool calls, not intent, so treat it as one layer and read the page for the limits. [Coding 13](/coding/40-settings-permissions/) explains where these rules live.
+
+3. **Start Claude Code and share the error with context**
+
+   Open `claude` in the project folder. The docs' starting example is as short as "I'm seeing an error when I run npm test". A more specific prompt works better, because the best-practices page says naming the file, describing the symptom and saying what "fixed" looks like usually saves a round of corrections. Here is a prompt template of our own:
+
+   <PromptBox>
+   When I run npm test, the test "saves a draft" fails. The cleaned error is below. I expect it to pass. First explain the most likely cause in plain words and point to the file and line. Do not change any files yet.
+
+   TypeError: Cannot read properties of undefined (reading 'id') at saveDraft (src/drafts.js:42)
+   </PromptBox>
+
+   Other ways to hand over information, from the best-practices page: type `@` and a path to include a file's contents; paste a screenshot of the error into the prompt (the common-workflows page lists dragging an image in, or copying and pasting it with `Ctrl+V`); or pipe command output in with `cat error.log | claude -p "what's going on here"`. For piped logs, clean them first.
+
+4. **Ask for causes before changes**
+
+   Good debugging separates the symptom from the cause. Ask for several explanations and for how to tell them apart:
+
+   <PromptBox>
+   List the three most likely causes of this error, with the evidence for each in the code. Tell me one command or log line that would confirm or rule out each one. Then wait for me to choose.
+   </PromptBox>
+
+   If you want to review a plan before anything is edited, the docs describe **plan mode**: Claude reads files and proposes a plan but makes no edits until you approve, and the status bar shows "plan mode on". Start it with `claude --permission-mode plan`. The common-workflows page's second step is the same idea: ask for a few ways to fix the problem (its example is "suggest a few ways to fix the @ts-ignore in user.ts"), then apply one.
+
+5. **Ask for a failing test first, then a small fix**
+
+   The best-practices page gives this pattern in its example prompt: look at the relevant code, write a failing test that reproduces the problem, then fix it. A test that fails for the right reason is proof you found the bug, and the same test guards against it returning.
+
+   <PromptBox>
+   Write a test that reproduces this failure and run it to show me that it fails with this error. Then make the smallest change that fixes the cause. Do not hide the error with a try/catch, a default value that masks bad data, or by skipping the test. Run the test again and show me the output.
+   </PromptBox>
+
+   The "do not hide the error" line is our own advice: an AI can make an error message disappear without fixing what causes it, so ask for the cause, not just a quiet screen. Read each proposed edit before you accept it. Press `Esc` to stop Claude mid-action without losing the work so far.
+
+6. **Verify it yourself**
+
+   The docs say Claude stops when the work looks done, and that a check returning pass or fail lets it close the loop itself: make the change, run the check, read the output, fix what broke. They also say to ask for evidence, meaning the command it ran and its output, because "all tests pass" on its own tells you little. Then do your own check:
+
+   ```bash
+   # run these in your own terminal, not through Claude
+   git diff            # read every changed line
+   npm test            # or your project's test command
+   ```
+
+   Confirm that the new test fails without the fix and passes with it (you can temporarily revert the fix to see it fail). Run the whole suite, not only the new test, to catch side effects. If the project's real behavior matters, run the app and try the original steps.
+
+7. **Undo cleanly when the fix goes wrong**
+
+   If Claude drifts, the best-practices page says to press `Esc` right away, and after two failed corrections to run `/clear` and write a better prompt instead of a third correction. `/rewind` (or `Esc` twice on an empty prompt) opens a menu where you can roll the code, the conversation or both back to an earlier prompt. Git is still your safety net: `git restore <file>` or `git switch` back to a clean branch.
+
+   For a hard bug in code you did not write, the best-practices page says raising effort with `/effort high` or `/effort xhigh` makes Claude check more edge cases, at the cost of more time and tokens.
+
+8. **Ask for a review and write down the cause**
+
+   When the test passes, `/code-review` reviews the change in a fresh subagent that did not see your conversation (see [Coding 15](/coding/42-code-review-ai/)). Then ask for a short note you can put in the commit message or ticket:
+
+   <PromptBox>
+   Summarize in five lines: the symptom, the root cause, the change we made, how we tested it, and one thing to watch for next time. Do not claim anything we did not run.
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+| Task | Command or place |
+| --- | --- |
+| Review a plan before edits | `claude --permission-mode plan` |
+| Pipe a log in (clean it first) | `cat error.log \| claude -p "what's going on here"` |
+| Include a file | type `@` and the path |
+| Stop Claude mid-action | `Esc` |
+| Roll back code or conversation | `/rewind` or `Esc` twice on an empty prompt |
+| Start over with a better prompt | `/clear` |
+| Have the change reviewed | `/code-review` |
+| Hide secret files from Claude | `permissions.deny` in `.claude/settings.json` |
+
+## Common problems
+
+### Claude fixed the message but the bug is still there
+
+- **Cause**: The change may hide the symptom (a swallowed exception, a default value) instead of fixing the cause.
+- **Fix**: Ask for the root cause with evidence, and require a test that fails before the fix and passes after.
+
+### Claude cannot reproduce the error
+
+- **Cause**: Missing information: the command, the input, the environment, or whether it is intermittent.
+- **Fix**: Give the exact command, steps, and whether it happens every time. For flaky bugs, say so and ask Claude to find what varies.
+
+### The fix breaks something else
+
+- **Cause**: The change touched shared code, and only the new test was run.
+- **Fix**: Run the full test suite, read `git diff`, and revert with git if needed.
+
+### I pasted a secret by mistake
+
+- **Cause**: A log or error contained a key or token.
+- **Fix**: Treat it as exposed and rotate it in the service that issued it. Then clean the next message before sharing.
+
+## Practical tips
+
+- Change one thing at a time and re-run the test after each change.
+- A small reproducible example is easier to debug than a whole app. Ask Claude to help shrink the failing case.
+- Keep the real error text in the prompt. A summary like "it crashes" loses the clue.
+- Do not accept a fix you cannot explain in your own words.
+- Re-check commands and behaviors against the official pages, since Claude Code changes often.
+
+## Next tutorials
+
+- [1. Getting started with Claude Code](/coding/06-claude-code-start/)
+- [13. Tune settings and permissions](/coding/40-settings-permissions/) — deny rules and permission modes
+- [15. AI code review](/coding/42-code-review-ai/) — have the fix reviewed before merging
+- [Basics 5. Privacy and safety](/basics/05-privacy-safety/)
+- [Developer guide](/roles/developer/)
