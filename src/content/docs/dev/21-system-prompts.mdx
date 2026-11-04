@@ -1,0 +1,214 @@
+---
+title: "Write Effective System Prompts for Your Claude API App"
+description: "Where the system prompt goes in the Messages API, and how to give Claude a role, context, clear instructions, examples and an output format with XML tags, based on the official prompting best practices"
+sidebar:
+  label: "21. System prompts"
+level: advanced
+category: dev
+tools: ["Claude API", "Messages API", "Python", "anthropic SDK"]
+duration: "35 min"
+prerequisites:
+  - "You've finished C16. Getting started with the Claude API (API key, environment variable setup)"
+  - "Python 3.10 or later, pip install anthropic"
+  - "You've made at least one Messages API call (Dev 1 or Dev 15 is a good place)"
+lastVerified: 2026-11-04
+sources:
+  - title: "Prompting best practices"
+    url: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+  - title: "Messages API reference (system parameter)"
+    url: "https://platform.claude.com/docs/en/api/messages"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- In the Messages API the system prompt is the top-level `system` parameter: a string, or an array of text blocks (which can carry `cache_control`). It is not a message with a `system` role.
+- The official guide's core advice: be clear and direct, add the reason behind a rule, show a few examples, separate parts with XML tags, and give Claude a role (even one sentence helps).
+- Test from the docs: show the prompt to a colleague with no context. If they would be confused, Claude will be too.
+- For formatting, say what to do instead of what not to do, and match your prompt's own style to the output you want.
+- Examples: the docs recommend 3-5, wrapped in `<example>` tags, relevant and diverse. The sample below uses only one to stay short.
+- Keep the system prompt stable and put it first for caching ([Dev 19](/dev/19-prompt-caching/)); to force a JSON shape use structured outputs ([Dev 13](/dev/13-structured-outputs/)), not wording alone.
+- On 2026-11-04 I read two official pages. **I did not call the API** (no API key, no `anthropic` package); the example only passed a Python syntax check, so its output is not shown.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Put a system prompt in a Messages API request, as a string or as text blocks.
+- Write one with a role, rules with reasons, examples and an output format.
+- Use XML tags to keep instructions, data and examples apart.
+- Decide what belongs in the system prompt, in the user message, or in structured outputs.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **System prompt** | The `system` parameter: context and instructions for Claude, such as a goal or a role. |
+| **Role** | One or more sentences in the system prompt that say who Claude is for this app. |
+| **Few-shot (multishot) examples** | A few sample inputs and outputs inside the prompt that show the format, tone and structure you want. |
+| **XML tags** | Descriptive tags such as `<rules>` or `<example>` that separate kinds of content. The docs name `<instructions>`, `<context>` and `<input>` as examples. |
+
+<Aside type="note" title="What this lesson did and did not verify">
+Facts come from the two official pages in the front matter, read on 2026-11-04. The old dedicated "system prompts" docs URL now leads to the Prompting best practices page, so that one page is the source for the advice. The sample script passed a Python compile check only. I sent **no** request, so I cannot show what Claude answers; run it yourself and judge the result. Claims such as "tags reduce misinterpretation" are the docs' statements, not something I measured. The model ID `claude-opus-5-5` appears in the docs' own system prompt examples; check the models overview for the model you actually want.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'My system prompt is passed in the system parameter, not as a message',
+  'It says who Claude is for this app and who the readers are',
+  'Each important rule has a reason next to it',
+  'Instructions, data and examples are in separate tags',
+  'The output format is described in positive terms',
+  'I tested it with a normal input, an edge case and an off-topic input',
+]} />
+
+<Steps>
+
+1. **Put the prompt in the `system` parameter**
+
+   The Messages API reference lists `system` as an optional string or array of text blocks, described as a way of giving Claude context and instructions, such as a goal or a role. The docs show a one-sentence role like this:
+
+   ```python
+   message = client.messages.create(
+       model="claude-opus-5-5",
+       max_tokens=1024,
+       system="You are a helpful coding assistant specializing in Python.",
+       messages=[
+           {"role": "user", "content": "How do I sort a list of dictionaries by key?"}
+       ],
+   )
+   ```
+
+   The docs say that even a single sentence of role makes a difference. The array form takes `{"type": "text", "text": "..."}` blocks, and each block may carry `cache_control` (see step 6).
+
+2. **Be clear, direct and specific**
+
+   The docs compare Claude to a brilliant but new employee who lacks context on your norms and workflows. The more precisely you explain what you want, the better the result. Their key test: show the prompt to a colleague with minimal context and ask them to follow it. If the colleague would be confused, Claude will be too. More points from the page:
+
+   - Be specific about the output format and constraints.
+   - Use numbered lists or bullets when the order or completeness of steps matters.
+   - If you want Claude to do more than the task strictly requires, ask for it explicitly instead of relying on inference.
+
+3. **Give the reason behind a rule**
+
+   The docs say context or motivation helps Claude generalize. Their example replaces `NEVER use ellipses` with "Your response will be read aloud by a text-to-speech engine, so never use ellipses since the text-to-speech engine will not know how to pronounce them." In your app, write where the answer is shown (a small chat widget, an email, a voice reader) and who reads it.
+
+4. **Separate parts with XML tags and add examples**
+
+   The docs say XML tags help Claude parse prompts that mix instructions, context, examples and variable input. Use consistent, descriptive tag names, and nest when the content has a hierarchy. For examples, the docs ask for **relevant** (close to your real use), **diverse** (cover edge cases) and **structured** (inside `<example>`, with several in `<examples>`) ones, and say 3-5 examples work best. They also say you can ask Claude to review your examples or generate more.
+
+   Save this as `system_demo.py`. It is a made-up shop assistant; the shop and its rules are invented for the demo. It has one example only, to keep it short, so add more for real use.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the environment
+
+   SYSTEM = """You are the support assistant for Harbor Bikes, a small bike repair shop.
+
+   <rules>
+   - Answer only from the shop information below. If the answer is not there, say you do not know and suggest calling the shop.
+   - Reply in 3 sentences or fewer, in plain text, with no markdown.
+   - The reply is shown in a small chat widget, so short text reads best.
+   </rules>
+
+   <shop_info>
+   Open Tuesday to Saturday, 10:00 to 18:00. Flat tire repair is a fixed-price service.
+   </shop_info>
+
+   <examples>
+   <example>
+   <question>Are you open on Sunday?</question>
+   <reply>No, we are closed on Sundays. We are open Tuesday to Saturday, 10:00 to 18:00.</reply>
+   </example>
+   </examples>"""
+
+   reply = client.messages.create(
+       model="claude-opus-5-5",
+       max_tokens=300,
+       system=SYSTEM,
+       messages=[{"role": "user", "content": "Do you fix flat tires on weekends?"}],
+   )
+   print(reply.content[0].text)
+   ```
+
+   Status: **not run.** It passed `python3 -I -m py_compile` only. Try the question about weekends, a question the shop info does not answer (price), and an off-topic one, then adjust the rules.
+
+5. **Control the output format**
+
+   The docs list ways to steer formatting:
+
+   | Technique | Docs example |
+   | --- | --- |
+   | Say what to do, not what to avoid | Instead of "Do not use markdown", try "Your response should be composed of smoothly flowing prose paragraphs." |
+   | Use XML format indicators | Ask for the prose sections inside a named tag. |
+   | Match prompt style to output style | Removing markdown from your prompt can reduce markdown in the output. |
+   | Give detailed guidance when needed | The page includes a longer sample block for minimizing markdown. |
+
+   If your code parses the reply, do not rely on wording alone. The docs point to **structured outputs** for constraining Claude to a schema, and say prefilled responses on the last assistant turn are no longer supported starting with Claude 4.6 models (a 400 error). See [Dev 13](/dev/13-structured-outputs/). For skipping preambles, the docs suggest a system prompt instruction such as "Respond directly without preamble."
+
+6. **Keep it stable, and watch length and tone**
+
+   - **Caching:** a cache prefix is built in the order tools, system, then messages, so a stable system prompt is a good thing to cache. See [Dev 19](/dev/19-prompt-caching/).
+   - **Long documents:** the docs say to put long data (20k+ tokens) near the top, above the query, and that queries at the end can improve quality by up to 30 percent in their tests. Put those in the user message, wrapped in `<document>` tags, rather than growing the system prompt.
+   - **Shouting:** the docs say newer models respond more to the system prompt, so aggressive wording like "CRITICAL: You MUST..." can cause overtriggering. Use normal wording such as "Use this tool when...". The page states this for Claude Opus 4.5 and 4.6 specifically; I did not confirm it for other models, so test.
+   - **Model differences:** the page says a technique named for a model was measured on that model, so re-check it against your own evals on another. There are per-model prompting pages; I did not open them.
+
+   <PromptBox>
+   Review my system prompt for a Claude API app. Check it against these points: does it state a role and who reads the answers, does each rule have a reason, are instructions, data and examples separated with XML tags, is the output format described by what to do instead of what not to do, and is there any all-caps or absolute wording that could be softened. Then suggest three test inputs: a normal one, an edge case and an off-topic one. Do not invent facts about my product; ask me if something is missing. Here is the prompt, with secrets and customer data removed: (paste your system prompt)
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+| Item | Value (official docs, as of 2026-11-04) |
+| --- | --- |
+| Where | Top-level `system` parameter: string or array of text blocks |
+| Role | Even one sentence helps |
+| Examples | 3-5, relevant, diverse, in `<example>` / `<examples>` |
+| Structure | Consistent, descriptive XML tags; nest when hierarchical |
+| Long input | Data at the top, query at the end |
+| Format control | Say what to do; match prompt style to output style |
+| Strict JSON | Use structured outputs; prefill on the last turn is not supported from Claude 4.6 models |
+
+## Common sticking points
+
+### Claude ignores a formatting rule
+
+- **Cause**: The rule is phrased as a ban, or your prompt itself is full of markdown.
+- **Fix**: Rewrite it as what to do, and match your prompt style to the output you want.
+
+### The answers are too long or too short
+
+- **Cause**: The format and length were not stated. The docs also say Claude Opus 5's default responses run longer and effort does not reliably change visible length, so ask for conciseness explicitly.
+- **Fix**: State a length limit and where the answer is displayed.
+
+### One example makes every answer look the same
+
+- **Cause**: Claude picked up an unintended pattern from a single example.
+- **Fix**: Add diverse examples (the docs recommend 3-5) that cover edge cases.
+
+### The app breaks when the reply is not valid JSON
+
+- **Cause**: Wording alone does not guarantee a schema.
+- **Fix**: Use structured outputs ([Dev 13](/dev/13-structured-outputs/)) and handle errors ([Dev 20](/dev/20-errors-retries/)).
+
+## Practical tips
+
+- Keep the system prompt in version control and change one thing at a time, then re-run the same test inputs. This is general practice, not from the docs.
+- Do not put secrets or customer data in the system prompt; treat it as something a user might try to read out. This is general advice, not from the docs.
+- Keep a small set of test questions, including off-topic and tricky ones, and re-run it whenever you change the prompt or the model.
+- For writing prompts in the chat app rather than the API, see [C4. Writing good prompts](/claude/c04-prompting/).
+
+## Next tutorials
+
+- [13. Structured outputs](/dev/13-structured-outputs/) — make the reply match a schema
+- [19. Prompt caching](/dev/19-prompt-caching/) — cache a long, stable system prompt
+- [20. Errors and retries](/dev/20-errors-retries/) — what to do when a call fails
+- [C4. Writing good prompts](/claude/c04-prompting/) — the chat-app side of the same guide
+- [C16. Getting started with the API](/claude/c16-api/)
