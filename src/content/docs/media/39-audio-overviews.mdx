@@ -1,0 +1,200 @@
+---
+title: "Turn Documents into Audio Overviews"
+description: "How to turn your own PDFs and documents into a spoken Audio Overview in Gemini Notebook (formerly NotebookLM), choose a format, language and length, and check what you hear against the sources, based on Google's official help pages"
+sidebar:
+  label: "16. Audio overviews"
+level: beginner
+category: media
+tools: ["Gemini Notebook (NotebookLM)"]
+duration: "20 min"
+prerequisites:
+  - "A Google account that can use Gemini Notebook"
+  - "One or two documents you may upload (no confidential or personal information)"
+lastVerified: 2026-11-04
+sources:
+  - title: "Generate Audio Overview in Gemini Notebook (Google official help)"
+    url: "https://support.google.com/gemininotebook/answer/16212820"
+  - title: "Add or discover new sources for your notebook"
+    url: "https://support.google.com/gemininotebook/answer/16215270"
+  - title: "Manage your Gemini Notebook usage limits"
+    url: "https://support.google.com/gemininotebook/answer/17670842"
+  - title: "Learn about Gemini Notebook"
+    url: "https://support.google.com/gemininotebook/answer/16164461"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+<Summary>
+- An **Audio Overview** is a spoken discussion between AI hosts about the sources you upload. Google describes it as meant to reflect your sources objectively, not as the hosts' opinions.
+- It is a way to **listen** to a long document, for example on a commute. It is not a replacement for reading anything you must get exactly right.
+- You pick a format (Deep Dive, Brief, Critique, Debate), a language (80+ languages, Korean included on the list) and a length, and can add a prompt to set the focus.
+- Google says the audio, voices included, is AI-generated and **may contain inaccuracies or audio glitches**. Check names, numbers and dates against the original.
+- Usage limits depend on your plan and refresh on a schedule. Pricing and exact plan details were not confirmed here.
+</Summary>
+
+<Aside type="note" title="This page is about listening">
+How to build a notebook, ask questions with citations, and make flashcards is covered in [Studying and Organizing with Gemini Notebook (formerly NotebookLM)](/chat/21-notebooklm/). This tutorial only covers turning documents into audio. The service is called "Gemini Notebook" in Google's help pages; this site's older pages call it NotebookLM. Treat them as the same service.
+</Aside>
+
+<Aside type="caution" title="Before you upload">
+Everything you add becomes a source in a Google service. Do not upload other people's personal data, company secrets, or material you have no right to use. Google's help page for sources advises against uploading documents you do not have rights to. See [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/) and [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/). Work and school accounts can use it only where the admin allows.
+</Aside>
+
+## What you'll be able to do after this tutorial
+
+- Create an Audio Overview from one or more documents.
+- Choose the format, language and length that fit your purpose.
+- Guide the topics and the level of the conversation with a short prompt.
+- Check the audio against the sources and share or download it carefully.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Notebook / source** | A notebook holds the sources you add. The audio is built from them. |
+| **Studio panel** | The area where you generate outputs such as Audio Overviews. |
+| **Deep Dive** | The default format: two hosts talk through and connect the topics in your sources. |
+| **The Brief** | One speaker gives the key takeaways in under two minutes. |
+| **The Critique** | Two hosts give a constructive evaluation of something like an essay or design document. |
+| **The Debate** | Two hosts hold a formal back-and-forth on the topic. |
+| **Interactive mode** | You join the conversation by voice. Currently English only, per Google's page. |
+
+### What Google's pages say (as of 2026-11-04)
+
+| Item | What the page says |
+| --- | --- |
+| Source types | PDF, Word (docx), text, Markdown, CSV, PowerPoint (pptx), Google Docs, Slides, Sheets, ePub, images, audio files, web addresses, public YouTube videos, pasted text and more |
+| Source size | Up to 500,000 words per source, or 200MB per uploaded file |
+| Number of sources | Up to 50 per notebook for free users |
+| Languages | 80+ output languages. Default is your Google Account's preferred language |
+| Length | Shorter, Default, or Longer (Longer is English only) |
+| Time to generate | "A couple of minutes". It runs in the background |
+| Who can generate | You need edit access to the notebook |
+| Playback | You can change the speed. You can keep working and listen at the same time |
+| Mobile | The mobile app may have limitations for this feature |
+
+## Step by step
+
+The example is "turning a 20-page report you wrote yourself into a short audio summary for the commute."
+
+<Checklist items={[
+  'The documents are mine, or I have the right to use them',
+  'They contain no personal data or secrets',
+  'I chose a format and a language',
+  'I listened to the whole audio, not just the start',
+  'I checked names, numbers and dates against the original',
+  'I confirmed who can access the notebook before sharing',
+]} />
+
+<Steps>
+
+1. **Create a notebook and add your sources**
+
+   Open Gemini Notebook (the address shown in Google's help for the chat settings guide is notebook.google.com), create a notebook, and use Add sources. A cleaner, shorter source set gives a more focused audio, so add only what the audio should cover.
+
+   <FlowSteps title="Add sources to a notebook" officialUrl="https://support.google.com/gemininotebook/answer/16215270" steps={[
+     { where: 'Gemini Notebook', action: 'Open or create a notebook you own', result: 'An empty notebook' },
+     { where: 'Left side', action: 'Select Add sources and choose files, text or web addresses', result: 'The sources appear in the Sources panel' },
+     { where: 'Sources panel', action: 'Check that only the sources you want are included', result: 'The audio will draw on these' },
+   ]} />
+
+2. **Open the Studio panel and choose Audio Overview**
+
+   In the Studio panel select Audio Overview. In the generation panel you can set the format, the language and the length, and write a prompt. The audio is generated in the background, so you can do other things meanwhile.
+
+   | Goal | Format to try |
+   | --- | --- |
+   | Understand a topic in depth | Deep Dive |
+   | A quick pre-meeting recap | The Brief |
+   | Get feedback on your own draft | The Critique |
+   | See both sides of an issue | The Debate |
+
+3. **Steer it with a short prompt**
+
+   Google's page says the prompt can focus on specific topics or adjust the expertise level.
+
+   <PromptBox label="Prompt for the Audio Overview box">
+   Focus on the three main conclusions and the budget section. Explain it for someone who has not read the report and is new to the subject. Say the figures clearly and mention where the report is unsure.
+   </PromptBox>
+
+   The prompt shapes emphasis; it does not guarantee that every point is covered or correct.
+
+4. **Listen, then check**
+
+   <Aside type="caution" title="Listening is not verifying">
+   Google states that Audio Overviews may contain inaccuracies or audio glitches. A confident voice can make a wrong statement sound right. Note any number, date, name or recommendation you will act on and check it in the source. See [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/).
+   </Aside>
+
+   While the audio plays you can keep using the notebook, look at quotes and citations, and ask the sources questions. You can change the playback speed from the More menu.
+
+5. **Reload, share or download**
+
+   - **Reload**: in the Studio panel find the earlier audio and select Load. The three-dot menu has View custom prompt to see the prompt you used.
+   - **Share a link**: Share in the audio player. The page says to confirm the notebook is shared with the recipient or made public with access to the full notebook. Public sharing is only enabled for consumer accounts, not Workspace Enterprise or Education accounts.
+   - **Share the whole notebook**: others then find the audio in their Studio panel, along with your sources.
+   - **Download**: select Download and send the file. For notebooks with a Play Books ebook as a source, the page says download may be restricted by the publisher.
+   - If you delete the audio, old share links stop working.
+
+6. **Optional: join the conversation**
+
+   Interactive mode lets you ask the hosts questions by voice. Google's page says it is currently available only in English and only for newly generated overviews, with possible delays and glitches. Others cannot interact through a shared link.
+
+</Steps>
+
+## Quick reference
+
+| Need | What to do |
+| --- | --- |
+| Hear a short summary | Choose The Brief |
+| Another language | Choose a language in the generation panel (default follows your Google Account) |
+| Shorter or longer | Shorter, Default, Longer (Longer is English only) |
+| Focus on one chapter | Add a prompt, or select only that source |
+| Out of usage | Wait for the refresh, or use Generate later (web only) |
+| Check your usage | Settings > Usage |
+
+### Usage limits (from Google's page)
+
+Limits are compute-based and refresh every 5 hours up to a weekly limit. Without a plan you get standard limits; AI Plus is two times, AI Pro four times, and AI Ultra 5x or 20x higher than AI Pro, depending on the subscription. Google says limits may change. We did not confirm prices.
+
+## Common sticking points
+
+### The Audio Overview button is missing or will not start
+
+- **Cause**: You may lack edit access to the notebook, the mobile app may have limits, or your account or country may not be supported.
+- **Fix**: Use a notebook you own, try the web version, and check Google's availability page for your account type.
+
+### The audio is in the wrong language
+
+- **Cause**: The default is your Google Account's preferred language.
+- **Fix**: Choose the language in the generation panel before generating.
+
+### The audio leaves out something important
+
+- **Cause**: The hosts summarize; they do not read everything.
+- **Fix**: Add a prompt naming the topic, select fewer sources, or read that part directly.
+
+### I hit the usage limit
+
+- **Cause**: Limits are compute-based and generation uses a lot.
+- **Fix**: Wait for the 5-hour refresh, use Generate later on the web, or consider a higher plan.
+
+## Practical tips
+
+- **One purpose per notebook.** Few, relevant sources make a tighter audio.
+- **Make it a first pass.** Use audio to decide what to read closely, then read the important parts.
+- **Keep a written copy.** For anything you will quote, work from the source text.
+- **Do not present it as a human recording.** If you share the audio, say it is AI-generated.
+- **Not tested here.** We did not generate an audio file while writing this page. Everything above comes from Google's help pages as read on 2026-11-04. Audio length, voice quality and the exact button labels on your screen may differ.
+
+## What to read next
+
+- [Studying and Organizing with Gemini Notebook (formerly NotebookLM)](/chat/21-notebooklm/) — notebooks, citations, flashcards
+- [Summarizing Meeting Notes and Long Documents, and Pulling Out Action Items](/chat/02-summarize-documents/) — text summaries
+- [AI Voice Narration: Turn a Script into a Voice](/media/15-voice-narration/) — text to a chosen voice
+- [Turn Meeting and Lecture Recordings into Organized Text](/media/14-transcribe-recordings/) — the opposite direction, audio to text
+- [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/) — checking what you heard
