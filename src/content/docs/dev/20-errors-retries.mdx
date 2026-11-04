@@ -1,0 +1,317 @@
+---
+title: "Handle Claude API Errors, Rate Limits and Retries"
+description: "What each HTTP error from the Claude API means, which ones to retry, how retry-after and the rate limit headers work, what the SDK retries for you, and how to spot a spend-cap 429, from the official docs"
+sidebar:
+  label: "20. Errors and retries"
+level: advanced
+category: dev
+tools: ["Claude API", "Messages API", "Python", "anthropic SDK"]
+duration: "40 min"
+prerequisites:
+  - "You've finished C16. Getting started with the Claude API (API key, environment variable setup)"
+  - "Python 3.10 or later, pip install anthropic"
+  - "You've made at least one Messages API call (Dev 1 or Dev 15 is a good place)"
+lastVerified: 2026-11-04
+sources:
+  - title: "Claude API errors"
+    url: "https://platform.claude.com/docs/en/api/errors"
+  - title: "Rate limits"
+    url: "https://platform.claude.com/docs/en/api/rate-limits"
+  - title: "Python SDK (handling errors, retries, timeouts)"
+    url: "https://platform.claude.com/docs/en/cli-sdks-libraries/sdks/python"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- Errors come back as JSON with a top-level `error` object (`type` and `message`) and a `request_id`. Log the `request-id` response header; support asks for it.
+- Documented codes: 400 `invalid_request_error`, 401 `authentication_error`, 402 `billing_error`, 403 `permission_error`, 404 `not_found_error`, 409 `conflict_error`, 413 `request_too_large`, 429 `rate_limit_error`, 500 `api_error`, 504 `timeout_error`, 529 `overloaded_error`.
+- The official SDK already retries transient failures with exponential backoff, **2 times by default**, and honors `retry-after` when present. Set `max_retries` to change or disable it. The Python SDK page lists connection errors, 408, 409, 429 and 5xx as retried.
+- For a 429, wait `retry-after` seconds; earlier retries fail. Not every 429 has that header. A **spend-cap 429** never has it and keeps failing until access resumes, so check `error.details.error_code` for `enforced_spend_limit_reached`.
+- Rate limits are counted in requests, input tokens and output tokens per minute, with a token bucket that refills continuously. For most models, cache reads do not count toward input tokens per minute.
+- Streaming can fail **after** a 200 response, and that error does not follow these rules.
+- On 2026-11-04 I read three official pages and tested only the decision function of the demo script locally. **I did not call the real API** (no API key, no `anthropic` package), so the retry loop itself is untested here.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Read an error response and decide whether to fix the request, wait and retry, or stop.
+- Tell a normal rate limit 429 from a spend-cap 429.
+- Use the SDK's built-in retries instead of writing your own, and know when your own layer still helps.
+- Read the rate limit headers and the `request-id` to debug and to report problems.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Transient error** | A failure that may succeed if you try again: connection problems, 429, 5xx. |
+| **Exponential backoff** | Waiting longer after each failed try, for example 1, 2, 4 seconds. |
+| **`retry-after`** | A response header with the number of seconds to wait. The docs say earlier retries will fail. |
+| **Token bucket** | The docs say rate limiting uses this algorithm, so capacity refills continuously up to the maximum instead of resetting at fixed times. |
+| **Request ID** | The `request-id` header, also the `request_id` field in error bodies. Include it when you contact support. |
+
+<Aside type="note" title="What this lesson did and did not verify">
+Facts come from the three official pages in the front matter, read on 2026-11-04. I compiled the demo script and ran only its `decide` function against made-up inputs. I did **not** send any real request and did not provoke a real 429 or 529. Treat your first real run as a test. The docs' example snippets use several model IDs; this lesson uses `claude-opus-5-5`, which also appears in the Python SDK page examples.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I log the request-id of every failed call',
+  'I know which status codes I should never retry without changing something',
+  'My code treats a 429 with no retry-after, or a spend-cap code, as a stop signal',
+  'I set max_retries on purpose instead of relying on the default by accident',
+  'I use streaming or batches for long requests, not a huge max_tokens in one plain call',
+  'I tested at least one failure path (for example a wrong API key) and read the error',
+]} />
+
+<Steps>
+
+1. **Read the error shape**
+
+   Every error is JSON with `type: "error"`, an `error` object with its own `type` and `message`, and a `request_id`:
+
+   ```json
+   {
+     "type": "error",
+     "error": {
+       "type": "not_found_error",
+       "message": "The requested resource could not be found."
+     },
+     "request_id": "req_011CSHoEeqs5C35K2UUqR7Fy"
+   }
+   ```
+
+   The docs warn that the values inside these objects may expand over time, so do not assume the list of `type` values is closed. Also, a 400 `invalid_request_error` may be used for other 4XX codes not listed.
+
+2. **Sort the status codes into three groups**
+
+   This grouping is my reading of the docs' descriptions, not a table from the docs.
+
+   | Group | Codes (docs name) | What to do |
+   | --- | --- | --- |
+   | Fix the request or account, then resend | 400 `invalid_request_error`, 401 `authentication_error`, 402 `billing_error`, 403 `permission_error`, 404 `not_found_error`, 413 `request_too_large` | Retrying the same request will not help. Check the format, the API key, billing in the Console, workspace access, the endpoint path, or the request size. |
+   | Resolve, then retry | 409 `conflict_error` | The docs say to resolve the conflict, then retry. |
+   | Temporary, retry with backoff | 429 `rate_limit_error`, 500 `api_error`, 504 `timeout_error`, 529 `overloaded_error` | The docs say to retry a 500 with exponential backoff, and to wait `retry-after` seconds on a 429 when it is present. |
+
+   Details worth knowing from the docs:
+
+   - A 400 is also returned when usage reaches a **spend limit you set** yourself (the message starts with `You have reached your specified API usage limits`). Raise or remove the limit to restore access sooner.
+   - A 401 starting with `CORS requests are not allowed for this Organization` is not an API key problem. The request had an `Origin` header (browsers add it), and your organization cannot call the API directly from a browser. Send the request from your own back end.
+   - A 529 means the API is temporarily overloaded and can happen under high traffic across all users. In rare cases a sharp rise in your own usage can cause 429 errors from **acceleration limits**; increase traffic gradually.
+   - A 504 `timeout_error` can also appear with other status codes, for example a 500 when a request hits the server time limit before the response starts.
+   - The Messages API request size limit is 128 MB (Batch API 256 MB, Files API 500 MB). Larger requests get a 413.
+
+3. **Let the SDK retry first**
+
+   You do not have to write a retry loop for the common cases. The docs say the official SDK retries transient failures (connection errors, rate limits, 5xx) with exponential backoff, twice by default, honoring `retry-after`. The Python SDK page also lists 408 and 409 and says the backoff is short. Configure it on the client or per request:
+
+   ```python
+   from anthropic import Anthropic
+
+   client = Anthropic(max_retries=0)  # default is 2; 0 turns retries off
+
+   client.with_options(max_retries=5).messages.create(
+       max_tokens=1024,
+       messages=[{"role": "user", "content": "Hello, Claude"}],
+       model="claude-opus-5-5",
+   )
+   ```
+
+   Timeouts are separate: the default is 10 minutes, set with `timeout`, and a timeout raises `APITimeoutError`. Timed-out requests are retried twice by default too, so a short timeout multiplied by retries can mean a long wait.
+
+4. **Catch the SDK's typed exceptions**
+
+   The SDK raises subclasses of `APIError` instead of returning raw JSON. Catch the specific classes first, and do not string-match messages:
+
+   | Status | Python class |
+   | --- | --- |
+   | 400 | `BadRequestError` |
+   | 401 | `AuthenticationError` |
+   | 403 | `PermissionDeniedError` |
+   | 404 | `NotFoundError` |
+   | 409 | `ConflictError` |
+   | 422 | `UnprocessableEntityError` |
+   | 429 | `RateLimitError` |
+   | 500 and above | `InternalServerError` |
+   | no response | `APIConnectionError` |
+
+   Other languages have their own names; the errors page links each SDK's page. The Python page notes that `e.status_code` and `e.response` are available on `APIStatusError`.
+
+5. **Know the two kinds of 429**
+
+   A rate limit 429 is about speed: you sent too many requests, input tokens or output tokens in a short time. The response tells you which limit, and usually has `retry-after`. Waiting is the fix.
+
+   A **spend-cap 429** is about money: the usage tier's monthly spend cap was reached. The docs give these caps per tier: Start $500, Build $1,000, Scale $200,000 per month; Custom has none. Usage pauses until 00:00 UTC on the first day of the next month unless you get a higher limit. The error body looks like this (message shortened):
+
+   ```json
+   {
+     "type": "error",
+     "error": {
+       "type": "rate_limit_error",
+       "message": "You have reached your API usage limits: ...",
+       "details": { "error_code": "enforced_spend_limit_reached" }
+     },
+     "request_id": "req_018EeWyXxfu5pfWkrYcMdjWG"
+   }
+   ```
+
+   The type is the same `rate_limit_error`, but there is **no `retry-after` header**, and retrying, including the SDK's automatic retries, fails until access resumes. On the Messages API use `error.details.error_code` to tell them apart. Spend limits on the Claude Code workspace are checked separately and can return a 429 that does carry `retry-after`.
+
+6. **Add a small layer of your own**
+
+   Save this as `safe_call.py`. It turns the SDK's own retries off (`max_retries=0`) so there is only one retry layer, stops at once on errors that retrying cannot fix, and for the rest waits `retry-after` (or 1, 2, 4 seconds) before one more attempt from your code. The jitter (a random fraction of a second) is common practice, not from the docs.
+
+   ```python
+   import random
+   import time
+
+   import anthropic
+
+   MODEL = "claude-opus-5-5"
+
+   # The SDK already retries connection errors, 408, 409, 429 and >=500
+   # 2 times by default (honoring retry-after). Here we turn that off.
+   client = anthropic.Anthropic(max_retries=0)  # one retry layer: this script's loop
+
+
+   def decide(status, headers, body):
+       """Return (action, note). action is "fix", "stop", or "wait"."""
+       error = (body or {}).get("error", {})
+       code = (error.get("details") or {}).get("error_code")
+       if status == 429 and code == "enforced_spend_limit_reached":
+           return "stop", "Monthly spend cap reached. Retrying will keep failing."
+       if status == 429 and "retry-after" not in headers:
+           return "stop", "429 without retry-after. Check the message before retrying."
+       if status in (400, 401, 402, 403, 404, 413):
+           return "fix", f"{error.get('type')}: {error.get('message')}"
+       if status in (429, 500, 504, 529):
+           return "wait", f"{error.get('type')}: temporary"
+       return "fix", f"unexpected status {status}"
+
+
+   def ask(prompt, tries=3):
+       for attempt in range(tries):
+           try:
+               return client.messages.create(
+                   model=MODEL,
+                   max_tokens=300,
+                   messages=[{"role": "user", "content": prompt}],
+               )
+           except anthropic.APIStatusError as e:
+               try:
+                   body = e.response.json()
+               except ValueError:
+                   body = {}
+               action, note = decide(e.status_code, e.response.headers, body)
+               print(f"status {e.status_code} | request-id {e.response.headers.get('request-id')} | {note}")
+               if action != "wait" or attempt == tries - 1:
+                   raise
+               seconds = float(e.response.headers.get("retry-after") or 2 ** attempt)
+               time.sleep(seconds + random.random())  # small jitter
+           except anthropic.APIConnectionError:
+               print("could not reach the API")
+               if attempt == tries - 1:
+                   raise
+               time.sleep(2 ** attempt)
+
+
+   if __name__ == "__main__":
+       reply = ask("Say hello in one short sentence.")
+       print(reply.content[0].text)
+   ```
+
+   I compiled it and tested `decide` with made-up status codes, headers and bodies; it classified a spend-cap body as "stop", a 429 with `retry-after` as "wait", a 429 without it as "stop", a 529 as "wait", and a 400 as "fix". **The loop was not run against the real API.** Reading `e.response.json()` and `e.response.headers` follows the `e.response` attribute shown on the Python SDK page; I did not confirm the exact body accessors beyond that.
+
+   SDK retries are off here, so the script makes at most 3 attempts in total. If you keep the SDK's retries on instead, drop your own loop: two stacked layers multiply the attempts (for example 3 x 5 = 15) and add load during an outage.
+
+7. **Read the rate limit headers**
+
+   Every response carries headers that show the limit, what is left and when it refills. The docs list these (replace `...` with the limit type):
+
+   | Header | Meaning |
+   | --- | --- |
+   | `retry-after` | Seconds to wait; earlier retries fail. Not on every 429 |
+   | `anthropic-ratelimit-requests-limit` / `-remaining` / `-reset` | Request limit, requests left, refill time (RFC 3339) |
+   | `anthropic-ratelimit-input-tokens-limit` / `-remaining` / `-reset` | Same for input tokens (remaining is rounded to the nearest thousand) |
+   | `anthropic-ratelimit-output-tokens-limit` / `-remaining` / `-reset` | Same for output tokens |
+   | `anthropic-ratelimit-tokens-*` | The most restrictive limit currently in effect (total of input and output when no workspace limit applies) |
+
+   In Python, `client.messages.with_raw_response.create(...)` gives `response.headers`, and `response.parse()` returns the normal message. Use this to slow down **before** you hit zero, for example by pausing when `-remaining` gets low. Priority Tier has its own `anthropic-priority-*` headers.
+
+   To raise limits, the docs point to **Request tier increase** on the Rate limits page of the Console, or Anthropic support. You can also set lower limits per workspace so one project cannot use up the whole organization. Your own limits and tier appear in the Console at `platform.claude.com/usage/limits`; I did not read your numbers, so look them up there.
+
+8. **Cut how often you hit limits**
+
+   - **Cache the repeated part.** The docs say that for most models only uncached input tokens count toward input tokens per minute: `input_tokens` and `cache_creation_input_tokens` count, `cache_read_input_tokens` does not. See [Dev 19](/dev/19-prompt-caching/).
+   - **Use batches for work that can wait.** The Message Batches API has its own rate limits. See [Dev 16](/dev/16-batch-api/).
+   - **Stream long outputs.** For long requests, especially over 10 minutes, the docs recommend streaming or batches. Some networks drop idle connections, and the SDK checks that non-streaming requests are not expected to exceed 10 minutes. See [Dev 15](/dev/15-streaming/).
+   - **Ramp up gradually** to stay clear of acceleration limits.
+
+   <PromptBox>
+   Review my Claude API error handling. List which HTTP status codes my code retries and which it gives up on, and check them against this rule set: 400, 401, 402, 403, 404 and 413 need a fix before resending; 429 uses the retry-after header when present; a 429 with no retry-after or with error_code enforced_spend_limit_reached should stop; 500, 504 and 529 use exponential backoff. Also tell me whether my retries stack on top of the SDK default of 2 retries, whether I log the request-id header, and what happens if an error arrives in the middle of a stream. Do not invent rate limit numbers; tell me where to look them up. Here is my code with the API key removed: (paste your code)
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+| Item | Value (official docs, as of 2026-11-04) |
+| --- | --- |
+| Error body | `type: "error"`, `error.type`, `error.message`, `request_id` |
+| Retry-worthy | Connection errors, 429, 5xx (Python page also lists 408 and 409) |
+| SDK default | 2 retries with exponential backoff, honors `retry-after`; `max_retries` to change |
+| Python timeout | 10 minutes by default; `APITimeoutError`; timeouts are retried too |
+| `retry-after` | Seconds to wait; absent on a spend-cap 429 |
+| Spend-cap code | `error.details.error_code` = `enforced_spend_limit_reached` |
+| Monthly spend cap | Start $500, Build $1,000, Scale $200,000; Custom none |
+| Request size | Messages 128 MB, Token Counting 128 MB, Batch 256 MB, Files 500 MB |
+| Limits measured in | Requests, input tokens, output tokens per minute, per model class |
+| Mid-stream errors | Can occur after a 200 response; see Error events in the streaming docs |
+
+## Common sticking points
+
+### The SDK seems to hang before it fails
+
+- **Cause**: Automatic retries with backoff, and `retry-after` waits, happen inside the call. With the default 10-minute timeout also retried, a call can take much longer than one timeout.
+- **Fix**: Lower `max_retries` or `timeout` for interactive code, and log each failure with its request-id.
+
+### A 429 keeps coming back no matter how long I wait
+
+- **Cause**: It may be a spend-cap 429, which has no `retry-after` and lasts until access resumes (or until your tier is raised). A spend limit you set yourself returns a 400 instead.
+- **Fix**: Check `error.details.error_code` and the message, which states when access returns. Look at the Billing page and tier in the Console.
+
+### Retries do not help a 400
+
+- **Cause**: The request itself is wrong, or a limit you set was reached.
+- **Fix**: Read `error.message`. The docs also list common validation errors such as prefill not being supported on newer models, thinking blocks being modified, and thinking settings the model does not accept.
+
+### I got a 200 but the output stopped with an error
+
+- **Cause**: With streaming (server-sent events), an error can occur after the 200 response, and it does not follow the standard error mechanisms.
+- **Fix**: Handle error events in the stream. See Error events in the streaming docs and [Dev 15](/dev/15-streaming/).
+
+### Browser calls fail with a 401 about CORS
+
+- **Cause**: The request includes an `Origin` header and your organization cannot call the API from a browser.
+- **Fix**: Call the API from your own back end.
+
+## Practical tips
+
+- Log `request-id`, status, `error.type` and the time for every failure, but never log the API key or full prompts that hold personal data.
+- Make the code that gets a "stop" answer loud: alert a person instead of retrying all night.
+- Give retried writes a way to avoid doing the same work twice in your own system, since a request that timed out may or may not have been processed. This is general advice, not from the docs.
+- Test failure paths on purpose, for example with a wrong API key, before you need them.
+- Tie spend caps and rate limits back to cost work: [Dev 2](/dev/02-cost-optimization/) and [Dev 11](/dev/11-usage-cost-api/).
+
+## Next tutorials
+
+- [1. Build a work bot with tool use](/dev/01-tool-use/) — a loop where retries and errors matter
+- [15. Streaming responses (real-time output)](/dev/15-streaming/) — errors that arrive mid-stream
+- [16. Large jobs with the Batches API (half price)](/dev/16-batch-api/) — a different path for work that can wait
+- [19. Prompt caching](/dev/19-prompt-caching/) — fewer input tokens counted against the limit
+- [C16. Getting started with the API](/claude/c16-api/)

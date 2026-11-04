@@ -1,0 +1,202 @@
+---
+title: "Pull Data Out of PDFs and Invoices with AI"
+description: "Turn PDF invoices and statements into a clean table with AI: what Claude, Gemini and ChatGPT accept, a field-by-field extraction prompt, handling client and personal data, and a checklist for verifying every number"
+sidebar:
+  label: "21. Extract data from PDFs and invoices"
+level: practical
+category: automation
+tools: ["Claude", "Gemini", "ChatGPT", "Google Sheets"]
+duration: "45 min"
+prerequisites:
+  - "An account with Claude, Gemini or ChatGPT"
+  - "Two or three PDF invoices or statements you are allowed to share with an AI service, or made-up practice copies"
+lastVerified: 2026-11-04
+sources:
+  - title: "Upload files to Claude (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/8241126-uploading-files-to-claude"
+  - title: "Create and edit files with Claude (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12111783-create-and-edit-files-with-claude"
+  - title: "Upload & analyze files in Gemini Apps (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/14903178?hl=en"
+  - title: "Work with files (ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/artifacts-viewer.md"
+  - title: "Image inputs (ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/image-inputs.md"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- The flow is **decide the fields → upload a few PDFs → ask for a table with one row per invoice or line → verify every number → paste into a sheet**.
+- Claude accepts PDFs (and CSV, XLSX and more) and Gemini accepts most file types. The ChatGPT pages we read describe attaching source files and images but give no upload limits (checked 2026-11-04).
+- Per Anthropic, Claude reads text and visuals in PDFs of 100 pages or fewer, and text only for 101 to 1,000 pages. Gemini takes up to 10 files per prompt.
+- **A PDF often holds client names, bank details and prices.** Check you may share it with the service, and mask what the table does not need.
+- **AI can misread or invent numbers.** Recalculate the totals yourself before anything goes into your records. We did not run this exercise on real invoices, so the prompts and sample table are our own examples.
+</Summary>
+
+## What you'll be able to do
+
+- Turn a pile of PDF invoices or statements into **one table** with the fields you choose.
+- Write an extraction prompt that returns the same columns every time and marks missing values instead of guessing.
+- Decide which details to remove before you upload.
+- **Verify the result** with a few simple checks, so a wrong digit does not reach your books.
+
+For photos of paper receipts and household budgets, see [Organize Household Budgets and Receipts with AI](/automation/46-budget-sheet/). This page focuses on PDFs, invoices and tables.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Extraction** | Having AI read a document and copy chosen fields (invoice number, date, total) into a structured table. |
+| **Field** | One piece of data you want, such as vendor name or due date. You decide the list. |
+| **Text PDF vs scanned PDF** | A text PDF has real text you can select. A scanned PDF is a picture of a page, so the AI has to read the image, which is more error-prone. |
+| **Line items** | The individual rows on an invoice (product, quantity, price), as opposed to the invoice total. |
+| **Reconciliation** | Checking that the extracted numbers add up, for example that line items sum to the subtotal. |
+
+<Aside type="caution" title="Before you upload">
+Invoices and statements can contain client or vendor names, addresses, tax IDs and bank account numbers. Check your employer's or client's rules first, and read [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/). If you are not sure you may share a document, do not upload it.
+</Aside>
+
+<Aside type="note" title="Things to keep in mind (as of 2026-11-04)">
+- This guide is based on the five official pages in the front matter. We did not run these steps in real accounts, so menu names come from the help text only.
+- We could not find official accuracy figures for any service reading invoices or tables, and we did not test them. Treat every extracted value as a draft.
+- Anthropic's two pages give different file-size numbers: the upload page lists 500 MB per file for chat uploads, while the file-creation page says 30 MB per file for uploads and downloads. We could not tell which applies to your case, so keep files small and check the limit shown in the app.
+- For ChatGPT, the pages we read do not list file types or size limits. We did not read OpenAI's main help center for this page.
+- We did not read official help for tools that specialize in document extraction, so we do not describe them.
+- Features and menus change often. Check them on screen.
+</Aside>
+
+### What each service says it accepts (checked 2026-11-04)
+
+| Service | What the official help says | What we could not confirm |
+| --- | --- | --- |
+| **Claude** | Documents: PDF, DOCX, CSV, TXT, HTML, ODT, RTF, EPUB, JSON, XLSX (XLSX needs code execution and file creation turned on). Chat uploads: up to 20 files per chat; PDFs limited to 1,000 pages. PDFs of 100 pages or fewer: text and visuals analyzed; 101 to 1,000 pages: text only. Non-PDF documents: text only, embedded images not read. Claude can create .xlsx files you download. | Which per-file size limit applies (500 MB vs 30 MB, see above); reading accuracy on scans. |
+| **Gemini** | Up to 10 files per prompt (subject to availability); other file types up to 100 MB each; ZIP files up to 10 files and 100 MB. Rolling usage limits apply, with higher limits on Google AI plans. If analysis fails, re-upload. | Whether every PDF layout is read correctly. |
+| **ChatGPT** | Web: attach source files, review the generated file in chat, download it, and name the page, sheet or table when asking for a revision. Images can be attached, pasted or dragged into the web composer. | File types and size limits for consumer accounts. |
+
+## Step-by-step guide
+
+Practice first with two or three invoices you may share, or with made-up copies.
+
+<Checklist items={[
+  'I may share these documents with this AI service',
+  'I wrote down the fields I need (one line each)',
+  'I removed or masked bank account numbers and anything the table does not need',
+  'I know whether each PDF is a text PDF or a scan',
+  'I will recalculate totals myself before using the table',
+]} />
+
+<Steps>
+
+1. **Decide your columns first**
+
+   Write the fields you want, in order. For example: file name, vendor, invoice number, invoice date, due date, currency, subtotal, tax, total. Decide what to do when a value is missing. A fixed list is what keeps the table the same from one invoice to the next.
+
+2. **Prepare the files**
+
+   - Prefer the original PDF from the sender over a photo or a scan of a printout.
+   - Split a long file if you only need some pages. Anthropic suggests dividing large documents into smaller sections.
+   - If it is a scan, expect more mistakes. Follow Anthropic's image tip where relevant: images of 1000x1000 pixels or larger work better than small or low-resolution ones.
+   - Mask what you do not need, such as bank account numbers.
+
+3. **Upload a small batch**
+
+   Use the **+** button in Claude, **Add files** in Gemini, or attach files in the ChatGPT web composer. Start with two or three files, not the whole folder, so you can check the result.
+
+4. **Ask for a table with rules**
+
+   <PromptBox>
+   Read each attached PDF invoice. Return one table with one row per invoice and these columns in this order: file name, vendor, invoice number, invoice date (YYYY-MM-DD), due date (YYYY-MM-DD), currency, subtotal, tax, total. Rules: copy values exactly as printed. If a value is missing or unreadable, write NOT FOUND instead of guessing. Do not calculate or fix anything. After the table, list any invoice where the subtotal plus tax does not equal the total.
+   </PromptBox>
+
+5. **Extract line items when you need them**
+
+   <PromptBox>
+   For the attached invoice, return one row per line item with these columns: line number, description, quantity, unit price, line amount. Copy the values exactly as printed. Add a final row labeled CHECK that shows the sum of the line amounts so I can compare it with the printed subtotal. Mark anything unclear as NOT FOUND.
+   </PromptBox>
+
+6. **Verify before you trust it**
+
+   Open the PDF next to the table and compare. At minimum:
+
+   - Check every total and date against the document, not only a sample, when the numbers matter.
+   - Add up the line items yourself, or with a spreadsheet `SUM`, and compare with the printed subtotal.
+   - Check that the row count matches the number of invoices you uploaded.
+   - Look for invoices the AI skipped or merged.
+
+   If a value is wrong, tell the AI which row and which field, and ask it to re-read that page.
+
+7. **Move the table into a sheet**
+
+   Copy the table into Google Sheets or Excel, or ask Claude for an .xlsx file. Anthropic says Claude can create Excel files you can download or save to Google Drive, with code execution and file creation turned on. Then set the number columns to a number format and add your own `SUM` to compare with the AI's totals. For adding AI to the sheet itself, see [Adding AI to Excel and Google Sheets: Copilot, Gemini, and Claude](/automation/23-spreadsheet-ai/).
+
+8. **Keep a record and delete what you no longer need**
+
+   Keep the original PDFs as your source of truth. Review the privacy settings and chat history of the service you used. See [Turn Off AI Training on Your Chats: Privacy Settings in Claude, ChatGPT and Gemini](/basics/12-privacy-settings/).
+
+</Steps>
+
+## Quick reference
+
+### Prompt rules that reduce errors
+
+| Rule | Why |
+| --- | --- |
+| Give the exact column list | Same structure every run |
+| "Copy exactly as printed" | Stops silent rounding or reformatting |
+| "Write NOT FOUND instead of guessing" | Makes gaps visible |
+| "Do not calculate or fix anything" | Keeps extraction separate from your checking |
+| Ask for a CHECK row or a mismatch list | Surfaces sums that do not add up |
+| Start with two or three files | Catches layout problems early |
+
+### Checks to run on every batch
+
+| Check | How |
+| --- | --- |
+| Row count | Same as the number of files |
+| Totals | Subtotal plus tax equals total; line items sum to subtotal |
+| Dates | Match the PDF, in one date format |
+| Currency | Same on each row, or noted |
+| Duplicates | The same invoice number should not appear twice by mistake |
+
+## Common sticking points
+
+### The table has the wrong number in one cell
+
+- **Cause**: The AI misread a digit, especially in a scan, or picked a different number on the page.
+- **Fix**: Compare to the PDF, name the row and field, and ask it to re-read that page. Fix it by hand if needed.
+
+### Rows are missing or merged
+
+- **Cause**: Too many files at once, or an invoice that spans several pages.
+- **Fix**: Run smaller batches and check the row count. Gemini's help lists up to 10 files per prompt, and Claude's up to 20 files per chat.
+
+### The upload fails or the answer misses details
+
+- **Cause**: The file is too large or too long. Anthropic says PDFs over 1,000 pages cannot be uploaded, and Gemini's help says very large uploads can give answers that miss details.
+- **Fix**: Split the file into sections and process them separately.
+
+### The AI explains instead of giving a table
+
+- **Cause**: The prompt did not say what to return.
+- **Fix**: State the columns and say "return only the table".
+
+## Practical tips
+
+- **Numbers are yours to check.** Do not post, pay or file anything from an unverified table. See [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/).
+- **Share the minimum.** Remove columns of data you do not need, and mask account numbers before upload.
+- **Keep a log.** Note the date, the files, the prompt and who checked the totals.
+- **Mind company and client rules.** Documents from clients may be covered by agreements. When in doubt, ask first.
+- **This is not accounting or tax advice.** For tax or legal questions, ask a qualified professional. See [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/) for related cautions.
+- **Reuse your best prompt.** Once a prompt works, save it. A repeated job can become a template; see [Build Reusable Document Templates with AI](/automation/50-document-templates/).
+
+## What to read next
+
+- [Organize Household Budgets and Receipts with AI](/automation/46-budget-sheet/) — receipt photos and personal budgets
+- [Adding AI to Excel and Google Sheets: Copilot, Gemini, and Claude](/automation/23-spreadsheet-ai/) — work on the table inside a spreadsheet
+- [Create and edit files with Claude (Excel, Word, slides, PDF)](/claude/c25-file-creation/) — get Excel, Word and PDF files from Claude
+- [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/) — what not to upload
