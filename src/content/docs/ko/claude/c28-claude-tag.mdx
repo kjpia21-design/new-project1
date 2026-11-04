@@ -1,0 +1,202 @@
+---
+title: "팀 Slack에서 Claude Tag 쓰기"
+description: "팀원이 Slack 채널에서 @Claude에게 일을 맡기는 방법을 공식 문서 기준으로 정리했어요. 채널과 DM의 차이, Claude가 볼 수 있는 범위, 끝낼 수 있는 지시 쓰기, 명령어, 채널 메모리, 비용과 개인정보 주의점을 다뤄요"
+sidebar:
+  label: "C28. Slack의 Claude Tag"
+level: practical
+category: claude
+tools: ["Claude Tag", "Slack"]
+duration: "30분"
+prerequisites:
+  - "조직의 Claude Team 또는 Enterprise Owner가 Claude Tag를 이미 설정해 둔 Slack 워크스페이스 (개인 플랜은 사용할 수 없어요)"
+  - "실제 고객 정보나 기밀이 없는, 연습용 가상 내용의 채널"
+lastVerified: 2026-11-04
+sources:
+  - title: "What is Claude Tag? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/15594475-what-is-claude-tag"
+  - title: "Work with Claude Tag (Claude docs)"
+    url: "https://claude.com/docs/claude-tag/overview"
+  - title: "Get started (Claude Tag docs)"
+    url: "https://claude.com/docs/claude-tag/users/getting-started.md"
+  - title: "Good habits for working with Claude Tag"
+    url: "https://claude.com/docs/claude-tag/users/good-habits.md"
+  - title: "Commands Claude Tag understands"
+    url: "https://claude.com/docs/claude-tag/users/commands.md"
+  - title: "Control when Claude Tag responds"
+    url: "https://claude.com/docs/claude-tag/users/when-claude-responds.md"
+  - title: "What Claude Tag remembers"
+    url: "https://claude.com/docs/claude-tag/users/memory.md"
+  - title: "Security and data handling (Claude Tag docs)"
+    url: "https://claude.com/docs/claude-tag/concepts/security-and-data.md"
+  - title: "Troubleshoot Claude Tag in channels and DMs"
+    url: "https://claude.com/docs/claude-tag/users/troubleshooting.md"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- **Claude Tag**는 Slack 채널에서 `@Claude`를 불러 일을 맡기고, 스레드에서 진행을 지켜보는 기능이에요. **Team·Enterprise** 플랜의 **공개 베타**이고, 개인 플랜(Free, Pro, Max, Ultra)은 포함되지 않아요(2026-11-04 기준 공식 문서).
+- 채널에 `@Claude`가 들어와 있으면 바로 쓸 수 있어요. 설치할 건 없고, 설정은 Claude 조직의 **Owner**가 해요. 이 글은 쓰는 사람을 위한 안내예요.
+- 채널에서는 모든 내용이 채널 사람들에게 보이고 비용은 **조직**에 청구돼요. 일대일 DM은 **내 Claude 계정**으로 실행돼요.
+- 좋은 지시는 결과물과 **완료 기준**을 적어요. Claude도 틀릴 수 있으니 올려 준 출처를 확인하세요.
+- 관리자 설정·비용 개요와 Slack 자체 AI는 [업무 메신저 AI](/ko/automation/41-slack-ai/)에 있어요. 이 글은 매일 쓰는 방법을 다뤄요.
+</Summary>
+
+Slack 기본 AI 기능은 이미 써 봤을 수 있어요. Claude Tag는 달라요. 일을 맡길 수 있는 팀원 같은 존재이고, 하는 일이 팀 전체에 보여요. 설정, 플랜, 사용 한도 같은 내용은 [업무 메신저 AI](/ko/automation/41-slack-ai/)에 있고, 여기서는 잘 쓰는 방법에 집중해요. Claude 커넥터 전반은 [C7. 커넥터](/ko/claude/c07-connectors/)를 보세요.
+
+## 이 글을 마치면 할 수 있는 것
+
+- 채널에서 Claude Tag가 작동하는지 확인하고, 채널·DM·그룹 DM 중 어디에서 쓸지 정해요.
+- Claude가 읽을 수 있는 것과 없는 것을 알아요.
+- 결과물과 완료 기준이 있는 지시를 써요.
+- `!` 명령어, 채널 메모리, 응답 설정을 써요.
+- 답이 없을 때 무엇을 확인할지 알아요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **Claude Tag** | Slack 워크스페이스에서 일하는 Claude예요. `@Claude`와 함께 일을 적으면 그 스레드에서 작업해요. |
+| **스레드 세션** | Claude가 참여하는 스레드마다 내 컴퓨터가 아닌 임시 샌드박스에서 별도의 작업 세션이 돌아요. |
+| **채널 메모리** | Claude가 채널별로(일부는 워크스페이스 전체에) 적어 두는 메모예요. 사람이 아니라 채널에 속해요. |
+| **연결(Connection)** | 관리자가 채널에 연결해 둔 외부 서비스(예: GitHub, Google Drive)예요. 연결이 없으면 Claude는 Slack만 다뤄요. |
+| **Owner** | Claude Tag를 설정하는 Claude 조직 역할이에요. Admin 역할은 할 수 없어요. |
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '연습 채널에 Claude가 들어와 있고 접근 범위 질문에 답했다',
+  '채널과 DM이 비용과 공개 범위에서 어떻게 다른지 안다',
+  '지시에 결과물과 완료 기준을 적었다',
+  'Claude가 올린 출처를 확인한 뒤 결과를 썼다',
+  '스레드를 음소거하는 방법과 Configure 링크 위치를 안다',
+]} />
+
+<Steps>
+
+1. **채널에 Claude를 추가하고 작동 확인하기**
+
+   Claude는 추가된 채널에서만 일해요. 채널의 메시지 입력창(스레드 안이 아님)에서 `/invite @Claude`를 실행하거나, `@Claude`를 멘션하면 Slack이 추가를 안내해요. 그다음 아래 메시지를 보내요. 답이 오면 그 채널에서 작동하는 것이고, 답에 접근 가능한 범위가 나와요. 초대 권한이 없다는 안내가 나오면 채널 세부 정보 > 에이전트 및 앱(Slack 버전에 따라 Integrations) > 추가를 쓰거나, 사람을 추가할 수 있는 분께 부탁하세요.
+
+   <PromptBox label="첫 확인">
+   @Claude what can you access from this channel?
+   </PromptBox>
+
+2. **알맞은 장소 고르기**
+
+   공식 문서 기준으로, **채널**은 모두에게 열린 작업이고 누구든 방향을 바꿀 수 있으며, 접근 범위는 관리자가 채널에 정한 대로이고 비용은 조직에 청구돼요. **일대일 DM**은 내 claude.ai 계정과 내 커넥터로 실행되고, 멘션 없이 모든 메시지가 Claude에게 가며, 내 좌석을 써요. **그룹 DM**은 몇 사람이 워크스페이스 수준 접근으로 함께 일하고 비용은 조직에 청구돼요. 여러 곳이 가능하면 문서는 채널을 권해요. 일이 쌓이기 때문이에요.
+
+3. **Claude가 볼 수 있는 것 알기**
+
+   Claude는 멘션된 스레드를 읽고(스레드 중간에 멘션하면 앞선 메시지도 받아요), 워크스페이스의 공개 채널을 키워드로 검색할 수 있어요. 공개 채널이라도 추가되지 않았다면 전체 기록은 읽지 못하고, 비공개 채널은 그 채널 안에서만 읽어요. Slack 캔버스는 읽을 수 없다고 나와 있어요. 붙여 넣은 링크는 관리자가 그 사이트를 채널에 허용했거나 내 커넥터 사용을 허용했을 때만 열려요. 첨부 파일 한도는 이미지 약 3.75MB, PDF 5MB, 그 외 100MB, 메시지당 5개까지예요.
+
+4. **완료 기준이 있는 일 맡기기**
+
+   문서는 작업에 확인 가능한 끝 상태가 있어야 한다고 해요. 첫 문장에 결과물을 적고, "끝"이 무엇인지와 어떤 결정은 나에게 돌아와야 하는지 적으세요. Claude가 스레드에 들어온 뒤에는 다시 멘션하지 않아도 돼요. 작업 표시 아래 스레드가 조용한 것은 보통 일하는 중이에요. 채널에서 멈추려면 작업 표시의 **Stop**을 누르세요.
+
+   <PromptBox label="끝낼 수 있는 지시">
+   @Claude read this week's replies in this thread and draft a decision note with four parts: what was decided, the reason, who owns it, and the deadline. Write TBD for anything not in the thread. Post the draft here for my approval before anything else, and attach links to the messages you used.
+   </PromptBox>
+
+   <PromptBox label="나에게 돌아올 결정 정하기">
+   @Claude update the checklist the way this thread agreed. Handle formatting yourself. Come back to me before you delete anything or change any date.
+   </PromptBox>
+
+   프롬프트는 영어로 적어 두었지만 한국어로 써도 돼요. 한국어 응답 품질은 공식 문서에서 확인하지 못했어요.
+
+5. **명령어, 메모리, 응답 설정 쓰기**
+
+   명령어는 `@Claude` 바로 뒤에 `!`로 시작하는 정확한 낱말 하나를 붙인 것이에요. `!help`는 내 워크스페이스의 명령어 목록, `!status`는 Claude가 아직 일하는지(나에게만 보이는 답), `!mute`·`!unmute`는 한 스레드 음소거·해제, `!restart`는 멈췄거나 맥락이 틀어진 세션 교체, `!configure`는 채널 Configure 페이지 링크예요. 항상 지킬 규칙은 채널에서 말하고 기억해 달라고 하세요. 그리고 질문으로 확인하세요.
+
+   <PromptBox label="채널 규칙 저장하기">
+   @Claude remember for this channel: keep replies to three sentences unless someone asks for detail, and always include a link to the source.
+   </PromptBox>
+
+   <PromptBox label="무엇을 기억했는지 확인하기">
+   @Claude what do you remember about this channel?
+   </PromptBox>
+
+   기본 설정에서는 Claude가 멘션되지 않은 채널 메시지 중 답할 만하다고 판단한 것에 스스로 답할 수도 있어요. 너무 자주 답하면 채널의 **How Claude participates** 설정(Claude 답변 아래 Configure 링크 또는 Claude에게 요청)을 **Only when @-mentioned**로 바꾸세요.
+
+6. **결과를 쓰기 전에 확인하기**
+
+   걸린 것의 크기에 맞게 읽으세요. 요약은 훑어보고, 고객에게 갈 글이나 시스템 변경은 꼼꼼히 읽어요. 같은 스레드에서 출처나 실행한 쿼리를 보여 달라고 하세요. 틀렸다면 같은 스레드에서 알려 주세요. 다음 시도를 바로잡는 방법이기도 해요.
+
+</Steps>
+
+<Aside type="caution" title="채널의 내용은 구성원에게 다 보이고, Claude의 연결도 공유돼요">
+채널 스레드는 구성원에게 공개된 것으로 생각하세요. 비밀번호, 주민등록번호, 카드번호를 적지 마세요. 커넥터의 자격 증명은 Claude 자신의 신원에 속하고 그것이 적용되는 채널의 모든 구성원이 함께 쓰므로, 연결된 계정이 읽고 쓸 수 있는 것은 요청하는 구성원 누구에게나 열려 있어요. 개인적인 일은 DM에서 하세요. 기본 원칙은 [개인정보·회사 정보를 지키며 AI 쓰기](/ko/basics/05-privacy-safety/)를 보세요.
+</Aside>
+
+## 한계와 알아둘 점
+
+- **베타**: 문서에 정식 출시 전에 기능과 동작이 바뀔 수 있다고 적혀 있어요.
+- **지시는 유도일 뿐 강제가 아니에요**: 적은 제약은 Claude의 작업 맥락에 들어갈 뿐 잊힐 수 있어요. 문서는 하면 안 되는 일을 대화 밖, 예를 들어 저장소 권한과 브랜치 보호로 막으라고 해요.
+- **샌드박스의 파일은 남지 않아요**: 스레드가 조용해지면 샌드박스가 해제돼요. 스레드, 보이는 작업, 브랜치에 푸시하거나 풀 리퀘스트로 열거나 Slack에 올린 것은 남아요.
+- **사용 한도**: 한도를 넘는 작업은 거절돼요. Slack 안에서 관리자에게 더 요청할 수 있어요. 채널 작업에 좌석당 요금은 없어요.
+- **쓸 수 없는 조직**: 보안 문서에 따르면 Claude Tag는 채널 메모리와 세션 기록을 보관하기 때문에 Zero Data Retention이나 고객 관리 암호화(CMEK) 정책이 있는 조직에서는 쓸 수 없어요.
+- **건강 정보**: 관리자용 별도 문서에 Claude Tag는 Anthropic의 Business Associate Agreement 대상이 아니라고 나와 있어요. 보호 대상 건강 정보를 다룬다면 관리자에게 물어보세요.
+
+<Aside type="note" title="확인하지 못한 것">
+위에 적은 Claude 도움말 문서와 Claude Tag 문서 페이지를 읽었어요. Claude Tag를 직접 써 보지는 않아서 모든 동작은 해당 페이지 기준이고 실제 테스트가 아니에요. 서비스별 연결 가이드, 그룹 DM·모델 선택·루틴·프롬프트 라이브러리 페이지, 보관 기간을 다루는 관리자 페이지는 자세히 읽지 않아서 이름만 언급했어요. 사용량 요금의 금액은 읽은 페이지에 없었어요. Owner에게 물어보세요. Slack 메뉴 이름은 버전에 따라 다를 수 있어요. 문서가 공개 베타 표기라 링크를 다시 확인하세요.
+</Aside>
+
+## 한눈에 보기
+
+| 하고 싶은 일 | 방법 |
+| --- | --- |
+| 여기서 Claude가 작동하나 | `@Claude what can you access from this channel?` |
+| 채널에 Claude 추가 | 메시지 입력창에서 `/invite @Claude` |
+| 명령어 목록 | `@Claude !help` |
+| 아직 일하는지 | `@Claude !status` |
+| 스레드에서 답 멈추기 | `@Claude !mute` |
+| 멈춘 스레드 새로 시작 | `@Claude !restart` |
+| 채널 설정 링크 | `@Claude !configure` |
+| 규칙 저장 | `@Claude remember for this channel: ...` |
+| 실행 중인 작업 중단 | 작업 표시의 **Stop** |
+
+## 자주 막히는 부분
+
+### `@Claude`를 불러도 아무 반응이 없어요
+
+- **원인**: 앱이 설치되지 않았거나, 채널에 Claude가 없거나, 그 채널에서 Claude Tag가 꺼져 있을 수 있어요.
+- **해결**: 공식 순서대로 하세요. `@Claude`를 입력해 앱 배지를 확인하고, 채널 메시지 입력창에서 `/invite @Claude`를 실행하고, 다시 멘션해 나오는 안내를 읽어요. 안내가 나오면 관리자가 해결해야 해요. 설정 가이드를 전해 주세요.
+
+### Claude가 자신 있게 틀린 답을 했어요
+
+- **원인**: Claude도 틀릴 수 있고, 흔한 경우는 한 출처나 한 기간만 찾아 불완전한 답을 하는 거예요.
+- **해결**: 어떤 채널·출처를 썼는지, 실행한 쿼리를 보여 달라고 하고, 같은 스레드에 올바른 답을 알려 주세요. 다음 지시에는 "수치마다 출처를 넣어 줘"를 더하세요.
+
+### 이전에 준 규칙을 Claude가 잊었어요
+
+- **원인**: 무엇을 저장할지는 Claude가 정해서 지나가며 한 말은 저장되지 않을 수 있어요. 긴 항목은 다른 항목을 밀어내요.
+- **해결**: "remember for this channel:"과 함께 짧은 규칙을 말한 뒤 무엇을 기억하는지 물어보세요. 긴 매뉴얼은 Claude가 읽을 수 있는 저장소나 문서에 두세요.
+
+### Claude가 너무 자주 답하거나 스레드가 조용해졌어요
+
+- **원인**: 기본 설정에서는 멘션 없는 메시지에도 답할 수 있고, 답변에 엄지 아래(👎) 버튼을 누르면 그 스레드가 음소거돼요.
+- **해결**: **How Claude participates**를 **Only when @-mentioned**로 바꾸거나 스레드를 `!mute`하세요. `@Claude !unmute`나 새 멘션으로 다시 불러요.
+
+### 사용 한도(spend limit)에 도달했대요
+
+- **원인**: 조직 또는 채널의 한도에 도달했어요.
+- **해결**: Owner가 관리자 설정에서 한도를 올린 뒤 Claude를 다시 멘션하세요.
+
+## 실전 팁
+
+- 새 일은 새 스레드에서 시작하고, 같은 일의 후속은 같은 스레드에서 하세요.
+- 증거를 요청하세요: 출처 링크, 차트, 테스트 출력, diff.
+- 차츰 조절하세요. 새 채널에서는 처음에 전부 확인하고, 결과가 믿을 만해지면 Claude가 스스로 마무리하는 범위를 넓혀요.
+- 반복 요약은 출력 형식을 정해서 한눈에 읽히게 하세요.
+- 하루 종일보다 몰아서 검토하고, 끝난 스레드에는 체크 이모지를 달아 두세요.
+
+## 다음에 읽을 글
+
+- [업무 메신저 AI](/ko/automation/41-slack-ai/) — Slack AI, 플랜, Claude Tag의 관리자·비용 개요
+- [C7. 커넥터](/ko/claude/c07-connectors/) — Claude가 외부 도구에 닿는 방법
+- [C9. 메모리·설정](/ko/claude/c09-memory-settings/) — Claude 앱 안에서의 기억
+- [C27. 답변 스타일](/ko/claude/c27-styles/) — 말투와 길이 조절
