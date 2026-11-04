@@ -1,0 +1,211 @@
+---
+title: "What AI Agents Cost and How Their Usage Limits Work"
+description: "Why agent tasks use up your allowance faster than chat, how Claude, ChatGPT and Gemini describe their plan prices and usage limits, and a routine for watching and stretching your usage"
+sidebar:
+  label: "9. Agent costs and usage limits"
+level: practical
+category: agents
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "25 min"
+prerequisites:
+  - "Have tried at least one agent or research feature"
+  - "It helps to have read the free vs. paid plans article (Basics 8)"
+lastVerified: 2026-11-04
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "How do usage and length limits work? (Claude)"
+    url: "https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work"
+  - title: "Extra usage for paid Claude plans"
+    url: "https://support.claude.com/en/articles/12429409-extra-usage-for-paid-claude-plans"
+  - title: "Pricing (OpenAI, ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/pricing"
+  - title: "Gemini Apps limits & feature availability"
+    url: "https://support.google.com/gemini/answer/16275805"
+  - title: "Google AI plans (Gemini subscriptions)"
+    url: "https://gemini.google/subscriptions/"
+status: published
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- An agent task makes many model calls, reads files and web pages, and keeps a long history, so it tends to use more of your allowance than one chat answer. The official pages say usage depends on task size, model, tools and chat length.
+- **Limits are not fixed numbers.** Claude and Gemini say in plain words that limits can change, and ChatGPT's page calls its numbers estimates, not fixed limits. Check your own usage screen.
+- Claude: a session limit that resets every five hours plus a weekly limit. ChatGPT's pricing page gives estimated local messages per five hours. Gemini: a limit that refreshes every 5 hours until you reach a weekly limit.
+- When you hit a limit you can wait, upgrade, or (on some plans) pay for extra usage. Extra usage is billed separately from the subscription.
+- Prices below are **as of 2026-11-04**, from the official pages. Anything we could not confirm is marked as unconfirmed.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Explain why agent work uses more allowance than chat.
+- Read each service's plan and limit wording without mixing up the terms.
+- Spot and stretch your usage with a few habits, and decide when paying more makes sense.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Usage limit** | How much you can use a service within a time window. Resets on a schedule. |
+| **Session limit / five-hour limit** | Claude's and ChatGPT's wording for a limit that resets after five hours. Claude's starts when you send your first message. |
+| **Weekly limit** | A second, longer limit. Claude's resets at a fixed time each week assigned to your account. |
+| **Length limit (context window)** | How much one chat can hold at once. Different from usage limits. |
+| **Credits / usage credits** | Paid extra usage after you reach your included limits. Claude bills it at standard API rates. |
+| **Token** | A small unit of text the model reads or writes. Prompts, files, history, tool results and replies all count. |
+
+For plan basics, see [Basics 8: Free vs. paid plans](/basics/08-free-vs-paid/) and [C2. Claude plans and limits](/claude/c02-plans-limits/). This article focuses on **why agents are heavier and how to manage that**.
+
+<Aside type="caution" title="Prices and limits change">
+Every number below is what the official page showed on 2026-11-04. Anthropic and Google say plans, prices or limits can change, and OpenAI describes its limits as estimates. Check the live page before you pay.
+</Aside>
+
+## Why agent tasks use more
+
+The official pages do not give a per-task cost for agents, so this is the reasoning they support, not a measured figure.
+
+- **Claude** says usage is affected by the length and complexity of your conversations, the features you use, the model, and the effort level. It also says longer conversations that trigger automatic context management use more of your limit, and that tools and connectors are token-intensive.
+- **ChatGPT** says small scripts may use a fraction of your allowance while long-running tasks or extended sessions that hold more context use significantly more per message. Model choice, context, reasoning, tool use, retrieval and caching all affect usage, so prompt length alone is not a reliable estimate.
+- **Gemini** rates a simple chat as very low usage, a long ongoing conversation or a large file analysis as medium, and Deep Research as high, because it runs multi-step searches and several rounds of reasoning.
+
+An agent combines these: many steps, tools, files, and a growing history. So the same plan that feels generous for chat can run out sooner with agents.
+
+## What the official pages say, service by service
+
+### Claude (claude.com/pricing, as of 2026-11-04)
+
+| Plan | Price shown | Usage as described |
+| --- | --- | --- |
+| Free | $0 | Limited usage every 5 hours and every week |
+| Pro | $17/month with annual discount ($200 billed up front), $20 if billed monthly | More usage than Free, every 5 hours and every week; Fable paid with usage credits |
+| Max | $100/month | 5x Pro usage every 5 hours and every week; Fable included up to half your weekly limit; $100 a month in API credits |
+| Ultra | $200/month | No 5-hour limit for verified accounts; 10x Pro usage every week; $200 a month in API credits |
+
+The pricing page also says prices exclude applicable tax and that how fast you reach a limit depends on the model, chat length and file size. The help center adds that all Claude surfaces (claude.ai, Claude Code, Claude Desktop) count toward the same usage limit, and that weekly limits apply across all models, with a separate Fable weekly limit on some plans.
+
+**When you reach a limit:** wait for the reset or upgrade (the new plan's limits apply right away). With usage credits enabled on Pro, Max or Ultra, requests continue at standard API rates until your monthly spend limit or balance runs out. These are charged separately from the subscription. The monthly API credits that come with Max and Ultra are separate and do not apply to usage credits in Claude, Claude Code or Cowork. The help page says Research can use credits once you exceed included limits and may consume tokens quickly.
+
+### ChatGPT (learn.chatgpt.com/docs/pricing, as of 2026-11-04)
+
+The page we read is the pricing page for **ChatGPT Work and Codex**, which share usage and are included in Free, Go, Plus, Pro, Business, Edu and Enterprise plans.
+
+| Plan | Price shown |
+| --- | --- |
+| Free | $0 |
+| Go | $8/month |
+| Plus | $20/month |
+| Pro | From $100/month (plans at $100, $200 or $500 per month) |
+| Business | $20 per user per month billed annually, $25 monthly (2 or more users) |
+
+It gives estimates of **local messages per five-hour period** for Plus and Standard Business that vary a lot by model, for example 5 to 45 for one model and 350 to 3,000 for the lightest listed. It says these are not fixed message limits, that weekly limits may also apply, and that Pro plans currently have no five-hour limit. When you hit a limit mid-task the agent can keep working on that turn subject to fair use, and Plus and Pro users can buy extra credits. Your current limits and reset times are in the usage dashboard. API token prices are separate from subscription usage.
+
+### Gemini (support.google.com/gemini and gemini.google/subscriptions, as of 2026-11-04)
+
+| Plan | Price shown | Usage as described |
+| --- | --- | --- |
+| Free (no AI plan) | $0 | Standard limits, 32k-token context window |
+| Google AI Plus | $4.99/month | 2x higher than standard limits, 128k context |
+| Google AI Pro | $19.99/month | 4x higher than standard limits, 1 million context |
+| Google AI Ultra | $99.99/month (5x AI Pro limits) or $199.99/month (20x) | 5x or 20x higher than AI Pro limits depending on subscription, 1 million context |
+
+The help page says limits are compute-based, refresh every 5 hours until you reach a weekly limit, and may change without notice, including because of capacity. If you have an AI plan and hit your limit, you can continue with Flash-Lite. Without a plan, features that need more compute, such as Deep Research, may be unavailable during busy periods. To see your limits, go to gemini.google.com, then Settings, then Usage Limits.
+
+### What we could not confirm
+
+- **Korean-won prices** for any of the three services. The pages we read showed US dollars, and we did not confirm which currency or region the Gemini subscriptions page was showing.
+- **ChatGPT limits for ordinary chat** (as opposed to Work and Codex). The pricing page we read is about Work and Codex, and we did not find a message-count table for plain chat.
+- **Gemini's exact daily numbers** for individual features. The help page gives multipliers, not counts.
+- Whether any plan or limit differs for your country or for work and school accounts.
+
+## Step by step
+
+<Checklist items={[
+  '1. I know which plan I am on and where its usage screen is',
+  '2. I started a small task first to see how much it uses',
+  '3. I picked the lightest model that still does the job',
+  '4. I turned off tools and connectors I did not need',
+  '5. I started a new chat when the topic changed',
+  '6. I decided in advance whether to use paid extra usage, with a cap',
+  '7. I checked usage again after a big task',
+]} />
+
+### 1. Find your usage screen
+
+Claude: Settings, then Usage. Gemini: Settings, then Usage Limits at gemini.google.com. ChatGPT: the usage dashboard linked from the pricing page. Look once before a big task so you know your starting point.
+
+### 2. Try a small task first (this site's recommendation)
+
+Before you hand an agent a 40-page job, run a small version and compare the usage screen before and after. Your own numbers beat any general estimate.
+
+<PromptBox>
+Before you start, tell me in three bullets what steps you plan to take, which tools or files you will use, and whether a smaller version of this task would give me most of the value. Wait for my OK.
+</PromptBox>
+
+### 3. Pick the model and effort deliberately
+
+Claude's help says higher effort uses more tokens and suggests lower effort for routine tasks, and its extra-usage page suggests Haiku or the latest Sonnet for most tasks. ChatGPT's page suggests a smaller model or tighter scope. Use the heavier model only where quality matters.
+
+### 4. Cut what the agent has to carry
+
+The Claude pages list ways to save: turn off connected apps when a chat doesn't need them, ask Claude not to search the web when you don't need current information, remove unused project files, keep project instructions short, turn off extended thinking when not needed, and start a new conversation for a new topic. Gemini's page gives the same tip about new chats. These are official suggestions; the exact savings are not stated.
+
+### 5. Decide about paying for more
+
+| Situation | Options the pages describe |
+| --- | --- |
+| Hit a limit once in a while | Wait for the reset |
+| Hit it often on the same plan | Compare the next plan's multiplier on the pricing page |
+| One-off big job | Claude usage credits or ChatGPT credits, with a monthly cap you set |
+| Team or work use | Business or Team plans, which the services price separately |
+
+For Claude, the extra-usage page suggests starting with a conservative monthly cap. Usage credits are billed separately and appear as additional charges. In some places credits can expire (for example, the page says six months after purchase in Japan from 2026-09-10); we did not check Korea.
+
+### 6. Review after the job
+
+Open the usage screen again. If a task cost much more than expected, note why (long history, many files, web search, a heavy model) and change that next time.
+
+## Quick reference
+
+| Question | Where the official pages point |
+| --- | --- |
+| Why did I run out so fast? | Long chats, big files, tools and heavy models all add up |
+| When does it reset? | Claude: five-hour session and fixed weekly time; Gemini: refreshes every 5 hours until the weekly limit; ChatGPT: check the dashboard |
+| Can limits change? | Claude and Gemini say yes; ChatGPT calls its numbers estimates, not fixed limits |
+| Do API credits cover app usage? | Claude says monthly API credits do not apply to usage credits in Claude, Claude Code or Cowork |
+
+## Common sticking points
+
+### The warning showed but I wasn't cut off
+
+- **Cause**: With Claude usage credits on, the "approaching limit" notice can still show after you switch to credits.
+- **Fix**: Look for "Now using credits" and check your spend cap.
+
+### My usage dropped faster in a long chat
+
+- **Cause**: The model re-reads history each turn, and Claude's automatic context management uses more of your limit.
+- **Fix**: Start a new chat and paste a short summary.
+
+### I bought a plan through the mobile app and can't enable credits
+
+- **Cause**: Claude says usage credits can only be enabled on the web version if you subscribed through a mobile app.
+- **Fix**: Enable them on the Claude web app.
+
+## Practical tips
+
+- **Don't treat any number here as a promise.** The services can change limits at their discretion.
+- **Use the cheapest tool that works.** A web search or normal chat can answer many questions without an agent ([Agents 1](/agents/01-agents-compared/)).
+- **Set a spend cap** before you enable pay-as-you-go anything.
+- **Check agent work before running it again.** Repeating a bad run costs the same as the first ([Agents 7](/agents/07-reviewing-agent-work/)).
+- **Prices exclude tax** where the pages say so, and may differ by country.
+- We only read the official pages. We did not run any agent task to measure usage for this article.
+
+## What to read next
+
+- [Basics 8: Free vs. paid plans](/basics/08-free-vs-paid/): the plan basics
+- [C2. Claude plans and limits](/claude/c02-plans-limits/): Claude's plans in more detail
+- [Part 8: Deep research agents](/agents/08-deep-research-agents/): a heavy task type, with a checking routine
+- [Part 6: Browser agents](/agents/06-browser-agents/): agents that click through websites
+- [Part 5: Agent safety](/agents/05-agent-safety/): limiting what an agent can do
