@@ -7,7 +7,7 @@ import NewsItem from '../../components/NewsItem.astro';
 
 This collects Claude updates from Anthropic's official channels, newest first. We picked only what matters to people who actually use Claude, such as model releases, pricing, and new features in Claude Code and the app, and left out minor bug fixes. We keep checking the official channels and updating this page.
 
-**Last updated: 2026-11-03**
+**Last updated: 2026-11-05**
 
 ## Official channels we monitor
 
@@ -18,6 +18,10 @@ This collects Claude updates from Anthropic's official channels, newest first. W
 - [Anthropic News](https://www.anthropic.com/news): policy, partnerships, model announcements
 
 ## November 2026
+
+<NewsItem date="Nov 4" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+Version 2.1.318 is out. `claude auth status` and `claude -p` JSON output now show when your claude.ai sign-in expires, with a warning on stderr starting 10 days before. Cloud sessions on Anthropic-hosted environments get a "No repository" option. Background subagents move a shell command to the background after 3 minutes so the prompt cache doesn't expire, and subagents now stop instead of switching models when "Switch models when a message is flagged" is set to "Ask each time." The IDE extension is no longer installed or updated when Claude Code starts in an IDE terminal; use `/ide` from an outside terminal instead.
+</NewsItem>
 
 <NewsItem date="Nov 3" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
 Version 2.1.317 is out. `/schedule` now warns you when a new cloud scheduled task gets connectors you didn't request, and tells you how to remove them. Claude Code also asks before a web or shell tool call sends your account email address over the network. Subagents running on a different model from the main conversation now use that model's saved or default effort level, and rereading an unchanged file with the Read tool returns its full content instead of a "file unchanged" stub.

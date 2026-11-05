@@ -7,7 +7,7 @@ import NewsItem from '../../../components/NewsItem.astro';
 
 Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 모았어요. 모델 출시, 가격, Claude Code와 앱의 새 기능처럼 실제로 쓰는 분에게 의미 있는 것만 골랐고, 사소한 버그 수정은 뺐어요. 공식 채널을 점검해 계속 갱신해요.
 
-**마지막 업데이트: 2026-11-04**
+**마지막 업데이트: 2026-11-05**
 
 ## 모니터링하는 공식 채널
 
@@ -18,6 +18,10 @@ Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 �
 - [Anthropic 뉴스](https://www.anthropic.com/news): 정책, 파트너십, 모델 발표
 
 ## 2026년 11월
+
+<NewsItem date="11월 4일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/ko/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
+2.1.318 버전이 나왔어요. `claude auth status`와 `claude -p` JSON 출력에 claude.ai 로그인 만료일이 표시되고, 만료 10일 전부터 stderr로 경고해요. Anthropic이 호스팅하는 환경의 클라우드 세션에는 "No repository"(저장소 없음) 옵션이 생겼어요. 백그라운드 서브에이전트는 셸 명령을 3분 뒤 백그라운드로 넘겨 프롬프트 캐시가 만료되지 않게 하고, "Switch models when a message is flagged"를 "Ask each time"으로 두면 서브에이전트가 모델을 바꾸는 대신 멈춰요. IDE 터미널에서 Claude Code를 시작해도 IDE 확장을 더 이상 설치·갱신하지 않으니, 바깥 터미널에서 `/ide`를 쓰세요.
+</NewsItem>
 
 <NewsItem date="11월 3일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/ko/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
 2.1.317 버전이 나왔어요. `/schedule`에서 새 클라우드 예약 작업에 요청하지 않은 커넥터가 붙으면 경고하고, 지우는 방법을 알려 줘요. 웹·셸 도구 호출이 계정 이메일 주소를 네트워크로 보내려 할 때는 먼저 물어봐요. 메인 대화와 다른 모델에서 도는 서브에이전트는 그 모델의 저장된(또는 기본) 노력 수준(effort)을 쓰고, Read 도구로 바뀌지 않은 파일을 다시 읽으면 "file unchanged" 안내 대신 전체 내용을 돌려줘요.
