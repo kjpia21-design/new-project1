@@ -1,0 +1,200 @@
+---
+title: "Use Claude Tag in your team's Slack"
+description: "A practical guide for team members to hand work to @Claude in Slack channels based on official pages: channel vs DM, what Claude can see, writing tasks that finish, commands, channel memory, billing and privacy cautions"
+sidebar:
+  label: "C28. Claude Tag in Slack"
+level: practical
+category: claude
+tools: ["Claude Tag", "Slack"]
+duration: "30 min"
+prerequisites:
+  - "A Slack workspace where your organization's Claude Team or Enterprise owner has already set up Claude Tag (individual plans cannot use it)"
+  - "A practice channel with made-up content, not real customer or confidential information"
+lastVerified: 2026-11-04
+sources:
+  - title: "What is Claude Tag? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/15594475-what-is-claude-tag"
+  - title: "Work with Claude Tag (Claude docs)"
+    url: "https://claude.com/docs/claude-tag/overview"
+  - title: "Get started (Claude Tag docs)"
+    url: "https://claude.com/docs/claude-tag/users/getting-started.md"
+  - title: "Good habits for working with Claude Tag"
+    url: "https://claude.com/docs/claude-tag/users/good-habits.md"
+  - title: "Commands Claude Tag understands"
+    url: "https://claude.com/docs/claude-tag/users/commands.md"
+  - title: "Control when Claude Tag responds"
+    url: "https://claude.com/docs/claude-tag/users/when-claude-responds.md"
+  - title: "What Claude Tag remembers"
+    url: "https://claude.com/docs/claude-tag/users/memory.md"
+  - title: "Security and data handling (Claude Tag docs)"
+    url: "https://claude.com/docs/claude-tag/concepts/security-and-data.md"
+  - title: "Troubleshoot Claude Tag in channels and DMs"
+    url: "https://claude.com/docs/claude-tag/users/troubleshooting.md"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- **Claude Tag** lets you tag `@Claude` in a Slack channel, hand it a task, and follow the work in the thread. It is in **public beta** on **Team and Enterprise** plans; individual plans (Free, Pro, Max, Ultra) are not included (as of 2026-11-04, per the official docs).
+- If `@Claude` is in your channel, you can use it; there is nothing to install. An **Owner** of your Claude organization does the setup. This guide is for the people who use it.
+- In a channel, everything is visible to the channel and the work **bills to your organization**. A one-to-one DM runs on **your own** Claude account instead.
+- Good tasks name the outcome and a **definition of done**. Claude can be wrong, so check the sources it posts.
+- For the admin and cost overview, and Slack's own AI, see [Messenger AI for work](/automation/41-slack-ai/). This page covers daily use.
+</Summary>
+
+You may already use Slack's built-in AI features. Claude Tag is different: it is a teammate you can assign work to, and the whole team sees what it does. Setup, plan and spend-limit details are in [Messenger AI for work](/automation/41-slack-ai/); here we focus on using it well. For Claude connectors in general, see [C7. Connectors](/claude/c07-connectors/).
+
+## What you'll be able to do
+
+- Check that Claude Tag works in a channel and decide between a channel, a DM and a group DM.
+- Know what Claude can and cannot read.
+- Write a task with an outcome and a definition of done.
+- Use `!` commands, channel memory and the reply settings.
+- Know what to do when it does not answer.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Claude Tag** | Claude working in your Slack workspace: you mention `@Claude` with a task and it works in that thread. |
+| **Thread session** | Each thread Claude takes part in runs its own working session in a temporary sandbox, not on your computer. |
+| **Channel memory** | Notes Claude keeps per channel (and some shared across the workspace). It belongs to the channel, not to a person. |
+| **Connection** | An external service (for example GitHub or Google Drive) an admin linked for a channel. Without one, Claude has only Slack. |
+| **Owner** | The Claude organization role that sets up Claude Tag. The Admin role cannot. |
+
+## Step-by-step
+
+<Checklist items={[
+  'Claude is in my practice channel and answered the access question',
+  'I know the difference between a channel and a DM for billing and visibility',
+  'My task names an outcome and a definition of done',
+  'I checked the sources Claude posted before using the result',
+  'I know how to mute a thread and where the Configure link is',
+]} />
+
+<Steps>
+
+1. **Add Claude to a channel and check it works**
+
+   Claude works only in channels it has been added to. In the channel's message box (not inside a thread) run `/invite @Claude`, or mention `@Claude` and let Slack prompt you. Then send the message below. A reply means it is running there, and the answer tells you what it can reach. If Slack says you lack permission to invite, use Channel details > Agents & apps (called Integrations in some Slack versions) > Add, or ask someone who can add people.
+
+   <PromptBox label="First check">
+   @Claude what can you access from this channel?
+   </PromptBox>
+
+2. **Choose the right place**
+
+   Per the official pages: in a **channel**, work is open to everyone there, anyone can steer it, access is whatever an admin set for that channel, and it bills to the organization. In a **one-to-one DM**, Claude runs on your own claude.ai account with your own connectors, every message reaches it without a mention, and it uses your seat. A **group DM** shares work among a few people using the workspace-level access, and bills to the organization. When more than one place would work, the docs prefer a channel because the work builds up there.
+
+3. **Know what Claude can see**
+
+   It reads the thread you tag it in (mentioning it mid-thread also gives it earlier messages) and can search your workspace's public channels by keyword. It cannot read a public channel's full history unless it has been added there, and it reads a private channel only from inside that channel. Slack canvases are listed as not readable. A pasted link works only if an admin allowed that site for the channel or you allowed Claude to use your own connectors. Attached files have limits: images about 3.75 MB, PDFs 5 MB, other files 100 MB, and up to 5 files per message.
+
+4. **Hand over a task with a definition of done**
+
+   The docs say tasks should have a verifiable end state. Put the outcome in the first sentence, say what "done" means, and say which decisions come back to you. Once Claude is in a thread you do not need to mention it again. A quiet thread under the working indicator usually means it is working; select **Stop** on the indicator to interrupt it in a channel.
+
+   <PromptBox label="A task that can close">
+   @Claude read this week's replies in this thread and draft a decision note with four parts: what was decided, the reason, who owns it, and the deadline. Write TBD for anything not in the thread. Post the draft here for my approval before anything else, and attach links to the messages you used.
+   </PromptBox>
+
+   <PromptBox label="Say which decisions come back to you">
+   @Claude update the checklist the way this thread agreed. Handle formatting yourself. Come back to me before you delete anything or change any date.
+   </PromptBox>
+
+5. **Use commands, memory and reply settings**
+
+   A command is `@Claude` followed by one exact word starting with `!`. `!help` lists them for your workspace, `!status` tells you privately whether Claude is still working, `!mute` and `!unmute` quiet one thread, `!restart` replaces a stuck or wrong-context session, and `!configure` returns the link to the channel's Configure page. To set a standing rule, tell Claude in the channel and ask it to remember; check with a question.
+
+   <PromptBox label="Save a channel rule">
+   @Claude remember for this channel: keep replies to three sentences unless someone asks for detail, and always include a link to the source.
+   </PromptBox>
+
+   <PromptBox label="Check what it kept">
+   @Claude what do you remember about this channel?
+   </PromptBox>
+
+   By default Claude may also reply to untagged channel messages it judges worth answering. The channel's **How Claude participates** setting (reachable from the Configure link under any Claude reply, or by asking Claude) can be set to **Only when @-mentioned** if it replies too much.
+
+6. **Check the result before you use it**
+
+   Read Claude's work in proportion to what is at stake: skim a summary, read a message to a customer or a change to a system carefully. Ask it to show its work in the same thread, such as the sources or the query it ran. If something is wrong, say so in the same thread; that is also how you steer the next attempt.
+
+</Steps>
+
+<Aside type="caution" title="The channel can see everything, and so can Claude's connections">
+Treat a channel thread as public to its members. Do not put passwords, national ID numbers or card numbers in it. A connector's credential belongs to Claude's own identity and is shared by everyone in the channels where it applies, so whatever the connected account can read or write is available to every member who asks. Put personal tasks in a DM. For the basics, see [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/).
+</Aside>
+
+## Limits and good to know
+
+- **Beta**: the pages say features and behavior may change before general availability.
+- **Instructions steer, they do not enforce**: constraints you write go into Claude's working context and can be forgotten. The docs say to enforce must-not-do rules outside the conversation, for example with repository permissions and branch protection.
+- **Files in the sandbox do not last**: when a thread goes quiet its sandbox is released. What persists is the thread, visible work, and anything pushed to a branch, opened as a pull request or posted in Slack.
+- **Spend limits**: work that would exceed a limit is declined. You can request more from an admin in Slack. Channel work has no per-seat charge.
+- **Organizations not eligible**: the security page says Claude Tag is not available to organizations with Zero Data Retention or a customer-managed encryption policy, because it retains channel memory and session transcripts.
+- **Health data**: a separate admin page says Claude Tag is not covered by Anthropic's Business Associate Agreement. If you handle protected health information, ask your admin.
+
+<Aside type="note" title="What we could not confirm">
+We read the official Claude Help Center article and the Claude Tag docs pages listed above. We did not use Claude Tag ourselves, so every behavior here is from those pages, not from testing. We did not read the per-service connection guides, the Group DMs, Choose the model, routines and Prompt library pages, or the admin pages on retention periods in detail, so this guide only mentions them. Pricing amounts for usage were not stated on the pages we read; ask your Owner. Slack's menu names can differ by version. The pages are marked public beta, so recheck them.
+</Aside>
+
+## Quick reference
+
+| I want to... | Do this |
+| --- | --- |
+| See if Claude works here | `@Claude what can you access from this channel?` |
+| Add Claude to a channel | `/invite @Claude` in the message box |
+| List commands | `@Claude !help` |
+| Is it still working? | `@Claude !status` |
+| Stop it replying in a thread | `@Claude !mute` |
+| Start fresh in a stuck thread | `@Claude !restart` |
+| Get the channel settings link | `@Claude !configure` |
+| Make a rule stick | `@Claude remember for this channel: ...` |
+| Stop a running task | **Stop** on the working indicator |
+
+## Common sticking points
+
+### `@Claude` does nothing at all
+
+- **Cause**: The app may not be installed, Claude may not be in the channel, or Claude Tag may not be turned on for it.
+- **Fix**: Follow the official order: type `@Claude` and look for the app badge; run `/invite @Claude` in the channel's message box; mention it again and read any notice. The notices need an admin to fix. Send them the setup guide.
+
+### Claude gave a confident but wrong answer
+
+- **Cause**: Claude can be wrong, and the common failure is an incomplete answer that searched one source or date range.
+- **Fix**: Ask which channels or sources it used and to show the query, and reply with the correct answer in the same thread. Add "include the source for every figure" to future tasks.
+
+### Claude forgot a rule I gave it
+
+- **Cause**: Claude decides what to save, so something said in passing may not be kept. Long entries also crowd out others.
+- **Fix**: Say "remember for this channel:" with a short rule, then ask what it remembers. Put longer playbooks in a repository or document Claude can read.
+
+### Claude replies too often, or a thread went quiet
+
+- **Cause**: The default lets Claude answer some untagged messages; a thumbs-down on a reply mutes that thread.
+- **Fix**: Set **How Claude participates** to **Only when @-mentioned**, or `!mute` the thread. `@Claude !unmute` or a new mention brings it back.
+
+### You've reached a Claude Tag spend limit
+
+- **Cause**: The organization or channel limit was reached.
+- **Fix**: An Owner raises it in admin settings; then mention Claude again to retry.
+
+## Practical tips
+
+- Start every new task in a new thread; follow-ups stay in the same thread.
+- Ask for proof: source links, the chart, the test output or the diff.
+- Calibrate over time: check everything in a new channel at first, then let Claude close more by itself as its output holds up.
+- For recurring digests, specify the output format so every post reads at a glance.
+- Review in batches instead of all day, and react with a check mark to threads you consider done.
+
+## What to read next
+
+- [Messenger AI for work](/automation/41-slack-ai/) — Slack AI, plans, and the admin and cost overview of Claude Tag
+- [C7. Connectors](/claude/c07-connectors/) — How Claude reaches outside tools
+- [C9. Memory and settings](/claude/c09-memory-settings/) — What Claude remembers in its own apps
+- [C27. Response styles](/claude/c27-styles/) — Control tone and length

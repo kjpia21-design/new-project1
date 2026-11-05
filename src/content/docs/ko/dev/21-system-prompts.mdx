@@ -1,0 +1,214 @@
+---
+title: "Claude API 앱을 위한 시스템 프롬프트 잘 쓰기"
+description: "Messages API에서 시스템 프롬프트를 넣는 위치, 역할·맥락·명확한 지시·예시·출력 형식을 XML 태그로 정리하는 법을 공식 프롬프트 모범 사례 기준으로 정리해요"
+sidebar:
+  label: "21. 시스템 프롬프트"
+level: advanced
+category: dev
+tools: ["Claude API", "Messages API", "Python", "anthropic SDK"]
+duration: "35분"
+prerequisites:
+  - "C16. Claude API 시작하기를 끝낸 상태 (API 키, 환경 변수 설정)"
+  - "Python 3.10 이상, pip install anthropic"
+  - "Messages API를 한 번 이상 호출해 본 상태 (개발 1이나 개발 15가 좋아요)"
+lastVerified: 2026-11-04
+sources:
+  - title: "Prompting best practices"
+    url: "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices"
+  - title: "Messages API reference (system parameter)"
+    url: "https://platform.claude.com/docs/en/api/messages"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- Messages API에서 시스템 프롬프트는 최상위 `system` 매개변수예요. 문자열이거나 텍스트 블록 배열(`cache_control`을 붙일 수 있어요)이고, `system` 역할의 메시지가 아니에요.
+- 공식 가이드의 핵심: 명확하고 직접적으로 쓰고, 규칙에 이유를 붙이고, 예시를 몇 개 보여 주고, XML 태그로 부분을 나누고, Claude에게 역할을 주세요(한 문장만으로도 달라져요).
+- 문서의 점검법: 맥락을 모르는 동료에게 프롬프트를 보여 주세요. 동료가 헷갈리면 Claude도 헷갈려요.
+- 형식은 "하지 말라"보다 "이렇게 하라"로 쓰고, 프롬프트 자체의 문체를 원하는 출력에 맞추세요.
+- 예시는 문서가 3~5개, 관련성 있고 다양하게, `<example>` 태그로 감싸라고 권해요. 아래 샘플은 짧게 하려고 1개만 써요.
+- 시스템 프롬프트를 안정적으로 유지해 맨 앞에 두면 캐싱에 좋아요([개발 19](/ko/dev/19-prompt-caching/)). JSON 모양을 강제하려면 문구만 믿지 말고 구조화 출력을 쓰세요([개발 13](/ko/dev/13-structured-outputs/)).
+- 2026-11-04에 공식 페이지 2개를 읽었어요. **API는 호출하지 못했어요**(API 키와 `anthropic` 패키지가 없었어요). 예제는 Python 문법 검사만 통과했고, 그래서 출력 결과는 싣지 않아요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- Messages API 요청에 시스템 프롬프트를 문자열이나 텍스트 블록으로 넣어요.
+- 역할, 이유가 붙은 규칙, 예시, 출력 형식을 갖춘 프롬프트를 써요.
+- XML 태그로 지시, 데이터, 예시를 구분해요.
+- 시스템 프롬프트, 사용자 메시지, 구조화 출력 중 어디에 무엇을 둘지 정해요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **시스템 프롬프트** | `system` 매개변수. 목표나 역할 같은 맥락과 지시를 Claude에게 주는 곳이에요. |
+| **역할** | 시스템 프롬프트에서 이 앱의 Claude가 누구인지 알려 주는 한두 문장이에요. |
+| **퓨샷(멀티샷) 예시** | 원하는 형식·어조·구조를 보여 주려고 프롬프트에 넣는 입력과 출력 샘플이에요. |
+| **XML 태그** | `<rules>`, `<example>`처럼 내용 종류를 나누는 설명적 태그예요. 문서는 `<instructions>`, `<context>`, `<input>`을 예로 들어요. |
+
+<Aside type="note" title="이 편에서 확인한 것과 못 한 것">
+사실은 front matter에 적은 공식 페이지 2개를 2026-11-04에 읽은 내용이에요. 예전의 "시스템 프롬프트" 전용 문서 주소는 지금 Prompting best practices 페이지로 연결돼서, 조언의 출처는 그 한 페이지예요. 샘플 스크립트는 Python 컴파일 검사만 통과했어요. 요청은 **한 번도 보내지 못했기에** Claude가 어떻게 답하는지는 보여 드릴 수 없어요. 직접 실행해서 결과를 판단하세요. "태그가 오해를 줄인다" 같은 말은 문서의 설명이지 제가 측정한 게 아니에요. 모델 ID `claude-opus-5-5`는 문서의 시스템 프롬프트 예제에 나오는 값이에요. 실제로 쓸 모델은 모델 개요에서 확인하세요.
+</Aside>
+
+## 단계별 따라 하기
+
+<Checklist items={[
+  '시스템 프롬프트를 메시지가 아니라 system 매개변수로 넘긴다',
+  '이 앱에서 Claude가 누구이고 독자가 누구인지 적었다',
+  '중요한 규칙마다 이유를 붙였다',
+  '지시, 데이터, 예시를 서로 다른 태그에 넣었다',
+  '출력 형식을 "이렇게 하라" 방식으로 적었다',
+  '보통 입력, 경계 사례, 주제에서 벗어난 입력으로 시험했다',
+]} />
+
+<Steps>
+
+1. **`system` 매개변수에 넣기**
+
+   Messages API 레퍼런스는 `system`을 선택 항목인 문자열 또는 텍스트 블록 배열이라고 해요. 목표나 역할 같은 맥락과 지시를 주는 방법이라고 설명해요. 문서의 한 문장 역할 예시는 이래요.
+
+   ```python
+   message = client.messages.create(
+       model="claude-opus-5-5",
+       max_tokens=1024,
+       system="You are a helpful coding assistant specializing in Python.",
+       messages=[
+           {"role": "user", "content": "How do I sort a list of dictionaries by key?"}
+       ],
+   )
+   ```
+
+   문서는 역할 한 문장만으로도 차이가 난다고 해요. 배열 형태는 `{"type": "text", "text": "..."}` 블록을 받고, 블록마다 `cache_control`을 붙일 수 있어요(6단계 참고).
+
+2. **명확하고 직접적이고 구체적으로 쓰기**
+
+   문서는 Claude를 똑똑하지만 새로 들어와 우리 규범과 업무 방식을 모르는 직원에 비유해요. 원하는 것을 정확히 설명할수록 결과가 좋아져요. 핵심 점검법은 맥락을 거의 모르는 동료에게 프롬프트를 보여 주고 따라 해 보게 하는 거예요. 동료가 헷갈리면 Claude도 헷갈려요. 페이지의 다른 요점이에요.
+
+   - 출력 형식과 제약을 구체적으로 적으세요.
+   - 단계의 순서나 빠짐없음이 중요하면 번호 목록이나 글머리표를 쓰세요.
+   - 작업이 꼭 요구하는 것 이상을 원하면 추측에 맡기지 말고 명시적으로 요청하세요.
+
+3. **규칙 뒤의 이유 적기**
+
+   문서는 지시의 맥락이나 동기를 알려 주면 Claude가 일반화하는 데 도움이 된다고 해요. 문서 예시는 `NEVER use ellipses` 대신 "응답을 음성 합성 엔진이 읽어 주므로, 엔진이 발음할 줄 모르는 말줄임표는 쓰지 마라"라고 써요. 여러분 앱에서는 답이 어디에 보이는지(작은 채팅 위젯, 이메일, 음성 낭독)와 누가 읽는지를 적으세요.
+
+4. **XML 태그로 나누고 예시 넣기**
+
+   문서는 지시, 맥락, 예시, 가변 입력이 섞인 프롬프트를 XML 태그가 Claude가 해석하는 데 도움이 된다고 해요. 일관되고 설명적인 태그 이름을 쓰고, 내용에 계층이 있으면 중첩하세요. 예시는 **관련성**(실제 사용과 가깝게), **다양성**(경계 사례 포함), **구조**(`<example>`, 여러 개면 `<examples>`) 기준을 따르고, 3~5개가 가장 좋다고 해요. Claude에게 예시를 검토시키거나 더 만들게 할 수도 있다고 해요.
+
+   `system_demo.py`로 저장하세요. 가상의 자전거 수리점 도우미이고, 가게와 규칙은 데모용으로 지어냈어요. 짧게 하려고 예시는 1개뿐이니 실제로는 더 추가하세요.
+
+   ```python
+   import anthropic
+
+   client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from the environment
+
+   SYSTEM = """You are the support assistant for Harbor Bikes, a small bike repair shop.
+
+   <rules>
+   - Answer only from the shop information below. If the answer is not there, say you do not know and suggest calling the shop.
+   - Reply in 3 sentences or fewer, in plain text, with no markdown.
+   - The reply is shown in a small chat widget, so short text reads best.
+   </rules>
+
+   <shop_info>
+   Open Tuesday to Saturday, 10:00 to 18:00. Flat tire repair is a fixed-price service.
+   </shop_info>
+
+   <examples>
+   <example>
+   <question>Are you open on Sunday?</question>
+   <reply>No, we are closed on Sundays. We are open Tuesday to Saturday, 10:00 to 18:00.</reply>
+   </example>
+   </examples>"""
+
+   reply = client.messages.create(
+       model="claude-opus-5-5",
+       max_tokens=300,
+       system=SYSTEM,
+       messages=[{"role": "user", "content": "Do you fix flat tires on weekends?"}],
+   )
+   print(reply.content[0].text)
+   ```
+
+   상태: **실행하지 않았어요.** `python3 -I -m py_compile`만 통과했어요. 주말 질문, 가게 정보에 없는 질문(가격), 주제에서 벗어난 질문을 차례로 던져 보고 규칙을 고치세요.
+
+5. **출력 형식 다루기**
+
+   문서가 꼽는 형식 조절 방법이에요.
+
+   | 방법 | 문서 예시 |
+   | --- | --- |
+   | 피할 것보다 할 것을 말하기 | "마크다운을 쓰지 마라" 대신 "응답은 매끄럽게 이어지는 산문 단락으로 구성하라" |
+   | XML 형식 지시자 쓰기 | 산문 부분을 이름 붙인 태그 안에 쓰게 요청해요. |
+   | 프롬프트 문체를 출력에 맞추기 | 프롬프트에서 마크다운을 없애면 출력의 마크다운이 줄 수 있어요. |
+   | 필요하면 자세히 안내하기 | 마크다운을 줄이는 긴 샘플 블록이 페이지에 있어요. |
+
+   코드가 응답을 파싱한다면 문구만 믿지 마세요. 문서는 스키마에 맞추려면 **구조화 출력**을 쓰라고 하고, Claude 4.6 모델부터는 마지막 어시스턴트 턴의 프리필이 지원되지 않는다고(400 오류) 해요. [개발 13](/ko/dev/13-structured-outputs/)을 보세요. 서두 문구를 없애려면 문서는 시스템 프롬프트에 "서두 없이 바로 답하라" 같은 지시를 쓰라고 해요.
+
+6. **안정적으로 유지하고 길이와 어조 살피기**
+
+   - **캐싱:** 캐시 접두부는 도구, 시스템, 메시지 순서로 만들어지므로 안정적인 시스템 프롬프트는 캐시하기 좋아요. [개발 19](/ko/dev/19-prompt-caching/)를 보세요.
+   - **긴 문서:** 문서는 긴 데이터(2만 토큰 이상)를 질문 위, 프롬프트 앞쪽에 두라고 하고, 질문을 끝에 두면 테스트에서 품질이 최대 30퍼센트 좋아질 수 있다고 해요. 이런 내용은 시스템 프롬프트를 키우지 말고 사용자 메시지에 `<document>` 태그로 감싸 넣으세요.
+   - **강한 어조:** 문서는 최신 모델이 시스템 프롬프트에 더 잘 반응해서 "CRITICAL: You MUST..." 같은 강한 표현이 과다 호출을 부를 수 있다고 해요. "Use this tool when..." 같은 평범한 표현을 쓰세요. 페이지는 이를 Claude Opus 4.5와 4.6에 대해 적었고, 다른 모델은 확인하지 못했으니 시험해 보세요.
+   - **모델별 차이:** 페이지는 특정 모델을 적은 기법은 그 모델에서 측정한 것이니 다른 모델에서는 직접 평가로 다시 확인하라고 해요. 모델별 프롬프트 페이지가 따로 있지만 열어 보지는 않았어요.
+
+   <PromptBox>
+   내 Claude API 앱의 시스템 프롬프트를 검토해 줘. 다음을 확인해 줘: 역할과 답을 읽는 사람이 적혀 있는가, 규칙마다 이유가 있는가, 지시와 데이터와 예시가 XML 태그로 나뉘어 있는가, 출력 형식이 하지 말라가 아니라 하라는 방식으로 적혀 있는가, 완화할 수 있는 대문자·절대적 표현이 있는가. 그다음 시험 입력 세 개를 제안해 줘. 보통 입력, 경계 사례, 주제에서 벗어난 입력이야. 내 제품에 대한 사실을 지어내지 말고, 빠진 게 있으면 나에게 물어봐. 비밀 정보와 고객 데이터를 지운 프롬프트는 이거야: (여기에 시스템 프롬프트 붙여넣기)
+   </PromptBox>
+
+</Steps>
+
+## 한눈에 보는 요약
+
+| 항목 | 값 (공식 문서, 2026-11-04 기준) |
+| --- | --- |
+| 위치 | 최상위 `system` 매개변수: 문자열 또는 텍스트 블록 배열 |
+| 역할 | 한 문장만으로도 도움이 돼요 |
+| 예시 | 3~5개, 관련성 있고 다양하게, `<example>` / `<examples>` |
+| 구조 | 일관되고 설명적인 XML 태그, 계층이면 중첩 |
+| 긴 입력 | 데이터는 앞쪽, 질문은 끝 |
+| 형식 제어 | 할 것을 말하기, 프롬프트 문체를 출력에 맞추기 |
+| 엄격한 JSON | 구조화 출력 사용. 마지막 턴 프리필은 Claude 4.6 모델부터 지원 안 됨 |
+
+## 자주 막히는 부분
+
+### Claude가 형식 규칙을 무시해요
+
+- **원인**: 규칙이 금지 형태로 쓰였거나, 프롬프트 자체가 마크다운투성이예요.
+- **해결**: 할 것 중심으로 다시 쓰고, 프롬프트 문체를 원하는 출력에 맞추세요.
+
+### 답이 너무 길거나 짧아요
+
+- **원인**: 형식과 길이를 적지 않았어요. 문서는 Claude Opus 5의 기본 응답이 더 길고 effort가 보이는 길이를 안정적으로 바꾸지 않는다고도 하니, 간결함을 명시적으로 요청하세요.
+- **해결**: 길이 제한과 답이 표시되는 곳을 적으세요.
+
+### 예시 하나 때문에 답이 모두 비슷해져요
+
+- **원인**: Claude가 예시 하나에서 의도치 않은 패턴을 배웠어요.
+- **해결**: 경계 사례를 포함한 다양한 예시를 더하세요(문서 권장 3~5개).
+
+### 응답이 올바른 JSON이 아니면 앱이 깨져요
+
+- **원인**: 문구만으로는 스키마가 보장되지 않아요.
+- **해결**: 구조화 출력([개발 13](/ko/dev/13-structured-outputs/))을 쓰고 오류 처리([개발 20](/ko/dev/20-errors-retries/))를 갖추세요.
+
+## 실전 팁
+
+- 시스템 프롬프트를 버전 관리에 두고, 한 번에 하나만 바꾼 뒤 같은 시험 입력을 다시 돌리세요. 문서에 있는 내용이 아닌 일반적인 요령이에요.
+- 비밀 정보나 고객 데이터를 시스템 프롬프트에 넣지 마세요. 사용자가 읽어 내려 할 수 있다고 생각하세요. 문서에 있는 내용이 아닌 일반적인 조언이에요.
+- 주제에서 벗어난 질문과 까다로운 질문을 포함한 작은 시험 세트를 두고, 프롬프트나 모델을 바꿀 때마다 다시 돌리세요.
+- API가 아니라 채팅 앱에서 프롬프트를 쓰는 법은 [C4. 좋은 프롬프트 쓰는 법](/ko/claude/c04-prompting/)을 보세요.
+
+## 다음 튜토리얼
+
+- [13. 구조화 출력](/ko/dev/13-structured-outputs/) — 응답을 스키마에 맞추기
+- [19. 프롬프트 캐싱](/ko/dev/19-prompt-caching/) — 길고 안정적인 시스템 프롬프트 캐시하기
+- [20. 오류와 재시도](/ko/dev/20-errors-retries/) — 호출이 실패했을 때
+- [C4. 좋은 프롬프트 쓰는 법](/ko/claude/c04-prompting/) — 같은 가이드의 채팅 앱 쪽
+- [C16. API 시작하기](/ko/claude/c16-api/)

@@ -1,0 +1,217 @@
+---
+title: "Make Charts and Infographics with AI"
+description: "How to turn your own data into a chart or a one-page infographic with Claude artifacts, Gemini Canvas and ChatGPT image generation, and how to check the numbers, axes and labels against your source data before you share it"
+sidebar:
+  label: "17. Charts and infographics"
+level: beginner
+category: media
+tools: ["Claude", "Gemini 앱", "ChatGPT"]
+duration: "30 min"
+prerequisites:
+  - "An account with Claude, Gemini or ChatGPT"
+  - "A small set of your own numbers (a table of 5 to 20 rows is plenty)"
+lastVerified: 2026-11-04
+sources:
+  - title: "What are artifacts and how do I use them? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them"
+  - title: "Publish and share artifacts (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/9547008-publish-and-share-artifacts"
+  - title: "Create docs, apps & more with Canvas (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/16047321"
+  - title: "Image generation (ChatGPT Learn, OpenAI)"
+    url: "https://learn.chatgpt.com/docs/image-generation"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+import FlowSteps from '../../../components/FlowSteps.astro';
+
+<Summary>
+- **Two different jobs.** A chart needs exact numbers, so build it from your data in a tool that works with it (a Claude artifact, Gemini Canvas, a spreadsheet). An infographic is a designed explainer, and an AI image tool can draft it.
+- **Always check the numbers against your source.** A chart that looks right can still show a wrong value, a wrong label or a misleading axis. Compare every bar with your table.
+- **ChatGPT's guide says to review every word** of dense image text and finish production-critical typography in a design tool.
+- **Pick honest axes and ratios.** Bars should start at zero, and scales should match when you compare charts. This is this site's advice, not an official claim.
+- **Do not paste private or confidential data** into a chat just to get a prettier chart.
+</Summary>
+
+<Aside type="caution" title="A good-looking chart is not a correct chart">
+AI can draw a convincing chart from a wrong number, a mislabeled column or a truncated axis. The three official pages we read describe how to make and edit things; none of them says the tool verifies your data. Treat the output as a draft and check it yourself. If the chart supports a business, health, legal or financial decision, have a qualified person review it.
+</Aside>
+
+## What you'll be able to do after this tutorial
+
+- Choose a chart type that fits your question (comparison, trend, share of a whole).
+- Turn a small table into a chart with Claude or Gemini, and ask for edits in plain words.
+- Draft a one-page infographic layout with an image tool, keeping the text short.
+- Check values, labels, units and axes against the original data before you share.
+
+For analyzing a whole spreadsheet, see [Handing Excel and CSV Data Analysis to AI](/chat/03-data-analysis/). For AI inside Excel and Sheets, see [Adding AI to Excel and Google Sheets](/automation/23-spreadsheet-ai/).
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Source data** | Your original table. Keep it unchanged; every chart must match it. |
+| **Axis** | The scale along the bottom or side. A cut-off axis can make a small gap look huge. |
+| **Baseline** | Where a bar chart starts. For bars, start at zero. |
+| **Chart** | Exact values drawn from data. |
+| **Infographic** | A designed explainer mixing a few numbers, icons and short text. |
+| **Artifact** | Something Claude makes that opens beside the chat and that you can edit and share. |
+| **Canvas** | A side panel in the Gemini app for creating or editing a doc, app, slides or code. |
+
+### What each tool's official page says
+
+| | Claude | Gemini app | ChatGPT |
+| --- | --- | --- | --- |
+| Where to build | Artifacts open beside the chat. The help page lists dashboards, diagrams and small interactive tools among what Claude can make | Canvas, to create or edit a doc, app, slides or code | Image generation can draft explainers, posters, labeled diagrams and timelines |
+| Edit afterwards | Ask Claude to change it, or edit directly in template-based artifacts | Ask in the text box, edit the code, or use Select & ask. Changes are auto-saved | Ask for one change at a time; the guide says to review dense text |
+| Share or export | Template artifacts export (for example Docs to Word or PDF). Sharing can be limited to you, invited people or anyone with the link | Not covered in the page we read | Not covered in the page we read |
+| Plan or setting | Artifacts need "Cloud code execution and file creation" turned on in Settings, Capabilities | Sign in to Gemini Apps | Image availability and limits depend on plan and workspace settings |
+
+We did **not** confirm chart types each tool supports, upload size or row limits, or how ChatGPT or Gemini handle chart-from-spreadsheet requests. We tried to read a ChatGPT Canvas page and a data-analysis page and they were not found, so this tutorial says nothing about them. Look at your own account.
+
+## Step by step
+
+The example is "monthly sales for a small shop, shown as a bar chart and a one-page summary."
+
+<Checklist items={[
+  'I have my source table saved and unchanged',
+  'The data has no private details (customer names, account numbers)',
+  'I know the question the chart must answer',
+  'I pasted exact numbers instead of describing them',
+  'I compared every value, label and unit with the source',
+  'I checked the axis starts at zero for bars',
+]} />
+
+<Steps>
+
+1. **Decide the question and the chart type**
+
+   Write one sentence: "Show which month sold the most." Then pick a type. These are this site's suggestions:
+
+   - **Compare categories:** bar chart.
+   - **Change over time:** line chart.
+   - **Parts of a whole:** a single stacked bar or a pie with only a few slices.
+   - **Two measures:** two separate charts, not one chart with two scales.
+
+2. **Build the chart in Claude from your table**
+
+   The Claude help page says artifacts require "Cloud code execution and file creation" to be on in Settings, Capabilities (the setting is called "Create and edit files" in the updated layout). Paste a small table directly, so the numbers are exact.
+
+   <PromptBox>
+   Make a bar chart as an artifact from this table. Use exactly these numbers and do not round or estimate. Label each bar with its value, put the month on the bottom axis, start the vertical axis at 0, and title the chart "Monthly sales (units)". Month, Units: Jan 120, Feb 95, Mar 140, Apr 110, May 180, Jun 160. After the chart, list each value you plotted so I can check it.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="A bar chart artifact opening beside the Claude chat" officialUrl="https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them" />
+
+   To change it, ask in the chat. For example, "Make June's bar a different color and keep every number the same." The help page says you can also edit template-based artifacts directly.
+
+3. **Or build it in Gemini Canvas**
+
+   <FlowSteps title="Start Canvas in the Gemini app" officialUrl="https://support.google.com/gemini/answer/16047321" steps={[
+     { where: 'gemini.google.com', action: 'Below the text box, choose Canvas', result: 'A chat that creates content in a side panel' },
+     { where: 'Text box', action: 'Enter your prompt with the table pasted in, then click Submit', result: 'The chart appears in the Canvas panel' },
+     { where: 'Canvas panel', action: 'Use Select & ask to point at a section, or edit the code directly', result: 'Changes are auto-saved' },
+   ]} />
+
+   Use the same prompt as step 2. The help page describes Canvas for docs, apps, slides and code; building a chart as a small app there is this site's suggestion.
+
+4. **Draft an infographic with ChatGPT image generation**
+
+   ChatGPT's guide says image generation can help draft explainers, posters, labeled diagrams and timelines. It says to describe the information hierarchy and layout, keep labels concise, and request sharp text rendering. It also says to put exact text in quotation marks and to say whether any other text is allowed.
+
+   <PromptBox>
+   Create a clean one-page infographic draft for a small shop's first-half sales summary. Layout: a title at the top, three large number callouts in a row, and a simple icon for each. Use only this text: the title "First half at a glance" and the three labels "Best month: May", "Total: 805 units", "Average: 134 units". Do not add any other words, numbers or logos. Use a warm, muted palette and a lot of white space.
+   </PromptBox>
+
+   Treat the result as a layout sketch. The guide says to review every word of dense copy and to finish production-critical typography in a design tool.
+
+5. **Check every number against your source**
+
+   <Aside type="caution" title="Compare, do not trust">
+   Lay your source table next to the result. Check each value, each label, the units, the title and the order of the categories. In the example, 120 + 95 + 140 + 110 + 180 + 160 = 805 and 805 / 6 is about 134, so the infographic's totals are checkable by hand. Do the same arithmetic for yours. If anything differs, ask for a fix and check again, or build the chart in a spreadsheet instead.
+   </Aside>
+
+6. **Check axes and ratios before sharing**
+
+   - Bars start at zero. A bar twice as tall should mean twice the value.
+   - If you show two charts side by side, use the same scale.
+   - Use few colors and make sure labels are readable. Do not rely on color alone.
+   - Show the unit and the time period in the title or subtitle.
+   - Say where the data came from.
+   - Avoid 3D effects and pie charts with many slices.
+
+   These are this site's practical suggestions, not claims from an official page.
+
+7. **Share or export carefully**
+
+   For Claude, the help page says template-based artifacts have an "Export" option and that sharing can be set to only you, invited people or anyone with the link. Check who can open it before you send the link. For legacy artifacts, the page says you can view, copy or download the code. For an image from ChatGPT, review the result first. ChatGPT's guide says credit to OpenAI is optional, and to follow your organization's guidelines and usage policies.
+
+</Steps>
+
+## Quick reference
+
+### Prompt wording
+
+| Need | Wording to try |
+| --- | --- |
+| Exact numbers | "Use exactly these numbers. Do not round or estimate" |
+| Honest axis | "Start the vertical axis at 0" |
+| Self-check | "After the chart, list every value you plotted" |
+| Short text | "Use only this text: ... Do not add any other words" |
+| Consistent scale | "Use the same axis range for both charts" |
+
+### Which tool for which job
+
+| Job | Option |
+| --- | --- |
+| A chart from a small pasted table | Claude artifact or Gemini Canvas |
+| A designed explainer draft | ChatGPT image generation (review all text) |
+| A chart from a large file | Your spreadsheet, or see [chat/03](/chat/03-data-analysis/) |
+| Final print-quality typography | A design tool of your choice (not covered by the pages we read) |
+
+## Common sticking points
+
+### A bar is the wrong height or a label is wrong
+
+- **Cause**: The model misread, rounded or reordered your data.
+- **Fix**: Paste the table again, say "use exactly these numbers", and ask it to list plotted values. Compare with your source.
+
+### Text in the infographic is garbled
+
+- **Cause**: Image tools can get text wrong, especially long text.
+- **Fix**: Use fewer, shorter words in quotation marks, then check every word. Add the final text in a design tool.
+
+### The chart looks dramatic but the change is small
+
+- **Cause**: The axis may not start at zero.
+- **Fix**: Ask for a zero baseline and compare with the numbers.
+
+### I cannot find Artifacts or Canvas
+
+- **Cause**: Features depend on plan, settings and sign-in.
+- **Fix**: Check the "Capabilities" setting for Claude and the sign-in requirement on the Gemini help page.
+
+### My data is confidential
+
+- **Cause**: Uploaded or pasted data goes to the service.
+- **Fix**: Remove names and identifiers or use made-up sample numbers. See [Privacy and Safety Basics](/basics/05-privacy-safety/).
+
+## Practical tips
+
+- **Keep the source table.** Save it next to every chart so you can recheck later.
+- **One message, one chart.** Fewer requests at once means fewer surprises.
+- **Round on purpose.** Say how many decimals you want.
+- **Ask for the numbers back.** A list of plotted values is easy to verify.
+- **Label the source and date** on anything you publish.
+
+## What to read next
+
+- [Claude Artifacts](/claude/c06-artifacts/) — what artifacts are and how to share them
+- [Handing Excel and CSV Data Analysis to AI](/chat/03-data-analysis/) — analyzing whole files
+- [Adding AI to Excel and Google Sheets](/automation/23-spreadsheet-ai/) — charts inside your spreadsheet
+- [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/) — disclosure and reuse

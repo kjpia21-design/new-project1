@@ -1,0 +1,214 @@
+---
+title: "Think Through a Decision with AI: Pros and Cons, Scenarios, Opposing Views, and a Pre-Mortem"
+description: "How to use an AI assistant as a thinking partner for a decision: list your options and criteria, build a pros-and-cons table, test scenarios, ask for the opposing case, run a pre-mortem, and know when to talk to a professional, with what the official pages confirm and what we could not confirm"
+sidebar:
+  label: "21. Decisions"
+level: beginner
+category: chat
+tools: ["Claude", "Gemini", "ChatGPT"]
+duration: "30 min"
+prerequisites:
+  - "One AI account (any of Claude, Gemini, or ChatGPT)"
+  - "A real decision you are weighing, such as a move, a purchase, a job offer, or a plan, and a rough idea of what matters to you"
+lastVerified: 2026-11-04
+sources:
+  - title: "Prompting (ChatGPT documentation)"
+    url: "https://learn.chatgpt.com/docs/prompting.md"
+  - title: "Learn in creative ways with generative AI (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/15216790"
+  - title: "When should I use web search, extended thinking, and research? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/11095361-when-should-i-use-web-search-extended-thinking-and-research"
+  - title: "Introduction to prompt design (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/7996853-introduction-to-prompt-design"
+  - title: "Usage Policy (Anthropic)"
+    url: "https://www.anthropic.com/legal/aup"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- AI is a good **thinking tool** for a decision: it can lay out options, ask what you have not considered, and argue the other side. **It does not make the decision, and it does not know your life.** You decide.
+- For important decisions about **health, legal matters, or money**, treat the AI's output as notes to bring to a qualified professional, not as advice to act on.
+- Six steps: **state the decision and what matters, list the options, build a pros-and-cons table, test scenarios, ask for the opposing view, then run a pre-mortem and decide.** Below are 8 prompts you can copy.
+- Per the official pages (as of 2026-11-04): Gemini's learning page suggests asking generative AI to argue the opposing side to understand different points of view; ChatGPT's prompting page shows a "compare options" example and suggests asking for a final check and reviewing the result yourself; Claude's help page says web search suits up-to-date facts and extended thinking suits complex reasoning that needs no recent web information.
+- The method here (criteria weights, scenarios, pre-mortem) is **this site's suggestion**, not an official recommendation from any service. We did not test how well each service follows these prompts.
+- Do not paste private or confidential details, and check any fact or number the AI gives you before relying on it.
+</Summary>
+
+## What you'll be able to do
+
+- Turn a vague worry into a clear decision statement with options and criteria.
+- Get a pros-and-cons table that is tied to what you care about, not a generic list.
+- Compare "best case, likely case, worst case" scenarios and see which assumptions matter most.
+- Ask the AI to argue against your favorite option, and run a pre-mortem on it.
+- Recognize when a decision needs a doctor, lawyer, or financial professional, and prepare for that conversation.
+
+This tutorial is about **thinking through a choice.** For comparing products you might buy, see [Compare Products Before You Buy with AI](/chat/48-shopping-compare/). For trips, see [Plan Trips with AI](/chat/45-travel-planning/). For health, legal, and money questions in particular, read [Asking AI About Health, Legal and Money Questions Safely](/basics/13-sensitive-questions/) first.
+
+## Concepts first
+
+| Term | Meaning |
+| --- | --- |
+| **Decision statement** | One sentence: what you are choosing, by when, and what a good outcome looks like. |
+| **Options** | The real choices, including "do nothing" and "wait and decide later". |
+| **Criteria** | What matters to you in this choice (cost, time, risk, stress, who is affected). Only you can say which matter most. |
+| **Pros and cons table** | Each option with its benefits and costs, ideally scored against your criteria. |
+| **Scenario** | A short story of how things might turn out, such as best, likely, and worst case. |
+| **Devil's advocate** | Asking the AI to argue against the option you prefer. |
+| **Pre-mortem** | Imagining the decision failed a year from now and working backward to ask why. |
+| **Reversible or not** | Whether you can undo the choice cheaply. Reversible choices deserve less analysis than one-way doors. |
+
+### What the official pages confirm (as of 2026-11-04)
+
+| Item | Claude | ChatGPT | Gemini |
+| --- | --- | --- | --- |
+| Comparing options | Not confirmed on the pages read | The prompting page has a "Compare options" example: compare two phone plans, show differences in a table, recommend one and explain the tradeoff | Not confirmed on the page read |
+| Seeing the other side | Not confirmed | Not confirmed | The learning page lists "Understand different points of view", for example asking generative AI to argue for the opposing side |
+| Giving it context and limits | The prompt-design help page says to treat Claude like a newly hired contractor with no context and to give very specific instructions | The prompting page lists goal, context, output, and boundaries, and says to use only the parts that help | The learning page says the more specific your questions, the more helpful the AI's responses |
+| Checking the result | Not confirmed on the pages read | For important work, ask for a final check, such as flagging information it could not verify, then review the result yourself before using it | The learning page says to always evaluate responses and fact-check, because generative AI can make mistakes |
+| Current facts vs. reasoning | Web search suits straightforward factual and up-to-date queries; extended thinking suits complex reasoning that does not need recent web information; research suits comprehensive multi-source reports | The prompting page says to ask for web search when the answer depends on current information, and to ask for sources when you need to check the result | Not confirmed on the page read |
+| High-stakes decisions | Anthropic's Usage Policy (see below) | Not confirmed | Not confirmed |
+
+<Aside type="note" title="What the Usage Policy says, and what we could not confirm">
+Anthropic's Usage Policy page, which shows an effective date of Nov 12, 2026 (a few days after this tutorial's date), has a "High-risk Use Case Requirements" section. It says that when products are used to make a "High-risk AI Recommendation" affecting an individual's health, legal rights, finances, livelihoods, or access to housing, education, or essential services, a qualified person must meaningfully review it, with authority to change it, and the affected individual must know AI was involved. The text frames this as requirements for people who use Anthropic's products to give advice or make decisions affecting others; we did not read it as a rule about thinking through your own personal choice, and we are not giving legal advice about how it applies to you. We did not find equivalent wording on the ChatGPT or Gemini pages we read, which does not mean those services have no such terms. We also could not confirm how any service performs on decision-making tasks, and we did not run these prompts against all three.
+</Aside>
+
+<Aside type="caution" title="Serious decisions need a professional">
+Medical, legal, tax, and investment decisions depend on facts about you that an AI does not have, and on rules that change by place and over time. Use the AI to organize your questions, understand terms, and prepare for an appointment, and then ask a doctor, lawyer, accountant, or licensed adviser. If something is urgent or an emergency, contact emergency services or a professional directly instead of using a chatbot. Also leave out names, ID numbers, account numbers, and other private details; see [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/).
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I wrote the decision in one sentence, with a deadline if there is one',
+  'I listed what matters to me and which matters most',
+  'I removed names, numbers, and other private details before pasting',
+  'I asked for the opposing case and a pre-mortem, not only the pros',
+  'I checked any fact, price, or rule the AI gave me against a primary source',
+  'If it involves health, law, or money, I made a list of questions for a professional',
+]} />
+
+<Steps>
+
+1. **State the decision and what matters**
+
+   Start by writing it out yourself, then ask the AI to sharpen it. Give your real constraints.
+
+   <PromptBox label="Framing prompt">
+   I am trying to decide [the decision, in one sentence] by [date, if any]. What matters to me: [for example cost, time, stress, family, risk]. Constraints I cannot change: [constraints]. Please restate the decision in one sentence, then ask me up to five questions that would change the answer. Do not recommend anything yet.
+   </PromptBox>
+
+   Answer the questions in your own words. If you realize you do not know what matters most to you, that is the finding.
+
+2. **List the options, including doing nothing**
+
+   <PromptBox label="Options prompt">
+   Based on the above, list the realistic options, including "do nothing" and "wait and decide later". For each, give one line on what it would involve. Also point out any option I may be missing, and tell me which options are easy to undo and which are not.
+   </PromptBox>
+
+3. **Build a pros-and-cons table tied to your criteria**
+
+   <PromptBox label="Table prompt">
+   Make a table with my options as columns and my criteria as rows. In each cell, write a short note and a score from 1 to 5, and say what the score is based on. Where you are guessing because I did not give you the information, write "guess" instead of a score. Then show the total, but tell me how the total changes if I weight [my most important criterion] twice as much.
+   </PromptBox>
+
+   Change the weights yourself. If the winner flips with a small change, the choice is close and other factors matter.
+
+4. **Test scenarios**
+
+   <PromptBox label="Scenario prompt">
+   For my top two options, describe a best case, a likely case, and a worst case. For each, say what would have to be true for it to happen, how I would notice early, and what I could do to limit the damage. Mark every number or probability as an assumption I should check, and do not present them as facts.
+   </PromptBox>
+
+5. **Ask for the opposing view**
+
+   <PromptBox label="Devil's advocate prompt">
+   I am leaning toward [option]. Argue as strongly as you honestly can against it, as a thoughtful person who disagrees. Then tell me which of your arguments are strongest, which depend on facts you do not know, and what information would settle them.
+   </PromptBox>
+
+   <PromptBox label="Bias check prompt">
+   Look at how I have described this decision so far. Where might I be anchoring on one number, avoiding a hard fact, or giving my favorite option an easier case than the others? Point it out politely and with examples from what I wrote.
+   </PromptBox>
+
+6. **Run a pre-mortem, then decide**
+
+   <PromptBox label="Pre-mortem prompt">
+   Imagine it is one year from now and I chose [option] and it went badly. Write five plausible reasons it failed, ordered from most to least likely. For each, suggest an early warning sign and one step I could take now to reduce the risk. Then list the questions I should answer, or the people I should talk to, before I commit.
+   </PromptBox>
+
+   Decide by yourself, ideally after a night's sleep. Write down why you chose it and what would make you revisit it. See [Can You Trust AI Answers?](/basics/04-fact-checking/) to check any facts you relied on.
+
+7. **If it is health, law, or money, prepare for a professional**
+
+   <PromptBox label="Professional prep prompt">
+   This decision involves [a health, legal, or money matter]. I will talk to a [doctor / lawyer / accountant / adviser]. Do not give me a recommendation. Explain the key terms in plain language, list the questions I should ask, the documents or information I should bring, and the things I should ask them to confirm because rules differ by place. Say clearly what you cannot know about my situation.
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+| What you want | Try this |
+| --- | --- |
+| Clarify what you are deciding | Framing prompt |
+| Find options you missed | Options prompt |
+| See trade-offs side by side | Table prompt |
+| See how things could go | Scenario prompt |
+| Hear the other side | Devil's advocate prompt |
+| Catch your own blind spots | Bias check prompt |
+| Find what could go wrong | Pre-mortem prompt |
+| Get ready to see a professional | Professional prep prompt |
+
+## Common sticking points
+
+### The AI just agrees with me
+
+- **Cause**: Assistants can be agreeable, and a prompt that reveals your preference invites support.
+- **Fix**: Ask for the opposing case, or describe the options neutrally without saying which you favor. Use the Devil's advocate prompt.
+
+### The pros and cons are generic
+
+- **Cause**: It did not know your criteria, limits, or situation.
+- **Fix**: Answer the Framing prompt's questions and use the Table prompt with your own criteria.
+
+### The numbers look precise but I do not know where they came from
+
+- **Cause**: AI can produce confident-looking figures without a source, and any AI can make mistakes.
+- **Fix**: Ask what each number is based on and mark guesses as guesses. Check prices, rates, and rules at the original source. For current facts, ask for web search and sources if your service offers it.
+
+### The scores keep changing when I ask again
+
+- **Cause**: Scores are the AI's judgments, not measurements, and they can vary between runs.
+- **Fix**: Use the table to see the reasoning, not as a calculation. Adjust the scores yourself where you disagree.
+
+### I still cannot decide
+
+- **Cause**: The options may be close, or an important fact is missing, or the real issue is a feeling the table does not capture.
+- **Fix**: Ask what single piece of information would settle it and go find it. Consider a small reversible trial, or set a date to decide. Talking to a trusted person can help more than another prompt.
+
+### The topic is medical, legal, or about money
+
+- **Cause**: These depend on your records, your location, and current rules.
+- **Fix**: Use the Professional prep prompt and bring the result to a qualified person. Do not act on the AI's output alone.
+
+## Practical tips
+
+- **Say what matters before listing options.** Criteria make the table useful.
+- **Include "do nothing".** It is often a real option with its own costs.
+- **Ask for the other side every time.** Make it a habit before a big choice.
+- **Mark guesses.** A number with no source is a prompt for you to check, not a fact.
+- **Match effort to stakes.** A reversible choice needs a quick look; a one-way door needs time and, if it is serious, a professional.
+- **Keep it private.** Describe the situation without names or identifying details.
+
+## What to read next
+
+- [Asking AI About Health, Legal and Money Questions Safely](/basics/13-sensitive-questions/) — how to handle high-stakes questions
+- [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/) — verify before you rely on it
+- [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/) — what to keep out of chats
+- [Asking Well: The Basics Worth Remembering](/basics/03-asking-well/) — giving context and limits
+- [Compare Products Before You Buy with AI](/chat/48-shopping-compare/) — when the choice is a purchase
+- [Plan Trips with AI](/chat/45-travel-planning/) — when the choice is where to go

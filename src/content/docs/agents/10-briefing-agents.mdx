@@ -1,0 +1,166 @@
+---
+title: "How to Write a Clear Brief for an AI Agent"
+description: "A reusable brief template for handing work to an AI agent: goal, scope, definition of done, off-limits actions, and check-in points, with what the Claude, ChatGPT dot, and Gemini help pages say about describing tasks, separated from our own recommendations"
+sidebar:
+  label: "10. Briefing agents"
+level: beginner
+category: agents
+tools: ["Claude Cowork", "ChatGPT dots", "Gemini"]
+duration: "20 min"
+prerequisites:
+  - "Have used an AI chat tool at least once"
+  - "It helps to have skimmed the agent safety checklist (Part 5)"
+lastVerified: 2026-11-04
+sources:
+  - title: "Get started with Claude Cowork"
+    url: "https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork"
+  - title: "Use Claude Cowork safely"
+    url: "https://support.claude.com/en/articles/13364135-use-claude-cowork-safely"
+  - title: "Tasks and memory (OpenAI)"
+    url: "https://learn.chatgpt.com/docs/dots/tasks-and-memory"
+  - title: "Control your dot (OpenAI)"
+    url: "https://learn.chatgpt.com/docs/dots/controls"
+  - title: "Manage your tasks & workflows in Gemini Apps"
+    url: "https://support.google.com/gemini/answer/16596215"
+status: published
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- An agent works on its own for a while, so a vague request can go wrong in ways a chat answer can't. A good **brief** is the cheapest safeguard.
+- The three official pages we read all ask you to **describe the result you want**: Claude says to "describe the task you want Claude to complete," OpenAI says to "describe the result you need and the sources it should use," and Gemini says to "tell Gemini your specific goals and when you want tasks completed."
+- This article gives a five-part brief: **goal, scope, definition of done, off-limits actions, check-in points**. The five parts are **this site's recommendation**, not an official format.
+- The official pages do confirm the ingredients: you can add more specific instructions (OpenAI), steer mid-task (Claude, Gemini), and ask for confirmation or updates on certain decisions (OpenAI, Gemini).
+- After the agent finishes, [Part 7](/agents/07-reviewing-agent-work/) covers how to check the result.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Turn a vague request into a brief an agent can follow.
+- Fill in a five-part template and reuse it for different tasks.
+- Tell which parts of this advice come from official help pages and which are our own.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Brief** | The written instruction you give an agent before it starts: what you want, the limits, and how you will know it's done. |
+| **Scope** | Which files, sites, apps, and time period the agent may use. |
+| **Definition of done** | A checkable description of the finished result: format, count, location, and what to report. |
+| **Check-in point** | A moment where you want the agent to stop and ask, or send an update, before going further. |
+| **Steering** | Adding or changing instructions while a task is running. |
+
+### What the official pages say (and what is our recommendation)
+
+| Source | Official statement (paraphrased or quoted briefly) |
+| --- | --- |
+| Claude Cowork getting-started page | To start, select "Cowork" in the message box and describe the task you want Claude to complete. Then review Claude's approach and let it run. While it works you can jump in to course-correct or give more direction. |
+| Claude Cowork getting-started page | You can set global instructions (tone, output format, role background) for every Cowork session, and folder instructions for project-specific context when you select a local folder on desktop. |
+| Claude Cowork safety guide | Watch for unexpected patterns: is Claude accessing files or websites you didn't mention, and is the task scope creeping beyond what you asked? Consider a dedicated working folder rather than broad access. Switch to "Manually approve" when mistakes would be hard to undo, such as sending messages or making purchases. |
+| ChatGPT dot docs | Describe the result you need and the sources it should use. Built-in safeguards and app permissions apply automatically, and you can add more specific instructions. Tell it which results deserve an update and which decisions need your input. |
+| ChatGPT dot docs | For a recurring task, specify what it should check or update, when it runs (with time zone and any end date), which changes deserve a notification, and where to deliver results. Ask the dot to confirm what it saved. |
+| Gemini task help | Tell Gemini your specific goals and when you want tasks completed. To change its approach mid-task, enter additional instructions. Monitor the task for input Gemini may need. Avoid tasks or schedules that use or act on information you find sensitive. |
+
+<Aside type="note" title="Official guidance vs. this site's recommendations">
+The table above reflects what the pages say. The five-part template, the "ask it to report what it skipped" habit, and the example prompts are **our recommendations**. They are consistent with the official advice but are not an official requirement. We did not find an official page that prescribes a brief template.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  '1. I wrote the goal as an outcome, not a vague topic',
+  '2. I listed what the agent may use: files, sites, apps, time range',
+  '3. I described what "done" looks like and what to report back',
+  '4. I wrote what the agent must not do',
+  '5. I named the moments it should stop and ask me',
+  '6. I started with a small version of the task',
+  '7. I reread the brief once as if I were a stranger',
+]} />
+
+### 1. Goal: say the outcome, not just the topic
+
+"Look into flights" is a topic. "Find three nonstop options from Seoul to Tokyo on March 5, under a set budget, and put them in a table" is an outcome. All three official pages frame tasks around the result you want.
+
+### 2. Scope: say what it may use
+
+List the folder, the sites or apps it may use, and the period. The Cowork safety guide suggests a dedicated working folder, and OpenAI says to describe the sources the dot should use. A narrow scope also makes it easier to notice when the agent strays.
+
+### 3. Definition of done: make it checkable
+
+State the format, the count, where the output goes, and what the agent should report at the end. This pairs with [Part 7](/agents/07-reviewing-agent-work/), where you check the result against the same description.
+
+### 4. Off-limits actions: write what not to do
+
+Examples: don't delete or move originals, don't send anything, don't buy anything, don't sign in to accounts, don't change settings. The official pages say that built-in safeguards apply, but also that you can add more specific instructions (OpenAI). Treat your own "don't" list as an extra layer, not a replacement for permission settings ([Part 5](/agents/05-agent-safety/)).
+
+### 5. Check-in points: say when to stop and ask
+
+OpenAI says to tell the dot which results deserve an update and which decisions need your input. Gemini notes that some tasks require your confirmation. Write your own: "Ask me before contacting anyone," "Show me the plan before you start," "Stop and ask if you find more than 50 files."
+
+### 6. Put it together
+
+<PromptBox>
+Goal: Turn the 12 receipt photos in the "receipts" folder into one spreadsheet with date, store, and amount columns.
+Scope: Use only the "receipts" folder. Do not open other folders or websites.
+Done when: The spreadsheet has one row per receipt, and you report how many you processed, which ones you could not read, and anything you did beyond this list.
+Do not: Move, rename, or delete the original photos. Do not send the spreadsheet to anyone.
+Ask me first: If a receipt is unclear, or if you think you need to use something outside the folder.
+Before you start, tell me your plan in three lines.
+</PromptBox>
+
+### 7. Start small, then steer
+
+Run a small version first, such as 3 receipts instead of 12. Claude and Gemini both say you can add instructions while the task runs. If the first result is off, fix the brief and rerun.
+
+## Quick reference
+
+### Weak brief vs. clear brief
+
+| Weak | Clear |
+| --- | --- |
+| "Clean up my downloads" | "List files in Downloads older than 90 days and group them by type. Don't move or delete anything. Show me the list." |
+| "Research standing desks" | "Compare 5 standing desks under a stated budget using official product pages. Table with price, size, warranty, and the page link for each claim. Mark anything you could not confirm." |
+| "Handle my inbox" | "Draft replies to the 5 newest messages from the team label. Do not send. Skip anything about money or contracts and list those for me." |
+
+### Recurring task brief (follows the dot docs' list)
+
+<PromptBox>
+Every weekday at 9 AM Seoul time until the end of this month, check the shared planning page and list any deadline that changed. Notify me only if a deadline is at risk or you need a decision. Put the list in a new note titled with today's date. Don't edit the page. When you save this schedule, tell me exactly what you saved.
+</PromptBox>
+
+## Common sticking points
+
+### The agent did something I didn't expect
+
+- **Cause**: The brief didn't say it was off limits, or the scope was wide.
+- **Fix**: Add an explicit "do not" line and narrow the scope. See [Part 7](/agents/07-reviewing-agent-work/) for what to check.
+
+### The brief got so long it's a chore to write
+
+- **Cause**: Trying to cover every case.
+- **Fix**: Keep the five parts to one line each. Save the filled template as a note and edit it. For standing preferences, Claude's global and folder instructions are designed for that.
+
+### The agent keeps asking questions
+
+- **Cause**: Check-in points are too broad, or the goal is unclear.
+- **Fix**: Narrow the "ask me first" list to real decisions, and answer the open questions in the brief.
+
+## Practical tips
+
+- **Never put passwords, one-time codes, or card numbers in a brief.** Keep secrets out of any chat (our recommendation).
+- **Avoid sensitive tasks on a schedule.** Claude and Gemini both advise this because you can't watch scheduled runs in real time.
+- **Keep one template note** and copy it for each new task.
+- **Prefer drafts over actions** when you are new to a tool.
+- **Features change often.** This article is as of 2026-11-04, and menu names may differ on your screen.
+
+## What to read next
+
+- [Part 5: Using Personal AI Agents Safely](/agents/05-agent-safety/): what to allow before you start
+- [Part 6: Browser Agents Compared](/agents/06-browser-agents/): approval modes by product
+- [Part 7: How to Check an AI Agent's Work](/agents/07-reviewing-agent-work/): what to verify afterward
+- [C19. Getting started with Cowork](/claude/c19-cowork/): Claude's desktop agent
+- [Basics 3: Asking well](/basics/03-asking-well/): the chat-side version of clear requests
