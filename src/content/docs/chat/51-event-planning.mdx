@@ -1,0 +1,210 @@
+---
+title: "Plan Events and Gatherings with AI: Checklist, Budget, Timeline, and Invitations"
+description: "How to use an AI assistant to plan a party, meetup, or family gathering: define the event, build a task checklist and budget table, draft a timeline and invitation, and re-check venues and prices on official sites, with what the official pages confirm and what we could not confirm"
+sidebar:
+  label: "22. Events"
+level: beginner
+category: chat
+tools: ["Claude", "Gemini", "ChatGPT"]
+duration: "30 min"
+prerequisites:
+  - "One AI account (any of Claude, Gemini, or ChatGPT)"
+  - "An event you are really planning, such as a birthday, a club meetup, a farewell, or a family dinner, with a rough date, headcount, and budget"
+lastVerified: 2026-11-05
+sources:
+  - title: "Prompting (ChatGPT documentation)"
+    url: "https://learn.chatgpt.com/docs/prompting.md"
+  - title: "Learn in creative ways with generative AI (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/15216790"
+  - title: "Enable and use web search (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/10684626-enable-and-use-web-search"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- AI is good at the **first draft of a plan**: a task checklist, a budget table, a timeline for the day, a guest message, and a "what could go wrong" list. **It cannot book, pay, or confirm anything for you, and it does not know your guests.** You make the calls.
+- Six steps: **define the event, brainstorm the format, build a checklist and budget, draft the timeline, write the invitation, then verify and run a day-before check.** Below are 7 prompts you can copy.
+- **Venue hours, prices, availability, and rules change.** Treat every such detail the AI gives you as unverified until you check the venue's or vendor's own official site or ask them directly. (as of 2026-11-05)
+- Per the official pages (as of 2026-11-05): ChatGPT's prompting page suggests boundaries such as keeping budget figures unchanged and preparing a message as a draft instead of sending it, and a final check before you share the result; Gemini's learning page lists brainstorming ideas and says to always fact-check because the AI can make mistakes; Claude's web search page says Claude can search the live web and gives citations you can open.
+- The planning method here (checklist, budget table, timeline, day-before check) is **this site's suggestion**, not an official recommendation from any service. We did not test how well each service follows these prompts.
+- **Do not paste guests' phone numbers, emails, home addresses, allergy or health details, or payment details.** Use first names or "Guest A", and keep the real list in your own file.
+</Summary>
+
+## What you'll be able to do
+
+- Turn "I should organize something" into a clear event brief: purpose, date, headcount, budget, and constraints.
+- Get a task checklist with owners and deadlines, and a budget table you can fill with real prices.
+- Draft a run-of-day timeline with buffers, and a backup plan for rain, no-shows, or a late venue.
+- Write an invitation and a reminder message you can edit and send yourself.
+- List what to confirm with the venue and vendors, and do a short check the day before.
+
+This tutorial is about **planning a gathering.** For trips, see [Plan Trips with AI](/chat/45-travel-planning/). For putting meeting times on a calendar, see [Plan Your Schedule and Meetings with AI](/automation/48-calendar-scheduling/). For choosing between two venues or dates, see [Think Through a Decision with AI](/chat/50-decision-making/).
+
+## Concepts first
+
+| Term | Meaning |
+| --- | --- |
+| **Event brief** | A few lines: why you are gathering, who, roughly when, where, and how much you can spend. |
+| **Run of day** | A time-ordered list of what happens, from setup to cleanup, with owners. |
+| **Budget table** | Each cost line with an estimate, and later the real quote and the amount paid. |
+| **Buffer** | Spare time or money for things that run late or cost more than planned. |
+| **Backup plan** | What you do if the weather, a no-show, or a venue problem changes things. |
+| **Verification list** | The details you must confirm with the venue or vendor before you pay. |
+| **Official source** | The venue's, vendor's, or organizer's own site, or a direct reply from them. |
+
+### What the official pages confirm (as of 2026-11-05)
+
+| Item | Claude | ChatGPT | Gemini |
+| --- | --- | --- | --- |
+| Brainstorming ideas | Not confirmed on the page read | Not confirmed on the page read | The learning page lists "Brainstorm ideas" among ways generative AI can help |
+| Plans, tables, and shopping lists | Not confirmed | The prompting page has a "Make a practical plan" example (five dinners, reused ingredients, one consolidated shopping list), a "Compare options" example in a table, and an example of a table of planned versus actual spending | Not confirmed |
+| Boundaries and drafts | Not confirmed | The page suggests boundaries such as keeping approved dates and budget figures unchanged, keeping recommendations within the stated budget, and preparing a message as a draft without sending it | Not confirmed |
+| Being specific | Not confirmed | Tell it your goal, context, desired output, and boundaries; use only the parts that help | The learning page says the more specific your questions, the more helpful the answers |
+| Checking the result | Not confirmed | For important work, ask for a final check, such as flagging information it could not verify, then review the result yourself | The learning page says to always evaluate responses and fact-check, because generative AI can make mistakes |
+| Current information | The web search page says Claude can search the live web and every response includes citations; on Team and Enterprise plans an Owner must first enable web search for the workspace; the page also notes that with the new Claude experience there is no toggle and Claude searches when it helps | The prompting page says to ask for web search when the answer depends on current information, and to ask for sources when you need to check the result | Not confirmed on the page read |
+
+<Aside type="note" title="What we could not confirm">
+The pages we read do not say how **fresh or complete** the venue hours, prices, or availability that any assistant gives are. They also do not say that any assistant can **book a venue, send invitations, collect RSVPs, or take payments** for you, and we did not test any such feature. Whether your service can connect to your email or calendar depends on your plan and settings, so check your own app. We did not verify any local permit, venue, insurance, food-safety, or alcohol rules for any place.
+</Aside>
+
+<Aside type="caution" title="Guests' details are other people's data">
+A guest list can contain phone numbers, emails, addresses, dietary needs, and health information. Keep the real list in your own spreadsheet, and give the AI only what the plan needs, such as headcount, a count of vegetarian guests, or "one guest uses a wheelchair" without names. Do not paste payment details or deposit receipts. Ask people before sharing their details. See [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/).
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I wrote the event brief with date, headcount, budget, and constraints',
+  'I replaced guest names and contact details with first names or labels',
+  'I asked the AI to keep my budget and dates unchanged and to mark guesses',
+  'I confirmed venue hours, prices, and rules on the official site or with the venue',
+  'I edited the invitation myself and sent it from my own account',
+  'I made a day-before check and a backup plan',
+]} />
+
+<Steps>
+
+1. **Write the event brief**
+
+   Start with the facts you know, and let the AI ask about the rest.
+
+   <PromptBox label="Event brief prompt">
+   I am planning [type of event] for about [number] people on or around [date]. Purpose: [for example a birthday, a farewell, a team lunch]. Budget: [amount in your currency], which must not be exceeded. Place: [city or area; indoors or outdoors]. Constraints: [for example kids attending, a vegetarian guest, limited parking]. Ask me up to six questions that would change the plan, and do not make a plan yet.
+   </PromptBox>
+
+   Answer in your own words. If you find you do not know the purpose or the budget, that is the first thing to settle.
+
+2. **Brainstorm formats and themes**
+
+   <PromptBox label="Brainstorm prompt">
+   Based on the brief, suggest five different ways to run this event, each in two lines: the format, roughly what it would cost relative to my budget, and one risk. Include one low-effort option. Do not name specific venues or prices as facts.
+   </PromptBox>
+
+   Pick one, or combine two. The AI's ideas are a starting point; the event should still sound like you.
+
+3. **Build the checklist and budget table**
+
+   <PromptBox label="Checklist and budget prompt">
+   For the format I chose, make two tables. First, a task checklist with columns: task, who, deadline counted backward from the event date, and status. Second, a budget table with columns: item, estimate, real quote, amount paid. Keep the total within my budget and include a buffer line. Write "guess" next to any estimate that is not based on figures I gave you, and keep my dates and budget figures unchanged.
+   </PromptBox>
+
+   Fill in the real quote and amount paid yourself as you go. The estimates are placeholders until you have an official price. This is planning help, not financial advice.
+
+4. **Draft the run of day and a backup plan**
+
+   <PromptBox label="Timeline prompt">
+   Write a run of day from setup to cleanup, with start times, what happens, and who is responsible. Add a 15-minute buffer where things commonly run late. Then give me a backup plan for each of these: bad weather, fewer guests than expected, a late delivery, and the venue not being ready.
+   </PromptBox>
+
+5. **Write the invitation and a reminder**
+
+   <PromptBox label="Invitation prompt">
+   Draft a friendly invitation message for this event. Include placeholders for the date, time, place, and how to reply by [date]. Ask guests to tell me about dietary needs and access needs privately. Keep it under 120 words. Also draft a short reminder to send two days before. Prepare both as drafts only.
+   </PromptBox>
+
+   Replace the placeholders, edit the tone, and send from your own account. Do not rely on the AI to send or track replies.
+
+6. **Make the verification list, then check on official sites**
+
+   <PromptBox label="Verification prompt">
+   From the plan above, list every detail I must confirm before paying or sending invitations: venue availability and capacity, opening hours, prices and deposits, cancellation terms, rules on outside food or drinks, noise or end-time rules, accessibility, parking, and any permit or insurance needed. For each, name the type of official source to check, such as the venue's site or a direct reply from the venue. Do not state any of these as facts.
+   </PromptBox>
+
+   Work through the list on the venue's or vendor's own pages, or ask them directly, and note the date you checked.
+
+7. **Do a day-before check**
+
+   <PromptBox label="Day-before check prompt">
+   Here is my final plan with the date, headcount, and run of day. Do a final check: find tasks without an owner or deadline, times that overlap, items missing from the shopping or packing list, and information you could not verify. Then give me a short checklist to go through the day before and a message I can send to helpers.
+   </PromptBox>
+
+   Review the result yourself before relying on it.
+
+</Steps>
+
+## Quick reference
+
+| What you want | Try this |
+| --- | --- |
+| Clarify the event | Event brief prompt |
+| Get ideas | Brainstorm prompt |
+| Track tasks and money | Checklist and budget prompt |
+| Plan the day and plan B | Timeline prompt |
+| Invite people | Invitation prompt |
+| Know what to confirm | Verification prompt |
+| Catch gaps before the day | Day-before check prompt |
+
+## Common sticking points
+
+### The plan ignores my budget
+
+- **Cause**: The budget was not stated as a hard limit, or the AI had no cost information for your area.
+- **Fix**: Say the budget must not be exceeded and ask it to keep the figures unchanged. Replace its estimates with real quotes.
+
+### The venue details look specific but I cannot find them
+
+- **Cause**: AI can produce confident-looking names, hours, and prices that are wrong or out of date.
+- **Fix**: Ask it not to name venues or prices as facts, or ask for web search and sources if your service offers it. Open the cited page and confirm on the venue's own site or by asking them.
+
+### The invitation sounds like a template
+
+- **Cause**: It did not know your tone or your group.
+- **Fix**: Add two or three sentences you have written before, and ask it to match that voice. Edit before sending.
+
+### I do not want to paste my guest list
+
+- **Cause**: The list has other people's details.
+- **Fix**: Give counts and needs without names, and keep the real list in your own file. Ask permission before sharing anyone's details.
+
+### The timeline is too tight
+
+- **Cause**: The AI may not know how long setup, travel, or serving really takes for your group.
+- **Fix**: Tell it your own time estimates, ask for buffers, and walk through the timeline once yourself.
+
+### The event involves alcohol, many people, or children
+
+- **Cause**: Rules, insurance, and safety needs vary by place and venue.
+- **Fix**: Ask the venue and your local authority what applies. The AI can help you list questions, but it cannot tell you what is required where you live.
+
+## Practical tips
+
+- **State the budget as a limit.** Say it must not be exceeded, and keep a buffer line.
+- **Ask the AI to mark guesses.** A price with no source is a prompt for you to check.
+- **Keep drafts as drafts.** Edit and send messages yourself.
+- **Keep guest data out of the chat.** Counts and needs are usually enough.
+- **Confirm with the venue.** Official sites and direct replies beat any AI summary.
+- **Match effort to size.** A small dinner needs a quick list; a larger event needs the full set of tables and a backup plan.
+
+## What to read next
+
+- [Plan Trips with AI](/chat/45-travel-planning/) — itineraries, budgets, and re-checking facts
+- [Plan Your Schedule and Meetings with AI](/automation/48-calendar-scheduling/) — calendars and meeting times
+- [Think Through a Decision with AI](/chat/50-decision-making/) — choosing between venues, dates, or formats
+- [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/) — what to keep out of chats
+- [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/) — verify before you rely on it
+- [Asking Well: The Basics Worth Remembering](/basics/03-asking-well/) — giving context and limits
