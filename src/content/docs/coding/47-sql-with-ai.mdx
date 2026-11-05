@@ -1,0 +1,209 @@
+---
+title: "Write and Check SQL Queries with AI"
+description: "Have AI draft a SQL query from your table layout, then check it on sample data and a read-only account before you trust it. Based on the official Claude Code MCP docs and the PostgreSQL docs"
+sidebar:
+  label: "20. SQL with AI"
+level: practical
+category: coding
+tools: ["Claude Code", "Claude"]
+duration: "30 min"
+prerequisites:
+  - "Basic idea of tables, rows and columns (no SQL experience needed)"
+  - "A practice database or sample data (never start with production)"
+  - "Optional: Claude Code installed and signed in (see Getting started with Claude Code)"
+lastVerified: 2026-11-05
+sources:
+  - title: "Claude Code: Connect Claude Code to tools via MCP (Query your PostgreSQL database)"
+    url: "https://code.claude.com/docs/en/mcp"
+  - title: "Claude Code: Common workflows"
+    url: "https://code.claude.com/docs/en/common-workflows"
+  - title: "PostgreSQL documentation: SET TRANSACTION (read-only mode)"
+    url: "https://www.postgresql.org/docs/current/sql-set-transaction.html"
+  - title: "SQLite documentation: SELECT"
+    url: "https://www.sqlite.org/lang_select.html"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- AI writes SQL well when it knows your table names, columns and what you want. It cannot see your data unless you give it, so describe the layout (the schema) and a few fake rows instead of real customer data.
+- Run a new query on sample data first, then on a read-only account. The Claude Code MCP docs show a database server set up with a read-only database user "so the queries Claude runs can't modify data".
+- A query that runs without an error can still give a wrong answer. Check the result against a number you can count by hand. Three classic traps are shown below with a tested example: filtering a LEFT JOIN in WHERE, NOT IN with NULL, and counting the wrong rows.
+- Keep personal data (names, emails, phone numbers, card numbers) out of prompts and results. Prefer masked or sample data.
+- We read the official pages on 2026-11-05. We ran the SQL examples in this tutorial against an in-memory SQLite database (Python's sqlite3 module) and the results shown are from that run. We did not run Claude Code, a PostgreSQL server or any MCP database server, so those parts come from the docs.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Ask AI for a SQL query with the context it needs: table layout, the question, the database type.
+- Have the query explained line by line and check it on sample data.
+- Spot common wrong-answer bugs before they reach a report.
+- Set up a safer way to run queries: sample data first, read-only access after, production never first.
+
+## Concepts to know first
+
+**SQL** is the language for asking questions of a relational database. A **table** holds rows; a **schema** is the list of tables and columns. A **JOIN** combines rows from two tables; a **NULL** means "no value", which behaves differently from zero or an empty string. A **read-only account** can read data but cannot change or delete it. This tutorial focuses on reading data (`SELECT`). For spreadsheets and CSV files without a database, see [3. Handing off data analysis](/chat/03-data-analysis/); for analysis in code, see [11. Analyzing data with Claude Code](/coding/38-data-analysis-claude-code/). Permission settings are in [13. Tune settings and permissions](/coding/40-settings-permissions/).
+
+<Aside type="caution" title="Do not run AI-written SQL on production first">
+A query that reads is harmless; one that updates or deletes may not be. Run new queries on a practice copy or sample data, and give any tool the AI uses a read-only account. Rows can also hold personal data, and whatever you paste or let a tool return goes to the AI service. See [Basics 5](/basics/05-privacy-safety/) and [Basics 12](/basics/12-privacy-settings/).
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I am working on sample data or a practice copy, not production',
+  'I described the schema and used fake or masked rows',
+  'I asked for a SELECT-only query and read it before running it',
+  'I checked the result against a number I can count by hand',
+  'Any database connection I gave a tool uses a read-only account',
+]} />
+
+<Steps>
+
+1. **Make a safe practice database**
+
+   Create a small database with fake rows. The examples below use three tables: `customers`, `orders` and `order_items`, with names like "Sample A". SQLite is a good practice choice because it is a single file or can live in memory. Never put real names or emails into a practice set that you will paste into a chat.
+
+   ```sql
+   CREATE TABLE customers(id INTEGER PRIMARY KEY, name TEXT, region TEXT);
+   CREATE TABLE orders(id INTEGER PRIMARY KEY, customer_id INTEGER, ordered_on TEXT, status TEXT);
+   CREATE TABLE order_items(id INTEGER PRIMARY KEY, order_id INTEGER, price REAL, qty INTEGER);
+   INSERT INTO customers VALUES (1,'Sample A','East'),(2,'Sample B','West'),(3,'Sample C','East');
+   INSERT INTO orders VALUES (1,1,'2026-10-02','paid'),(2,1,'2026-10-15','paid'),(3,2,'2026-10-20','cancelled'),(4,NULL,'2026-10-21','paid');
+   INSERT INTO order_items VALUES (1,1,10,2),(2,1,5,1),(3,2,20,1),(4,3,7,1),(5,4,9,1);
+   ```
+
+2. **Describe the schema and the question**
+
+   Give the database type (SQLite, PostgreSQL, MySQL and so on, since syntax differs), the table layout, the question in plain words, and what you expect the answer to look like. Do not paste real rows.
+
+   <PromptBox>
+   I use SQLite. Tables: customers(id, name, region), orders(id, customer_id, ordered_on, status), order_items(id, order_id, price, qty). status is paid or cancelled. Write one read-only SELECT that shows every customer with the number of paid orders, including customers with none (show 0). Explain each clause in one line, and tell me one way the query could be wrong.
+   </PromptBox>
+
+   The "one way it could be wrong" request is our own habit: it makes the AI list its assumptions before you trust the output.
+
+3. **Read the query before you run it**
+
+   Check that it only uses `SELECT` (no `INSERT`, `UPDATE`, `DELETE`, `DROP`), that the table and column names exist in your schema, and that the join condition matches the right columns. If you do not understand a line, ask for it to be explained; do not run what you cannot read.
+
+4. **Run it on sample data and check by hand**
+
+   With the sample data above, a correct answer for "customers with their paid orders, including zero" is: Sample A has 2, Sample B has 0 (its only order was cancelled), Sample C has 0 (no orders). Here is a version that gives it. We ran it in SQLite and got `[('Sample A', 2), ('Sample B', 0), ('Sample C', 0)]`:
+
+   ```sql
+   SELECT c.name, COUNT(o.id) AS paid_orders
+   FROM customers c
+   LEFT JOIN orders o ON o.customer_id = c.id AND o.status = 'paid'
+   GROUP BY c.id, c.name;
+   ```
+
+   If your own result does not match what you can count on a few rows, the query is wrong, even though it ran.
+
+5. **Learn the three common wrong-answer traps**
+
+   *Trap 1: filtering a LEFT JOIN in WHERE.* Moving `o.status = 'paid'` from the `ON` clause to `WHERE` removes customers with no matching paid order, so the LEFT JOIN behaves like an inner join. We ran this version and got only `[('Sample A', 2)]`:
+
+   ```sql
+   SELECT c.name, COUNT(o.id)
+   FROM customers c
+   LEFT JOIN orders o ON o.customer_id = c.id
+   WHERE o.status = 'paid'
+   GROUP BY c.id;
+   ```
+
+   *Trap 2: NOT IN with NULL.* "Customers with no orders" written with `NOT IN` returned nothing in our run (`[]`), because one order has a NULL `customer_id`. The comparison against NULL is never true, so no row passes. The `NOT EXISTS` version returned `[('Sample C',)]`, which is correct:
+
+   ```sql
+   -- returned [] in our run (wrong)
+   SELECT name FROM customers WHERE id NOT IN (SELECT customer_id FROM orders);
+
+   -- returned [('Sample C',)] (right)
+   SELECT name FROM customers c
+   WHERE NOT EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id);
+   ```
+
+   *Trap 3: counting the wrong rows.* Joining `orders` to `order_items` gives one row per item, so `COUNT(*)` counts items, not orders (order 1 has two item rows in our data). When you want orders, use `COUNT(DISTINCT o.id)` or aggregate items first. Ask the AI "what does one row of this result represent?" for every join.
+
+   These traps are general SQL behavior we tested on SQLite. Other databases may differ in details, so test on yours.
+
+6. **Run it with a read-only account, not production**
+
+   When the query is right on sample data, run it on the real database through an account that can only read. If you let Claude Code query a database through MCP, the official MCP page's PostgreSQL example uses DBHub and tells you to "use a read-only database user in the connection string so the queries Claude runs can't modify data". The command shape in the docs is:
+
+   ```bash
+   claude mcp add --transport stdio db -- npx -y @bytebase/dbhub \
+     --dsn "postgresql://readonly:pass@prod.db.com:5432/analytics"
+   ```
+
+   Do not copy this as is. The host, user and password are the docs' placeholders; use your own read-only user, keep the password out of files you share, and read the MCP page for scopes and security notes. The page also says to verify you trust each MCP server before connecting it, because servers that fetch external content can expose you to prompt injection. Query results returned by a tool are sent to the AI service, so mind personal columns.
+
+   PostgreSQL also has a read-only transaction mode. Its docs say a read-only transaction disallows `INSERT`, `UPDATE`, `DELETE`, `MERGE` (and `COPY FROM`) on non-temporary tables, all `CREATE`, `ALTER` and `DROP`, and more, and call it "a high-level notion of read-only that does not prevent all writes to disk". So a read-only database user is still the main safeguard; treat the transaction mode as an extra layer.
+
+7. **Review slow or heavy queries before running them**
+
+   Ask the AI to explain the plan and to suggest an index, but do not create indexes on a live system without your database owner. In SQLite, putting `EXPLAIN QUERY PLAN` before a query shows how it will run; in our run, `EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id=1` printed `SCAN orders`, meaning a full table scan on this tiny table. Other databases have their own commands and output formats; check your database's docs. Limit rows while testing (`LIMIT 20`).
+
+8. **Save what you learned**
+
+   Keep the final query with a one-line comment on what it counts and which traps you checked. Ask for a short note:
+
+   <PromptBox>
+   Write a comment block for this query: what question it answers, what one row of the result means, which filters it applies, and the edge cases (NULL values, cancelled orders, customers with no orders) I checked. Do not claim anything we did not test.
+   </PromptBox>
+
+</Steps>
+
+## Quick reference
+
+| Task | What to do |
+| --- | --- |
+| Give AI context | Database type, schema, plain-language question, fake rows |
+| Keep it safe | Sample data first, then a read-only account; never production first |
+| Keep customers with no match | Put the filter in `ON`, not `WHERE`, of a LEFT JOIN |
+| Find rows with no match | `NOT EXISTS` instead of `NOT IN` when NULL is possible |
+| Count orders after a join | `COUNT(DISTINCT o.id)` or aggregate first |
+| See how SQLite runs a query | `EXPLAIN QUERY PLAN SELECT ...` |
+| Connect a database to Claude Code | `claude mcp add` with a read-only user (see the MCP page) |
+
+## Common problems
+
+### The query runs but the number looks wrong
+
+- **Cause**: A join multiplied rows, a filter removed rows, or NULL values behaved unexpectedly.
+- **Fix**: Test on a few rows you can count by hand. Ask what one result row represents.
+
+### The AI used a function my database does not have
+
+- **Cause**: SQL dialects differ and the database type was not stated.
+- **Fix**: Say which database and version you use, and read its official docs for the function.
+
+### The AI wrote an UPDATE or DELETE
+
+- **Cause**: The request was vague.
+- **Fix**: Ask for SELECT only. Do not run it. Use a read-only account so it could not change data anyway.
+
+### I pasted real customer rows
+
+- **Cause**: Rows were copied from a real table.
+- **Fix**: Treat it as shared. Use masked or sample data next time, and tell the data owner if the data was sensitive.
+
+## Practical tips
+
+- Ask for the query and a plain-language explanation together. If the explanation does not match your question, the query is probably wrong.
+- Add `LIMIT` while testing, and check row counts against a known total.
+- Keep schema files (without data) in your project so the AI always starts from the real layout.
+- Do not ask AI to guess table names; give them.
+- Re-check commands and behavior against the official pages, since tools change often.
+
+## Next tutorials
+
+- [3. Handing off data analysis](/chat/03-data-analysis/)
+- [11. Analyzing data with Claude Code](/coding/38-data-analysis-claude-code/)
+- [13. Tune settings and permissions](/coding/40-settings-permissions/) — keep secret files and risky commands out of reach
+- [Basics 5. Privacy and safety](/basics/05-privacy-safety/)
+- [Developer guide](/roles/developer/)
