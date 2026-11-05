@@ -11,7 +11,7 @@ prerequisites:
   - "A Slack workspace (AI features show up depending on your plan and admin settings)"
   - "To use Claude Tag, a Claude Team or Enterprise organization, and Owner permission to configure it"
   - "A practice channel and made-up conversations (don't test in channels containing real customer information or confidential content)"
-lastVerified: 2026-10-31
+lastVerified: 2026-11-05
 sources:
   - title: "Guide to AI features in Slack (Slack Help Center)"
     url: "https://slack.com/help/articles/25076892548883-Guide-to-AI-features-in-Slack"
@@ -41,7 +41,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 - There are two ways to add AI to Slack: **Slack's own AI** (summaries, search answers, recaps, Slackbot) and **Claude Tag** (a feature where you call @Claude in a channel to hand off work).
 - Slack AI is described as using **only conversations you can see**. Features vary by plan: summaries are described as available across paid plans, while search answers, recaps, translation, and Slackbot are described as Business+ and above (as of 2026-10-31).
 - Claude's Slack integration **became Claude Tag as of 2026-08-03.** It's a beta feature on Claude Team and Enterprise plans, and is described as unavailable on personal plans (Free, Pro, Max).
-- Claude Tag's channel work is **billed to the organization based on usage**. Only Owners can configure it.
+- Claude Tag's channel work is **billed to the organization based on usage**. An Owner sets it up (the Admin role can't); on Enterprise, an Owner can delegate many controls.
 - Either way, **click through to the sources to check the original** for results, and for channels with confidential content, check your company policy first on whether to hand them to AI.
 </Summary>
 
@@ -142,28 +142,28 @@ According to Claude's help, Claude Tag has **three touchpoints** in Slack.
 - **DM**: Chat one-on-one with @Claude.
 - **AI assistant panel**: Open it by clicking the Claude icon in Slack's AI assistant header.
 
-| Item | What's described (as of 2026-10-31) |
+| Item | What's described (as of 2026-11-05) |
 | --- | --- |
 | Plans | **Team, Enterprise**. Beta. Not available on personal plans such as Free, Pro, Max, or Ultra. |
 | Identity and cost of channel work | Claude works under the organization's identity, within the tools and access scope an admin set for that channel. Costs are billed to the **organization**. |
 | DMs and panel | Works with features you've turned on in your own Claude account (web search, connected tools, etc.). |
 | Claude seats | Each Slack user doesn't need a Claude seat. Channel work is usage-based, with no extra per-seat fee. |
-| Who can configure | Only the **Primary Owner or an Owner**. The Admin role can't. |
+| Who can configure | Setup and the access and channel settings are done by the **Primary Owner or an Owner**. The Admin role can't. On Enterprise, an Owner can delegate many controls through a Claude Tag Admin permission or per-channel managers. |
 | Initial access scope | It starts with no access to external systems, and admins connect the services needed. |
 | Execution environment | Runs in a temporary sandbox, not on your computer. |
 
 ### Cost and access control (for admins to check)
 
-- Cost is **usage-based**. You can set organization-wide limits and per-channel limits, and admins are described as being notified at 75% and 95% of a limit. Work that would exceed the limit is rejected rather than silently cut off.
+- Cost is **usage-based**. You can set organization-wide limits and per-channel limits. Warnings before a limit is reached: the Help Center article says admins are notified at 75% and 95%, while the spend-limit docs say Claude posts a heads-up in Slack at 75% and 90%. We couldn't reconcile the two, so the exact thresholds are unconfirmed; check your own settings. Work that would exceed the limit is declined rather than silently cut off.
 - **Who can use it** is set under Member Access: the entire Slack workspace, only Claude organization members, or by role (Enterprise).
 - Access scope is configured at three levels, organization, workspace, and private channel, and sensitive connections can be kept separately in private channels.
 - **Channels with guests** default to Restrict, so Claude doesn't respond.
 - **Memory**: Claude Tag remembers context per channel and workspace, and Owners can view, edit, and delete it.
 - **Activity log**: Owners can see scheduled and one-time tasks and network calls under Organization settings > Claude Tag > Activity.
-- Conversations started in Slack are kept separate from your Claude conversation history and follow Slack's retention policy. If you disconnect the integration or delete the app, the Claude-side conversations are described as deleted within 30 days.
+- Conversations started in Slack are kept separate from your Claude conversation history. Messages in Slack follow your Slack retention settings. On Claude's side, the docs say there is no automatic retention period during the beta: transcripts and memory are kept until deleted, for example when an Owner disconnects the workspace or the app is uninstalled. The Help Center article says Claude-side conversations are deleted within 30 days of that, but the docs state no timing, so the 30-day figure is unconfirmed.
 
 <FlowSteps title="Getting started with Claude Tag (Owner)" officialUrl="https://claude.com/docs/claude-tag/overview" steps={[
-  { where: 'Slack workspace', action: 'Install the Claude app, then type @Claude connect', result: 'A pairing code' },
+  { where: 'Slack workspace', action: 'A Slack workspace admin installs the Claude app, then types @Claude connect in a channel where Claude has been added', result: 'A pairing code (works once, expires in 15 minutes)' },
   { where: 'claude.ai/admin-settings/claude-tag', action: 'Enter the pairing code', result: 'Slack and the Claude organization are connected' },
   { where: 'Settings screen', action: 'Set a monthly limit, choose the channels to put Claude in, and start', result: 'Channel members can use it right away' },
   { where: 'Practice channel', action: 'Ask @Claude what can you access from this channel?', result: 'Check the scope it can access' },
