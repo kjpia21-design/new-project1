@@ -7,7 +7,7 @@ import NewsItem from '../../components/NewsItem.astro';
 
 This collects Claude updates from Anthropic's official channels, newest first. We picked only what matters to people who actually use Claude, such as model releases, pricing, and new features in Claude Code and the app, and left out minor bug fixes. We keep checking the official channels and updating this page.
 
-**Last updated: 2026-11-05**
+**Last updated: 2026-11-06**
 
 ## Official channels we monitor
 
@@ -18,6 +18,14 @@ This collects Claude updates from Anthropic's official channels, newest first. W
 - [Anthropic News](https://www.anthropic.com/news): policy, partnerships, model announcements
 
 ## November 2026
+
+<NewsItem date="Nov 5" channel="Claude app" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c02-plans-limits/" tutorialLabel="C2 Plans and usage limits">
+Personal Finance is rolling out as a beta on Pro, Max, and Ultra plans. You can link your bank, credit card, loan, and investment accounts to Claude, see balances and spending on one page, and ask Claude questions about your own money. As of 2026-11-05, it's available in the US only, so it isn't offered in Korea. Claude Enterprise also gets new security and admin controls, including a security center, inference hooks, centralized management, and additional access controls, several in beta.
+</NewsItem>
+
+<NewsItem date="Nov 5" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c16-api/" tutorialLabel="C16 Claude API basics">
+Two admin features arrived in beta. The Claude Console now supports an organization IP allowlist (IPv4/IPv6 addresses or CIDR ranges, up to 1,000 per organization); requests to covered services from addresses not on the list are refused, which limits where a leaked API key can be used. The Admin API also gained `POST /v1/organizations/users/{user_id}/sign_out` (beta header `admin-user-sign-out-2026-10-08`), which signs a Claude Enterprise member out on every browser and device while leaving them in the organization.
+</NewsItem>
 
 <NewsItem date="Nov 4" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
 Version 2.1.318 is out. `claude auth status` and `claude -p` JSON output now show when your claude.ai sign-in expires, with a warning on stderr starting 10 days before. Cloud sessions on Anthropic-hosted environments get a "No repository" option. Background subagents move a shell command to the background after 3 minutes so the prompt cache doesn't expire, and subagents now stop instead of switching models when "Switch models when a message is flagged" is set to "Ask each time." The IDE extension is no longer installed or updated when Claude Code starts in an IDE terminal; use `/ide` from an outside terminal instead.

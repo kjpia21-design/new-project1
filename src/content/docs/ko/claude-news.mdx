@@ -7,7 +7,7 @@ import NewsItem from '../../../components/NewsItem.astro';
 
 Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 모았어요. 모델 출시, 가격, Claude Code와 앱의 새 기능처럼 실제로 쓰는 분에게 의미 있는 것만 골랐고, 사소한 버그 수정은 뺐어요. 공식 채널을 점검해 계속 갱신해요.
 
-**마지막 업데이트: 2026-11-05**
+**마지막 업데이트: 2026-11-06**
 
 ## 모니터링하는 공식 채널
 
@@ -18,6 +18,14 @@ Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 �
 - [Anthropic 뉴스](https://www.anthropic.com/news): 정책, 파트너십, 모델 발표
 
 ## 2026년 11월
+
+<NewsItem date="11월 5일" channel="Claude 앱" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/ko/claude/c02-plans-limits/" tutorialLabel="C2 요금제와 사용량 한도">
+개인 금융(Personal Finance) 베타가 Pro·Max·Ultra 플랜에 순차 제공돼요. 은행·신용카드·대출·투자 계좌를 Claude에 연결하면 잔액과 지출을 한 페이지에서 보고, 내 돈에 관해 Claude에게 물어볼 수 있어요. 2026-11-05 기준 미국에서만 쓸 수 있어서 한국에서는 제공되지 않아요. Claude Enterprise에도 보안 센터, 추론 훅(inference hooks), 중앙 관리, 추가 접근 제어 같은 새 보안·관리 기능이 생겼고, 일부는 베타예요.
+</NewsItem>
+
+<NewsItem date="11월 5일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/ko/claude/c16-api/" tutorialLabel="C16 Claude API 기초">
+관리자용 기능 두 가지가 베타로 나왔어요. Claude Console에서 조직 IP 허용 목록(IPv4·IPv6 주소 또는 CIDR 범위, 조직당 최대 1,000개)을 설정할 수 있고, 목록에 없는 주소에서 오는 요청은 거부돼서 API 키가 유출돼도 쓸 수 있는 위치가 제한돼요. Admin API에는 `POST /v1/organizations/users/{user_id}/sign_out`(베타 헤더 `admin-user-sign-out-2026-10-08`)이 추가돼, Claude Enterprise 구성원을 모든 브라우저와 기기에서 로그아웃시키되 조직에는 남겨둘 수 있어요.
+</NewsItem>
 
 <NewsItem date="11월 4일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/ko/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
 2.1.318 버전이 나왔어요. `claude auth status`와 `claude -p` JSON 출력에 claude.ai 로그인 만료일이 표시되고, 만료 10일 전부터 stderr로 경고해요. Anthropic이 호스팅하는 환경의 클라우드 세션에는 "No repository"(저장소 없음) 옵션이 생겼어요. 백그라운드 서브에이전트는 셸 명령을 3분 뒤 백그라운드로 넘겨 프롬프트 캐시가 만료되지 않게 하고, "Switch models when a message is flagged"를 "Ask each time"으로 두면 서브에이전트가 모델을 바꾸는 대신 멈춰요. IDE 터미널에서 Claude Code를 시작해도 IDE 확장을 더 이상 설치·갱신하지 않으니, 바깥 터미널에서 `/ide`를 쓰세요.
