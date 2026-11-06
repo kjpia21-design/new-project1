@@ -1,0 +1,182 @@
+---
+title: "Use AI Agents for a Small Business's Routine Work"
+description: "Which routine jobs of a one-person or small business suit an AI agent (booking and quote drafts, inventory lists, customer reply drafts), a safe way to start, and what the Claude Cowork, ChatGPT dot, and Gemini help pages say, kept apart from our own advice"
+sidebar:
+  label: "11. Agents for a small business"
+level: practical
+category: agents
+tools: ["Claude Cowork", "ChatGPT dots", "Gemini"]
+duration: "25 min"
+prerequisites:
+  - "Have used an AI chat tool at least once"
+  - "It helps to have read the agent safety checklist (Part 5) and the briefing template (Part 10)"
+lastVerified: 2026-11-06
+sources:
+  - title: "Get started with Claude Cowork"
+    url: "https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork"
+  - title: "Use Claude Cowork safely"
+    url: "https://support.claude.com/en/articles/13364135-use-claude-cowork-safely"
+  - title: "Tasks and memory (OpenAI)"
+    url: "https://learn.chatgpt.com/docs/dots/tasks-and-memory"
+  - title: "Control your dot (OpenAI)"
+    url: "https://learn.chatgpt.com/docs/dots/controls"
+  - title: "Manage your tasks & workflows in Gemini Apps"
+    url: "https://support.google.com/gemini/answer/16596215"
+status: published
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- A person running a shop or a one-person business repeats the same chores: tidying booking requests, drafting quotes, updating stock lists, answering similar questions. An AI agent can do the **preparation** for these, while you keep the **decisions**.
+- **Our recommendation**: start with jobs that only read and draft (summaries, lists, drafts), and keep payments, refunds, and sending messages to customers in your own hands.
+- The official pages back this up. Claude's safety guide says to switch to "Manually approve" when mistakes would be hard to undo, such as sending messages or making purchases, and not to schedule tasks that send messages or make purchases. Gemini's page says to avoid tasks that use sensitive information. OpenAI says asking a dot to draft replies does not give it permission to send them.
+- Customer names, contact details, and payment information are best kept out of the task. Claude and Gemini both warn about sensitive files and details.
+- The examples (bookings, quotes, stock) are **our illustrations**, not features the vendors advertise for small businesses.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Sort your routine chores into "hand to an agent", "agent drafts, I decide", and "I do it myself".
+- Write a first agent task for a small-business chore with limits and a check-in point.
+- Tell which advice comes from official help pages and which is our own.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Agent** | An AI that works through several steps on its own (reading files, using apps, making documents) after you describe a task. |
+| **Draft-only task** | A task whose output is a draft or list for you to review. Nothing is sent, paid, or changed. |
+| **Scheduled task** | A task saved to run again at set times. |
+| **Approval mode** | A setting for how often the agent must ask before acting. |
+
+### What the official pages say (and what is our recommendation)
+
+| Source | Official statement (paraphrased or quoted briefly) |
+| --- | --- |
+| Claude Cowork getting-started page | Cowork is available on paid plans. It can take multi-step tasks and deliver outputs such as spreadsheets, slides, and documents. Example use cases listed include organizing a Downloads folder, processing receipts into an expense report, batch-renaming files, summarizing notes and transcripts, and making spreadsheets with formulas. Claude requires your explicit permission before permanently deleting files. |
+| Claude Cowork getting-started page | Scheduled tasks run in the cloud, without your computer awake. Multi-step tasks use more of your usage than a quick question. Sessions cannot be shared with others, but individual artifacts can. |
+| Claude Cowork safety guide | Consider a dedicated working folder and keep backups; avoid granting access to sensitive files such as financial documents. For scheduled tasks: start simple, avoid sensitive data and consequential actions (such as sending messages on your behalf or making purchases), review outputs after each run, and pause tasks you no longer use. Switch to "Manually approve" when mistakes would be hard to undo. You remain responsible for messages sent, purchases, and actions taken by scheduled tasks. |
+| ChatGPT dot docs | Describe the result you need and the sources to use. Tell the dot which results deserve an update and which decisions need your input. Recurring work needs a saved schedule: what to check or update, when (with time zone and end date), which changes deserve a notification, where to deliver results. A completed run does not by itself confirm that the result was achieved or delivered, so review output and errors. |
+| ChatGPT dot docs (controls) | An automatic review checks actions that could affect your accounts or share information. Asking a dot to draft replies does not give it permission to send them. Optional custom rules include "Ask before taking action" (the page gives sending messages to customers as an example) and "Hand off to you". Stopping work does not undo completed actions; pausing does not cancel future scheduled runs. |
+| Gemini task help | Tasks need a personal Google Account, a Google AI Pro or Ultra subscription, and more (the page lists the conditions); not available in the EEA, Nigeria, Switzerland, or the UK. Do not enter sign-in info, payment details, or sensitive info into the task thread. Avoid scheduling tasks you find sensitive; if a schedule runs while you are offline, you may not be able to stop an unintended action. Gemini can create files such as PDF, DOCX, XLSX, and PPTX. |
+
+<Aside type="note" title="Official guidance vs. this site's recommendations">
+The table reflects what the pages say. The sorting of chores, the example tasks, and the "draft first" habit are **our recommendations**. None of the three pages describes a small-business use case, and we did not confirm which plan, region, or Korean-language support applies to each product for your situation. Check the current plan and availability pages before you pay.
+</Aside>
+
+## Step by step
+
+<Checklist items={[
+  '1. I listed my repeating chores and how long each takes',
+  '2. I sorted them: agent does it, agent drafts, I do it',
+  '3. I picked one low-risk chore to start',
+  '4. I made a small folder with copies and no customer personal data',
+  '5. I wrote the task with limits and a check-in point',
+  '6. I kept approval on manual and checked the result',
+  '7. I decided whether it is worth repeating before scheduling it',
+]} />
+
+### 1. List the chores and sort them
+
+Write down what you repeat each week. Then sort each chore (this is our own three-way sort):
+
+| Group | Examples | Why |
+| --- | --- | --- |
+| Agent can do | Turn a pile of notes into a clean list; make a monthly stock sheet from a copied spreadsheet; rename photo files | Output stays in your folder and is easy to check. |
+| Agent drafts, I decide | Booking confirmations, quote drafts, replies to common questions | A wrong draft is cheap; a wrong sent message is not. |
+| I do it | Taking payments, refunds, price changes, contract terms, anything with a customer's personal data | Hard to undo, and you stay responsible for it. |
+
+### 2. Start with one read-and-draft chore
+
+A good first task is one where the agent reads a copy of something and produces a document. The Cowork page lists examples of this shape (receipts to an expense report, notes to a polished document).
+
+### 3. Prepare a safe workspace
+
+Make a dedicated folder with copies of what the task needs, as the Cowork safety guide suggests, and keep your originals elsewhere. Remove customer names, phone numbers, and addresses first (our recommendation; see [Part 5](/agents/05-agent-safety/)). Never place passwords or card numbers in a task.
+
+### 4. Write the task with limits
+
+Use the five-part brief from [Part 10](/agents/10-briefing-agents/). Here is a booking-tidy example, using made-up data only.
+
+<PromptBox>
+Goal: Turn the 15 booking requests in the file "requests-copy.txt" into one table with date, time, service, and status (clear, unclear, conflict).
+Scope: Use only the "bookings-work" folder. Do not open other folders or websites.
+Done when: The table has one row per request. Report how many are unclear or conflict, and list anything you skipped.
+Do not: Edit the original file. Do not send any message or confirm any booking. Do not change prices.
+Ask me first: If two requests overlap or a request is ambiguous.
+Before you start, tell me your plan in three lines.
+</PromptBox>
+
+### 5. Draft customer replies, but do not send them
+
+<PromptBox>
+Using only the table in the file "bookings-table.csv", write a short, polite reply draft for each row marked clear and a question draft for each row marked unclear. Save them in one document, one draft per row. Do not send anything. Leave blanks wherever you would have to guess a price, a policy, or an opening hour, and list those blanks at the end.
+</PromptBox>
+
+You read each draft, fill in the facts yourself, and send it from your own account. For OpenAI, the controls page says drafting does not give permission to send; for Claude, the safety guide recommends manual approval for sending messages.
+
+### 6. Quotes and stock: let the agent calculate, you confirm
+
+For a quote or stock list, give the agent a copy of your price list and quantities, and ask it to show its calculation. Then check totals, taxes, and discounts yourself. Prices, tax treatment, and terms are your business decisions (see [the solo-business guide](/roles/solo-business/)).
+
+<PromptBox>
+From the copy "stock-copy.xlsx", list items where the quantity is below the number in the "reorder at" column. Add a column showing how you decided. Do not change the original or order anything. Mark any row where a cell is empty or unreadable instead of guessing.
+</PromptBox>
+
+### 7. Check the result, then decide on repeating
+
+Compare against the "done when" line and spot-check a few rows against your originals. OpenAI's page notes a completed run does not confirm the result was achieved. See [Part 7](/agents/07-reviewing-agent-work/). Only after several good runs consider a schedule, and read the next section first.
+
+## Quick reference
+
+### Scheduling a routine chore
+
+| Question | Our advice | Official basis |
+| --- | --- | --- |
+| What may run unattended? | Read-and-summarize jobs only | Claude: start simple, avoid sensitive data and consequential actions |
+| Who sends customer messages? | You | Claude: sending messages is hard to undo; OpenAI: drafting is not permission to send |
+| How do I stop it? | Know where the Scheduled list is before you start | Claude: Scheduled page; OpenAI: Scheduled; pausing does not cancel schedules |
+| How often do I check output? | After every run at first | Claude: review outputs after each run |
+
+<PromptBox>
+Every Monday at 8 AM Seoul time until the end of next month, read the file "stock-copy.xlsx" in the "bookings-work" folder and write a list of items below their reorder level into a new note dated that day. Do not edit the spreadsheet or order anything. Tell me exactly what schedule you saved.
+</PromptBox>
+
+## Common sticking points
+
+### The draft contains a price or policy I never gave it
+
+- **Cause**: The agent filled a gap by guessing.
+- **Fix**: Tell it to leave blanks instead of guessing, and keep policy and refund terms as text you paste in.
+
+### Usage runs out quickly
+
+- **Cause**: Multi-step tasks use more of your usage than a quick question (Claude page).
+- **Fix**: Group related work into one task. See [Part 9](/agents/09-agent-usage-limits/).
+
+### The agent can't reach my files or the result is somewhere unexpected
+
+- **Cause**: Local access depends on the desktop app being open and on the folders you connected (Claude pages).
+- **Fix**: Check the folder permissions and the output location the agent reported.
+
+## Practical tips
+
+- **Do not put customers' personal data in tasks.** Replace names with codes (our recommendation).
+- **You are responsible for what goes out under your name.** Claude's safety guide says so explicitly for messages, purchases, and scheduled tasks.
+- **Run a small sample first**, such as 3 requests instead of 15.
+- **Keep a short list of what the agent may never do** and paste it into every task.
+- **Check current plans and regions.** Gemini tasks are limited to certain accounts and regions, and we did not confirm plan or region availability for dots. This article is as of 2026-11-06 and menu names may differ on your screen.
+- **Not legal, tax, or accounting advice.** Confirm those matters with an expert.
+
+## What to read next
+
+- [AI guide for solo business owners](/roles/solo-business/): customer replies, promotion, and quotes
+- [Part 5: Using Personal AI Agents Safely](/agents/05-agent-safety/): what to allow before you start
+- [Part 7: How to Check an AI Agent's Work](/agents/07-reviewing-agent-work/): what to verify afterward
+- [Part 9: Agent costs and usage limits](/agents/09-agent-usage-limits/): why agent tasks use more
+- [Part 10: How to Write a Clear Brief for an AI Agent](/agents/10-briefing-agents/): the five-part brief
+- [C19. Getting started with Cowork](/claude/c19-cowork/): Claude's desktop agent

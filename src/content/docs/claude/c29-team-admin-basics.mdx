@@ -1,0 +1,222 @@
+---
+title: "Claude for Team and Enterprise admins: security and settings basics"
+description: "A practical first-pass guide for new Claude Team and Enterprise admins based on official help pages: roles, domain verification, SSO and provisioning, session and data controls, the new Enterprise security center, and what each plan includes"
+sidebar:
+  label: "C29. Team and Enterprise admin basics"
+level: practical
+category: claude
+tools: ["Claude Team", "Claude Enterprise"]
+duration: "40 min"
+prerequisites:
+  - "A Claude Team or Enterprise organization where you hold the Admin, Owner or Primary Owner role (or are preparing to ask the person who does)"
+  - "For SSO: access to your company's DNS settings and identity provider (or your IT administrator)"
+lastVerified: 2026-11-06
+sources:
+  - title: "Roles and permissions (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/9267276-roles-and-permissions"
+  - title: "Manage members on Team and Enterprise plans"
+    url: "https://support.claude.com/en/articles/13133750-manage-members-on-team-and-enterprise-plans"
+  - title: "Set up single sign-on (SSO)"
+    url: "https://support.claude.com/en/articles/13132885-set-up-single-sign-on-sso"
+  - title: "Important considerations before enabling SSO and JIT/SCIM provisioning"
+    url: "https://support.claude.com/en/articles/10276682-important-considerations-before-enabling-single-sign-on-sso-and-jit-scim-provisioning"
+  - title: "Set up JIT or SCIM provisioning"
+    url: "https://support.claude.com/en/articles/13133195-set-up-jit-or-scim-provisioning"
+  - title: "Configuring session security settings"
+    url: "https://support.claude.com/en/articles/13163631-configuring-session-security-settings"
+  - title: "Configure custom data retention controls for Enterprise plans"
+    url: "https://support.claude.com/en/articles/10440198-configure-custom-data-retention-controls-for-enterprise-plans"
+  - title: "Access audit logs"
+    url: "https://support.claude.com/en/articles/9970975-access-audit-logs"
+  - title: "Review your organization's security posture with the security center"
+    url: "https://support.claude.com/en/articles/18246629-review-your-organization-s-security-posture-with-the-security-center"
+  - title: "Inference hooks overview"
+    url: "https://support.claude.com/en/articles/16059458-inference-hooks-overview"
+  - title: "Get started with centralized management"
+    url: "https://support.claude.com/en/articles/18232924-get-started-with-centralized-management"
+  - title: "Set organization instructions"
+    url: "https://support.claude.com/en/articles/14546867-set-organization-instructions"
+  - title: "Claim and migrate accounts on your domain"
+    url: "https://support.claude.com/en/articles/14625619-claim-and-migrate-accounts-on-your-domain"
+  - title: "Restrict access to Claude with IP allowlisting"
+    url: "https://support.claude.com/en/articles/13200993-restrict-access-to-claude-with-ip-allowlisting"
+  - title: "Who owns and manages the data of my Team? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/9265372-who-owns-and-manages-the-data-of-my-team"
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "Release notes (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12138966-release-notes"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- Admin work in Claude is mostly done in **Organization settings**. What you can see and change depends on your **role** (User, Admin, Owner, Primary Owner), and several controls exist **only on Enterprise** (as of 2026-11-06, per the official pages).
+- A safe first order: confirm who holds the Owner roles, **verify your domain**, set up **SSO** and test it before requiring it, choose how members are **provisioned**, then look at data retention, audit logs and the new security center.
+- Some changes are hard to undo: requiring SSO can lock people out, a shortened retention period permanently deletes data, and domain capture cannot be reversed. Read the warning before each switch.
+- The Enterprise **security center** (beta) is a read-only page that compares your settings with Anthropic's recommended configuration. It is guidance, not a security certification.
+- This guide is a basics map, not legal or compliance advice. Check the linked official pages and your own security team before you change settings.
+</Summary>
+
+If you have just been made an admin, the settings menu can look large. This guide gives you a short path through the parts the official help pages treat as foundations. For the plan comparison, see [C2. Plans and limits](/claude/c02-plans-limits/). For how members share projects and chats, see [C24. Sharing projects and chats](/claude/c24-sharing-projects/). For the Slack feature, see [C28. Claude Tag in Slack](/claude/c28-claude-tag/).
+
+## What you'll be able to do
+
+- Explain the four built-in roles and who can reach which settings.
+- Verify a domain and understand what SSO and provisioning change for your members.
+- Know which data and session controls exist, and which plan needs them.
+- Find the security center and read what its statuses mean.
+- Make a short rollout checklist and decide what to ask your IT or security team.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Organization settings** | The admin area in Claude, opened from your account menu. Members, billing, security and data controls live here. |
+| **Primary Owner** | The single top role. A Team or Enterprise organization can have only one; the seat uses one license, and the official page says it can be a service account that is not tied to a person. |
+| **Owner / Admin / User** | Owners and Admins manage members and settings; which settings each can reach differs (see step 1). Users do not have admin access. |
+| **Custom role** | Enterprise only. A member whose role is set to Custom has no default permissions; access comes from the custom roles assigned to their groups. |
+| **Domain verification** | Proving you own your company email domain by adding a DNS TXT record. It is required before SSO. |
+| **SSO / JIT / SCIM** | Single sign-on lets people sign in through your identity provider (IdP). JIT creates accounts at first login. SCIM syncs adds and removals from your IdP (Enterprise only). |
+| **Parent organization** | The entity that stores domain verification and SSO settings, which can be shared by several Claude or Console organizations. |
+
+## Step-by-step
+
+<Checklist items={[
+  'I know who the Primary Owner and Owners are, and there is more than one person who can regain access',
+  'I verified my domain and saved the TXT value before leaving the setup screen',
+  'I tested SSO before turning on Require SSO, and I know how a locked-out Owner contacts Support',
+  'I chose a provisioning mode (invite only, JIT or SCIM) and know who removes departed members',
+  'I read the warning on every retention, domain capture and session change before saving',
+  'I exported my member list as a CSV before large role changes',
+]} />
+
+<Steps>
+
+1. **Map the roles before you change anything**
+
+   The official roles page lists four built-in roles. The Primary Owner is unique to the organization. Owners and the Primary Owner can access Billing; the Members page says Admins can manage members under Organization settings > Members but cannot open Billing. Setting up SSO, setting organization instructions, and managing data retention each require an Owner or Primary Owner, per the pages for those features. Enterprise adds custom roles and groups for finer access (for example connector permissions), described on separate pages. Export the current member list first: Organization settings > Members > Export CSV (Admins and above).
+
+   <PromptBox label="Draft a role map">
+   I am a new admin on a Claude Team plan with 40 people. Draft a one-page table with these columns: person or group, the role I think they need (User, Admin, Owner), and a question I should confirm with the official roles page. Use made-up names and mark anything you are unsure about as unconfirmed.
+   </PromptBox>
+
+2. **Verify your domain**
+
+   In Organization settings > Organization and access, add your domain under Domains, choose Verify, and publish the TXT record that starts with `anthropic-domain-verification-` at your DNS provider. Add it alongside existing TXT records, copy the full value exactly, and save it before you leave the screen, because once the domain shows Pending the console does not show the value again. The page says to wait about 10 minutes, and DNS can take 24 to 48 hours. Verifying a domain alone does not change existing users' access. After verification a **Restrict organization creation** toggle appears; it prevents new Claude or Console organizations, including personal accounts, on your verified domains. Decide that on purpose.
+
+3. **Set up SSO, test it, then decide whether to require it**
+
+   SSO is available on Team plans, Enterprise plans and Console organizations, and the person setting it up must be an Owner or Primary Owner on Claude. Under Authentication choose Setup SSO and follow your IdP's guide (the page lists Okta, Entra ID, Google, OneLogin, JumpCloud and Duo, all SAML). Run the built-in test. Only then consider **Require SSO**. The page warns that enforcing it can stop people from logging in if they are not assigned to the Anthropic app in your IdP, and that if your signing certificate or client secret expires while Require SSO is on, no one can sign in to fix it. Note the expiry date in your IdP and rotate early. If all admins are locked out, contact Support from an Owner's or Primary Owner's email address.
+
+4. **Choose how people are added and removed**
+
+   The default is **invite only**: you add and remove members yourself, and invitations expire after 21 days. Pending invitations already use a seat. **JIT** creates accounts at first login for people assigned to the Anthropic app in your IdP and is available on all plans; the official page says JIT never removes members, so someone you unassign can no longer log in but keeps a seat until an admin removes them. **SCIM** is Enterprise only and adds and removes members automatically from your IdP. Group mappings can assign roles and seat types by IdP group. Make sure seats are available before provisioning, because new users cannot be provisioned without them.
+
+5. **Review session and member security controls**
+
+   On Enterprise, Admins and above can turn on **Shortened session length** under Organization settings > Organization and access (choices on the page: 1, 7, 14 or 28 days). Existing sessions older than the chosen time expire immediately. For a lost device, the Members page describes **Sign out everywhere** (beta): it ends the member's sessions on every device without removing them, and because sessions belong to the person's account it also signs them out of other organizations. It does not remove them from your IdP. Enterprise also lists IP allowlisting in public beta; the help page points to the API docs for setup and notes that artifacts shared outside your organization are not limited by it.
+
+6. **Set data retention and know where the audit logs are**
+
+   On Enterprise, an Owner can set custom retention under Organization settings > Data and Privacy (minimum 30 days, counted from last activity; by default data is kept indefinitely). Shortening the period schedules older data for permanent deletion as soon as you save, and it cannot be recovered. The page says it does not apply to Claude Design at claude.ai/design, Claude Tag, Claude Managed Agents or other features that run Claude Code in the cloud. Audit logs are Enterprise only: an Owner can use Export logs in Data and Privacy to get the past 180 days by email, with a download link active for 24 hours. Chat titles and contents are not in audit logs, only identifiers.
+
+7. **Open the security center and read what it tells you**
+
+   On Enterprise, open your account menu, choose Organization settings, then Security posture. The page (beta) groups controls into Org, chats, Cowork and Claude Code and shows each control's value, the recommended value, and a status: Passed, Failed, Not attested, or Shown for information. It is view-only, visible to Owners and the Primary Owner only, and can produce a PDF report that the page says is not a security certification. For controls it cannot read, such as device management, an Owner can record an attestation. Treat Failed as a prompt to read the control's page, not as an order to change it.
+
+   <PromptBox label="Plan a review meeting">
+   I will review my company's Claude security posture with our IT lead next week. Write an agenda for 30 minutes with five questions, such as who owns SSO, who handles departures, and how long data should be retained. Do not invent Claude features; mark any question where the answer depends on checking the official help page.
+   </PromptBox>
+
+8. **Set organization-wide guidance last**
+
+   Owners on Team and Enterprise can set organization instructions that apply to every conversation, up to 3,000 characters, and changes can take up to an hour. If a user's own instruction contradicts it, Claude favors the organization one. Keep them short and test them. For larger Enterprise setups, the help center also describes inference hooks (every prompt and tool call is checked by a server you host before Claude proceeds; Owners and Primary Owners manage it) and centralized management (beta, a parent-level console at admin.claude.com). Read those pages with your security team before planning anything.
+
+</Steps>
+
+<Aside type="caution" title="Three switches that are hard to undo">
+Requiring SSO can lock out people who are not assigned in your IdP. A shortened retention period permanently deletes data once saved. Domain capture (Enterprise only) is described on the official page as a one-way door: after you enable it, accounts on your domain that are not migrated within 30 days are deactivated, and their paid personal subscriptions are canceled with a prorated refund. Take a member-list export, tell your members first, and read the confirmation screen.
+</Aside>
+
+## What is on which plan
+
+The official pricing page's security and administration table shows these differences. Prices and plan contents can change, so recheck before buying.
+
+| Feature | Team | Enterprise |
+| --- | --- | --- |
+| SSO, domain verification, restrict organization creation | Yes | Yes |
+| Usage analytics, set organization instructions | Yes | Yes |
+| Domain capture, migrate accounts using your domains | No | Yes |
+| Role-based access, SCIM, audit logs | No | Yes |
+| Compliance API, custom data retention controls | No | Yes |
+| Inference hooks, HIPAA-ready offering | No | Yes |
+
+The pricing page lists Team at $20 per seat per month billed annually ($25 monthly) for Standard seats, and Enterprise as $20 per seat per month billed annually with usage billed at API rates and a 20-seat minimum (as of 2026-11-06). JIT is listed on the SSO help page for Team and Enterprise, while SCIM is Enterprise only.
+
+## Limits and good to know
+
+- **Beta labels**: the security center, centralized management, Sign out everywhere and IP allowlisting are marked beta or public beta on the official pages. Details may change.
+- **Admin is not Owner**: if a setting says Owner or Primary Owner, an Admin will not see it. Ask for the right role instead of sharing a login.
+- **Who sees employee data**: the data-ownership help page says the Primary Owner manages the account and its data, including requesting data exports that may contain conversations. Tell your members what your organization can access.
+- **Not a compliance guarantee**: HIPAA, retention and sector rules are separate legal questions. This guide does not cover them.
+
+<Aside type="note" title="What we could not confirm">
+We read the official help pages listed above and the pricing page on 2026-11-06. We did not administer a live organization, so every menu name and behavior is from those pages, not from testing, and your screen may differ. We did not read the full Anthropic blog post announcing the 11-05 Enterprise security features (we could not find its address on the news page), so we rely on the help center pages for each feature. We did not read the per-IdP setup guides, the custom roles, groups and spend limit pages, the Compliance API pages, the Admin API reference, or the IP allowlisting API docs in detail. The roles page's permission table lost its column layout when we extracted it, so we only state role requirements that other pages say in words. Whether a given beta is on for your organization is not confirmed here.
+</Aside>
+
+## Quick reference
+
+| I want to... | Where / how |
+| --- | --- |
+| See or change members | Organization settings > Members |
+| Export the member list | Members > Export CSV (Admins and above) |
+| Verify a domain | Organization settings > Organization and access > Domains > Verify |
+| Set up or manage SSO | Organization and access > Authentication > Setup SSO / Manage SSO |
+| Choose JIT or SCIM | Organization and access > User provisioning |
+| Set a shortened session length (Enterprise) | Organization and access > Session security |
+| Set data retention (Enterprise) | Organization settings > Data and Privacy |
+| Export audit logs (Enterprise) | Data and Privacy > Export logs |
+| Open the security center (Enterprise, beta) | Organization settings > Security posture |
+| Set organization instructions | Organization and access > Organization instructions |
+
+## Common sticking points
+
+### The domain stays Pending
+
+- **Cause**: The TXT record may be at the wrong host (it should be at the root domain), not yet propagated, or not an exact match, or the domain was removed and re-added, which creates a new value.
+- **Fix**: Look up the TXT records, compare the full value including the prefix, wait for DNS, press Refresh, and contact Support if it is correct but still Pending.
+
+### People cannot log in after Require SSO
+
+- **Cause**: They are not assigned to the Anthropic app in your IdP, or the certificate or secret expired.
+- **Fix**: Assign them in the IdP, or update the certificate or secret in Manage SSO. If no admin can sign in, contact Support from an Owner's email.
+
+### A former employee is still in the member list
+
+- **Cause**: JIT does not remove members, and unassigning from the IdP only stops login.
+- **Fix**: Remove them under Organization settings > Members, or use SCIM on Enterprise. Use Sign out everywhere if you need their sessions ended now.
+
+### I do not see Security posture or Data and Privacy options
+
+- **Cause**: You may be an Admin rather than an Owner, or your plan may be Team. The security center is Enterprise and limited to Owners and the Primary Owner.
+- **Fix**: Check your role and plan, then ask an Owner.
+
+## Practical tips
+
+- Keep at least two people who can act as Owner, and write down who holds the Primary Owner role.
+- Make one change at a time and test with a pilot group before applying it to everyone.
+- Write the reason and date for each setting change in a shared log; the Enterprise audit log records events, but your own notes explain why.
+- Avoid putting real passwords, DNS tokens or customer data in a chat with Claude when you draft admin documents. See [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/).
+- If you plan to automate organization tasks, see [Manage your organization with the Claude Admin API](/dev/22-admin-api/) and keep keys private.
+
+## What to read next
+
+- [C2. Plans and limits](/claude/c02-plans-limits/) — Compare Team and Enterprise with individual plans
+- [C24. Sharing projects and chats](/claude/c24-sharing-projects/) — What members can share and what admins can turn off
+- [C28. Claude Tag in Slack](/claude/c28-claude-tag/) — Admin-set-up Slack feature for Team and Enterprise
+- [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/) — What not to paste into any AI

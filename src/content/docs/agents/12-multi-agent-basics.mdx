@@ -1,0 +1,214 @@
+---
+title: "Multi-Agent Setups Explained: Subagents and Teams"
+description: "What a multi-agent setup is, how a lead agent hands work to subagents or teammates, when it helps and when one agent is enough, and what the official pages say about extra token use"
+sidebar:
+  label: "12. Multi-agent basics"
+level: beginner
+category: agents
+tools: ["Claude Code", "Claude Agent SDK"]
+duration: "20 min"
+prerequisites:
+  - "Know what an AI agent is (Agents 1)"
+  - "No coding needed to follow the ideas; the Claude Code examples are optional"
+lastVerified: 2026-11-06
+sources:
+  - title: "Create custom subagents (Claude Code docs)"
+    url: "https://code.claude.com/docs/en/sub-agents"
+  - title: "Orchestrate teams of Claude Code sessions (Claude Code docs)"
+    url: "https://code.claude.com/docs/en/agent-teams"
+  - title: "Subagents in the SDK (Claude Agent SDK docs)"
+    url: "https://platform.claude.com/docs/en/agent-sdk/subagents"
+  - title: "How we built our multi-agent research system (Anthropic Engineering)"
+    url: "https://www.anthropic.com/engineering/multi-agent-research-system"
+  - title: "Building effective agents (Anthropic Engineering)"
+    url: "https://www.anthropic.com/engineering/building-effective-agents"
+status: published
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- A **multi-agent setup** is one lead agent that splits a job and hands the pieces to other agents, each working in its own context window, then pulls the results together.
+- Anthropic's docs describe two shapes. **Subagents** work inside one session and report a result back. **Agent teams** are separate sessions that share a task list and message each other. Agent teams are marked experimental and off by default.
+- It helps most when the work splits into independent parts, such as researching several topics at once. It helps least when steps depend on each other or share the same files.
+- It costs more. Anthropic's engineering post says agents typically used about 4x the tokens of a chat and multi-agent systems about 15x in its own data. Claude Code's docs say agent teams use significantly more tokens than a single session.
+- This page explains the ideas. For hands-on steps, see [Coding 12: Create your own subagents](/coding/39-claude-code-subagents/) and [Dev 3: Agent SDK](/dev/03-agent-sdk/). Facts are from official pages read on **2026-11-06**.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Explain in plain words what a lead agent, a subagent and a teammate are.
+- Tell when splitting a job across agents is worth it and when one agent is better.
+- Write a delegation request that a multi-agent setup can actually act on.
+- Know what to check afterwards, and why the bill grows.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Agent** | A model that uses tools in a loop to work toward a goal, as Anthropic's research post puts it: "LLMs autonomously using tools in a loop". |
+| **Multi-agent system** | Several agents working together on one job. |
+| **Lead agent (orchestrator)** | The agent that plans, hands out pieces and combines the results. |
+| **Subagent** | A helper the lead starts for a focused task. It has its own context window, system prompt, tool access and permissions, and returns a summary. |
+| **Teammate** | In Claude Code agent teams, a separate Claude Code instance that can message other teammates directly and claim tasks from a shared list. |
+| **Context window** | How much one agent can hold in mind at once. Each subagent or teammate gets its own. |
+
+For the single-agent basics, see [Agents 1: Agents compared](/agents/01-agents-compared/).
+
+<Aside type="note" title="Two different meanings of agent">
+Anthropic's "Building effective agents" post separates **workflows** (models and tools run through predefined code paths) from **agents** (models that direct their own process and tool use). A multi-agent setup in this article is the second kind: the lead decides the split as it goes.
+</Aside>
+
+## The idea in one picture
+
+Think of a small project team. A manager reads the request, splits it, gives each person a clear brief, then merges what comes back.
+
+1. **You** describe the goal to the lead.
+2. **The lead** breaks it into parts and starts helpers.
+3. **Each helper** works in its own space and sends back a result.
+4. **The lead** combines the results into one answer for you.
+
+Anthropic describes its Research feature this way: a lead agent plans, then creates parallel agents that search at the same time. It calls this an orchestrator-worker pattern.
+
+## Two shapes: subagents and teams
+
+The Claude Code docs compare them like this.
+
+| | Subagents | Agent teams |
+| --- | --- | --- |
+| Where they run | Inside a single session | Separate Claude Code instances, one is the lead |
+| Context | Own window; the result returns to the caller | Own window; fully independent |
+| Communication | Return a result to the caller | Teammates message each other directly |
+| Coordination | The main agent manages the work | Shared task list plus messages |
+| Best for | Focused tasks where only the result matters | Complex work that needs discussion and collaboration |
+| Token cost | Lower: results are summarized back | Higher: each teammate is a separate instance |
+| Status | Available | Experimental, disabled by default |
+
+The docs say to check whether a lighter option does the job before setting up a team.
+
+### What subagents are good at (official)
+
+- **Context isolation**: intermediate tool calls and results stay inside the subagent, and only its final message returns to the parent.
+- **Parallelization**: independent subtasks can run at the same time.
+- **Specialized instructions**: each subagent can have its own system prompt.
+- **Tool restrictions**: a subagent can be limited to specific tools.
+
+The Claude Code page adds that a subagent sends its own requests, which count toward the same usage limits as your main conversation.
+
+### What agent teams add (official)
+
+Teammates share a task list, claim work and message each other, and you can talk to any teammate directly. The docs list research and review, new modules, debugging with competing hypotheses, and work across layers as the strongest uses. Agent teams are turned on with an environment variable, and the docs list known limitations, such as no session resumption for in-process teammates and one team per session. See the [official page](https://code.claude.com/docs/en/agent-teams) before relying on them.
+
+## When it helps and when it does not
+
+| Good fit | Poor fit |
+| --- | --- |
+| Researching several independent topics or sources at once | Steps where each depends on the previous result |
+| A job too big for one context window | A quick, targeted change |
+| Reviewing the same material through different lenses (security, performance, tests) | Several agents editing the same files |
+| Output that is verbose and you only need the summary | Work that needs frequent back-and-forth with you |
+
+This table follows the official pages. Claude Code's docs say to use the main conversation for iterative work and shared-context phases, and that agent teams are less effective for sequential tasks, same-file edits or many dependencies. Anthropic's research post makes a similar point: domains where all agents must share the same context, or with many dependencies between agents, are not a good fit today, and most coding tasks have fewer parallelizable parts than research.
+
+## Why it costs more
+
+Three official statements, kept separate because they come from different sources:
+
+- **Anthropic engineering post (June 2025, its own internal data):** agents typically use about 4x more tokens than chat interactions, and multi-agent systems about 15x more. It says multi-agent systems need tasks valuable enough to pay for the extra performance. Treat these as one company's measurements from a specific system, not a promise for your tasks or for today's models.
+- **Claude Code agent teams page:** agent teams use significantly more tokens than a single session; each teammate has its own context window and usage scales with the number of active teammates. For routine tasks, a single session is more cost-effective.
+- **Claude Code subagents page:** each subagent spends tokens of its own while it runs, and many subagents returning detailed results can consume significant context.
+
+We did not measure any run ourselves. To see how your plan counts usage, read [Agents 9: Agent costs and usage limits](/agents/09-agent-usage-limits/).
+
+## Step by step: delegate well
+
+<Checklist items={[
+  '1. I can say in one sentence what I want at the end',
+  '2. I listed the parts and confirmed they are independent',
+  '3. I gave each part an objective, an output format and a boundary',
+  '4. I started small (two or three helpers, not ten)',
+  '5. I told the lead what to do with disagreements',
+  '6. I checked the combined result before using it',
+  '7. I noted how much usage the run took',
+]} />
+
+### 1. Check that the job splits
+
+Ask: can part A finish without waiting for part B? If not, one agent is probably better. Anthropic's own advice in "Building effective agents" is to find the simplest solution possible and only add complexity when needed.
+
+### 2. Give each part a clear brief
+
+Anthropic's research post found that short instructions like "research the semiconductor shortage" led to subagents misreading the task or repeating each other's searches. It says each subagent needs an objective, an output format, guidance on tools and sources, and clear task boundaries.
+
+<PromptBox>
+I want to compare three note-taking apps for a small team. Split this into three parts, one per app. For each part, the helper should: (1) use only the official site and help pages, (2) report price, platforms and sharing features in a table, (3) mark anything it could not confirm as "unconfirmed". Do not let helpers overlap. When they finish, merge the three tables and list the differences. Start with these three helpers only.
+</PromptBox>
+
+### 3. Keep the team small at first
+
+Claude Code's agent teams page suggests starting with 3 to 5 teammates for most workflows and says three focused teammates often do better than five scattered ones. Anthropic's research post says early versions sometimes started 50 subagents for simple queries, and that it added rules to scale effort to the complexity of the question.
+
+### 4. Review what comes back
+
+The lead only sees what helpers report. A helper can be wrong, or two helpers can disagree. Use the routine in [Agents 7: Reviewing agent work](/agents/07-reviewing-agent-work/) on the combined answer, and open the sources for claims that matter.
+
+## A tiny Claude Code example (not run for this article)
+
+If you use Claude Code, you can ask for subagents in plain language. The subagents page shows prompts like this:
+
+```text
+Research the authentication, database, and API modules in parallel using separate subagents
+```
+
+Claude then researches each area in its own subagent and combines the findings. For agent teams, the official example prompt asks Claude to spawn teammates for different angles after you enable the feature. We did not run these prompts, so results on your project may differ. Steps for writing your own subagent are in [Coding 12](/coding/39-claude-code-subagents/), and for defining subagents in code see [Dev 3](/dev/03-agent-sdk/).
+
+## Quick reference
+
+| Question | Answer from the official pages |
+| --- | --- |
+| Do subagents see my whole chat? | The Claude Code docs say a subagent starts with a fresh, isolated context window and does not see your conversation history. Claude passes it a delegation message. |
+| Can subagents start subagents? | By default yes, up to three layers below the main conversation, per the Claude Code docs. |
+| Is there a cap on running subagents? | By default, spawning fails when 20 subagents are already running in a session (Claude Code docs, setting can be changed). |
+| Can teammates start their own teams? | No. The agent teams page lists no nested teams; only the lead manages the team. |
+| Are agent teams stable? | They are labeled experimental and disabled by default. |
+
+## Common sticking points
+
+### The lead did the work itself and did not delegate
+
+- **Cause**: delegation is the lead's choice. The subagents page says Claude uses each subagent's description to decide when to delegate.
+- **Fix**: ask explicitly, for example "use separate subagents for each part".
+
+### The helpers repeated each other's work
+
+- **Cause**: vague or overlapping briefs, as Anthropic's research post found.
+- **Fix**: give each helper a distinct objective and boundary.
+
+### The answer looks confident but contradicts itself
+
+- **Cause**: helpers worked in separate contexts and the merge hid a disagreement.
+- **Fix**: ask the lead to list conflicts between helpers before the final answer.
+
+### Usage ran out faster than expected
+
+- **Cause**: each helper spends its own tokens.
+- **Fix**: use fewer helpers, or one agent for routine work.
+
+## Practical tips
+
+- **Start with one agent.** Add helpers only when the job clearly splits.
+- **Write briefs like you would for a new colleague.** Goal, format, limits.
+- **Keep risky actions with you.** Helpers act with tools too, and the docs say you can restrict a subagent's tools; see [Agents 5: Agent safety](/agents/05-agent-safety/).
+- **Expect variation.** The same prompt can split differently each time.
+- **Numbers age quickly.** The 4x and 15x figures come from a 2025 post about one system.
+
+## What to read next
+
+- [Agents 1: Agents compared](/agents/01-agents-compared/): single-agent basics
+- [Agents 8: Deep research agents](/agents/08-deep-research-agents/): research agents compared
+- [Agents 9: Agent costs and usage limits](/agents/09-agent-usage-limits/): how plans count heavy usage
+- [Coding 12: Create your own subagents](/coding/39-claude-code-subagents/): hands-on Claude Code steps
+- [Dev 3: Agent SDK](/dev/03-agent-sdk/): subagents in your own code
