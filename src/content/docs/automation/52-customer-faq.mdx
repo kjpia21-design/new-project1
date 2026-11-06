@@ -1,0 +1,201 @@
+---
+title: "Build a Customer FAQ and Reply Templates with AI"
+description: "Turn repeated customer questions into an FAQ and reusable reply templates with AI: what to gather, how to mask customer data, a Project or Gem that holds your policies, and a review step before anything is sent"
+sidebar:
+  label: "22. Customer FAQ and reply templates"
+level: practical
+category: automation
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "60 min"
+prerequisites:
+  - "An account with Claude, ChatGPT or Gemini"
+  - "Ten to twenty past customer questions and your real policies (shipping, refunds, hours), with names and contact details removed"
+lastVerified: 2026-11-06
+sources:
+  - title: "What are projects? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/9517075-what-are-projects"
+  - title: "How can I create and manage projects? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects"
+  - title: "Projects and chats (ChatGPT docs)"
+    url: "https://learn.chatgpt.com/docs/projects"
+  - title: "Use Gems in Gemini Apps (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/15146780?hl=en"
+  - title: "About the transition from Gems to skills (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/18560919?hl=en"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- The flow is **collect real questions (masked) → write your policies down → ask AI to group them into an FAQ → turn each answer type into a reply template → keep the policies in a Project or Gem → review every reply before it goes out**.
+- Claude Projects, ChatGPT projects and Gemini Gems each let you keep shared files and instructions in one place. Anthropic's help says project instructions apply to all chats in the project.
+- **Your company decides the policies.** Refund terms, delivery dates and prices must come from you. AI should only phrase them.
+- **Mask customer names, emails, order numbers and phone numbers** before pasting anything.
+- **AI drafts, a person sends.** We did not run this exercise with a real customer inbox, so the prompts and sample FAQ are our own examples.
+</Summary>
+
+## What you'll be able to do
+
+- Sort a pile of past customer questions into **groups** and write a short FAQ from them.
+- Turn each kind of answer into a **reply template** with blanks a person fills in.
+- Keep your policies, tone and templates in a Project (or Gem) so you do not paste them every time.
+- Put a **review step** between the AI draft and the customer.
+
+For reusable documents in general, see [Build Reusable Document Templates with AI](/automation/50-document-templates/). For the wider picture of sales and support work, see [AI Guide for Sales and Customer Support](/roles/sales-support/).
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **FAQ** | A list of frequent questions with short, approved answers that customers or staff can read. |
+| **Reply template** | A reply with fixed wording and blanks, such as [customer first name] or [order status], that a person fills in. |
+| **Policy sheet** | One page that states your real rules: shipping times, refund conditions, hours, what you do not do. The AI must not go beyond it. |
+| **Project / Gem** | A saved workspace with its own files and instructions, so every chat starts with the same context. |
+| **Masking** | Replacing personal details with placeholders (for example CUSTOMER_A) before you share text with an AI service. |
+
+<Aside type="caution" title="Customer information">
+Past emails and chats contain names, addresses, order numbers and sometimes payment or health details. Replace them with placeholders before pasting, and check your company's rules first. See [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/). If you are not sure you may share something, leave it out.
+</Aside>
+
+<Aside type="note" title="Things to keep in mind (as of 2026-11-06)">
+- This guide is based on the five official pages in the front matter. We did not run these steps in real accounts, so menu names come from the help text only.
+- **Gemini Gems are changing.** Google's help says that starting in November 2026 Gems will transition to skills on personal Google accounts, and in 2027 on work and school accounts, and that existing Gems will be recreated as skills automatically. We did not confirm the exact date or how a recreated Gem behaves, so check the help page before you rely on a Gem.
+- **Claude Projects are also changing.** Anthropic's help describes a new version of projects in beta, rolling out in stages, and says other existing projects in chat stay on the current version for now. The steps below follow the help page for the current version; yours may look different.
+- We did not find official figures for how accurate any service is at writing support replies, and we did not test them.
+- We did not read each service's file-size limits for project files in detail. Check the limit shown in the app.
+- Features, plans and menus change often. Check them on screen.
+</Aside>
+
+### Where each service keeps shared files and instructions (checked 2026-11-06)
+
+| Service | What the official help says | What we could not confirm |
+| --- | --- | --- |
+| **Claude** | Projects are available to all users, including free accounts; free users can create up to five. Add documents, text or code to project knowledge and set project instructions, which Claude uses for all chats in the project. Context is not shared across chats unless it is in the project knowledge. On Team and Enterprise plans, projects can be private or shared, with "Can view" or "Can edit" permission. | Whether your account already has the new beta version of projects. |
+| **ChatGPT** | On the web, a project keeps related chats, files, instructions and sources together. Project instructions apply across its chats. A ChatGPT project does not give direct access to a folder on your computer, so you upload or connect sources. | Plan availability and file limits (not stated on the page we read). |
+| **Gemini** | Create a Gem with a name and instructions, and optionally add files under "Knowledge" (from your device, Google Drive or a NotebookLM notebook). Gems cannot be used with Gemini Live for now. | Exact timing of the Gems-to-skills change and how skills handle uploaded files. |
+
+## Step-by-step guide
+
+Practice with made-up customers or masked copies first.
+
+<Checklist items={[
+  'I replaced names, emails, phone numbers and order numbers with placeholders',
+  'I wrote my real policies on one page (shipping, refunds, hours, exceptions)',
+  'I know who will review replies before they are sent',
+  'I will not let the AI invent a price, date or promise',
+  'I may share these documents with this AI service',
+]} />
+
+<Steps>
+
+1. **Collect real questions**
+
+   Copy ten to twenty questions customers actually asked, from email, chat or messages. Mask personal details. Real questions are better than questions you imagine, because they show the wording customers use.
+
+2. **Write the policy sheet yourself**
+
+   Put your rules on one page: delivery times, refund and exchange conditions, opening hours, who to contact for what. Write what you do **not** offer, too. Refund conditions and prices are business decisions, so the AI must not make them up.
+
+3. **Ask AI to group the questions**
+
+   <PromptBox>
+   Below are customer questions I collected. Group them by topic (for example shipping, refunds, account, product use). For each group, give a short topic name, the number of questions, and one example. Do not answer them yet. Questions: [paste masked questions]
+   </PromptBox>
+
+4. **Draft the FAQ from your policy sheet only**
+
+   <PromptBox>
+   Using only the policy sheet below, write an FAQ with one short answer for each topic group above. If the policy sheet does not cover a question, write NEEDS A DECISION instead of answering. Do not add prices, dates or promises that are not in the sheet. Tone: friendly and plain. Policy sheet: [paste your policies]
+   </PromptBox>
+
+   Read every line against your policy sheet. Each NEEDS A DECISION line is a gap for you to fill, not for the AI.
+
+5. **Turn answer types into reply templates**
+
+   <PromptBox>
+   Turn the FAQ answer about [topic] into a reply template for an email. Keep the policy wording unchanged. Put blanks in square brackets for anything a person must fill in, such as [customer first name] and [order status]. Add a one-line note at the end saying what the sender must check before sending.
+   </PromptBox>
+
+   Make one template per common situation, for example a late delivery, a refund request, a question you cannot answer yet.
+
+6. **Save the setup in a Project or Gem**
+
+   - **Claude**: create a project, add the policy sheet and templates as project knowledge, and put the tone rules in project instructions.
+   - **ChatGPT**: create a project and upload the same files, with instructions in the project.
+   - **Gemini**: create a Gem with the instructions and add the files under Knowledge. Check Google's Gems-to-skills notice first.
+
+   Suggested instructions, with no real customer data in them:
+
+   <PromptBox>
+   You help draft replies to customers. Use only the attached policy sheet and templates. Never invent prices, dates, refund terms or promises. If the policy does not cover the question, say so and list what the staff member needs to decide. Always mark the draft as DRAFT FOR REVIEW. Keep replies short and polite.
+   </PromptBox>
+
+7. **Draft a reply, then review it**
+
+   Paste the masked customer message into a new chat in the Project or Gem and ask for a draft using the right template. Before sending, a person checks the points in the review table below, puts the real name and order details back in, and sends it from your own mail or support tool.
+
+8. **Update when policies change**
+
+   When a rule changes, edit the policy sheet first, then the FAQ and templates. Replace the old file in the Project or Gem, and note the date.
+
+</Steps>
+
+## Quick reference
+
+### Review before sending
+
+| Check | Why |
+| --- | --- |
+| Policy match | Every rule in the reply appears in your policy sheet |
+| Numbers and dates | Prices, deadlines and amounts come from your records, not the AI |
+| Promises | Nothing is promised that the company has not decided |
+| Tone | Polite, and not blaming the customer |
+| Personal data | Only the right customer's details, nothing from another case |
+| Hard cases | Complaints, safety, legal or health questions go to a person |
+
+### Prompt rules that reduce errors
+
+| Rule | Why |
+| --- | --- |
+| "Use only the policy sheet" | Keeps answers inside your rules |
+| "Write NEEDS A DECISION" | Makes gaps visible |
+| "Do not add prices or dates" | Stops invented details |
+| "Mark as DRAFT FOR REVIEW" | Reminds everyone a person must check |
+| Blanks in square brackets | Shows what a person must fill in |
+
+## Common sticking points
+
+### The AI invents a policy
+
+- **Cause**: The policy sheet does not cover the question, so the AI fills the gap.
+- **Fix**: Add the rule to your sheet if you have one. If not, keep the "write NEEDS A DECISION" instruction and decide yourself.
+
+### Replies sound different each time
+
+- **Cause**: Tone is not written down, or each chat starts without context.
+- **Fix**: Put tone rules and two or three approved sample replies in the Project or Gem. Anthropic's help notes that context is not shared across chats in a project unless it is in the project knowledge.
+
+### The Gem or project looks different from these steps
+
+- **Cause**: The services are changing. Google plans to move Gems to skills, and Anthropic is rolling out a new version of projects in stages.
+- **Fix**: Follow the menus you see, and check the linked help pages.
+
+## Practical tips
+
+- **Start small.** Cover the five most frequent questions first.
+- **Keep a log.** Note the date of each policy change and who approved the templates.
+- **Do not let AI be the only answer for sensitive cases.** Complaints, refunds in dispute, safety, health and legal questions need a person. This guide is not legal advice.
+- **Check facts.** See [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/).
+- **Mind rights and ethics.** See [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/).
+- **Tell customers when needed.** If your company or local rules require saying a reply was AI-assisted, follow them. We did not research those rules.
+
+## What to read next
+
+- [Managing Materials and Instructions with Projects](/claude/c05-projects/) — how Claude Projects work in detail
+- [Build Reusable Document Templates with AI](/automation/50-document-templates/) — more on templates
+- [AI Guide for Sales and Customer Support](/roles/sales-support/) — the role guide
+- [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/) — what not to paste
