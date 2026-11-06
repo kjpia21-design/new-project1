@@ -1,0 +1,226 @@
+---
+title: "Plan Videos with AI Storyboards and Shot Lists"
+description: "How to turn a video idea into a scene outline, a shot list and rough storyboard frames with AI, using Gemini image generation and editing or a Claude Design one-pager, and what to check about copyright and likeness before you shoot or publish"
+sidebar:
+  label: "19. Storyboards"
+level: beginner
+category: media
+tools: ["Gemini", "Claude", "Claude Design"]
+duration: "40 min"
+prerequisites:
+  - "A video idea: what it is about, who will watch it, how long it should be"
+  - "A Gemini account, a claude.ai account, or another AI chat service"
+lastVerified: 2026-11-06
+sources:
+  - title: "Generate & edit images with Gemini Apps (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/14286560?hl=en"
+  - title: "Create docs, apps & more with Canvas (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/16047321?hl=en"
+  - title: "What are artifacts and how do I use them? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/9487310-what-are-artifacts-and-how-do-i-use-them"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- **A storyboard is a plan, not the video.** It shows what each shot looks like, in order, before you spend time filming or generating clips.
+- **A shot list turns the plan into a to-do list**: shot number, what is in the frame, camera angle, length, sound, and notes.
+- **AI helps most with the words first.** Get a scene outline and a shot list as a table, then make rough frames for only the key shots.
+- **Image tools can draw rough frames.** Gemini's help page says you can generate images, edit them, and upload several images to make a new one. Keep the same character description in every prompt for a consistent look.
+- **Check before you shoot or publish**: copyright, and the rights of any real person shown. These checks are this site's advice, not features of any tool.
+</Summary>
+
+<Aside type="caution" title="Rough frames are drafts, not final art">
+AI frames can contain odd details, garbled text, or something that looks too close to existing work or to a real person. Gemini's help page tells you not to violate others' copyright or privacy rights and to use your discretion before you rely on, publish or use what it generates. Use storyboard frames to plan, and re-check anything you plan to publish.
+</Aside>
+
+## What you'll be able to do after this tutorial
+
+- Turn a one-line video idea into a short scene outline.
+- Make a shot list table you can follow on the day.
+- Generate rough storyboard frames for the key shots with an image tool.
+- Lay the frames and shot list out on one page to share with a helper.
+- Run a short rights check before you film or publish.
+
+For turning a plan into a finished promo, see [Make a Short Promo Video with AI Video Tools](/media/13-promo-video/). For generating the clips themselves, see [Make Short AI Videos with Google's Video Tools](/media/34-ai-video-generation/).
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Storyboard** | A row of simple pictures, one per shot, showing the video in order |
+| **Shot** | One continuous piece of video, from one camera position, until the cut |
+| **Shot list** | A table of all shots with the details needed to film or generate each one |
+| **Scene** | A group of shots in one place and time |
+| **Framing** | How much is in the picture: wide (whole scene), medium (person to waist), close-up (face or object) |
+| **Angle / movement** | Where the camera is (eye level, high, low) and whether it moves (still, pan, zoom) |
+| **Character sheet** | A fixed text description of a person or character, pasted into every prompt so the look stays the same |
+| **Likeness** | How a real person looks or sounds. Using it can need their permission |
+
+### What the official pages say, and what we could not confirm
+
+| Topic | Confirmed on the pages we read |
+| --- | --- |
+| Gemini image generation | In Gemini Apps you can generate images from a prompt or a template and edit them. The page names Nano Banana 2 as the model for image requests, and Nano Banana Pro for paid subscribers to redo an image |
+| Character consistency | Listed as a key feature of Nano Banana 2: maintaining the look of a person or character across generated images, including combining multiple images |
+| Editing | Edit a generated image, upload an image and ask for edits, or upload several images and ask for a new one. Local edits to parts of an image are listed. Editing is not available to users under 18 |
+| Text in images | "Better text rendering" is listed as a feature. We still suggest you add labels yourself |
+| Prompt tips | Start with words like draw, generate or create; describe the style; describe subject, action and setting |
+| Output | Download at 2K resolution with a Google AI plan or 1K without one. Images can be exported to Docs |
+| Terms | You agree to Google's Terms of Service and Prohibited Use Policy. Be sure not to violate others' copyright or privacy rights. Work or school accounts may be subject to different terms |
+| Gemini Canvas | Collaborate with Gemini to create or edit a doc, app, slides or code, and you can ask for a specific format such as a slide deck. The page lists no storyboard feature |
+| Claude artifacts | Claude can make designs, decks and documents that open beside the chat. The Design template covers visuals, mockups, one-pagers and landing pages. Designs export as .zip, PDF, PowerPoint or standalone HTML |
+
+We could **not** read OpenAI's ChatGPT help pages on image creation and Canvas (the site returned an access-denied response to a plain request), so this tutorial makes **no claims about ChatGPT's image or Canvas features**. We also did not confirm how many images you can generate per day in Gemini, whether Claude itself generates photo-style images, or any storyboard-specific template in any tool. Check your own account.
+
+## Step by step
+
+The example is a 45-second video for "Morning Crumb", a made-up home bakery, showing a Saturday morning bake (practice name and story).
+
+<Checklist items={[
+  'I wrote the purpose, audience and length of the video',
+  'I did not include private details (home address, customer names, real faces of others)',
+  'I asked for a shot list as a table before making any pictures',
+  'I used the same character description in every frame prompt',
+  'I checked the frames for odd details and wrong text',
+  'I checked rights before filming or publishing',
+]} />
+
+<Steps>
+
+1. **Write the brief**
+
+   In three or four lines: what the video is for, who watches it, how long it is, and where it will be shown (phone, vertical or horizontal). A short video usually needs fewer shots than you think.
+
+2. **Ask for a scene outline**
+
+   <PromptBox>
+   I want a 45-second vertical video for a small home bakery called Morning Crumb. Purpose: show a calm Saturday morning bake so neighbors want to order bread. Audience: people in my neighborhood. Tone: warm and simple. Give me a scene outline with 4 scenes: a one-line idea for each, the approximate seconds, and one thing the viewer should feel. Do not write the shot list yet.
+   </PromptBox>
+
+   Change what you do not like, one scene at a time. Keep the outline in the same chat so later prompts remember it.
+
+3. **Turn the outline into a shot list table**
+
+   <PromptBox>
+   Using the 4 scenes we agreed, make a shot list as a table with these columns: shot number, scene, what is in the frame, framing (wide, medium or close-up), camera movement, length in seconds, sound or voiceover, and a note on anything I need to prepare. Use 8 to 10 shots in total, and make the lengths add up to about 45 seconds.
+   </PromptBox>
+
+   Check the numbers yourself: do the seconds add up, and can you really film every shot with what you have? Remove shots you cannot do.
+
+4. **Write a character sheet and a style line**
+
+   To keep the look steady, write fixed text once and paste it into every frame prompt. Use an invented person, not a real one.
+
+   <PromptBox>
+   Write a short character sheet for the baker in this video: an invented adult with a fixed look (hair, clothes, apron color) and a fixed kitchen setting. Also write one style line I can paste into every image prompt, for example a simple hand-drawn storyboard sketch in soft colors, no text.
+   </PromptBox>
+
+5. **Generate rough frames for the key shots**
+
+   You do not need a picture for every shot. Pick 4 to 6 that decide the look: the opening, a close-up, the main action, the ending. In Gemini, the help page says to open the sidebar, choose Images, then enter your prompt. It suggests starting with words like draw, generate or create, naming a style, and describing the subject, action and setting.
+
+   <PromptBox>
+   Draw storyboard frame 3 of 10, a close-up. Style: simple hand-drawn storyboard sketch in soft colors, no text in the picture. Character: the invented baker from our character sheet. Frame: close-up of floury hands shaping a round loaf on a wooden table, morning window light from the left. Vertical 9:16 framing.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="Gemini Apps image generation: a rough storyboard frame next to the prompt" officialUrl="https://support.google.com/gemini/answer/14286560?hl=en" />
+
+   Whether a particular aspect ratio such as 9:16 is honored is not stated on the page we read. Try it, and if it is ignored, crop later.
+
+6. **Fix frames one change at a time**
+
+   The Gemini help page says you can edit a generated image: open it, choose Chat under the image, type your change, and submit. Ask for one change, for example "same frame, but move the loaf to the right and remove the extra hand". If the character drifts, paste the character sheet again, or upload your best frame and ask for a new frame in the same look.
+
+7. **Put it on one page**
+
+   A shot list plus frames fits on a single sheet. One option is a Claude Design one-pager: the Claude Help Center says Design is a template for visuals, mockups and one-pagers, and you can ask for it in any chat or pick it from the Artifacts tab. Another is a plain document or slide deck: Gemini Canvas can create docs and slides, per its help page.
+
+   <PromptBox>
+   Make a one-page storyboard sheet as a design. Goal: a plan for me and one helper to film on Saturday. Layout: title and total length at the top, then a grid of the shot list rows, each with shot number, framing, length, sound and notes. Leave an empty box beside each row where I can paste a frame image. Content: use exactly the shot list we agreed in this chat. Audience: me and one helper. Keep text short and readable.
+   </PromptBox>
+
+   Add your frame images yourself. Export or save the sheet using the options in your tool, and keep a copy outside the AI service.
+
+8. **Check rights, then shoot**
+
+   - If real people will appear, ask them first, and ask again if you will publish. See [Avoiding AI Scams and Deepfakes](/basics/10-ai-scams-deepfakes/) for why using a real person's face or voice without consent is risky.
+   - Do not ask for frames in the style of a named living artist or of a specific film, and do not copy logos or characters you do not own. See [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/).
+   - Music, locations and products on camera can have their own rules. Rules differ by country. For anything beyond a hobby, ask a professional.
+   - Do your own test shoot of the riskiest shot before the real day.
+
+</Steps>
+
+## Quick reference
+
+### What a shot list row contains
+
+| Column | Example |
+| --- | --- |
+| Shot | 3 |
+| Scene | 2, shaping the dough |
+| In the frame | Floury hands shaping a round loaf |
+| Framing | Close-up |
+| Movement | Still |
+| Length | 4 s |
+| Sound | Soft kitchen sounds, no voiceover |
+| Prepare | Flour, wooden board, window light |
+
+### Prompt wording
+
+| Need | Wording to try |
+| --- | --- |
+| Outline first | "Give me a scene outline, do not write the shot list yet" |
+| A table | "Make a shot list as a table with these columns" |
+| Same look | "Use exactly this character sheet and style line" |
+| Sketch, not polish | "Simple hand-drawn storyboard sketch, no text in the picture" |
+| One change | "Same frame, change only the loaf position" |
+| Reality check | "Which shots here would be hard to film with a phone and daylight?" |
+
+## Common sticking points
+
+### The character looks different in every frame
+
+- **Cause**: Each image request is made fresh.
+- **Fix**: Paste the same character sheet every time, keep it short, and upload your best frame as a reference. Character consistency is listed as a feature on Gemini's page, but results can still vary.
+
+### Text in the picture is wrong
+
+- **Cause**: Image models can still misspell, even when the page lists better text rendering.
+- **Fix**: Ask for no text in the frame and write labels in your sheet.
+
+### The shot list is too long
+
+- **Cause**: The AI suggests many shots by default.
+- **Fix**: Set a total shot count and total seconds in the prompt, then cut shots you cannot film.
+
+### I cannot find the Images option or Redo with Pro
+
+- **Cause**: Availability depends on the app, your account type, age, country and plan.
+- **Fix**: Read the Gemini help page above and check your account. Pro redo needs a paid plan, per that page.
+
+### The frames look like a famous film or artist
+
+- **Cause**: Style words can pull toward existing work.
+- **Fix**: Describe the look in plain words (soft colors, simple lines), not by a name, and change the frame.
+
+## Practical tips
+
+- **Plan with words first.** A good shot list is worth more than pretty frames.
+- **Rough is fine.** Stick figures work. Frames are for deciding, not displaying.
+- **Number everything.** Shot numbers keep the list, the frames and the footage matched.
+- **Time it.** Add up the seconds before you film.
+- **Keep the prompts.** Save the character sheet and style line with the storyboard.
+
+## What to read next
+
+- [Make a Short Promo Video with AI Video Tools](/media/13-promo-video/) — from plan to finished promo
+- [Make Short AI Videos with Google's Video Tools](/media/34-ai-video-generation/) — generate the clips
+- [Make Product Photos for an Online Store with AI](/media/38-product-photos/) — more on image prompts
+- [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/) — copyright and reuse
+- [Avoiding AI Scams and Deepfakes](/basics/10-ai-scams-deepfakes/) — likeness and consent
