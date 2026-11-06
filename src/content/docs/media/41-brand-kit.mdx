@@ -1,0 +1,206 @@
+---
+title: "Build a Simple Brand Kit with AI"
+description: "How to draft a one-page brand kit (colors, fonts, tone of voice and a few rules) with AI, put it into a Claude Design one-pager, and check trademark, copyright, font licenses and readability before real use"
+sidebar:
+  label: "18. Brand kit"
+level: beginner
+category: media
+tools: ["Claude", "Claude Design"]
+duration: "40 min"
+prerequisites:
+  - "A claude.ai account (or another AI chat service)"
+  - "A few sentences about your shop, club, project or channel: what it is, who it is for"
+lastVerified: 2026-11-05
+sources:
+  - title: "Get started with Claude Design (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/14604416-get-started-with-claude-design"
+  - title: "What are artifacts and how do I use them? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/17153992-what-are-artifacts-and-how-do-i-use-them"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
+
+<Summary>
+- **A brand kit is a small set of decisions**: a few colors, one or two fonts, a way of speaking, and some do's and don'ts, written on one page so everything you make looks and sounds the same.
+- **AI is good at proposing options.** You decide. Ask for 2 or 3 directions, pick one, and change one thing at a time.
+- **Claude Design can lay the kit out as a one-pager.** Its help page says you can describe the goal, layout, content and audience, and refine by chat, inline comments or direct editing.
+- **Check before real use**: trademark and copyright of names and logos, font licenses, and readability. These checks are this site's advice, not features of any tool.
+- **For a business or a public launch, have a professional review the final brand.**
+</Summary>
+
+<Aside type="caution" title="A draft kit is not a cleared brand">
+AI can suggest a name, a color palette or a slogan that is too close to an existing brand. No page we read says the tools check for that. Treat everything here as a draft, search for similar names and logos yourself, and ask a qualified person (a designer, or a trademark or IP professional) before you print, register or launch.
+</Aside>
+
+## What you'll be able to do after this tutorial
+
+- Describe your brand in a few plain sentences the AI can work from.
+- Get color, font and tone-of-voice proposals and narrow them down to one set.
+- Turn the set into a one-page brand sheet, for example with Claude Design.
+- Run a short check on readability, licenses and look-alikes before you use it.
+
+For logo drafts, see [Draft Logos and Icons with AI](/media/35-logo-icon-drafts/). For the Claude Design tool itself, see [Making mockups and prototypes with Claude Design](/claude/c20-claude-design/).
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Brand kit** | A one-page guide to how your brand looks and sounds. Others (and future you) can follow it. |
+| **Palette** | The few colors you use, each with a job (main, accent, background, text). |
+| **Hex code** | A color written like `#1F4E79`. Handy for copying the same color between tools. |
+| **Typeface / font** | The style of lettering. Many fonts have license terms. |
+| **Tone of voice** | How your writing sounds: friendly, formal, playful. |
+| **Contrast** | How clearly text stands out from its background. |
+| **Trademark** | A legal protection for names and logos used in trade. Rules vary by country. |
+
+### What the official pages say, and what we could not confirm
+
+| Topic | Confirmed on the pages we read |
+| --- | --- |
+| Claude Design | Lets you create designs, interactive prototypes and one-pagers by chatting with Claude. It is one of the templates you can start an artifact from, and it is available on Free, Pro, Max, Ultra, Team and Enterprise plans, on by default |
+| Writing a prompt | A good prompt includes the goal, the layout, the content and the audience. Claude may ask clarifying questions |
+| Adding context | You can attach screenshots, images or existing assets, and ask for "make it look like this" |
+| Refining | Chat for broad changes, inline comments for a specific part, direct editing for quick visual tweaks |
+| Design system | New projects inherit your organization's design system if one is set up. The page assumes it exists already |
+| Export | Artifact export options depend on the template (for example, Designs to .zip, PDF, PowerPoint or HTML, per the artifacts help page) |
+| Standalone version | The standalone claude.ai/design is listed as closing on December 14, 2026 |
+
+We could **not** read Canva's help pages (the site returned an access-denied response to a plain request), so this tutorial makes **no claims about Canva's brand kit or any other Canva feature**. Check Canva's own help center in your account if you use it. We also did not confirm whether an individual (non-organization) account can save a brand kit as a reusable design system in Claude Design, how colors are exported, or any limits. Look at your own account.
+
+## Step by step
+
+The example is a small home bakery called "Morning Crumb" (a made-up name for practice).
+
+<Checklist items={[
+  'I wrote 3 to 5 sentences about my brand',
+  'I did not include private details (home address, customer names)',
+  'I asked for 2 or 3 directions, then picked one',
+  'I checked text/background contrast',
+  'I searched for look-alike names and logos',
+  'I checked the license of any font I plan to use',
+]} />
+
+<Steps>
+
+1. **Write a short brand description**
+
+   Answer in plain words: What is it? Who is it for? Three adjectives for how it should feel? What should it never look like? Keep it short; you can paste it into every prompt.
+
+2. **Ask for 2 or 3 directions, not one**
+
+   <PromptBox>
+   I run a small home bakery called Morning Crumb that sells sourdough and pastries to neighbors. The feeling should be warm, honest and simple, never luxury or corporate. Propose 3 different brand directions. For each give a one-line idea, a palette of 4 colors with hex codes and a job for each (main, accent, background, text), one heading font and one body font style, and 3 words for the tone of voice. Do not invent a logo yet.
+   </PromptBox>
+
+   Pick one direction, or mix two. Then keep going in the same chat so the choice stays in context.
+
+3. **Narrow and fix the details**
+
+   Change one thing per message, for example "Keep direction 2 but make the accent color calmer", or "Give me two alternatives for the heading font." Ask for the final palette as a table with hex codes so you can copy it.
+
+4. **Write the tone-of-voice rules**
+
+   <PromptBox>
+   Using direction 2, write a tone-of-voice section for Morning Crumb: 3 short principles, 5 words we like, 5 words we avoid, and one example each for a menu line, a social media caption and a thank-you note. Keep sentences short.
+   </PromptBox>
+
+   Read the examples out loud. If they do not sound like you, say what is off and ask again.
+
+5. **Lay it out as a one-page brand sheet**
+
+   The Claude Design help page says you can start a design from a conversation, from the Artifacts tab, or by choosing Output, then Design, in the message box. It also says a good prompt includes the goal, layout, content and audience.
+
+   <PromptBox>
+   Make a one-page brand sheet for Morning Crumb as a design. Goal: a quick reference for me and anyone who helps with flyers and posts. Layout: title at the top, color swatches in a row with hex codes and their jobs, fonts with a sample line, then tone-of-voice rules and the do and don't lists in two columns. Content: use exactly the palette, fonts and rules we agreed in this chat. Audience: me and one volunteer. Keep text short and readable.
+   </PromptBox>
+
+   <ScreenshotPlaceholder caption="A one-page brand sheet design opening beside the Claude chat" officialUrl="https://support.claude.com/en/articles/14604416-get-started-with-claude-design" />
+
+   Refine it the way the help page describes: chat for big changes, inline comments to point at one part, direct editing for quick visual tweaks. If comments are not picked up, the page says to paste the feedback into the chat instead.
+
+6. **Check readability**
+
+   Put your text color on your background color. Is it easy to read at a small size? The Claude Design help page says its color picker tells you whether a text color's contrast against the background is good or poor, so you can use that there. In any other tool, use a contrast checker of your choice. Do not rely on color alone to carry meaning.
+
+7. **Check names, logos and fonts before real use**
+
+   - Search for your name and any slogan in search engines and in your country's trademark database.
+   - If you drew a logo with AI, see [Draft Logos and Icons with AI](/media/35-logo-icon-drafts/) and [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/).
+   - Check the license of each font: can you use it commercially, in print, on a website? Fonts the AI "suggests" may not be free to use.
+   - Rules differ by country. For anything beyond a hobby, ask a professional.
+
+8. **Save and keep the kit**
+
+   Save the final sheet, the hex codes and the tone rules in one folder. Check the export options for your design in the tool you used (the artifacts help page lists them per template) and keep a copy outside the AI service. When your brand changes, update the kit first.
+
+</Steps>
+
+## Quick reference
+
+### What a one-page brand kit contains
+
+| Part | What to write |
+| --- | --- |
+| Brand in one line | Who you are and who it is for |
+| Colors | 3 to 5 colors with hex codes and jobs |
+| Fonts | One for headings, one for body, with license noted |
+| Tone of voice | 3 principles, words to use and avoid, examples |
+| Do and don't | A few rules, such as spacing, logo use, colors never to mix |
+| Checked on | Date, and who reviewed it |
+
+### Prompt wording
+
+| Need | Wording to try |
+| --- | --- |
+| Options first | "Propose 3 different directions" |
+| One change at a time | "Keep everything, change only the accent color" |
+| Copyable colors | "Give the palette as a table with hex codes" |
+| Consistency | "Use exactly the palette and rules we agreed in this chat" |
+| Readable | "Keep text short and check contrast on every color pair" |
+
+## Common sticking points
+
+### Every direction looks the same
+
+- **Cause**: The description was too general.
+- **Fix**: Add what the brand is not, and a reference such as an existing style you like (describe it, or attach an image if the tool allows).
+
+### Colors changed between messages
+
+- **Cause**: The model re-created the palette instead of reusing it.
+- **Fix**: Paste the final hex codes back and say "use exactly these".
+
+### The suggested name looks like an existing brand
+
+- **Cause**: Common words and styles repeat across brands.
+- **Fix**: Search before you commit, and choose another name if it is close.
+
+### I cannot find Claude Design
+
+- **Cause**: Availability depends on plan, organization settings and rollout.
+- **Fix**: Read the "Get started" help page above and check your plan and organization settings.
+
+### The design comments do not seem to work
+
+- **Cause**: The help page mentions an intermittent issue where comments can disappear before Claude reads them.
+- **Fix**: Paste the feedback into the chat.
+
+## Practical tips
+
+- **Less is more.** Four colors and two fonts are plenty for a small project.
+- **Name the job of each color.** It stops random choices later.
+- **Keep your source description.** Paste it in again when a chat gets long.
+- **Print a test.** Colors look different on screen and on paper.
+- **Date the kit.** Brands change; note when you last checked it.
+
+## What to read next
+
+- [Draft Logos and Icons with AI](/media/35-logo-icon-drafts/) — logo and icon drafts
+- [Making mockups and prototypes with Claude Design](/claude/c20-claude-design/) — more on Claude Design
+- [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/) — copyright and reuse
+- [Make Charts and Infographics with AI](/media/40-charts-infographics/) — apply the kit to a chart

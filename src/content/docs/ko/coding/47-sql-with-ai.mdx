@@ -1,0 +1,209 @@
+---
+title: "AI로 SQL 쿼리 작성하고 검토하기"
+description: "테이블 구조를 알려 주고 AI에게 SQL 쿼리를 쓰게 한 뒤, 샘플 데이터와 읽기 전용 계정으로 먼저 확인하는 방법이에요. Claude Code MCP 공식 문서와 PostgreSQL 문서 기준이에요"
+sidebar:
+  label: "20. AI로 SQL 쓰기"
+level: practical
+category: coding
+tools: ["Claude Code", "Claude"]
+duration: "30분"
+prerequisites:
+  - "표, 행, 열에 대한 기본 개념 (SQL 경험은 필요 없어요)"
+  - "연습용 데이터베이스나 샘플 데이터 (운영 DB로 시작하지 마세요)"
+  - "선택: Claude Code가 설치되고 로그인된 상태 (Claude Code 시작하기 참고)"
+lastVerified: 2026-11-05
+sources:
+  - title: "Claude Code: Connect Claude Code to tools via MCP (Query your PostgreSQL database)"
+    url: "https://code.claude.com/docs/en/mcp"
+  - title: "Claude Code: Common workflows"
+    url: "https://code.claude.com/docs/en/common-workflows"
+  - title: "PostgreSQL documentation: SET TRANSACTION (read-only mode)"
+    url: "https://www.postgresql.org/docs/current/sql-set-transaction.html"
+  - title: "SQLite documentation: SELECT"
+    url: "https://www.sqlite.org/lang_select.html"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- AI는 테이블 이름, 열, 원하는 결과를 알면 SQL을 잘 써요. 하지만 내 데이터는 주지 않으면 볼 수 없으니, 실제 고객 데이터 대신 구조(스키마)와 가짜 행 몇 개를 설명해 주세요.
+- 새 쿼리는 샘플 데이터에서 먼저, 그다음 읽기 전용 계정으로 실행하세요. Claude Code MCP 문서는 데이터베이스 서버를 읽기 전용 DB 사용자로 연결하라고 하며 이유를 "Claude가 실행하는 쿼리가 데이터를 바꾸지 못하게" 하려는 것이라고 해요.
+- 오류 없이 실행된 쿼리도 틀린 답을 줄 수 있어요. 손으로 셀 수 있는 숫자와 결과를 맞춰 보세요. 아래에 테스트한 예시로 세 가지 흔한 함정을 보여 줘요. WHERE에서 LEFT JOIN 걸러내기, NULL이 있는 NOT IN, 엉뚱한 행 세기예요.
+- 개인정보(이름, 이메일, 전화번호, 카드번호)는 프롬프트와 결과에서 빼세요. 가린 데이터나 샘플 데이터가 좋아요.
+- 2026-11-05에 공식 페이지를 읽었어요. 이 튜토리얼의 SQL 예시는 메모리 SQLite 데이터베이스(Python sqlite3 모듈)에서 직접 실행했고 나온 결과를 그대로 적었어요. Claude Code, PostgreSQL 서버, MCP 데이터베이스 서버는 실행하지 않았으므로 그 부분은 문서 내용이에요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- AI에게 필요한 맥락(테이블 구조, 질문, 데이터베이스 종류)과 함께 SQL 쿼리를 요청해요.
+- 쿼리를 한 줄씩 설명받고 샘플 데이터로 확인해요.
+- 보고서에 들어가기 전에 흔한 오답 버그를 알아봐요.
+- 더 안전하게 쿼리를 실행해요. 샘플 데이터 먼저, 그다음 읽기 전용, 운영 DB는 절대 처음에 쓰지 않아요.
+
+## 먼저 알아둘 개념
+
+**SQL**은 관계형 데이터베이스에 질문하는 언어예요. **테이블**에는 행이 들어 있고, **스키마**는 테이블과 열의 목록이에요. **JOIN**은 두 테이블의 행을 합치는 것이고, **NULL**은 "값 없음"이라 0이나 빈 문자열과 다르게 동작해요. **읽기 전용 계정**은 데이터를 읽을 수만 있고 바꾸거나 지울 수 없어요. 이 튜토리얼은 데이터를 읽는 `SELECT`에 집중해요. 데이터베이스가 아닌 스프레드시트·CSV는 [3. 데이터 분석 맡기기](/ko/chat/03-data-analysis/), 코드로 하는 분석은 [11. Claude Code로 데이터 분석](/ko/coding/38-data-analysis-claude-code/)을 보세요. 권한 설정은 [13. 설정·권한 다듬기](/ko/coding/40-settings-permissions/)에 있어요.
+
+<Aside type="caution" title="AI가 쓴 SQL을 운영 DB에서 먼저 실행하지 마세요">
+읽기만 하는 쿼리는 안전하지만, 수정·삭제하는 쿼리는 그렇지 않을 수 있어요. 새 쿼리는 연습용 복사본이나 샘플 데이터에서 돌리고, AI가 쓰는 도구에는 읽기 전용 계정을 주세요. 행에는 개인정보가 들어 있을 수 있고, 붙여 넣거나 도구가 돌려준 내용은 AI 서비스로 전달돼요. [기초 5편](/ko/basics/05-privacy-safety/)과 [기초 12편](/ko/basics/12-privacy-settings/)을 참고하세요.
+</Aside>
+
+## 단계별 따라 하기
+
+<Checklist items={[
+  '운영 DB가 아니라 샘플 데이터나 연습용 복사본에서 작업한다',
+  '스키마를 설명했고 가짜나 가린 행만 썼다',
+  'SELECT만 쓰는 쿼리를 요청했고 실행 전에 읽었다',
+  '결과를 손으로 셀 수 있는 숫자와 맞춰 봤다',
+  '도구에 준 데이터베이스 연결은 읽기 전용 계정이다',
+]} />
+
+<Steps>
+
+1. **안전한 연습용 데이터베이스 만들기**
+
+   가짜 행으로 작은 데이터베이스를 만드세요. 아래 예시는 `customers`, `orders`, `order_items` 세 테이블을 쓰고 이름은 "Sample A" 같은 값이에요. SQLite는 파일 하나이거나 메모리에 둘 수 있어서 연습용으로 좋아요. 채팅에 붙여 넣을 연습 데이터에 실제 이름이나 이메일을 넣지 마세요.
+
+   ```sql
+   CREATE TABLE customers(id INTEGER PRIMARY KEY, name TEXT, region TEXT);
+   CREATE TABLE orders(id INTEGER PRIMARY KEY, customer_id INTEGER, ordered_on TEXT, status TEXT);
+   CREATE TABLE order_items(id INTEGER PRIMARY KEY, order_id INTEGER, price REAL, qty INTEGER);
+   INSERT INTO customers VALUES (1,'Sample A','East'),(2,'Sample B','West'),(3,'Sample C','East');
+   INSERT INTO orders VALUES (1,1,'2026-10-02','paid'),(2,1,'2026-10-15','paid'),(3,2,'2026-10-20','cancelled'),(4,NULL,'2026-10-21','paid');
+   INSERT INTO order_items VALUES (1,1,10,2),(2,1,5,1),(3,2,20,1),(4,3,7,1),(5,4,9,1);
+   ```
+
+2. **스키마와 질문 설명하기**
+
+   데이터베이스 종류(SQLite, PostgreSQL, MySQL 등 문법이 달라요), 테이블 구조, 평범한 말로 쓴 질문, 기대하는 결과 모양을 알려 주세요. 실제 행은 붙여 넣지 마세요.
+
+   <PromptBox>
+   SQLite를 써요. 테이블은 customers(id, name, region), orders(id, customer_id, ordered_on, status), order_items(id, order_id, price, qty)예요. status는 paid 또는 cancelled예요. 모든 고객과 결제 완료(paid) 주문 수를 보여 주는 읽기 전용 SELECT 하나를 써 주세요. 주문이 없는 고객도 0으로 나와야 해요. 각 절을 한 줄로 설명하고, 이 쿼리가 틀릴 수 있는 경우도 하나 알려 주세요.
+   </PromptBox>
+
+   "틀릴 수 있는 경우"를 묻는 건 우리의 습관이에요. 결과를 믿기 전에 AI가 가정을 먼저 적게 해요.
+
+3. **실행 전에 쿼리 읽기**
+
+   `SELECT`만 쓰는지(`INSERT`, `UPDATE`, `DELETE`, `DROP` 없음), 테이블과 열 이름이 내 스키마에 있는지, JOIN 조건이 맞는 열을 쓰는지 확인하세요. 이해 안 되는 줄은 설명을 요청하세요. 읽을 수 없는 쿼리는 실행하지 마세요.
+
+4. **샘플 데이터로 실행하고 손으로 확인하기**
+
+   위 샘플 데이터에서 "고객별 결제 완료 주문 수(0 포함)"의 정답은 Sample A 2건, Sample B 0건(유일한 주문이 취소), Sample C 0건(주문 없음)이에요. 이 답을 주는 쿼리예요. SQLite에서 실행해 `[('Sample A', 2), ('Sample B', 0), ('Sample C', 0)]`이 나왔어요.
+
+   ```sql
+   SELECT c.name, COUNT(o.id) AS paid_orders
+   FROM customers c
+   LEFT JOIN orders o ON o.customer_id = c.id AND o.status = 'paid'
+   GROUP BY c.id, c.name;
+   ```
+
+   몇 행만 세어 본 결과와 다르면, 실행이 되었더라도 쿼리가 틀린 거예요.
+
+5. **흔한 오답 함정 세 가지 알아두기**
+
+   *함정 1: LEFT JOIN을 WHERE에서 거르기.* `o.status = 'paid'`를 `ON`에서 `WHERE`로 옮기면 결제 완료 주문이 없는 고객이 사라져서 LEFT JOIN이 내부 조인처럼 동작해요. 이 버전을 실행하니 `[('Sample A', 2)]`만 나왔어요.
+
+   ```sql
+   SELECT c.name, COUNT(o.id)
+   FROM customers c
+   LEFT JOIN orders o ON o.customer_id = c.id
+   WHERE o.status = 'paid'
+   GROUP BY c.id;
+   ```
+
+   *함정 2: NULL이 있는 NOT IN.* "주문이 없는 고객"을 `NOT IN`으로 쓰면 우리 실행에서 아무것도 나오지 않았어요(`[]`). 주문 하나의 `customer_id`가 NULL이라서예요. NULL과의 비교는 참이 되지 않아 어떤 행도 통과하지 못해요. `NOT EXISTS` 버전은 `[('Sample C',)]`로 올바르게 나왔어요.
+
+   ```sql
+   -- 우리 실행에서 [] (틀림)
+   SELECT name FROM customers WHERE id NOT IN (SELECT customer_id FROM orders);
+
+   -- 우리 실행에서 [('Sample C',)] (맞음)
+   SELECT name FROM customers c
+   WHERE NOT EXISTS (SELECT 1 FROM orders o WHERE o.customer_id = c.id);
+   ```
+
+   *함정 3: 엉뚱한 행 세기.* `orders`와 `order_items`를 조인하면 상품 하나당 행이 하나 생겨서, `COUNT(*)`는 주문이 아니라 상품 행을 세요(우리 데이터에서 1번 주문은 상품 행이 2개예요). 주문 수가 필요하면 `COUNT(DISTINCT o.id)`를 쓰거나 상품을 먼저 집계하세요. 조인마다 AI에게 "이 결과의 한 행은 무엇을 뜻하나요?"를 물어보세요.
+
+   이 함정들은 SQLite에서 테스트한 일반적인 SQL 동작이에요. 다른 데이터베이스는 세부가 다를 수 있으니 내 환경에서 테스트하세요.
+
+6. **운영 DB가 아니라 읽기 전용 계정으로 실행하기**
+
+   샘플 데이터에서 맞으면, 읽기만 되는 계정으로 실제 데이터베이스에서 실행하세요. Claude Code가 MCP로 데이터베이스를 조회하게 할 때, 공식 MCP 페이지의 PostgreSQL 예시는 DBHub를 쓰고 "연결 문자열에 읽기 전용 데이터베이스 사용자를 쓰라"고 해요. 그러면 Claude가 실행하는 쿼리가 데이터를 바꾸지 못해요. 문서의 명령 형태는 이래요.
+
+   ```bash
+   claude mcp add --transport stdio db -- npx -y @bytebase/dbhub \
+     --dsn "postgresql://readonly:pass@prod.db.com:5432/analytics"
+   ```
+
+   그대로 복사하지 마세요. 호스트, 사용자, 비밀번호는 문서의 자리 표시 값이에요. 내 읽기 전용 사용자를 쓰고, 공유하는 파일에 비밀번호를 남기지 말고, 범위(scope)와 보안 안내는 MCP 페이지에서 읽어 보세요. 같은 페이지는 MCP 서버를 연결하기 전에 신뢰할 수 있는지 확인하라고도 해요. 외부 콘텐츠를 가져오는 서버는 프롬프트 인젝션 위험에 노출시킬 수 있기 때문이에요. 도구가 돌려준 쿼리 결과는 AI 서비스로 전달되니 개인정보 열을 조심하세요.
+
+   PostgreSQL에는 읽기 전용 트랜잭션 모드도 있어요. 공식 문서에 따르면 읽기 전용 트랜잭션에서는 임시 테이블이 아닌 테이블에 대한 `INSERT`, `UPDATE`, `DELETE`, `MERGE`(그리고 `COPY FROM`), 모든 `CREATE`, `ALTER`, `DROP` 등이 허용되지 않고, 이를 "디스크에 대한 모든 쓰기를 막지는 않는 고수준의 읽기 전용 개념"이라고 해요. 그러니 주된 안전장치는 여전히 읽기 전용 DB 사용자이고, 트랜잭션 모드는 추가 한 겹으로 보세요.
+
+7. **느리거나 무거운 쿼리는 실행 전에 검토하기**
+
+   AI에게 실행 계획을 설명해 달라고 하고 인덱스를 제안받을 수는 있지만, 운영 시스템에 인덱스를 만드는 건 DB 담당자 없이 하지 마세요. SQLite에서는 쿼리 앞에 `EXPLAIN QUERY PLAN`을 붙이면 실행 방식을 볼 수 있어요. 우리 실행에서 `EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id=1`은 `SCAN orders`를 출력했고, 이 작은 테이블에서 전체 스캔이라는 뜻이에요. 다른 데이터베이스는 명령과 출력 형식이 다르니 해당 문서를 확인하세요. 테스트할 때는 행 수를 제한하세요(`LIMIT 20`).
+
+8. **알게 된 것 기록하기**
+
+   최종 쿼리를 무엇을 세는지 한 줄 주석과 함께, 확인한 함정과 같이 보관하세요. 짧은 메모를 요청하세요.
+
+   <PromptBox>
+   이 쿼리의 주석을 써 주세요. 어떤 질문에 답하는지, 결과의 한 행이 무엇을 뜻하는지, 어떤 필터를 쓰는지, 제가 확인한 예외 상황(NULL 값, 취소된 주문, 주문이 없는 고객)을 적어 주세요. 테스트하지 않은 것은 했다고 쓰지 마세요.
+   </PromptBox>
+
+</Steps>
+
+## 빠른 참조
+
+| 하고 싶은 일 | 방법 |
+| --- | --- |
+| AI에게 맥락 주기 | 데이터베이스 종류, 스키마, 평범한 말의 질문, 가짜 행 |
+| 안전하게 쓰기 | 샘플 데이터 먼저, 그다음 읽기 전용 계정. 운영 DB는 처음에 쓰지 않기 |
+| 짝 없는 고객도 남기기 | LEFT JOIN의 필터는 `WHERE`가 아니라 `ON`에 |
+| 짝 없는 행 찾기 | NULL 가능성이 있으면 `NOT IN` 대신 `NOT EXISTS` |
+| 조인 뒤 주문 수 세기 | `COUNT(DISTINCT o.id)` 또는 먼저 집계 |
+| SQLite 실행 방식 보기 | `EXPLAIN QUERY PLAN SELECT ...` |
+| Claude Code에 데이터베이스 연결 | 읽기 전용 사용자로 `claude mcp add` (MCP 페이지 참고) |
+
+## 자주 겪는 문제
+
+### 쿼리는 실행되는데 숫자가 이상해요
+
+- **원인**: 조인이 행을 늘렸거나, 필터가 행을 없앴거나, NULL이 예상과 다르게 동작했어요.
+- **해결**: 손으로 셀 수 있는 몇 행으로 테스트하세요. 결과의 한 행이 무엇을 뜻하는지 물어보세요.
+
+### AI가 내 데이터베이스에 없는 함수를 썼어요
+
+- **원인**: SQL 방언이 다른데 데이터베이스 종류를 말하지 않았어요.
+- **해결**: 데이터베이스와 버전을 알려 주고, 함수는 해당 공식 문서에서 확인하세요.
+
+### AI가 UPDATE나 DELETE를 썼어요
+
+- **원인**: 요청이 모호했어요.
+- **해결**: SELECT만 요청하세요. 실행하지 마세요. 읽기 전용 계정을 쓰면 어차피 데이터를 바꿀 수 없어요.
+
+### 실제 고객 행을 붙여 넣었어요
+
+- **원인**: 실제 테이블에서 행을 복사했어요.
+- **해결**: 공유된 것으로 보세요. 다음에는 가린 데이터나 샘플 데이터를 쓰고, 민감한 데이터였다면 데이터 담당자에게 알리세요.
+
+## 실전 팁
+
+- 쿼리와 평범한 말의 설명을 함께 요청하세요. 설명이 내 질문과 맞지 않으면 쿼리가 틀렸을 가능성이 커요.
+- 테스트할 때는 `LIMIT`을 붙이고, 행 수를 알고 있는 총합과 비교하세요.
+- 스키마 파일(데이터 제외)을 프로젝트에 두면 AI가 항상 실제 구조에서 시작해요.
+- AI에게 테이블 이름을 추측하게 하지 말고 알려 주세요.
+- 도구는 자주 바뀌니 명령과 동작은 공식 페이지에서 다시 확인하세요.
+
+## 다음 튜토리얼
+
+- [3. 데이터 분석 맡기기](/ko/chat/03-data-analysis/)
+- [11. Claude Code로 데이터 분석](/ko/coding/38-data-analysis-claude-code/)
+- [13. 설정·권한 다듬기](/ko/coding/40-settings-permissions/) — 비밀 파일과 위험한 명령 막기
+- [기초 5편. 개인정보와 안전](/ko/basics/05-privacy-safety/)
+- [개발자 가이드](/ko/roles/developer/)

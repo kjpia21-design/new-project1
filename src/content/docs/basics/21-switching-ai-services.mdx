@@ -1,0 +1,185 @@
+---
+title: "Move Between AI Services: Export, Import and Memory"
+description: "How to carry your saved context and old chats from one AI service to another, what Claude and Gemini officially support, and what I could not confirm for ChatGPT"
+sidebar:
+  label: "21. Switching AI services"
+level: beginner
+category: basics
+status: published
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "30 min"
+prerequisites: ["An account with the service you are leaving and the one you are joining", "A computer (the export and import screens below are on the web or desktop app)"]
+lastVerified: 2026-11-05
+sources:
+  - title: "Claude Help Center: Import and export your memory from Claude"
+    url: "https://support.claude.com/en/articles/12123587-import-and-export-your-memory-from-claude"
+  - title: "Claude Help Center: Export your Claude data"
+    url: "https://support.claude.com/en/articles/9450526-how-can-i-export-my-claude-data"
+  - title: "Gemini Apps Help: Import from other AI platforms to Gemini Apps"
+    url: "https://support.google.com/gemini/answer/16868299"
+  - title: "Gemini Apps Help: Download your Gemini Apps data"
+    url: "https://support.google.com/gemini/answer/16920332"
+  - title: "ChatGPT docs: Import from another agent"
+    url: "https://learn.chatgpt.com/docs/import.md"
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- Switching does not have to mean starting from zero. Two things can move: your **memory** (preferences and facts the old service learned about you) and your **old chats**.
+- **Memory** moves by copy and paste: the new service gives you a prompt, you run it in the old one, and you paste the answer back. Claude and Gemini both document this.
+- **Old chats** move as an exported file. Gemini documents importing a `.zip` exported from ChatGPT or Claude. Claude documents exporting, but says exported data cannot be imported into another personal Claude account.
+- **Export is a copy.** Your old account is not deleted. Delete only after you have checked the new one.
+- Plans and screens change. Details below are as of 2026-11-05 from the official pages listed in Sources. Imports are described as experimental or limited, so keep your own backup.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Decide what you actually want to bring to a new AI service.
+- Export your memory and chats from the service you are leaving.
+- Import memory into Claude or Gemini, and chat history into Gemini.
+- Check the result and clean up the old account safely.
+
+## Concepts to know first
+
+This page is about **moving**. For what memory is and how to edit it, see [Memory and personal settings](/claude/c09-memory-settings/). For finding, renaming and deleting chats inside one service, see [tutorial 17](/basics/17-chat-history/). For privacy choices such as training settings, see [tutorial 12](/basics/12-privacy-settings/).
+
+| Term | Plain meaning |
+| --- | --- |
+| **Memory** | Preferences and facts a service saved about you from earlier chats. |
+| **Export** | A downloadable copy of your data. The original stays in the old account. |
+| **Import** | Loading memory or chats from another service into this one. |
+| **Migration prompt** | A prompt you paste into the old service so it lists what it remembers about you. |
+
+What the official pages say (as of 2026-11-05, personal accounts; your plan and region may differ):
+
+| | Claude | Gemini | ChatGPT |
+| --- | --- | --- | --- |
+| **Import memory from another service** | Yes: Settings > Your Claude > Start import (web and Claude Desktop; Free, Pro, Max, Ultra, Team, Enterprise). Described as experimental. | Yes: Settings > Import memory to Gemini (personal Google Account, age 18 or older; not available in the EEA, Switzerland or the UK) | Not confirmed |
+| **Import old chats** | Not confirmed | Yes: upload a `.zip` (up to 5 GB, up to 5 files per day) exported from ChatGPT or Claude | Not confirmed (see the note below) |
+| **Export your memory** | Yes: Settings > Your Claude > Manage, or ask Claude to write it out verbatim | Not confirmed | Not confirmed |
+| **Export your chats** | Yes: Settings > Privacy > Export data (web or Claude Desktop, not the iOS or Android app); link expires after 24 hours | Yes: Google Takeout | Not confirmed in official pages I could open |
+
+<Aside type="caution" title="What I could not confirm">
+OpenAI's help pages (help.openai.com) returned an error here, so I could not read ChatGPT's own export or memory-import steps. The Gemini page describes ChatGPT's export path as Settings > Data controls > Export data, but treat that as Google's description and check the ChatGPT app yourself. The ChatGPT docs page I could open (learn.chatgpt.com import) covers importing setup and chats from **Claude Code, Claude Cowork and Cursor** into the ChatGPT desktop app or Codex CLI. It is about coding agents, not about moving ordinary Claude or Gemini chat history into ChatGPT. I also did not confirm whether Claude can import old chats, or whether Gemini can export its memory in a single step. I did not test any import with a real account.
+</Aside>
+
+## Step-by-step guide
+
+<Checklist items={[
+  'I decided what I want to bring (memory, old chats, or both)',
+  'I removed anything sensitive from what I will copy over',
+  'I exported my chats and saved the file somewhere private',
+  'I imported memory into the new service',
+  'I checked what the new service now knows about me',
+  'I kept the old account until I was sure everything worked',
+]} />
+
+<Steps>
+
+1. **Decide what to bring**
+
+   Most people only need the **memory**: tone preferences, job, ongoing projects, tools they use. Old chats are worth moving only if you want to continue them. A smaller set is easier to check.
+
+2. **Look at your plan and region**
+
+   Claude's memory import is available on Free, Pro, Max, Ultra, Team and Enterprise on the web and Claude Desktop. Gemini's import needs a personal Google Account (not work, school or supervised), age 18 or older, and is not available in the EEA, Switzerland or the UK. If you use a work account, ask your administrator first; see [tutorial 18](/basics/18-ai-at-work/).
+
+3. **Ask the old service to list your memory**
+
+   Open the import screen of the new service first. It shows a prompt written for this job. Copy it and paste it into a chat in the old service. Claude's help page also gives a prompt that asks for every stored memory in one code block, with the date saved if available, preserving your wording.
+
+   <PromptBox>
+   I am moving to another AI service. List every memory you have stored about me and anything you learned about me from past chats, in one code block, one entry per line, using my own words where possible. Do not summarize or leave anything out, and tell me at the end if the list is complete.
+   </PromptBox>
+
+   This is my own short version of the idea. The prompt shown inside the new service is the one the provider tested, so prefer that one.
+
+4. **Review before you paste**
+
+   Read the list. Delete anything you would not want a new company to hold: health details, family details, account numbers, workplace secrets. Claude's help page says you can edit the prompt to exclude sensitive information. See [tutorial 5](/basics/05-privacy-safety/).
+
+5. **Paste it into the new service**
+
+   - **Claude**: Settings > Your Claude (or Settings > Memory in the older layout), choose **Start import**, paste the text and choose **Add to memory**. Claude stores key points as separate entries you can review.
+   - **Gemini**: gemini.google.com, Settings > **Import memory to Gemini**, copy the prompt, run it in the other service, paste the reply and choose **Add memory**. Gemini then starts a new chat thread for it.
+
+   Claude's page notes that its memory focuses on work-related topics, so personal details unrelated to work may not be kept. It also says imports are experimental and may not always succeed. If something matters, add it yourself in Claude's memory screen or tell Claude in chat.
+
+6. **Export your old chats (optional)**
+
+   - **Claude**: on the web or Claude Desktop, Settings > Privacy > Export data. A download link arrives by email and expires 24 hours after delivery. You cannot start an export from the iOS or Android app.
+   - **Gemini**: use Google Takeout (takeout.google.com). Choose only Gemini data, then pick a delivery method and file type. Google says a download does not delete your activity.
+   - **ChatGPT**: not confirmed in official pages I could open. Look in the app under Settings > Data controls.
+
+   Exported files contain your private conversations. Keep them in a private folder and delete the email link when you are done.
+
+7. **Import old chats into Gemini (optional)**
+
+   Gemini's page describes this: in Settings > Import memory to Gemini, under **Import chats** choose **Add**, then select the `.zip` file. The limit is 5 GB per file and 5 files per day. It may take up to a day. Imported chats show an imported-chat icon, and you can delete one chat or a whole import. Re-uploading the same `.zip` adds new conversations and overwrites ones already imported. If an import is interrupted, delete the import entry and try again.
+
+   Claude's help page says exported data cannot be imported into another personal Claude account.
+
+8. **Check the result**
+
+   Ask the new service what it now knows, then correct it.
+
+   <PromptBox>
+   Tell me what you now remember about me, as a short list. Mark anything you are unsure about, and tell me what you did not keep.
+   </PromptBox>
+
+9. **Only then clean up the old account**
+
+   Keep the old account for a while. When the new one works, delete chats or memory in the old service using the steps in [tutorial 17](/basics/17-chat-history/) and the service's own settings. Exporting does not delete anything, and deleting an account or plan is a separate decision; check [tutorial 8](/basics/08-free-vs-paid/) for what a plan change does.
+
+</Steps>
+
+## Quick reference
+
+| I want to... | Try |
+| --- | --- |
+| Bring my preferences to Claude | Settings > Your Claude > Start import |
+| Bring my preferences to Gemini | Settings > Import memory to Gemini |
+| Back up my Claude memory | Settings > Your Claude > Manage, or ask Claude to write it out verbatim |
+| Download my Claude chats | Settings > Privacy > Export data (web or desktop) |
+| Download my Gemini chats | Google Takeout |
+| Bring ChatGPT or Claude chats into Gemini | Export a `.zip`, then Import chats > Add |
+
+## Common sticking points
+
+### I cannot find the import or export button
+
+- **Cause**: Your plan, region, account type or app version differs, or you are on the mobile app.
+- **Fix**: Use the web or desktop app. For Gemini, check the age, account type and region rules above. For work accounts, ask your administrator.
+
+### The new service forgot something
+
+- **Cause**: Claude's page says imports are experimental, and its memory focuses on work topics.
+- **Fix**: Add the missing point in the memory screen, or say it in a chat.
+
+### The export link stopped working
+
+- **Cause**: Claude's link expires 24 hours after delivery; Gemini's Takeout email link is active for 7 days when sent by email.
+- **Fix**: Request a new export.
+
+### I want the old chats inside Claude
+
+- **Cause**: Claude's help says exported data cannot be imported into another personal Claude account. I did not find an official way to import chats from another service.
+- **Fix**: Keep the export file as an archive, and move the memory instead.
+
+## Practical tips
+
+- Move memory first; move chats only if you will really continue them.
+- Redact before you paste. A new service does not need your account numbers.
+- Keep your own text copy of the memory list as a backup.
+- This page is general guidance, not legal or privacy advice.
+
+## What to read next
+
+- [C9. Memory and personal settings](/claude/c09-memory-settings/) — How memory works inside Claude
+- [17. Chat history](/basics/17-chat-history/) — Find, rename, delete and export chats
+- [12. Privacy settings](/basics/12-privacy-settings/) — Training and temporary chats
+- [11. Choosing an AI tool](/basics/11-choose-ai-tool/) — Picking which service to use

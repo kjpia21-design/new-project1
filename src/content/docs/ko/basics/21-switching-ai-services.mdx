@@ -1,0 +1,185 @@
+---
+title: "AI 서비스 갈아타기: 내보내기·가져오기·메모리"
+description: "다른 AI 서비스로 옮길 때 저장된 맥락과 예전 대화를 가져가는 방법, Claude·Gemini가 공식 안내하는 범위, 확인하지 못한 ChatGPT 부분"
+sidebar:
+  label: "21. 서비스 갈아타기"
+level: beginner
+category: basics
+status: published
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "30분"
+prerequisites: ["떠날 서비스와 옮겨 갈 서비스의 계정", "컴퓨터 (아래 내보내기·가져오기 화면은 웹이나 데스크톱 앱 기준)"]
+lastVerified: 2026-11-05
+sources:
+  - title: "Claude 지원센터: Claude 메모리 가져오기·내보내기 (영문)"
+    url: "https://support.claude.com/en/articles/12123587-import-and-export-your-memory-from-claude"
+  - title: "Claude 지원센터: Claude 데이터 내보내기 (영문)"
+    url: "https://support.claude.com/en/articles/9450526-how-can-i-export-my-claude-data"
+  - title: "Gemini 앱 도움말: 다른 AI 플랫폼에서 Gemini 앱으로 가져오기 (영문)"
+    url: "https://support.google.com/gemini/answer/16868299"
+  - title: "Gemini 앱 도움말: Gemini 앱 데이터 다운로드 (영문)"
+    url: "https://support.google.com/gemini/answer/16920332"
+  - title: "ChatGPT 문서: 다른 에이전트에서 가져오기 (영문)"
+    url: "https://learn.chatgpt.com/docs/import.md"
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- 서비스를 바꿔도 처음부터 다시 시작할 필요는 없어요. 옮길 수 있는 것은 두 가지예요. **메모리**(예전 서비스가 파악한 내 선호와 정보)와 **예전 대화**.
+- **메모리**는 복사·붙여넣기로 옮겨요. 새 서비스가 주는 프롬프트를 예전 서비스에서 실행하고, 나온 답을 새 서비스에 붙여 넣어요. Claude와 Gemini가 모두 안내해요.
+- **예전 대화**는 내보낸 파일로 옮겨요. Gemini는 ChatGPT나 Claude에서 내보낸 `.zip`을 가져오는 방법을 안내해요. Claude는 내보내기를 안내하지만, 내보낸 데이터를 다른 개인 Claude 계정으로 가져올 수는 없다고 밝혀요.
+- **내보내기는 복사본**이에요. 예전 계정이 지워지지 않아요. 새 서비스를 확인한 뒤에 지우세요.
+- 요금제와 화면은 바뀌어요. 아래 내용은 출처에 적은 공식 페이지 기준 2026-11-05 현재예요. 가져오기는 실험적이거나 제한이 있다고 안내되니 직접 백업을 따로 두세요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 새 서비스로 무엇을 가져갈지 정하기
+- 떠나는 서비스에서 메모리와 대화 내보내기
+- Claude·Gemini에 메모리 가져오기, Gemini에 대화 기록 가져오기
+- 결과를 확인하고 예전 계정을 안전하게 정리하기
+
+## 먼저 알아둘 개념
+
+이 글은 **옮기기**를 다뤄요. 메모리가 무엇이고 어떻게 고치는지는 [메모리와 개인 설정](/ko/claude/c09-memory-settings/)을, 한 서비스 안에서 대화를 찾고 이름 바꾸고 지우는 방법은 [튜토리얼 17](/ko/basics/17-chat-history/)을, 학습 설정 같은 개인정보 선택은 [튜토리얼 12](/ko/basics/12-privacy-settings/)를 보세요.
+
+| 용어 | 쉬운 뜻 |
+| --- | --- |
+| **메모리** | 서비스가 이전 대화에서 저장한 내 선호와 정보 |
+| **내보내기** | 내 데이터의 다운로드용 복사본. 원본은 예전 계정에 그대로 있어요 |
+| **가져오기** | 다른 서비스의 메모리나 대화를 이 서비스로 불러오는 것 |
+| **이전용 프롬프트** | 예전 서비스에 붙여 넣어, 나에 대해 기억하는 것을 목록으로 받는 프롬프트 |
+
+공식 페이지가 말하는 내용 (2026-11-05 기준, 개인 계정이며 플랜·지역에 따라 다를 수 있어요):
+
+| | Claude | Gemini | ChatGPT |
+| --- | --- | --- | --- |
+| **다른 서비스의 메모리 가져오기** | 가능: 설정 > Your Claude > Start import (웹·Claude Desktop, Free·Pro·Max·Ultra·Team·Enterprise). 실험적 기능이라고 안내 | 가능: 설정 > Import memory to Gemini (개인 Google 계정, 만 18세 이상, EEA·스위스·영국은 제외) | 확인하지 못함 |
+| **예전 대화 가져오기** | 확인하지 못함 | 가능: ChatGPT·Claude에서 내보낸 `.zip` 업로드 (파일당 최대 5GB, 하루 5개) | 확인하지 못함 (아래 안내 참고) |
+| **메모리 내보내기** | 가능: 설정 > Your Claude > Manage, 또는 Claude에게 그대로 적어 달라고 요청 | 확인하지 못함 | 확인하지 못함 |
+| **대화 내보내기** | 가능: 설정 > Privacy > Export data (웹·Claude Desktop, iOS·Android 앱은 불가), 링크는 24시간 뒤 만료 | 가능: Google Takeout | 열 수 있었던 공식 페이지에서는 확인하지 못함 |
+
+<Aside type="caution" title="확인하지 못한 점">
+OpenAI 도움말(help.openai.com)은 여기서 오류가 나서 ChatGPT 자체의 내보내기·메모리 가져오기 절차를 읽지 못했어요. Gemini 도움말은 ChatGPT의 내보내기 경로를 설정 > Data controls > Export data로 소개하지만, 이는 Google의 설명이니 ChatGPT 앱에서 직접 확인하세요. 열 수 있었던 ChatGPT 문서(learn.chatgpt.com 가져오기)는 **Claude Code, Claude Cowork, Cursor**의 설정과 대화를 ChatGPT 데스크톱 앱이나 Codex CLI로 가져오는 내용이에요. 코딩 에이전트용이고, 일반 Claude·Gemini 대화 기록을 ChatGPT로 옮기는 내용은 아니에요. Claude가 예전 대화를 가져올 수 있는지, Gemini 메모리를 한 번에 내보낼 수 있는지도 확인하지 못했어요. 실제 계정으로 가져오기를 직접 시험해 보지는 않았어요.
+</Aside>
+
+## 단계별 따라하기
+
+<Checklist items={[
+  '무엇을 가져갈지 정했다 (메모리, 예전 대화, 또는 둘 다)',
+  '복사할 내용에서 민감한 정보를 뺐다',
+  '대화를 내보내고 파일을 비공개 장소에 저장했다',
+  '새 서비스에 메모리를 가져왔다',
+  '새 서비스가 나에 대해 무엇을 아는지 확인했다',
+  '모든 게 잘 되는 것을 확인할 때까지 예전 계정을 남겨 두었다',
+]} />
+
+<Steps>
+
+1. **무엇을 가져갈지 정하기**
+
+   대부분은 **메모리**만 있으면 충분해요. 말투 선호, 직업, 진행 중인 프로젝트, 쓰는 도구 같은 것들이죠. 예전 대화는 이어서 쓰고 싶을 때만 옮길 가치가 있어요. 양이 적을수록 확인하기 쉬워요.
+
+2. **플랜과 지역 확인하기**
+
+   Claude 메모리 가져오기는 웹과 Claude Desktop에서 Free, Pro, Max, Ultra, Team, Enterprise 플랜에 제공돼요. Gemini 가져오기는 개인 Google 계정(직장·학교·보호자 관리 계정 제외), 만 18세 이상이 필요하고 EEA·스위스·영국에서는 쓸 수 없어요. 회사 계정이라면 먼저 관리자에게 물어보세요. [튜토리얼 18](/ko/basics/18-ai-at-work/)을 참고하세요.
+
+3. **예전 서비스에게 메모리 목록 받기**
+
+   먼저 새 서비스의 가져오기 화면을 열면 이 용도로 쓴 프롬프트가 나와요. 그것을 복사해 예전 서비스의 대화에 붙여 넣으세요. Claude 도움말도 저장된 메모리를 코드 블록 하나에 모두, 가능하면 저장 날짜와 함께, 내 표현 그대로 내놓으라는 프롬프트를 제공해요.
+
+   <PromptBox>
+   다른 AI 서비스로 옮기려고 해요. 나에 대해 저장한 메모리와 지난 대화에서 파악한 내용을 모두 코드 블록 하나에, 한 줄에 하나씩, 가능하면 내가 쓴 표현 그대로 적어 주세요. 요약하거나 빼지 말고, 마지막에 목록이 전부인지 알려 주세요.
+   </PromptBox>
+
+   이것은 취지를 담은 제 짧은 버전이에요. 새 서비스 화면에 나오는 프롬프트는 제공사가 시험해 만든 것이니 그쪽을 우선 쓰세요.
+
+4. **붙여 넣기 전에 검토하기**
+
+   목록을 읽어 보세요. 새 회사가 갖고 있기를 원하지 않는 것은 지우세요. 건강 정보, 가족 정보, 계좌번호, 회사 기밀 같은 것들이에요. Claude 도움말은 민감한 정보를 빼도록 프롬프트를 고쳐 써도 된다고 안내해요. [튜토리얼 5](/ko/basics/05-privacy-safety/)를 참고하세요.
+
+5. **새 서비스에 붙여 넣기**
+
+   - **Claude**: 설정 > Your Claude(예전 화면은 설정 > Memory)에서 **Start import**를 누르고, 텍스트를 붙여 넣은 뒤 **Add to memory**를 누르세요. Claude가 핵심을 개별 항목으로 저장하고, 검토할 수 있어요.
+   - **Gemini**: gemini.google.com에서 설정 > **Import memory to Gemini**로 가서 프롬프트를 복사하고, 다른 서비스에서 실행한 뒤 답을 붙여 넣고 **Add memory**를 누르세요. 그러면 Gemini가 새 대화 스레드를 만들어요.
+
+   Claude 도움말은 Claude의 메모리가 업무 관련 주제에 맞춰져 있어 업무와 무관한 개인 정보는 유지되지 않을 수 있다고 해요. 또 가져오기는 실험적이라 항상 성공하지는 않는다고 밝혀요. 중요한 내용은 Claude 메모리 화면에서 직접 추가하거나 대화에서 말해 주세요.
+
+6. **예전 대화 내보내기 (선택)**
+
+   - **Claude**: 웹이나 Claude Desktop에서 설정 > Privacy > Export data. 다운로드 링크가 이메일로 오고, 전달 후 24시간 뒤 만료돼요. iOS·Android 앱에서는 내보내기를 시작할 수 없어요.
+   - **Gemini**: Google Takeout(takeout.google.com)을 쓰세요. Gemini 데이터만 고르고 받는 방법과 파일 형식을 선택하세요. Google은 다운로드해도 활동 기록이 삭제되지는 않는다고 안내해요.
+   - **ChatGPT**: 열 수 있었던 공식 페이지에서는 확인하지 못했어요. 앱의 설정 > Data controls를 살펴보세요.
+
+   내보낸 파일에는 개인 대화가 들어 있어요. 비공개 폴더에 보관하고, 끝나면 이메일의 링크는 지우세요.
+
+7. **Gemini에 예전 대화 가져오기 (선택)**
+
+   Gemini 도움말에 따르면 설정 > Import memory to Gemini의 **Import chats**에서 **Add**를 누르고 `.zip` 파일을 고르세요. 파일당 5GB, 하루 5개까지이고 최대 하루가 걸릴 수 있어요. 가져온 대화에는 가져옴 아이콘이 표시되고, 대화 하나 또는 가져오기 전체를 지울 수 있어요. 같은 `.zip`을 다시 올리면 새 대화는 추가되고 이미 가져온 대화는 덮어써져요. 가져오기가 중간에 끊기면 해당 가져오기 항목을 지우고 다시 시도하세요.
+
+   Claude 도움말은 내보낸 데이터를 다른 개인 Claude 계정으로 가져올 수 없다고 안내해요.
+
+8. **결과 확인하기**
+
+   새 서비스에게 지금 무엇을 아는지 물어보고 바로잡으세요.
+
+   <PromptBox>
+   지금 나에 대해 기억하는 것을 짧은 목록으로 알려 주세요. 확실하지 않은 것은 표시하고, 저장하지 않은 것도 알려 주세요.
+   </PromptBox>
+
+9. **그 다음에 예전 계정 정리하기**
+
+   예전 계정은 한동안 두세요. 새 서비스가 잘 동작하면 [튜토리얼 17](/ko/basics/17-chat-history/)과 해당 서비스의 설정에서 대화나 메모리를 지우세요. 내보내기는 아무것도 지우지 않고, 계정이나 플랜을 해지하는 것은 별개의 결정이에요. 플랜을 바꾸면 어떻게 되는지는 [튜토리얼 8](/ko/basics/08-free-vs-paid/)을 보세요.
+
+</Steps>
+
+## 빠른 참조표
+
+| 하고 싶은 일 | 방법 |
+| --- | --- |
+| Claude로 선호 가져오기 | 설정 > Your Claude > Start import |
+| Gemini로 선호 가져오기 | 설정 > Import memory to Gemini |
+| Claude 메모리 백업 | 설정 > Your Claude > Manage, 또는 Claude에게 그대로 적어 달라고 요청 |
+| Claude 대화 다운로드 | 설정 > Privacy > Export data (웹·데스크톱) |
+| Gemini 대화 다운로드 | Google Takeout |
+| ChatGPT·Claude 대화를 Gemini로 | `.zip` 내보내기 후 Import chats > Add |
+
+## 자주 막히는 지점
+
+### 가져오기·내보내기 버튼이 안 보여요
+
+- **원인**: 플랜, 지역, 계정 종류, 앱 버전이 다르거나 모바일 앱을 쓰고 있어요.
+- **해결**: 웹이나 데스크톱 앱을 쓰세요. Gemini는 위의 연령·계정·지역 조건을 확인하세요. 회사 계정이면 관리자에게 물어보세요.
+
+### 새 서비스가 어떤 내용을 잊었어요
+
+- **원인**: Claude 도움말은 가져오기가 실험적이고 메모리가 업무 주제에 맞춰져 있다고 해요.
+- **해결**: 메모리 화면에서 빠진 내용을 직접 추가하거나 대화에서 말해 주세요.
+
+### 내보내기 링크가 안 열려요
+
+- **원인**: Claude 링크는 전달 후 24시간 뒤 만료되고, Gemini Takeout은 이메일로 받을 때 링크가 7일간 유효해요.
+- **해결**: 내보내기를 다시 요청하세요.
+
+### 예전 대화를 Claude로 가져오고 싶어요
+
+- **원인**: Claude 도움말은 내보낸 데이터를 다른 개인 Claude 계정으로 가져올 수 없다고 해요. 다른 서비스의 대화를 가져오는 공식 방법은 찾지 못했어요.
+- **해결**: 내보낸 파일은 보관용으로 두고 메모리만 옮기세요.
+
+## 실전 팁
+
+- 메모리를 먼저 옮기고, 대화는 정말 이어 쓸 것만 옮기세요.
+- 붙여 넣기 전에 가리세요. 새 서비스에 계좌번호까지 알려 줄 필요는 없어요.
+- 메모리 목록은 텍스트로 직접 백업해 두세요.
+- 이 글은 일반 안내이고, 법률·개인정보 자문이 아니에요.
+
+## 다음에 볼 튜토리얼
+
+- [C9. 메모리와 개인 설정](/ko/claude/c09-memory-settings/) — Claude 안에서 메모리가 작동하는 방식
+- [17. 대화 기록](/ko/basics/17-chat-history/) — 대화 찾기·이름 바꾸기·삭제·내보내기
+- [12. 개인정보 설정](/ko/basics/12-privacy-settings/) — 학습 설정과 임시 대화
+- [11. AI 도구 고르기](/ko/basics/11-choose-ai-tool/) — 어떤 서비스를 쓸지 고르기
