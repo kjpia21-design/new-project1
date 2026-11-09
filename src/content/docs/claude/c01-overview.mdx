@@ -8,7 +8,7 @@ category: claude
 tools: ["Claude", "Claude Code"]
 duration: "15 min"
 prerequisites: ["A Claude account (a free account works)"]
-lastVerified: 2026-11-09
+lastVerified: 2026-11-10
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -32,7 +32,7 @@ import PromptBox from '../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- There are four current models: **Fable 5.1, Opus 5.5, Sonnet 5.5, and Haiku 5.5** (as of 2026-10-10).
+- There are four current models: **Fable 5.2, Opus 5.5, Sonnet 5.5, and Haiku 5.5** (as of 2026-11-10). Fable 5.2 launched on 2026-11-09 and replaces Fable 5.1 as the default Fable model.
 - The official docs say: "If you're not sure, **start with Opus 5.5** for most workloads."
 - The Claude Code default (`default`) is also Opus 5.5. **Fable is not the default on any plan, so you have to pick it yourself.**
 - Haiku suits high-volume, low-latency work, Sonnet balances speed and quality, and Fable fits the hardest long-horizon reasoning.
@@ -60,15 +60,15 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 | Model | Use it for | Speed | API price (per 1M tokens, input / output) | Model ID |
 | --- | --- | --- | --- | --- |
-| **Fable 5.1** | Hard reasoning, long-horizon agent work | Slow | $10 / $50 | `claude-fable-5-1` |
+| **Fable 5.2** | Hard reasoning, long-horizon agent work | Slow | $8 / $40 | `claude-fable-5-2` |
 | **Opus 5.5** | Long-running agentic coding and knowledge work. **The officially recommended starting point** | Medium | $4 / $20 | `claude-opus-5-5` |
 | **Sonnet 5.5** | The best combination of speed and intelligence | Fast | $2 / $10 | `claude-sonnet-5-5` |
 | **Haiku 5.5** | High-volume, low-latency work like classification, extraction, and routing | Fastest | From $0.10 / from $0.50 | `claude-haiku-5-5` |
 
 - These prices are for the API. The Batch API is 50% off. For Haiku 5.5, the per-token price is higher when the prompt exceeds 100K tokens (per the Claude Code Model configuration doc, as of 2026-10-12). Check the official pricing page for exact tiered rates.
 - All four models have a 1M-token context window and a 128K-token maximum output (synchronous Messages API), and a reliable knowledge cutoff of June 2026.
-- Default effort is `high` for Fable 5.1, `medium` for Opus 5.5, `high` for Sonnet 5.5, and `medium` for Haiku 5.5.
-- Retirement commitments: Fable 5.1 will not retire before 2027-09-01, Opus 5.5 not before 2027-09-22, Sonnet 5.5 not before 2027-09-28, and Haiku 5.5 not before 2027-10-07. Keep this in mind if you're building a long-lived service.
+- Default effort is `high` for Fable 5.1 (not re-checked for Fable 5.2), `medium` for Opus 5.5, `high` for Sonnet 5.5, and `medium` for Haiku 5.5.
+- Retirement commitments (not yet confirmed for Fable 5.2): Fable 5.1 will not retire before 2027-09-01, Opus 5.5 not before 2027-09-22, Sonnet 5.5 not before 2027-09-28, and Haiku 5.5 not before 2027-10-07. Keep this in mind if you're building a long-lived service.
 - Earlier generations (Fable 5, Opus 5, Opus 4.x, Sonnet 5, Sonnet 4.6, Haiku 4.5) are still available. However, **Sonnet 4.5 (`claude-sonnet-4-5-20250929`) was announced as deprecated on 2026-09-30 and retires on the Claude API on 2026-11-30.** If you're using it, move to Sonnet 5.5 (as of 2026-10-11, per the official release notes and Model deprecations doc). Opus 4.1 has already retired. The models overview also mentions a model called Claude Mythos 5.1, but it isn't in the current model table, so this guide doesn't cover it.
 
 <Aside type="caution" title="Fable is not the default">
@@ -95,7 +95,7 @@ The official docs have no table of which models appear in the Claude app's model
    - Start with **Opus 5.5**.
    - For high-volume, low-latency work, step down to **Haiku 5.5**.
    - When speed and balance matter, use **Sonnet 5.5**.
-   - For hard long-horizon reasoning, or when Opus 5.5 at a high effort level still isn't good enough in your evaluations, use **Fable 5.1**.
+   - For hard long-horizon reasoning, or when Opus 5.5 at a high effort level still isn't good enough in your evaluations, use **Fable 5.2**.
 
 2. **Switch models in the Claude app**
 
@@ -135,7 +135,7 @@ The official docs have no table of which models appear in the Claude app's model
 | Long coding tasks, knowledge work | Opus 5.5 | Described as built for long-running agentic work |
 | Quick drafts, everyday work, response speed matters | Sonnet 5.5 | A balance of speed and intelligence |
 | Thousands of classification, extraction, or routing jobs | Haiku 5.5 | The fastest and cheapest |
-| The hardest reasoning, very long agent tasks | Fable 5.1 | The most powerful, but slow and expensive |
+| The hardest reasoning, very long agent tasks | Fable 5.2 | The most powerful, but slow and expensive |
 
 ### Claude Code aliases and commands
 
