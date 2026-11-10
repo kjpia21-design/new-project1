@@ -45,17 +45,14 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
         <li class:list={['card', { soon: e.data.status === 'draft' }]} data-level={e.data.level} data-category={e.data.category} data-search={[e.data.title, e.data.description, ...(e.data.tools ?? [])].filter(Boolean).join(' ').toLowerCase()}>
           <a href={entryUrl(e.id)}>
             <div class="top">
-              <Illustration name={e.data.category!} size={34} tone="neutral" />
-              <div class="badges">
-                {e.data.level && <LevelBadge level={e.data.level} />}
-                {e.data.status === 'draft' && <span class="soon-tag">{t(lang, 'meta.draft')}</span>}
-              </div>
+              <span class="cat"><Illustration name={e.data.category!} size={26} tone="neutral" bare />{getCategoryLabel(e.data.category!, lang)}</span>
+              {e.data.status === 'draft' && <span class="soon-tag">{t(lang, 'meta.draft')}</span>}
             </div>
             <Heading>{e.data.title}</Heading>
             {e.data.description && <p class="desc">{e.data.description}</p>}
             <p class="foot">
-              <span>{getCategoryLabel(e.data.category!, lang)}</span>
-              {e.data.duration && <span>· {e.data.duration}</span>}
+              {e.data.level && <LevelBadge level={e.data.level} />}
+              {e.data.duration && <span class="dur">{e.data.duration}</span>}
             </p>
           </a>
         </li>
@@ -66,49 +63,67 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
 </div>
 
 <style>
-  .filters { display: grid; gap: 0.6rem; margin-bottom: 1.25rem; padding: 1rem 1.1rem; border: 1px solid var(--ai-line); border-radius: var(--ai-radius); background: var(--ai-surface-2); }
-  .search { display: grid; gap: 0.3rem; }
-  .search label { font-weight: 600; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); }
+  .filters { display: grid; gap: 0.75rem; margin-bottom: 1.5rem; padding: 1.1rem 1.2rem; border: 1px solid var(--ai-line); border-radius: var(--ai-radius-lg); background: var(--ai-surface); box-shadow: var(--ai-shadow); }
+  .search { display: grid; gap: 0.35rem; }
+  .search label { font-weight: 600; font-size: var(--sl-text-xs); color: var(--sl-color-gray-2); }
   .search input {
-    width: 100%; max-width: 28rem; box-sizing: border-box; padding: 0.5rem 0.8rem; font: inherit; font-size: var(--sl-text-sm);
-    border: 1px solid var(--ai-line-strong); border-radius: var(--ai-radius-sm); background: var(--ai-surface); color: var(--sl-color-white);
+    width: 100%; max-width: 30rem; box-sizing: border-box; min-height: 2.75rem; padding: 0.5rem 0.9rem; font: inherit; font-size: var(--sl-text-base);
+    border: 1px solid var(--ai-line-strong); border-radius: 10px; background: var(--sl-color-black); color: var(--sl-color-white);
+    transition: border-color 0.15s, box-shadow 0.15s;
   }
-  .search input::placeholder { color: var(--sl-color-gray-4); }
-  .search input:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 1px; }
-  .group { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; }
-  .group-label { font-weight: 600; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); min-width: 2.5rem; }
+  .search input::placeholder { color: var(--sl-color-gray-3); }
+  .search input:hover { border-color: var(--sl-color-gray-3); }
+  .search input:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 1px; border-color: var(--sl-color-accent); }
+  .group { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
+  .group-label { flex-basis: 100%; font-weight: 600; font-size: var(--sl-text-xs); color: var(--sl-color-gray-2); }
   .group button {
-    border: 1px solid var(--ai-line); background: var(--ai-surface); color: var(--sl-color-gray-2);
-    border-radius: var(--ai-radius-sm); padding: 0.22rem 0.7rem; font: inherit; font-size: var(--sl-text-xs); font-weight: 500; cursor: pointer; line-height: 1.5;
+    border: 1px solid var(--ai-line); background: var(--ai-surface-2); color: var(--sl-color-gray-1);
+    border-radius: 999px; min-height: 2rem; padding: 0.25rem 0.85rem; font: inherit; font-size: var(--sl-text-xs); font-weight: 500; cursor: pointer; line-height: 1.5;
     transition: border-color 0.15s, color 0.15s, background-color 0.15s;
   }
   .group button:hover { border-color: var(--ai-line-strong); color: var(--sl-color-white); }
   .group button[aria-pressed='true'] {
     background: var(--sl-color-white); border-color: var(--sl-color-white); color: var(--sl-color-black); font-weight: 600;
   }
-  .result { margin: 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); }
-  .cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.875rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
-  .card { margin: 0; padding: 0; }
+  .result { margin: 0; padding-top: 0.7rem; border-top: 1px solid var(--ai-line); font-size: var(--sl-text-xs); font-weight: 600; color: var(--sl-color-gray-2); font-variant-numeric: tabular-nums; }
+  .result:empty { display: none; }
+  .cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
+  .card { margin: 0; padding: 0; min-width: 0; }
   .card[hidden] { display: none; }
   .card a {
-    display: flex; flex-direction: column; gap: 0.35rem; height: 100%;
-    padding: 1rem 1.1rem; border-radius: var(--ai-radius-lg); text-decoration: none;
+    display: flex; flex-direction: column; gap: 0.3rem; height: 100%;
+    padding: 0.95rem 1.05rem 0.9rem; border-radius: var(--ai-radius); text-decoration: none;
     border: 1px solid var(--ai-line); background: var(--ai-surface);
-    transition: border-color 0.15s, box-shadow 0.15s;
+    transition: border-color 0.15s, box-shadow 0.2s var(--ai-ease), transform 0.2s var(--ai-ease);
   }
-  .card a:hover { border-color: var(--ai-line-strong); box-shadow: var(--ai-shadow-md); }
-  .card.soon a { opacity: 0.7; }
-  .top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.3rem; }
-  .badges { display: flex; gap: 0.35rem; flex-wrap: wrap; justify-content: flex-end; }
+  .card a:hover { border-color: var(--ai-line-strong); box-shadow: var(--ai-shadow-md); transform: translateY(-1px); }
+  .card a:hover :is(h2, h3) { color: var(--ai-coral-ink); }
+  .card.soon a { opacity: 0.75; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+  .cat { display: inline-flex; align-items: center; gap: 0.4rem; min-width: 0; font-size: var(--sl-text-2xs); font-weight: 600; letter-spacing: 0.01em; color: var(--sl-color-gray-3); }
+  .cat :global(.illu) { color: var(--sl-color-gray-3); }
   .soon-tag {
-    padding: 0.1rem 0.5rem; border-radius: var(--ai-radius-sm); font-size: var(--sl-text-2xs); font-weight: 600; line-height: 1.6;
+    flex: none; padding: 0.1rem 0.5rem; border-radius: 999px; font-size: var(--sl-text-2xs); font-weight: 600; line-height: 1.6;
     background: var(--ai-yellow-bg); color: var(--ai-yellow-fg);
   }
-  h2, h3 { margin: 0.1rem 0 0; font-size: var(--sl-text-base); line-height: 1.4; color: var(--sl-color-white); font-weight: 600; letter-spacing: -0.005em; }
-  .desc { margin: 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-2); line-height: 1.55; }
-  .foot { margin: auto 0 0; padding-top: 0.6rem; font-size: var(--sl-text-2xs); color: var(--sl-color-gray-3); display: flex; gap: 0.3rem; flex-wrap: wrap; }
+  h2, h3 { margin: 0.1rem 0 0; font-size: var(--sl-text-base); line-height: 1.4; color: var(--sl-color-white); font-weight: 650; letter-spacing: -0.01em; overflow-wrap: anywhere; transition: color 0.15s; }
+  /* 설명은 3줄까지만 보여 카드 높이를 고르게 한다(전체 문장은 글에서 볼 수 있다). */
+  .desc { margin: 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-2); line-height: 1.6; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden; }
+  .foot { margin: auto 0 0; padding-top: 0.65rem; font-size: var(--sl-text-2xs); color: var(--sl-color-gray-3); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+  .dur { font-variant-numeric: tabular-nums; }
   .empty { padding: 1rem 1.25rem; border: 1px dashed var(--ai-line-strong); border-radius: var(--ai-radius); color: var(--sl-color-gray-2); font-size: var(--sl-text-sm); margin: 0; }
   .empty[hidden] { display: none; }
+  @media (min-width: 40rem) {
+    .group-label { flex-basis: auto; min-width: 3rem; }
+  }
+  @media (max-width: 39.99rem) {
+    /* 휴대폰: 필터 버튼을 한 줄로 두고 옆으로 밀어 보게 해서 목록이 바로 보이게 한다. */
+    .filters { padding: 1rem; }
+    .group button { flex: none; }
+    .group { min-width: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -1rem; padding-inline: 1rem; scroll-padding-inline: 1rem; padding-block: 2px; }
+    .group::-webkit-scrollbar { display: none; }
+    .group-label { flex: none; flex-basis: auto; min-width: 0; margin-inline-end: 0.2rem; }
+  }
 </style>
 
 <script>

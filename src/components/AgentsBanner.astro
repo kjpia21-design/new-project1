@@ -18,13 +18,14 @@ const lang = getLang(Astro);
   .banner {
     display: flex; align-items: center; gap: 1.1rem; padding: 1.1rem 1.4rem; margin-top: 0.875rem;
     border-radius: var(--ai-radius-lg); text-decoration: none;
-    background: var(--ai-surface-2); border: 1px solid var(--ai-line);
-    transition: border-color 0.15s, background-color 0.15s;
+    background: var(--ai-surface); border: 1px solid var(--ai-line); box-shadow: var(--ai-shadow);
+    transition: border-color 0.15s, box-shadow 0.2s var(--ai-ease), transform 0.2s var(--ai-ease);
   }
-  .banner:hover { border-color: var(--ai-line-strong); background: var(--ai-surface); }
+  .banner:hover { border-color: var(--ai-line-strong); box-shadow: var(--ai-shadow-md); transform: translateY(-1px); }
   .text { flex: 1; min-width: 0; }
   p { margin: 0; }
   .eyebrow { font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--sl-color-gray-3); }
+  .eyebrow:lang(ko) { letter-spacing: 0; }
   .title { margin-top: 0.15rem; font-size: 1.05rem; font-weight: 650; color: var(--sl-color-white); letter-spacing: -0.01em; }
   .desc { margin-top: 0.25rem; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); line-height: 1.55; }
   .go { flex: none; display: inline-flex; align-items: center; gap: 0.3rem; font-size: var(--sl-text-sm); font-weight: 600; color: var(--sl-color-gray-1); }

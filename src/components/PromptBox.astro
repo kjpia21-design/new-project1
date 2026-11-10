@@ -19,26 +19,28 @@ const { label = t(lang, 'prompt.label') } = Astro.props;
     border: 1px solid var(--ai-line);
     border-radius: var(--ai-radius);
     background: var(--ai-surface);
+    box-shadow: var(--ai-shadow);
     overflow: hidden;
   }
   .head {
     display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
-    padding: 0.45rem 0.6rem 0.45rem 1rem;
+    padding: 0.45rem 0.5rem 0.45rem 1rem;
     background: var(--ai-surface-2); border-bottom: 1px solid var(--ai-line);
   }
-  .label { display: inline-flex; align-items: center; gap: 0.45rem; font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--sl-color-gray-3); }
-  .label::before { content: ''; width: 6px; height: 6px; border-radius: 999px; background: var(--ai-coral); }
+  .label { display: inline-flex; align-items: center; gap: 0.5rem; min-width: 0; font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--sl-color-gray-2); overflow-wrap: anywhere; }
+  .label:lang(ko) { letter-spacing: 0; }
+  .label::before { content: ''; flex: none; width: 6px; height: 6px; border-radius: 999px; background: var(--ai-coral); }
   .copy {
     flex: none; display: inline-flex; align-items: center; gap: 0.35rem;
-    border: 1px solid var(--ai-line); border-radius: var(--ai-radius-sm); cursor: pointer;
-    padding: 0.25rem 0.65rem;
+    border: 1px solid var(--ai-line-strong); border-radius: 7px; cursor: pointer;
+    min-height: 2rem; padding: 0.25rem 0.75rem;
     background: var(--ai-surface); color: var(--sl-color-gray-1);
     font: inherit; font-size: var(--sl-text-xs); font-weight: 600; line-height: 1.5;
     transition: border-color 0.15s, color 0.15s, background-color 0.15s;
   }
-  .copy:hover { border-color: var(--ai-line-strong); color: var(--sl-color-white); }
-  .copy:active { background: var(--ai-surface-2); }
-  .body { padding: 0.9rem 1rem; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--sl-color-white); font-size: var(--sl-text-sm); line-height: 1.7; }
+  .copy:hover { border-color: var(--ai-coral-ink); color: var(--ai-coral-ink); }
+  .copy:active { background: var(--ai-coral-soft); }
+  .body { padding: 1rem 1.1rem; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--sl-color-white); font-size: var(--sl-text-sm); line-height: 1.75; }
   .body :global(p) { margin: 0; }
 </style>
 

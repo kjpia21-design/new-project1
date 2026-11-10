@@ -20,33 +20,43 @@ const lang = getLang(Astro);
 <style>
   .hero {
     position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 2rem; align-items: center;
-    padding: 2.5rem 0 1.5rem;
+    padding: 3rem 0 1rem;
   }
   .hero::before {
     content: ''; position: absolute; inset: -1.5rem -1rem 0 -1rem; z-index: -1; pointer-events: none;
     background: radial-gradient(closest-side at 78% 30%, color-mix(in srgb, var(--ai-coral) 13%, transparent), transparent);
   }
-  .kicker { margin: 0 0 1rem; display: inline-flex; align-items: center; gap: 0.5rem; font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ai-coral-ink); }
+  .kicker {
+    margin: 0 0 1.25rem; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0.75rem 0.3rem 0.65rem;
+    border: 1px solid var(--ai-coral-line); border-radius: 999px; background: var(--ai-coral-soft);
+    font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--ai-coral-ink); line-height: 1.5;
+  }
+  .kicker:lang(ko) { letter-spacing: 0; }
   .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--ai-coral); }
-  h1 { margin: 0 0 1rem; font-size: clamp(2.25rem, 5.2vw, 3.5rem); line-height: 1.08; font-weight: 700; letter-spacing: -0.03em; color: var(--sl-color-white); }
-  .lead { margin: 0 0 1.6rem; max-width: 34rem; font-size: var(--sl-text-lg); color: var(--sl-color-gray-2); line-height: 1.65; }
+  h1 { margin: 0 0 1.1rem; font-size: clamp(2.5rem, 5.4vw, 3.75rem); line-height: 1.06; font-weight: 750; letter-spacing: -0.035em; color: var(--sl-color-white); }
+  h1:lang(ko) { line-height: 1.16; letter-spacing: -0.03em; }
+  .lead { margin: 0 0 1.75rem; max-width: 34rem; font-size: var(--sl-text-lg); color: var(--sl-color-gray-2); line-height: 1.65; text-wrap: pretty; }
   .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
   .btn {
-    display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1.1rem; border-radius: var(--ai-radius-sm);
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; min-height: 2.75rem; padding: 0.6rem 1.2rem; border-radius: 10px;
     font-size: var(--sl-text-sm); font-weight: 600; text-decoration: none; line-height: 1.4;
-    border: 1px solid var(--ai-line-strong); color: var(--sl-color-white); background: var(--ai-surface);
-    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+    border: 1px solid var(--ai-line-strong); color: var(--sl-color-white); background: var(--ai-surface); box-shadow: var(--ai-shadow);
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.2s, transform 0.2s var(--ai-ease);
   }
   .btn:hover { border-color: var(--sl-color-gray-3); background: var(--ai-surface-2); }
-  .btn.primary { background: var(--sl-color-accent); border-color: var(--sl-color-accent); color: var(--ai-on-accent); }
+  .btn svg { transition: transform 0.2s var(--ai-ease); }
+  .btn:hover svg { transform: translateX(2px); }
+  .btn.primary { background: var(--sl-color-accent); border-color: var(--sl-color-accent); color: var(--ai-on-accent); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12), 0 6px 16px -6px color-mix(in srgb, var(--sl-color-accent) 60%, transparent); }
   .btn.primary:hover { background: var(--ai-accent-hover); border-color: var(--ai-accent-hover); }
-  .btn.primary:active { background: var(--ai-accent-active); border-color: var(--ai-accent-active); }
+  .btn.primary:active { background: var(--ai-accent-active); border-color: var(--ai-accent-active); transform: translateY(1px); }
   .art { display: flex; justify-content: flex-end; }
   @media (max-width: 720px) {
-    .hero { grid-template-columns: 1fr; gap: 0.5rem; padding-top: 1.25rem; }
-    .art { order: -1; justify-content: flex-start; margin: 0 0 0 -0.25rem; }
-    .art :global(.hero-art) { max-width: 200px; }
-    h1 { font-size: clamp(2rem, 9vw, 2.6rem); }
-    .lead { font-size: var(--sl-text-base); }
+    /* 좁은 화면에서는 장식 그림을 빼고 제목과 버튼이 바로 보이게 한다. */
+    .hero { grid-template-columns: 1fr; gap: 0; padding: 1.5rem 0 0; }
+    .hero::before { background: radial-gradient(closest-side at 85% 12%, color-mix(in srgb, var(--ai-coral) 14%, transparent), transparent); }
+    .art { display: none; }
+    h1 { font-size: clamp(2.125rem, 10vw, 2.75rem); }
+    .lead { font-size: var(--sl-text-base); margin-bottom: 1.4rem; }
+    .btn { flex: 1 1 auto; }
   }
 </style>

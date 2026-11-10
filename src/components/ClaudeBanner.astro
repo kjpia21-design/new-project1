@@ -23,14 +23,15 @@ const claudeCount = (await getTutorials({ category: 'claude', lang })).length;
   .banner {
     position: relative; display: flex; align-items: center; gap: 1.1rem; padding: 1.25rem 1.4rem;
     border-radius: var(--ai-radius-lg); background: var(--ai-surface); border: 1px solid var(--ai-line); box-shadow: var(--ai-shadow);
-    background-image: linear-gradient(100deg, color-mix(in srgb, var(--ai-coral) 7%, transparent), transparent 55%);
-    transition: border-color 0.15s, box-shadow 0.15s;
+    background-image: linear-gradient(100deg, color-mix(in srgb, var(--ai-coral) 9%, transparent), transparent 60%);
+    transition: border-color 0.15s, box-shadow 0.2s var(--ai-ease), transform 0.2s var(--ai-ease);
   }
-  .banner:hover { border-color: var(--ai-line-strong); box-shadow: var(--ai-shadow-md); }
+  .banner:hover { border-color: var(--ai-coral-line); box-shadow: var(--ai-shadow-md); transform: translateY(-1px); }
   .cover { position: absolute; inset: 0; border-radius: var(--ai-radius-lg); }
   .text { flex: 1; min-width: 0; }
   p { margin: 0; }
   .eyebrow { font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ai-coral-ink); }
+  .eyebrow:lang(ko) { letter-spacing: 0; }
   .title { margin-top: 0.15rem; font-size: 1.15rem; font-weight: 650; color: var(--sl-color-white); letter-spacing: -0.01em; }
   .desc { margin-top: 0.25rem; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); line-height: 1.55; }
   .links { position: relative; z-index: 1; flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; pointer-events: none; }

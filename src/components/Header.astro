@@ -36,7 +36,7 @@ const aria = lang === 'en' ? '한국어 페이지로 보기' : 'View this page i
   .lang-toggle {
     display: inline-flex; align-items: center; gap: 0.35rem;
     flex: none;
-    padding: 0.3rem 0.6rem;
+    min-height: 2.25rem; padding: 0.3rem 0.65rem;
     border: 1px solid var(--ai-line);
     border-radius: var(--ai-radius-sm);
     background: var(--sl-color-black);
@@ -48,6 +48,8 @@ const aria = lang === 'en' ? '한국어 페이지로 보기' : 'View this page i
     transition: border-color 0.15s, color 0.15s;
   }
   .lang-toggle svg { color: var(--sl-color-gray-3); }
+  /* 아주 좁은 화면에서는 지구본 아이콘을 빼서 사이트 제목이 잘리지 않게 한다. */
+  @media (max-width: 26rem) { .lang-toggle { padding-inline: 0.55rem; } .lang-toggle svg { display: none; } }
   .lang-toggle:hover { border-color: var(--ai-line-strong); color: var(--sl-color-white); }
   /* 넓은 화면에서는 기본 언어 선택기가 보이므로 숨긴다. */
   @media (min-width: 50rem) {
