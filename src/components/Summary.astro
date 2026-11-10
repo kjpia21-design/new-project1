@@ -15,14 +15,19 @@ const { title = t(lang, 'summary.title') } = Astro.props;
 
 <style>
   .summary {
-    margin: 1.25rem 0 1.75rem; padding: 1rem 1.25rem 1.1rem;
-    border: 1px solid var(--ai-line); border-inline-start: 3px solid var(--ai-coral); border-radius: var(--ai-radius);
-    background: var(--ai-surface);
+    margin: 1.25rem 0 2rem; padding: 1.1rem 1.3rem 1.2rem;
+    border: 1px solid var(--ai-coral-line); border-radius: var(--ai-radius-lg);
+    background: var(--ai-coral-soft);
   }
-  .head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; font-size: var(--sl-text-sm); color: var(--ai-coral-ink); letter-spacing: 0.02em; }
-  .head svg { width: 16px; height: 16px; }
+  .head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; font-size: var(--sl-text-sm); color: var(--ai-coral-ink); letter-spacing: 0.01em; }
+  .head svg { width: 18px; height: 18px; flex: none; }
+  .head strong { font-weight: 700; }
   .body { color: var(--sl-color-gray-1); line-height: 1.7; overflow-wrap: anywhere; font-size: var(--sl-text-base); }
   .body :global(ul), .body :global(ol) { margin: 0; padding-left: 1.2rem; }
-  .body :global(li) { margin: 0.25rem 0; }
+  .body :global(li) { margin: 0.3rem 0; }
+  .body :global(li::marker) { color: var(--ai-coral-ink); }
   .body :global(p) { margin: 0.3rem 0; }
+  .body :global(strong) { color: var(--sl-color-white); font-weight: 650; }
+  .body :global(a) { color: var(--ai-coral-ink); text-underline-offset: 0.2em; }
+  @media (max-width: 40rem) { .summary { padding: 1rem 1.05rem 1.05rem; } .body { font-size: 0.9375rem; } }
 </style>
