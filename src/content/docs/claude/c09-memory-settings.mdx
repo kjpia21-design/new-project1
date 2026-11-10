@@ -8,7 +8,7 @@ category: claude
 tools: ["Claude"]
 duration: "20 min"
 prerequisites: ["A Claude account", "Being able to sign in to claude.ai (web or desktop app)"]
-lastVerified: 2026-11-02
+lastVerified: 2026-11-09
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -63,8 +63,8 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 ### Defaults by plan
 
 - **Free/Pro/Max/Ultra**: On by default.
-- **Team/Enterprise**: The organization Owner has to enable it, and it also starts off for each member. Owners can't view or edit an individual member's memory. If the organization turns it off, everyone's memory is permanently deleted.
-- Not available to organizations with HIPAA, public sector, or custom data retention agreements.
+- **Team/Enterprise**: The organization Owner controls it. In organizations created on or after 2026-10-31 (Pacific Time), memory starts on for each member (unless they turned it off earlier with the same account). Older organizations start with it off, so the Owner has to enable it (as of 2026-11-09). Owners can't view or edit an individual member's memory. If the organization turns it off, everyone's memory is permanently deleted.
+- Memory doesn't start on for HIPAA-enabled organizations, government platforms, or Claude for Teachers (as of 2026-11-09).
 
 <Aside type="note" title="Memory limits aren't published">
 The official memory help (confirmed 2026-10-13) doesn't state a limit on memory size or number of topics; it isn't a value that's officially disclosed. If you're curious, check the Settings > Your Claude screen or contact support. The older "Settings > Capabilities > Memory" screen may remain on some accounts (some Team/Enterprise organizations use the legacy version). If your screen looks different, check the official help for the latest.

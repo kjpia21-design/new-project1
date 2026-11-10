@@ -11,7 +11,7 @@ prerequisites:
   - "A ChatGPT Pro (from $100/month), Business Premium, or Enterprise account where an admin has turned on Dots"
   - "18 or older (for Pro)"
   - "The latest ChatGPT mobile app, the desktop app, or a desktop browser"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-09
 sources:
   - title: "Meet dots (OpenAI developer docs)"
     url: "https://learn.chatgpt.com/docs/dots"
@@ -42,8 +42,8 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 <Summary>
 - **Dots** is an **always-on personal agent** inside ChatGPT. When you create one, it becomes your "dot," and it works on its own cloud computer and browser even when your computer is off.
-- Press reports say it was announced at DevDay on 2026-09-29 (the date comes from press coverage), the official docs describe a **gradual rollout**, and the enterprise admin docs add **Beta** to the setting name.
-- Eligible plans are **ChatGPT Pro** ($100, $200, $500/month), **Business Premium**, and **Enterprise** (off by default, an admin must turn it on). Pro requires **age 18 or older and excludes the EEA, UK, and Switzerland**.
+- Press reports say it was announced at DevDay on 2026-09-29 (the date comes from press coverage), the official docs describe a **gradual rollout**, and the enterprise admin docs call the current period a "preview" (as of 2026-11-09).
+- Eligible plans are **ChatGPT Pro** ($100, $200, $500/month), **Business Premium**, and **Enterprise, Edu, and Healthcare** (during the admin preview an admin must turn it on; starting 2026-11-18 members get access by default unless the workspace opts out; as of 2026-11-09). Pro requires **age 18 or older and excludes the EEA, UK, and Switzerland**.
 - **Korea** isn't on the official list of excluded regions, but we couldn't find an official statement confirming availability in Korea. You'll need to check in the app whether it shows up for your account. We also couldn't get official confirmation of Korean language support for Dots.
 - Actions like sending and payments go through **automatic review**, and you can set "ask, then act" with custom rules. At first, start with "only make drafts, don't send."
 </Summary>
@@ -74,7 +74,7 @@ Boiled down, the official docs say this: use **chat** when you need an answer or
 
 ### Who made it, and when?
 
-It was made by OpenAI, and several outlets reported it was revealed at DevDay on 2026-09-29 (based on press reports). The official docs carry no date and say only that it's "rolling out gradually." The enterprise admin docs label it "Use dots (Beta)." The underlying model, per the official docs, is GPT-6 Astra.
+It was made by OpenAI, and several outlets reported it was revealed at DevDay on 2026-09-29 (based on press reports). The official docs carry no date and say only that it's "rolling out gradually." The enterprise admin guide calls the permission "Use dots" and describes the current period as a "preview" (as of 2026-11-09). The underlying model, per the official docs, is GPT-6 Astra.
 
 ### What it can do
 
@@ -92,7 +92,7 @@ Sources word this differently, so we've summarized them.
 
 | Source | Details |
 | --- | --- |
-| OpenAI developer docs (official) | Pro is 18 or older, **excluding the EEA, UK, and Switzerland**. Business Premium and Enterprise roll out worldwide in phases. Korea isn't mentioned separately. |
+| OpenAI developer docs (official) | Pro is 18 or older, **excluding the EEA, UK, and Switzerland**. Business Premium is available in supported ChatGPT regions, and Enterprise, Edu, and Healthcare are generally available in eligible workspaces (workspaces with UAE data or inference residency are ineligible). Korea isn't mentioned separately. |
 | Korean press reports | Report that it's being rolled out in phases in Korea (based on press reports). |
 | English-language outlet summaries | Say only "applicable markets" apart from the excluded regions and don't mention Korea. |
 
@@ -110,8 +110,8 @@ The official docs have no separate pricing for Dots. It's included in the plans 
 | Plan | Access |
 | --- | --- |
 | Pro 100 / 200 / 500 | 18 or older, excluding the EEA, UK, and Switzerland |
-| Business Premium | Rolling out worldwide in phases |
-| Enterprise | Rolling out worldwide in phases, **off by default**. A workspace admin must turn it on |
+| Business Premium | Available in supported ChatGPT regions, subject to workspace eligibility (as of 2026-11-09) |
+| Enterprise, Edu, Healthcare | Eligible workspaces only (UAE data/inference residency excluded). **Off until an admin turns it on** during the preview; from 2026-11-18 on by default unless the workspace opts out. Billing for enabled dots starts 2026-11-18 (as of 2026-11-09) |
 
 - Pro pricing per OpenAI's official pricing page is **$100, $200, $500**/month (USD). In the in-app purchase list for the ChatGPT app on the Korean App Store, Pro 100 shows as ₩159,000, Pro 200 as ₩299,000, and Pro 500 as ₩790,000 (KRW, as of 2026-10-12; based on the store screen, so it may change).
 - **Conversations with your dot don't count against your ChatGPT usage limits.** But **Work and Codex tasks that the dot starts or manages count against those products' limits.**
@@ -300,7 +300,7 @@ On Enterprise, admins control by role the use of Dots, adding to Slack, local co
 - Official Korean-language guidance on openai.com and the Help Center (automated access is blocked)
 - An official statement confirming availability in Korea, and a help page on supported regions
 - The level of Korean conversation and voice support in Dots
-- Exact support status for Plus, standard Business, and Edu plans
+- Exact support status for Plus and standard Business plans (Edu is now listed in the official docs)
 - Prices in KRW, and whether payment or purchase features exist
 - The exact launch date (not in the official docs)
 

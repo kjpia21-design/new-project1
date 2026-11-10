@@ -11,7 +11,7 @@ prerequisites:
   - "A paid Claude plan (scheduled tasks and routines are on Pro, Max, Ultra, Team, and Enterprise)"
   - "It helps if you've read C13 (cloud session and routine basics)"
   - "One recurring task you want to automate (one you've done by hand at least once)"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-09
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -121,6 +121,8 @@ App scheduled tasks save a prompt in Claude (Cowork) and run it on a set schedul
    **C. Desktop local scheduled tasks.** In Routines on the Code tab, choose New routine > **Local** and set the name, description, instructions, frequency, and working folder. The folder is required. There's an option to use an isolated Git worktree for each run. Each run opens as a new session and you get a notification.
 
    **D. `/loop`.** It repeats while the session is open.
+
+   If you leave out the interval (`/loop check the deploy`), Claude picks the delay itself each time, between 1 minute and 1 hour. Since Claude Code 2.1.319 (2026-11-06), a self-paced loop ends when an iteration finishes without scheduling the next one (set `CLAUDE_CODE_LOOP_KEEPALIVE=1` to keep the old behavior) (as of 2026-11-09).
 
    ```sh
    /loop 5m check if the deployment finished and tell me what happened

@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 유료 플랜 (예약 작업과 루틴은 Pro, Max, Ultra, Team, Enterprise)"
   - "C13(클라우드 세션과 루틴 기본)을 읽어 봤다면 더 수월해요"
   - "자동으로 돌리고 싶은 반복 업무 하나 (한 번은 손으로 해 본 것)"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-09
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -121,6 +121,8 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
    **C. 데스크톱 로컬 예약 작업.** Code 탭의 Routines에서 New routine > **Local**을 골라 이름·설명·지침·주기와 작업 폴더를 정해요. 폴더가 필수예요. 실행마다 격리된 Git worktree를 쓰는 옵션이 있어요. 매 실행이 새 세션으로 열리고 알림이 와요.
 
    **D. `/loop`.** 세션이 열려 있는 동안 반복해요.
+
+   주기를 생략하면(`/loop check the deploy`) Claude가 매번 1분~1시간 사이에서 대기 시간을 직접 정해요. Claude Code 2.1.319(2026-11-06)부터 이렇게 스스로 주기를 정하는 루프는 다음 실행을 예약하지 않고 한 번의 실행이 끝나면 종료돼요(예전 동작을 유지하려면 `CLAUDE_CODE_LOOP_KEEPALIVE=1`을 설정해요)(2026-11-09 기준).
 
    ```sh
    /loop 5m check if the deployment finished and tell me what happened

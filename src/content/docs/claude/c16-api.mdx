@@ -11,7 +11,7 @@ prerequisites:
   - "A Claude Console account (platform.claude.com)"
   - "Billing set up for API use (separate from a Pro/Max/Ultra subscription)"
   - "A terminal, and Python 3.10 or later (for the Python examples)"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-10
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -47,7 +47,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 - The Claude API runs on a **Claude Console (platform.claude.com)** account and an **API key**. Claude Pro/Max/Ultra subscriptions don't include API usage, which is **billed separately**.
 - You create keys in the Console under Settings > API keys. They start with `sk-ant-`, and the full key is shown **only once, when you create it**.
 - If you put the key in the `ANTHROPIC_API_KEY` environment variable, the SDK reads it automatically. **Never write the key directly in your code.**
-- The model IDs are `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5`, and `claude-fable-5-1`.
+- The model IDs are `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5`, and `claude-fable-5-2` (Fable 5.1, `claude-fable-5-1`, is the previous version).
 - Prices per 1M tokens (input/output) are $4/$20 for Opus 5.5 and $2/$10 for Sonnet 5.5 (as of 2026-11-02).
 - If you only swap the model ID in an example, **each model blocks different parameters.** Opus 5.5 can't turn thinking off, and Haiku 5.5 returns a 400 error for `budget_tokens` and sampling parameters. See the quick reference tables for details.
 </Summary>
@@ -217,7 +217,8 @@ Prices are in US dollars. For details, check the [official pricing page](https:/
 
 | Model | Model ID | Input / Output |
 | --- | --- | --- |
-| Fable 5.1 | `claude-fable-5-1` | $10 / $50 |
+| Fable 5.2 | `claude-fable-5-2` | $8 / $40 |
+| Fable 5.1 (previous) | `claude-fable-5-1` | $10 / $50 |
 | Opus 5.5 | `claude-opus-5-5` | $4 / $20 |
 | Sonnet 5.5 | `claude-sonnet-5-5` | $2 / $10 |
 | Haiku 5.5 | `claude-haiku-5-5` | from $0.10 / from $0.50 |
@@ -242,11 +243,11 @@ If you only change `model` in an example, you can hit a 400 error for the reason
 | --- | --- |
 | Opus 5.5 | Sampling parameters (`temperature`, `top_p`, `top_k`) and assistant message prefill also return a 400 error. You can't turn thinking off. `thinking: {"type": "disabled"}` and `{"type": "enabled", ...}` return a 400 error. Leave out the `thinking` field and control depth with `effort`. `tool_choice` of `any` or `tool` also returns a 400 error, so use `auto` and strict tool use. |
 | Sonnet 5.5 | Five settings return a 400 error: thinking budgets (`budget_tokens`), sampling parameters (`temperature`, `top_p`, `top_k`), assistant message prefill, `tool_choice` of `any` or `tool` (use `auto` and strict tool use), and `thinking: {"type": "disabled"}` (to turn off up-front thinking, use `thinking: {"type": "between_tools"}`). |
-| Fable 5.1, Mythos 5.1 | `tool_choice` of `any` or `tool` is not supported and returns a 400 error (`auto` and `none` still work). If you need tool input that matches a schema, use strict tool use. |
+| Fable 5.1, Mythos 5.1 (not re-checked for 5.2) | `tool_choice` of `any` or `tool` is not supported and returns a 400 error (`auto` and `none` still work). If you need tool input that matches a schema, use strict tool use. |
 | Haiku 5.5 | Code written the Haiku 4.5 way may break. `budget_tokens` (manual extended thinking), `temperature`, `top_p`, `top_k`, and assistant message prefill can each cause a 400 error. Adaptive thinking is the default, so the response may start with a `thinking` block, and that text is omitted unless you set `thinking.display` to `"summarized"`. |
 
 - **New API version 2026-10-21 (released 2026-10-21, as of 2026-10-26)**: The new major SDK versions (Python `anthropic` 2.0.0, TypeScript `@anthropic-ai/sdk` 1.0.0, C# 13.0.0, Go 2.0.0, Java 3.0.0, PHP, Ruby, and others) and the `ant` CLI 2.0.0 send `anthropic-version: 2026-10-21` by default. If you call without an SDK, you need to change this header value to `2026-10-21` to get the new behavior; if you keep sending the old `2023-06-01`, you get the old behavior. In the new version, sending `temperature`, `top_p`, or `top_k` returns a 400 error even at default values. `citations` on user messages and `document` blocks inside assistant messages also return a 400 error. The new SDKs send the API key as `Authorization: Bearer`. Before upgrading, follow the checklist in the [official migration docs](https://platform.claude.com/docs/en/api/migration-2026-10-21).
-- **Data retention**: Like Fable 5, Fable 5.1 and Mythos 5.1 **require 30-day data retention**, and **can't be used by ZDR (zero data retention) organizations** unless Anthropic explicitly allows it. If you have a ZDR agreement, check before switching to Fable.
+- **Data retention**: Like Fable 5, Fable 5.1, Fable 5.2, Mythos 5.1 and Mythos 5.2 **require 30-day data retention**, and **can't be used by ZDR (zero data retention) organizations** unless Anthropic explicitly allows it. If you have a ZDR agreement, check before switching to Fable.
 - You can look up which models accept turning thinking off or server tools through the Models API `capabilities` (`thinking.types.disabled`, `server_tools`).
 
 ### Installing the official SDKs

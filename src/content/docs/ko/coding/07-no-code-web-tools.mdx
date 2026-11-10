@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 계정 (아티팩트 기능 사용 가능)"
   - "(선택) Claude Code 설치 — 6편 참고"
   - "만들고 싶은 업무 도구 하나의 계산 규칙 (예: 단가, 할인 규칙)"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-09
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -97,7 +97,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 
 2. **아티팩트로 계산기 만들기**
 
-   Claude 채팅에서 요구사항을 붙여 넣어요. 아티팩트 기능은 설정(Settings) > 기능(Capabilities)의 "Cloud code execution and file creation"이 켜져 있어야 해요(Team·Enterprise는 조직 설정의 Capabilities). 안 보이면 여기를 확인하세요.
+   Claude 채팅에서 요구사항을 붙여 넣어요. 아티팩트 기능은 설정(Settings) > 기능(Capabilities)의 "Cloud code execution and file creation"(새 설정 화면에서는 "Create and edit files"라고 불러요)이 켜져 있어야 해요(Team·Enterprise는 조직 설정의 Capabilities, 2026-11-09 기준). 안 보이면 여기를 확인하세요.
 
    <PromptBox>
    견적 계산기를 만들어 줘. 입력은 품목 이름, 수량, 단가이고 품목은 최대 5줄이야. 계산 규칙은 다음과 같아. (1) 공급가액은 수량x단가의 합계. (2) 공급가액이 1,000,000원 이상이면 5% 할인. (3) 부가세는 할인 후 금액의 10%. (4) 원 단위 미만은 버림. 화면에는 공급가액, 할인액, 부가세, 합계를 따로 보여 주고 숫자에는 천 단위 쉼표를 넣어 줘. 한국어 화면으로 만들어 줘. 만들기 전에 이해한 규칙을 먼저 정리해서 알려 줘.
