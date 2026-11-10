@@ -7,7 +7,7 @@ import NewsItem from '../../components/NewsItem.astro';
 
 This collects Claude updates from Anthropic's official channels, newest first. We picked only what matters to people who actually use Claude, such as model releases, pricing, and new features in Claude Code and the app, and left out minor bug fixes. We keep checking the official channels and updating this page.
 
-**Last updated: 2026-11-10**
+**Last updated: 2026-11-11**
 
 ## Official channels we monitor
 
@@ -18,6 +18,10 @@ This collects Claude updates from Anthropic's official channels, newest first. W
 - [Anthropic News](https://www.anthropic.com/news): policy, partnerships, model announcements
 
 ## November 2026
+
+<NewsItem date="Nov 10" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+Version 2.1.322 adds fast mode when you run Claude Code through Google Cloud Vertex AI, in the global, us, and eu regions. If Vertex refuses a fast request, Claude Code falls back to standard speed. This only matters if your organization connects Claude Code through Vertex AI.
+</NewsItem>
 
 <NewsItem date="Nov 9" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c01-overview/" tutorialLabel="C1 Claude at a glance">
 Claude Fable 5.2 (`claude-fable-5-2`) and Claude Mythos 5.2 (`claude-mythos-5-2`) are out. Both have a 1M-token context window and 128k max output, and cost $8 / $40 per million tokens, down from $10 / $50 for Fable 5.1. Mythos 5.2 is limited to organizations verified through Anthropic's programs. Both require 30-day data retention. Fable 5.2 also gets fast mode on the Claude API (up to 2.5x output speed at $16 / $80). If you call the computer use tool with these models, switch to the `computer_toolset_20260801` toolset.
