@@ -7,7 +7,7 @@ import NewsItem from '../../../components/NewsItem.astro';
 
 Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 모았어요. 모델 출시, 가격, Claude Code와 앱의 새 기능처럼 실제로 쓰는 분에게 의미 있는 것만 골랐고, 사소한 버그 수정은 뺐어요. 공식 채널을 점검해 계속 갱신해요.
 
-**마지막 업데이트: 2026-11-11**
+**마지막 업데이트: 2026-11-13**
 
 ## 모니터링하는 공식 채널
 
@@ -18,6 +18,14 @@ Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 �
 - [Anthropic 뉴스](https://www.anthropic.com/news): 정책, 파트너십, 모델 발표
 
 ## 2026년 11월
+
+<NewsItem date="11월 12일" channel="Claude 앱" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/ko/automation/37-meeting-ai/" tutorialLabel="회의 AI 비교">
+Claude Meetings가 Team·Enterprise 요금제에 베타로 순차 제공돼요(웹의 Claude와 Claude Desktop). Google Meet 회의에 Claude를 눈에 보이는 참가자로 추가하면, 회의록을 쓰고, 누군가 "Claude"라고 부르거나 Meet 채팅에 입력한 질문에 답하고, 회의 중에 문서·화이트보드·슬라이드 같은 아티팩트를 만들어요. 대화 기록(트랜스크립트)과 요약은 저장하지만 음성은 저장하지 않아요. Team은 기본으로 켜져 있고, Enterprise는 소유자가 켜야 쓸 수 있어요. Google Calendar를 연결한 뒤 claude.ai/meetings에서 시작해요. 2026-11-12 기준 공식 페이지에는 Google Meet만 나와 있고, 개인 요금제(Pro·Max·Ultra) 제공 여부, 지원 언어, 제공 지역은 적혀 있지 않아요. 자세한 내용은 [Use Claude Meetings](https://support.claude.com/en/articles/18325154-use-claude-meetings)를 참고하세요.
+</NewsItem>
+
+<NewsItem date="11월 12일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/ko/dev/04-managed-agents/" tutorialLabel="개발자 심화 Managed Agents">
+self-hosted Claude Managed Agents가 신청제로 나왔어요. 지금까지는 샌드박스만 직접 호스팅할 수 있었는데, 이제 Managed Agents 서비스 전체를 내 인프라에서 돌리고 에이전트, 세션, 세션 기록도 거기에 저장할 수 있어요. 모델 요청은 내가 고른 제공자로 보내요. 기본값은 Anthropic이고, Amazon Bedrock, Google Cloud, Microsoft Foundry, 자체 게이트웨이도 고를 수 있어요. 쓰려면 Anthropic 담당 팀(account team)에 요청해야 해요. [self-hosted Managed Agents 문서](https://platform.claude.com/docs/en/managed-agents/self-hosted)를 참고하세요.
+</NewsItem>
 
 <NewsItem date="11월 10일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/ko/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code 핵심 기능">
 2.1.322 버전부터 Google Cloud Vertex AI로 Claude Code를 쓸 때도 빠른 모드를 쓸 수 있어요(global, us, eu 리전). Vertex가 빠른 모드 요청을 거절하면 표준 속도로 바꿔서 이어 가요. 조직에서 Vertex AI로 Claude Code를 연결해 쓰는 경우에만 해당해요.
