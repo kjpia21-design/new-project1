@@ -7,7 +7,7 @@ import NewsItem from '../../components/NewsItem.astro';
 
 This collects Claude updates from Anthropic's official channels, newest first. We picked only what matters to people who actually use Claude, such as model releases, pricing, and new features in Claude Code and the app, and left out minor bug fixes. We keep checking the official channels and updating this page.
 
-**Last updated: 2026-11-10**
+**Last updated: 2026-11-13**
 
 ## Official channels we monitor
 
@@ -18,6 +18,18 @@ This collects Claude updates from Anthropic's official channels, newest first. W
 - [Anthropic News](https://www.anthropic.com/news): policy, partnerships, model announcements
 
 ## November 2026
+
+<NewsItem date="Nov 12" channel="Claude app" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/automation/37-meeting-ai/" tutorialLabel="Comparing meeting AI">
+Claude Meetings is rolling out in beta on Team and Enterprise plans, in Claude on the web and Claude Desktop. You add Claude to a Google Meet call as a visible participant, and it takes notes, answers questions when someone says "Claude" or types in the Meet chat, and builds artifacts such as docs, whiteboards, and slides during the call. It saves a transcript and summary but not the audio. It's on by default on Team and off by default on Enterprise until an owner turns it on, and you start from claude.ai/meetings after connecting Google Calendar. As of 2026-11-12, the official pages mention only Google Meet and don't list individual plans (Pro, Max, Ultra), supported languages, or regional availability. Details are in [Use Claude Meetings](https://support.claude.com/en/articles/18325154-use-claude-meetings).
+</NewsItem>
+
+<NewsItem date="Nov 12" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/dev/04-managed-agents/" tutorialLabel="Developer Deep Dives: Managed Agents">
+Self-hosted Claude Managed Agents is now available on request. Until now you could host only the sandboxes yourself; with this option you run the whole Managed Agents service on your own infrastructure and store agents, sessions, and session history there. Model requests go to the provider you choose, which is Anthropic by default (Amazon Bedrock, Google Cloud, Microsoft Foundry, or your own gateway are the other options). To get access, contact your Anthropic account team. See the [self-hosted Managed Agents docs](https://platform.claude.com/docs/en/managed-agents/self-hosted).
+</NewsItem>
+
+<NewsItem date="Nov 10" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/claude/c14-claude-code-features/" tutorialLabel="C14 Claude Code core features">
+Version 2.1.322 adds fast mode when you run Claude Code through Google Cloud Vertex AI, in the global, us, and eu regions. If Vertex refuses a fast request, Claude Code falls back to standard speed. This only matters if your organization connects Claude Code through Vertex AI.
+</NewsItem>
 
 <NewsItem date="Nov 9" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c01-overview/" tutorialLabel="C1 Claude at a glance">
 Claude Fable 5.2 (`claude-fable-5-2`) and Claude Mythos 5.2 (`claude-mythos-5-2`) are out. Both have a 1M-token context window and 128k max output, and cost $8 / $40 per million tokens, down from $10 / $50 for Fable 5.1. Mythos 5.2 is limited to organizations verified through Anthropic's programs. Both require 30-day data retention. Fable 5.2 also gets fast mode on the Claude API (up to 2.5x output speed at $16 / $80). If you call the computer use tool with these models, switch to the `computer_toolset_20260801` toolset.
