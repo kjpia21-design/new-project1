@@ -21,6 +21,8 @@ sources:
     url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-runner"
   - title: "Handle tool calls"
     url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
+  - title: "Define tools (tool_choice by model)"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools"
   - title: "Strict tool use"
     url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use"
   - title: "Claude Platform release notes (모델별 tool_choice 제한)"
@@ -85,7 +87,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 
 ### 모델별 제한: tool_choice
 
-C16의 "모델별 요청 제한" 표에 있듯이 Opus 5.5, Sonnet 5.5, Fable 5.1은 `tool_choice`의 `{"type": "any"}`와 `{"type": "tool", "name": ...}`가 **400 오류**예요. "반드시 도구를 쓰게 강제"하고 싶다면 이렇게 해요.
+C16의 "모델별 요청 제한" 표에 있듯이 Opus 5.5, Sonnet 5.5, Fable 5.2, Fable 5.1은(공식 도구 문서, 2026-11-16 기준) `tool_choice`의 `{"type": "any"}`와 `{"type": "tool", "name": ...}`가 **400 오류**예요. "반드시 도구를 쓰게 강제"하고 싶다면 이렇게 해요.
 
 - `tool_choice`는 기본값 `auto`로 두고, 프롬프트에 "재고는 반드시 get_stock 도구로 조회해"처럼 적어요.
 - `auto`는 호출을 보장하지 않으니, 응답에 `tool_use`가 없으면 한 번 되묻거나 재시도하는 코드를 두세요.
@@ -418,7 +420,8 @@ C16의 "모델별 요청 제한" 표에 있듯이 Opus 5.5, Sonnet 5.5, Fable 5.
 | --- | --- | --- | --- |
 | Opus 5.5 | 가능 | 가능 | **400 오류** |
 | Sonnet 5.5 | 가능 | 가능 | **400 오류** |
-| Fable 5.1 | 가능 | 가능 | **400 오류** |
+| Fable 5.2 | 가능 | 가능 | **400 오류** |
+| Fable 5.1(이전 버전) | 가능 | 가능 | **400 오류** |
 
 ### 직접 루프 vs tool runner
 

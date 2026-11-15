@@ -11,7 +11,7 @@ prerequisites:
   - "You've finished C16. Getting started with the Claude API (API key, environment variable setup)"
   - "Python 3.10 or later, pip install anthropic"
   - "You've skimmed Dev 2 (cost optimization); this lesson goes deeper on its caching part"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Prompt caching"
     url: "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
@@ -31,7 +31,7 @@ import PromptBox from '../../../components/PromptBox.astro';
 - A cache stores the processed **prefix** of your prompt. The prefix is built in the order `tools`, then `system`, then `messages`, up to and including the block marked with `cache_control`. A hit needs the prefix to be 100 percent identical.
 - Two ways to turn it on: **automatic caching** (one top-level `cache_control` field; the breakpoint follows the last cacheable block as a conversation grows) or **explicit breakpoints** on content blocks (up to 4 per request). Cache writes happen only at a breakpoint.
 - Default lifetime is 5 minutes, refreshed free on every hit and measured from the start of the request. A 1-hour lifetime costs more to write (`"ttl": "1h"`).
-- Prices (as of 2026-11-02): a 5-minute write is 1.25x base input, a 1-hour write is 2x, and a read is 0.1x (0.05x on Claude Opus 5.5 and Claude Sonnet 5.5, 0.025x on Claude Fable 5.1). The docs say a 5-minute cache pays off after one read, a 1-hour cache after two.
+- Prices (as of 2026-11-16): a 5-minute write is 1.25x base input, a 1-hour write is 2x, and a read is 0.1x (0.05x on Claude Opus 5.5 and Claude Sonnet 5.5, 0.025x on Claude Fable 5.2 and Claude Fable 5.1). The docs say a 5-minute cache pays off after one read, a 1-hour cache after two.
 - Minimum cacheable prompt: 512 tokens on Claude Opus 5.5, Sonnet 5.5 and Haiku 5.5 (other models differ). Shorter prompts are processed without caching and **no error is returned**.
 - Check `usage`: `cache_creation_input_tokens` (written), `cache_read_input_tokens` (read), `input_tokens` (only the part after the last breakpoint). Total input is the sum of all three.
 - On 2026-11-02 I read three official pages and ran only the local price calculator and a stub test of the demo script. **I did not call the real API** (no API key, no `anthropic` package), so cache hits are untested here.
@@ -56,11 +56,12 @@ import PromptBox from '../../../components/PromptBox.astro';
 | **Cache read (hit)** | Reusing a stored prefix. It costs a fraction of normal input and refreshes the lifetime. |
 | **Lookback window** | When a breakpoint has no entry, the system checks earlier block positions, at most 20 including the breakpoint, for an entry that an earlier request wrote. |
 
-Prices per million tokens, from the pricing and caching pages (as of 2026-11-02). Always confirm on the [official pricing page](https://platform.claude.com/docs/en/about-claude/pricing):
+Prices per million tokens, from the pricing and caching pages (as of 2026-11-16). Always confirm on the [official pricing page](https://platform.claude.com/docs/en/about-claude/pricing):
 
 | Model | Base input | 5m write | 1h write | Read | Min. length |
 | --- | --- | --- | --- | --- | --- |
-| Claude Fable 5.1 (`claude-fable-5-1`) | $10 | $12.50 | $20 | $0.25 | 512 |
+| Claude Fable 5.2 (`claude-fable-5-2`) | $8 | $10 | $16 | $0.20 | 512 |
+| Claude Fable 5.1 (`claude-fable-5-1`, previous version) | $10 | $12.50 | $20 | $0.25 | 512 |
 | Claude Opus 5.5 (`claude-opus-5-5`) | $4 | $5 | $8 | $0.20 | 512 |
 | Claude Sonnet 5.5 (`claude-sonnet-5-5`) | $2 | $2.50 | $4 | $0.10 | 512 |
 | Claude Haiku 5.5 (`claude-haiku-5-5`), prompt up to 100,000 tokens | $0.10 | $0.125 | $0.20 | $0.01 | 512 |
@@ -239,14 +240,14 @@ Facts come from the official pages listed in the front matter, read on 2026-11-0
 
 ## Quick reference
 
-| Item | Value (official docs, as of 2026-11-02) |
+| Item | Value (official docs, as of 2026-11-16) |
 | --- | --- |
 | Enable | Top-level `"cache_control": {"type": "ephemeral"}` or the same on content blocks |
 | Prefix order | `tools`, `system`, `messages` |
 | Breakpoints | Up to 4 explicit per request; lookback 20 positions per breakpoint |
 | Lifetime | 5 minutes default, refreshed on each hit; 1 hour with `"ttl": "1h"` |
-| Write / read price | 5m 1.25x, 1h 2x, read 0.1x (0.05x on Opus 5.5 and Sonnet 5.5, 0.025x on Fable 5.1) |
-| Minimum length | 512 tokens on Fable 5.1, Opus 5.5, Opus 5, Sonnet 5.5, Haiku 5.5; 1,024 on Sonnet 5 and Opus 4.8; larger for some older models |
+| Write / read price | 5m 1.25x, 1h 2x, read 0.1x (0.05x on Opus 5.5 and Sonnet 5.5, 0.025x on Fable 5.2 and Fable 5.1) |
+| Minimum length | 512 tokens on Fable 5.2, Fable 5.1, Opus 5.5, Opus 5, Sonnet 5.5, Haiku 5.5; 1,024 on Sonnet 5 and Opus 4.8; larger for some older models |
 | Cannot be cached directly | Thinking blocks (they can ride along in earlier assistant turns), sub-content such as citations (cache the top-level document), empty text blocks |
 | Data | Eligible for zero data retention (excludes Covered Models); KV cache and hashes held in memory for the lifetime |
 

@@ -11,7 +11,7 @@ prerequisites:
   - "C16. Claude API 시작하기를 끝낸 상태 (API 키, 환경 변수 설정)"
   - "Python 3.10 이상, pip install anthropic"
   - "개발 2(비용 줄이기)를 훑어본 상태. 이 편은 그 캐싱 부분을 더 깊게 다뤄요"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Prompt caching"
     url: "https://platform.claude.com/docs/en/build-with-claude/prompt-caching"
@@ -31,7 +31,7 @@ import PromptBox from '../../../../components/PromptBox.astro';
 - 캐시는 프롬프트의 처리된 **앞부분(접두사)**을 저장해요. 접두사는 `tools`, `system`, `messages` 순서로 이어지고, `cache_control`을 붙인 블록까지 포함해요. 캐시 히트는 접두사가 100% 똑같아야 해요.
 - 켜는 방법은 두 가지예요. **자동 캐싱**(요청 최상위에 `cache_control` 하나, 대화가 길어지면 브레이크포인트가 마지막 캐시 가능 블록으로 따라가요)과 콘텐츠 블록에 붙이는 **명시 브레이크포인트**(요청당 최대 4개)예요. 캐시 쓰기는 브레이크포인트에서만 일어나요.
 - 기본 수명은 5분이고, 히트할 때마다 무료로 갱신돼요. 수명은 요청이 **시작된 시점**부터 재요. 1시간 수명(`"ttl": "1h"`)은 쓰기 비용이 더 비싸요.
-- 가격(2026-11-02 기준): 5분 쓰기는 기본 입력의 1.25배, 1시간 쓰기는 2배, 읽기는 0.1배예요(Claude Opus 5.5·Sonnet 5.5는 0.05배, Claude Fable 5.1은 0.025배). 문서에 따르면 5분 캐시는 읽기 한 번, 1시간 캐시는 읽기 두 번이면 본전이에요.
+- 가격(2026-11-16 기준): 5분 쓰기는 기본 입력의 1.25배, 1시간 쓰기는 2배, 읽기는 0.1배예요(Claude Opus 5.5·Sonnet 5.5는 0.05배, Claude Fable 5.2·Fable 5.1은 0.025배). 문서에 따르면 5분 캐시는 읽기 한 번, 1시간 캐시는 읽기 두 번이면 본전이에요.
 - 캐시할 수 있는 최소 프롬프트 길이: Claude Opus 5.5, Sonnet 5.5, Haiku 5.5는 512토큰이에요(다른 모델은 달라요). 더 짧으면 캐시 없이 처리되고 **오류도 나오지 않아요**.
 - `usage`를 확인하세요. `cache_creation_input_tokens`(쓴 양), `cache_read_input_tokens`(읽은 양), `input_tokens`(마지막 브레이크포인트 뒤 부분만)이에요. 총 입력은 세 값의 합이에요.
 - 2026-11-02에 공식 페이지 3개를 읽었고, 로컬 가격 계산기와 데모 스크립트의 스텁 테스트만 실행했어요. **실제 API 호출은 하지 못했어요**(API 키와 `anthropic` 패키지가 없었어요). 그래서 캐시 히트는 여기서 확인하지 못했어요.
@@ -56,11 +56,12 @@ import PromptBox from '../../../../components/PromptBox.astro';
 | **캐시 읽기(히트)** | 저장된 접두사를 다시 쓰는 것. 일반 입력의 일부 가격이고 수명을 갱신해요. |
 | **룩백 윈도우** | 브레이크포인트에 항목이 없으면 이전 요청이 쓴 항목을 찾아 앞쪽 블록 위치를 최대 20곳(브레이크포인트 포함) 살펴봐요. |
 
-100만 토큰당 가격이에요. 가격 페이지와 캐싱 페이지 기준(2026-11-02)이고, 항상 [공식 가격 페이지](https://platform.claude.com/docs/en/about-claude/pricing)로 확인하세요.
+100만 토큰당 가격이에요. 가격 페이지와 캐싱 페이지 기준(2026-11-16)이고, 항상 [공식 가격 페이지](https://platform.claude.com/docs/en/about-claude/pricing)로 확인하세요.
 
 | 모델 | 기본 입력 | 5분 쓰기 | 1시간 쓰기 | 읽기 | 최소 길이 |
 | --- | --- | --- | --- | --- | --- |
-| Claude Fable 5.1 (`claude-fable-5-1`) | $10 | $12.50 | $20 | $0.25 | 512 |
+| Claude Fable 5.2 (`claude-fable-5-2`) | $8 | $10 | $16 | $0.20 | 512 |
+| Claude Fable 5.1 (`claude-fable-5-1`, 이전 버전) | $10 | $12.50 | $20 | $0.25 | 512 |
 | Claude Opus 5.5 (`claude-opus-5-5`) | $4 | $5 | $8 | $0.20 | 512 |
 | Claude Sonnet 5.5 (`claude-sonnet-5-5`) | $2 | $2.50 | $4 | $0.10 | 512 |
 | Claude Haiku 5.5 (`claude-haiku-5-5`), 프롬프트 10만 토큰 이하 | $0.10 | $0.125 | $0.20 | $0.01 | 512 |
@@ -239,14 +240,14 @@ import PromptBox from '../../../../components/PromptBox.astro';
 
 ## 한눈에 보기
 
-| 항목 | 값 (공식 문서, 2026-11-02 기준) |
+| 항목 | 값 (공식 문서, 2026-11-16 기준) |
 | --- | --- |
 | 켜기 | 최상위 `"cache_control": {"type": "ephemeral"}` 또는 콘텐츠 블록에 같은 값 |
 | 접두사 순서 | `tools`, `system`, `messages` |
 | 브레이크포인트 | 명시 브레이크포인트 요청당 최대 4개, 브레이크포인트마다 룩백 20곳 |
 | 수명 | 기본 5분(히트할 때마다 갱신), `"ttl": "1h"`면 1시간 |
-| 쓰기·읽기 가격 | 5분 1.25배, 1시간 2배, 읽기 0.1배(Opus 5.5·Sonnet 5.5 0.05배, Fable 5.1 0.025배) |
-| 최소 길이 | Fable 5.1, Opus 5.5, Opus 5, Sonnet 5.5, Haiku 5.5는 512토큰. Sonnet 5와 Opus 4.8은 1,024, 일부 구형 모델은 더 커요 |
+| 쓰기·읽기 가격 | 5분 1.25배, 1시간 2배, 읽기 0.1배(Opus 5.5·Sonnet 5.5 0.05배, Fable 5.2·Fable 5.1 0.025배) |
+| 최소 길이 | Fable 5.2, Fable 5.1, Opus 5.5, Opus 5, Sonnet 5.5, Haiku 5.5는 512토큰. Sonnet 5와 Opus 4.8은 1,024, 일부 구형 모델은 더 커요 |
 | 직접 캐시할 수 없는 것 | thinking 블록(이전 assistant 턴에 실려서는 캐시돼요), 인용 같은 하위 콘텐츠(최상위 문서 블록을 캐시하세요), 빈 text 블록 |
 | 데이터 | 데이터 제로 보존(ZDR) 대상(Covered Models 제외). KV 캐시와 해시는 수명 동안 메모리에만 있어요 |
 

@@ -11,7 +11,7 @@ prerequisites:
   - "You've finished C16. Getting started with the Claude API (API key, environment variable setup)"
   - "Python 3.10 or later, pip, and a terminal"
   - "A few practice documents you're allowed to ask questions about (PDF, .txt, or .md)"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Files API"
     url: "https://platform.claude.com/docs/en/build-with-claude/files"
@@ -433,7 +433,7 @@ The location format of a citation depends on the document type.
 
 ## Long context vs. RAG: which should you choose?
 
-The context window of current models (Opus 5.5, Sonnet 5.5, Haiku 5.5, Fable 5.1) is 1M tokens (models overview, as of 2026-10-11). With the current tokenizer, 1M tokens is roughly 550,000 words in English (Korean differs). For PDFs, the limits are up to 600 pages per request (100 pages if the request's context window is smaller than 1M tokens) and a 128MB request size on the first-party Claude API (it varies by platform; raised from 32MB on 2026-10-28; PDF support docs, as of 2026-11-02). The decision criteria below are this article's own summary, not figures set by the official docs.
+The context window of current models (Opus 5.5, Sonnet 5.5, Haiku 5.5, Fable 5.2) is 1M tokens (models overview, as of 2026-11-16). With the current tokenizer, 1M tokens is roughly 550,000 words in English (Korean differs). For PDFs, the limits are up to 600 pages per request (100 pages if the request's context window is smaller than 1M tokens) and a 128MB request size on the first-party Claude API (it varies by platform; raised from 32MB on 2026-10-28; PDF support docs, as of 2026-11-02). The decision criteria below are this article's own summary, not figures set by the official docs.
 
 | Situation | Recommendation | Why |
 | --- | --- | --- |
@@ -467,7 +467,7 @@ The cache lasts 5 minutes by default, so if the gap between questions exceeds 5 
 From the moment you send a document through the API, the data leaves your computer. Decide the following before you start.
 
 - **The Files API is not eligible for ZDR.** In the feature table of the data retention docs, the Files API is "No" for both ZDR and HIPAA. Files are kept until you delete them or they expire. By contrast, citations, search results, and putting a PDF directly into the request are ZDR-eligible (except for Covered Models). If you have a ZDR contract, consider putting documents directly into the request instead of using the Files API, and check the scope of your contract with Anthropic and your internal security and legal teams.
-- **Covered Models require 30-day retention.** As you saw in C16, Fable 5.1 requires 30-day data retention and can't be used in ZDR organizations. This article's default model, Opus 5.5, isn't on that list (as of 2026-10-11). Before you change models, re-check the [per-model request restrictions and data retention in C16](/claude/c16-api/) section.
+- **Covered Models require 30-day retention.** As you saw in C16, Fable 5.2 (like Fable 5.1 before it) requires 30-day data retention and can't be used in ZDR organizations. This article's default model, Opus 5.5, isn't on that list (as of 2026-11-16). Before you change models, re-check the [per-model request restrictions and data retention in C16](/claude/c16-api/) section.
 - **The whole workspace can access files.** Every key in the same workspace can use every file. Split documents that must stay separate (departments, client companies) into different workspaces and use only the matching keys. For a multi-tenant service, the official recommendation is to create a workspace per tenant (up to 100 per organization).
 - **Don't accept a `file_id` sent by users.** If a user enters someone else's `file_id`, they can read that document. Handle `file_id`s only on the server, and have your app manage "who can see which documents" (the `registry.json` in this article is the minimal form of that role).
 - **Cut it down before uploading.** Remove or mask personal information such as national ID numbers and bank account numbers, and any parts not needed for this question, before you upload.

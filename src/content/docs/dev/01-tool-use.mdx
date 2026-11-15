@@ -21,6 +21,8 @@ sources:
     url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-runner"
   - title: "Handle tool calls"
     url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/handle-tool-calls"
+  - title: "Define tools (tool_choice by model)"
+    url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools"
   - title: "Strict tool use"
     url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/strict-tool-use"
   - title: "Claude Platform release notes (tool_choice limits by model)"
@@ -85,7 +87,7 @@ Tool definitions, `tool_use` blocks, `tool_result` blocks, and the system prompt
 
 ### Model-specific limit: tool_choice
 
-As the "request limits by model" table in C16 shows, for Opus 5.5, Sonnet 5.5, and Fable 5.1, `tool_choice` set to `{"type": "any"}` or `{"type": "tool", "name": ...}` returns a **400 error**. If you want to "force the model to use a tool," do this instead.
+As the "request limits by model" table in C16 shows, for Opus 5.5, Sonnet 5.5, Fable 5.2, and Fable 5.1 (official tool docs, as of 2026-11-16), `tool_choice` set to `{"type": "any"}` or `{"type": "tool", "name": ...}` returns a **400 error**. If you want to "force the model to use a tool," do this instead.
 
 - Leave `tool_choice` at the default `auto`, and write something like "Always look up stock with the get_stock tool" in the prompt.
 - `auto` doesn't guarantee a call, so add code that asks again or retries once if the response has no `tool_use`.
@@ -418,7 +420,8 @@ The bot we'll build is a read-only bot that looks up internal **inventory** and 
 | --- | --- | --- | --- |
 | Opus 5.5 | Supported | Supported | **400 error** |
 | Sonnet 5.5 | Supported | Supported | **400 error** |
-| Fable 5.1 | Supported | Supported | **400 error** |
+| Fable 5.2 | Supported | Supported | **400 error** |
+| Fable 5.1 (previous) | Supported | Supported | **400 error** |
 
 ### Manual loop vs. tool runner
 

@@ -11,7 +11,7 @@ prerequisites:
   - "C16. Claude API 시작하기를 끝낸 상태 (API 키, 환경 변수 설정)"
   - "Python 3.10 이상, pip install anthropic"
   - "개발 2(비용 기초)와 개발 15(스트리밍)를 읽은 상태"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Thinking"
     url: "https://platform.claude.com/docs/en/build-with-claude/thinking"
@@ -173,7 +173,7 @@ thinking 블록에서 읽는 내용은 **날것의 사고 과정이 아니에요
 
    - **스트리밍**([개발 15](/ko/dev/15-streaming/)): thinking 블록은 `thinking_delta` 이벤트로 오고, 블록이 끝나기 직전에 `signature_delta` 하나가 와요. `display: "omitted"`이면 각 thinking 블록이 빈 문자열의 `thinking_delta`를 보낸 뒤 서명을 보내요. 문서는 `max_tokens`가 21,333보다 크면 SDK가 스트리밍을 요구한다고도 해요. HTTP 타임아웃을 피하려는 클라이언트 쪽 검사예요. 이벤트가 필요 없으면 SDK의 `.stream()`으로 받고 최종 메시지만 가져오면 돼요.
    - **도구**: 도구 사용 턴 안에서는 어시스턴트의 thinking 블록을 `tool_use` 블록과 함께 **완전하고 수정하지 않은 채** 되돌려 보내야 해요. 수정된 블록은 400 오류로 거부돼요. 블록을 type으로 거를 때는 `redacted_thinking` 블록도 남기세요. 이전 턴의 thinking이 문맥에 남는지는 모델마다 달라요. API가 알아서 걸러 주므로 전부 되돌려 보내라는 것이 문서의 권장이에요. 도구 사용 턴 중간에 thinking을 켜고 끄지 마세요. 문서에 따르면 API가 그 요청에서 thinking을 조용히 꺼요.
-   - **강제 도구 사용**: 적응형 사고에서는 `tool_choice`의 `any`나 이름 지정이 가능해요. 단 Opus 5.5, Sonnet 5.5, Fable 5.1, Mythos 5.1은 400 오류로 거부해요. 그 모델들은 `auto`와 엄격한 도구 사용 또는 구조화 출력을 쓰세요.
+   - **강제 도구 사용**: 적응형 사고에서는 `tool_choice`의 `any`나 이름 지정이 가능해요. 단 Opus 5.5, Sonnet 5.5, Fable 5.2, Mythos 5.2, Fable 5.1, Mythos 5.1은 400 오류로 거부해요. 그 모델들은 `auto`와 엄격한 도구 사용 또는 구조화 출력을 쓰세요.
    - **캐싱**([개발 2](/ko/dev/02-cost-optimization/)): thinking 모드 전환, `budget_tokens` 변경, 최상위 effort 변경은 새 캐시 접두사를 시작해요. 메시지 단위 지점은 항상 놓쳐요. 캐시를 쓰는 대화 하나에는 설정 하나만 쓰세요. 생각이 많은 작업에는 1시간 캐시 지속 시간도 문서가 권해요.
    - **배치**([개발 16](/ko/dev/16-batch-api/)): 개발 16은 공식 배치 페이지가 확장 사고를 배치 가능 기능으로 든다고 적었어요. 이번에는 그 페이지를 다시 열지 않았어요. Thinking 페이지 자체는 레거시 예산이 32k를 넘을 때만 배치를 권해요.
 

@@ -11,7 +11,7 @@ prerequisites:
   - "You've finished C16. Getting started with the Claude API (API key, environment variable setup)"
   - "Python 3.10 or later, pip install anthropic"
   - "You've read Dev 2 (cost basics) and Dev 15 (streaming)"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Thinking"
     url: "https://platform.claude.com/docs/en/build-with-claude/thinking"
@@ -173,7 +173,7 @@ Older articles, blog posts, and sample code use `budget_tokens`. The current doc
 
    - **Streaming** ([Dev 15](/dev/15-streaming/)): thinking blocks arrive as `thinking_delta` events, then one `signature_delta` just before the block ends. With `display: "omitted"` each thinking block sends a `thinking_delta` with an empty string, then its signature. The docs also say the SDK requires streaming when `max_tokens` is greater than 21,333, a client-side check to avoid HTTP timeouts. You can call the SDK's `.stream()` and take the final message if you do not need events.
    - **Tools**: within a tool-use turn you must pass the assistant's thinking blocks back **complete and unmodified**, next to the `tool_use` block; modified blocks are rejected with a 400 error. If you filter blocks by type, also keep `redacted_thinking` blocks. Whether older turns' thinking stays in context depends on the model; the API filters it for you, so passing everything back is the docs' recommendation. Do not switch thinking on or off in the middle of a tool-use turn; the docs say the API silently disables thinking for that request.
-   - **Forced tool use**: adaptive thinking allows `tool_choice` of `any` or a named tool, except on Opus 5.5, Sonnet 5.5, Fable 5.1, and Mythos 5.1, which reject it with a 400 error. Use `auto` with strict tool use or structured outputs there.
+   - **Forced tool use**: adaptive thinking allows `tool_choice` of `any` or a named tool, except on Opus 5.5, Sonnet 5.5, Fable 5.2, Mythos 5.2, Fable 5.1, and Mythos 5.1, which reject it with a 400 error. Use `auto` with strict tool use or structured outputs there.
    - **Caching** ([Dev 2](/dev/02-cost-optimization/)): switching thinking modes, changing `budget_tokens`, or changing top-level effort starts a new cache prefix, and message-level breakpoints always miss. Pick one setting per cached conversation. The docs also suggest the 1-hour cache duration for thinking-heavy work.
    - **Batches** ([Dev 16](/dev/16-batch-api/)): Dev 16 reports that the official batch page lists extended thinking among the batchable features. We did not reopen that page for this tutorial, and the Thinking page itself only recommends batches for legacy budgets above 32k.
 
