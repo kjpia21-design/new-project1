@@ -11,7 +11,7 @@ prerequisites:
   - "One of: Premium, Super, or Ultra of The X Subscription; (legacy) a paid individual Cursor plan or Teams; or a SuperGrok-tier or X Premium+ subscription"
   - "One app or website account for the Bot to work in (at first, summarizing a document is fine)"
   - "A macOS, Windows, or Linux computer, or an iPhone or Android phone"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 sources:
   - title: "Introducing Grok Bot (xAI, 2026-08-11)"
     url: "https://x.ai/news/introducing-grok-bot"
@@ -29,10 +29,14 @@ sources:
     url: "https://docs.x.ai/grok-bot/skills-routines-and-automations"
   - title: "Grok Bot docs: Tag @bot on X"
     url: "https://docs.x.ai/grok-bot/tag-on-x"
-  - title: "Plans and billing (Cursor Help)"
-    url: "https://cursor.com/help/grok-bot/plans"
+  - title: "Plans and billing (Grok Help; moved from Cursor Help)"
+    url: "https://grok.com/help/grok-bot/plans"
+  - title: "Grok Bot docs: FAQ"
+    url: "https://docs.x.ai/grok-bot/faq"
   - title: "Models & Pricing (Cursor docs)"
     url: "https://cursor.com/docs/account/pricing"
+  - title: "Legacy Cursor plans (Cursor docs)"
+    url: "https://cursor.com/docs/account/pricing/legacy-cursor-plans"
   - title: "Security (Cursor)"
     url: "https://cursor.com/security"
   - title: "Grok Bot app (App Store, Korea)"
@@ -126,7 +130,8 @@ Rules to know:
 - A Cursor plan and a SuperGrok link **don't add together.** If you have both, whichever gives more usage applies.
 - Once you link SuperGrok or X Premium+, **you can't unlink it or move it to a different Cursor account.** Make sure you're signed in to the right Cursor account before linking.
 - The free trial is **credit**-based, not based on number of days (a 7-day window also applies). A large task can use it all at once.
-- Per Cursor's official docs (Models & Pricing), Pro is $20/month, Pro Plus is $60/month, Ultra is $200/month, and Teams is $40/user/month for Standard and $120/user/month for Premium (US dollars, as of 2026-10-13). They say only that Grok Bot weekly usage increases in the order Pro < Pro+ < Ultra, and don't officially disclose specific figures. We haven't listed SuperGrok prices because the x.ai pricing page blocks automated access and we couldn't check.
+- Per Cursor's official docs (Models & Pricing), The X Subscription is $30/month for Premium, $100/month for Super, and $200/month for Ultra, and team seats cost $30, $100, or $200 per seat per month (US dollars, excluding tax, as of 2026-11-16). Plus ($8/month) and Free don't include Grok Bot.
+- The legacy Cursor plans are Pro at $20/month, Pro+ at $60/month, Ultra at $200/month, and Teams at $40/user/month for Standard and $120/user/month for Premium (US dollars, per the Legacy Cursor plans page, as of 2026-11-16). They say only that Grok Bot weekly usage increases in the order Pro < Pro+ < Ultra, and don't officially disclose specific figures. We haven't listed SuperGrok prices because the x.ai pricing page blocks automated access and we couldn't check.
 
 ### Can I use it in Korea? What about Korean?
 
@@ -263,7 +268,7 @@ If you tag `@bot` in an X post or reply, your main Bot takes that post as a task
 | File attachments | Up to 25 MB, video 200 MB, 6 at a time on desktop |
 | Routines | Up to 50 per Bot, minimum interval 5 minutes, last 20 run records kept |
 | Teach a task (learning by demonstration) | Gradual rollout, recordings up to 10 minutes, the microphone isn't recorded |
-| Approval expiry | Approvals started from routines, triggers, or other Bots expire after about 10 minutes |
+| Approval expiry | Approval cards raised by a routine, an incoming message, or other background work expire after 30 minutes (as of 2026-11-16) |
 
 ### Options on the approval card
 
@@ -296,8 +301,9 @@ Files, browser logins, and command-line credentials are shared with all Bots. Th
 ### Payments and purchases
 
 - The official announcement includes a case of building a website and **buying a domain and deploying it**. That means purchases are possible.
-- On the other hand, in the docs we checked this time, **we couldn't find a Bot-specific payment method or a feature for setting a spending cap.** Don't assume one exists.
-- Payment confirmation is designed so you handle it yourself at the **takeover** step, where the Bot hands over control of the computer. Don't send card numbers in chat.
+- The official docs describe saving a card in the Bot's **Vault** (as of 2026-11-16). **A saved card fills in at checkout without a separate approval each time**, and in chats in the Grok Bot app the Bot can see the saved card's number and security code. If you want to approve every payment, don't save the card: leave **Securely save to Bot's vault** unchecked when you enter it in a Secure Form, or remove it in Settings → Vault.
+- **We still couldn't find a feature for setting a spending cap** in the docs. Don't assume one exists.
+- Steps a form can't handle, such as a bank card verification, are designed so you do them yourself at the **takeover** step, where the Bot hands over control of the computer. Don't send card numbers in chat.
 - For purchases, financial transfers, deletions, permission changes, production environment changes, and agreeing to terms, state **"ask first"** explicitly in your request. This is the official recommendation.
 - Approval only controls actions that are about to happen and **can't undo what's already done.** Read the target, scope, and amount on the confirmation screen, and don't approve if you don't understand it.
 - For money-related work like customer refunds, spell out the policy scope in a sentence and have it only draft at first.
@@ -306,7 +312,7 @@ Files, browser logins, and command-line credentials are shared with all Bots. Th
 
 - Start with read-only and drafting. Let it send, post, buy, and delete only after approval.
 - **Auto Review** is a model-based check, so it's not perfect. The docs also say it doesn't replace least privilege and explicit approval. Avoid broad rules like "allow everything in the browser" and keep them narrow (for example, "always ask first before sending outside email").
-- Approvals started by routines or other Bots expire after about 10 minutes and won't run. If you missed one, have the Bot try again.
+- Approvals started by routines or other background work expire after 30 minutes and won't run (as of 2026-11-16). If you missed one, have the Bot try again.
 - Log out of services you don't use, and revoke permissions for connected apps at the source service.
 - If you can create an account with limited scope on the service side (a service account), use that. A Bot works with only the permissions of the person logged in.
 

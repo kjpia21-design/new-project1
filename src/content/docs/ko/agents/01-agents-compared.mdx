@@ -9,7 +9,7 @@ tools: ["Meta Muse", "Grok Bot", "ChatGPT Dots", "Claude"]
 duration: "20분"
 prerequisites:
   - "AI 채팅(ChatGPT, Claude 등)을 한 번이라도 써 본 경험"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 sources:
   - title: "Introducing Muse (Meta Newsroom, 2026-09-08)"
     url: "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/"
@@ -17,14 +17,20 @@ sources:
     url: "https://muse.ai"
   - title: "About Muse subscriptions (Meta Help Center)"
     url: "https://www.meta.com/help/subscriptions/1021145227643680/"
+  - title: "Muse 일본 출시 (Meta Newsroom 일본, 2026-10-23)"
+    url: "https://about.fb.com/ja/news/2026/10/muse-personal-ai-agent-launches-in-japan/"
   - title: "Introducing Grok Bot (xAI, 2026-08-11)"
     url: "https://x.ai/news/introducing-grok-bot"
   - title: "Grok Bot 문서: Overview (docs.x.ai)"
     url: "https://docs.x.ai/grok-bot/overview"
-  - title: "Plans and billing (Cursor 도움말)"
-    url: "https://cursor.com/help/grok-bot/plans"
+  - title: "Plans and billing (Grok 도움말, Cursor 도움말에서 이동)"
+    url: "https://grok.com/help/grok-bot/plans"
+  - title: "Grok Bot 문서: FAQ"
+    url: "https://docs.x.ai/grok-bot/faq"
   - title: "Models & Pricing (Cursor 문서)"
     url: "https://cursor.com/docs/account/pricing"
+  - title: "Legacy Cursor plans (Cursor 문서)"
+    url: "https://cursor.com/docs/account/pricing/legacy-cursor-plans"
   - title: "Grok Bot 앱 (App Store, 한국)"
     url: "https://apps.apple.com/kr/app/grok-bot/id6794501026"
   - title: "Meet dots (OpenAI 개발자 문서)"
@@ -63,7 +69,7 @@ import Checklist from '../../../../components/Checklist.astro';
 <Summary>
 - **개인 AI 에이전트**는 질문에 답하는 데서 끝나지 않고, 목표를 받으면 **계획을 세워 내 서비스에서 직접 일을 하고, 앱을 닫아도 이어서 일하는** AI예요.
 - 한국 사용자 기준으로 지금 확실한 건 **Claude**뿐이에요. Anthropic의 제공 국가 목록에 한국이 있어요.
-- **Muse**는 공식적으로 미국, 캐나다, 싱가포르에서만 제공돼요(2026-11-02 기준). 한국 출시 일정은 공식 발표가 없어요. 우회 가입은 권하지 않아요.
+- **Muse**는 공식적으로 미국, 캐나다, 일본, 싱가포르에서만 제공돼요(2026-11-16 기준). 한국 출시 일정은 공식 발표가 없어요. 우회 가입은 권하지 않아요.
 - **Grok Bot**은 한국 App Store와 Google Play에 등록돼 있어요. 다만 요금은 Cursor 또는 SuperGrok 같은 구독에 묶여 있어서 한국에서 가입이 되는지는 직접 확인해야 해요.
 - **Dots**는 ChatGPT Pro 이상 요금제(월 $100부터)에서 쓰는 기능이에요. 한국이 제외 지역 목록에는 없지만 "한국 제공 확정"이라는 공식 문장은 못 찾았어요.
 - 표의 모든 칸에 **확인 수준**을 표시했어요. 공식 페이지를 직접 읽은 내용만 단정적으로 썼어요.
@@ -121,15 +127,15 @@ import Checklist from '../../../../components/Checklist.astro';
 | 항목 | Meta Muse | Grok Bot | ChatGPT Dots | Claude |
 | --- | --- | --- | --- | --- |
 | 만든 곳 | Meta [공식] | xAI (운영·청구는 Cursor 계정) [공식] | OpenAI [공식] | Anthropic [공식] |
-| 출시 | 2026-09-08, 미국 롤아웃 [공식] | 2026-08-11 베타 [공식] | 2026-09-29 DevDay 발표 (보도 기준), 공식 문서는 날짜 없이 "점진적 롤아웃", 기업 관리자 문서는 현재 기간을 "프리뷰"로 안내(2026-11-09 기준) [부분] | Cowork·루틴·컴퓨터 사용 등 기능별로 다름. 컴퓨터 사용과 Chrome 사이드 패널은 베타, 루틴은 리서치 프리뷰 [공식] |
-| 플랫폼 | iOS, Android, 웹, Mac 앱, WhatsApp 대화. AI 글라스는 예정 [공식] | macOS·Windows·Linux 데스크톱, iOS 18+, Android 9+ (2026-10-07 문서 기준) [공식] | ChatGPT 모바일 앱, 데스크톱 앱, 데스크톱 브라우저. 모바일 웹은 불가. Slack·Teams로도 대화 [공식] | 웹, 데스크톱(macOS·Windows), iOS·Android 앱. Cowork·컴퓨터 사용은 데스크톱 앱 중심 [공식] |
-| 요금 | 사용량 한도가 있는 무료. 유료 Power 월 $20, Maximum 월 $100 (미국 달러, 지역·계정마다 다를 수 있음. Meta 도움말센터 본문 확인) [공식] | 별도 구독 없음. The X Subscription의 Premium·Super·Ultra에 포함(2026-10-19 기준), 또는 기존 Cursor Pro·Pro+·Ultra·Teams에 포함되거나 SuperGrok·X Premium+ 연결. Cursor Pro 월 $20, Pro+ 월 $60, Ultra 월 $200, Teams 사용자당 월 $40(Premium 좌석 $120). 한국 App Store 앱 내 구입에는 Pro ₩44,000, Pro+ ₩129,000, Ultra ₩449,000이 표시돼요. SuperGrok·X Premium+ 금액은 x.ai 가격 페이지가 막혀 [미확인] [공식] | 별도 요금 없음. ChatGPT Pro(월 $100·$200·$500. 한국 App Store에는 ₩159,000·₩299,000·₩790,000으로 표시), Business Premium, Enterprise에 포함. Plus·Free는 문서에 언급 없음 [공식] | Free는 Cowork·Code 없음. Pro 월 $20(연간 결제 시 월 $17), Max 월 $100부터. 컴퓨터 사용은 Pro·Max만 [공식] |
+| 출시 | 2026-09-08, 미국 롤아웃 [공식] | 2026-08-11 베타 [공식] | 2026-09-29 DevDay 발표 (보도 기준), 공식 문서는 날짜 없이 "점진적 롤아웃", 기업 관리자 문서는 현재 기간을 "프리뷰"로 안내(2026-11-09 기준) [부분] | Cowork·루틴·컴퓨터 사용 등 기능별로 다름. 컴퓨터 사용은 베타, 루틴은 리서치 프리뷰. Claude in Chrome은 도움말에 베타 표기가 없고, Cowork 기반 사이드 패널이 순차 제공 중이에요(2026-11-16 기준) [공식] |
+| 플랫폼 | iOS, Android, 웹, Mac 앱, WhatsApp 대화. AI 글라스는 예정 [공식] | macOS·Windows·Linux 데스크톱, iOS 18+, Android 9+ (2026-10-07 문서 기준) [공식] | ChatGPT 모바일 앱, 데스크톱 앱, 데스크톱 브라우저. 모바일 웹은 불가. Slack·Teams로도 대화 [공식] | 웹, 데스크톱(macOS·Windows, Linux는 베타, 2026-11-16 기준), iOS·Android 앱. Cowork·컴퓨터 사용은 데스크톱 앱 중심 [공식] |
+| 요금 | 사용량 한도가 있는 무료. 유료 Power 월 $20, Maximum 월 $100 (미국 달러, 지역·계정마다 다를 수 있음. Meta 도움말센터 본문 확인) [공식] | 별도 구독 없음. The X Subscription의 Premium·Super·Ultra에 포함(2026-10-19 기준), 또는 기존 Cursor Pro·Pro+·Ultra·Teams에 포함되거나 SuperGrok·X Premium+ 연결. The X Subscription은 Premium 월 $30, Super 월 $100, Ultra 월 $200(2026-11-16 기준). 기존(legacy) Cursor Pro 월 $20, Pro+ 월 $60, Ultra 월 $200, Teams 사용자당 월 $40(Premium 좌석 $120). 한국 App Store 앱 내 구입에는 Pro ₩44,000, Pro+ ₩129,000, Ultra ₩449,000이 표시돼요. SuperGrok·X Premium+ 금액은 x.ai 가격 페이지가 막혀 [미확인] [공식] | 별도 요금 없음. ChatGPT Pro(월 $100·$200·$500. 한국 App Store에는 ₩159,000·₩299,000·₩790,000으로 표시), Business Premium, Enterprise에 포함. Plus·Free는 문서에 언급 없음 [공식] | Free는 Cowork·Code 없음. Pro 월 $20(연간 결제 시 월 $17), Max 월 $100, Ultra 월 $200. 컴퓨터 사용은 Pro·Max·Ultra만(2026-11-16 기준) [공식] |
 
 ### 한국 사용자에게 가장 중요한 두 줄
 
 | 항목 | Meta Muse | Grok Bot | ChatGPT Dots | Claude |
 | --- | --- | --- | --- | --- |
-| **한국 제공** | **아니요.** 공식 제공 지역은 미국, 캐나다, 싱가포르(2026-11-02 기준). 한국은 어느 공식 페이지에도 없고 출시 일정 발표도 없어요 [공식] | **앱은 가능.** 한국 App Store와 Google Play에 등록돼 있어요. 한국 App Store에서 Cursor Pro·Pro+·Ultra 앱 내 구입이 원화로 표시돼요. SuperGrok·X Premium+ 구독이 한국에서 되는지는 [미확인]. @bot 태그는 일부 지역 제외지만 한국은 제외 목록에 없어요 [공식] | **제외 지역이 아님.** Pro 기준 제외는 EEA·영국·스위스이고 한국은 목록에 없어요. 다만 "한국 제공 확정" 공식 문장은 못 찾았고, 롤아웃이 점진적이라 계정마다 달라요. 국내 보도는 순차 제공으로 전해요 [부분] | **예.** Anthropic 제공 국가·지역 목록에 South Korea가 있어요. Cowork 등 개별 기능의 지역 제한은 [미확인] [공식] |
+| **한국 제공** | **아니요.** 공식 제공 지역은 미국, 캐나다, 일본, 싱가포르(2026-11-16 기준). 한국은 어느 공식 페이지에도 없고 출시 일정 발표도 없어요 [공식] | **앱은 가능.** 한국 App Store와 Google Play에 등록돼 있어요. 한국 App Store에서 Cursor Pro·Pro+·Ultra 앱 내 구입이 원화로 표시돼요. SuperGrok·X Premium+ 구독이 한국에서 되는지는 [미확인]. @bot 태그는 일부 지역 제외지만 한국은 제외 목록에 없어요 [공식] | **제외 지역이 아님.** Pro 기준 제외는 EEA·영국·스위스이고 한국은 목록에 없어요. 다만 "한국 제공 확정" 공식 문장은 못 찾았고, 롤아웃이 점진적이라 계정마다 달라요. 국내 보도는 순차 제공으로 전해요 [부분] | **예.** Anthropic 제공 국가·지역 목록에 South Korea가 있어요. Cowork 등 개별 기능의 지역 제한은 [미확인] [공식] |
 | **한국어** | 지원 언어 목록을 공식 페이지에서 못 찾았어요 [미확인] | 앱 화면은 한국어 지원(App Store 지원 언어에 포함). Bot이 한국어로 일하는 품질은 공식 문구 없음 [공식] / 품질 [미확인] | ChatGPT 앱은 한국어 지원(한국 App Store). Dots 자체의 한국어 지원(대화·음성)은 공식 확인 못 함 [미확인] | 공식 다국어 성능 표에 한국어가 포함돼 있어요. 앱의 한국어 화면 지원 범위는 이 비교에서 따로 확인하지 못했어요 [부분] |
 
 <Aside type="caution" title="Muse 우회 가입은 안내하지 않아요">
@@ -141,8 +147,8 @@ Muse 약관은 관련 법률상 서비스를 받을 수 없는 경우 사용할 
 | 항목 | Meta Muse | Grok Bot | ChatGPT Dots | Claude |
 | --- | --- | --- | --- | --- |
 | 상시 작동 | 예. 앱을 닫아도 클라우드 VM에서 일정·이벤트에 따라 작업 [공식] | 예. 지속되는 클라우드 컴퓨터에서 앱을 닫아도 작동, 루틴 실행 [공식] | 예. 클라우드에서 계속 동작하고 스스로 깨어나 이어서 일해요 [공식] | **부분적.** 클라우드 세션과 루틴은 내 컴퓨터가 꺼져 있어도 돌지만 GitHub 저장소 작업 중심이에요. 컴퓨터 사용은 컴퓨터가 깨어 있고 데스크톱 앱이 열려 있어야 해요 [공식] |
-| 외부 서비스 연동 | 이메일, 캘린더, 인스타그램, Shopify, Slack, Notion, GitHub 등 + 커스텀 커넥터 [공식] | Marketplace 플러그인 + 커넥터 없는 사이트는 컴퓨터 사용으로 직접 조작 [공식] | Gmail, Google Drive, GitHub 등 플러그인, Slack, Teams, 내 컴퓨터(선택, 한 대) [공식] | 커넥터(Gmail, Calendar, Drive, Notion, 커스텀 MCP 등), Claude in Chrome, 컴퓨터 사용 [공식] |
-| 결제 기능 | 예. Stripe Link 일회용 카드(적격 구매 보호), 구매 전 사람 승인 [공식] | 전용 결제 수단·지출 상한은 문서에서 확인 안 됨. 구매는 가능하나 결제 확인은 사용자가 직접 입력 [공식] | 공식 문서에서 결제·구매 기능은 확인 못 함 (없다고 단정하지 않아요) [미확인] | 구매 기능 없음. Claude in Chrome은 권한과 상관없이 구매·계정 생성·카드 정보 처리를 하지 않아요 [공식] |
+| 외부 서비스 연동 | 이메일, 캘린더, 인스타그램, Shopify, Slack, Notion, GitHub 등 + 커스텀 커넥터 [공식] | Marketplace 플러그인 + 커넥터 없는 사이트는 컴퓨터 사용으로 직접 조작 [공식] | Gmail, Google Drive, GitHub 등 플러그인, Slack, Teams, 내 컴퓨터(선택. 스레드마다 한 번에 한 대 사용, 2026-11-16 기준) [공식] | 커넥터(Gmail, Calendar, Drive, Notion, 커스텀 MCP 등), Claude in Chrome, 컴퓨터 사용 [공식] |
+| 결제 기능 | 예. Stripe Link 일회용 카드(적격 구매 보호), 구매 전 사람 승인 [공식] | 가능. Bot의 Vault에 저장한 카드는 결제 단계에서 매번 따로 승인받지 않고 입력돼요(2026-11-16 기준). 은행 카드 인증 같은 단계는 사용자에게 넘겨요. 지출 상한은 문서에서 확인 안 됨 [공식] | 공식 문서에서 결제·구매 기능은 확인 못 함 (없다고 단정하지 않아요) [미확인] | 구매 기능 없음. Claude in Chrome은 권한과 상관없이 구매·계정 생성·카드 정보 처리를 하지 않아요 [공식] |
 | 승인 방식 | 이메일 발송·구매 등 민감 작업은 사람 승인. 활동 로그 제공 [공식] | 승인 카드(Allow once, Always allow, Deny)와 Auto Review [공식] | 사용자 규칙 4단계(묻지 않고 실행 ~ 나에게 넘기기)와 자동 검토 [공식] | 커넥터는 전송·삭제 전 승인. Chrome은 Manual·Auto·Skip 모드. 루틴은 승인 없이 자율 실행 [공식] |
 
 <Aside type="tip" title="Claude만 '일부러 보수적'인 부분이 있어요">
