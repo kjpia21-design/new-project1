@@ -11,7 +11,7 @@ prerequisites:
   - "A paid Claude plan (routines are on Pro, Max, Ultra, Team, and Enterprise)"
   - "A GitHub account and one practice repository"
   - "Experience with Tutorials 6 and 8 (or C12 and C13)"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -181,7 +181,7 @@ This scenario is **"Every Friday afternoon, gather the week's notes and make a w
    </PromptBox>
 
    - **Repository**: One practice repository. The selected repository is cloned from the default branch on every run. Claude pushes to branches with the `claude/` prefix.
-   - **Environment**: **Default** (Trusted network) is enough.
+   - **Environment**: **Default** (Limited network access, shown as Trusted in older settings; as of 2026-11-16) is enough.
    - **Trigger**: Under Schedule, pick a preset like daily or weekly and enter the time in your own time zone. For a cadence that isn't a preset, after creating it choose **Custom** in the edit window and set it with a cron expression (times in cron expressions are UTC). **Runs at the top of the hour can start a few minutes late**, so we recommend offsetting the minute, such as 16:07 instead of 16:00. The minimum interval is 1 hour.
    - **Connectors**: All connected connectors are included by default. Claude can use all the tools of an included connector, including writing, so **remove everything this routine doesn't need.**
 

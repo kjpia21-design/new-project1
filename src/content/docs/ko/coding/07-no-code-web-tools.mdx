@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 계정 (아티팩트 기능 사용 가능)"
   - "(선택) Claude Code 설치 — 6편 참고"
   - "만들고 싶은 업무 도구 하나의 계산 규칙 (예: 단가, 할인 규칙)"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -174,8 +174,8 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 | 기본 상태 | 비공개 |
 | 공유 | 링크 공유는 Pro·Max·Ultra·Team·Enterprise(공식 표에 Free의 링크 공유는 없어요), 이메일 초대(베타)는 Pro·Max·Ultra·Team·Enterprise, Team·Enterprise는 기본적으로 조직 안에서만(조직·그룹 공유는 Team·Enterprise, 그룹은 Enterprise) |
 | 권한 | Can view(보기) / Commenter(댓글, 아티팩트가 제공하는 파일 내려받기) / Can edit(수정) |
-| Claude나 커넥터를 쓰는 아티팩트 | 링크 공유가 되지 않아요 |
-| 저장소 | 개인 저장과 공유 저장이 있고 아티팩트당 20MB, 텍스트만. 민감한 정보를 넣기 전 어느 저장소인지 확인하세요 |
+| 링크 공유가 안 되는 아티팩트 | 다른 웹사이트에 연결하는 아티팩트, 업로드한 파일이 아직 검사 중이거나 검사를 통과하지 못한 아티팩트예요. 링크로 공유한 아티팩트에서 Claude나 연결된 앱을 쓰는 부분은 조직 밖 사람이나 로그인하지 않은 사람에게는 동작하지 않아요 (2026-11-16 기준) |
+| 저장소 | 개인 저장과 공유 저장이 있어요. 새 아티팩트는 기본으로 데이터 100MB, 문서(저장된 레코드) 25,000개까지 저장하고, 레거시 아티팩트는 아티팩트당 20MB, 텍스트만 돼요 (2026-11-16 기준). 민감한 정보를 넣기 전 어느 저장소인지 확인하세요 |
 | 예전 방식 게시(Publish) | 2026-09-16 이전 아티팩트에만 해당(게시는 Free·Pro·Max·Ultra, Team·Enterprise는 Share & copy link). 게시 취소는 영구적이라 다시 게시할 수 없고 저장 데이터가 삭제돼요 |
 
 <Aside type="note" title="참고할 점 (2026-11-02 기준)">
@@ -196,7 +196,7 @@ Docs·Slides·Design 템플릿으로 만든 아티팩트는 Export(내보내기)
 
 ### 링크를 보냈는데 상대방이 못 열어요
 
-- **원인**: 대개 링크를 받은 사람이 Claude에 로그인해야 하고, Team·Enterprise는 기본적으로 조직 안에서만 공유돼요. Claude나 커넥터를 쓰는 아티팩트는 링크 공유가 안 돼요.
+- **원인**: 대개 링크를 받은 사람이 Claude에 로그인해야 하고, Team·Enterprise는 기본적으로 조직 안에서만 공유돼요. 다른 웹사이트에 연결하는 아티팩트는 링크 공유가 안 되고, Claude나 연결된 앱을 쓰는 부분은 밖에서 링크로 연 사람에게는 동작하지 않아요 (2026-11-16 기준).
 - **해결**: 공유 설정과 상대방 계정을 확인하세요. 로그인 없이 보여 줘야 한다면 `quote.html` 파일 전달이나 웹 배포를 쓰세요.
 
 ### 공개된 페이지에 내부 정보가 들어갔어요

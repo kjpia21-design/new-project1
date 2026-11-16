@@ -11,7 +11,7 @@ prerequisites:
   - "A paid Claude plan (Pro or higher) or a Console account"
   - "Claude Code installed and logged in (see C12)"
   - "A practice copy of a folder (you won't touch the originals)"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Checkpointing"
     url: "https://code.claude.com/docs/en/checkpointing"
@@ -210,7 +210,7 @@ So for file work, **copying the folder before you start is a more reliable safeg
 
 ### Go slowly with auto-approval modes
 
-The many approval questions can be frustrating. According to the official permission modes docs (checked 2026-11-02), `acceptEdits` mode runs file edits and ordinary file commands like `mkdir`, `touch`, `mv`, and `cp` without asking. That's convenient, but it also means **a rename runs immediately without asking**. The same doc says auto mode doesn't guarantee safety either and advises using it for tasks whose direction you trust. Use it only after you've made a backup and confirmed in the practice folder that the rules are right. The kinds of modes are summarized in [C14](/claude/c14-claude-code-features/).
+The many approval questions can be frustrating. According to the official permission modes docs (checked 2026-11-16), `acceptEdits` mode runs file edits and common file commands (`mkdir`, `touch`, `rm`, `rmdir`, `mv`, `cp`, and `sed`) inside the working folder without asking. That's convenient, but it also means **a rename or a delete runs immediately without asking**. The same doc says auto mode doesn't guarantee safety either and advises using it for tasks whose direction you trust. Use it only after you've made a backup and confirmed in the practice folder that the rules are right. The kinds of modes are summarized in [C14](/claude/c14-claude-code-features/).
 
 ## Quick reference
 

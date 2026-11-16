@@ -11,7 +11,7 @@ prerequisites:
   - "A Claude account (with the artifacts feature available)"
   - "(Optional) Claude Code installed — see Tutorial 6"
   - "The calculation rules for one work tool you want to build (e.g., unit prices, discount rules)"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -174,8 +174,8 @@ The example task is a **"quote calculator that takes quantity and unit price and
 | Default state | Private |
 | Sharing | Link sharing on Pro, Max, Ultra, Team, and Enterprise (the official table has no link sharing on Free); email invitations (beta) on Pro, Max, Ultra, Team, and Enterprise; on Team and Enterprise, by default only inside the organization (organization and group sharing on Team and Enterprise, groups on Enterprise) |
 | Permissions | Can view / Commenter (comment, and download files the artifact provides) / Can edit |
-| Artifacts that use Claude or connectors | Link sharing isn't available |
-| Storage | Personal and shared storage, 20 MB per artifact, text only. Check which storage it is before entering sensitive information |
+| Artifacts that can't use link sharing | Artifacts that connect to other websites, and artifacts with an uploaded file that is still being checked or failed the check. In a link-shared artifact, the parts that use Claude or connected apps don't work for people outside your organization or people who aren't signed in (as of 2026-11-16) |
+| Storage | Personal and shared storage. By default a new artifact stores up to 100 MB of data and 25,000 documents (saved records); legacy artifacts are limited to 20 MB per artifact, text only (as of 2026-11-16). Check which storage it is before entering sensitive information |
 | Legacy publishing (Publish) | Applies only to artifacts from before 2026-09-16 (publishing on Free, Pro, Max, and Ultra; Share & copy link on Team and Enterprise). Unpublishing is permanent: you can't publish again and the stored data is deleted |
 
 <Aside type="note" title="Good to know (as of 2026-11-02)">
@@ -196,7 +196,7 @@ Artifacts made from the Docs, Slides, and Design templates have Export (Design e
 
 ### I sent the link but the other person can't open it
 
-- **Cause**: Usually the recipient has to be logged in to Claude, and on Team and Enterprise, sharing is by default limited to inside the organization. Artifacts that use Claude or connectors can't be shared by link.
+- **Cause**: Usually the recipient has to be logged in to Claude, and on Team and Enterprise, sharing is by default limited to inside the organization. Artifacts that connect to other websites can't be shared by link, and the parts that use Claude or connected apps don't work for people who open the link from outside (as of 2026-11-16).
 - **Fix**: Check the sharing settings and the recipient's account. If you need to show it without a login, send the `quote.html` file or use web deployment.
 
 ### Internal information ended up on a public page
