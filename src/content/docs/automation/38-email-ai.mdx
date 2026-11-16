@@ -10,7 +10,7 @@ duration: "30 min"
 prerequisites:
   - "A Gmail or Outlook account (depending on the feature, a paid or work plan may be required)"
   - "A made-up practice email thread (don't use emails with real customer information or confidential content)"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Catch up on email threads with AI Overview conversation summaries (Gmail Help)"
     url: "https://support.google.com/mail/answer/16561387"
@@ -28,6 +28,8 @@ sources:
     url: "https://support.claude.com/en/articles/10166901-use-google-workspace-connectors"
   - title: "Set up the Microsoft 365 connector (Claude Help Center)"
     url: "https://support.claude.com/en/articles/12542951-set-up-the-microsoft-365-connector"
+  - title: "Connect to Microsoft 365 (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/15183774-connect-to-microsoft-365"
 status: published
 ---
 
@@ -75,7 +77,7 @@ We couldn't open the original sources for the specific plan names and prices tha
 | Summaries | AI Overview above the thread (Summarize this email), or ask Ask Gemini | Summary by Copilot above the thread (new Outlook) / Summarize (classic) | Ask in chat, "Summarize this thread" (searches and reads mail) |
 | Reply drafts | Help me write, Ask Gemini | Draft / Draft with Copilot, with length and tone controls | Writes email drafts, views the draft list |
 | Organizing | Ask Ask Gemini to delete multiple emails or add labels | (Not confirmed this time) | Manages labels and threads |
-| What you need | Summaries: a work, school, or personal Google account. Drafts and Ask Gemini: an eligible Workspace or Google AI plan | A subscription that includes Copilot, or a company license | Gmail: all users. Microsoft 365: all Claude plans, but requires a work Microsoft account and admin consent |
+| What you need | Summaries: a work, school, or personal Google account. Drafts and Ask Gemini: an eligible Workspace or Google AI plan | A subscription that includes Copilot, or a company license | Gmail: all users. Microsoft 365: all Claude plans. Work or school accounts need admin consent; personal Microsoft accounts connect on Free, Pro, Max, and Ultra only (as of 2026-11-16) |
 | Korean | Korean is on the supported-language list (summaries, drafts, side panel) | Korean is on the Copilot supported-language list | Claude can converse in Korean |
 | Sending | You send it yourself | You send it yourself | Sending, replying, and forwarding ask for approval every time by default |
 
@@ -125,7 +127,7 @@ The example is "a long email thread with a partner about coordinating schedules.
 
 5. **Work with email through a Claude connector (optional)**
 
-   For Gmail, connect it from **+** > Connectors in the input box (on Team/Enterprise, an Owner has to turn it on first). The connection method and approval window are covered in detail in [C7. Connectors](/claude/c07-connectors/). For Outlook, the Microsoft 365 connector searches SharePoint, OneDrive, Outlook, and Teams. This connector is available on all Claude plans, but it requires an Entra tenant tied to a Microsoft Business plan, and personal Microsoft accounts like `@outlook.com` and `@hotmail.com` can't connect. Your company admin's consent is also needed, so for work email, talk to your admin first.
+   For Gmail, connect it from **+** > Connectors in the input box (on Team/Enterprise, an Owner has to turn it on first). The connection method and approval window are covered in detail in [C7. Connectors](/claude/c07-connectors/). For Outlook, the Microsoft 365 connector searches SharePoint, OneDrive, Outlook, and Teams. This connector is available on all Claude plans. A work or school account needs a Microsoft Entra tenant and one-time consent from a Microsoft Entra Global Administrator, so for work email, talk to your admin first. According to Anthropic's help (as of 2026-11-16), on Free, Pro, Max, and Ultra plans you can also connect a personal Microsoft account such as Outlook.com, Hotmail, Live, or MSN without an admin; it connects Outlook and OneDrive, and doesn't include SharePoint or Teams. Team and Enterprise plans aren't shown the personal-account option.
 
    <FlowSteps title="Using the Gmail connector in Claude" officialUrl="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" steps={[
      { where: 'Claude input box', action: 'Connect Gmail from + > Connectors', result: 'Sign in to Google and grant consent' },
@@ -185,8 +187,8 @@ Email mixes in names, contact details, contract details, and customer informatio
 
 ### Claude won't connect to my Outlook email
 
-- **Cause**: The Microsoft 365 connector can't connect with a personal Microsoft account, and it needs Entra admin consent and (on Team/Enterprise) activation by a Claude Owner.
-- **Fix**: Pass the setup documentation to your company admin, and if it's a personal account, copy the email and paste it into the chat (masking sensitive information).
+- **Cause**: A work or school account needs Entra admin consent and (on Team/Enterprise) activation by a Claude Owner. A personal Microsoft account can connect only on Free, Pro, Max, and Ultra plans, and it can't sign in through "Work or school account" (as of 2026-11-16).
+- **Fix**: Pass the setup documentation to your company admin. For a personal account, check that you chose "Personal account" when connecting. If it still won't connect, copy the email and paste it into the chat (masking sensitive information).
 
 ### It can't read the contents of attachments
 

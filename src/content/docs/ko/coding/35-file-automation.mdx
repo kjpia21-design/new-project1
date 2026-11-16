@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 유료 플랜 (Pro 이상) 또는 Console 계정"
   - "Claude Code 설치와 로그인 (C12 참고)"
   - "연습용 복사본 폴더 (원본은 건드리지 않아요)"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Checkpointing"
     url: "https://code.claude.com/docs/en/checkpointing"
@@ -210,7 +210,7 @@ Claude Code가 엑셀(.xlsx) 파일을 어떤 방식으로 읽고 쓰는지는 �
 
 ### 자동 승인 모드는 천천히
 
-승인 질문이 많아 답답할 수 있어요. 공식 권한 모드 문서(2026-11-02 확인)에 따르면 `acceptEdits` 모드는 파일 편집과 `mkdir`, `touch`, `mv`, `cp` 같은 일반 파일 명령을 묻지 않고 실행해요. 편해지지만 **이름 변경이 묻지 않고 바로 실행**된다는 뜻이기도 해요. 같은 문서가 auto 모드도 안전을 보장하지 않고, 방향을 신뢰하는 작업에 쓰라고 안내해요. 백업을 만들고 연습 폴더에서 규칙이 맞는 것을 확인한 다음에만 쓰세요. 모드 종류는 [C14](/ko/claude/c14-claude-code-features/)에 정리돼 있어요.
+승인 질문이 많아 답답할 수 있어요. 공식 권한 모드 문서(2026-11-16 확인)에 따르면 `acceptEdits` 모드는 작업 폴더 안에서 파일 편집과 일반 파일 명령(`mkdir`, `touch`, `rm`, `rmdir`, `mv`, `cp`, `sed`)을 묻지 않고 실행해요. 편해지지만 **이름 변경이나 삭제가 묻지 않고 바로 실행**된다는 뜻이기도 해요. 같은 문서가 auto 모드도 안전을 보장하지 않고, 방향을 신뢰하는 작업에 쓰라고 안내해요. 백업을 만들고 연습 폴더에서 규칙이 맞는 것을 확인한 다음에만 쓰세요. 모드 종류는 [C14](/ko/claude/c14-claude-code-features/)에 정리돼 있어요.
 
 ## 빠른 참조표
 

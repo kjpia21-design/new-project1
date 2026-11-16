@@ -9,10 +9,10 @@ tools: ["Meta Muse", "Grok Bot", "ChatGPT Dots", "Claude"]
 duration: "20분"
 prerequisites:
   - "개인 AI 에이전트가 무엇인지 알고 있기 (1편)"
-lastVerified: 2026-10-10
+lastVerified: 2026-11-16
 sources:
   - title: "How We Built Safety Into Muse (Meta AI Research)"
-    url: "https://research.meta.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse"
+    url: "https://muse.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse"
   - title: "Muse Supplemental Terms of Service"
     url: "https://muse.ai/terms"
   - title: "Muse Privacy"
@@ -25,8 +25,8 @@ sources:
     url: "https://docs.x.ai/grok-bot/overview"
   - title: "Grok Bot 문서: Security"
     url: "https://docs.x.ai/grok-bot/security"
-  - title: "Plans and billing (Cursor 도움말)"
-    url: "https://cursor.com/help/grok-bot/plans"
+  - title: "Plans and billing (Grok 도움말, Cursor 도움말에서 이동)"
+    url: "https://grok.com/help/grok-bot/plans"
   - title: "Control your dot (OpenAI 개발자 문서)"
     url: "https://learn.chatgpt.com/docs/dots/controls"
   - title: "Tasks and memory (OpenAI 개발자 문서)"
@@ -90,14 +90,14 @@ import PromptBox from '../../../../components/PromptBox.astro';
 | 항목 | Meta Muse | Grok Bot | ChatGPT Dots | Claude |
 | --- | --- | --- | --- | --- |
 | 승인 | 이메일 발송·구매 같은 민감 작업은 사람 승인. 범위는 1회~영구 중에서 선택 | 승인 카드(Allow once, Always allow, Deny)와 모델 기반 Auto Review | 사용자 규칙 4단계: 묻지 않고 실행, 내가 말할 때 실행, 실행 전 확인, 나에게 넘기기 | 커넥터는 전송·답장·삭제 등 전에 승인. Chrome은 Manual·Auto·Skip 모드 |
-| 결제 | Stripe Link 일회용 카드로 실제 카드 정보를 판매자와 에이전트에게 숨김. 저장된 결제 수단 사이트는 매번 사람이 승인 | 결제 확인은 사용자가 직접 컴퓨터를 인수해 입력. 전용 결제 수단·지출 상한은 문서에서 못 찾음 | 결제 전용 기능은 문서에서 못 찾음 | Chrome은 권한과 상관없이 구매·카드 정보 처리를 하지 않음 |
+| 결제 | Stripe Link 일회용 카드로 실제 카드 정보를 판매자와 에이전트에게 숨김. 저장된 결제 수단 사이트는 매번 사람이 승인 | Bot의 Vault에 저장한 카드는 결제 단계에서 매번 따로 승인받지 않고 입력되니, 매번 승인하려면 카드를 저장하지 마세요(2026-11-16 기준). 은행 카드 인증 같은 단계는 사용자가 직접 컴퓨터를 인수해 처리. 지출 상한은 문서에서 못 찾음 | 결제 전용 기능은 문서에서 못 찾음 | Chrome은 권한과 상관없이 구매·카드 정보 처리를 하지 않음 |
 | 비밀번호 | 직접 입력은 보안 저장소로 가고 Muse는 못 봄. 에이전트에는 대리 토큰만 보임 | 비밀번호·2단계 인증·CAPTCHA·결제 확인은 사용자가 직접 입력. 채팅에 보내지 말 것 | 사이트 로그인 정보는 대화 밖 비공개 흐름으로 전달. 저장된 로그인 재사용은 사용자 확인 필요 | 1Password 로그인 요청(macOS 베타)에서 Claude는 비밀번호를 볼 수 없음 |
 | 기록 | 활동 로그(audit trail)로 한 일과 할 일 확인 | 문서에 루틴 실행 기록(루틴당 최근 20개) | Activity 화면에서 위임 작업 확인 | 클라우드 세션은 결과 diff 검토 후 반영 |
 | 중단·회수 | 접근 변경·연결 해제 가능. 직접 브라우저 조작 중에는 에이전트가 멈춤 | 접근 회수 절차(루틴 중지, 로그아웃, 커넥터 해제, 파일 삭제)를 문서에 정리 | Pause, 위임 작업 중지, 반복 작업 삭제, dot 삭제(되돌릴 수 없음) | 컴퓨터 사용은 언제든 중단 가능. 커넥터는 연결 해제 |
 | 공식 경고 | "Muse는 실수를 할 것이다" | "Auto Review는 최소 권한과 명시적 승인을 대체하지 않는다" | "Your dot can make mistakes" | Chrome은 안전 분류기가 있어도 위험이 남는다고 경고 |
 
 <Aside type="note" title="Muse는 한국에서 아직 쓸 수 없어요">
-Muse는 공식적으로 미국, 캐나다, 싱가포르에서만 제공돼요(2026-11-02 기준). 위 내용은 출시 전에 알아 두는 참고용이에요. 비교 정보는 [1편](/ko/agents/01-agents-compared/)에 있어요.
+Muse는 공식적으로 미국, 캐나다, 일본, 싱가포르에서만 제공돼요(2026-11-16 기준). 위 내용은 출시 전에 알아 두는 참고용이에요. 비교 정보는 [1편](/ko/agents/01-agents-compared/)에 있어요.
 </Aside>
 
 ## 단계별 따라하기
@@ -134,7 +134,7 @@ Muse는 공식적으로 미국, 캐나다, 싱가포르에서만 제공돼요(20
 되돌릴 수 없는 일(발송, 삭제, 권한 변경, 결제, 약관 동의)은 **항상 묻도록** 설정하세요.
 
 - **Dots**: 설정(Settings) > 개인 설정(Personalization) > Custom rules(모바일은 Customize > Custom rules)에서 "실행 전 확인"이나 "나에게 넘기기"를 고를 수 있어요. 규칙은 "dot이 따르려 하는 지침이며 실수할 수 있다"고 문서가 밝히고, 앱·컴퓨터 접근을 새로 주지는 않아요. 지침에 "초안을 보여 주고 보내지 마"라고 쓰면 초안 작성이 발송 권한으로 읽히지 않아요.
-- **Grok Bot**: 승인 카드에서 **Always allow**는 신중히 고르세요. 문서상 Ask first가 Allow automatically보다 우선해요. 루틴이나 다른 Bot에서 시작된 작업의 승인은 약 10분 뒤 만료돼 실행되지 않아요.
+- **Grok Bot**: 승인 카드에서 **Always allow**는 신중히 고르세요. 문서상 Ask first가 Allow automatically보다 우선해요. 루틴이나 그 밖의 백그라운드 작업에서 시작된 승인은 30분 뒤 만료돼 실행되지 않아요(2026-11-16 기준).
 - **Muse**: 약관이 상태를 바꾸는 행동(메시지 발송, 금융 거래, 데이터 삭제, 설정 변경)은 사전 사람 검토 없이 하지 말라고 하고, 사전 승인을 주는 것도 신중하라고 해요.
 - **Claude in Chrome**: Manual은 매 동작 승인, Auto는 안전 검사를 하며 진행, Skip은 검사 없이 실행이에요. 처음에는 Manual로 시작하세요. 파일 다운로드와 민감 정보 입력은 "항상 허용"한 사이트에서도 물어요. [C11](/ko/claude/c11-chrome-computer-use/)에 정리돼 있어요.
 
@@ -145,7 +145,7 @@ Claude 루틴은 사람이 지켜보지 않는 상태로 돌아요. 커밋과 PR
 ### 4. 결제는 한도 있는 수단으로, 매번 승인
 
 <Aside type="caution" title="에이전트 쪽 지출 상한은 확인되지 않았어요">
-Grok Bot 문서에서는 전용 결제 수단과 지출 상한 기능을 확인하지 못했고, Dots 문서에서는 결제 기능 자체를 확인하지 못했어요. Muse는 Stripe Link 일회용 카드와 구매 전 승인이 있지만, 이 보호는 "적격 구매"에 한정된다고 Meta가 밝혀요. 이 점검표는 **지출 상한을 내가 직접 만든다**는 전제로 쓰였어요.
+Grok Bot 문서에서는 지출 상한 기능을 확인하지 못했고(Vault에 저장한 카드는 결제 단계에서 매번 따로 승인받지 않고 입력돼요, 2026-11-16 기준), Dots 문서에서는 결제 기능 자체를 확인하지 못했어요. Muse는 Stripe Link 일회용 카드와 구매 전 승인이 있지만, 이 보호는 "적격 구매"에 한정된다고 Meta가 밝혀요. 이 점검표는 **지출 상한을 내가 직접 만든다**는 전제로 쓰였어요.
 </Aside>
 
 - 에이전트에게 쓰는 카드는 **한도가 낮은 별도 카드나 일회용 카드**로 하세요. 주 카드는 연결하지 마세요.
@@ -189,7 +189,7 @@ Grok Bot 문서에서는 전용 결제 수단과 지출 상한 기능을 확인�
 **공유 기기**
 
 - 공용 PC나 가족 기기에 에이전트 앱을 로그인해 두지 마세요. 쓰고 나면 로그아웃하세요.
-- Dots는 내 컴퓨터 연결이 선택 기능이고 한 번에 한 대만 돼요. 연결을 켠 컴퓨터는 앱이 열려 있는 동안 접근 대상이에요. 공유 기기에서는 켜지 마세요.
+- Dots는 내 컴퓨터 연결이 선택 기능이에요. 여러 대를 연결할 수 있고, 스레드마다 한 번에 한 대만 써요(2026-11-16 기준). 연결을 켠 컴퓨터는 앱이 열려 있는 동안 접근 대상이에요. 공유 기기에서는 켜지 마세요.
 - Claude의 컴퓨터 사용은 **샌드박스가 없어서 화면에 보이는 모든 것을 볼 수 있어요.** 사용 전에 민감한 앱과 창을 닫아 두세요.
 - Grok Bot은 모든 Bot이 같은 컴퓨터를 공유하므로, 작업이 끝나면 서비스에서 로그아웃하고 임시 파일을 정리하고 커넥터 승인을 해제하라고 권해요. Bot을 지워도 공유 컴퓨터의 파일과 브라우저 세션은 지워지지 않아요.
 - Grok Bot을 공유 링크로 공유하면 **설정(구성)이 노출**돼요. 비밀, 고객 정보, 내부 URL을 넣지 마세요.

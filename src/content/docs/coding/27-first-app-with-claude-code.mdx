@@ -11,7 +11,7 @@ prerequisites:
   - "A paid Claude plan (Pro or higher) or a Console account"
   - "Claude Code installed and logged in (see C12)"
   - "One empty folder and a web browser"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Quickstart"
     url: "https://code.claude.com/docs/en/quickstart"
@@ -56,7 +56,7 @@ This approach is often called **vibe coding**. It's a way of working where you d
 | **Checkpoint** | A restore point Claude leaves before changing files. Open it with `/rewind`. |
 | **How to verify** | A way to see whether the result is right. In this exercise, it's "click through it yourself in the browser". |
 
-The official docs recommend **giving Claude a way to check its own work**. When there's a signal it can read the result from, like tests, a build, or a screenshot, the quality of the result improves. They also say, "if you can't verify it, don't ship it" (checked 2026-11-02). That's why the prompts in this tutorial include "after you build it, test it like this".
+The official docs recommend **giving Claude a way to check its own work**. When there's a signal it can read the result from, like tests, a build, or a screenshot, the quality of the result improves. They also say to ask Claude for evidence, such as the command it ran and its output, or a screenshot (checked 2026-11-16). That's why the prompts in this tutorial include "after you build it, test it like this".
 
 <Aside type="note" title="The expense tracker in this exercise is for practice">
 It's a very simple app that stores data in the browser. It has no real bank connection, login, or multi-device sync. Don't enter real personal financial information; test only with **sample practice data**.

@@ -11,7 +11,7 @@ prerequisites:
   - "The X Subscription의 Premium·Super·Ultra, 또는 (기존) Cursor 유료 개인 플랜·Teams, 혹은 SuperGrok 계열·X Premium+ 구독 중 하나"
   - "Bot이 일할 앱이나 웹사이트 계정 하나 (처음에는 문서 요약만 해도 돼요)"
   - "macOS·Windows·Linux 컴퓨터 또는 iPhone·Android 폰"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 sources:
   - title: "Introducing Grok Bot (xAI, 2026-08-11)"
     url: "https://x.ai/news/introducing-grok-bot"
@@ -29,10 +29,14 @@ sources:
     url: "https://docs.x.ai/grok-bot/skills-routines-and-automations"
   - title: "Grok Bot 문서: Tag @bot on X"
     url: "https://docs.x.ai/grok-bot/tag-on-x"
-  - title: "Plans and billing (Cursor 도움말)"
-    url: "https://cursor.com/help/grok-bot/plans"
+  - title: "Plans and billing (Grok 도움말, Cursor 도움말에서 이동)"
+    url: "https://grok.com/help/grok-bot/plans"
+  - title: "Grok Bot 문서: FAQ"
+    url: "https://docs.x.ai/grok-bot/faq"
   - title: "Models & Pricing (Cursor 문서)"
     url: "https://cursor.com/docs/account/pricing"
+  - title: "Legacy Cursor plans (Cursor 문서)"
+    url: "https://cursor.com/docs/account/pricing/legacy-cursor-plans"
   - title: "Security (Cursor)"
     url: "https://cursor.com/security"
   - title: "Grok Bot 앱 (App Store, 한국)"
@@ -126,7 +130,8 @@ X에서 글에 `@grok`을 달아 묻는 것은 별개 서비스예요. Grok Bot�
 - Cursor 플랜과 SuperGrok 연결은 **합산되지 않아요.** 둘 다 있으면 사용량이 더 많은 쪽이 적용돼요.
 - SuperGrok이나 X Premium+ 연결은 **한 번 하면 해제하거나 다른 Cursor 계정으로 옮길 수 없어요.** 연결하기 전에 올바른 Cursor 계정으로 로그인했는지 꼭 확인하세요.
 - 무료 체험은 일수가 아니라 **크레딧** 방식이에요(7일 창도 적용). 크게 맡기면 한 번에 다 쓸 수 있어요.
-- Cursor 공식 문서(Models & Pricing) 기준으로 Pro가 월 $20, Pro Plus가 월 $60, Ultra가 월 $200이고, Teams는 Standard 사용자당 월 $40, Premium 사용자당 월 $120이에요(미국 달러, 2026-10-13 기준). Grok Bot의 주간 사용량은 Pro < Pro+ < Ultra 순으로 많다고만 밝히고, 구체적인 수치는 공식적으로 공개하지 않아요. SuperGrok 금액은 x.ai 가격 페이지가 자동 접근을 막아 확인하지 못해서 싣지 않아요.
+- Cursor 공식 문서(Models & Pricing) 기준으로 The X Subscription은 Premium이 월 $30, Super가 월 $100, Ultra가 월 $200이고, 팀 좌석은 좌석당 월 $30, $100 또는 $200이에요(미국 달러, 세금 별도, 2026-11-16 기준). Plus(월 $8)와 Free에는 Grok Bot이 들어 있지 않아요.
+- 기존(legacy) Cursor 플랜은 Pro가 월 $20, Pro+가 월 $60, Ultra가 월 $200이고, Teams는 Standard 사용자당 월 $40, Premium 사용자당 월 $120이에요(미국 달러, Legacy Cursor plans 문서, 2026-11-16 기준). Grok Bot의 주간 사용량은 Pro < Pro+ < Ultra 순으로 많다고만 밝히고, 구체적인 수치는 공식적으로 공개하지 않아요. SuperGrok 금액은 x.ai 가격 페이지가 자동 접근을 막아 확인하지 못해서 싣지 않아요.
 
 ### 한국에서 쓸 수 있나요? 한국어는요?
 
@@ -263,7 +268,7 @@ X 글이나 답글에 `@bot`을 태그하면 내 대표 Bot이 그 글을 작업
 | 파일 첨부 | 25MB 이하, 영상 200MB, 데스크톱 한 번에 6개 |
 | 루틴 | Bot당 최대 50개, 최소 간격 5분, 실행 기록 최근 20개 |
 | 시연 학습(Teach a task) | 점진 배포, 녹화 최대 10분, 마이크는 녹음하지 않음 |
-| 승인 만료 | 루틴·트리거·다른 Bot에서 시작된 승인은 약 10분 뒤 만료 |
+| 승인 만료 | 루틴, 들어온 메시지, 그 밖의 백그라운드 작업이 띄운 승인 카드는 30분 뒤 만료 (2026-11-16 기준) |
 
 ### 승인 카드의 선택지
 
@@ -296,8 +301,9 @@ Grok Bot은 내 앱에 로그인해서 실제 작업을 해요. 편리한 만큼
 ### 결제와 구매
 
 - 공식 공지에는 웹사이트를 만들고 **도메인을 구매해 배포**하는 사례가 있어요. 구매가 가능한 일이라는 뜻이에요.
-- 반면 이번에 확인한 문서에서 **Bot 전용 결제 수단이나 지출 상한을 정하는 기능은 찾지 못했어요.** 있다고 가정하지 마세요.
-- 결제 확인은 Bot이 컴퓨터 제어권을 넘기는 **인수** 단계에서 내가 직접 처리하도록 설계돼 있어요. 카드 번호를 채팅에 보내지 마세요.
+- 공식 문서에는 Bot의 **Vault**에 카드를 저장하는 방법이 나와요(2026-11-16 기준). **저장한 카드는 결제 단계에서 매번 따로 승인받지 않고 입력돼요.** Grok Bot 앱의 채팅에서는 Bot이 저장된 카드의 번호와 보안 코드를 볼 수 있어요. 결제를 매번 승인하고 싶다면 카드를 저장하지 마세요. Secure Form에 입력할 때 **Securely save to Bot's vault**를 체크하지 않거나, Settings → Vault에서 삭제하면 돼요.
+- **지출 상한을 정하는 기능은 문서에서 여전히 찾지 못했어요.** 있다고 가정하지 마세요.
+- 은행 카드 인증처럼 양식으로 처리할 수 없는 단계는 Bot이 컴퓨터 제어권을 넘기는 **인수** 단계에서 내가 직접 처리하도록 설계돼 있어요. 카드 번호를 채팅에 보내지 마세요.
 - 구매, 금융 이체, 삭제, 권한 변경, 운영 환경 변경, 약관 동의는 요청 안에 **"먼저 물어보라"**고 명시하세요. 이것이 공식 권고예요.
 - 승인은 앞으로 할 동작을 통제할 뿐 **이미 끝난 일을 되돌리지 못해요.** 확인 화면의 대상·범위·금액을 읽고 이해되지 않으면 승인하지 마세요.
 - 고객 환불 같은 금전 작업은 정책 범위를 문장으로 못 박고, 처음에는 초안만 만들게 하세요.
@@ -306,7 +312,7 @@ Grok Bot은 내 앱에 로그인해서 실제 작업을 해요. 편리한 만큼
 
 - 처음에는 읽기 전용, 초안 작성부터 시작하세요. 보내기, 게시, 구매, 삭제는 승인 뒤에만 하게 하세요.
 - **Auto Review**는 모델이 점검하는 기능이라 완벽하지 않아요. 문서도 최소 권한과 명시적 승인을 대체하지 못한다고 말해요. "브라우저에서는 모두 허용" 같은 넓은 규칙은 피하고 좁게 쓰세요(예: "외부 메일 발송 전에는 항상 먼저 묻기").
-- 루틴이나 다른 Bot이 시작한 승인은 10분쯤 뒤 만료되고 실행되지 않아요. 놓쳤다면 Bot에게 다시 시도시키세요.
+- 루틴이나 그 밖의 백그라운드 작업이 시작한 승인은 30분 뒤 만료되고 실행되지 않아요(2026-11-16 기준). 놓쳤다면 Bot에게 다시 시도시키세요.
 - 쓰지 않는 서비스는 로그아웃하고, 연결 앱은 원 서비스에서 권한을 취소하세요.
 - 서비스 쪽에 범위가 제한된 계정(서비스 계정)을 만들 수 있다면 그 계정을 쓰세요. Bot은 로그인한 사람의 권한만큼 일해요.
 

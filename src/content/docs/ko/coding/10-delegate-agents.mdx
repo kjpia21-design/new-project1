@@ -11,7 +11,7 @@ prerequisites:
   - "Claude 유료 플랜 (루틴은 Pro, Max, Ultra, Team, Enterprise)"
   - "GitHub 계정과 연습용 저장소 하나"
   - "6편과 8편을 해 본 경험 (또는 C12, C13)"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -181,7 +181,7 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
    </PromptBox>
 
    - **저장소**: 연습 저장소 하나. 선택한 저장소는 매 실행마다 기본 브랜치에서 클론돼요. Claude는 `claude/` 접두사의 브랜치에 push해요.
-   - **환경**: **Default**(Trusted 네트워크)면 충분해요.
+   - **환경**: **Default**(Limited 네트워크 접근, 예전 설정에서는 Trusted로 표시, 2026-11-16 기준)면 충분해요.
    - **트리거**: Schedule에서 daily나 weekly 같은 프리셋을 고르고 시간은 내 시간대로 입력해요. 프리셋에 없는 주기는 만든 뒤 편집 창에서 **Custom**을 골라 cron 식으로 정해요(cron 식의 시각은 UTC예요). **정각은 몇 분 늦게 시작할 수 있어서** 16:00 대신 16:07처럼 분을 어긋나게 권해요. 최소 간격은 1시간이에요.
    - **커넥터**: 기본으로 연결된 커넥터가 전부 포함돼요. Claude는 포함된 커넥터의 모든 도구를 쓰기까지 쓸 수 있으니 **이 루틴에 필요 없는 것은 모두 빼세요.**
 

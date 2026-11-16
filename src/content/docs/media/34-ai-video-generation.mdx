@@ -10,7 +10,7 @@ duration: "40 min"
 prerequisites:
   - "A personal Google Account, age 18 or older, with a Google AI plan (Plus, Pro, or Ultra)"
   - "A short idea for a video of about 10 seconds"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 sources:
   - title: "Gemini Apps Help: Generate videos with Gemini Apps"
     url: "https://support.google.com/gemini/answer/16126339"
@@ -35,7 +35,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - Google's video generation in the **Gemini app** now uses **Gemini Omni**, which Google says replaces Veo in the app. Google's overview page lists **10-second videos**, native audio, up to 5 photos as input, scene extension, and video editing by chat.
-- You need a **Google AI plan** for a personal account, and the feature is **not available to users under 18**. **Google Flow**, the filmmaking tool, requires age 18+, a supported region, and a Google AI plan.
+- You need a **Google AI plan** for a personal account, and the feature is **not available to users under 18**. **Google Flow**, the filmmaking tool, requires age 18+ and a supported region. Without a subscription you get basic features and 50 credits a day, and some features need a Google AI plan (as of 2026-11-16).
 - Every video made in Gemini and Flow carries an invisible **SynthID** watermark. Flow can add a visible one too.
 - Video is the **most usage-hungry** feature. Plans, limits and regions change, so confirm on the official pages.
 - I have not run these tools myself. This is a guide built from Google's official pages as of 2026-11-01.
@@ -120,11 +120,13 @@ Tutorial 3 was written when the Gemini app used Veo. Google's current pages say 
 
    Flow is for clips, scenes and stories, and Google recommends a desktop Chromium-based browser for the most powerful editing. You spend credits per generation. Credits are deducted when generation begins, and are returned within one hour if it fails or hits a safety filter. The model and its credit cost are shown in settings before you confirm.
 
+   As of 2026-11-16, Google's credits page lists Omni Flash 1.2 at 1 credit per second (360p) or 3 credits per second (720p) for videos up to 10 seconds. Videos up to 15 seconds and extending a video by 3 to 10 seconds are for Google AI Plus, Pro and Ultra subscribers only. Veo 3.1 Lite costs 10 credits per generation (5 for Ultra). Google also says Veo 3.1 Fast, Veo 3.1 Quality and Omni Flash 1.1 will be retired on December 5, 2026, and that Veo Extend was retired on November 5, 2026. Costs can change, so check Settings in the prompt box.
+
 6. **Know the plan limits and credits**
 
    Gemini app usage limits are compute-based and refresh every 5 hours until you reach a weekly limit. Google rates video generation as high usage, saying video generally uses the most. Limits are standard without an AI plan, 2x with AI Plus, 4x with AI Pro, and 5x or 20x of Pro with AI Ultra.
 
-   In Flow, everyone gets 50 credits per day. Plus adds 200 per month, Pro 1,000, and the two Ultra tiers 10,000 and 25,000. Without a subscription, you may be unable to generate videos during peak hours (roughly 2 PM to 5 PM UTC). Figures are as of 2026-11-01 and may change.
+   In Flow, everyone gets 50 credits per day. Plus adds 200 per month, Pro 1,000, and the two Ultra tiers 10,000 and 25,000. Without a subscription, you may be unable to generate videos during peak hours (roughly 2 PM to 5 PM UTC). Figures are as of 2026-11-16 and may change.
 
 7. **Label and verify AI videos**
 

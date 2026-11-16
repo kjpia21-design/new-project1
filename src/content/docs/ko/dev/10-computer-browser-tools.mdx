@@ -11,7 +11,7 @@ prerequisites:
   - "C16. Claude API 시작하기를 끝낸 상태"
   - "C11. Chrome과 컴퓨터 사용 (앱 기능으로 먼저 감을 잡기)"
   - "Python 3.10 이상, 격리된 VM 또는 컨테이너를 쓸 수 있는 환경"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Computer use tool (computer_toolset_20260801)"
     url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool"
@@ -85,11 +85,11 @@ Claude 모델 (Claude API)
 
 공식 문서는 웹페이지 안에서 끝나는 작업에는 브라우저 툴셋을, 데스크톱 전체가 필요한 작업에는 컴퓨터 툴셋을 권해요. 가벼운 읽기나 출처 찾기는 웹 페치·웹 검색 도구가 낫다고 안내해요. 둘은 한 요청에 함께 쓸 수도 있어요.
 
-<Aside type="note" title="호환성 (2026-10-11 기준)">
-- Opus 5.5, Sonnet 5.5, Haiku 5.5는 Claude API와 Google Cloud에서 **컴퓨터 툴셋만** 받아요. 이전 방식인 `computer_20251124`(베타 헤더 필요)를 보내면 400 오류예요. Amazon Bedrock에서는 이 세 모델도 `computer_20251124`를 받아요.
+<Aside type="note" title="호환성 (2026-11-16 기준)">
+- Fable 5.2(2026-11-09 출시), Opus 5.5, Sonnet 5.5, Haiku 5.5는 Claude API와 Google Cloud에서 **컴퓨터 툴셋만** 받아요. 이전 방식인 `computer_20251124`(베타 헤더 필요)를 보내면 400 오류예요. Amazon Bedrock에서는 이 모델들도 `computer_20251124`를 받아요.
 - 두 툴셋은 현재 **Claude Managed Agents에서 쓸 수 없어요.**
-- 브라우저 툴셋 지원 모델은 `claude-fable-5-1`, `claude-mythos-5-1`, `claude-fable-5`, `claude-mythos-5`, `claude-opus-5-5`, `claude-opus-5`, `claude-sonnet-5-5`, `claude-sonnet-5`, `claude-opus-4-8`, `claude-haiku-5-5`예요.
-- 데이터 보존: 두 툴셋 모두 ZDR 대상(Covered Models 제외)이에요. 스크린샷과 입력은 내 환경에 저장되고, Anthropic은 호출 중에 실시간으로 처리해요. 단 Fable 5.1은 Covered Model이라 30일 보존이 필요해요([C16](/ko/claude/c16-api/) 참고).
+- 브라우저 툴셋 지원 모델은 `claude-fable-5-2`, `claude-mythos-5-2`, `claude-fable-5-1`, `claude-mythos-5-1`, `claude-fable-5`, `claude-mythos-5`, `claude-opus-5-5`, `claude-opus-5`, `claude-sonnet-5-5`, `claude-sonnet-5`, `claude-opus-4-8`, `claude-haiku-5-5`예요.
+- 데이터 보존: 두 툴셋 모두 ZDR 대상(Covered Models 제외)이에요. 스크린샷과 입력은 내 환경에 저장되고, Anthropic은 호출 중에 실시간으로 처리해요. 단 Fable 5.2는(Fable 5.1과 마찬가지로) Covered Model이라 30일 보존이 필요해요([C16](/ko/claude/c16-api/) 참고).
 </Aside>
 
 ## 안전 수칙 먼저 (필수)

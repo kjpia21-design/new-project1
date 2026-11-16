@@ -11,10 +11,12 @@ prerequisites:
   - "C16. Getting started with the Claude API (API key, ANTHROPIC_API_KEY, installing the Python SDK)"
   - "3. Build Your Own Agent with the Claude Agent SDK (concepts of agents, tools, and permissions)"
   - "Python 3.10 or later and a terminal (Node.js for the TypeScript examples)"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Claude Managed Agents overview"
     url: "https://platform.claude.com/docs/en/managed-agents/overview"
+  - title: "Self-hosted Claude Managed Agents"
+    url: "https://platform.claude.com/docs/en/managed-agents/self-hosted"
   - title: "Get started with Claude Managed Agents"
     url: "https://platform.claude.com/docs/en/managed-agents/quickstart"
   - title: "Multiagent orchestration (dynamic workflows)"
@@ -92,7 +94,9 @@ A session creation request takes only `agent` (an ID or `{type: "agent", id, ver
 The uses the official overview docs list for Managed Agents are long-running work, cloud sandboxes, self-hosted execution needed for compliance or data location reasons, minimizing the infrastructure you build yourself, sessions that keep state, and cron-scheduled runs (scheduled deployments). The Agent SDK hosting docs also say to consider Managed Agents if you don't want to host the agent loop yourself.
 
 <Aside type="danger" title="Check this first: ZDR and a HIPAA BAA aren't supported">
-The official docs state that Managed Agents is designed so sessions run long and store conversation history, sandbox state, and outputs on the server, so it currently isn't eligible for ZDR (zero data retention) or a HIPAA BAA. You can delete a session through the API at any time, and you can delete uploaded files separately. If you handle personal or confidential information, check the retention policy first (the Fable 5.1 data retention note in [C16](/claude/c16-api/) is in the same vein). It also can't be used on Bedrock, Vertex, or Foundry.
+The official docs state that Managed Agents is designed so sessions run long and store conversation history, sandbox state, and outputs on the server, so it currently isn't eligible for ZDR (zero data retention) or a HIPAA BAA. You can delete a session through the API at any time, and you can delete uploaded files separately. If you handle personal or confidential information, check the retention policy first (the Fable data retention note in [C16](/claude/c16-api/) is in the same vein). It also can't be used on Bedrock, Vertex, or Foundry.
+
+One exception arrived on 2026-11-12: **self-hosted Claude Managed Agents**. In addition to self-hosted sandboxes, you can now run the whole Managed Agents service (the API, the agent loop, and storage for agents, sessions, and session history) on your own infrastructure, and the server can send model calls to Anthropic (the default) or to a provider you choose, such as Amazon Bedrock, Google Cloud, Microsoft Foundry, or your own model gateway. Because you store the data yourself, the official overview lists it as the exception to the ZDR restriction (HIPAA is still not eligible). It isn't open to everyone: you request access through your Anthropic account team (as of 2026-11-16; [official page](https://platform.claude.com/docs/en/managed-agents/self-hosted)). This tutorial uses the default hosted service.
 </Aside>
 
 ## Step by step

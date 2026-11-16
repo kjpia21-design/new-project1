@@ -12,7 +12,7 @@ prerequisites:
   - "C15. Model division strategy"
   - "1. Build a work bot with tool use (helpful if your bot uses tools)"
   - "Python 3.10 or later, pip install anthropic"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Pricing"
     url: "https://platform.claude.com/docs/en/about-claude/pricing"
@@ -40,7 +40,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 <Summary>
 - Look at cost as **"the total it takes to finish one task," not the price of a single call.** If you run the same job several times, or retry after failures, even a cheap model gets expensive.
 - The official order is **caching and trimming input -> auditing prompts -> tuning effort -> comparing models -> output and budget caps.** Start with the things that don't touch quality.
-- **Prompt caching**: if you cache the part at the front that repeats identically, the read price is 10% of the base input price. For Opus 5.5 and Sonnet 5.5 it's 5%, and for Fable 5.1 it's 2.5%.
+- **Prompt caching**: if you cache the part at the front that repeats identically, the read price is 10% of the base input price. For Opus 5.5 and Sonnet 5.5 it's 5%, and for Fable 5.2 (and the previous Fable 5.1) it's 2.5%.
 - **Message Batches API**: for work that isn't urgent, both input and output get a **50% discount**. The tradeoff is that results can take up to 24 hours.
 - In the example calculation below (1,000 requests), Opus 5.5 costs $88.00 at baseline, $12.10 with caching, $44.00 with batches, and $6.05 in theory with caching plus batches.
 - Log `usage` on every call, and measure input size with `count_tokens` before making real calls.
@@ -59,13 +59,14 @@ The examples follow the official documentation, and on 2026-10-11 only the Pytho
 
 ## Concepts to know first
 
-### Prices by model (USD per 1 million tokens, as of 2026-10-11)
+### Prices by model (USD per 1 million tokens, as of 2026-11-16)
 
 Prices are in US dollars and can change. Always check the [official pricing page](https://platform.claude.com/docs/en/about-claude/pricing). Model IDs and input/output prices match [C16](/claude/c16-api/).
 
 | Model | Input | 5-minute cache write | 1-hour cache write | Cache read | Output |
 | --- | --- | --- | --- | --- | --- |
-| Fable 5.1 (`claude-fable-5-1`) | $10 | $12.50 | $20 | $0.25 | $50 |
+| Fable 5.2 (`claude-fable-5-2`, released 2026-11-09) | $8 | $10 | $16 | $0.20 | $40 |
+| Fable 5.1 (`claude-fable-5-1`, previous version) | $10 | $12.50 | $20 | $0.25 | $50 |
 | Opus 5.5 (`claude-opus-5-5`) | $4 | $5 | $8 | $0.20 | $20 |
 | Sonnet 5.5 (`claude-sonnet-5-5`) | $2 | $2.50 | $4 | $0.10 | $10 |
 | Haiku 5.5 (`claude-haiku-5-5`), prompts of 100K tokens or less | $0.10 | $0.125 | $0.20 | $0.01 | $0.50 |
@@ -250,13 +251,13 @@ The official guide cites a case where internal measurements showed caching cutti
 
    - On a research-style benchmark measured with Fable 5, `low` gave up 1 to 3 points of accuracy and cut cost to between a third and a half, while `medium` matched baseline accuracy at 70 to 87% of the cost.
    - On a coding benchmark (SWE-bench Pro), compared with `high`, `medium` scored about 2.5 points lower at about 70% of the cost, `low` scored about 8 points lower at about a third of the cost, and `xhigh` scored 1.4 points higher at 2.5x the cost.
-   - It does vary by model, though. In the same guide, Fable 5.1 scored almost the same at `low` and `high` on DeepResearch Bench II, but Opus 5.5 at `low` scored 13.3 points lower than at `medium` on DRACO (a research task) (as of 2026-10-26).
+   - It does vary by model, though. In the same guide, Fable 5.2 scored 3.3 points higher at `high` than at `low` on DeepResearch Bench II for 3.2 times the cost (and not measurably higher at `medium` than at `low`), but Opus 5.5 at `low` scored 13.3 points lower than at `medium` on DRACO (a research task) (as of 2026-11-16).
    - In some measurements, using Opus 5.5 at `medium` reached accuracy similar to Fable 5.1's default setting at a much lower "cost per correct answer."
 
    There's no guarantee it's the same for your task. Chat, classification, and bulk processing are often fine at `low`, while coding and long agent tasks are sensitive to effort. **Measure it yourself with a representative sample.**
 
    <Aside type="caution" title="Changing effort mid-conversation breaks the cache">
-   The official cost guide says changing effort invalidates the message cache, so test each effort level in a separate session. Avoid designs that move the top-level effort value up and down within one conversation. That said, according to the official effort docs (as of 2026-10-12), Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5, and others support changing effort per message (beta, with the beta header `mid-conversation-output-config-2026-07-01`), and this approach keeps the prompt cache.
+   The official cost guide says changing effort invalidates the message cache, so test each effort level in a separate session. Avoid designs that move the top-level effort value up and down within one conversation. That said, according to the official effort docs (as of 2026-11-16), Fable 5.2, Fable 5.1, Opus 5.5, Sonnet 5.5, Haiku 5.5, and others support changing effort per message (beta, with the beta header `mid-conversation-output-config-2026-07-01`), and this approach keeps the prompt cache.
    </Aside>
 
    Look at `max_tokens` too. If it's too low, responses get cut off and you pay for retries; for agent work, about 64,000 is recommended (per the official cost guide). On the other hand, for short classification, a small value like 256 works as a safeguard. Opus 5.5 can't turn thinking off, so effort is the only dial you have.
@@ -266,7 +267,7 @@ The official guide cites a case where internal measurements showed caching cutti
    The biggest model doesn't always give the most expensive results. In a measured case in the official cost guide, Haiku 5.5 scored 85% on one science reasoning benchmark (GPQA Diamond) at about one twentieth the cost of Opus 5.5 (which scored 91%). If small models do the easy work and you escalate only the hard work to larger models, the average cost drops a lot.
 
    - Start bulk work like classification, extraction, and summarization on Haiku 5.5 or Sonnet 5.5.
-   - Escalate only the hard judgment calls to Opus 5.5, and if needed use Fable 5.1 only for the hardest work.
+   - Escalate only the hard judgment calls to Opus 5.5, and if needed use Fable 5.2 only for the hardest work.
    - Compare by **cost per task**, not by price. If a cheap model fails more often and you retry, it ends up costing more. The official guide also says to look separately at "the cost of the hardest 10% of tasks."
    - When you switch models, check [C16's request limits by model](/claude/c16-api/) first (for example, Haiku 5.5 returns a 400 error for `budget_tokens` and sampling parameters).
    - If the model changes, the cache is separate too. Caches are separated by model.
@@ -422,7 +423,7 @@ The official guide cites a case where internal measurements showed caching cutti
 | --- | --- |
 | Minimum length | 512 tokens for Opus 5.5, Sonnet 5.5, and Haiku 5.5 (official caching page) |
 | Write cost | 1.25x for 5 minutes, 2x for 1 hour |
-| Read cost | 0.1x of base input. 0.05x for Opus 5.5 and Sonnet 5.5, 0.025x for Fable 5.1 |
+| Read cost | 0.1x of base input. 0.05x for Opus 5.5 and Sonnet 5.5, 0.025x for Fable 5.2 and Fable 5.1 |
 | Lifetime | 5 minutes (default) or 1 hour. Refreshed on a hit |
 | Order | tools -> system -> messages |
 | If you mix TTLs in one request | 1-hour entries must come before 5-minute entries |

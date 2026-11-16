@@ -10,7 +10,7 @@ duration: "30 min"
 prerequisites:
   - "An account for at least one of Claude, Gemini, or ChatGPT"
   - "For calendar sync, a Google account with Google Calendar makes it easier to follow along (steps 1 to 3 and 5 to 6 still work without one)"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 status: published
 sources:
   - title: "Claude Help Center: Use Google Workspace connectors"
@@ -41,7 +41,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 <Summary>
 - The key to an AI assistant is **telling it about your situation once: your fixed commitments, how much time you have per day, and what you want to avoid.** Then its plans fit your real life much better.
 - Chat alone is enough. **Connecting your calendar is optional.** Once connected, you can check and add events by conversation (confirmed in the official help pages as of 2026-10-15).
-- The Gemini help pages say it can **create, find, and edit** calendar events, but **can't invite attendees or edit the location or description.**
+- The Gemini help pages say it can **create, find, and edit** calendar events, but for calendar apps other than Google Calendar it **can't edit some details, such as the location or description** (as of 2026-11-16).
 - Claude's Gmail, Google Calendar, and Drive connectors are described as available to all users. By default, Claude asks for your approval each time before it does something on your behalf.
 - The AI can get opening hours, prices, and booking availability wrong in a trip itinerary. **Check them directly on official sites.**
 - The AI reads the content of connected apps. Don't put national ID numbers, passport numbers, or card numbers into the conversation.
@@ -145,14 +145,14 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
    | Service | What we confirmed (as of 2026-10-15) |
    | --- | --- |
    | **Claude** | Gmail, Google Calendar, and Google Drive connectors are described as available to all users. It says you can view, create, edit, and delete events, find mutual free time, and set up recurring events in the calendar. By default, Claude asks for your approval for actions it takes on your behalf. For how to connect, see [the connectors tutorial](/claude/c07-connectors/). |
-   | **Gemini** | You can ask it to create, find, and edit events in Google Calendar and elsewhere. You need to turn on Keep Activity and connect Google Workspace. You can specify the calendar by putting `@Google Calendar` in your prompt. It can't invite attendees or edit the location or description. |
+   | **Gemini** | You can ask it to create, find, and edit events in Google Calendar and elsewhere. You need to turn on Keep Activity and connect Google Workspace. You can specify the calendar by putting `@Google Calendar` in your prompt. For calendar apps other than Google Calendar, it can't edit some event details, such as the location or description (as of 2026-11-16). |
    | **ChatGPT** | It's described as letting you install plugins from the Plugins tab on web and desktop. The official docs' examples are the Gmail and Google Drive plugins. We **couldn't confirm** Google Calendar. |
 
    <FlowSteps title="Adding an event to your calendar in Gemini (per the help pages)" officialUrl="https://support.google.com/gemini/answer/15305236?hl=en" steps={[
      { where: 'Gemini settings', action: 'Turn on Keep Activity', result: 'If it\'s off, you can\'t connect to the calendar' },
      { where: 'gemini.google.com (same Google account as Workspace)', action: 'Enter an event request, for example: "Create a doctor\'s appointment for next Wednesday at 3 p.m."', result: 'If it isn\'t connected, a connection prompt appears' },
      { where: 'Connection prompt screen', action: 'Follow the instructions shown and approve the Google Workspace connection' },
-     { where: 'Below the reply', action: 'Check the event that was created. If it\'s wrong, use "Undo" or open the event and edit it', result: 'Edit attendees, location, and description directly in the calendar app' },
+     { where: 'Below the reply', action: 'Check the event that was created. If it\'s wrong, use "Undo" or open the event and edit it', result: 'Fix details Gemini can\'t edit directly in the calendar app' },
    ]} />
 
    <ScreenshotPlaceholder caption="The help page for creating and managing Calendar events in the Gemini app" officialUrl="https://support.google.com/gemini/answer/15305236?hl=en" />
@@ -195,7 +195,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
    This is a feature where the AI summarizes your schedule and to-dos at a set time and tells you. There are conditions, so check first.
 
-   - **Gemini**: It's described as letting you schedule daily, weekly, and monthly recurring tasks. The help page's examples include "a daily summary of your calendar, to-do list, and email." But this feature is rolling out gradually to personal Google accounts and to work or school accounts on the relevant Google Workspace editions (as of 2026-10-19), so **some accounts can't use it yet.** Keep Activity must be on, and you can have up to 10 active scheduled tasks. Results are prepared in advance, so fast-changing information may not be current when you receive it. You manage them at gemini.google.com under Settings & help > Scheduled actions.
+   - **Gemini**: It's described as letting you schedule daily, weekly, and monthly recurring tasks. The help page's examples include "a daily summary of your calendar, to-do list, and email." But this feature is rolling out gradually to personal Google accounts and to work or school accounts on the relevant Google Workspace editions (as of 2026-10-19), so **some accounts can't use it yet.** Keep Activity must be on, and you can have up to 10 active scheduled tasks. Results are prepared in advance, so fast-changing information may not be current when you receive it. You manage them at gemini.google.com by clicking Scheduled in the sidebar (as of 2026-11-16).
    - **ChatGPT**: It's described as letting you schedule recurring tasks and view their status and run history under **Scheduled**. As noted above, we couldn't confirm the plan requirements. The official docs recommend testing the prompt in a regular chat before scheduling, and reviewing the results of the first few runs.
    - **Claude**: Recurring runs are covered in [Automating recurring tasks](/claude/c18-automate-recurring/) and [Morning briefing from Gmail and Calendar](/automation/17-morning-briefing/).
 
@@ -209,7 +209,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
    The more you use an assistant, the more the AI knows about you. Review these once in a while.
 
-   - **Disconnecting**: Gemini says you can connect or disconnect at any time in the connected apps settings (web: sidebar > Customize > Connectors, then More options > Disconnect on the app; mobile: Menu > Personalization > Connectors. Menu names vary by device and account). For Claude, disconnecting is covered in [the connectors tutorial](/claude/c07-connectors/).
+   - **Disconnecting**: Gemini says you can connect or disconnect at any time in the connected apps settings (web: sidebar > Customize > Connectors, then More options > Disconnect on the app; mobile: Menu > Customize > Connectors. Menu names vary by device and account). For Claude, disconnecting is covered in [the connectors tutorial](/claude/c07-connectors/).
    - **Memory**: In Claude, memory is on by default for Free, Pro, Max, and Ultra, and you can turn it off with "Generate memory from chats" under Settings > Your Claude (on older screens, under Settings > Memory), as of 2026-11-09. For chats you don't want recorded, you can use an incognito chat with the ghost icon at the upper right of a new chat, and it's described as available to all users, including the free plan. Details are in [Memory and personal settings](/claude/c09-memory-settings/).
    - **ChatGPT**: The official docs say you can turn personalization and memory on or off in Settings.
    - Each service's training and history settings are covered in [Tutorial 5: Privacy and safety](/basics/05-privacy-safety/).
@@ -230,7 +230,7 @@ A schedule holds more information than you might think, because it reveals who y
 | --- | --- | --- |
 | Decide today's tasks | All your to-dos, deadlines, how many you can do per day | The AI's priorities are only a suggestion |
 | Weekly schedule | Fixed commitments you can't move, your working hours | Time estimates can be wrong |
-| Get it into the calendar | Date, time, event name | Check in the calendar after it's created. Gemini can't invite attendees |
+| Get it into the calendar | Date, time, event name | Check in the calendar after it's created. Gemini can't edit some event details |
 | Trip plan | Companions, budget, pace, what to avoid | Check opening hours, fees, and bookings on official sites |
 | Meeting-coordination message | Your candidate available times | Check the day of the week before sending |
 | Recurring briefing | Time, items to include | Availability varies by service and account |
@@ -244,7 +244,7 @@ A schedule holds more information than you might think, because it reveals who y
 
 ### The event was created but the attendees or location are empty
 
-- **Cause**: The Gemini help pages say it can't invite attendees to an event or add or edit the location or description of an existing event.
+- **Cause**: The Gemini help pages say that, for calendar apps other than Google Calendar, it can't edit some event details, such as the location or description (as of 2026-11-16). We could no longer find a line about inviting attendees on that page.
 - **Fix**: Fill in the attendees, location, and description yourself in the calendar app.
 
 ### The opening hours the AI gave me were wrong

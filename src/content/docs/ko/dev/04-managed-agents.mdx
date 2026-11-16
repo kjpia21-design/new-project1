@@ -11,10 +11,12 @@ prerequisites:
   - "C16. Claude API 시작하기 (API 키, ANTHROPIC_API_KEY, Python SDK 설치)"
   - "3. Claude Agent SDK로 나만의 에이전트 만들기 (에이전트·도구·권한 개념)"
   - "Python 3.10 이상과 터미널 (TypeScript 예제는 Node.js)"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Claude Managed Agents overview"
     url: "https://platform.claude.com/docs/en/managed-agents/overview"
+  - title: "Self-hosted Claude Managed Agents"
+    url: "https://platform.claude.com/docs/en/managed-agents/self-hosted"
   - title: "Get started with Claude Managed Agents"
     url: "https://platform.claude.com/docs/en/managed-agents/quickstart"
   - title: "Multiagent orchestration (동적 워크플로)"
@@ -92,7 +94,9 @@ import PromptBox from '../../../../components/PromptBox.astro';
 공식 개요 문서가 꼽는 Managed Agents의 용도는 장시간 실행, 클라우드 샌드박스, 규정이나 데이터 위치 때문에 필요한 self-hosted 실행, 직접 만들 인프라 최소화, 상태가 남는 세션, 크론 스케줄 실행(scheduled deployments)이에요. Agent SDK 호스팅 문서도 에이전트 루프를 직접 호스팅하고 싶지 않다면 Managed Agents를 고려하라고 안내해요.
 
 <Aside type="danger" title="먼저 확인하세요: ZDR과 HIPAA BAA는 지원하지 않아요">
-Managed Agents는 세션이 길게 이어지고 대화 기록, 샌드박스 상태, 산출물을 서버에 저장하는 설계라서, 현재 ZDR(zero data retention)과 HIPAA BAA 적용 대상이 아니라고 공식 문서가 밝혀요. 세션은 API로 언제든 삭제할 수 있고 업로드한 파일도 따로 삭제할 수 있어요. 개인정보나 기밀을 다룬다면 보관 정책을 먼저 확인하세요([C16](/ko/claude/c16-api/)의 Fable 5.1 데이터 보관 안내도 같은 맥락이에요). 또한 Bedrock, Vertex, Foundry에서는 쓸 수 없어요.
+Managed Agents는 세션이 길게 이어지고 대화 기록, 샌드박스 상태, 산출물을 서버에 저장하는 설계라서, 현재 ZDR(zero data retention)과 HIPAA BAA 적용 대상이 아니라고 공식 문서가 밝혀요. 세션은 API로 언제든 삭제할 수 있고 업로드한 파일도 따로 삭제할 수 있어요. 개인정보나 기밀을 다룬다면 보관 정책을 먼저 확인하세요([C16](/ko/claude/c16-api/)의 Fable 데이터 보관 안내도 같은 맥락이에요). 또한 Bedrock, Vertex, Foundry에서는 쓸 수 없어요.
+
+2026-11-12에 예외가 하나 생겼어요. **self-hosted Claude Managed Agents**예요. self-hosted 샌드박스에 더해, 이제 Managed Agents 서비스 전체(API, 에이전트 루프, 에이전트·세션·세션 기록 저장소)를 내 인프라에서 돌릴 수 있어요. 서버는 모델 호출을 Anthropic(기본값)이나 내가 고른 제공자(Amazon Bedrock, Google Cloud, Microsoft Foundry, 자체 모델 게이트웨이)로 보낼 수 있어요. 데이터를 직접 저장하기 때문에 공식 개요 문서는 이 방식을 ZDR 제한의 예외로 적고 있어요(HIPAA는 여전히 대상이 아니에요). 누구나 바로 쓸 수 있는 것은 아니고, Anthropic 담당 팀(account team)에 접근을 요청해야 해요(2026-11-16 기준, [공식 페이지](https://platform.claude.com/docs/en/managed-agents/self-hosted)). 이 튜토리얼은 기본인 Anthropic 호스팅 서비스를 써요.
 </Aside>
 
 ## 단계별 따라하기

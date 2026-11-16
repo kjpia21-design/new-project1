@@ -10,7 +10,7 @@ tools: ["Claude", "ChatGPT", "Gemini"]
 duration: "25 min"
 prerequisites:
   - "An account with at least one of Claude, ChatGPT, or Gemini (a personal account; Gemini's feature is not available on work, school or supervised accounts)"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 sources:
   - title: "Understanding Claude's personalization features (Claude Help Center)"
     url: "https://support.claude.com/en/articles/10185728-understanding-claude-s-personalization-features"
@@ -36,7 +36,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - If you keep typing "answer in short sentences" or "I'm a beginner," put it in **standing instructions** once. All three services have a place for them.
-- **Claude**: Settings > Your Claude > Instructions. **ChatGPT**: Settings > Personalization (custom instructions, base style and tone). **Gemini**: Settings & help > Personal Intelligence > Instructions for Gemini. Menu names change, so check your own screen. (as of 2026-11-01)
+- **Claude**: Settings > Your Claude > Instructions. **ChatGPT**: Settings > Personalization (custom instructions, base style and tone). **Gemini**: Settings > Personal Intelligence > Instructions for Gemini. Menu names change, so check your own screen. (as of 2026-11-16)
 - Write **preferences about how to answer**, not secrets. Don't put ID numbers, account numbers, health details or company confidential information in them.
 - Test with one ordinary question, and know where the off switch is. A specific request in the current chat can still override a standing preference.
 - The saved-facts "memory" features differ by service and plan. Claude's is covered in [C9](/claude/c09-memory-settings/); here we focus on instructions.
@@ -62,7 +62,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 | | Claude | ChatGPT | Gemini |
 | --- | --- | --- | --- |
-| Standing instructions | Settings > Your Claude > Instructions (older layout: Settings > Account > Instructions for Claude). Applied to all your conversations | Custom instructions, managed from Settings (the exact field label was not confirmed; see note below) | Settings & help > Personal Intelligence > Instructions for Gemini. Applied to every chat |
+| Standing instructions | Settings > Your Claude > Instructions (older layout: Settings > Account > Instructions for Claude). Applied to all your conversations | Custom instructions, managed from Settings (the exact field label was not confirmed; see note below) | Settings (at the bottom of the web app) > Personal Intelligence > Instructions for Gemini. Applied to every chat |
 | Tone setting | The official personalization page names skills for adjusting tone and format (below) | Settings > Personalization > Base style and tone (web) | Not a separate setting. The official page lists tone and style requests as example instructions |
 | Per-project | Project instructions | Not covered by the pages we read | Not covered by the pages we read |
 | Memory | Settings > Your Claude (see C9) | Settings > Personalization | Settings > Personal Intelligence > Memory (Google AI plan, 18+, US only for now) |
@@ -112,7 +112,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
    ]} officialUrl="https://learn.chatgpt.com/docs/personalize" />
 
    <FlowSteps title="Gemini" steps={[
-     { where: 'gemini.google.com: Menu > Settings & help', action: 'Open Personal Intelligence > Instructions for Gemini', result: 'List of instructions' },
+     { where: 'gemini.google.com: Settings (at the bottom)', action: 'Open Personal Intelligence > Instructions for Gemini', result: 'List of instructions' },
      { where: 'Instructions for Gemini', action: 'Tap Add +, enter text, tap Submit', result: 'Applied to every chat' },
    ]} officialUrl="https://support.google.com/gemini/answer/16598625" />
 

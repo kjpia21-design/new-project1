@@ -11,7 +11,7 @@ prerequisites:
   - "You've finished C16. Getting started with the Claude API"
   - "C11. Chrome and computer use (get a feel for it with the app features first)"
   - "Python 3.10 or later, and an environment where you can use an isolated VM or container"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Computer use tool (computer_toolset_20260801)"
     url: "https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool"
@@ -85,11 +85,11 @@ The key point is that Claude doesn't touch the screen directly. Claude only make
 
 The official docs recommend the browser toolset for work that stays inside a web page and the computer toolset for work that needs the whole desktop. For light reading or finding sources, they say the web fetch and web search tools are better. You can also use both in one request.
 
-<Aside type="note" title="Compatibility (as of 2026-10-11)">
-- On the Claude API and Google Cloud, Opus 5.5, Sonnet 5.5, and Haiku 5.5 accept **only the computer toolset**. Sending the older `computer_20251124` (which needed a beta header) returns a 400 error. On Amazon Bedrock, these three models still accept `computer_20251124`.
+<Aside type="note" title="Compatibility (as of 2026-11-16)">
+- On the Claude API and Google Cloud, Fable 5.2 (released 2026-11-09), Opus 5.5, Sonnet 5.5, and Haiku 5.5 accept **only the computer toolset**. Sending the older `computer_20251124` (which needed a beta header) returns a 400 error. On Amazon Bedrock, these models still accept `computer_20251124`.
 - Neither toolset can currently be used in **Claude Managed Agents.**
-- Models that support the browser toolset are `claude-fable-5-1`, `claude-mythos-5-1`, `claude-fable-5`, `claude-mythos-5`, `claude-opus-5-5`, `claude-opus-5`, `claude-sonnet-5-5`, `claude-sonnet-5`, `claude-opus-4-8`, and `claude-haiku-5-5`.
-- Data retention: both toolsets are ZDR-eligible (except for Covered Models). Screenshots and inputs are stored in your environment, and Anthropic processes them in real time during the call. However, Fable 5.1 is a Covered Model, so it requires 30-day retention (see [C16](/claude/c16-api/)).
+- Models that support the browser toolset are `claude-fable-5-2`, `claude-mythos-5-2`, `claude-fable-5-1`, `claude-mythos-5-1`, `claude-fable-5`, `claude-mythos-5`, `claude-opus-5-5`, `claude-opus-5`, `claude-sonnet-5-5`, `claude-sonnet-5`, `claude-opus-4-8`, and `claude-haiku-5-5`.
+- Data retention: both toolsets are ZDR-eligible (except for Covered Models). Screenshots and inputs are stored in your environment, and Anthropic processes them in real time during the call. However, Fable 5.2 (like Fable 5.1) is a Covered Model, so it requires 30-day retention (see [C16](/claude/c16-api/)).
 </Aside>
 
 ## Safety rules first (required)

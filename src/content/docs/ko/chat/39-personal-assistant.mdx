@@ -10,7 +10,7 @@ duration: "30분"
 prerequisites:
   - "Claude, Gemini, ChatGPT 중 하나 이상의 계정"
   - "캘린더 반영은 Google 계정과 Google Calendar가 있으면 따라 하기 쉬워요 (없어도 1~3단계, 5~6단계는 가능해요)"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 status: published
 sources:
   - title: "Claude 지원센터: Google Workspace 커넥터 사용하기"
@@ -41,7 +41,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 <Summary>
 - AI 비서의 핵심은 **내 상황(고정 일정, 하루에 쓸 수 있는 시간, 피하고 싶은 것)을 한 번 알려 주는 것**이에요. 그러면 계획이 훨씬 내 현실에 맞아요.
 - 채팅만으로도 충분히 쓸 수 있어요. **캘린더 연결은 선택**이에요. 연결하면 일정 확인과 추가를 대화로 할 수 있어요(2026-10-15 기준 공식 도움말 확인).
-- Gemini는 캘린더에 일정을 **만들고 찾고 수정**할 수 있지만, 일정에 **참석자를 초대하거나 위치·설명을 고치는 일은 못 한다**고 도움말에 적혀 있어요.
+- Gemini는 캘린더에 일정을 **만들고 찾고 수정**할 수 있지만, Google Calendar가 아닌 캘린더 앱에서는 **위치·설명 같은 일부 세부 정보를 고치지 못한다**고 도움말에 적혀 있어요(2026-11-16 기준).
 - Claude의 Gmail·Google Calendar·Drive 커넥터는 모든 사용자에게 열려 있다고 안내돼요. Claude가 대신 하는 작업은 기본적으로 매번 내 승인을 받아요.
 - 여행 일정의 영업시간·요금·예약 가능 여부는 AI가 틀릴 수 있어요. **공식 사이트에서 직접 확인**하세요.
 - 연결한 앱의 내용은 AI가 읽어요. 주민등록번호·여권번호·카드번호는 대화에 넣지 마세요.
@@ -145,14 +145,14 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
    | 서비스 | 확인한 내용 (2026-10-15 기준) |
    | --- | --- |
    | **Claude** | Gmail, Google Calendar, Google Drive 커넥터가 모든 사용자에게 제공된다고 안내돼요. 캘린더에서 일정 보기, 만들기·수정·삭제, 공통 가능 시간 찾기, 반복 일정 설정이 가능하다고 해요. Claude가 대신 하는 작업은 기본적으로 내 승인을 받는다고 안내돼요. 연결 방법은 [커넥터 편](/ko/claude/c07-connectors/)에 있어요. |
-   | **Gemini** | Google Calendar 등에서 일정을 만들고 찾고 수정해 달라고 요청할 수 있어요. 활동 기록 보관(Keep Activity)을 켜고 Google Workspace를 연결해야 해요. 프롬프트에 `@Google Calendar`를 넣어 캘린더를 지정할 수 있어요. 참석자 초대와 위치·설명 수정은 못 해요. |
+   | **Gemini** | Google Calendar 등에서 일정을 만들고 찾고 수정해 달라고 요청할 수 있어요. 활동 기록 보관(Keep Activity)을 켜고 Google Workspace를 연결해야 해요. 프롬프트에 `@Google Calendar`를 넣어 캘린더를 지정할 수 있어요. Google Calendar가 아닌 캘린더 앱에서는 위치·설명 같은 일부 세부 정보를 수정하지 못해요(2026-11-16 기준). |
    | **ChatGPT** | 웹과 데스크톱의 플러그인(Plugins) 탭에서 플러그인을 설치해 쓸 수 있다고 안내돼요. 공식 문서의 예시는 Gmail과 Google Drive 플러그인이에요. Google Calendar는 **확인하지 못했어요.** |
 
    <FlowSteps title="Gemini에서 캘린더에 일정 추가하기 (도움말 기준)" officialUrl="https://support.google.com/gemini/answer/15305236?hl=ko" steps={[
      { where: 'Gemini 설정', action: '활동 기록 보관(Keep Activity) 켜기', result: '꺼져 있으면 캘린더에 연결할 수 없어요' },
      { where: 'gemini.google.com (Workspace와 같은 Google 계정)', action: '일정 요청 입력 예: "다음 주 수요일 오후 3시에 병원 일정 만들어 줘"', result: '연결이 안 돼 있으면 연결 안내가 나와요' },
      { where: '연결 안내 화면', action: '표시된 안내에 따라 Google Workspace 연결 승인' },
-     { where: '대답 아래', action: '만들어진 일정 확인. 틀렸으면 "실행취소" 또는 일정을 열어 수정', result: '참석자·위치·설명은 캘린더 앱에서 직접 고쳐요' },
+     { where: '대답 아래', action: '만들어진 일정 확인. 틀렸으면 "실행취소" 또는 일정을 열어 수정', result: 'Gemini가 못 고치는 세부 정보는 캘린더 앱에서 직접 고쳐요' },
    ]} />
 
    <ScreenshotPlaceholder caption="Gemini 앱에서 캘린더 일정 생성 및 관리하기 도움말 화면" officialUrl="https://support.google.com/gemini/answer/15305236?hl=ko" />
@@ -195,7 +195,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 
    AI가 정해 둔 시간에 일정과 할 일을 요약해 알려 주는 기능이에요. 조건이 있으니 먼저 확인하세요.
 
-   - **Gemini**: 일일·주간·월간 반복 작업을 예약할 수 있다고 안내돼요. 도움말의 예시에 "캘린더, 할 일 목록, 이메일의 일일 요약"이 있어요. 단, 이 기능은 개인 Google 계정이나 해당 Google Workspace 버전을 쓰는 업무·학교 계정에 점진적으로 제공되고 있어서(2026-10-19 기준) **아직 쓸 수 없는 계정도 있어요.** 활동 기록 보관이 켜져 있어야 하고, 활성 예약 작업은 최대 10개예요. 결과는 미리 준비돼서 빠르게 바뀌는 정보는 받을 때 최신이 아닐 수 있다고 해요. 관리는 gemini.google.com의 설정 및 도움말(Settings & help) > 예약된 작업에서 해요.
+   - **Gemini**: 일일·주간·월간 반복 작업을 예약할 수 있다고 안내돼요. 도움말의 예시에 "캘린더, 할 일 목록, 이메일의 일일 요약"이 있어요. 단, 이 기능은 개인 Google 계정이나 해당 Google Workspace 버전을 쓰는 업무·학교 계정에 점진적으로 제공되고 있어서(2026-10-19 기준) **아직 쓸 수 없는 계정도 있어요.** 활동 기록 보관이 켜져 있어야 하고, 활성 예약 작업은 최대 10개예요. 결과는 미리 준비돼서 빠르게 바뀌는 정보는 받을 때 최신이 아닐 수 있다고 해요. 관리는 gemini.google.com 사이드바의 Scheduled(예약)를 눌러서 해요(2026-11-16 기준).
    - **ChatGPT**: 반복 작업을 예약하고 **Scheduled**에서 상태와 실행 기록을 본다고 안내돼요. 요금제 조건은 위에서 밝혔듯 확인하지 못했어요. 공식 문서는 예약하기 전에 일반 채팅에서 프롬프트를 시험하고, 처음 몇 번의 실행 결과를 검토하라고 권해요.
    - **Claude**: 반복 실행은 [반복 업무 자동 실행하기](/ko/claude/c18-automate-recurring/)와 [Gmail·캘린더 아침 브리핑](/ko/automation/17-morning-briefing/)에서 다뤄요.
 
@@ -230,7 +230,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 | --- | --- | --- |
 | 오늘 할 일 정하기 | 할 일 전체, 마감, 하루에 할 수 있는 개수 | AI의 우선순위는 제안일 뿐이에요 |
 | 주간 시간표 | 옮길 수 없는 고정 일정, 일하는 시간대 | 시간 추정이 틀릴 수 있어요 |
-| 캘린더 반영 | 날짜, 시간, 일정 이름 | 만든 뒤 캘린더에서 확인. Gemini는 참석자 초대 불가 |
+| 캘린더 반영 | 날짜, 시간, 일정 이름 | 만든 뒤 캘린더에서 확인. Gemini는 일부 세부 정보 수정 불가 |
 | 여행 계획 | 동행, 예산, 속도, 피할 것 | 영업시간·요금·예약은 공식 사이트에서 확인 |
 | 약속 조율 문구 | 내 가능한 시간 후보 | 보내기 전에 요일 확인 |
 | 반복 브리핑 | 시각, 포함할 항목 | 서비스·계정에 따라 사용 가능 여부가 달라요 |
@@ -244,7 +244,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 
 ### 일정은 만들어졌는데 참석자나 장소가 비어 있어요
 
-- **원인**: Gemini는 일정에 참석자를 초대하거나 기존 일정의 위치·설명을 추가·수정하는 일은 못 한다고 도움말에 적혀 있어요.
+- **원인**: Gemini는 Google Calendar가 아닌 캘린더 앱에서는 위치·설명 같은 일부 세부 정보를 수정하지 못한다고 도움말에 적혀 있어요(2026-11-16 기준). 참석자 초대에 관한 문장은 이 페이지에서 더는 찾지 못했어요.
 - **해결**: 캘린더 앱에서 참석자와 위치, 설명을 직접 채우세요.
 
 ### AI가 알려 준 영업시간이 틀렸어요

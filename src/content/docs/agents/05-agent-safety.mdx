@@ -9,10 +9,10 @@ tools: ["Meta Muse", "Grok Bot", "ChatGPT Dots", "Claude"]
 duration: "20 min"
 prerequisites:
   - "Know what a personal AI agent is (Part 1)"
-lastVerified: 2026-10-10
+lastVerified: 2026-11-16
 sources:
   - title: "How We Built Safety Into Muse (Meta AI Research)"
-    url: "https://research.meta.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse"
+    url: "https://muse.ai/blog/security-and-safety-for-ai-agents-our-approach-with-muse"
   - title: "Muse Supplemental Terms of Service"
     url: "https://muse.ai/terms"
   - title: "Muse Privacy"
@@ -25,8 +25,8 @@ sources:
     url: "https://docs.x.ai/grok-bot/overview"
   - title: "Grok Bot docs: Security"
     url: "https://docs.x.ai/grok-bot/security"
-  - title: "Plans and billing (Cursor Help)"
-    url: "https://cursor.com/help/grok-bot/plans"
+  - title: "Plans and billing (Grok Help; moved from Cursor Help)"
+    url: "https://grok.com/help/grok-bot/plans"
   - title: "Control your dot (OpenAI developer docs)"
     url: "https://learn.chatgpt.com/docs/dots/controls"
   - title: "Tasks and memory (OpenAI developer docs)"
@@ -90,14 +90,14 @@ All as of 2026-10-10, and all read directly from each product's official pages.
 | Item | Meta Muse | Grok Bot | ChatGPT Dots | Claude |
 | --- | --- | --- | --- | --- |
 | Approval | Human approval for sensitive actions like sending email and purchases. Scope can be chosen from one time to permanent | Approval cards (Allow once, Always allow, Deny) and model-based Auto Review | Four levels of custom rules: act without asking, act when I say so, confirm before acting, hand off to me | Connectors ask for approval before sending, replying, deleting, and so on. Chrome has Manual, Auto, and Skip modes |
-| Payments | Stripe Link one-time cards hide your real card details from merchants and the agent. Sites with a saved payment method need human approval every time | Payment confirmation is entered by you taking over the computer. No dedicated payment method or spending cap found in the docs | No payment-specific feature found in the docs | Chrome doesn't make purchases or handle card details, regardless of permissions |
+| Payments | Stripe Link one-time cards hide your real card details from merchants and the agent. Sites with a saved payment method need human approval every time | A card saved in the Bot's Vault fills in at checkout without a separate approval each time, so don't save the card if you want to approve every payment (as of 2026-11-16). Steps like bank card verification are done by you taking over the computer. No spending cap found in the docs | No payment-specific feature found in the docs | Chrome doesn't make purchases or handle card details, regardless of permissions |
 | Passwords | Direct input goes to a secure store that Muse can't see. The agent sees only a proxy token | You enter passwords, two-factor authentication, CAPTCHAs, and payment confirmation yourself. Don't send them in chat | Site login information is passed through a private flow outside the conversation. Reusing a saved login needs your confirmation | In 1Password login requests (macOS beta), Claude can't see the password |
 | Logs | An activity log (audit trail) shows what it did and will do | The docs describe a routine run history (last 20 per routine) | The Activity screen shows delegated tasks | Cloud sessions apply results after you review the diff |
 | Stopping and revoking | You can change access and disconnect. The agent stops while you're operating the browser directly | The docs lay out an access revocation procedure (stop routines, log out, disconnect connectors, delete files) | Pause, stop delegated tasks, delete recurring tasks, delete the dot (can't be undone) | Computer use can be stopped at any time. Connectors can be disconnected |
 | Official warning | "Muse will make mistakes" | "Auto Review doesn't replace least privilege and explicit approval" | "Your dot can make mistakes" | Warns that risk remains in Chrome even with safety classifiers |
 
 <Aside type="note" title="Muse isn't available in Korea yet">
-Muse is officially available only in the US, Canada, and Singapore (as of 2026-11-02). The above is reference information to know before it launches. For comparison details, see [Part 1](/agents/01-agents-compared/).
+Muse is officially available only in the US, Canada, Japan, and Singapore (as of 2026-11-16). The above is reference information to know before it launches. For comparison details, see [Part 1](/agents/01-agents-compared/).
 </Aside>
 
 ## Step by step
@@ -134,7 +134,7 @@ Read my inbox for the past week and sum up in three lines only the emails that n
 Set irreversible things (sending, deleting, permission changes, payments, agreeing to terms) to **always ask**.
 
 - **Dots**: Under Settings > Personalization > Custom rules (on mobile, Customize > Custom rules), you can choose "confirm before acting" or "hand off to me." The docs say the rules are "guidance the dot tries to follow and can get wrong," and they don't grant new app or computer access. If you write "show me a draft and don't send" in the instructions, drafting isn't read as permission to send.
-- **Grok Bot**: Choose **Always allow** on the approval card carefully. Per the docs, Ask first takes priority over Allow automatically. Approvals for tasks started by routines or other Bots expire after about 10 minutes and won't run.
+- **Grok Bot**: Choose **Always allow** on the approval card carefully. Per the docs, Ask first takes priority over Allow automatically. Approvals for tasks started by routines or other background work expire after 30 minutes and won't run (as of 2026-11-16).
 - **Muse**: The terms say not to take state-changing actions (sending messages, financial transactions, deleting data, changing settings) without prior human review, and to be careful about giving advance approval too.
 - **Claude in Chrome**: Manual approves every action, Auto proceeds with safety checks, and Skip runs without checks. Start with Manual. It asks about file downloads and entering sensitive information even on sites you've set to "always allow." This is covered in [C11](/claude/c11-chrome-computer-use/).
 
@@ -145,7 +145,7 @@ Claude routines run without anyone watching. Commits and PRs are made under your
 ### 4. Pay with a limited method, and approve every time
 
 <Aside type="caution" title="Agent-side spending caps aren't confirmed">
-In the Grok Bot docs we couldn't confirm a dedicated payment method or spending cap feature, and in the Dots docs we couldn't confirm a payment feature at all. Muse has Stripe Link one-time cards and approval before purchases, but Meta says this protection is limited to "eligible purchases." This checklist is written on the premise that **you create the spending cap yourself**.
+In the Grok Bot docs we couldn't confirm a spending cap feature (a card saved in its Vault fills in at checkout without a separate approval each time, as of 2026-11-16), and in the Dots docs we couldn't confirm a payment feature at all. Muse has Stripe Link one-time cards and approval before purchases, but Meta says this protection is limited to "eligible purchases." This checklist is written on the premise that **you create the spending cap yourself**.
 </Aside>
 
 - For the card you use with an agent, use **a separate card with a low limit, or a one-time card**. Don't connect your main card.
@@ -189,7 +189,7 @@ In the Grok Bot docs we couldn't confirm a dedicated payment method or spending 
 **Shared devices**
 
 - Don't leave an agent app logged in on a public PC or a family device. Log out after using it.
-- In Dots, connecting your computer is optional and only one machine at a time. A computer you've connected is accessible while the app is open. Don't turn it on for shared devices.
+- In Dots, connecting your computer is optional. You can connect more than one, and each thread uses one computer at a time (as of 2026-11-16). A computer you've connected is accessible while the app is open. Don't turn it on for shared devices.
 - Claude's computer use **has no sandbox and can see everything on your screen.** Close sensitive apps and windows before using it.
 - With Grok Bot, all Bots share one computer, so when a task is done it recommends logging out of services, cleaning up temporary files, and revoking connector approvals. Deleting a Bot doesn't delete the files and browser sessions on the shared computer.
 - When you share a Grok Bot with a share link, its **settings (configuration) are exposed**. Don't put secrets, customer information, or internal URLs in them.
