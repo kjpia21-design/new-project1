@@ -10,7 +10,7 @@ duration: "30분"
 prerequisites:
   - "Gmail 또는 Outlook 계정 (기능에 따라 유료·회사 플랜이 필요할 수 있어요)"
   - "연습용 가상 메일 스레드 (실제 고객 정보·기밀이 든 메일은 쓰지 마세요)"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Catch up on email threads with AI Overview conversation summaries (Gmail Help)"
     url: "https://support.google.com/mail/answer/16561387"
@@ -28,6 +28,8 @@ sources:
     url: "https://support.claude.com/en/articles/10166901-use-google-workspace-connectors"
   - title: "Set up the Microsoft 365 connector (Claude Help Center)"
     url: "https://support.claude.com/en/articles/12542951-set-up-the-microsoft-365-connector"
+  - title: "Connect to Microsoft 365 (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/15183774-connect-to-microsoft-365"
 status: published
 ---
 
@@ -75,7 +77,7 @@ Gemini 기능이 포함된 구체적인 요금제 이름과 가격, Outlook Copi
 | 요약 | 스레드 위 AI Overview(Summarize this email), Ask Gemini에 요청 | 스레드 위 Summary by Copilot(새 Outlook) / Summarize(클래식) | 대화로 "이 스레드 요약해 줘" (메일 검색·읽기) |
 | 답장 초안 | Help me write, Ask Gemini | Draft / Draft with Copilot, 길이·톤 조절 | 메일 초안 작성, 초안 목록 보기 |
 | 정리 | Ask Gemini로 여러 메일 삭제·라벨 추가 요청 | (이번에 확인하지 못함) | 라벨·스레드 관리 |
-| 필요한 것 | 요약: 업무·학교·개인 Google 계정. 초안·Ask Gemini: 적격 Workspace 또는 Google AI 요금제 | Copilot이 포함된 구독 또는 회사 라이선스 | Gmail: 모든 사용자. Microsoft 365: 모든 Claude 플랜이지만 회사용 Microsoft 계정과 관리자 동의 필요 |
+| 필요한 것 | 요약: 업무·학교·개인 Google 계정. 초안·Ask Gemini: 적격 Workspace 또는 Google AI 요금제 | Copilot이 포함된 구독 또는 회사 라이선스 | Gmail: 모든 사용자. Microsoft 365: 모든 Claude 플랜. 회사·학교 계정은 관리자 동의 필요, 개인 Microsoft 계정은 Free·Pro·Max·Ultra에서만 연결(2026-11-16 기준) |
 | 한국어 | 지원 언어 목록에 Korean 포함(요약, 초안, 사이드 패널) | Copilot 지원 언어 목록에 Korean 포함 | Claude는 한국어로 대화 가능 |
 | 보내기 | 내가 직접 보내요 | 내가 직접 보내요 | 보내기·답장·전달은 기본적으로 매번 승인을 물어요 |
 
@@ -125,7 +127,7 @@ Gmail 도움말에 따르면 "Help me write"는 개인 Google 계정에서는 �
 
 5. **Claude 커넥터로 메일 다루기 (선택)**
 
-   Gmail은 입력창의 **+** > Connectors에서 Gmail을 연결해요(Team/Enterprise는 Owner가 먼저 켜 둬야 해요). 연결 방법과 승인 창은 [C7. 커넥터](/ko/claude/c07-connectors/)에 자세히 있어요. Outlook은 Microsoft 365 커넥터가 SharePoint·OneDrive·Outlook·Teams를 검색해요. 이 커넥터는 모든 Claude 플랜에서 제공되지만 Microsoft Business 플랜에 묶인 Entra 테넌트가 필요하고, `@outlook.com`·`@hotmail.com` 같은 개인 Microsoft 계정은 연결할 수 없어요. 회사 관리자의 동의도 필요해서, 회사 메일이라면 먼저 관리자와 상의하세요.
+   Gmail은 입력창의 **+** > Connectors에서 Gmail을 연결해요(Team/Enterprise는 Owner가 먼저 켜 둬야 해요). 연결 방법과 승인 창은 [C7. 커넥터](/ko/claude/c07-connectors/)에 자세히 있어요. Outlook은 Microsoft 365 커넥터가 SharePoint·OneDrive·Outlook·Teams를 검색해요. 이 커넥터는 모든 Claude 플랜에서 제공돼요. 회사·학교 계정은 Microsoft Entra 테넌트가 필요하고 Microsoft Entra 전역 관리자(Global Administrator)가 한 번 동의해 줘야 하니, 회사 메일이라면 먼저 관리자와 상의하세요. Anthropic 도움말에 따르면(2026-11-16 기준) Free·Pro·Max·Ultra 플랜에서는 Outlook.com·Hotmail·Live·MSN 같은 개인 Microsoft 계정도 관리자 없이 연결할 수 있어요. 이때는 Outlook과 OneDrive가 연결되고 SharePoint와 Teams는 포함되지 않아요. Team·Enterprise 플랜에는 개인 계정 선택지가 표시되지 않아요.
 
    <FlowSteps title="Claude에서 Gmail 커넥터 쓰기" officialUrl="https://support.claude.com/en/articles/10166901-use-google-workspace-connectors" steps={[
      { where: 'Claude 입력창', action: '+ > Connectors에서 Gmail 연결', result: 'Google 로그인·동의' },
@@ -185,8 +187,8 @@ Gmail 도움말에 따르면 "Help me write"는 개인 Google 계정에서는 �
 
 ### Claude가 Outlook 메일에 연결되지 않아요
 
-- **원인**: Microsoft 365 커넥터는 개인 Microsoft 계정으로는 연결할 수 없고, Entra 관리자 동의와 (Team/Enterprise는) Claude Owner의 활성화가 필요해요.
-- **해결**: 회사 관리자에게 설정 문서를 전달하고, 개인 계정이라면 메일을 복사해 대화에 붙여넣는 방법을 쓰세요(민감 정보는 가리고).
+- **원인**: 회사·학교 계정은 Entra 관리자 동의와 (Team/Enterprise는) Claude Owner의 활성화가 필요해요. 개인 Microsoft 계정은 Free·Pro·Max·Ultra 플랜에서만 연결할 수 있고, "Work or school account"로는 로그인할 수 없어요(2026-11-16 기준).
+- **해결**: 회사 관리자에게 설정 문서를 전달하세요. 개인 계정이라면 연결할 때 "Personal account"를 골랐는지 확인하고, 그래도 안 되면 메일을 복사해 대화에 붙여넣는 방법을 쓰세요(민감 정보는 가리고).
 
 ### 첨부 파일 내용을 못 읽어요
 
