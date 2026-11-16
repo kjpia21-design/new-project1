@@ -11,7 +11,7 @@ prerequisites:
   - "A paid Claude plan (Pro, Max, Ultra, Team, or an Enterprise Premium or Chat + Claude Code seat)"
   - "A GitHub account and one repository to hand work to"
   - "(If you use the terminal method) A terminal with Claude Code installed"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -60,7 +60,7 @@ import CloudFlowDiagram from '../../../components/diagrams/CloudFlowDiagram.astr
 | **Cloud session** | A Claude Code session that runs on cloud infrastructure. It keeps running even if you turn off your device. |
 | **Claude GitHub App** | One way to connect GitHub. You approve it through web onboarding, and private repositories work only where the app is installed. |
 | **`/web-setup`** | Another way to connect, run from the terminal. It sends the `gh` token from your computer to your account. It works whether or not the app is installed. |
-| **Environment** | A saved configuration of network access, environment variables, and a setup script. The first time you use it, a **Default** environment (Trusted network, no variables or script) is created. |
+| **Environment** | A saved configuration of network access, environment variables, and a setup script. The first time you use it, a **Default** environment (Limited network access, no variables or script) is created. |
 | **Setup script** | A script that runs before the session starts. Use it for things like installing packages. |
 | **teleport** | A feature that brings a cloud session into your terminal so you can continue the work. |
 | **Routines** | A feature that saves a prompt + repository + connectors and runs them automatically in the cloud. Currently a research preview. As of 2026-10-26, the official docs present this feature as **cloud scheduled tasks, formerly called routines**. The address (claude.ai/code/routines), the `/routines` alias, and the screens on some accounts still say "Routines." This article uses the familiar name, "routines." Cloud sessions that a routine starts begin in auto mode (a classifier decides on approvals for you), and for intervals not in the presets you set a cron expression under Custom, written in UTC (as of 2026-10-26; intervals more frequent than hourly are rejected). |
@@ -167,7 +167,7 @@ Depending on your account, you may see a **"cloud session credits"** item on the
 
    In the environment selector, click the settings icon to edit network access, environment variables, and the setup script.
 
-   - **Network**: The default is Trusted. If you need to install packages or call an external API, adjust the level. The four levels are in the table below.
+   - **Network**: The default is Limited with Allow package managers checked. If you need to call an external API, add its domain or adjust the level. The three levels are in the table below.
    - **Setup script**: Runs before the session starts. If it finishes within about 5 minutes, a filesystem snapshot is cached and later sessions start faster.
    - **Environment variables**: Stores key-value pairs. But anyone who uses the environment can read them, so **don't store secrets.**
 
@@ -213,16 +213,17 @@ Depending on your account, you may see a **"cloud session credits"** item on the
 | Terminal | `claude --cloud "task"` (push first) |
 | Routines | claude.ai/code/routines, the desktop app, CLI `/schedule` |
 
-### The four network access levels
+### The three network access levels
 
 | Level | Meaning |
 | --- | --- |
 | **None** | No outside access. Claude Code's own communication with the Anthropic API still works. |
-| **Trusted** | Access only to allowlisted domains (package registries, GitHub, cloud SDKs, and so on). **The default for the Default environment.** |
+| **Limited** | Access to the default allowlist (package registries, GitHub, cloud SDKs) while **Allow package managers** is checked, plus any domains you add under **Allowed domains**. **A new environment starts here.** |
 | **Full** | Access to all domains. |
-| **Custom** | Uses an allowlist you make. You can choose whether to include the default list. |
 
-This document doesn't cover the full list of domains allowed under Trusted. Check the default allowed domains section of the official docs.
+The levels used to be None, Trusted, Full, and Custom. An environment saved as Trusted now opens as Limited with Allow package managers checked, and one saved as Custom opens as Limited with its own domain list (as of 2026-11-16).
+
+This document doesn't cover the full list of domains in the default allowlist. Check the default allowed domains section of the official docs.
 
 ### Commonly used commands
 
@@ -297,8 +298,8 @@ Moving through the CLI is **one-way** (cloud to terminal). If you continue in th
 
 ### Package installs or outside sites are blocked
 
-- **Cause**: The environment's network access level may be outside what's allowed (None means no outside access, Trusted means allowlisted domains only).
-- **Fix**: Raise the network access level in the environment settings, or use Custom and add the domains you need. If an install keeps repeating, put it in the setup script to take advantage of the cache.
+- **Cause**: The environment's network access level may be outside what's allowed (None means no outside access, Limited means allowlisted domains only).
+- **Fix**: Raise the network access level in the environment settings, or choose Limited and add the domains you need under Allowed domains. If an install keeps repeating, put it in the setup script to take advantage of the cache.
 
 ### I can't push to GitLab/Bitbucket repositories
 
@@ -324,7 +325,7 @@ Moving through the CLI is **one-way** (cloud to terminal). If you continue in th
 - **Don't put secrets in environment variables.** Use network secrets (all paid plans, as of 2026-11-02).
 - **Check before sharing.** Before sharing a session as Public, make sure it doesn't contain credentials.
 - **You can change models inside a session too.** Use it with an argument, like `/model sonnet`.
-- **If you need faster responses, try fast mode.** You can turn it on in cloud sessions with `/fast on`, and in the browser (claude.ai/code) a switch appears in the model menu of the message input box. It applies only to the session where you turn it on and isn't saved as a default. It works only with Opus-family models (Opus 5.5 by default; fast mode for Opus 4.8 is deprecated and will be removed on 2026-11-30, so move to Opus 5.5), on subscription plans extra usage (usage credits) must be on and it costs more, and on Team/Enterprise an Owner must allow it first. For the detailed conditions, see the [fast mode docs](https://code.claude.com/docs/en/fast-mode).
+- **If you need faster responses, try fast mode.** You can turn it on in cloud sessions with `/fast on`, and in the browser (claude.ai/code) a switch appears in the model menu of the message input box. It applies only to the session where you turn it on and isn't saved as a default. On the Anthropic API it works with Fable 5.2 and Opus models (Opus 5.5, Opus 5, Opus 4.8), not Sonnet or Haiku (as of 2026-11-16). Opus 5.5 is the default, fast mode on Fable 5.2 needs Claude Code v2.1.321 or later, and fast mode for Opus 4.8 is deprecated and will be removed on 2026-11-30, so move to Opus 5.5. Also, on subscription plans extra usage (usage credits) must be on and it costs more, and on Team/Enterprise an Owner must allow it first. For the detailed conditions, see the [fast mode docs](https://code.claude.com/docs/en/fast-mode).
 - **If GitHub work gets blocked, have it use `gh api`.** In cloud sessions, you can call the GitHub REST API with `gh api`. The built-in `gh api` works even if the image has no GitHub CLI (v2.1.288 and later). The proxy attaches the token for you, so you don't need to sign in separately, but GraphQL-only features (such as Projects v2) and `gh pr` and `gh issue` are blocked.
 
 <Aside type="note" title="This site was built this way too">

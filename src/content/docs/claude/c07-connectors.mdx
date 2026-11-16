@@ -11,7 +11,7 @@ prerequisites:
   - "A claude.ai account"
   - "An account for the service you'll connect (Google account, Notion account, etc.)"
   - "(For Team/Enterprise) Check that your organization Owner has already turned connectors on"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -82,7 +82,7 @@ Salesforce in Claude appeared as a beta in the 2026-09-15 release notes. It's av
 
 <Aside type="note" title="Notes on Notion and the directory">
 - **Notion**: There's no dedicated click-by-click help article (support.claude.com), only the general connectors help. On the official connector page (claude.com/connectors/notion), we confirmed that it's a connector built by Notion and verified by Anthropic (added November 2025), that it requires login, and that the server address is `https://mcp.notion.com/mcp` (as of 2026-10-12). The same page lists read and write capabilities such as search, fetch, creating, editing, and moving pages, creating databases, and writing comments, but it doesn't say which plans can use it. The Notion connection steps below are general principles, so follow the actual on-screen guidance.
-- The total number of connectors keeps changing. The official connectors page (claude.com/connectors) shows "973 connectors" as of 2026-10-19. For the latest list, see that page or the directory in the app.
+- The total number of connectors keeps changing. The official connectors page (claude.com/connectors) shows "1128 connectors" as of 2026-11-16. For the latest list, see that page or the directory in the app.
 - The menu location may appear as "Customize > Connectors" in the latest docs and "Settings > Connectors" in older ones.
 </Aside>
 
@@ -208,7 +208,7 @@ Salesforce in Claude appeared as a beta in the 2026-09-15 release notes. It's av
 
 ### I can't share connector data in a team Project
 
-- **Cause**: On Team/Enterprise, connectors work only in private Projects, and chats with synced content can't be shared.
+- **Cause**: On Team/Enterprise, the Google Drive connector can add files only in private Projects, and if the organization turns off "Share chats that use connectors," chats that use connectors or synced content can't be shared (as of 2026-11-16).
 - **Fix**: Work in a private Project and organize just the results to share. See [C5. Projects](/claude/c05-projects/).
 
 ## Practical tips

@@ -11,7 +11,7 @@ prerequisites:
   - "claude.ai 계정"
   - "연결할 서비스의 계정 (Google 계정, Notion 계정 등)"
   - "(Team/Enterprise라면) 조직 Owner가 커넥터를 먼저 켜 두었는지 확인"
-lastVerified: 2026-11-02
+lastVerified: 2026-11-16
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -82,7 +82,7 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 
 <Aside type="note" title="Notion과 디렉터리 참고">
 - **Notion**: 클릭 단계별 전용 도움말(support.claude.com)은 없고, 일반 커넥터 도움말만 있어요. 공식 커넥터 페이지(claude.com/connectors/notion)에서는 Notion이 만든 커넥터이고 Anthropic이 검증했으며(2025년 11월 추가), 로그인이 필요하고 서버 주소가 `https://mcp.notion.com/mcp`라는 점을 확인했어요(2026-10-12 기준). 같은 페이지에는 검색·가져오기·페이지 생성·수정·이동·데이터베이스 생성·댓글 작성 같은 읽기·쓰기 기능이 적혀 있지만, 쓸 수 있는 플랜은 적혀 있지 않아요. 아래 Notion 연결 절차는 일반 원칙이고, 실제 화면 안내를 따르세요.
-- 커넥터 전체 개수는 계속 바뀌어요. 공식 커넥터 페이지(claude.com/connectors)는 2026-10-19 기준 "973 connectors"로 표시해요. 최신 목록은 그 페이지나 앱의 디렉터리에서 보세요.
+- 커넥터 전체 개수는 계속 바뀌어요. 공식 커넥터 페이지(claude.com/connectors)는 2026-11-16 기준 "1128 connectors"로 표시해요. 최신 목록은 그 페이지나 앱의 디렉터리에서 보세요.
 - 메뉴 위치가 최신 문서의 "Customize > Connectors"와 예전의 "Settings > Connectors"로 섞여 보일 수 있어요.
 </Aside>
 
@@ -208,7 +208,7 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 
 ### 팀 프로젝트에서 커넥터 데이터를 공유할 수 없어요
 
-- **원인**: Team/Enterprise에서 커넥터는 비공개 프로젝트에서만 작동하고, 동기화된 콘텐츠가 있는 채팅은 공유할 수 없어요.
+- **원인**: Team/Enterprise에서 Google Drive 커넥터로 파일을 추가하는 것은 비공개 프로젝트에서만 되고, 조직이 "Share chats that use connectors"를 꺼 두면 커넥터나 동기화된 콘텐츠를 쓴 채팅은 공유할 수 없어요(2026-11-16 기준).
 - **해결**: 비공개 프로젝트에서 작업하고 결과만 정리해 공유하세요. [C5. 프로젝트](/ko/claude/c05-projects/)를 참고하세요.
 
 ## 실전 팁

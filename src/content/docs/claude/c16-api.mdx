@@ -11,7 +11,7 @@ prerequisites:
   - "A Claude Console account (platform.claude.com)"
   - "Billing set up for API use (separate from a Pro/Max/Ultra subscription)"
   - "A terminal, and Python 3.10 or later (for the Python examples)"
-lastVerified: 2026-11-10
+lastVerified: 2026-11-16
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -48,7 +48,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 - You create keys in the Console under Settings > API keys. They start with `sk-ant-`, and the full key is shown **only once, when you create it**.
 - If you put the key in the `ANTHROPIC_API_KEY` environment variable, the SDK reads it automatically. **Never write the key directly in your code.**
 - The model IDs are `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5`, and `claude-fable-5-2` (Fable 5.1, `claude-fable-5-1`, is the previous version).
-- Prices per 1M tokens (input/output) are $4/$20 for Opus 5.5 and $2/$10 for Sonnet 5.5 (as of 2026-11-02).
+- Prices per 1M tokens (input/output) are $4/$20 for Opus 5.5 and $2/$10 for Sonnet 5.5 (as of 2026-11-16).
 - If you only swap the model ID in an example, **each model blocks different parameters.** Opus 5.5 can't turn thinking off, and Haiku 5.5 returns a 400 error for `budget_tokens` and sampling parameters. See the quick reference tables for details.
 </Summary>
 
@@ -82,7 +82,7 @@ The screen formerly called Workbench was renamed **Playground** on 2026-08-18 (p
 | Workspace key | Legacy. |
 
 <Aside type="note" title="Tiers and billing notes">
-Rate limits are set by usage tier (Start, Build, Scale, Custom), and your organization is placed automatically based on usage history (official Rate limits docs, 2026-11-02). Monthly spend caps are $500 for Start, $1,000 for Build, and $200,000 for Scale, and per-model requests-per-minute and token limits differ by tier. For example, Sonnet 5.5 on the Start tier allows 4,000 requests, 2,000,000 input tokens, and 400,000 output tokens per minute. New organizations may start on an Evaluation tier that's lower than this. To add credits, per the official billing help, sign in to the Console with the Admin or Billing role, go to Settings > Billing, click "Buy credits," enter an amount, and confirm. Purchased credits apply right away (confirmed 2026-10-13). Purchased credits expire one year after the purchase date, the expiration date can't be extended, and they are non-refundable (confirmed 2026-10-19). The minimum and maximum purchase amounts aren't stated in this help article. Organizations on invoice (billed) contracts are billed monthly. For adding a payment method, follow the prompts in the Console.
+Rate limits are set by usage tier (Start, Build, Scale, Custom), and your organization is placed automatically based on usage history (official Rate limits docs, 2026-11-16). Monthly spend caps are $500 for Start, $1,000 for Build, and $200,000 for Scale, and per-model requests-per-minute and token limits differ by tier. For example, Sonnet 5.5 on the Start tier allows 4,000 requests, 2,000,000 input tokens, and 400,000 output tokens per minute. New organizations may start on an Evaluation tier that's lower than this. To add credits, per the official billing help, sign in to the Console with the Admin or Billing role, go to Settings > Billing, click "Buy credits," enter an amount, and confirm. Purchased credits apply right away (confirmed 2026-10-13). Purchased credits expire one year after the purchase date, the expiration date can't be extended, and they are non-refundable (confirmed 2026-10-19). The minimum and maximum purchase amounts aren't stated in this help article. Organizations on invoice (billed) contracts are billed monthly. For adding a payment method, follow the prompts in the Console.
 </Aside>
 
 ## Step by step
@@ -128,13 +128,13 @@ Rate limits are set by usage tier (Start, Build, Scale, Custom), and your organi
 
 3. **Make your first call with curl**
 
-   This is the example from the official quickstart. When you call over HTTP directly, you need the `x-api-key` header and the `anthropic-version: 2023-06-01` header.
+   This is the example from the official quickstart. When you call over HTTP directly, you need the `x-api-key` header and the `anthropic-version` header. The official quickstart now uses `anthropic-version: 2026-10-21` (as of 2026-11-16).
 
    ```bash
    curl https://api.anthropic.com/v1/messages \
      -H "content-type: application/json" \
      -H "x-api-key: $ANTHROPIC_API_KEY" \
-     -H "anthropic-version: 2023-06-01" \
+     -H "anthropic-version: 2026-10-21" \
      -d '{
        "model": "claude-opus-5-5",
        "max_tokens": 1000,
@@ -211,7 +211,7 @@ Rate limits are set by usage tier (Start, Build, Scale, Custom), and your organi
 
 ## Quick reference
 
-### Model IDs and prices (per 1M tokens, input/output, as of 2026-11-02)
+### Model IDs and prices (per 1M tokens, input/output, as of 2026-11-16)
 
 Prices are in US dollars. For details, check the [official pricing page](https://platform.claude.com/docs/en/about-claude/pricing).
 
@@ -224,7 +224,7 @@ Prices are in US dollars. For details, check the [official pricing page](https:/
 | Haiku 5.5 | `claude-haiku-5-5` | from $0.10 / from $0.50 |
 
 - The **Batch API** is a 50% discount.
-- **Prompt cache reads** cost 10% of the base input price. The exceptions are Fable 5.1 at 2.5%, and Opus 5.5 and Sonnet 5.5 at 5%.
+- **Prompt cache reads** cost 10% of the base input price. The exceptions are Fable 5.2 and Fable 5.1 at 2.5%, and Opus 5.5 and Sonnet 5.5 at 5%.
 - For how to choose a model, see [C1](/claude/c01-overview/); for how to cut costs by splitting work across models, see [C15](/claude/c15-model-division/).
 
 ### Required parts of a request (direct HTTP calls)
@@ -232,7 +232,7 @@ Prices are in US dollars. For details, check the [official pricing page](https:/
 | Item | Value |
 | --- | --- |
 | URL | `POST https://api.anthropic.com/v1/messages` |
-| Headers | `content-type: application/json`, `x-api-key: $ANTHROPIC_API_KEY`, `anthropic-version: 2023-06-01` (per the official quickstart. See below for the new API version. As of 2026-10-26, the migration docs say the API accepts the key through both the `X-Api-Key` and `Authorization: Bearer <key>` headers) |
+| Headers | `content-type: application/json`, `x-api-key: $ANTHROPIC_API_KEY`, `anthropic-version: 2026-10-21` (per the official quickstart as of 2026-11-16; the older `2023-06-01` still works and gives the old behavior. See below for the new API version. As of 2026-10-26, the migration docs say the API accepts the key through both the `X-Api-Key` and `Authorization: Bearer <key>` headers) |
 | Body | `model`, `max_tokens`, `messages` (the system prompt goes in `system`) |
 
 ### Per-model request restrictions (watch for 400 errors, as of 2026-11-02)
@@ -243,7 +243,7 @@ If you only change `model` in an example, you can hit a 400 error for the reason
 | --- | --- |
 | Opus 5.5 | Sampling parameters (`temperature`, `top_p`, `top_k`) and assistant message prefill also return a 400 error. You can't turn thinking off. `thinking: {"type": "disabled"}` and `{"type": "enabled", ...}` return a 400 error. Leave out the `thinking` field and control depth with `effort`. `tool_choice` of `any` or `tool` also returns a 400 error, so use `auto` and strict tool use. |
 | Sonnet 5.5 | Five settings return a 400 error: thinking budgets (`budget_tokens`), sampling parameters (`temperature`, `top_p`, `top_k`), assistant message prefill, `tool_choice` of `any` or `tool` (use `auto` and strict tool use), and `thinking: {"type": "disabled"}` (to turn off up-front thinking, use `thinking: {"type": "between_tools"}`). |
-| Fable 5.1, Mythos 5.1 (not re-checked for 5.2) | `tool_choice` of `any` or `tool` is not supported and returns a 400 error (`auto` and `none` still work). If you need tool input that matches a schema, use strict tool use. |
+| Fable 5.2, Fable 5.1, Mythos 5.2, Mythos 5.1 (5.2 confirmed 2026-11-16) | `tool_choice` of `any` or `tool` is not supported and returns a 400 error (`auto` and `none` still work). If you need tool input that matches a schema, use strict tool use. |
 | Haiku 5.5 | Code written the Haiku 4.5 way may break. `budget_tokens` (manual extended thinking), `temperature`, `top_p`, `top_k`, and assistant message prefill can each cause a 400 error. Adaptive thinking is the default, so the response may start with a `thinking` block, and that text is omitted unless you set `thinking.display` to `"summarized"`. |
 
 - **New API version 2026-10-21 (released 2026-10-21, as of 2026-10-26)**: The new major SDK versions (Python `anthropic` 2.0.0, TypeScript `@anthropic-ai/sdk` 1.0.0, C# 13.0.0, Go 2.0.0, Java 3.0.0, PHP, Ruby, and others) and the `ant` CLI 2.0.0 send `anthropic-version: 2026-10-21` by default. If you call without an SDK, you need to change this header value to `2026-10-21` to get the new behavior; if you keep sending the old `2023-06-01`, you get the old behavior. In the new version, sending `temperature`, `top_p`, or `top_k` returns a 400 error even at default values. `citations` on user messages and `document` blocks inside assistant messages also return a 400 error. The new SDKs send the API key as `Authorization: Bearer`. Before upgrading, follow the checklist in the [official migration docs](https://platform.claude.com/docs/en/api/migration-2026-10-21).
@@ -278,7 +278,7 @@ If you only change `model` in an example, you can hit a 400 error for the reason
 ### I get an error when calling over HTTP directly
 
 - **Cause**: A required header may be missing.
-- **Fix**: Check the `x-api-key` and `anthropic-version: 2023-06-01` headers and the `max_tokens` value.
+- **Fix**: Check the `x-api-key` and `anthropic-version: 2026-10-21` headers and the `max_tokens` value.
 
 ### I switched to Opus 5.5 or Haiku 5.5 and got a 400 error
 

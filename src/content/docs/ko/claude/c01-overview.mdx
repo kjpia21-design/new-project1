@@ -8,7 +8,7 @@ category: claude
 tools: ["Claude", "Claude Code"]
 duration: "15분"
 prerequisites: ["Claude 계정 (무료 계정도 가능)"]
-lastVerified: 2026-11-10
+lastVerified: 2026-11-16
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -32,11 +32,11 @@ import PromptBox from '../../../../components/PromptBox.astro';
 import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.astro';
 
 <Summary>
-- 현재 모델은 **Fable 5.2, Opus 5.5, Sonnet 5.5, Haiku 5.5** 4종이에요. (2026-11-10 기준) Fable 5.2는 2026-11-09에 출시돼 Fable 5.1을 대신하는 기본 Fable 모델이에요.
+- 현재 모델은 **Fable 5.2, Opus 5.5, Sonnet 5.5, Haiku 5.5** 4종이에요. (2026-11-16 기준) Fable 5.2는 2026-11-09에 출시돼 Fable 5.1을 대신하는 기본 Fable 모델이에요.
 - 공식 문서는 "잘 모르겠다면 대부분의 워크로드에는 **Opus 5.5로 시작**하라"고 안내해요.
 - Claude Code의 기본값(`default`)도 Opus 5.5예요. **Fable은 어떤 플랜에서도 기본값이 아니라서 직접 골라야 해요.**
 - 대량·저지연 작업은 Haiku, 속도와 균형은 Sonnet, 정말 어려운 장기 추론은 Fable이 어울려요.
-- 가격(API 기준)은 모델마다 달라요. 아래 표는 **2026-10-10 기준**이에요.
+- 가격(API 기준)은 모델마다 달라요. 아래 표는 **2026-11-16 기준**이에요.
 </Summary>
 
 ## 이 튜토리얼로 할 수 있게 되는 것
@@ -56,20 +56,20 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 | **모델 ID** | API나 설정 파일에서 모델을 가리키는 이름이에요. 예: `claude-opus-5-5` |
 | **별칭(alias)** | Claude Code에서 쓰는 짧은 이름이에요. 예: `opus`, `sonnet`, `haiku`, `fable`, `default` |
 
-### 모델 4종 한눈에 비교 (2026-10-10 기준)
+### 모델 4종 한눈에 비교 (2026-11-16 기준)
 
 | 모델 | 이럴 때 | 속도 | API 가격 (100만 토큰당 입력/출력) | 모델 ID |
 | --- | --- | --- | --- | --- |
-| **Fable 5.2** | 까다로운 추론, 장기(long-horizon) 에이전트 작업 | 느림 | $8 / $40 | `claude-fable-5-2` |
+| **Fable 5.2** | 까다로운 추론, 장기(long-horizon) 에이전트 작업 | 보통 | $8 / $40 | `claude-fable-5-2` |
 | **Opus 5.5** | 장시간 에이전트형 코딩, 지식 업무. **공식 권장 시작점** | 보통 | $4 / $20 | `claude-opus-5-5` |
 | **Sonnet 5.5** | 속도와 지능의 최고 조합 | 빠름 | $2 / $10 | `claude-sonnet-5-5` |
 | **Haiku 5.5** | 분류·추출·라우팅처럼 대량·저지연 작업 | 가장 빠름 | $0.10부터 / $0.50부터 | `claude-haiku-5-5` |
 
 - 위 가격은 API 기준이에요. Batch API는 50% 할인돼요. Haiku 5.5는 프롬프트가 100K 토큰을 넘으면 토큰당 요금이 더 비싸요(Claude Code Model configuration 문서, 2026-10-12 기준). 정확한 구간별 요금은 공식 가격 페이지에서 확인하세요.
 - 네 모델 모두 컨텍스트 윈도우는 1M 토큰, 최대 출력은 128K 토큰(동기 Messages API)이고, 신뢰할 수 있는 지식 컷오프는 2026년 6월이에요.
-- 기본 effort는 Fable 5.1 `high`(Fable 5.2는 미확인), Opus 5.5 `medium`, Sonnet 5.5 `high`, Haiku 5.5 `medium`이에요.
-- 퇴역(retirement) 약속은(Fable 5.2는 아직 미확인) Fable 5.1이 2027-09-01 이전은 아니고, Opus 5.5는 2027-09-22, Sonnet 5.5는 2027-09-28, Haiku 5.5는 2027-10-07 이전은 아니에요. 길게 쓸 서비스를 만든다면 참고하세요.
-- 이전 세대(Fable 5, Opus 5, Opus 4.x, Sonnet 5, Sonnet 4.6, Haiku 4.5)도 아직 쓸 수 있어요. 다만 **Sonnet 4.5(`claude-sonnet-4-5-20250929`)는 2026-09-30에 지원 중단(deprecated)이 예고됐고 Claude API에서 2026-11-30에 퇴역해요.** 쓰고 있다면 Sonnet 5.5로 옮기세요(2026-10-11 기준, 공식 릴리스 노트와 Model deprecations 문서). Opus 4.1은 이미 퇴역했어요. 모델 개요 본문에 Claude Mythos 5.1이라는 이름도 나오지만 현재 모델 표에는 없어서, 이 문서에서는 다루지 않아요.
+- API의 기본 effort는 Fable 5.2 `high`, Opus 5.5 `medium`, Sonnet 5.5 `high`, Haiku 5.5 `medium`이에요.
+- 퇴역(retirement) 약속은(2026-11-16 기준) Fable 5.2가 2027-11-09 이전은 아니고(Fable 5.1은 2027-09-01), Opus 5.5는 2027-09-22, Sonnet 5.5는 2027-09-28, Haiku 5.5는 2027-10-07 이전은 아니에요. 길게 쓸 서비스를 만든다면 참고하세요.
+- 이전 세대(Fable 5, Opus 5, Opus 4.x, Sonnet 5, Sonnet 4.6, Haiku 4.5)도 아직 쓸 수 있어요. 다만 **Sonnet 4.5(`claude-sonnet-4-5-20250929`)는 2026-09-30에 지원 중단(deprecated)이 예고됐고 Claude API에서 2026-11-30에 퇴역해요.** 쓰고 있다면 Sonnet 5.5로 옮기세요(2026-10-11 기준, 공식 릴리스 노트와 Model deprecations 문서). Opus 4.1은 이미 퇴역했어요. 모델 개요에는 Claude Mythos 5.2와 5.1도 나오지만, Anthropic의 검증 프로그램으로 확인된 조직에만 제공되는 제한 제공 모델이라 이 문서에서는 다루지 않아요.
 
 <Aside type="caution" title="Fable은 기본값이 아니에요">
 Claude Code 문서는 "Fable 모델은 어떤 플랜·제공자에서도 기본값이 아니며 명시적으로 선택해야 한다"고 설명해요. Claude Code의 `default`는 Pro/Max/Ultra/Team/Enterprise/Anthropic API에서 **Opus 5.5**예요. Fable은 플랜과 좌석에 따라 한도 적용 방식이 달라서, 자세한 내용은 [C2. 요금제와 사용량 한도](/ko/claude/c02-plans-limits/)를 보세요.
@@ -135,7 +135,7 @@ Claude 앱의 모델 선택기에 플랜별로 어떤 모델이 보이는지 정
 | 긴 코딩 작업, 지식 업무 | Opus 5.5 | 장시간 에이전트형 작업용으로 안내돼요 |
 | 빠른 초안, 일상 업무, 응답 속도가 중요 | Sonnet 5.5 | 속도와 지능의 균형이에요 |
 | 수천 건 분류·추출·라우팅 | Haiku 5.5 | 가장 빠르고 저렴해요 |
-| 가장 어려운 추론, 아주 긴 에이전트 작업 | Fable 5.2 | 가장 강력하지만 느리고 비싸요 |
+| 가장 어려운 추론, 아주 긴 에이전트 작업 | Fable 5.2 | 가장 강력하지만 가장 비싸요 |
 
 ### Claude Code 별칭과 명령
 
@@ -160,7 +160,7 @@ Claude 앱의 모델 선택기에 플랜별로 어떤 모델이 보이는지 정
 ### Claude Code에서 Fable 선택이 안 돼요
 
 - **원인**: Claude Code 버전이 낮을 수 있어요.
-- **해결**: Fable 5는 v2.1.170 이상, Fable 5.1은 v2.1.255 이상이 필요해요(고객센터 "Claude Fable models on your plan" 기준). 다만 Claude Code Model configuration 문서는 Fable 5.1에 v2.1.257 이상이 필요하다고 적고 있어요(2026-10-12 기준). 두 문서의 숫자가 달라서, 선택이 안 되면 최신 버전으로 업데이트하세요. 같은 문서에는 Opus 5.5 v2.1.280, Sonnet 5.5 v2.1.284, Haiku 5.5 v2.1.293 이상이라는 안내도 있어요.
+- **해결**: Fable 5.2는 v2.1.321 이상이 필요해요(두 공식 문서가 같아요, 2026-11-16 기준). Fable 5는 v2.1.170 이상, Fable 5.1은 v2.1.255 이상이 필요해요(고객센터 "Claude Fable models on your plan" 기준). 다만 Claude Code Model configuration 문서는 Fable 5.1에 v2.1.257 이상이 필요하다고 적고 있어요(2026-11-16에도 그대로예요). 두 문서의 숫자가 달라서, 선택이 안 되면 최신 버전으로 업데이트하세요. 같은 문서에는 Opus 5.5 v2.1.280, Sonnet 5.5 v2.1.284, Haiku 5.5 v2.1.293 이상이라는 안내도 있어요.
 
 ### 더 큰 모델이 항상 낫다고 생각했는데 한도가 금방 줄어요
 
@@ -177,7 +177,7 @@ Claude 앱의 모델 선택기에 플랜별로 어떤 모델이 보이는지 정
 - **먼저 Opus 5.5로 시작하고, 필요할 때만 내리거나 올리세요.** 공식 권장 순서와 같아요.
 - **모델 선택과 effort는 프롬프트만큼 중요한 조절 장치예요.** 프롬프트 작성은 [C4](/ko/claude/c04-prompting/)를 보세요.
 - **계획은 큰 모델, 구현은 작은 모델로 나누는 방법도 있어요.** [C15. 모델 역할 나누기](/ko/claude/c15-model-division/)에서 다뤄요.
-- **가격은 바뀌어요.** 이 표는 2026-10-10 기준이니 쓰기 전에 공식 모델 개요 페이지에서 다시 확인하세요.
+- **가격은 바뀌어요.** 이 표는 2026-11-16 기준이니 쓰기 전에 공식 모델 개요 페이지에서 다시 확인하세요.
 
 ## 다음에 볼 튜토리얼
 

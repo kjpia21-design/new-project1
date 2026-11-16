@@ -11,7 +11,7 @@ prerequisites:
   - "A Claude account (web search depends on your account settings; Research requires a paid plan: Pro, Max, Ultra, Team, or Enterprise)"
   - "Any one of the web, desktop app, or mobile app"
   - "(Optional) Gmail, Google Calendar, and Google Docs connected"
-lastVerified: 2026-11-10
+lastVerified: 2026-11-16
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -39,7 +39,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 <Summary>
 - **Web search** is for fact-checking questions that one or two searches can answer. Every response comes with citations.
 - **Research** searches many times, step by step, and gives you a report with citations. It's available on the web, desktop, and mobile on paid plans (Pro, Max, Ultra, Team, Enterprise), and web search must be turned on.
-- The official help says to use Research for "comprehensive investigations that take 5 or more tool calls and several minutes" (wording as of 2026-10-26).
+- The official help says Research is best for "comprehensive information gathering requiring five or more tool calls over 1-3 minutes" (wording as of 2026-11-16).
 - Both features count toward your usage limits. Research in particular can use up your limit faster.
 - The most important habit is clicking the citation links to check the sources yourself.
 </Summary>
@@ -68,11 +68,11 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | A problem that needs deep reasoning without fresh information | Extended thinking | Math problems, code debugging |
 | A comprehensive investigation that gathers, compares, and organizes many sources | Research | Competitor comparisons, summarizing policy changes |
 
-The official help describes web search as for "simple factual questions that can be answered with one or two tool calls" and Research as for "comprehensive investigations that take 5 or more tool calls and several minutes." It also says that using Research together with extended thinking can give you a longer, more thorough report.
+The official help describes web search as for "simple factual questions that can be answered with one or two tool calls" and Research as for "comprehensive information gathering requiring five or more tool calls over 1-3 minutes." It also says that using Research together with extended thinking can give you a longer, more thorough report.
 
 ### Supported models
 
-Web search works with several models, including Haiku 5.5, Sonnet 5.5, Opus 5.5, and Fable 5.1 (as of 2026-10-10; not re-checked for Fable 5.2). For a model comparison, see [C1. Claude at a glance](/claude/c01-overview/).
+Web search works with several models, including Fable 5.2, Haiku 5.5, Sonnet 5.5, Opus 5.5, and Fable 5.1 (as of 2026-11-16). For a model comparison, see [C1. Claude at a glance](/claude/c01-overview/).
 
 <Aside type="note" title="The unified Claude experience looks different">
 In the new unified Claude experience, there's no separate web search toggle, and Claude searches automatically when it decides that would help. You start Research by typing `/deep-research` or using the "+" button (as of 2026-10-10). The layout can vary by account and app version.
@@ -143,7 +143,7 @@ The official help explains that Research uses the same limits as regular convers
 | Item | Web search | Research |
 | --- | --- | --- |
 | Use | Factual questions | Comprehensive investigation |
-| Scale | One or two tool calls | 5 or more, several minutes (per the official help) |
+| Scale | One or two tool calls | 5 or more, over 1-3 minutes (per the official help) |
 | How to turn on | "+" > Web search (automatic in the unified experience) | "+" > Research or `/deep-research` |
 | Using your materials | If you give a URL, it fetches the whole page | Uses Gmail, Google Calendar, and Google Docs along with the web |
 | Result | An answer with citations | A report with citations |
@@ -155,7 +155,7 @@ The official help explains that Research uses the same limits as regular convers
 | Item | Details |
 | --- | --- |
 | Counted toward limits | Both web search and fetching count toward your limit. Fetching long texts uses a lot of context. |
-| Free accounts | There's a usage limit, but the number and reset method aren't officially disclosed. The 5-hour session limit applies to paid plans ([C2](/claude/c02-plans-limits/)). |
+| Free accounts | Usage limits reset every five hours, and web search and fetch count toward them (official web search help, as of 2026-11-16). The numbers aren't officially disclosed ([C2](/claude/c02-plans-limits/)). |
 | Overage | Extra usage (usage credits) applies to Research too. Research sessions burn through tokens quickly. |
 | Image search | Shows images from search results with source links. Powered by Bing. |
 | Location | Your approximate location may be inferred from your IP. |

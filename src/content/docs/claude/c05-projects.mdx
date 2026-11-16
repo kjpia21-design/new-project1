@@ -11,7 +11,7 @@ prerequisites:
   - "A claude.ai account (the free plan works; free allows up to 5 Projects)"
   - "One or two reference materials to put in the Project (documents, text, code)"
   - "(To share) A Team or Enterprise plan"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -145,7 +145,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | Free plan | Up to 5 Projects |
 | RAG mode | Paid plans (Pro/Max/Ultra/Team/Enterprise): capacity expands up to 10x |
 | Sharing | Team/Enterprise |
-| Connectors | On Team/Enterprise, they work only in private Projects. Chats with synced content can't be shared |
+| Connectors | On Team/Enterprise, the Google Drive connector can add files only in private Projects. If the organization turns off "Share chats that use connectors," chats that use connectors or synced content can't be shared (as of 2026-11-16) |
 
 ### Telling the two kinds of "Project" apart (as of 2026-10-10)
 
@@ -177,7 +177,7 @@ Existing chat and Cowork Projects stay as they are.
 
 ### I can't share connector data in a Project with teammates
 
-- **Cause**: On Team/Enterprise, connectors work only in private Projects, and chats with synced content can't be shared.
+- **Cause**: On Team/Enterprise, the Google Drive connector can add files only in private Projects, and if the organization turns off "Share chats that use connectors," chats that use connectors or synced content can't be shared.
 - **Fix**: Do connector-dependent work in a private Project, and organize the results you want to share separately and upload them. Connectors are covered in [C7. Connectors](/claude/c07-connectors/).
 
 ### I can't delete a Project
