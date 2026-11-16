@@ -10,7 +10,7 @@ duration: "30 min"
 prerequisites:
   - "A document to translate (use a non-confidential document for practice)"
   - "At least one of DeepL, Papago, or Claude (you can start free)"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 sources:
   - title: "DeepL - Plan comparison (official site)"
     url: "https://www.deepl.com/en/pro"
@@ -115,7 +115,7 @@ The example is "translating an English supply contract notice (a Word file) into
    | --- | --- |
    | **DeepL** | The plan comparison table has a "No data training" row, shown for paid plans (Individual and above) but grayed out for the free version. The enterprise security page says it "does not store text or use it to train models without consent." We couldn't confirm the exact data-handling terms for the free version, so see the terms on screen. |
    | **Papago** | If you agree to "Consent to improving quality" at the bottom of the screen, translation request data (text, voice, images, documents, etc.) may be stored and used for service improvement and research and development. You can change your consent at any time, and the change applies from that point on. We couldn't confirm the default consent state. |
-   | **Claude** | For personal accounts (Free, Pro, Max), conversations are used for improvement if you've allowed the model improvement setting. Incognito chats aren't used for model improvement. The official help also advises being careful when sharing confidential business documents. Team and enterprise accounts have different policies, so follow your administrator's guidance. |
+   | **Claude** | For personal accounts (Free, Pro, Max, Ultra), conversations are used for improvement if you've allowed the model improvement setting. Incognito chats aren't used for model improvement. The official help also advises being careful when sharing confidential business documents. Team and enterprise accounts have different policies, so follow your administrator's guidance. |
 
    <FlowSteps title="Check the quality improvement consent in Papago" officialUrl="https://papago.naver.com/" steps={[
      { where: 'Very bottom of the papago.naver.com screen', action: 'Click "품질 개선 동의" (English: Consent to improving quality)', result: 'The consent notice opens' },
@@ -142,7 +142,7 @@ The example is "translating an English supply contract notice (a Word file) into
    (Paste the text here)
    </PromptBox>
 
-   To translate a whole Word file, file creation has to be turned on (for Free, Pro, and Max, "Code execution and file creation" under Settings > Capabilities). The limit is 30 MB per file. Check the formatting of the result file yourself.
+   To translate a whole Word file, file creation has to be turned on (for Free, Pro, Max, and Ultra, "Code execution and file creation" under Settings > Capabilities). The limit is 30 MB per file. Check the formatting of the result file yourself.
 
 5. **Review the translation**
 

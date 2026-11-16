@@ -10,7 +10,7 @@ tools: ["Claude", "ChatGPT", "Gemini"]
 duration: "25분"
 prerequisites:
   - "Claude, ChatGPT, Gemini 중 하나 이상의 개인 계정 (Gemini의 이 기능은 회사·학교·보호자 관리 계정에서는 쓸 수 없어요)"
-lastVerified: 2026-11-09
+lastVerified: 2026-11-16
 sources:
   - title: "Understanding Claude's personalization features (Claude 지원센터, 영문)"
     url: "https://support.claude.com/en/articles/10185728-understanding-claude-s-personalization-features"
@@ -36,7 +36,7 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 
 <Summary>
 - "짧게 답해 줘", "나는 초보야"를 매번 쓰고 있다면 **고정 지침**에 한 번만 적어 두세요. 세 서비스 모두 이런 자리가 있어요.
-- **Claude**: Settings > Your Claude > Instructions. **ChatGPT**: Settings > Personalization(맞춤 지침, Base style and tone). **Gemini**: Settings & help > Personal Intelligence > Instructions for Gemini. 메뉴 이름은 바뀔 수 있으니 내 화면에서 확인하세요. (2026-11-01 기준)
+- **Claude**: Settings > Your Claude > Instructions. **ChatGPT**: Settings > Personalization(맞춤 지침, Base style and tone). **Gemini**: Settings > Personal Intelligence > Instructions for Gemini. 메뉴 이름은 바뀔 수 있으니 내 화면에서 확인하세요. (2026-11-16 기준)
 - 적는 것은 **"어떻게 답해 달라"는 취향**이에요. 주민등록번호, 계좌번호, 건강 정보, 회사 기밀은 넣지 마세요.
 - 평범한 질문 하나로 테스트하고, 끄는 곳을 알아 두세요. 지금 채팅에서 구체적으로 부탁하면 고정 지침과 다르게 답하게 할 수도 있어요.
 - 사실을 저장하는 "메모리"는 서비스·요금제마다 달라요. Claude는 [C9](/ko/claude/c09-memory-settings/)에서 다뤘으니, 여기서는 지침 중심으로 봐요.
@@ -62,7 +62,7 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 
 | | Claude | ChatGPT | Gemini |
 | --- | --- | --- | --- |
-| 고정 지침 | Settings > Your Claude > Instructions (예전 화면: Settings > Account > Instructions for Claude). 모든 대화에 적용 | 설정(Settings)에서 관리하는 custom instructions (정확한 항목 이름은 확인하지 못했어요. 아래 상자 참고) | Settings & help > Personal Intelligence > Instructions for Gemini. 모든 채팅에 적용 |
+| 고정 지침 | Settings > Your Claude > Instructions (예전 화면: Settings > Account > Instructions for Claude). 모든 대화에 적용 | 설정(Settings)에서 관리하는 custom instructions (정확한 항목 이름은 확인하지 못했어요. 아래 상자 참고) | Settings(웹 앱 화면 아래쪽) > Personal Intelligence > Instructions for Gemini. 모든 채팅에 적용 |
 | 말투 설정 | 공식 개인화 안내는 말투·형식 조정에 스킬(skills)을 소개해요 (아래) | Settings > Personalization > Base style and tone (웹) | 별도 설정은 아니에요. 공식 문서가 말투·스타일 요청을 지침 예시로 들어요 |
 | 프로젝트별 | 프로젝트 지침 | 읽은 페이지에는 없어요 | 읽은 페이지에는 없어요 |
 | 메모리 | Settings > Your Claude (C9 참고) | Settings > Personalization | Settings > Personal Intelligence > Memory (Google AI 요금제, 만 18세 초과, 현재 미국만) |
@@ -112,7 +112,7 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
    ]} officialUrl="https://learn.chatgpt.com/docs/personalize" />
 
    <FlowSteps title="Gemini" steps={[
-     { where: 'gemini.google.com: Menu > Settings & help', action: 'Personal Intelligence > Instructions for Gemini 열기', result: '지침 목록' },
+     { where: 'gemini.google.com: 화면 아래쪽 Settings', action: 'Personal Intelligence > Instructions for Gemini 열기', result: '지침 목록' },
      { where: 'Instructions for Gemini', action: 'Add + 누르고 내용 입력 후 Submit', result: '모든 채팅에 적용' },
    ]} officialUrl="https://support.google.com/gemini/answer/16598625" />
 
