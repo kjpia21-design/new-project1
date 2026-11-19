@@ -7,7 +7,7 @@ import NewsItem from '../../components/NewsItem.astro';
 
 This collects Claude updates from Anthropic's official channels, newest first. We picked only what matters to people who actually use Claude, such as model releases, pricing, and new features in Claude Code and the app, and left out minor bug fixes. We keep checking the official channels and updating this page.
 
-**Last updated: 2026-11-18**
+**Last updated: 2026-11-20**
 
 ## Official channels we monitor
 
@@ -18,6 +18,10 @@ This collects Claude updates from Anthropic's official channels, newest first. W
 - [Anthropic News](https://www.anthropic.com/news): policy, partnerships, model announcements
 
 ## November 2026
+
+<NewsItem date="Nov 19" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/coding/42-code-review-ai/" tutorialLabel="Review code with AI before you merge">
+Two releases came out on the same day. In version 2.1.328, `/code-review` on most models now reports only bugs and `CLAUDE.md` violations (run `/simplify` for reuse, simplification, and efficiency cleanups), marks each finding Important, Pre-existing, or Nit, and ends each summary with a suggested fix. Version 2.1.329 adds that `/code-review` with no target reviews the whole branch against the default branch on most models, and that `/code-review <pr number>` reads the pull request with `gh pr diff` or says when it can't, instead of sometimes reviewing the checked-out branch. Auto mode now works with Claude Opus 4.6 and Sonnet 4.6 on Amazon Bedrock, Google Cloud's Agent Platform, Microsoft Foundry, and the Claude apps gateway, and interactive sessions there with no permission mode start in it (`disableAutoMode` turns it off). `"onFailure": "block"` now also works on `mcp_tool` hooks. `/tasks` lists the session's scheduled tasks, `/loop` wakeups, the goal, and the conversation's forks, and the trust dialog warns where a folder's hooks are declared. Two things to check after updating: most scheduled tasks saved by earlier versions need scheduling again in new signed-in sessions, and computer use on macOS follows newer safety rules, so some actions are refused and some apps have less access. 2.1.329 also fixes `~/.claude.json` sometimes being reset to defaults and repeated sign-outs on macOS.
+</NewsItem>
 
 <NewsItem date="Nov 17" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/coding/40-settings-permissions/" tutorialLabel="Claude Code settings and permissions">
 Version 2.1.327 continues the permission tightening from 2.1.326. `/install-github-app` now asks for confirmation before it changes a repository, `ExitWorktree` asks before removing a worktree that may hold unsaved work, and `/export` asks before overwriting an existing file. Path checks refuse some symbolic links, and what counts as inside a working directory changed, so some paths now ask for permission. Auto mode ignores more allow rules that can run any package, such as `Bash(pnpm dlx *)`, and its notice now says an upcoming release removes the fallback to billed classifier requests (those actions will be asked about or denied instead). For setup, `claude mcp add-json <name> -` reads the server's JSON from stdin so tokens stay off the command line, `/status` lists broken agent, skill, command, and keybinding files plus ignored permission settings, and `/config` notes when another setting overrides a row. `/tui classic` is the new name for the non-fullscreen renderer (`/tui default` still works). In VS Code, "Claude Code: Add to Chat" in the Explorer's right-click menu @-mentions the selected files and folders. The release also fixes `claude mcp add` and `claude mcp remove` with project scope deleting other top-level keys from `.mcp.json`.
