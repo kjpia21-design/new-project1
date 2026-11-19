@@ -11,7 +11,7 @@ prerequisites:
   - "A terminal with Claude Code installed (see C12 for installation)"
   - "One project folder to work in"
   - "(If you follow the hook example) jq and Node.js (npx)"
-lastVerified: 2026-11-16
+lastVerified: 2026-11-20
 sources:
   - title: "How Claude remembers your project (CLAUDE.md, auto memory)"
     url: "https://code.claude.com/docs/en/memory"
@@ -19,6 +19,8 @@ sources:
     url: "https://code.claude.com/docs/en/commands"
   - title: "Hooks guide"
     url: "https://code.claude.com/docs/en/hooks-guide"
+  - title: "Hooks reference"
+    url: "https://code.claude.com/docs/en/hooks"
   - title: "Custom subagents"
     url: "https://code.claude.com/docs/en/sub-agents"
   - title: "Connect Claude Code to tools via MCP"
@@ -286,7 +288,7 @@ You switch with `Shift+Tab` in the CLI, `claude --permission-mode <mode>` at sta
 | Example events | `Notification`, `PreToolUse`, `PostToolUse`, `SessionStart` |
 | matcher | Narrow the scope by tool name, like `Edit\|Write` |
 | Blocking | Exit code 2 (print the reason to stderr) |
-| When the hook itself fails | The default is `"onFailure": "continue"`, so the action simply proceeds even if the hook can't start or times out. For a policy hook, add `"onFailure": "block"` to the `command` or `http` hook so it blocks on failure (v2.1.295 and later). |
+| When the hook itself fails | The default is `"onFailure": "continue"`, so the action simply proceeds even if the hook can't start or times out. For a policy hook, add `"onFailure": "block"` to the `command`, `http`, or `mcp_tool` hook so it blocks on failure (v2.1.295 and later; on `mcp_tool` hooks, v2.1.328 and later). |
 | Checking | `/hooks` |
 
 ### Subagents summary
