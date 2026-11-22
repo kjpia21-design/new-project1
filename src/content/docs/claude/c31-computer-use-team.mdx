@@ -1,0 +1,229 @@
+---
+title: "Computer use for Team and Enterprise: setup and safe use"
+description: "How an Owner turns on computer use in Claude Desktop for a Team or Enterprise organization, how users start it, which apps can be blocked or allowed, the MDM key, and the official safety and screenshot warnings"
+sidebar:
+  label: "C31. Computer use for Team and Enterprise"
+level: practical
+category: claude
+tools: ["Claude Desktop", "Claude Team", "Claude Enterprise"]
+duration: "40 min"
+prerequisites:
+  - "A Claude Team or Enterprise organization (setting it up needs the Owner or Primary Owner role; using it needs only a member account)"
+  - "The new Claude experience, where Chat and Cowork unified is turned on"
+  - "The latest Claude Desktop on macOS 14 or later, or on Windows"
+lastVerified: 2026-11-22
+sources:
+  - title: "Set up computer use for Team and Enterprise plans"
+    url: "https://support.claude.com/en/articles/18483812-set-up-computer-use-for-team-and-enterprise-plans"
+  - title: "Let Claude use your computer in Cowork"
+    url: "https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork"
+  - title: "Release notes (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12138966-release-notes"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- Computer use lets Claude see a user's screen and work in the desktop apps that user allows. On Team and Enterprise plans it is **beta and off by default**, and it is rolling out to organizations gradually (as of 2026-11-22, per the official help page).
+- **Only an Owner or Primary Owner** can turn it on, under Organization settings > Capabilities, and **Chat and Cowork unified** must be on first. On Enterprise you can limit it by custom role; Team has one switch for everyone.
+- Each user then turns on **Enable computer use** in the latest Claude Desktop and approves each app. Admins can add a **block list** or an **allow list** of apps, and IT can keep it off on chosen computers with the policy key `computerUseEnabled`.
+- **There is no sandbox.** Content on the screen can steer Claude, files outside connected folders can be changed or deleted, and screenshots are saved with the chat. The block and allow lists have documented gaps (see below).
+- This page is a guide based on two official help pages, not legal or security advice. We did not run it in a live organization.
+</Summary>
+
+In mid-November 2026 computer use reached Team and Enterprise plans. This page follows the admin help page and the user help page from the top: what must be on first, who can turn it on, what users do, how to limit apps, and what the official pages warn about. For the individual-plan features and the difference from Claude in Chrome, see [C11. Chrome and computer use](/claude/c11-chrome-computer-use/). For the wider admin map, see [C29. Team and Enterprise admin basics](/claude/c29-team-admin-basics/). For the Cowork space itself, see [C19. Cowork](/claude/c19-cowork/).
+
+
+## What you'll be able to do
+
+- Say what computer use is, where it works on Team and Enterprise, and where it does not.
+- Walk an Owner through turning it on, limiting it to some roles, and restricting apps.
+- Walk a user through starting it, including from Claude on the web or Claude Mobile.
+- Explain the gaps in the app block and allow lists and what the policy key does and does not do.
+- Tell users what Claude can see and what to keep off the screen.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Computer use** | Claude looks at the screen and works in the desktop apps the user allows, clicking and typing like a person. |
+| **Computer access** | A different setting. It lets users reach their computer from scheduled tasks, Claude on the web or Claude Mobile. Computer use and Computer access are separate. |
+| **New Claude experience / Chat and Cowork unified** | The combined chat and Cowork experience. Computer use works only here. You have it when the message box no longer shows separate "Chat" and "Cowork" options. |
+| **App access** | The admin setting with two lists: "Block these apps" and "Allow only these apps". |
+| **MDM** | Device management such as Jamf or Intune, used here to keep computer use off on chosen computers. |
+
+## Where it works, and where it does not
+
+- **Works in**: Claude Desktop on macOS 14 or later and on Windows, in the new Claude experience. Also from Claude on the web and Claude Mobile if your organization's **Computer access** setting is on and a computer running Claude Desktop is connected.
+- **Does not work in**: tasks started with the separate "Cowork" option, or Claude Code.
+- **Organizations that cannot turn it on**: those with the HIPAA-ready configuration, Zero Data Retention (ZDR) for Claude Code, customer-managed encryption keys (CMEK), or FERPA or K-12 settings. The user help page lists "Computer use is disabled by your organization's policy" for this case, and says no setting turns it on.
+
+## Step by step
+
+<Checklist items={[
+  'Chat and Cowork unified is on for the organization',
+  'I read the safety and screenshot sections below with my security team before turning it on',
+  'On Enterprise, I decided which roles get computer use before turning it on',
+  'I decided whether to use a block list or an allow list, and kept confidential names out of it',
+  'Users know to update Claude Desktop and turn on Enable computer use',
+  'IT knows whether to deploy computerUseEnabled and macOS permissions through MDM',
+]} />
+
+### For admins (Owner or Primary Owner)
+
+<Steps>
+
+1. **Read the warnings first**
+
+   The official admin page says computer use has no sandbox between Claude and a user's applications, and that on-screen content such as web pages or emails could cause Claude to take unintended actions. It also is not limited to folders a user connected: through approved apps, Claude can open, change or delete files outside them. A folder limit you set, and marking a folder "Read only", do not apply to computer use. Decide with your security team before you continue.
+
+2. **Turn it on**
+
+   Sign in as an Owner or Primary Owner. Go to Organization settings > Capabilities. Make sure **Chat and Cowork unified** is on, because computer use does not work without it. Under Claude Desktop, find **Computer use** and turn it on. If the setting is missing or cannot be turned on, the page says it has not reached your organization yet or your organization cannot have it. Only an Owner or Primary Owner can change it.
+
+3. **On Enterprise, choose who gets it**
+
+   Computer use is a capability in custom roles. Team plans have no custom roles, so the one setting covers every user. On Enterprise, users with a built-in role (User, Admin, Owner, Primary Owner) get it as soon as you turn it on. To keep it from a user, set their role to "Custom" and wait 15 minutes before you turn it on. A user on a custom role needs a role that includes Chat and Cowork unified. When you turn it on, your custom roles are listed, usually already selected: clear every role that should not have it, then click "Turn on".
+
+   A role set to "All capabilities" cannot be cleared in that list. The page's workaround: set the role's Capability access to "Only selected", turn off Computer use on the role, wait 15 minutes, turn computer use on for the organization, and clear that role. Later you can change role access with "Edit role access" or on each role's Capabilities tab.
+
+4. **Optionally restrict apps**
+
+   Under Claude Desktop > Computer use, find **App access** and choose "Block these apps" (listed apps are denied, such as a password manager) or "Allow only these apps" (everything else is denied, and users still approve each app). Click "Add app", search the list of common apps, or type an ID in the App IDs box, one per line. On a Mac enter the bundle ID (for example `com.microsoft.Excel`). On Windows enter the program's file name (for example `excel.exe`) or a Microsoft Store app's AUMID. Nothing checks that a typed ID names a real app, and a new version of an app can change its ID. Choosing a list puts it in use and the other list stays saved. An empty allow list goes into use when you add its first app, and removing the last app from an allow list in use means Claude can use no app.
+
+   The apps you list are sent to users' computers. Claude Desktop does not show users the list, but someone could find it, so do not include anything confidential. While an allow list is in use, users who are not on the latest Claude Desktop lose computer use until they update. Only an Owner or Primary Owner can change App access.
+
+   <PromptBox label="Draft a block list review">
+   I am an Owner on a Claude Team plan. Draft a table of app categories we may want to block from computer use, such as password managers, banking tools and HR systems, with one column for the people who should decide and one for what could go wrong. Do not invent app IDs. Mark anything you are unsure about as unconfirmed.
+   </PromptBox>
+
+5. **Check an app, then wait**
+
+   Wait a minute after your change, quit and reopen Claude Desktop on a computer that has the app, start a new chat and ask Claude for the app by its exact name. A denied app is refused, and earlier approvals of it stop counting. Changes to who gets computer use, to the on or off switch, or to the app lists can take about an hour, sometimes longer, to reach each user's Claude Desktop. Until then Claude can still see the screen and use apps users allowed, or a just-denied app.
+
+6. **Optionally manage with MDM**
+
+   To keep computer use off on a computer whichever account is signed in, set the policy key `computerUseEnabled` to false at the computer level. It needs Claude Desktop 5.1231.0 or later. See the next section for the details and the official warning about Windows.
+
+</Steps>
+
+### For users
+
+<Steps>
+
+1. **Update and turn it on**
+
+   Get the latest Claude Desktop from claude.com/download. Open Settings > Capabilities (or, if there is no Computer use section there, Settings > System under This computer) and turn on **Enable computer use**. You do this on each computer and for each account.
+
+2. **Grant macOS permissions if asked**
+
+   On a Mac, computer use needs the Accessibility and Screen & System Audio Recording permissions in System Settings > Privacy & Security (Accessibility is called Device Control and Data Access on macOS 27). If you are not an administrator on the Mac you may need an administrator's name and password. If you turn on Screen Recording while Claude Desktop is open, you may need to quit and reopen it. On Windows the admin page says no operating system permission is needed.
+
+3. **Start a chat in the new Claude experience**
+
+   On Team and Enterprise, start a chat in the new Claude experience, not a task started with the separate "Cowork" option and not Claude Code. Ask for something that involves an app on your computer. Claude asks for permission for each app before using it, and you can stop Claude at any time.
+
+4. **From Claude on the web or Claude Mobile**
+
+   This also needs your organization's Computer access setting to be on. The chat must be connected to a computer with Claude Desktop open. Pick the computer when asked, or in Claude on the web under "+" > "Devices". The user page says the computer must be awake and Claude Desktop open.
+
+5. **If the toggle is grayed out**
+
+   Hover over it. The user help page lists the messages and what each means, for example "Computer use is off for your role. Ask your admin for access" or "Computer use requires macOS 14 or later". If Claude says your organization blocked an app, or that it is not on the organization's list, an Owner has limited the apps.
+
+</Steps>
+
+## Block lists and allow lists: what they do not cover
+
+The admin page lists what the lists do not cover. Read it before you rely on them as a control.
+
+| Not covered | What the page says |
+| --- | --- |
+| Claude's other tools | Claude in Chrome, the built-in browser, Claude Code and desktop extensions. Denying Google Chrome stops only computer use in Chrome. |
+| Other accounts | If a user switches Claude Desktop to a personal account or another organization, your lists do not apply there. |
+| Websites and browser extensions | Not covered in a browser the user approves, such as a password manager's extension. |
+| Remote desktops and virtual machines | Apps inside a remote desktop or virtual machine window the user approves are not covered. |
+| Indirect effects | Claude can affect a denied app through what it does in approved apps. |
+| Copied text | Claude can read text copied from a denied app, for example by pasting it into an approved app. |
+| Record a skill | A recording includes every app on the screen, denied ones too. |
+| Windows notifications | A denied app's notifications stay visible in screenshots, and so do the Start menu, search and File Explorer. |
+
+On Windows, some apps start from one program and show their window from another. The page's example: LibreOffice's window belongs to `soffice.bin`, so put the window's file name on the block list, or Claude can still use the app after a user approves it. Lists also apply only on computers with the same operating system as the app entry you picked from the search.
+
+## MDM: keeping it off, and preparing macOS
+
+The admin page describes these steps for tools such as Jamf or Intune.
+
+- **Key**: set Claude Desktop's policy key `computerUseEnabled` to `false`. It needs Claude Desktop 5.1231.0 or later; older versions do not know the key and will not turn computer use off. Deploy it at the **computer level**, not to a user.
+- **macOS**: set a Boolean in a configuration profile for the preference domain `com.anthropic.claudefordesktop`.
+- **Windows**: set a DWORD of 0 under `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Claude`. The page warns that an older Claude Desktop rejects the whole policy if that key holds no setting it knows, and then ignores settings saved in the app on that computer, such as a third-party inference setup, until you update or remove the key. No user-level Claude setting is read while that key holds any value.
+- **When it takes effect**: Claude Desktop reads the key only at start, so quit and reopen it. Then the Enable computer use toggle is grayed out with the message "Your organization has turned off computer use on this computer. Ask your IT administrator for access." If the app finds a policy it cannot read, it also turns computer use off.
+- **Not covered by the key**: Record a skill, Claude in Chrome, the built-in browser, Claude Code in a terminal, local MCP servers and desktop extensions. The page says it changes how Claude Desktop behaves and is not a lock against someone who can change the app or the computer's settings.
+- **Side effect**: any Claude Desktop policy key, true or false, makes the app treat the computer as managed. Users can then not choose a release channel, and the app stops reading users' own values for other behavior settings.
+- **macOS permissions**: you can prepare Accessibility and Screen Recording with a PPPC payload (needs user-approved MDM enrollment) for the identifier `com.anthropic.claudefordesktop`. A profile can allow Accessibility, but it cannot turn Screen Recording on; `AllowStandardUserToSetSystemService` lets non-administrators turn it on themselves. The page gives the full code requirement and the check command; copy those from the official page, not from here. A Deny in a profile also removes the permission from the quick entry feature, so the page says to use `computerUseEnabled` instead of a Deny to keep it off.
+- **What MDM cannot do**: turn computer use on (the organization setting, the user's role and each user's own switch decide that), turn on a user's switch, approve apps, or turn on Screen Recording.
+
+## What Claude can see, and the safety warnings
+
+- **Screenshots**: Claude takes screenshots to navigate. They are saved with the chat and can include personal or confidential information. The automated check that reviews Claude's actions can see the latest screenshot, and Anthropic can keep a copy of it in its record of the check. The admin page says data is handled under the Commercial Terms and Data Processing Addendum.
+- **No sandbox**: Claude works directly in your apps. Content on the screen can cause unintended actions. The user page says Claude is trained and instructed to treat what it sees as information, not instructions, but also that safeguards are not perfect.
+- **App types**: per the user page, browsers and many investment, trading and crypto apps are view-only; terminals and code editors allow clicking and scrolling but not typing (a click can still run code); most other apps are fully accessible; some apps, such as music, video streaming and e-book apps, are off limits by default.
+- **Approvals**: Claude asks before each app. The automated action check applies in "Automatically approve" mode only.
+- **Avoid**: the official page strongly advises against using it for financial accounts or investments, legal documents or contracts, medical or health information, or apps with other people's personal information.
+- **macOS 15 or later**: Claude works in background windows by default and asks before taking over the full screen; the setting "How Claude uses the apps you allow" can be switched to "Full control".
+- **Slower and less reliable than connectors**: Claude uses connectors first, then the browser, then the screen. The computer must be awake with Claude Desktop open.
+
+<Aside type="caution" title="Do not treat the lists as a security boundary">
+The official page itself lists how a denied app can still be affected (indirect effects, copied text, remote desktops, notifications, other accounts). Use the lists to reduce accidents, and keep truly sensitive apps closed or off the machine.
+</Aside>
+
+<Aside type="note" title="What we could not confirm">
+We read the two official help pages listed above on 2026-11-22. We did not run computer use in a live Team or Enterprise organization, so menu names and messages come from those pages and may differ on your screen during the gradual rollout. We did not read the linked pages on unified Claude setup, Enterprise configuration for Claude Desktop, or "Use Claude Cowork safely", so details such as how to deploy keys are not covered here. Pricing and usage limits for computer use were not on these pages. The release-note entry for the Team and Enterprise launch was not read separately.
+</Aside>
+
+## Quick reference
+
+| I want to... | Where / how |
+| --- | --- |
+| Turn computer use on for the organization | Owner or Primary Owner: Organization settings > Capabilities > Claude Desktop > Computer use (Chat and Cowork unified first) |
+| Keep it from some Enterprise users | Set their role to Custom, or clear roles in the list when turning on |
+| Block or allow specific apps | Capabilities > App access > Block these apps / Allow only these apps |
+| Keep it off on certain computers | Policy key `computerUseEnabled` = false, computer level, Claude Desktop 5.1231.0+ |
+| Start it as a user | Claude Desktop > Settings > Capabilities (or System) > Enable computer use |
+| Use it from the web or phone | Computer access on, chat connected to a computer, "+" > "Devices" |
+
+## Common sticking points
+
+### The toggle is grayed out
+
+- **Cause**: The official list of messages covers organization, role, rollout, app version, macOS version and IT policy reasons.
+- **Fix**: Hover over the toggle, match the message on the user help page, and ask the person it names (an Owner, whoever manages roles, or IT).
+
+### I turned it off but Claude still sees my screen
+
+- **Cause**: The page says turning it off, or changing roles or app lists, can take about an hour, sometimes longer, to reach each Claude Desktop.
+- **Fix**: Wait, and quit and reopen Claude Desktop. To keep it off on a specific computer, use the policy key.
+
+### I blocked an app but Claude still reached it
+
+- **Cause**: See the table of what the lists do not cover, such as a second program that shows the window on Windows, a browser extension, or a remote desktop.
+- **Fix**: Add the window's file name on Windows, and handle the other cases with your own controls.
+
+## Practical tips
+
+- Start with a small pilot group on Enterprise by using custom roles, then widen it.
+- Tell users that screenshots are saved with the chat and ask them to close sensitive windows first.
+- Prefer a connector when one exists. It is faster and more reliable than screen interaction. See [C7. Connectors](/claude/c07-connectors/).
+- Keep confidential names out of app lists, since users' computers receive them.
+- Recheck the help pages before a wide rollout; this is beta and rolling out gradually.
+
+## What to read next
+
+- [C11. Chrome and computer use](/claude/c11-chrome-computer-use/) — Individual-plan setup and Claude in Chrome
+- [C29. Team and Enterprise admin basics](/claude/c29-team-admin-basics/) — Roles, SSO, data controls and the security center
+- [C19. Cowork](/claude/c19-cowork/) — The Cowork space
+- [Using Personal AI Agents Safely](/agents/05-agent-safety/) — General safety habits for agents

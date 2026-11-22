@@ -1,0 +1,229 @@
+---
+title: "Team·Enterprise용 컴퓨터 사용: 설정과 안전한 사용"
+description: "Team·Enterprise 조직에서 Owner가 Claude Desktop의 컴퓨터 사용을 켜는 방법, 사용자가 시작하는 단계, 앱 차단·허용 목록, MDM 키, 공식 문서의 안전·스크린샷 경고를 정리해요"
+sidebar:
+  label: "C31. Team·Enterprise 컴퓨터 사용"
+level: practical
+category: claude
+tools: ["Claude Desktop", "Claude Team", "Claude Enterprise"]
+duration: "40분"
+prerequisites:
+  - "Claude Team 또는 Enterprise 조직 (설정에는 Owner 또는 Primary Owner 역할이 필요하고, 사용에는 구성원 계정이면 돼요)"
+  - "Chat and Cowork unified가 켜진 새 Claude 경험"
+  - "macOS 14 이상 또는 Windows의 최신 Claude Desktop"
+lastVerified: 2026-11-22
+sources:
+  - title: "Set up computer use for Team and Enterprise plans"
+    url: "https://support.claude.com/en/articles/18483812-set-up-computer-use-for-team-and-enterprise-plans"
+  - title: "Let Claude use your computer in Cowork"
+    url: "https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork"
+  - title: "Release notes (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12138966-release-notes"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- 컴퓨터 사용(computer use)은 Claude가 사용자의 화면을 보고, 사용자가 허용한 데스크톱 앱에서 작업하는 기능이에요. Team·Enterprise 플랜에서는 **베타이고 기본값은 꺼짐**이며, 조직에 순차적으로 배포되고 있어요(2026-11-22 기준 공식 도움말).
+- **Owner 또는 Primary Owner만** Organization settings > Capabilities에서 켤 수 있고, 먼저 **Chat and Cowork unified**가 켜져 있어야 해요. Enterprise는 사용자 지정 역할로 대상을 제한할 수 있고, Team은 모두에게 하나의 스위치예요.
+- 그다음 각 사용자가 최신 Claude Desktop에서 **Enable computer use**를 켜고 앱마다 승인해요. 관리자는 앱 **차단 목록** 또는 **허용 목록**을 둘 수 있고, IT는 정책 키 `computerUseEnabled`로 특정 컴퓨터에서 끌 수 있어요.
+- **샌드박스가 없어요.** 화면 내용이 Claude를 엉뚱하게 움직일 수 있고, 연결한 폴더 밖 파일도 바뀌거나 삭제될 수 있으며, 스크린샷은 대화에 저장돼요. 차단·허용 목록에는 공식 문서가 밝힌 빈틈이 있어요(아래 참고).
+- 이 글은 공식 도움말 두 쪽을 바탕으로 한 안내이고 법률·보안 자문이 아니에요. 실제 조직에서 실행해 보지는 않았어요.
+</Summary>
+
+2026년 11월 중순 컴퓨터 사용이 Team·Enterprise 플랜으로 확대됐어요. 이 글은 관리자용 도움말과 사용자용 도움말을 따라가요. 먼저 켜 둘 것, 켤 수 있는 사람, 사용자가 할 일, 앱 제한 방법, 공식 문서의 경고 순서예요. 개인 플랜 기능과 Claude in Chrome과의 차이는 [C11. Chrome·컴퓨터 사용](/ko/claude/c11-chrome-computer-use/), 관리자 전반은 [C29. Team·Enterprise 관리자 기본](/ko/claude/c29-team-admin-basics/), Cowork 공간은 [C19. Cowork](/ko/claude/c19-cowork/)를 보세요.
+
+
+## 이 글로 할 수 있는 것
+
+- 컴퓨터 사용이 무엇인지, Team·Enterprise에서 어디서 되고 어디서 안 되는지 설명해요.
+- Owner가 켜고, 일부 역할로 제한하고, 앱을 제한하는 과정을 따라가요.
+- 사용자가 시작하는 과정을 따라가요. 웹·모바일에서 쓰는 경우도 포함해요.
+- 차단·허용 목록의 빈틈과 정책 키가 하는 일·못 하는 일을 설명해요.
+- Claude가 무엇을 볼 수 있는지, 화면에 무엇을 두지 말아야 하는지 안내해요.
+
+## 먼저 알아둘 개념
+
+| 용어 | 뜻 |
+| --- | --- |
+| **컴퓨터 사용(computer use)** | Claude가 화면을 보고, 사용자가 허용한 데스크톱 앱에서 사람처럼 클릭하고 입력해요. |
+| **컴퓨터 접근(Computer access)** | 다른 설정이에요. 사용자가 예약 작업, 웹의 Claude, Claude 모바일에서 자기 컴퓨터에 접근하게 해 줘요. 컴퓨터 사용과 컴퓨터 접근은 별개예요. |
+| **새 Claude 경험 / Chat and Cowork unified** | 채팅과 Cowork가 합쳐진 경험이에요. 컴퓨터 사용은 여기서만 돼요. 메시지 입력창에 "Chat"과 "Cowork" 선택지가 따로 보이지 않으면 새 경험이에요. |
+| **App access** | 관리자 설정이에요. "Block these apps"와 "Allow only these apps" 두 목록이 있어요. |
+| **MDM** | Jamf, Intune 같은 기기 관리 도구예요. 여기서는 특정 컴퓨터에서 컴퓨터 사용을 끄는 데 써요. |
+
+## 어디서 되고 어디서 안 되나
+
+- **되는 곳**: 새 Claude 경험 안의 macOS 14 이상·Windows용 Claude Desktop이에요. 조직의 **Computer access** 설정이 켜져 있고 Claude Desktop이 열린 컴퓨터가 연결돼 있으면 웹의 Claude와 Claude 모바일에서도 쓸 수 있어요.
+- **안 되는 곳**: 별도의 "Cowork" 옵션으로 시작한 작업, Claude Code예요.
+- **켤 수 없는 조직**: HIPAA-ready 구성, Claude Code용 Zero Data Retention(ZDR), 고객 관리형 암호화 키(CMEK), FERPA·K-12 설정이 있는 조직이에요. 사용자용 도움말은 이 경우를 "Computer use is disabled by your organization's policy"로 안내하고, 켜 주는 설정이 없다고 해요.
+
+## 단계별로 따라가기
+
+<Checklist items={[
+  '조직에서 Chat and Cowork unified가 켜져 있어요',
+  '켜기 전에 아래 안전·스크린샷 절을 보안 담당자와 함께 읽었어요',
+  'Enterprise라면 켜기 전에 어떤 역할이 컴퓨터 사용을 가질지 정했어요',
+  '차단 목록과 허용 목록 중 무엇을 쓸지 정했고, 목록에 기밀 이름을 넣지 않았어요',
+  '사용자가 Claude Desktop을 업데이트하고 Enable computer use를 켜야 한다는 것을 알려 줬어요',
+  'IT가 computerUseEnabled와 macOS 권한을 MDM으로 배포할지 알고 있어요',
+]} />
+
+### 관리자용 (Owner 또는 Primary Owner)
+
+<Steps>
+
+1. **경고부터 읽기**
+
+   공식 관리자 도움말은 컴퓨터 사용에 Claude와 사용자 앱 사이의 샌드박스가 없다고 해요. 웹 페이지나 이메일 같은 화면 내용 때문에 Claude가 의도하지 않은 행동을 할 수 있어요. 사용자가 연결한 폴더에도 제한되지 않아서, 승인된 앱을 통해 폴더 밖 파일을 열고 바꾸고 삭제할 수 있어요. 연결 가능한 폴더를 제한하거나 폴더를 "Read only"로 표시해도 컴퓨터 사용에는 적용되지 않아요. 보안 담당자와 상의한 뒤 진행하세요.
+
+2. **켜기**
+
+   Owner 또는 Primary Owner로 로그인해 Organization settings > Capabilities로 가요. **Chat and Cowork unified**가 켜져 있는지 확인하세요. 이것 없이는 컴퓨터 사용이 동작하지 않아요. Claude Desktop 아래의 **Computer use**를 켜요. 설정이 없거나 켤 수 없으면, 아직 조직에 배포되지 않았거나 조직이 쓸 수 없는 경우라고 도움말이 설명해요. 이 설정은 Owner 또는 Primary Owner만 바꿀 수 있어요.
+
+3. **Enterprise라면 대상 정하기**
+
+   컴퓨터 사용은 사용자 지정 역할의 기능(capability)이에요. Team 플랜에는 사용자 지정 역할이 없어서 하나의 설정이 모든 사용자에게 적용돼요. Enterprise에서는 기본 역할(User, Admin, Owner, Primary Owner) 사용자가 켜는 즉시 컴퓨터 사용을 갖게 돼요. 특정 사용자를 제외하려면 그 사용자의 역할을 "Custom"으로 바꾸고 15분 기다린 뒤 켜세요. 사용자 지정 역할 사용자는 Chat and Cowork unified가 포함된 역할이 필요해요. 켤 때 사용자 지정 역할 목록이 나타나고 보통 이미 선택돼 있어요. 컴퓨터 사용을 주지 않을 역할은 모두 선택을 해제하고 "Turn on"을 눌러요.
+
+   "All capabilities"로 설정된 역할은 그 목록에서 해제할 수 없어요. 도움말이 안내하는 방법은 이래요. 그 역할의 Capability access를 "Only selected"로 바꾸고, 역할에서 Computer use를 끄고, 15분 기다린 뒤, 조직의 컴퓨터 사용을 켜면서 그 역할을 해제해요. 나중에 역할별 접근은 설정 옆의 "Edit role access"나 각 역할의 Capabilities 탭에서 바꿀 수 있어요.
+
+4. **필요하면 앱 제한하기**
+
+   Claude Desktop > Computer use 아래의 **App access**에서 "Block these apps"(목록의 앱을 거부해요. 예: 비밀번호 관리자) 또는 "Allow only these apps"(그 밖의 모든 앱을 거부해요. 사용자는 여전히 앱마다 승인해요)를 고르세요. "Add app"을 눌러 흔한 앱 목록에서 검색하거나, 목록에 없으면 App IDs 칸에 한 줄에 하나씩 ID를 입력해요. Mac은 번들 ID(예: `com.microsoft.Excel`), Windows는 프로그램 파일 이름(예: `excel.exe`)이나 Microsoft Store 앱의 AUMID를 써요. 입력한 ID가 실제 앱인지는 확인하지 않고, 앱의 새 버전이 ID를 바꿀 수도 있어요. 목록을 고르면 그 목록이 적용되고 다른 목록은 저장된 채로 남아요. 빈 허용 목록은 첫 앱을 추가할 때 적용되고, 적용 중인 허용 목록에서 마지막 앱을 지우면 Claude는 어떤 앱도 쓸 수 없어요.
+
+   목록에 넣은 앱은 사용자 컴퓨터로 전달돼요. Claude Desktop이 사용자에게 목록을 보여 주지는 않지만 찾아낼 수는 있으니 기밀은 넣지 마세요. 허용 목록을 쓰는 동안에는 최신 Claude Desktop이 아닌 사용자가 업데이트할 때까지 컴퓨터 사용을 잃어요. App access는 Owner 또는 Primary Owner만 바꿀 수 있어요.
+
+   <PromptBox label="차단 목록 검토 초안">
+   나는 Claude Team 플랜의 Owner예요. 컴퓨터 사용에서 막을지 검토할 앱 종류(비밀번호 관리자, 은행 도구, 인사 시스템 등)를 표로 정리해 주세요. 열은 누가 결정해야 하는지, 잘못되면 무슨 일이 생길 수 있는지로 해 주세요. 앱 ID는 지어내지 말고, 확실하지 않은 것은 확인 안 됨으로 표시해 주세요.
+   </PromptBox>
+
+5. **앱 확인하고 기다리기**
+
+   변경 후 1분 기다리고, 그 앱이 있는 컴퓨터에서 Claude Desktop을 완전히 종료했다가 다시 열어요. 새 대화에서 앱의 정확한 이름으로 Claude에게 요청해 보세요. 거부된 앱이면 거절하고, 이전 승인은 효력을 잃어요. 컴퓨터 사용 대상, 켜기·끄기, 앱 목록의 변경은 각 사용자의 Claude Desktop에 반영되기까지 약 1시간, 때로는 더 걸려요. 그동안 Claude는 사용자가 허용한 앱이나 방금 거부한 앱을 쓰고 화면을 볼 수 있어요.
+
+6. **필요하면 MDM으로 관리하기**
+
+   어떤 계정으로 로그인했든 특정 컴퓨터에서 컴퓨터 사용을 끄려면 정책 키 `computerUseEnabled`를 컴퓨터 수준에서 false로 설정해요. Claude Desktop 5.1231.0 이상이 필요해요. 자세한 내용과 Windows 관련 공식 경고는 다음 절을 보세요.
+
+</Steps>
+
+### 사용자용
+
+<Steps>
+
+1. **업데이트하고 켜기**
+
+   claude.com/download에서 최신 Claude Desktop을 받아요. Settings > Capabilities(Computer use 항목이 없으면 Settings > System의 This computer)에서 **Enable computer use**를 켜요. 컴퓨터마다, 계정마다 켜야 해요.
+
+2. **요청되면 macOS 권한 허용**
+
+   Mac에서는 System Settings > Privacy & Security의 손쉬운 사용(Accessibility, macOS 27에서는 Device Control and Data Access)과 화면 및 시스템 오디오 녹음(Screen & System Audio Recording) 권한이 필요해요. Mac의 관리자가 아니면 관리자의 이름과 비밀번호가 필요할 수 있어요. Claude Desktop이 열린 상태에서 화면 녹음을 켰다면 앱을 종료했다가 다시 열어야 할 수 있어요. 관리자용 도움말은 Windows에서는 운영체제 권한이 필요 없다고 해요.
+
+3. **새 Claude 경험에서 대화 시작**
+
+   Team·Enterprise에서는 새 Claude 경험에서 대화를 시작하세요. 별도의 "Cowork" 옵션으로 시작한 작업이나 Claude Code에서는 안 돼요. 컴퓨터의 앱이 관련된 일을 요청하면 Claude가 앱마다 사용 전에 허락을 물어요. 언제든 Claude를 멈출 수 있어요.
+
+4. **웹의 Claude·Claude 모바일에서**
+
+   조직의 Computer access 설정이 켜져 있어야 하고, 대화가 Claude Desktop이 열린 컴퓨터와 연결돼야 해요. 물어보면 컴퓨터를 고르거나, 웹의 Claude에서 "+" > "Devices"에서 고르세요. 사용자용 도움말은 컴퓨터가 켜져 있고 Claude Desktop이 열려 있어야 한다고 해요.
+
+5. **토글이 회색일 때**
+
+   마우스를 올려 보세요. 사용자용 도움말에 메시지별 의미가 나와 있어요. 예를 들어 "Computer use is off for your role. Ask your admin for access", "Computer use requires macOS 14 or later" 같은 것들이에요. Claude가 조직에서 앱을 차단했다거나 조직의 목록에 없는 앱이라고 말하면, Owner가 앱을 제한해 둔 거예요.
+
+</Steps>
+
+## 차단·허용 목록이 다루지 못하는 것
+
+관리자 도움말이 밝힌 목록의 한계예요. 목록을 통제 수단으로 믿기 전에 꼭 읽으세요.
+
+| 다루지 못하는 것 | 도움말의 설명 |
+| --- | --- |
+| Claude의 다른 도구 | Claude in Chrome, 내장 브라우저, Claude Code, 데스크톱 확장 프로그램이에요. Google Chrome을 거부해도 Chrome에서의 컴퓨터 사용만 막혀요. |
+| 다른 계정 | 사용자가 Claude Desktop을 개인 계정이나 다른 조직으로 바꾸면 조직의 목록이 적용되지 않아요. |
+| 웹사이트와 브라우저 확장 | 사용자가 승인한 브라우저 안의 것은 다루지 못해요. 예: 비밀번호 관리자 확장. |
+| 원격 데스크톱·가상 머신 | 사용자가 승인한 원격 데스크톱·가상 머신 창 안의 앱은 다루지 못해요. |
+| 간접 영향 | 승인된 앱에서 한 행동이 거부된 앱에 영향을 줄 수 있어요. |
+| 복사한 텍스트 | 거부된 앱에서 복사한 텍스트를, 예를 들어 승인된 앱에 붙여 넣어 Claude가 읽을 수 있어요. |
+| Record a skill | 녹화에는 거부된 앱을 포함해 화면의 모든 앱이 담겨요. |
+| Windows 알림 | 거부된 앱의 알림이 스크린샷에 보이고, 시작 메뉴·검색·파일 탐색기도 보여요. |
+
+Windows에서는 한 프로그램으로 시작하고 다른 프로그램이 창을 보여 주는 앱이 있어요. 도움말의 예로 LibreOffice의 창은 `soffice.bin`에 속해요. 창의 파일 이름을 차단 목록에 넣지 않으면 사용자가 승인한 뒤 Claude가 그 앱을 쓸 수 있어요. 또 검색으로 고른 앱 항목은 같은 운영체제의 컴퓨터에서만 거부·허용돼요.
+
+## MDM: 끄기와 macOS 권한 준비
+
+관리자 도움말이 Jamf, Intune 같은 도구용으로 설명하는 내용이에요.
+
+- **키**: Claude Desktop의 정책 키 `computerUseEnabled`를 `false`로 설정해요. Claude Desktop 5.1231.0 이상이 필요해요. 이전 버전은 이 키를 몰라서 컴퓨터 사용을 끄지 못해요. 사용자가 아니라 **컴퓨터 수준**에 배포하세요.
+- **macOS**: 환경설정 도메인 `com.anthropic.claudefordesktop`의 구성 프로파일에 Boolean으로 설정해요.
+- **Windows**: `HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Claude` 아래에 값 0의 DWORD로 설정해요. 도움말은 경고해요. 그 키에 오래된 Claude Desktop이 아는 설정이 하나도 없으면 오래된 버전이 정책 전체를 거부하고, 업데이트하거나 키를 지울 때까지 그 컴퓨터의 앱에 저장된 설정(예: 서드파티 추론 설정)을 무시해요. 이 키에 값이 하나라도 있으면 사용자 수준의 Claude 설정은 읽지 않아요.
+- **적용 시점**: Claude Desktop은 시작할 때만 키를 읽으므로 종료했다가 다시 열어야 해요. 그러면 Enable computer use 토글이 회색이 되고 "Your organization has turned off computer use on this computer. Ask your IT administrator for access."라고 보여요. 앱이 정책을 찾았지만 읽지 못해도 컴퓨터 사용을 꺼요.
+- **키가 다루지 못하는 것**: Record a skill, Claude in Chrome, 내장 브라우저, 터미널의 Claude Code, 로컬 MCP 서버, 데스크톱 확장 프로그램이에요. 도움말은 이 키가 Claude Desktop의 동작을 바꾸는 것이고 앱이나 컴퓨터 설정을 바꿀 수 있는 사람에 대한 잠금장치가 아니라고 해요.
+- **부수 효과**: Claude Desktop 정책 키는 true든 false든 그 컴퓨터를 관리 대상으로 취급하게 만들어요. 그러면 사용자가 릴리스 채널을 고를 수 없고, 앱이 다른 동작 설정에 대해 사용자 자신의 값을 읽지 않아요.
+- **macOS 권한**: 손쉬운 사용과 화면 녹음을 PPPC 페이로드(사용자 승인 MDM 등록 필요)로 식별자 `com.anthropic.claudefordesktop`에 준비할 수 있어요. 프로파일로 손쉬운 사용은 허용할 수 있지만 화면 녹음을 켤 수는 없고, `AllowStandardUserToSetSystemService`로 관리자가 아닌 사용자가 직접 켜게 할 수 있어요. 전체 코드 요구 사항과 확인 명령은 이 글이 아니라 공식 도움말에서 복사하세요. 프로파일의 Deny는 빠른 입력(quick entry) 기능의 권한도 빼앗으니, 끄려면 Deny 대신 `computerUseEnabled`를 쓰라고 도움말이 안내해요.
+- **MDM이 못 하는 것**: 컴퓨터 사용을 켜기(조직 설정, 사용자 역할, 사용자 본인의 스위치가 정해요), 사용자 스위치 켜기, 앱 승인, 화면 녹음 켜기예요.
+
+## Claude가 볼 수 있는 것과 안전 경고
+
+- **스크린샷**: Claude는 화면을 파악하려고 스크린샷을 찍어요. 스크린샷은 대화와 함께 저장되고 개인·기밀 정보를 포함할 수 있어요. Claude의 행동을 검토하는 자동 점검도 최신 스크린샷을 볼 수 있고, Anthropic이 점검 기록에 사본을 보관할 수 있어요. 관리자 도움말은 데이터가 상업 약관(Commercial Terms)과 데이터 처리 부속서(DPA)에 따라 처리된다고 해요.
+- **샌드박스 없음**: Claude는 앱에서 직접 작업해요. 화면 내용이 의도하지 않은 행동을 일으킬 수 있어요. 사용자용 도움말은 Claude가 화면에서 본 것을 지시가 아닌 정보로 다루도록 훈련·지시받았다고 하면서, 안전장치가 완벽하지 않다고도 해요.
+- **앱 종류별**: 사용자용 도움말에 따르면 브라우저와 많은 투자·거래·암호화폐 앱은 보기만 가능해요. 터미널과 코드 편집기는 클릭·스크롤은 되지만 입력은 안 돼요(클릭으로도 코드가 실행될 수 있어요). 대부분의 다른 앱은 전체 접근이 가능해요. 음악, 영상 스트리밍, 전자책 앱 같은 일부는 기본적으로 금지예요.
+- **승인**: Claude는 앱마다 먼저 물어요. 자동 행동 검토는 "Automatically approve" 모드에서만 작동해요.
+- **피할 것**: 공식 문서는 금융 계좌·투자 관리, 법률 문서·계약, 의료·건강 정보 처리, 타인의 개인정보가 담긴 앱에는 쓰지 말라고 강하게 권고해요.
+- **macOS 15 이상**: 기본적으로 Claude가 백그라운드 창에서 작업하고, 전체 화면이 필요하면 먼저 물어요. "How Claude uses the apps you allow" 설정을 "Full control"로 바꿀 수 있어요.
+- **커넥터보다 느리고 덜 안정적**: Claude는 커넥터, 브라우저, 화면 순으로 써요. 컴퓨터가 켜져 있고 Claude Desktop이 열려 있어야 해요.
+
+<Aside type="caution" title="목록을 보안 경계로 여기지 마세요">
+거부한 앱도 간접 영향, 복사한 텍스트, 원격 데스크톱, 알림, 다른 계정으로 영향받을 수 있다고 공식 도움말이 직접 밝혀요. 목록은 실수를 줄이는 용도로 쓰고, 정말 민감한 앱은 닫아 두거나 그 컴퓨터에 두지 마세요.
+</Aside>
+
+<Aside type="note" title="확인하지 못한 것">
+위에 적은 공식 도움말 두 쪽을 2026-11-22에 읽었어요. 실제 Team·Enterprise 조직에서 컴퓨터 사용을 실행해 보지는 않아서, 메뉴 이름과 메시지는 그 페이지에 근거하고 순차 배포 중인 화면과 다를 수 있어요. 통합 Claude 설정, Claude Desktop의 Enterprise 구성, "Use Claude Cowork safely" 등 링크된 다른 페이지는 읽지 않았으니 키 배포 방법 같은 세부는 다루지 않았어요. 컴퓨터 사용의 요금·사용량 한도는 이 페이지들에 없었어요. Team·Enterprise 출시 릴리스 노트 항목은 따로 읽지 않았어요.
+</Aside>
+
+## 빠른 참조표
+
+| 하고 싶은 일 | 위치 / 방법 |
+| --- | --- |
+| 조직에서 컴퓨터 사용 켜기 | Owner·Primary Owner: Organization settings > Capabilities > Claude Desktop > Computer use (먼저 Chat and Cowork unified) |
+| 일부 Enterprise 사용자 제외 | 역할을 Custom으로 바꾸거나, 켤 때 목록에서 역할 해제 |
+| 특정 앱 차단·허용 | Capabilities > App access > Block these apps / Allow only these apps |
+| 특정 컴퓨터에서 끄기 | 정책 키 `computerUseEnabled` = false, 컴퓨터 수준, Claude Desktop 5.1231.0 이상 |
+| 사용자로 시작 | Claude Desktop > Settings > Capabilities(또는 System) > Enable computer use |
+| 웹·폰에서 쓰기 | Computer access 켜짐, 대화를 컴퓨터에 연결, "+" > "Devices" |
+
+## 자주 막히는 지점
+
+### 토글이 회색이에요
+
+- **원인**: 공식 메시지 목록에 조직, 역할, 배포 시점, 앱 버전, macOS 버전, IT 정책 사유가 있어요.
+- **해결**: 토글에 마우스를 올려 사용자용 도움말의 메시지와 맞춰 보고, 메시지가 가리키는 사람(Owner, 역할 관리자, IT)에게 요청하세요.
+
+### 껐는데 Claude가 아직 내 화면을 봐요
+
+- **원인**: 끄기나 역할·앱 목록 변경이 각 Claude Desktop에 반영되는 데 약 1시간, 때로는 더 걸린다고 도움말이 설명해요.
+- **해결**: 기다리고 Claude Desktop을 종료했다가 다시 여세요. 특정 컴퓨터에서 확실히 끄려면 정책 키를 쓰세요.
+
+### 앱을 차단했는데 Claude가 접근했어요
+
+- **원인**: Windows에서 창을 보여 주는 다른 프로그램, 브라우저 확장, 원격 데스크톱처럼 목록이 다루지 못하는 경우예요. 위 표를 보세요.
+- **해결**: Windows는 창의 파일 이름을 추가하고, 나머지는 조직의 다른 통제 수단으로 보완하세요.
+
+## 실전 팁
+
+- Enterprise라면 사용자 지정 역할로 작은 시범 그룹에서 시작해 점차 넓히세요.
+- 스크린샷이 대화에 저장된다고 사용자에게 알리고, 민감한 창은 먼저 닫아 달라고 하세요.
+- 커넥터가 있으면 커넥터를 먼저 쓰세요. 화면 조작보다 빠르고 안정적이에요. [C7. 커넥터](/ko/claude/c07-connectors/)를 보세요.
+- 앱 목록은 사용자 컴퓨터로 전달되므로 기밀 이름을 넣지 마세요.
+- 베타이고 순차 배포 중이니 넓게 적용하기 전에 도움말을 다시 확인하세요.
+
+## 다음에 볼 튜토리얼
+
+- [C11. Chrome·컴퓨터 사용](/ko/claude/c11-chrome-computer-use/) — 개인 플랜 설정과 Claude in Chrome
+- [C29. Team·Enterprise 관리자 기본](/ko/claude/c29-team-admin-basics/) — 역할, SSO, 데이터 관리, 보안 센터
+- [C19. Cowork](/ko/claude/c19-cowork/) — Cowork 공간
+- [개인 AI 에이전트 안전하게 쓰는 법](/ko/agents/05-agent-safety/) — 에이전트 전반의 안전 습관

@@ -1,0 +1,171 @@
+---
+title: "Claude's Agents at a Glance: Cowork, Computer Use, Meetings, Tag and Managed Agents"
+description: "One comparison table of Claude's agent-style features: what each does, where it runs, which plans have it, its status (beta or not), and when to pick it, based on official pages read on 2026-11-22"
+sidebar:
+  label: "13. Claude agent lineup"
+level: beginner
+category: agents
+tools: ["Claude Cowork", "Claude Desktop", "Claude in Chrome", "Claude Meetings", "Claude Tag", "Claude Managed Agents"]
+duration: "15 min"
+prerequisites:
+  - "Know what an AI agent is (Agents 1)"
+  - "No coding needed; the Managed Agents row is for developers"
+lastVerified: 2026-11-22
+sources:
+  - title: "Get started with Claude Cowork (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork"
+  - title: "Get started with Claude in Chrome (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12012173-get-started-with-claude-in-chrome"
+  - title: "Let Claude use your computer in Cowork (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork"
+  - title: "Set up computer use for Team and Enterprise plans (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/18483812-set-up-computer-use-for-team-and-enterprise-plans"
+  - title: "Use Claude Meetings (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/18325154-use-claude-meetings"
+  - title: "What is Claude Tag? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/15594475-what-is-claude-tag"
+  - title: "Claude Managed Agents overview (Claude Platform docs)"
+    url: "https://platform.claude.com/docs/en/managed-agents/overview"
+  - title: "Self-hosted Claude Managed Agents (Claude Platform docs)"
+    url: "https://platform.claude.com/docs/en/managed-agents/self-hosted"
+  - title: "Release notes (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12138966-release-notes"
+  - title: "Release notes (Claude Platform docs)"
+    url: "https://platform.claude.com/docs/en/release-notes/overview"
+status: published
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- Claude has several agent-style features, and they differ mainly in **where they work**: your documents and files (Cowork), your browser (Claude in Chrome), your computer screen (computer use), a video call (Meetings), a Slack channel (Claude Tag), or your own application (Managed Agents).
+- Plans differ a lot. Cowork and Claude in Chrome are on all paid plans. Computer use is on Pro, Max and Ultra, and entered beta on Team and Enterprise on 2026-11-20. **Claude Meetings** and **Claude Tag** are beta on Team and Enterprise only. **Managed Agents** is an API product for developers.
+- A short rule for choosing: use the lightest tool that reaches the place the work lives. The computer use help puts connectors first, then the browser, then screen control, which it calls the slowest and most error-prone.
+- Statuses change quickly. Every row below carries a date, and the table is a snapshot from official pages read on **2026-11-22**, not a promise.
+- Each row links to a full tutorial. The new Meetings, Team and Enterprise computer use, and self-hosted pages are linked from the table.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Name each of Claude's agent-style features in one sentence.
+- Tell which plans can use each one and which are still in beta.
+- Pick the right feature for a task, such as meeting notes, a web form or a Slack request.
+- Know which tutorial on this site to open next.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Agent** | A model that uses tools in a loop to work toward a goal. See [Agents 1](/agents/01-agents-compared/). |
+| **Beta** | The label the official pages use for features still being rolled out. Behavior and availability can change. |
+| **Owner / admin** | On Team and Enterprise plans, the person who turns organization features on or off. |
+| **Connector** | A built-in link from Claude to another service such as Gmail or Slack. |
+
+<Aside type="note" title="This page is a map, not a manual">
+It keeps each feature to the facts you need to choose. Setup steps, limits and safety rules are in the linked tutorials. Everything here is from official pages read on 2026-11-22. We did not run these features ourselves for this page.
+</Aside>
+
+## The lineup in one table
+
+| Feature | What it does | Where it works | Plans (as of 2026-11-22) | Status | Good for | Tutorial |
+| --- | --- | --- | --- | --- | --- | --- |
+| **Claude Cowork** | Takes on multi-step knowledge work and hands back finished documents, organized files or research | Claude Desktop (macOS, Windows, Linux beta), web, mobile, and the Chrome side panel | Paid plans: Pro, Max, Ultra, Team, Enterprise. Web and mobile need an owner to enable them on Enterprise | Desktop Linux is beta; web and mobile are beta on Team. The Cowork page does not label Cowork itself as beta | Reports, spreadsheets, file clean-up, research you can step away from | [C19](/claude/c19-cowork/) |
+| **Claude in Chrome** | Reads pages and clicks, types and navigates in Chrome for you | The Chrome extension, Cowork and Claude Code | Paid plans. On Enterprise an owner must enable Claude in Chrome and Cowork in the cloud | The help does not label Claude in Chrome itself as beta | Web forms, comparing pages, repeated browser steps | [C11](/claude/c11-chrome-computer-use/) |
+| **Computer use** | Sees your screen and works in the desktop apps you allow | Claude Desktop (macOS 14 or later, or Windows); web and mobile reach it through a computer with Desktop open where an admin allows it | Pro, Max and Ultra. Beta on Team and Enterprise from 2026-11-20, off until an owner turns it on | Beta on Team and Enterprise, rolling out gradually | Apps with no connector and no web version | [C11](/claude/c11-chrome-computer-use/), [C31](/claude/c31-computer-use-team/) |
+| **Claude Meetings** | Joins a Google Meet call as a visible participant; takes notes, answers questions, builds docs, whiteboards and slides | Google Meet, with a meeting page in Claude and Claude Desktop | Team and Enterprise. On by default on Team, off by default on Enterprise | Beta (announced 2026-11-12) | Meeting notes, action items, live drafts during a call | [C30](/claude/c30-claude-meetings/) |
+| **Claude Tag** | Lets you tag Claude in Slack to take on a task in a thread | Slack | Team and Enterprise | Beta | Team requests that start in a channel | [C28](/claude/c28-claude-tag/) |
+| **Claude Managed Agents** | Anthropic runs the agent loop and a sandbox; your code starts sessions and exchanges events | The Claude API (hosted by Anthropic) | API accounts; the overview says it is enabled by default for all API accounts | Beta, needs a beta header, not eligible for ZDR or HIPAA | Building your own long-running agent into an app | [Dev 4](/dev/04-managed-agents/) |
+| **Self-hosted Managed Agents** | Runs the Managed Agents service and its sandboxes on your own infrastructure | Your cloud account or data center | Request access through your Anthropic account team | Launched 2026-11-12 with access by request | Teams that must store agents and sessions themselves or pick their own model provider | [Dev 23](/dev/23-self-hosted-managed-agents/) |
+
+<Aside type="caution" title="Read the Status column as a snapshot">
+Plans and beta labels moved several times in the last weeks, for example computer use on Team and Enterprise and the new Meetings feature. Check the linked official page before you plan a rollout for your team.
+</Aside>
+
+## How to choose
+
+Start from where the work lives, then check your plan.
+
+| The work is in... | Try first | Because |
+| --- | --- | --- |
+| Files, documents, a research task you can leave running | Cowork | It is built for multi-step tasks that end in finished files |
+| A website | Claude in Chrome | It acts inside the browser tab |
+| A desktop app with no connector or web version | Computer use | It is the fallback when connectors and the browser cannot reach the work |
+| A video call | Meetings | It joins the call and keeps notes and artifacts on a meeting page |
+| A Slack thread | Claude Tag | The task and the result stay in the thread |
+| Your own product or backend | Managed Agents | It is an API, so your code controls when sessions start |
+
+The computer use help states the same order of preference: a connector if one exists, then the browser, then screen control, which is slowest and most error-prone.
+
+## Questions to ask before you turn something on
+
+<Checklist items={[
+  '1. Which plan am I on, and is this feature available there?',
+  '2. Is it still beta, and can I accept that it may change?',
+  '3. Does an owner or admin need to switch it on first?',
+  '4. What data does it see? Screen, call audio or transcript, Slack channel, files?',
+  '5. Does my organization have a setting that blocks it, such as ZDR, HIPAA-ready or CMEK?',
+  '6. Who else is affected? People on a call, a channel, or teammates sharing a workspace?',
+  '7. Do I have a way to stop it and review what it did?',
+]} />
+
+### Things the official pages say to watch
+
+- **Meetings:** the help says to make sure everyone on the call is okay with being transcribed before adding Claude. It is not available to some organizations, including ZDR, HIPAA-ready configuration or CMEK. It saves a transcript, summary and screen descriptions, not audio.
+- **Computer use on Team and Enterprise:** the admin help says there is no sandbox between Claude and a user's applications, and that content on the screen could cause unintended actions. Screenshots are saved with the chat and can include personal or confidential information.
+- **Claude Tag:** work in a channel is visible to the channel. See [C28](/claude/c28-claude-tag/) for billing and data details.
+- **Managed Agents:** the overview marks it not eligible for ZDR or HIPAA.
+
+<PromptBox>
+I am deciding how to handle this task: [describe the task]. List the places the work lives (files, website, desktop app, video call, Slack, my own app). For each, tell me which Claude feature fits and which plan I would need, using only what the official pages say. Mark anything you are not sure about as unconfirmed.
+</PromptBox>
+
+Replace the bracketed text with your own task before sending. We did not run this prompt, and an answer may be out of date, so check it against the linked pages.
+
+## Quick reference
+
+| Question | Answer from the official pages (2026-11-22) |
+| --- | --- |
+| Is Cowork available on Free? | No. The Cowork page lists paid plans: Pro, Max, Ultra, Team, Enterprise. |
+| When did computer use reach Team and Enterprise? | The release notes list it on 2026-11-20 as beta, rolling out gradually. A research preview for Pro and Max was listed on 2026-03-23. |
+| Is Meetings on by default? | On Team plans yes, and an owner can turn it off. On Enterprise an owner turns it on. |
+| Does Meetings keep the audio? | The help says it saves a transcript, summary and screen descriptions, not audio. |
+| Can Managed Agents run on my own infrastructure? | The self-hosted option launched 2026-11-12. Access is requested through your Anthropic account team. |
+| Is Claude Tag for personal plans? | The Tag help describes Team and Enterprise availability in beta. |
+
+## Common sticking points
+
+### The feature is not in my account
+
+- **Cause:** rollouts are gradual, and some features need an owner to switch them on.
+- **Fix:** ask your organization owner, and check the linked help page for your plan.
+
+### I cannot tell which tool to use
+
+- **Cause:** several features can touch the same task, such as a web page.
+- **Fix:** follow the order connector, browser, screen control from the computer use help.
+
+### A feature is blocked for my organization
+
+- **Cause:** Meetings and computer use list ZDR, HIPAA-ready configuration and CMEK among the settings that keep them from being turned on.
+- **Fix:** this is an organization setting, so contact your admin. Do not look for ways around it.
+
+## Practical tips
+
+- **Start with the tool nearest the work.** Do not give a screen-control tool a job a connector can do.
+- **Treat beta as beta.** Keep a manual fallback for important tasks.
+- **Check consent for anything that listens.** Recording and transcription rules vary by place, and this page is not legal advice.
+- **Keep sensitive apps out of reach.** The official safety pages advise against using screen control with banking, medical or government apps.
+- **Re-check dates.** This table will age; the linked release notes are the place to look.
+
+## What to read next
+
+- [Agents 12: Multi-agent basics](/agents/12-multi-agent-basics/): lead agents, subagents and teams
+- [Agents 5: Agent safety](/agents/05-agent-safety/): limits and permissions for any agent
+- [Agents 9: Agent costs and usage limits](/agents/09-agent-usage-limits/): how plans count heavy use
+- [C19: Cowork](/claude/c19-cowork/) and [C11: Claude in Chrome and computer use](/claude/c11-chrome-computer-use/)
+- [C30: Claude Meetings](/claude/c30-claude-meetings/) and [C31: Computer use for Team and Enterprise](/claude/c31-computer-use-team/)
+- [C28: Claude Tag](/claude/c28-claude-tag/)
+- [Dev 4: Managed Agents](/dev/04-managed-agents/) and [Dev 23: Self-hosted Managed Agents](/dev/23-self-hosted-managed-agents/)
