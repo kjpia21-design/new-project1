@@ -117,6 +117,7 @@
 | C27 | Claude 답변 방식 맞추기: 출력 스타일·지침·스킬 | 입문 |
 | C28 | 팀 Slack에서 Claude Tag 쓰기 | 실무 |
 | C29 | Team·Enterprise 관리자를 위한 Claude 보안·설정 기본 | 실무 |
+| C30 | Claude Meetings로 회의에 Claude 참여시키기 | 실무 |
 
 ## 5. 기술 구성 (제안)
 
