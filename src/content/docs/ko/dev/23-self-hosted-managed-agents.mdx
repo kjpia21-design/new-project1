@@ -1,0 +1,302 @@
+---
+title: "Claude Managed Agents를 자체 인프라에서 운영하기"
+description: "Claude Managed Agents를 직접 호스팅하면 무엇이 달라지는지, 내가 운영하는 구성 요소, 모델 제공자 선택, 네트워크 밖으로 나가는 데이터, 호스팅 서비스와의 차이, 첫 로컬 세션 시작 방법을 공식 문서 기준으로 정리해요(접근 요청제)"
+sidebar:
+  label: "23. 자체 호스팅 Managed Agents"
+level: advanced
+category: dev
+tools: ["Claude Managed Agents", "ant CLI", "Docker Compose", "PostgreSQL"]
+duration: "45분"
+prerequisites:
+  - "개발 4. Managed Agents로 서버에서 에이전트 돌리기를 읽은 상태 (에이전트·환경·세션·이벤트)"
+  - "자체 호스팅 릴리스 접근 권한 (Anthropic 계정 담당자에게 요청해요)"
+  - "Docker와 YAML 설정 파일에 익숙할 것 (퀵스타트 스케치용)"
+lastVerified: 2026-11-22
+sources:
+  - title: "Self-hosted Claude Managed Agents"
+    url: "https://platform.claude.com/docs/en/managed-agents/self-hosted"
+  - title: "Differences from the hosted service"
+    url: "https://platform.claude.com/docs/en/managed-agents/self-hosted/differences"
+  - title: "Inference provider"
+    url: "https://platform.claude.com/docs/en/managed-agents/self-hosted/inference-provider"
+  - title: "Get started with self-hosted Claude Managed Agents"
+    url: "https://platform.claude.com/docs/en/managed-agents/self-hosted/quickstart"
+  - title: "Data and access in self-hosted Claude Managed Agents"
+    url: "https://platform.claude.com/docs/en/managed-agents/self-hosted-data-and-access"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- **자체 호스팅 Claude Managed Agents**는 같은 Managed Agents API를 쓰되 **서비스와 샌드박스를 내가 호스팅**하는 방식이에요(클라우드 계정이나 온프레미스 데이터 센터). 모델은 Anthropic 또는 내가 고른 제공자에서 돌아가요.
+- 공식 문서는 세 가지 선택지를 설명해요. 클라우드 샌드박스(전부 Anthropic이 호스팅, 기본값), 자체 호스팅 샌드박스(샌드박스만 내가 호스팅), 자체 호스팅 Managed Agents(서비스와 샌드박스 모두 내가 호스팅).
+- **에이전트·세션·세션 기록을 내 인프라에 저장해야 할 때**, 또는 모델 호출을 **Amazon Bedrock, Google Cloud의 Claude 모델(Google 관리), Microsoft Foundry, 직접 운영하는 모델 게이트웨이**로 보내야 할 때 선택해요.
+- **셀프서비스가 아니에요.** 다운로드 접근은 Anthropic 계정 담당자에게 요청하라고 문서가 안내해요. 서버, PostgreSQL 데이터베이스, 샌드박스를 직접 운영·보안하고 릴리스도 직접 설치해요.
+- 호스팅 서비스의 일부 기능은 없고(클라우드 환경, Files API, 예약 배포, 웹훅 등), 일부는 서버 설정을 바꿔야 켜져요. 앱을 옮기기 전에 차이 페이지를 확인하세요.
+- 2026-11-22에 공식 페이지 다섯 곳을 읽었어요. **아무것도 실행하지 않았어요.** 릴리스 아카이브도 서버도 없어서, 아래 명령과 설정은 문서의 형태를 옮긴 것이고 값은 모두 자리표시자예요.
+</Summary>
+
+## 이 튜토리얼을 마치면 할 수 있는 것
+
+- 세 가지 선택지에서 내가 호스팅하는 부분이 무엇인지, 자체 호스팅이 추가 수고를 들일 만한 때가 언제인지 설명할 수 있어요.
+- 한 배포의 구성 요소(서버, 데이터베이스, 워커, 콘솔, 관리자 CLI)를 설명할 수 있어요.
+- `inference.provider`의 다섯 값 중 하나를 고르고 각각 서버에 무엇이 필요한지 알아요.
+- 네트워크 밖으로 나가는 것과 안에 남는 것의 목록을 읽을 수 있어요.
+- 호스팅 서비스에서 앱을 옮기기 전에 차이 목록을 점검할 수 있어요.
+
+## 먼저 알아둘 개념
+
+에이전트·환경·세션·이벤트가 어떻게 동작하는지는 [개발 4](/ko/dev/04-managed-agents/)에서 다뤘으니 여기서 반복하지 않아요. 이 편은 직접 호스팅할 때 달라지는 점만 다뤄요.
+
+| 용어 | 뜻 |
+| --- | --- |
+| **호스팅 서비스** | Anthropic이 운영하는 Managed Agents예요. |
+| **내 서버** | 같은 서비스를 내가 자체 데이터베이스와 함께 운영하는 것이에요. API가 같아서 SDK와 `ant` CLI가 그대로 동작해요. |
+| **샌드박스** | 에이전트의 도구가 명령을 실행하고 파일을 다루는 컨테이너, VM 같은 격리된 작업 공간이에요. |
+| **워커** | 서버에서 작업을 받아 내 샌드박스에서 에이전트의 셸·파일 도구를 실행하는 프로그램이에요. `ant beta:worker` 명령이나 SDK 워커예요. |
+| **추론 제공자** | 서버의 모델 호출에 응답하는 서비스예요. 기본값은 Claude API예요. |
+
+<Aside type="caution" title="이 편에서 확인한 것과 못 한 것">
+사실 정보는 머리말의 공식 페이지 다섯 곳을 2026-11-22에 읽은 내용이에요. 릴리스 아카이브에 접근할 수 없어서 **서버를 띄우지도, 명령을 실행하지도, API를 호출하지도 않았어요.** 아래 설정과 명령은 해당 페이지의 형태를 옮긴 것이고 키는 자리표시자예요. 읽지 않은 페이지(설정 레퍼런스, Kubernetes, 업그레이드, 콘솔, 에이전트 아이덴티티 등)는 조사 노트에 확인하지 못한 항목으로 적었어요. 그래서 모든 설정 이름과 기본값 같은 세부 내용은 이 편에 없어요.
+</Aside>
+
+## 내가 호스팅하는 부분은?
+
+문서는 호스팅할 수 있는 부분이 둘이라고 해요. **샌드박스**와 **서비스**(API, 에이전트 루프, 에이전트·세션·세션 기록 저장소)예요. 선택지 이름이 곧 내가 호스팅하는 것이에요.
+
+| 선택지 | 샌드박스 | 서비스 | 모델 |
+| --- | --- | --- | --- |
+| 클라우드 샌드박스(기본) | Anthropic | Anthropic | Anthropic |
+| 자체 호스팅 샌드박스 | 나 | Anthropic | Anthropic |
+| 자체 호스팅 Managed Agents | 나 | 나 | Anthropic 또는 내가 고른 제공자 |
+
+도구만 내 인프라에서 돌리면 되는 경우, 문서는 Anthropic이 서비스를 운영하는 자체 호스팅 샌드박스를 쓰라고 안내해요. 서비스 전체를 자체 호스팅하면 서버와 데이터베이스를 직접 운영·보안하고 릴리스를 직접 설치해야 해요.
+
+## 언제 선택할까
+
+다음 중 하나가 필요할 때 선택해요.
+
+- **내 인프라에 저장:** 에이전트·세션·세션 기록을 직접 저장해야 해요.
+- **추론 제공자 선택:** 모델 호출이 Amazon Bedrock, Google Cloud의 Claude 모델(Google 관리), Microsoft Foundry, 또는 직접 운영하는 모델 게이트웨이로 가야 해요.
+
+<Aside type="note" title="접근은 요청제예요">
+문서는 이렇게 안내해요. 자체 호스팅 Claude Managed Agents 접근을 요청하려면 Anthropic 계정 담당자에게 문의하세요. 이미 접근 권한이 있는 Claude Console 조직이라면 로그인해서 그 조직으로 전환한 뒤 페이지를 새로고침하세요. 릴리스 아카이브는 접근 권한이 있는 사람이 직접 내려받아요(자동화 에이전트에게는 사람에게 물어보라고 안내해요). 서버 소프트웨어에는 별도 라이선스("Software License Agreement: Claude Managed Agents Server")가 적용돼요. 약관 내용은 읽지 않았어요.
+</Aside>
+
+## 무엇이 어디서 돌아가나
+
+서버 하나 이상, 그 데이터베이스, 내 샌드박스가 하나의 배포를 이뤄요.
+
+| 구성 요소 | 하는 일 |
+| --- | --- |
+| **서버** (`cma-server`) | API를 제공하고, 에이전트 루프를 돌리고, 에이전트·세션·세션별 기록을 저장하고, 추론 제공자를 호출해요. 에이전트의 셸·파일 도구는 절대 실행하지 않아요. |
+| **데이터베이스** | PostgreSQL 16 이상이에요. 데이터베이스가 없으면 서버는 데이터를 메모리에 두고, 재시작하면 지워져요. |
+| **워커** | 서버에서 작업을 받아 내 샌드박스에서 셸·파일 도구를 실행해요. |
+| **내 애플리케이션** | SDK나 `ant` CLI로 서버에 접속하는 내 코드와 스크립트예요. |
+| **서버의 콘솔** | 서버 주소에서 열리는 웹 페이지예요. 내 ID 제공자로 로그인해서 에이전트를 만들고 세션을 실행해요. |
+| **관리자 CLI** (`cma-server-admin`) | 환경과 환경 키를 만들어요. Linux(x86-64, Arm)와 Apple 실리콘 macOS에서 돌아가요. |
+
+### 자격 증명 세 가지
+
+| 자격 증명 | 누가 가지나 | 무엇을 인증하나 |
+| --- | --- | --- |
+| **서버 API 키** | 내 애플리케이션, `ant` CLI, 관리자 CLI | 내 서버로 가는 요청이에요. 설치 과정에서 생성되고, 호스팅 서비스의 Claude API 키와 같은 역할을 해요. |
+| **추론 자격 증명** | 서버 | 서버가 추론 제공자에게 보내는 모델 호출이에요(예: Claude API 키, 클라우드 자격 증명, 게이트웨이 토큰). 애플리케이션과 워커는 필요 없어요. |
+| **환경 키** | 서버를 폴링하는 워커 | 한 환경의 작업 큐와 그 환경의 세션이에요. |
+
+## 모델 제공자 고르기
+
+기본적으로 서버는 모델 호출을 Claude API로 보내요. `inference.provider` 설정은 다음 값을 가져요.
+
+| `inference.provider` | 모델 호출 대상 | 서버의 인증 방식 |
+| --- | --- | --- |
+| `anthropic` (기본) | Claude API | `ANTHROPIC_API_KEY` |
+| `bedrock` | Amazon Bedrock | AWS 자격 증명 |
+| `vertex` | Google Cloud의 Claude 모델(Google 관리) | Google Application Default Credentials |
+| `foundry` | Microsoft Foundry | Foundry API 키 또는 Microsoft Entra ID |
+| `gateway` | 직접 운영하는 모델 게이트웨이 | 게이트웨이가 받는 키 또는 토큰 |
+
+에이전트는 계속 `claude-opus-5-5` 같은 Claude API ID로 모델을 지정해요. 서버가 ID를 번역하므로, 그 모델을 제공하는 제공자라면 에이전트 정의를 바꾸지 않아도 돼요. 제공자를 바꾸는 순서는 이래요. 제공자 섹션의 샘플을 서버 설정 파일에 넣고, 제공자의 자격 증명을 서버에 주고, 서버를 재시작하고, 로그를 확인해요.
+
+### 문서의 예시 (자리표시자)
+
+Amazon Bedrock (서버는 AWS SDK 기본 자격 증명 체인이 찾는 것, 예를 들어 태스크 역할이나 파드 ID로 서명해요. 그 ID에는 `bedrock:InvokeModel`, `bedrock:InvokeModelWithResponseStream`, 그리고 `*` 리소스의 파운데이션 모델·추론 프로필 목록 권한이 필요해요).
+
+```yaml
+inference:
+  provider: bedrock
+  region: us-east-1
+```
+
+Google Cloud의 Claude 모델 (`region`은 필수이고, 그 ID에는 프로젝트의 `roles/aiplatform.user` 역할이 필요해요).
+
+```yaml
+inference:
+  provider: vertex
+  region: us-east5
+  project_id: my-project
+```
+
+Microsoft Foundry (`resource`는 `<resource>.services.ai.azure.com`의 첫 부분이에요. `ANTHROPIC_FOUNDRY_API_KEY`를 쓰거나, 설정하지 않으면 Microsoft Entra ID를 써요).
+
+```yaml
+inference:
+  provider: foundry
+  foundry:
+    resource: my-resource
+```
+
+장기 키 하나를 받는 Amazon Bedrock InvokeModel 형식의 모델 게이트웨이예요. 키는 환경 변수에 넣고 값이 아니라 변수 이름만 적어요.
+
+```yaml
+inference:
+  provider: gateway
+  gateway:
+    url: "https://llm-gateway.example.com/v1/model/{model}/invoke"
+    format: bedrock-invoke
+    # Quote every model_map value.
+    model_map:
+      claude-opus-5-5: "us.anthropic.claude-opus-5-5"
+  credentials:
+    supplier: env
+    env: { var: LLM_GATEWAY_KEY }
+    send_as: { header: x-api-key }
+```
+
+문서에 나온 다른 게이트웨이 형식은 `anthropic-messages`와 `vertex-raw-predict`예요. 단기 토큰이 필요한 게이트웨이는 `oauth_exchange` 자격 증명을 쓸 수 있고(서버가 내가 만든 HTTP 콜백을 호출하고, 받은 어설션을 내 OAuth 토큰 엔드포인트에서 교환해요), Microsoft Entra ID 토큰을 검사하는 게이트웨이는 `azure` 공급자를 쓸 수 있어요. 클라우드 계정의 모델 ID가 서버가 보내는 ID와 다르면 `model_id_overrides`로 대응시켜요.
+
+기억해 둘 문서 내용 두 가지예요.
+
+- `anthropic`이 아닌 모든 값에서 서버는 Claude API 키가 필요 없고 `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN`, `ANTHROPIC_BASE_URL`을 무시해요(단, 그 변수에서 키를 읽도록 지정한 게이트웨이는 예외예요).
+- `upstream credential resolved` 같은 로그 줄은 서버가 자격 증명을 찾았다는 뜻일 뿐, 내 계정에 모델이 활성화돼 있다는 증거는 아니에요. 모델이 없으면 그 모델을 처음 쓰는 턴에서 `session.error`로 드러나요.
+
+## 네트워크 밖으로 나가는 것
+
+서버는 모델 호출마다 지금까지의 대화(프롬프트, 도구 입력, 도구 결과 포함)를 추론 제공자에게 보내요. 문서는 서버가 연결하는 모든 대상을 나열해요. 추론 제공자, 데이터베이스, 모델 자격 증명을 발급하는 서비스, 내가 허용한 MCP 서버와 Git 호스트, OpenTelemetry 수집기, ID 제공자, 설정했다면 시크릿 관리자·키 관리 서비스, 그리고 내가 호출하도록 설정한 그 밖의 서비스예요. 서버는 **Claude API가 추론 제공자일 때만** Anthropic에 연결하고, Anthropic은 서버와 로그에 원격으로 접근할 수 없다고 문서가 밝혀요.
+
+Claude API가 제공자이면 각 호출에 세션·에이전트·환경 ID 헤더 셋도 실리며, 문서에 따르면 끌 수 없어요. ID에는 이름이나 내용이 없지만 생성 시각이 담겨요. 요청에는 서버 소프트웨어와 버전을 알리는 `User-Agent`가 붙고, 일부 호출은 `metadata.user_id`에 `cma-server` 라벨을 실어요. 경로에 내 프록시나 게이트웨이가 있고 요청 본문의 `metadata.user_id`를 거부하면 모든 모델 호출이 실패해요.
+
+데이터 보관:
+
+- 에이전트·세션·세션 기록은 삭제할 때까지 **내 데이터베이스**에 남아요. 서버는 오래됐다는 이유로 세션을 지우지 않아요. API로 삭제하면 내 데이터베이스에서 세션과 기록이 사라지지만, 백업·내보낸 로그와 트레이스·에이전트가 메모리 저장소에 쓴 내용 같은 다른 사본에는 닿지 않아요.
+- 로그는 표준 오류로 나가요. 트레이스와 메트릭은 OpenTelemetry 변수를 켠 경우에만 기록돼요.
+- 모델 호출은 모델을 제공하는 제공자와의 계약을 따라요. 문서는 Claude Managed Agents를 제로 데이터 보존(ZDR) 대상이 아니라고 적는데, Anthropic이 서비스를 운영하면 대화 기록을 삭제할 때까지 저장하기 때문이에요. 내가 운영하면 내가 저장해요.
+
+## 보안 책임
+
+<Aside type="caution" title="bash 도구는 진짜 셸이에요">
+문서는 에이전트의 `bash` 도구가 워커 프로세스의 권한과 네트워크 접근을 가진 진짜 셸이며, 워커가 이를 격리하지 않는다고 경고해요. 격리는 워커가 돌아가는 환경에서 와요. Docker Compose 스택과 `cma-sandboxes` Helm 차트는 세션마다 워커를 별도 컨테이너나 파드에서 시작해요. 워커를 직접 시작한다면 지킬 것이 없는 일회용 컨테이너나 VM에서 돌리세요.
+</Aside>
+
+- 자체 호스팅 샌드박스 보안 페이지가 Anthropic 몫으로 둔 일(서버 보안, 메모리 저장소 호스팅, 비정상 사용 탐지)이 내 몫이 돼요.
+- **배포 하나에 신뢰 수준 하나.** 한 배포 안의 환경은 신뢰 수준을 나눠 주지 않고, 서버 API 키는 모든 환경에 닿아요. 테넌트마다, 신뢰 수준마다 자체 데이터베이스·서버 API 키·워커를 가진 별도 배포를 두세요.
+- 배포 안에서 호출자를 나누려면 문서는 싱글 사인온을 켜고 그룹을 `developer` 또는 `user` 역할에 대응시키며, 서버 API 키는 관리자용으로 남기라고 안내해요.
+- 역할은 호출자가 자기 토큰으로 보내는 요청만 제한해요. 에이전트가 실행하는 코드는 샌드박스에 있는 어떤 자격 증명으로도 서버를 호출할 수 있고, 환경 키는 그 환경의 모든 세션에서 이벤트를 읽고 도구 결과를 보낼 수 있어요. 그러니 세션마다 자기 샌드박스에서 돌리고 환경 키는 샌드박스 밖에 두세요.
+- 서버는 기본적으로 `127.0.0.1:8400`에서 대기해요. Prometheus 메트릭 엔드포인트(기본 꺼짐)는 자격 증명을 요구하지 않고, 이그레스 게이트웨이용 리스너(기본 꺼짐)는 평문 HTTP이며 응답에 저장된 자격 증명 값이 실려요. 게이트웨이만 닿게 하세요.
+
+## 호스팅 서비스와 무엇이 다른가
+
+서버의 API는 차이 페이지의 예외를 빼면 같아요. **호스팅 서비스에서 아무것도 복사되지 않아요(세션 기록 포함).** 에이전트, 스킬, 볼트 자격 증명, 메모리 저장소를 내 서버에서 다시 만드세요.
+
+| 영역 | 문서의 설명 |
+| --- | --- |
+| 내 서버에만 있음 | 추론 제공자 선택, 싱글 사인온, 내 시크릿 관리자, 에이전트 아이덴티티(MCP 서버로 보내는 단기 서명 토큰). |
+| 쓸 수 없음 | 클라우드 환경(`self_hosted` 환경만 있고, 클라우드 환경 요청은 `400`), Messages·Models 같은 나머지 Claude API(`404`), 파일 세션 리소스와 Files API, `mcp_oauth` 볼트 자격 증명(`static_bearer`로 대체), 미리 만들어진 `docx`·`pdf`·`pptx`·`xlsx` 스킬, 예약 배포와 dreams, 웹훅. |
+| 다르게 동작 | platform.claude.com의 Claude Console에는 내 서버가 보이지 않아요(서버의 콘솔을 써요). 워커가 환경을 폴링할 때까지 도구 호출이 오류 없이 기다려요. 메모리 저장소는 워커가 복사해요. 스킬 zip 업로드는 풀리지 않아요. 멀티에이전트 오케스트레이션은 서브에이전트 1~20개를 나열한 `coordinator` 블록만 받아요. MCP 도구 결과는 `mcp.max_result_bytes`(기본 100 KiB)에서 잘려요. URL로 보낸 이미지·문서는 받아들이지만 모델에게 보이지 않고 오류도 없어요. |
+| 서버 설정 필요 | MCP 서버(`mcp.allowed_hostnames`, 정확한 호스트만, 기본은 빈 목록), Git 저장소(`git.allowed_hostnames`, `git.allowed_push_refs`), 웹 도구(`web_tools.enabled: true`), `environment_variable` 볼트 자격 증명(이그레스 게이트웨이 필요). |
+| 제공자에 따라 다름 | `web_search`는 `anthropic`·`vertex`·`foundry`에서, `web_fetch`는 `anthropic`·`foundry`에서, `inference_geo`는 `anthropic`에서만 동작해요. 빠른 모드는 제공자와 모델에 달려 있어요. |
+
+놓치기 쉬운 두 가지예요. 웹 도구가 꺼진 상태에서 툴셋에 웹 도구를 나열한 에이전트는 오류 없이 도구 없이 돌 수 있어요. 그리고 `anthropic` 제공자에서는 서버가 기본적으로 Claude API의 서버 측 폴백을 요청해서, 안전 분류기가 거절한 요청에 다른 Claude 모델이 답할 수 있어요. 끄려면 `inference.model_fallback: false`로 설정하세요. 차이 페이지는 서버가 Git 강제 푸시를 막지 않는다고도 하니, 브랜치 보호는 Git 호스트에서 설정하세요.
+
+## 첫 로컬 세션 (스케치, 실행 안 함)
+
+공식 퀵스타트는 한 대의 머신에서 Docker Compose를 써요. 문서는 이 스택을 **개발용**이라고 해요. 평문 HTTP를 쓰고 포트 8400을 `127.0.0.1`에 게시해요. 운영에는 릴리스의 Helm 차트 두 개를 Anthropic이 권장해요(Kubernetes 페이지는 읽지 않았어요).
+
+<Steps>
+
+1. **준비물.** 릴리스 아카이브(계정 담당자에게서), 서버의 모델 호출에 쓸 Claude API 키, Compose 플러그인이 있는 최신 Docker Engine, CPU 2개 이상 호스트, 첫 시작 시 네트워크 접근, `openssl`과 `ant` CLI.
+
+2. **`docker-compose.yml` 옆에 `.env`를 만들어요**(자리표시자만 적었어요. 문서는 비밀 값을 `openssl`로 생성해요).
+
+   ```bash
+   CMA_PG_PASSWORD=<random value>
+   ANTHROPIC_API_KEY=sk-ant-...
+   CMA_SERVER__API_KEY=<random value>
+   CMA_STORE__CREDENTIALS_ENCRYPTION_KEY=<random value>
+   ```
+
+   파일은 직접 편집하고 비공개로 두세요(`chmod 600 .env`). 키를 채팅에 붙여 넣지 마세요.
+
+3. **스택을 시작하고 준비 상태를 확인해요.**
+
+   ```bash
+   docker compose up --build -d
+   curl -s http://127.0.0.1:8400/cma-server/readyz
+   ```
+
+   준비되면 `"status":"ready"`로 답해요.
+
+4. **두 번째 터미널에서 `ant` CLI가 내 서버를 보게 해요.** `ANTHROPIC_API_KEY`에는 Claude API 키가 아니라 **서버 API 키**를 넣어요.
+
+   ```bash
+   export ANTHROPIC_BASE_URL=http://127.0.0.1:8400
+   export ANTHROPIC_API_KEY=<your server API key>
+   ```
+
+   `docker compose` 명령은 첫 번째 터미널에서 실행하세요. 이 변수가 설정된 곳에서 `docker compose up`을 하면 서버가 Claude API 대신 자기 자신을 호출해요.
+
+5. **에이전트를 만들고 세션을 시작해요.** 문서는 에이전트 정의(이름, `model: claude-opus-5-5`, `agent_toolset_20260401` 도구 유형, 짧은 시스템 프롬프트)를 `quickstart-agent.md`로 저장하고 `ant apply --yes quickstart-agent.md`를 실행해요. 이어서 `ant beta:sessions create --agent <agent id> --environment-id <environment id>`로 세션을 만들고 `ant beta:sessions connect <session id>`로 열어요. 스택의 환경 이름은 `compose-sandbox`예요.
+
+6. **도구가 샌드박스에서 돌았는지 확인해요.** 에이전트에게 bash 도구로 `hostname`을 실행하게 해요. 문서에 따르면 답은 샌드박스 컨테이너 이름인 `cma-sandbox-`로 시작해야 해요.
+
+   <PromptBox>
+   bash 도구로 `hostname`을 실행하고 출력을 알려 줘.
+   </PromptBox>
+
+</Steps>
+
+스택을 멈출 때 `docker compose down --remove-orphans`는 컨테이너를 지우고 데이터베이스는 남겨요. `-v`를 붙이면 모든 에이전트·세션·기록이 든 데이터베이스까지 지워져요.
+
+<Checklist items={[
+  '자체 호스팅 샌드박스만으로는 부족하고, 내 인프라 저장이나 모델 제공자 선택이 필요하다는 걸 확인했어요',
+  'Anthropic 계정 담당자에게 접근을 요청했고 릴리스 아카이브가 있어요',
+  '차이 페이지를 읽고 내 앱이 쓰는 기능이 빠져 있지 않은지 확인했어요',
+  '테넌트나 신뢰 수준마다 배포를 하나씩 두기로 했어요',
+  '워커는 민감한 것이 없는 일회용 컨테이너나 VM에서 돌아가요',
+  '서버 API 키, 추론 자격 증명, 환경 키를 따로 보관하고 채팅에 붙여 넣지 않아요',
+  '로그·트레이스·백업이 어디로 가고 얼마나 보관되는지 알아요',
+]} />
+
+## 자주 막히는 부분
+
+### 도구 호출이 끝나지 않아요
+
+- **원인:** 환경을 폴링하는 워커가 없어요. 모델 턴은 그래도 실행되고 첫 도구 호출이 오류 없이 기다려요.
+- **해결:** 워커 로그를 확인하세요. 퀵스타트 스택은 워커 10개가 각각 세션 컨테이너 하나를 잡으므로, 10개가 모두 찼다면 쓰지 않는 세션을 보관 처리하라고 문서가 안내해요.
+
+### 시작 직후 모든 턴이 실패해요
+
+- **원인:** 퀵스타트에서 `ANTHROPIC_BASE_URL`이 내 서버를 가리키는 셸에서 `docker compose up`을 하면 서버가 자기 자신을 호출해요.
+- **해결:** 그 변수가 설정되지 않은 터미널에서 다시 실행하세요.
+
+### 호스팅 서비스에서 되던 앱이 실패해요
+
+- **원인:** Files API, `mcp_oauth` 자격 증명처럼 쓸 수 없다고 적힌 기능이나, 서버 설정이 필요한 기능을 썼을 수 있어요.
+- **해결:** 차이 페이지를 행마다 확인하고 제안된 대안을 적용하세요.
+
+## 실전 팁
+
+- 먼저 자체 호스팅 샌드박스(Anthropic이 서비스 운영)로 충분한지 따져 보세요. 도구만 내 인프라에서 돌리면 된다면 문서가 그쪽을 안내해요.
+- Compose 스택은 실험용으로만 쓰고, 지킬 것이 없는 머신에서 돌리세요.
+- 업그레이드를 계획하세요. 릴리스를 직접 설치하고, 각 릴리스 아카이브에는 운영자 가이드 `operator-guide.md`가 들어 있어서 Claude가 읽게 하라고 문서가 제안해요.
+- 비용, 지원 조건, 지원 규모, 버전 번호는 제가 읽은 페이지에 없었어요. 계정 담당자에게 물어보세요.
+
+## 다음 튜토리얼
+
+- [4. Managed Agents로 서버에서 에이전트 돌리기](/ko/dev/04-managed-agents/): 이 편의 바탕이 되는 호스팅 서비스
+- [22. Admin API](/ko/dev/22-admin-api/): 호스팅 쪽 조직 수준 키와 워크스페이스
+- [11. 사용량·비용 API로 팀 사용량 대시보드](/ko/dev/11-usage-cost-api/): 호스팅 사용량의 지출 보고

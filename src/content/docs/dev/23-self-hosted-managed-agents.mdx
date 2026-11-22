@@ -1,0 +1,302 @@
+---
+title: "Run Claude Managed Agents on Your Own Infrastructure"
+description: "What changes when you self-host Claude Managed Agents: which parts you run, how to choose a model provider, what leaves your network, which hosted features differ, and how a first local session is started, based on the official docs (access by request)"
+sidebar:
+  label: "23. Self-hosted Managed Agents"
+level: advanced
+category: dev
+tools: ["Claude Managed Agents", "ant CLI", "Docker Compose", "PostgreSQL"]
+duration: "45 min"
+prerequisites:
+  - "You've read Dev 4, Run it on a server with Managed Agents (agents, environments, sessions, events)"
+  - "Access to the self-hosted release, which you request from your Anthropic account team"
+  - "Comfort with Docker and YAML settings files (for the quickstart sketch)"
+lastVerified: 2026-11-22
+sources:
+  - title: "Self-hosted Claude Managed Agents"
+    url: "https://platform.claude.com/docs/en/managed-agents/self-hosted"
+  - title: "Differences from the hosted service"
+    url: "https://platform.claude.com/docs/en/managed-agents/self-hosted/differences"
+  - title: "Inference provider"
+    url: "https://platform.claude.com/docs/en/managed-agents/self-hosted/inference-provider"
+  - title: "Get started with self-hosted Claude Managed Agents"
+    url: "https://platform.claude.com/docs/en/managed-agents/self-hosted/quickstart"
+  - title: "Data and access in self-hosted Claude Managed Agents"
+    url: "https://platform.claude.com/docs/en/managed-agents/self-hosted-data-and-access"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- **Self-hosted Claude Managed Agents** is the same Managed Agents API, but **you host the service and the sandboxes** (in a cloud account or an on-premise data center). The model runs at Anthropic or at a provider you choose.
+- The docs describe three options: cloud sandboxes (Anthropic hosts everything, the default), self-hosted sandboxes (you host only the sandboxes) and self-hosted Managed Agents (you host the service and the sandboxes).
+- Choose it when you must **store agents, sessions and session history on your own infrastructure**, or when model calls must go to **Amazon Bedrock, Claude Models on Google Cloud (Google managed), Microsoft Foundry or your own model gateway**.
+- It is **not self-service**: the docs say to contact your Anthropic account team to request access to the download. You also run and secure the server, its PostgreSQL database and the sandboxes, and install every release yourself.
+- Some hosted features are missing (cloud environments, the Files API, scheduled deployments, webhooks and more), and a few features are off until you change a server setting. Check the differences page before you move an app.
+- On 2026-11-22 I read five official pages. **I did not run anything**: I have no release archive and no server, so every command and setting below is copied in shape from the docs and shown with placeholder values only.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Explain which parts of Managed Agents you host in each of the three options, and when self-hosting is worth the extra work.
+- Describe the components of one deployment: server, database, workers, console and admin CLI.
+- Choose among the five `inference.provider` values and know what the server needs for each.
+- Read the list of what leaves your network and what stays inside.
+- Check the differences list before moving an application from the hosted service.
+
+## Concepts to know first
+
+This tutorial does not repeat how agents, environments, sessions and events work. That is covered in [Dev 4](/dev/04-managed-agents/). Here we cover only what is different when you host it yourself.
+
+| Term | Meaning |
+| --- | --- |
+| **Hosted service** | Managed Agents as Anthropic runs it. |
+| **Your server** | The same service as you run it, with its own database. It has the same API, so the SDK and the `ant` CLI work with it. |
+| **Sandbox** | The container, VM or other isolated workspace where an agent's tools run commands and work on files. |
+| **Worker** | A program that takes work from the server and runs the agent's shell and file tools in your sandbox. It is an `ant beta:worker` command or an SDK worker. |
+| **Inference provider** | The service that answers the server's model calls. The Claude API is the default. |
+
+<Aside type="caution" title="What this lesson did and did not verify">
+Facts come from the five official pages in the front matter, read on 2026-11-22. I have no access to the release archive, so I **started no server, ran no command and made no API call**. Settings and commands below are copied in shape from those pages; keys are placeholders. Pages I did not read (the configuration reference, Kubernetes, upgrade, console and agent identity pages, among others) are listed in the research note as unconfirmed, so details such as every setting name and default are not covered here.
+</Aside>
+
+## Which parts do you host?
+
+The docs say Managed Agents has two parts you can host: the **sandboxes** and the **service** (the API, the agent loop and the storage for agents, sessions and session history). Each option's name says what you host:
+
+| Option | Sandboxes | Service | Model |
+| --- | --- | --- | --- |
+| Cloud sandboxes (default) | Anthropic | Anthropic | Anthropic |
+| Self-hosted sandboxes | You | Anthropic | Anthropic |
+| Self-hosted Managed Agents | You | You | Anthropic, or a provider that you choose |
+
+If you only need tools to run on your infrastructure, the docs point you to self-hosted sandboxes, where Anthropic still runs the service. Self-hosting the whole service means you also run and secure a server and its database and install each release yourself.
+
+## When to choose it
+
+Choose self-hosted Managed Agents when you need one of these:
+
+- **Storage on your infrastructure:** you must store agents, sessions and session history yourself.
+- **Your choice of inference provider:** model calls must go to Amazon Bedrock, Claude Models on Google Cloud (Google managed), Microsoft Foundry or your own model gateway.
+
+<Aside type="note" title="Access is by request">
+The docs say: to request access to self-hosted Claude Managed Agents, contact your Anthropic account team. If your Claude Console organization already has access, sign in and switch to that organization, then reload the page. The release archive is downloaded by a person with access; the docs tell automated agents to ask the person for it. The server software is covered by a separate license, "Software License Agreement: Claude Managed Agents Server". I did not read its terms.
+</Aside>
+
+## What runs where
+
+One or more servers, their database and your sandboxes make one deployment.
+
+| Component | What it does |
+| --- | --- |
+| **Server** (`cma-server`) | Serves the API, runs the agent loop, stores agents, sessions and each session's history, and calls your inference provider. It never runs an agent's shell or file tools. |
+| **Database** | PostgreSQL 16 or later. Without a database the server keeps its data in memory, and a restart erases it. |
+| **Workers** | Take work from the server and run the shell and file tools in your sandboxes. |
+| **Your applications** | Your code and scripts, which reach the server with the SDK or the `ant` CLI. |
+| **Console on your server** | A webpage at the server's address where people sign in through your identity provider to create agents and run sessions. |
+| **Admin CLI** (`cma-server-admin`) | Creates environments and their environment keys. Runs on Linux (x86-64 and Arm) and macOS on Apple silicon. |
+
+### Three credentials
+
+| Credential | Who holds it | What it authenticates |
+| --- | --- | --- |
+| **Server API key** | Your applications, the `ant` CLI and the admin CLI | Requests to your server. Setup generates it; it plays the role a Claude API key plays with the hosted service. |
+| **Inference credential** | The server | The server's model calls to your inference provider (for example a Claude API key, your cloud credential or a gateway token). Applications and workers don't need it. |
+| **Environment key** | Workers that poll the server | One environment's work queue and that environment's sessions. |
+
+## Choose a model provider
+
+By default the server sends model calls to the Claude API. The `inference.provider` setting takes these values:
+
+| `inference.provider` | Model calls go to | The server authenticates with |
+| --- | --- | --- |
+| `anthropic` (default) | The Claude API | `ANTHROPIC_API_KEY` |
+| `bedrock` | Amazon Bedrock | Your AWS credential |
+| `vertex` | Claude Models on Google Cloud (Google managed) | Google Application Default Credentials |
+| `foundry` | Microsoft Foundry | A Foundry API key, or Microsoft Entra ID |
+| `gateway` | A model gateway that you run | A key or token your gateway accepts |
+
+Agents keep naming models by Claude API IDs such as `claude-opus-5-5`; the server translates the ID, so an agent definition works unchanged under any provider that serves that model. To change provider: put the provider's sample in the server's settings file, give the server the provider's credential, restart the server, then check the log.
+
+### Examples from the docs (placeholders)
+
+Amazon Bedrock (the server signs with whatever the AWS SDK's default credential chain finds, such as a task role or pod identity; the identity needs `bedrock:InvokeModel`, `bedrock:InvokeModelWithResponseStream`, and list permissions on `*` for foundation models and inference profiles):
+
+```yaml
+inference:
+  provider: bedrock
+  region: us-east-1
+```
+
+Claude Models on Google Cloud (`region` is required; the identity needs the `roles/aiplatform.user` role on the project):
+
+```yaml
+inference:
+  provider: vertex
+  region: us-east5
+  project_id: my-project
+```
+
+Microsoft Foundry (`resource` is the first part of `<resource>.services.ai.azure.com`; use `ANTHROPIC_FOUNDRY_API_KEY`, or leave it unset to use Microsoft Entra ID):
+
+```yaml
+inference:
+  provider: foundry
+  foundry:
+    resource: my-resource
+```
+
+A model gateway that takes one long-lived key in the Amazon Bedrock InvokeModel format. Put the key in an environment variable and name the variable, never the value:
+
+```yaml
+inference:
+  provider: gateway
+  gateway:
+    url: "https://llm-gateway.example.com/v1/model/{model}/invoke"
+    format: bedrock-invoke
+    # Quote every model_map value.
+    model_map:
+      claude-opus-5-5: "us.anthropic.claude-opus-5-5"
+  credentials:
+    supplier: env
+    env: { var: LLM_GATEWAY_KEY }
+    send_as: { header: x-api-key }
+```
+
+Other gateway formats named in the docs are `anthropic-messages` and `vertex-raw-predict`. A gateway that needs short-lived tokens can use an `oauth_exchange` credential (the server calls an HTTP callback you build, then exchanges the assertion at your OAuth token endpoint), and a gateway that checks Microsoft Entra ID tokens can use the `azure` supplier. If your cloud account uses a different model ID than the one the server sends, map it with `model_id_overrides`.
+
+Two notes from the docs worth remembering:
+
+- Under every value except `anthropic`, the server needs no Claude API key and ignores `ANTHROPIC_API_KEY`, `ANTHROPIC_AUTH_TOKEN` and `ANTHROPIC_BASE_URL` (the exception is a gateway whose key you tell the server to read from one of them).
+- A log line such as `upstream credential resolved` means the server found a credential. It does not prove your account has the model enabled; a missing model shows up as a `session.error` on the first turn that uses it.
+
+## What leaves your network
+
+For each model call the server sends the conversation so far, including prompts, tool inputs and tool results, to your inference provider. The docs list every destination the server connects to: your inference provider, its database, services that issue its model credential, the MCP servers and Git hosts you allow, an OpenTelemetry collector, identity providers, and a secret manager or key management service if you configure them, plus anything else you configure. The server connects to Anthropic **only when the Claude API is the inference provider**, and the docs say Anthropic has no remote access to the server or its log.
+
+When the Claude API is the provider, each call also carries three ID headers (session, agent and environment), which the docs say cannot be turned off; the IDs hold no names or content but encode creation time. Requests carry a `User-Agent` naming the server software and its version, and some calls carry the label `cma-server` in `metadata.user_id`. If a proxy or gateway of your own sits in the path and rejects `metadata.user_id` in the request body, every model call fails.
+
+Data kept:
+
+- Agents, sessions and session history stay in **your database** until you delete them; the server does not delete a session because of its age. Deleting through the API removes the session and history from your database but not copies elsewhere, such as backups, exported logs and traces, or what an agent wrote to a memory store.
+- The log goes to standard error. Traces and metrics are recorded only if you turn on OpenTelemetry variables.
+- Model calls fall under your agreement with whichever provider serves the model. The docs list Claude Managed Agents as not covered by zero data retention, because when Anthropic runs the service it stores transcripts until you delete them; when you run it, you store them.
+
+## Security responsibilities
+
+<Aside type="caution" title="The bash tool is a real shell">
+The docs warn that an agent's `bash` tool is a real shell with the worker process's permissions and network access, and the worker does not isolate it. Isolation comes from what the worker runs in. The Docker Compose stack and the `cma-sandboxes` Helm chart start each session's worker in its own container or pod. If you start a worker yourself, run it in a disposable container or VM that holds nothing you need to protect.
+</Aside>
+
+- What the self-hosted-sandboxes security page assigns to Anthropic becomes your job: securing the server, hosting memory stores and detecting unusual usage.
+- **One trust level per deployment.** Environments in one deployment do not keep trust levels apart, and the server API key reaches every environment. Give each tenant, and each trust level, its own deployment with its own database, server API key and workers.
+- To separate callers inside a deployment, the docs suggest single sign-on with groups mapped to the `developer` or `user` role, keeping the server API key for administrators.
+- Roles limit only requests made with a caller's own token. Code an agent runs can call the server with any credential its sandbox holds, and an environment key can read events and post tool results in every session of its environment. So run each session in its own sandbox and keep the environment key out of it.
+- By default the server listens on `127.0.0.1:8400`. The Prometheus metrics endpoint (off by default) asks for no credential, and the egress gateway listener (off by default) speaks plain HTTP with answers that carry stored credential values; let only the gateway reach it.
+
+## What is different from the hosted service
+
+The server has the same API apart from the exceptions on the differences page. **Nothing is copied from the hosted service, session history included**: create your agents, skills, vault credentials and memory stores again on your server.
+
+| Area | What the docs say |
+| --- | --- |
+| Only on your server | Choice of inference provider, single sign-on, your own secret manager, agent identity (short-lived signed tokens sent to MCP servers). |
+| Not available | Cloud environments (only `self_hosted` environments exist; a cloud request returns `400`); the rest of the Claude API such as Messages and Models (`404`); file session resources and the Files API; `mcp_oauth` vault credentials (use `static_bearer`); the prebuilt `docx`, `pdf`, `pptx` and `xlsx` skills; scheduled deployments and dreams; webhooks. |
+| Behaves differently | The Claude Console at platform.claude.com does not show your server (use the console on your server). A tool call waits, with no error, until a worker polls the environment. Memory stores are copied by the worker. Custom skill zip uploads are not unpacked. Multiagent orchestration accepts only a `coordinator` block with 1 to 20 listed subagents. MCP tool results are cut at `mcp.max_result_bytes` (100 KiB by default). Images and documents sent by URL are accepted but the model never sees them, with no error. |
+| Needs a server setting | MCP servers (`mcp.allowed_hostnames`, exact hosts, empty by default), Git repositories (`git.allowed_hostnames` and `git.allowed_push_refs`), web tools (`web_tools.enabled: true`), and `environment_variable` vault credentials (need the egress gateway). |
+| Depends on provider | `web_search` works under `anthropic`, `vertex` and `foundry`; `web_fetch` under `anthropic` and `foundry`; `inference_geo` only under `anthropic`; fast mode depends on provider and model. |
+
+Two details that are easy to miss: an agent with web tools listed in its toolset while the tools are off may run with no error and no tools, and under the `anthropic` provider the server asks the Claude API for server-side fallback by default, so a different Claude model can answer a request a safety classifier declined. Set `inference.model_fallback: false` to turn that off. The differences page also says git force pushes are not refused by the server, so protect branches on your Git host.
+
+## A first local session (sketch, not run)
+
+The official quickstart uses Docker Compose on one machine. The docs call that stack **development only**: it serves plain HTTP and publishes port 8400 on `127.0.0.1`. For production, Anthropic recommends the release's two Helm charts (see the Kubernetes page, which I did not read).
+
+<Steps>
+
+1. **Prerequisites.** The release archive (from your account team), a Claude API key for the server's model calls, the latest Docker Engine with the Compose plugin, a host with at least two CPUs, network access on first start, and `openssl` plus the `ant` CLI.
+
+2. **Create `.env` beside `docker-compose.yml`** (placeholders only; the docs generate the secrets with `openssl`):
+
+   ```bash
+   CMA_PG_PASSWORD=<random value>
+   ANTHROPIC_API_KEY=sk-ant-...
+   CMA_SERVER__API_KEY=<random value>
+   CMA_STORE__CREDENTIALS_ENCRYPTION_KEY=<random value>
+   ```
+
+   Edit the file yourself and keep it private (`chmod 600 .env`). Do not paste the key into chat.
+
+3. **Start the stack and check readiness.**
+
+   ```bash
+   docker compose up --build -d
+   curl -s http://127.0.0.1:8400/cma-server/readyz
+   ```
+
+   A ready server answers with `"status":"ready"`.
+
+4. **Point the `ant` CLI at your server in a second terminal.** Set `ANTHROPIC_API_KEY` to your **server API key**, not your Claude API key:
+
+   ```bash
+   export ANTHROPIC_BASE_URL=http://127.0.0.1:8400
+   export ANTHROPIC_API_KEY=<your server API key>
+   ```
+
+   Keep `docker compose` commands in the first terminal. If you run `docker compose up` where these variables are set, the server calls itself instead of the Claude API.
+
+5. **Create an agent, then a session.** The docs save an agent definition as `quickstart-agent.md` (name, `model: claude-opus-5-5`, the `agent_toolset_20260401` tool type, a short system prompt) and run `ant apply --yes quickstart-agent.md`. They then create a session with `ant beta:sessions create --agent <agent id> --environment-id <environment id>` and open it with `ant beta:sessions connect <session id>`. The stack's environment is named `compose-sandbox`.
+
+6. **Confirm the tool ran in a sandbox.** Ask the agent to run `hostname` with the bash tool. The docs say the reply should start with `cma-sandbox-`, the name of the sandbox container.
+
+   <PromptBox>
+   Run `hostname` with the bash tool and tell me the output.
+   </PromptBox>
+
+</Steps>
+
+To stop the stack, `docker compose down --remove-orphans` deletes the containers and keeps the database; adding `-v` also deletes the database with every agent, session and history in it.
+
+<Checklist items={[
+  'I confirmed that I need on-infrastructure storage or my own model provider, not only self-hosted sandboxes',
+  'I requested access from my Anthropic account team and have the release archive',
+  'I read the differences page and nothing my app depends on is missing',
+  'I chose one deployment per tenant or trust level',
+  'Workers run in disposable containers or VMs that hold nothing sensitive',
+  'The server API key, inference credential and environment keys are stored separately and never pasted into chat',
+  'I know where the log, traces and backups go and how long they are kept',
+]} />
+
+## Common sticking points
+
+### The tool call never finishes
+
+- **Cause:** No worker is polling the environment. The model turn runs anyway, and the first tool call waits without an error.
+- **Fix:** Check the workers' log. In the quickstart stack the docs also note that 10 workers each hold one session container, so archive unused sessions if all 10 are taken.
+
+### Every turn fails right after start
+
+- **Cause:** In the quickstart, running `docker compose up` in a shell where `ANTHROPIC_BASE_URL` points at the server makes it call itself.
+- **Fix:** Run it in a terminal where those variables are not set.
+
+### An app that worked on the hosted service fails
+
+- **Cause:** It used a feature listed as unavailable, such as the Files API or `mcp_oauth` credentials, or a feature that needs a server setting.
+- **Fix:** Go through the differences page row by row and apply the suggested alternative.
+
+## Practical tips
+
+- Decide first whether self-hosted sandboxes (Anthropic runs the service) are enough; the docs point there when only tools must run on your infrastructure.
+- Treat the Compose stack as a lab, and use a machine that holds nothing you need to protect.
+- Plan upgrades: you install each release yourself, and each release archive includes an operator guide, `operator-guide.md`, that the docs suggest having Claude read.
+- Costs, support terms, supported scale and version numbers were not in the pages I read, so ask your account team.
+
+## Next tutorials
+
+- [4. Run it on a server with Managed Agents](/dev/04-managed-agents/): the hosted service this tutorial builds on
+- [22. Admin API](/dev/22-admin-api/): organization-level keys and workspaces on the hosted side
+- [11. Team usage dashboard with the usage and cost API](/dev/11-usage-cost-api/): spend reporting for hosted usage
