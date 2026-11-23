@@ -27,3 +27,9 @@
 - `localStorage['lang-pref']`가 `'ko'`면 `/ko/`로, `'en'`이면 그대로.
 - 값이 없으면 `navigator.languages`에 `ko`로 시작하는 값이 있을 때만 `/ko/`로 이동.
 - 언어 선택기(넓은 화면)나 헤더 언어 버튼(좁은 화면)으로 고른 언어는 `lang-pref`에 저장된다.
+
+## 검색 노출용 필드·피드 (2026-11-23)
+- frontmatter `seoTitle`/`seoDescription`(선택): 화면 H1은 그대로 두고 `<title>`·meta description·og:title·og:description에만 쓴다(`src/routeMiddleware.ts`). `seoTitle | 사이트 이름`이 60자를 넘으면 `seoTitle`만 쓴다. 설명은 120~155자. 두 언어 중 길이를 넘는 쪽에만 넣는다.
+- RSS: `/rss.xml`, `/ko/rss.xml` (`src/lib/rss.ts`). 구조화 데이터(JSON-LD)는 `Head.astro`, 사이트맵 lastmod는 `astro.config.mjs`가 `lastVerified`로 만든다.
+- IndexNow: main에 push하면 배포 뒤 바뀐 문서 주소를 알린다(`scripts/indexnow-urls.sh`, 키 파일 `public/81a215c1fe6ef1ef9b83e5b6e9d53989.txt`). 키 파일을 지우거나 바꾸지 않는다.
+- 자세한 배경: `docs/research/site-upgrade-2026-11-23.md`.
