@@ -1,0 +1,170 @@
+---
+title: "Claude·ChatGPT·Gemini 요금과 무료 한도 한눈에"
+description: "Claude, ChatGPT, Gemini의 무료·유료 플랜 가격과 포함 내용을 각 공식 페이지에서 확인해 2026-11-23 기준으로 나란히 정리했어요"
+seoTitle: "챗GPT·Claude·Gemini 요금 비교와 무료 한도"
+seoDescription: "챗GPT(ChatGPT), Claude, Gemini의 무료 플랜 한도와 유료 플랜 가격을 공식 페이지에서 직접 읽고 2026-11-23 기준으로 비교했어요. 표의 칸마다 출처 링크를 달았고, 확인하지 못한 항목은 따로 적었어요."
+sidebar:
+  label: "22. 요금과 무료 한도"
+level: beginner
+category: basics
+status: published
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "15분"
+prerequisites:
+  - "없어요. 기초 8편을 먼저 읽으면 도움이 되지만 필수는 아니에요"
+requires: ["basics/08-free-vs-paid"]
+lastVerified: 2026-11-23
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "ChatGPT pricing"
+    url: "https://chatgpt.com/pricing"
+  - title: "Pricing (OpenAI, ChatGPT Learn docs)"
+    url: "https://learn.chatgpt.com/docs/pricing"
+  - title: "Google AI plans (Gemini subscriptions)"
+    url: "https://gemini.google/subscriptions/"
+  - title: "Gemini Apps limits & feature availability"
+    url: "https://support.google.com/gemini/answer/16275805"
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import Checklist from '../../../../components/Checklist.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- 세 서비스 모두 **무료 플랜**이 있고, 유료 플랜의 가격대도 비슷해요. 낮은 단계(월 약 $5~8), 표준 단계(월 약 $17~20), 많이 쓰는 사람용 단계($100 이상)로 나뉘어요.
+- **무료 플랜의 메시지 수를 고정 숫자로 공개한 곳은 없어요.** Claude는 "5시간마다·매주 제한된 사용량", ChatGPT는 남용 방지 범위에서 "텍스트 채팅 무제한"이고 다른 기능은 제한, Gemini는 주간 한도까지 5시간마다 새로 채워지는 "표준 한도"라고 해요.
+- 아래 가격은 모두 **2026-11-23 기준**이고, 달러로 표시되며, 칸마다 달린 공식 페이지 링크에서 가져왔어요. 가격과 한도는 자주 바뀌어서 이 글은 한 달에 한 번쯤 다시 확인하는 것을 전제로 해요.
+- 세 서비스 모두 원화 가격은 확인하지 못했어요. 글 끝에 정리했어요.
+</Summary>
+
+## 이 튜토리얼로 할 수 있게 되는 것
+
+- 세 서비스의 플랜 이름을 나란히 놓고 헷갈리지 않고 읽기
+- 각 서비스의 무료 플랜이 공식적으로 어떻게 설명되는지 알기
+- 유료 플랜을 볼 만한지 판단하고, 먼저 어디서 최신 가격을 확인할지 알기
+
+<Aside type="caution" title="가격과 한도는 바뀌어요">
+여기 적은 내용은 2026-11-23에 공식 페이지가 보여 준 값이에요. 각 페이지가 가격·플랜·한도가 바뀔 수 있다고 직접 밝혀요(Anthropic은 "Anthropic의 재량으로", Google은 "예고 없이", OpenAI는 한도를 추정치라고 설명). 결제 전에 최신 페이지를 확인하세요. 가격은 미국 달러이고, Claude 페이지는 해당 세금이 별도라고 적었어요.
+</Aside>
+
+## Claude (Anthropic)
+
+| 플랜 | 가격 | 공식 페이지의 사용량 설명 | 플랜에 적힌 내용 |
+| --- | --- | --- | --- |
+| Free | [$0](https://claude.com/pricing) | [5시간마다, 매주 제한된 사용량](https://claude.com/pricing) | [웹·데스크톱·모바일 채팅, 웹 검색·파일 만들기·코드 실행, 메모리, 커넥터, 아티팩트](https://claude.com/pricing). Claude Code는 Free에서 "No"로 표시돼요. |
+| Pro | [연간 구독 할인 시 월 $17(선결제 $200), 월 결제 시 $20](https://claude.com/pricing) | [Free보다 많은 사용량, 5시간마다·매주](https://claude.com/pricing) | [Free의 모든 것 + Claude Code, 리서치, 프로젝트, Chrome·Microsoft 365용 Claude, Fable은 사용 크레딧으로 결제](https://claude.com/pricing) |
+| Max | [월 $100](https://claude.com/pricing) | [Pro의 5배 사용량, 5시간마다·매주](https://claude.com/pricing) | [Pro의 모든 것 + 주간 한도의 절반까지 Fable 포함, 월 $100 API 크레딧, 트래픽이 몰릴 때 우선 접근](https://claude.com/pricing) |
+| Ultra | [월 $200](https://claude.com/pricing) | [인증된 계정은 5시간 한도 없음, 매주 Pro의 10배 사용량](https://claude.com/pricing) | [Max의 모든 것 + 월 $200 API 크레딧](https://claude.com/pricing) |
+
+가격 페이지는 한도에 닿는 속도가 모델, 채팅 길이, 파일 크기에 따라 달라진다고도 적었어요. 5시간·주간 한도가 어떻게 동작하는지는 [C2. Claude 플랜과 사용 한도](/ko/claude/c02-plans-limits/)를 보세요.
+
+## ChatGPT (OpenAI)
+
+| 플랜 | 가격 | 공식 페이지 설명 | 참고 |
+| --- | --- | --- | --- |
+| Free | [$0](https://learn.chatgpt.com/docs/pricing) | [GPT-6 텍스트 채팅은 남용 방지 범위에서 무제한, 업로드 메시지·이미지 생성·음성 채팅·딥 리서치·메모리와 컨텍스트는 제한](https://chatgpt.com/pricing) | [빠른 모델의 전체 컨텍스트 창 27K](https://chatgpt.com/pricing) |
+| Go | [월 $8](https://learn.chatgpt.com/docs/pricing) | [Free의 모든 것 + 도구를 쓰는 메시지, 업로드, 이미지 생성, 음성 채팅이 더 많고 메모리가 더 길어요](https://chatgpt.com/pricing) | [이 플랜에는 광고가 포함될 수 있다고 적혀 있어요](https://chatgpt.com/pricing) |
+| Plus | [월 $20](https://learn.chatgpt.com/docs/pricing) | [Go의 모든 것 + 고급 추론 모델, 확장된 메시지·업로드·이미지 생성·딥 리서치·메모리, 프로젝트·예약 작업·맞춤형 GPT, Codex 사용량 확대](https://chatgpt.com/pricing) | [한도가 적용돼요](https://chatgpt.com/pricing) |
+| Pro | [월 $100부터($100, $200, $500 중 선택)](https://learn.chatgpt.com/docs/pricing) | [Plus의 모든 것 + 사용량 3단계 중 선택, 무제한이고 더 빠른 이미지 생성, 최대 딥 리서치·메모리](https://chatgpt.com/pricing) | [단계에 따라 월 API 크레딧이 포함돼요](https://chatgpt.com/pricing) |
+| Business | [사용자당 월 $20(연간 결제), 월 결제 시 $25(2명 이상)](https://learn.chatgpt.com/docs/pricing) | [관리 기능이 있는 보안 전용 워크스페이스, 업무 데이터는 기본적으로 학습에 쓰지 않음](https://learn.chatgpt.com/docs/pricing) | 개인이 아니라 팀용 |
+
+OpenAI의 Work·Codex 가격 페이지는 Plus 기준 5시간당 로컬 메시지 **추정치**도 줘요(예: [한 모델은 6~50, 가장 가벼운 모델은 350~3,000](https://learn.chatgpt.com/docs/pricing)). 고정 메시지 한도가 아니라고 밝혀요. 일반 채팅의 메시지 수 표는 찾지 못해서 적지 않았어요. 에이전트 작업이 한도를 더 빨리 쓰는 이유는 [에이전트 9편](/ko/agents/09-agent-usage-limits/)을 보세요.
+
+## Gemini (Google)
+
+아래는 Google AI 플랜 페이지에 표시된 미국 가격이에요. 페이지가 플랜을 "United States" 아래에 보여 주므로 다른 나라 가격은 다를 수 있어요.
+
+| 플랜 | 가격 | 사용량 | 플랜에 적힌 내용 |
+| --- | --- | --- | --- |
+| Free (AI 플랜 없음) | [Google 계정으로 $0](https://gemini.google/subscriptions/) | [표준 한도, 컨텍스트 창 32k 토큰](https://support.google.com/gemini/answer/16275805) | [이미지 생성·편집, 딥 리서치, Gemini Live, 캔버스가 있는 Gemini 앱, Gmail·드라이브·포토 합산 15GB 저장공간](https://gemini.google/subscriptions/) |
+| Google AI Plus | [월 $4.99](https://gemini.google/subscriptions/) | [표준 한도의 2배, 컨텍스트 128k](https://support.google.com/gemini/answer/16275805) | [Free의 모든 것 + 동영상 생성, 데일리 브리프, 저장공간 400GB](https://gemini.google/subscriptions/) |
+| Google AI Pro | [월 $19.99](https://gemini.google/subscriptions/) | [표준 한도의 4배, 컨텍스트 100만](https://support.google.com/gemini/answer/16275805) | [Free의 모든 것 + Gmail·문서 안의 Gemini, Chrome 자동 탐색, 저장공간 5TB](https://gemini.google/subscriptions/) |
+| Google AI Ultra | [월 $99.99(AI Pro 한도의 5배) 또는 월 $199.99(20배)](https://gemini.google/subscriptions/) | [구독에 따라 AI Pro 한도의 5배 또는 20배, 컨텍스트 100만](https://support.google.com/gemini/answer/16275805) | [AI Pro의 모든 것 + 가장 높은 접근 한도와 더 큰 저장공간](https://gemini.google/subscriptions/) |
+
+Google 도움말은 한도가 연산량 기준이고, 주간 한도에 닿을 때까지 5시간마다 새로 채워지며, 예고 없이 바뀔 수 있다고 해요. AI 플랜이 있으면 한도에 닿아도 [Flash-Lite로 대화를 이어 갈 수 있고](https://support.google.com/gemini/answer/16275805), 플랜이 없으면 딥 리서치 같은 무거운 기능은 사용자가 몰릴 때 못 쓸 수 있어요.
+
+## 세 서비스 나란히 보기
+
+| 질문 | Claude | ChatGPT | Gemini |
+| --- | --- | --- | --- |
+| 무료 플랜 가격 | [$0](https://claude.com/pricing) | [$0](https://learn.chatgpt.com/docs/pricing) | [$0](https://gemini.google/subscriptions/) |
+| 가장 낮은 유료 플랜 | [Pro, 연간 $17 또는 월 $20](https://claude.com/pricing) | [Go, $8](https://learn.chatgpt.com/docs/pricing) | [AI Plus, $4.99](https://gemini.google/subscriptions/) |
+| 표준 유료 플랜 | [Pro, $17 또는 $20](https://claude.com/pricing) | [Plus, $20](https://learn.chatgpt.com/docs/pricing) | [AI Pro, $19.99](https://gemini.google/subscriptions/) |
+| 많이 쓰는 사람용 | [Max $100, Ultra $200](https://claude.com/pricing) | [Pro $100부터](https://learn.chatgpt.com/docs/pricing) | [AI Ultra $99.99 또는 $199.99](https://gemini.google/subscriptions/) |
+| 무료 한도 설명 | [5시간마다·매주 제한](https://claude.com/pricing) | [텍스트 채팅 무제한, 다른 기능은 제한](https://chatgpt.com/pricing) | [표준 한도, 주간 한도까지 5시간마다 갱신](https://support.google.com/gemini/answer/16275805) |
+| 무료 플랜의 코딩 도구 | [Claude Code: No](https://claude.com/pricing) | [Codex 제한적 사용](https://chatgpt.com/pricing) | 읽은 페이지에는 없어요 |
+
+"가장 낮은"·"표준"은 표시된 가격을 우리가 묶은 분류일 뿐 서비스의 표현이 아니에요. 플랜끼리 사용량·모델·부가 기능이 달라 똑같이 비교할 수 없으니, 이 표는 가격대 비교일 뿐 가치 비교가 아니에요.
+
+## 단계별 따라 하기
+
+<Checklist items={[
+  '1. 내가 하려는 일(대화, 파일, 이미지, 코딩)을 적어 봤어요',
+  '2. 쓰려는 서비스의 무료 플랜을 먼저 써 봤어요',
+  '3. 어떤 한도에 얼마나 자주 닿는지 기록했어요',
+  '4. 결제 전에 최신 가격 페이지를 열어 봤어요',
+  '5. 월 결제인지 연간 결제인지 확인했어요',
+  '6. 한 달 뒤에 가격을 다시 확인하도록 알림을 맞췄어요',
+]} />
+
+### 1. 무료 플랜부터 써 보기
+
+내 실제 작업에 무료 플랜을 일주일쯤 써 보세요. 한도 안내 메시지는 어떤 표보다 내게 필요한 것을 잘 알려 줘요. 아껴 쓰는 방법은 [기초 16편: 무료 AI 활용 팁](/ko/basics/16-free-ai-tips/)을 보세요.
+
+### 2. 닿은 한도 이름 붙이기
+
+메시지 수인지, 너무 큰 파일인지, 이미지·음성 횟수인지, 아예 못 쓰는 기능인지(예: Claude Free에는 Claude Code가 없어요)를 구분해 보세요. 각각 가리키는 플랜이 달라요.
+
+<PromptBox>
+나는 주로 다음 일에 AI를 써요: (내 용도를 적어요). 일주일에 대략 이만큼 써요: (횟수). 아래에 붙여 넣는 Claude, ChatGPT, Gemini 공식 가격 페이지 내용만 보고, 어떤 무료 또는 유료 플랜이 맞을지, 결제 전에 무엇을 확인해야 할지 알려 줘요. 가격은 추측하지 말고 내가 붙여 넣은 내용만 써 줘요.
+</PromptBox>
+
+### 3. 최신 페이지에서 비교하기
+
+마음이 가는 서비스의 표에 달린 공식 링크를 열어, 정확한 플랜 이름·가격·세금 포함 여부를 비교하세요. 최신 페이지가 이 글과 다르면 최신 페이지를 믿으세요.
+
+### 4. 결제 경로도 영향이 있어요
+
+결제하는 곳(웹, 앱스토어, 구글 플레이)에 따라 가격과 해지 방법이 달라질 수 있어요. 여기서는 비교하지 않았어요. 플랜 기본은 [기초 8편](/ko/basics/08-free-vs-paid/)을 보세요.
+
+## 자주 막히는 부분
+
+### 내가 보는 가격이 이 글과 달라요
+
+- **원인**: 각 페이지가 가격이 바뀔 수 있고, 나라별로 다르며, 세금 포함 여부가 다를 수 있다고 적어요.
+- **해결**: 내 화면의 최신 가격을 믿으세요. 비교하려면 날짜와 플랜 이름을 적어 두세요.
+
+### "무제한"이 정말 끝없다는 뜻은 아니에요
+
+- **원인**: ChatGPT의 "텍스트 채팅 무제한"은 남용 방지 범위에서 일상적인 텍스트 채팅에 해당하고, 업로드·이미지·음성·딥 리서치는 제한돼요.
+- **해결**: 첫 단어만이 아니라 그 줄 전체를 읽으세요.
+
+### 어떤 플랜에 어떤 기능이 있는지 모르겠어요
+
+- **원인**: 기능이 플랜 사이에서 옮겨 다녀요.
+- **해결**: 오래된 후기 말고 공식 페이지의 기능 비교표를 보세요.
+
+## 확인하지 못한 것
+
+- **세 서비스의 원화 가격.** 읽은 공식 페이지는 달러로 표시됐어요(Gemini 페이지는 United States로 표시). 앱스토어·구글 플레이 가격은 찾아보지 않아서 원화 금액은 적지 않았어요.
+- **세 서비스 무료 플랜의 고정 메시지 수.** 읽은 페이지 어디에도 없었어요.
+- **Gemini 기능별 하루 횟수.** 도움말은 횟수가 아니라 배수만 줘요.
+- **국가, 회사·학교 계정, 결제하는 앱스토어에 따라 가격이 달라지는지.**
+- 어떤 플랜도 직접 가입하거나 써 보지 않았어요. 위 내용은 모두 2026-11-23에 공식 페이지를 읽고 정리한 거예요.
+
+## 실전 팁
+
+- **후기나 쿠폰 사이트 말고 공식 가격 페이지를 보세요.** 제3자 페이지는 오래된 경우가 많아요.
+- **연간 결제는 월 환산이 더 싸지만 한 번에 선결제해요.** Claude Pro는 연간 $17, 월 결제 $20로 둘 다 표시돼요.
+- **데이터 설정을 읽지 않은 서비스에 개인 정보를 붙여 넣지 마세요.** [기초 12편: 개인정보 설정](/ko/basics/12-privacy-settings/)을 보세요.
+- **이 글은 한 달에 한 번쯤 다시 확인하는 글이에요.** 맨 위의 "확인일"을 보세요.
+
+## 다음에 읽을 글
+
+- [기초 8편: 무료와 유료 플랜](/ko/basics/08-free-vs-paid/): 결제하면 무엇이 달라지는지
+- [기초 16편: 무료 AI 활용 팁](/ko/basics/16-free-ai-tips/): 무료 플랜을 더 잘 쓰는 방법
+- [기초 11편: AI 도구 고르기](/ko/basics/11-choose-ai-tool/): 어떤 작업에 어떤 서비스가 맞는지
+- [C2. Claude 플랜과 사용 한도](/ko/claude/c02-plans-limits/): Claude 플랜 자세히
+- [에이전트 9편: 에이전트 비용과 사용 한도](/ko/agents/09-agent-usage-limits/): 에이전트 작업이 한도를 빨리 쓰는 이유
