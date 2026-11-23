@@ -1,0 +1,170 @@
+---
+title: "Claude, ChatGPT and Gemini Prices and Free Limits at a Glance"
+description: "A side-by-side look at what the free and paid plans of Claude, ChatGPT and Gemini cost and include, taken from each official page and dated 2026-11-23"
+seoTitle: "ChatGPT vs Claude vs Gemini price & free limits (2026)"
+seoDescription: "What ChatGPT, Claude and Gemini plans cost and what the free tiers include, read from the official pages as of 2026-11-23, with a source in every cell."
+sidebar:
+  label: "22. Prices and free limits"
+level: beginner
+category: basics
+status: published
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "15 min"
+prerequisites:
+  - "None. Reading Basics 8 first helps, but it is not required"
+requires: ["basics/08-free-vs-paid"]
+lastVerified: 2026-11-23
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "ChatGPT pricing"
+    url: "https://chatgpt.com/pricing"
+  - title: "Pricing (OpenAI, ChatGPT Learn docs)"
+    url: "https://learn.chatgpt.com/docs/pricing"
+  - title: "Google AI plans (Gemini subscriptions)"
+    url: "https://gemini.google/subscriptions/"
+  - title: "Gemini Apps limits & feature availability"
+    url: "https://support.google.com/gemini/answer/16275805"
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- All three services have a **free plan**, and all three sell paid plans in the same rough price bands: a low tier (about $5 to $8 a month), a standard tier (about $17 to $20), and heavy-use tiers ($100 and up).
+- **Nobody publishes a fixed number of messages for the free plan.** Claude says "limited usage every 5 hours and every week", ChatGPT says "unlimited text chats" subject to abuse guardrails with other features limited, and Gemini says "standard limits" that refresh every 5 hours until a weekly limit.
+- Every price below is **as of 2026-11-23**, in US dollars, from the official page linked in that cell. Prices and limits change often, so this page is meant to be re-checked about once a month.
+- We could not confirm Korean-won prices for any of the three. See the end of the page.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Read the three services' plan names side by side without mixing up the terms.
+- Know what the free plan of each service is described as including.
+- Decide whether it is worth looking at a paid plan, and where to check the live price first.
+
+<Aside type="caution" title="Prices and limits change">
+Everything here is what the official pages showed on 2026-11-23. The pages themselves say prices, plans and limits can change (Anthropic: "at Anthropic's discretion"; Google: "may change without notice"; OpenAI describes its limits as estimates). Check the live page before you pay. Prices are shown in US dollars; the Claude page says its prices exclude applicable tax.
+</Aside>
+
+## Claude (Anthropic)
+
+| Plan | Price | Usage, as the official page describes it | What the plan lists |
+| --- | --- | --- | --- |
+| Free | [$0](https://claude.com/pricing) | [Limited usage every 5 hours and every week](https://claude.com/pricing) | [Chat on web, desktop and mobile; web search, file creation and code execution; memory; connectors; Artifacts](https://claude.com/pricing). Claude Code is listed as "No" on Free. |
+| Pro | [$17/month with the annual discount ($200 billed up front), $20 if billed monthly](https://claude.com/pricing) | [More usage than Free, every 5 hours and every week](https://claude.com/pricing) | [Everything in Free, plus Claude Code, Research, Projects, Claude in Chrome and Microsoft 365; Fable paid with usage credits](https://claude.com/pricing) |
+| Max | [$100/month](https://claude.com/pricing) | [5x Pro usage every 5 hours and every week](https://claude.com/pricing) | [Everything in Pro, plus Fable up to half your weekly limit, $100 a month in API credits, priority access at high-traffic times](https://claude.com/pricing) |
+| Ultra | [$200/month](https://claude.com/pricing) | [No 5-hour limit for verified accounts; 10x Pro usage every week](https://claude.com/pricing) | [Everything in Max, plus $200 a month in API credits](https://claude.com/pricing) |
+
+The pricing page also says how fast you reach a limit depends on the model, the length of your chats and the size of your files. For how the five-hour and weekly limits work, see [C2. Claude plans and limits](/claude/c02-plans-limits/).
+
+## ChatGPT (OpenAI)
+
+| Plan | Price | What the official page says | Notes |
+| --- | --- | --- | --- |
+| Free | [$0](https://learn.chatgpt.com/docs/pricing) | [Unlimited text chats with GPT-6, subject to abuse guardrails; limited messages with uploads, limited image creation, limited voice chats, limited deep research, limited memory and context](https://chatgpt.com/pricing) | [Context window for the instant model: 27K](https://chatgpt.com/pricing) |
+| Go | [$8/month](https://learn.chatgpt.com/docs/pricing) | [Everything in Free, with more messages with tools, more uploads, more image creation, more voice chats and longer memory](https://chatgpt.com/pricing) | [The page says this plan may include ads](https://chatgpt.com/pricing) |
+| Plus | [$20/month](https://learn.chatgpt.com/docs/pricing) | [Everything in Go, with advanced reasoning models, expanded messages, uploads, image creation, deep research and memory; projects, scheduled tasks and custom GPTs; expanded Codex usage](https://chatgpt.com/pricing) | [Limits apply](https://chatgpt.com/pricing) |
+| Pro | [From $100/month (plans at $100, $200 or $500)](https://learn.chatgpt.com/docs/pricing) | [Everything in Plus, with your choice of 3 usage tiers, unlimited and faster image creation, maximum deep research and memory](https://chatgpt.com/pricing) | [Includes monthly API credits that depend on the tier](https://chatgpt.com/pricing) |
+| Business | [$20 per user per month billed annually, $25 monthly (2 or more users)](https://learn.chatgpt.com/docs/pricing) | [A secure, dedicated workspace with admin controls; no training on your business data by default](https://learn.chatgpt.com/docs/pricing) | For teams, not individuals |
+
+OpenAI's pricing page for Work and Codex also gives **estimates** of local messages per five-hour period for Plus (for example, [6-50 for one model and 350-3,000 for the lightest listed](https://learn.chatgpt.com/docs/pricing)) and says they are not fixed message limits. We did not find a plain-chat message-count table, so we do not give one. For how agent work uses an allowance faster, see [Agents 9](/agents/09-agent-usage-limits/).
+
+## Gemini (Google)
+
+These are the US prices shown on the Google AI plans page. The page lists the plans under "United States", so prices in other countries may differ.
+
+| Plan | Price | Usage | What the plan lists |
+| --- | --- | --- | --- |
+| Free (no AI plan) | [$0 with a Google Account](https://gemini.google/subscriptions/) | [Standard limits; 32k-token context window](https://support.google.com/gemini/answer/16275805) | [Gemini app with image generation and editing, Deep Research, Gemini Live, Canvas; 15 GB of storage shared across Gmail, Drive and Photos](https://gemini.google/subscriptions/) |
+| Google AI Plus | [$4.99/month](https://gemini.google/subscriptions/) | [2x higher than standard limits; 128k context](https://support.google.com/gemini/answer/16275805) | [Everything in Free, plus video generation and Daily Brief; 400 GB storage](https://gemini.google/subscriptions/) |
+| Google AI Pro | [$19.99/month](https://gemini.google/subscriptions/) | [4x higher than standard limits; 1 million context](https://support.google.com/gemini/answer/16275805) | [Everything in Free, plus Gemini in Gmail and Docs, Chrome auto browse; 5 TB storage](https://gemini.google/subscriptions/) |
+| Google AI Ultra | [$99.99/month (5x AI Pro limits) or $199.99/month (20x)](https://gemini.google/subscriptions/) | [5x or 20x higher than AI Pro limits, depending on the subscription; 1 million context](https://support.google.com/gemini/answer/16275805) | [Everything in AI Pro, with the highest access and more storage](https://gemini.google/subscriptions/) |
+
+Google's help page says limits are compute-based, refresh every 5 hours until you reach a weekly limit, and may change without notice. With an AI plan, reaching your limit lets you [continue with Flash-Lite](https://support.google.com/gemini/answer/16275805); without a plan, heavy features such as Deep Research may be unavailable during busy periods.
+
+## Reading the three side by side
+
+| Question | Claude | ChatGPT | Gemini |
+| --- | --- | --- | --- |
+| Free plan price | [$0](https://claude.com/pricing) | [$0](https://learn.chatgpt.com/docs/pricing) | [$0](https://gemini.google/subscriptions/) |
+| Cheapest paid plan | [Pro, $17 annual or $20 monthly](https://claude.com/pricing) | [Go, $8](https://learn.chatgpt.com/docs/pricing) | [AI Plus, $4.99](https://gemini.google/subscriptions/) |
+| Standard paid plan | [Pro, $17 or $20](https://claude.com/pricing) | [Plus, $20](https://learn.chatgpt.com/docs/pricing) | [AI Pro, $19.99](https://gemini.google/subscriptions/) |
+| Heavy-use plans | [Max $100, Ultra $200](https://claude.com/pricing) | [Pro from $100](https://learn.chatgpt.com/docs/pricing) | [AI Ultra $99.99 or $199.99](https://gemini.google/subscriptions/) |
+| How the free limit is described | [Limited every 5 hours and every week](https://claude.com/pricing) | [Unlimited text chats, other features limited](https://chatgpt.com/pricing) | [Standard limits, refreshing every 5 hours up to a weekly limit](https://support.google.com/gemini/answer/16275805) |
+| Coding tool on the free plan | [Claude Code: No](https://claude.com/pricing) | [Limited Codex access](https://chatgpt.com/pricing) | Not covered by the pages we read |
+
+"Cheapest" and "standard" here are our own grouping of the listed prices, not the services' wording. The plans are not like for like: usage, models and extras differ, so the table compares price bands, not value.
+
+## Step by step
+
+<Checklist items={[
+  '1. I wrote down what I actually want to do (chat, files, images, coding)',
+  '2. I tried the free plan of the service first',
+  '3. I noted which limit I hit and how often',
+  '4. I opened the live pricing page before deciding to pay',
+  '5. I checked whether the plan is billed monthly or annually',
+  '6. I set a reminder to re-check the price in a month',
+]} />
+
+### 1. Start with the free plan
+
+Use the free plan for a week on your real tasks. A limit message tells you more about what you need than any table. See [Basics 16: Free AI tips](/basics/16-free-ai-tips/) for ways to stretch it.
+
+### 2. Name the limit you hit
+
+Is it the number of messages, a file that was too big, an image or voice quota, or a feature you cannot use at all (for example Claude Code is not on Claude Free)? Each points at a different plan.
+
+<PromptBox>
+I mostly use AI for the following things: (list yours). I use it about this many times a week: (number). Based on the official pricing pages for Claude, ChatGPT and Gemini that I will paste below, which free or paid plan fits, and what should I check before paying? Do not guess prices; use only what I paste.
+</PromptBox>
+
+### 3. Compare on the live page
+
+Open the official page linked in the table for the service you are leaning toward. Compare the exact plan name, the price and whether tax is included. If the live page differs from this one, trust the live page.
+
+### 4. Billing channel matters
+
+Where you pay (the web, the App Store or Google Play) can change price and how you cancel. We did not compare these here; see [Basics 8](/basics/08-free-vs-paid/) for the plan basics.
+
+## Common sticking points
+
+### The price I see is different from this page
+
+- **Cause**: The pages say prices can change, differ by country, and may or may not include tax.
+- **Fix**: Trust your live page. Note the date and plan name if you want to compare.
+
+### "Unlimited" does not mean unlimited
+
+- **Cause**: ChatGPT's "unlimited text chats" is subject to abuse guardrails and applies to everyday text chats, while uploads, images, voice and deep research are limited.
+- **Fix**: Read the whole row, not just the first word.
+
+### I cannot tell which plan includes a feature
+
+- **Cause**: Plan names and features move between plans.
+- **Fix**: Use the feature comparison table on the official page, not an old review.
+
+## What we could not confirm
+
+- **Korean-won prices** for Claude, ChatGPT and Gemini. The official pages we read showed US dollars (Gemini's page was labeled United States). We did not look up the App Store or Google Play listings, so we do not give a won price.
+- **A fixed message count for the free plan** of any of the three. None of the pages we read gave one.
+- **Gemini's per-feature daily numbers.** The help page gives multipliers, not counts.
+- **Whether your country, a work or school account, or the app store you pay through changes the price.**
+- We did not sign up for or test any plan. All of the above comes from reading the official pages on 2026-11-23.
+
+## Practical tips
+
+- **Check the official pricing page, not a review or a coupon site.** Many third-party pages are out of date.
+- **Annual billing can be cheaper per month, but you pay up front.** Claude's Pro price shows both ($17 annual, $20 monthly).
+- **Do not paste private data into a service you have not read the data settings for.** See [Basics 12: Privacy settings](/basics/12-privacy-settings/).
+- **This page is meant to be re-checked about once a month.** Check the "last verified" date at the top.
+
+## What to read next
+
+- [Basics 8: Free vs. paid plans](/basics/08-free-vs-paid/): what changes when you pay
+- [Basics 16: Free AI tips](/basics/16-free-ai-tips/): ways to get more from free plans
+- [Basics 11: Choose an AI tool](/basics/11-choose-ai-tool/): which service fits which task
+- [C2. Claude plans and limits](/claude/c02-plans-limits/): Claude's plans in more detail
+- [Agents 9: Agent costs and usage limits](/agents/09-agent-usage-limits/): why agent tasks use up an allowance faster

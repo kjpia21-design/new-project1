@@ -1,0 +1,138 @@
+---
+title: "Free AI Tools You Can Use Today, and Their Limits"
+description: "A dated tour of free AI for chat, coding, translation and more, based on official pages, with what each free plan limits and what I could not confirm"
+seoTitle: "Best Free AI Tools in 2026 and Their Limits"
+seoDescription: "Which AI tools are free in 2026? Chat (Claude, Gemini, ChatGPT), coding, translation and Korean services, with limits from official pages as of 2026-11-23."
+sidebar:
+  label: "23. Free AI tools"
+level: beginner
+category: basics
+requires: ["basics/08-free-vs-paid"]
+status: published
+tools: ["Claude", "Gemini", "ChatGPT", "GitHub Copilot", "DeepL", "Papago", "Kanana"]
+duration: "20 min"
+prerequisites:
+  - "No account is needed to read this page; an account helps if you want to try a tool"
+lastVerified: 2026-11-23
+sources:
+  - title: "Claude pricing"
+    url: "https://claude.com/pricing"
+  - title: "Google AI plans (Gemini subscriptions)"
+    url: "https://gemini.google/subscriptions/"
+  - title: "Gemini Apps limits & feature availability (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/16275805"
+  - title: "Pricing (OpenAI, ChatGPT docs: Work and Codex)"
+    url: "https://learn.chatgpt.com/docs/pricing"
+  - title: "ChatGPT Voice (OpenAI docs)"
+    url: "https://learn.chatgpt.com/docs/features/voice.md"
+  - title: "Image generation (OpenAI docs)"
+    url: "https://learn.chatgpt.com/docs/image-generation.md"
+  - title: "GitHub Copilot plans (GitHub Docs)"
+    url: "https://docs.github.com/en/copilot/get-started/plans"
+  - title: "DeepL plans and pricing"
+    url: "https://www.deepl.com/en/pro"
+  - title: "Papago (Naver)"
+    url: "https://papago.naver.com/"
+  - title: "Kanana in KakaoTalk (Kakao)"
+    url: "https://kanana.kakao.com/"
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- **Several well-known AI tools have a free tier.** Per the official pages (as of 2026-11-23): Claude Free, the Gemini app free tier, GitHub Copilot Free, and DeepL's free version are listed at $0. ChatGPT Free is listed at $0 on OpenAI's Work and Codex pricing page.
+- **Free means limited, not unlimited.** Claude says "limited usage every 5 hours and every week." Gemini says limits can change without notice. None of the pages I read gives a fixed message count.
+- **Which tool for which job:** chat and writing (Claude, Gemini, ChatGPT), images (Gemini lists image generation and editing in its free tier), coding help (GitHub Copilot Free), translation (DeepL free version, Papago), and Korean-language everyday help (Kanana in KakaoTalk).
+- **Several things I could not confirm** are marked below, such as ChatGPT's free chat, image and voice limits, and any free transcription tool.
+- **Free does not mean private.** Check each service's data and training settings before you paste anything sensitive. See [Privacy settings](/basics/12-privacy-settings/).
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Pick a free tool for a job (chat, images, coding, translation, voice).
+- Read the limits that matter before you start.
+- Know which claims were confirmed on an official page and which were not.
+
+This page is a dated map. For how limits and resets work, and how to stretch them, see [Getting the most from free AI](/basics/16-free-ai-tips/). For when paying makes sense, see [Free vs. paid plans](/basics/08-free-vs-paid/). For Korean services in depth, see [A tour of Korean AI services](/chat/29-korean-ai-services/).
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Free tier** | A $0 plan with reduced limits or fewer features than paid plans. |
+| **Usage limit** | How much you can use in a period. At the limit you wait, or upgrade. |
+| **Training on your chats** | Whether a provider may use your conversations to improve its models. The setting varies by service and plan. |
+
+## The map (as of 2026-11-23)
+
+Every row comes from the official page named in the last column. Prices and limits change, so open the page before you decide.
+
+| Job | Tool | What the official page says about the free tier | Source |
+| --- | --- | --- | --- |
+| Chat, writing, files | **Claude Free** | $0. Limited usage every 5 hours and every week. Chat on web, desktop and mobile; search the web, create files and run code; memory; connectors; Artifacts; Claude Design, Slides and Docs. The Pro plan is the one listed as adding Claude Code. | [claude.com/pricing](https://claude.com/pricing) |
+| Chat, images, research | **Gemini app (no AI plan)** | $0/month with a Google Account. Auto model selection, image generation and editing, Deep Research, Gemini Live, Canvas, Skills, limited Google Flow, Gemini Notebook, 15 GB storage. Standard limits and a 32k-token context window; Deep Research and similar features may be unavailable at busy times without a plan. | [gemini.google/subscriptions](https://gemini.google/subscriptions/), [Gemini Apps Help](https://support.google.com/gemini/answer/16275805) |
+| Chat, voice, images | **ChatGPT Free** | Listed at $0/month on OpenAI's pricing page, with GPT-6 Luna at Standard speed in the desktop app, subject to rollout. That page is about Work and Codex and gives no limits for ordinary chat. | [learn.chatgpt.com pricing](https://learn.chatgpt.com/docs/pricing) |
+| Coding help | **GitHub Copilot Free** | Free, "limited access to a selection of Copilot features", an allowance of GitHub AI Credits, limited agents, auto model selection only. For individuals without Copilot through an organization. | [GitHub Docs](https://docs.github.com/en/copilot/get-started/plans) |
+| Translation | **DeepL free version** | Text translation up to 50,000 characters per month; 1 file translation per month, up to 5 MB; 1 glossary with 5 entries. | [deepl.com/pro](https://www.deepl.com/en/pro) |
+| Translation (Korean) | **Papago** | The page offers Text, Image, Document, Voice and Website translation and marks some features "Plus-only". I could not read a price or free limit from it. | [papago.naver.com](https://papago.naver.com/) |
+| Korean everyday help | **Kanana in KakaoTalk** | Available after sign-up in KakaoTalk on supported devices (the page lists iPhone 14 Pro and later, Galaxy S22 and later, and some foldables). The page states no price. It says original chat text is processed on the device only. | [kanana.kakao.com](https://kanana.kakao.com/) |
+
+<Aside type="caution" title="What I could not confirm (as of 2026-11-23)">
+- **ChatGPT Free for ordinary chat, images and voice.** The OpenAI pages I could read are about Work and Codex. The Codex section says image generation is not available on the Free plan, and ChatGPT Voice is listed for Plus and higher plans in the desktop app; neither tells me what the Free chat app allows. help.openai.com was not used.
+- **Which Gemini features are free, one by one.** The Gemini availability table marks features with icons that I could not read as text. I used only the Free list on the subscriptions page.
+- **Whether DeepL's free version trains on your text.** The "No data training" row of its comparison table uses icons I could not read.
+- **Papago's and Kanana's prices and limits.** Their pages do not state them.
+- **A free speech-to-text (transcription) tool.** I found no official page I could confirm. See [Turn recordings into organized text](/media/14-transcribe-recordings/) for the workflow, and check the current plan of whatever tool you pick.
+- **Exact message counts** for any service. Nothing was tested with a real account.
+</Aside>
+
+## How to choose
+
+<Checklist items={[
+  'I wrote down the job: chat, image, translation, coding or voice',
+  'I opened the official page of the tool and checked the date',
+  'I read the free limits and what is paid-only',
+  'I checked the training and privacy setting before pasting anything private',
+  'I kept a second free option as a backup',
+]} />
+
+1. **Start with one chat AI.** Claude, Gemini and ChatGPT cover most everyday questions. See [Which AI should you use?](/basics/11-choose-ai-tool/) and [Comparing Claude, ChatGPT and Gemini by task](/chat/05-compare-assistants/).
+2. **Add a tool only for a job the chat AI does badly.** For images, see [Advanced image generation](/media/30-image-generation-advanced/). For translation of documents, see [AI translation in practice](/media/26-ai-translation/). For voice, see [AI voice narration](/media/15-voice-narration/). For coding help, see [GitHub Copilot](/coding/28-github-copilot/) and [Getting started with Claude Code](/coding/06-claude-code-start/).
+3. **Test with something harmless.** Use a made-up or public text first, so a limit or a setting surprise costs nothing.
+
+<PromptBox>
+I want to try free AI tools. My main jobs are: [job 1], [job 2], [job 3]. Suggest one free option per job, tell me what limit I am likely to hit first, and mark anything you are not sure about so I can check the official page.
+</PromptBox>
+
+## Common sticking points
+
+### The free plan stopped working mid-task
+
+- **Cause**: You reached a usage limit, or a heavy feature was unavailable at a busy time.
+- **Fix**: Wait for the reset, start a new chat, or use a second free tool. See [Getting the most from free AI](/basics/16-free-ai-tips/).
+
+### A feature on this page is missing for me
+
+- **Cause**: Plans, regions, devices and rollouts differ. For example, Kanana lists supported devices, and Gemini's rules vary by account.
+- **Fix**: Check the official page for your account and device.
+
+### I do not know what happens to my chats
+
+- **Cause**: Data and training settings differ per service and plan.
+- **Fix**: Open the privacy settings of the service before use. See [Privacy settings](/basics/12-privacy-settings/) and [Privacy and safety](/basics/05-privacy-safety/).
+
+## Practical tips
+
+- Keep sensitive data (IDs, health, company secrets) out of any free personal account.
+- Check these pages again about once a month. Free tiers change.
+- This page is general guidance, not an endorsement or a price guarantee.
+
+## What to read next
+
+- [Getting the most from free AI](/basics/16-free-ai-tips/) — Make a free allowance last
+- [Free vs. paid plans](/basics/08-free-vs-paid/) — When paying makes sense
+- [A tour of Korean AI services](/chat/29-korean-ai-services/) — Naver, Kakao and others
+- [Which AI should you use?](/basics/11-choose-ai-tool/) — Choosing by job
