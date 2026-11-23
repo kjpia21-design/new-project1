@@ -1,6 +1,7 @@
 ---
-// Starlight 기본 PageTitle 오버라이드: 제목 아래에 튜토리얼 정보 상자를 자동으로 붙인다.
+// Starlight 기본 PageTitle 오버라이드: 튜토리얼이면 제목 위에 시리즈 위치 띠(SeriesBar), 제목 아래에 튜토리얼 정보 상자를 붙인다.
 import TutorialMeta from './TutorialMeta.astro';
+import SeriesBar from './SeriesBar.astro';
 import { isTutorial } from '../lib/tutorials';
 
 const PAGE_TITLE_ID = '_top'; // Starlight 목차가 가리키는 제목 id
@@ -9,6 +10,7 @@ const { title, level, category, duration, prerequisites, tools, lastVerified, st
 const isHome = ['index', '', 'ko', 'ko/index'].includes(entry.id);
 const showMeta = isTutorial(entry.id);
 ---
+{showMeta && <SeriesBar />}
 {isHome ? (
   <Fragment />
 ) : (
