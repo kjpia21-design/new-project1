@@ -46,6 +46,11 @@ export function isTutorial(id: string): boolean {
   return /^(ko\/)?(basics|claude|agents|dev|chat|coding|media|automation)\/(?!index$)/.test(id);
 }
 
+/** 언어와 상관없이 같은 글을 가리키는 키(진행 기록용): `ko/basics/01-x` → `basics/01-x` */
+export function tutorialSlug(id: string): string {
+  return id.replace(/^ko\//, '');
+}
+
 export async function getTutorials(
   opts: { level?: Level; category?: Category; lang?: Lang } = {},
 ): Promise<Tutorial[]> {

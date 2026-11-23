@@ -1,7 +1,7 @@
 ---
 import LevelBadge from './LevelBadge.astro';
 import Illustration from './Illustration.astro';
-import { getTutorials, entryUrl, getCategoryLabel, categoryOrder, getLevelLabel, type Level, type Category } from '../lib/tutorials';
+import { getTutorials, entryUrl, tutorialSlug, getCategoryLabel, categoryOrder, getLevelLabel, type Level, type Category } from '../lib/tutorials';
 import { getLang, t } from '../lib/i18n';
 
 interface Props {
@@ -34,7 +34,14 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
         <button type="button" data-value="" aria-pressed="true">{t(lang, 'grid.allBtn')}</button>
         {categoryOrder.map((c) => <button type="button" data-value={c} aria-pressed="false">{getCategoryLabel(c, lang)}</button>)}
       </div>
-      <p class="result" aria-live="polite"></p>
+      <div class="result-row">
+        <p class="result" aria-live="polite"></p>
+        {/* 완료한 글이 하나라도 있을 때만 Footer.astro의 진행 스크립트가 보이게 한다. 상태는 URL에 넣지 않는다(이 브라우저 전용). */}
+        <button type="button" class="hide-done" data-hide-done aria-pressed="false" hidden>
+          <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+          {t(lang, 'grid.hideDone')}
+        </button>
+      </div>
     </div>
   )}
   {items.length === 0 ? (
@@ -42,7 +49,7 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
   ) : (
     <ul class="cards">
       {items.map((e) => (
-        <li class:list={['card', { soon: e.data.status === 'draft' }]} data-level={e.data.level} data-category={e.data.category} data-search={[e.data.title, e.data.description, ...(e.data.tools ?? [])].filter(Boolean).join(' ').toLowerCase()}>
+        <li class:list={['card', { soon: e.data.status === 'draft' }]} data-slug={tutorialSlug(e.id)} data-level={e.data.level} data-category={e.data.category} data-search={[e.data.title, e.data.description, ...(e.data.tools ?? [])].filter(Boolean).join(' ').toLowerCase()}>
           <a href={entryUrl(e.id)}>
             <div class="top">
               <span class="cat"><Illustration name={e.data.category!} size={26} tone="neutral" bare />{getCategoryLabel(e.data.category!, lang)}</span>
@@ -85,8 +92,24 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
   .group button[aria-pressed='true'] {
     background: var(--sl-color-white); border-color: var(--sl-color-white); color: var(--sl-color-black); font-weight: 600;
   }
-  .result { margin: 0; padding-top: 0.7rem; border-top: 1px solid var(--ai-line); font-size: var(--sl-text-xs); font-weight: 600; color: var(--sl-color-gray-2); font-variant-numeric: tabular-nums; }
+  .result-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; flex-wrap: wrap; padding-top: 0.7rem; border-top: 1px solid var(--ai-line); }
+  .result-row:has(.result:empty):has(.hide-done[hidden]) { display: none; }
+  .hide-done {
+    display: inline-flex; align-items: center; gap: 0.35rem; min-height: 2rem; padding: 0.25rem 0.8rem; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--ai-line); background: var(--ai-surface-2); color: var(--sl-color-gray-1); font: inherit; font-size: var(--sl-text-xs); font-weight: 500; line-height: 1.5;
+    transition: border-color 0.15s, color 0.15s, background-color 0.15s;
+  }
+  .hide-done[hidden] { display: none; }
+  .hide-done svg { color: var(--ai-coral-ink); }
+  .hide-done:hover { border-color: var(--ai-line-strong); color: var(--sl-color-white); }
+  .hide-done[aria-pressed='true'] { background: var(--ai-coral-soft); border-color: var(--ai-coral-line); color: var(--ai-coral-ink); font-weight: 600; }
+  .result { margin: 0; font-size: var(--sl-text-xs); font-weight: 600; color: var(--sl-color-gray-2); font-variant-numeric: tabular-nums; }
   .result:empty { display: none; }
+  /* 완료한 글(Footer.astro 스크립트가 data-done을 붙임): 제목 앞에 코랄 체크, 제목은 한 톤 낮춘다. */
+  .card[data-done] :is(h2, h3) { color: var(--sl-color-gray-2); }
+  .card[data-done] :is(h2, h3)::before {
+    content: '✓' / ''; margin-inline-end: 0.35rem; color: var(--ai-coral-ink); font-weight: 700;
+  }
   .cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
   .card { margin: 0; padding: 0; min-width: 0; }
   .card[hidden] { display: none; }
@@ -120,9 +143,18 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
     /* 휴대폰: 필터 버튼을 한 줄로 두고 옆으로 밀어 보게 해서 목록이 바로 보이게 한다. */
     .filters { padding: 1rem; }
     .group button { flex: none; }
-    .group { min-width: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -1rem; padding-inline: 1rem; scroll-padding-inline: 1rem; padding-block: 2px; }
-    .group::-webkit-scrollbar { display: none; }
+    /* 수준(4개)은 두 줄 안에 들어가므로 줄바꿈한다. */
     .group-label { flex: none; flex-basis: auto; min-width: 0; margin-inline-end: 0.2rem; }
+    /* 분야(9개)는 한 줄로 두고 옆으로 밀어 본다. 오른쪽 끝을 흐리게 해서 더 있다는 걸 보여 주고, 끝까지 밀면 흐림을 없앤다. */
+    .group[data-group='category'] {
+      min-width: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -1rem; padding-inline: 1rem; scroll-padding-inline: 1rem; padding-block: 2px;
+      scroll-snap-type: x proximity; overscroll-behavior-x: contain;
+      -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 3rem), transparent);
+      mask-image: linear-gradient(to right, #000 calc(100% - 3rem), transparent);
+    }
+    .group[data-group='category'][data-end] { -webkit-mask-image: none; mask-image: none; }
+    .group[data-group='category']::-webkit-scrollbar { display: none; }
+    .group[data-group='category'] > * { scroll-snap-align: start; }
   }
 </style>
 
@@ -132,6 +164,7 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
       const cards = Array.from(root.querySelectorAll<HTMLElement>('.card'));
       const input = root.querySelector<HTMLInputElement>('.search input');
       const state: Record<string, string> = { level: '', category: '' };
+      const hideDone = root.querySelector<HTMLButtonElement>('[data-hide-done]');
       const params = new URLSearchParams(location.search);
       const allowed: Record<string, string[]> = {
         level: ['beginner', 'practical', 'advanced'],
@@ -146,7 +179,8 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
         const q = (input?.value ?? '').trim().toLowerCase();
         let shown = 0;
         for (const c of cards) {
-          const ok = (!state.level || c.dataset.level === state.level) && (!state.category || c.dataset.category === state.category) && (!q || (c.dataset.search ?? '').includes(q));
+          const ok = (!state.level || c.dataset.level === state.level) && (!state.category || c.dataset.category === state.category) && (!q || (c.dataset.search ?? '').includes(q))
+            && !(hideDone?.getAttribute('aria-pressed') === 'true' && c.hasAttribute('data-done'));
           c.hidden = !ok;
           if (ok) shown++;
         }
@@ -169,6 +203,17 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
           apply();
         }),
       );
+      hideDone?.addEventListener('click', () => {
+        hideDone.setAttribute('aria-pressed', String(hideDone.getAttribute('aria-pressed') !== 'true'));
+        apply();
+      });
+      // 분야 줄: 끝까지 밀었으면 오른쪽 흐림을 없앤다.
+      root.querySelectorAll<HTMLElement>('.group[data-group="category"]').forEach((g) => {
+        const edge = () => g.toggleAttribute('data-end', g.scrollLeft + g.clientWidth >= g.scrollWidth - 2);
+        g.addEventListener('scroll', edge, { passive: true });
+        window.addEventListener('resize', edge);
+        edge();
+      });
       input?.addEventListener('input', apply);
       input?.addEventListener('keydown', (ev) => {
         if (ev.key === 'Escape' && input.value) { input.value = ''; apply(); }

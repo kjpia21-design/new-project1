@@ -1,0 +1,97 @@
+---
+// 튜토리얼 하단 "완료로 표시" 상자 + 휴대폰 전용 하단 바(완료 버튼·다음 글).
+// 상태는 Footer.astro의 인라인 스크립트가 localStorage(atc:progress:v1)로 다룬다. 서버나 외부로는 아무것도 보내지 않는다.
+// JS가 없거나 꺼져 있으면 상자는 숨은 채로 남고, 하단 바도 나타나지 않는다.
+import { tutorialSlug } from '../lib/tutorials';
+import { getLang, t } from '../lib/i18n';
+
+const lang = getLang(Astro);
+const { entry, pagination } = Astro.locals.starlightRoute;
+const slug = tutorialSlug(entry.id);
+const { next } = pagination;
+const mark = t(lang, 'done.mark');
+---
+<div class="atc-done not-content" data-atc-slug={slug} data-atc-title={entry.data.title} hidden>
+  <div class="txt">
+    <p class="q">{t(lang, 'done.question')}</p>
+    <p class="note">{t(lang, 'done.note')}</p>
+  </div>
+  <button type="button" class="atc-done-btn" aria-pressed="false" aria-label={mark}>
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle class="ring" cx="12" cy="12" r="9.5"/><path class="tick" d="M7.5 12.5l3 3 6-6.5"/></svg>
+    <span class="off">{mark}</span><span class="on">{t(lang, 'done.done')}</span>
+  </button>
+</div>
+
+<aside class="atc-dock" data-atc-dock aria-label={t(lang, 'dock.label')}>
+  <button type="button" class="atc-done-btn" aria-pressed="false" aria-label={mark}>
+    <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle class="ring" cx="12" cy="12" r="9.5"/><path class="tick" d="M7.5 12.5l3 3 6-6.5"/></svg>
+    <span class="off">{mark}</span><span class="on">{t(lang, 'done.done')}</span>
+  </button>
+  {next && (
+    <a class="next" href={next.href} rel="next">
+      <span class="k">{t(lang, 'dock.next')}</span>
+      <span class="title">{next.label}</span>
+      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  )}
+</aside>
+
+<style>
+  .atc-done {
+    display: flex; align-items: center; justify-content: space-between; gap: 0.75rem 1.25rem; flex-wrap: wrap;
+    margin-top: 2.5rem; padding: 1rem 1.15rem; border: 1px solid var(--ai-line); border-radius: var(--ai-radius); background: var(--ai-surface);
+  }
+  .atc-done[hidden] { display: none; }
+  .txt { min-width: 0; flex: 1 1 16rem; }
+  .q { margin: 0; font-size: var(--sl-text-sm); font-weight: 650; color: var(--sl-color-white); }
+  .note { margin: 0.15rem 0 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); line-height: 1.55; }
+
+  .atc-done-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; flex: none;
+    min-height: 2.75rem; padding: 0.5rem 1rem; border-radius: 10px; cursor: pointer;
+    font: inherit; font-size: var(--sl-text-sm); font-weight: 600; line-height: 1.3; white-space: nowrap;
+    border: 1px solid var(--ai-line-strong); background: var(--sl-color-black); color: var(--sl-color-white);
+    transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .atc-done-btn:hover { border-color: var(--sl-color-gray-3); background: var(--ai-surface-2); }
+  .atc-done-btn svg { color: var(--sl-color-gray-3); flex: none; }
+  .atc-done-btn .tick { opacity: 0; }
+  .atc-done-btn .on { display: none; }
+  .atc-done-btn[aria-pressed='true'] { background: var(--ai-coral-soft); border-color: var(--ai-coral-line); color: var(--ai-coral-ink); }
+  .atc-done-btn[aria-pressed='true']:hover { border-color: var(--ai-coral-ink); }
+  .atc-done-btn[aria-pressed='true'] svg { color: var(--ai-coral-ink); }
+  .atc-done-btn[aria-pressed='true'] .tick { opacity: 1; }
+  .atc-done-btn[aria-pressed='true'] .off { display: none; }
+  .atc-done-btn[aria-pressed='true'] .on { display: inline; }
+
+  /* 휴대폰 하단 바: 글의 60%를 지나면 올라오고, 실제 하단(완료 상자·이전/다음)이 보이면 내려간다. */
+  .atc-dock { display: none; }
+  @media (max-width: 49.99rem) {
+    .atc-dock {
+      display: flex; align-items: center; gap: 0.5rem;
+      position: fixed; inset-inline: 0; bottom: 0; z-index: 3;
+      padding: 0.55rem max(0.75rem, env(safe-area-inset-right)) calc(0.55rem + env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+      border-top: 1px solid var(--ai-line); background: var(--sl-color-bg-nav);
+      box-shadow: 0 -6px 20px -10px rgb(0 0 0 / 0.25);
+      transform: translateY(110%); visibility: hidden;
+      transition: transform 0.22s var(--ai-ease), visibility 0s linear 0.22s;
+    }
+    .atc-dock[data-show] { transform: none; visibility: visible; transition: transform 0.22s var(--ai-ease); }
+    .atc-dock .atc-done-btn { min-height: 2.75rem; padding-inline: 0.8rem; font-size: var(--sl-text-xs); }
+    .next {
+      flex: 1; min-width: 0; display: flex; align-items: center; gap: 0.45rem;
+      min-height: 2.75rem; padding: 0.45rem 0.85rem; border-radius: 10px; text-decoration: none;
+      background: var(--sl-color-accent); color: var(--ai-on-accent); font-size: var(--sl-text-sm); font-weight: 600;
+    }
+    .next:hover { background: var(--ai-accent-hover); }
+    .next .k { flex: none; font-size: var(--sl-text-2xs); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+    .next .k:lang(ko) { letter-spacing: 0; }
+    .next .title { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .next svg { flex: none; }
+    .next:focus-visible, .atc-dock .atc-done-btn:focus-visible { outline-offset: 2px; }
+    :global(html.atc-dock-on body) { padding-bottom: var(--atc-dock-h, 4.5rem); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .atc-dock, .atc-dock[data-show] { transition: none; }
+  }
+</style>

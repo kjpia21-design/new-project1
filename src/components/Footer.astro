@@ -1,16 +1,19 @@
 ---
-// Starlight 기본 Footer 오버라이드: 튜토리얼 페이지 하단(이전/다음 링크 위)에 출처 상자를 자동으로 붙인다.
+// Starlight 기본 Footer 오버라이드: 튜토리얼 페이지 하단(이전/다음 링크 위)에 출처 상자와 "완료로 표시" 상자를 자동으로 붙인다.
 import Default from '@astrojs/starlight/components/Footer.astro';
 import Sources from './Sources.astro';
+import TutorialProgress from './TutorialProgress.astro';
 import { isTutorial } from '../lib/tutorials';
 import { getLang, t } from '../lib/i18n';
 
 const lang = getLang(Astro);
 
 const entry = Astro.locals.starlightRoute.entry;
-const showSources = isTutorial(entry.id) && entry.data.status === 'published';
+const tutorial = isTutorial(entry.id);
+const showSources = tutorial && entry.data.status === 'published';
 ---
 {showSources && <Sources sources={entry.data.sources} lastVerified={entry.data.lastVerified} lang={lang} />}
+{tutorial && <TutorialProgress />}
 <Default {...Astro.props}><slot /></Default>
 <script is:inline define:vars={{ tableLabel: t(lang, 'table.label') }}>
   // 좁은 화면에서 가로 스크롤이 생기는 표를 키보드로도 스크롤할 수 있게 한다.
@@ -27,4 +30,92 @@ const showSources = isTutorial(entry.id) && entry.data.status === 'published';
     window.addEventListener('load', mark);
     window.addEventListener('resize', mark);
   })();
+</script>
+{/*
+  학습 진행 기록(로그인 없음, 이 브라우저에만 저장, 외부 전송 없음).
+  - atc:progress:v1 = { "<ko/ 없는 slug>": { done: <epoch 초> } } → 영어·한국어가 같은 기록을 쓴다.
+  - atc:last = { slug, title, lang, at } → 튜토리얼을 볼 때마다 갱신, 홈 "이어 보기" 카드에 쓴다.
+  저장소를 못 쓰면(사생활 보호 모드 등) 기록 없이 그대로 동작한다.
+*/}
+<script is:inline define:vars={{ srDone: t(lang, 'done.sr'), lang }}>
+  document.addEventListener('DOMContentLoaded', function () {
+    var KEY = 'atc:progress:v1', LAST = 'atc:last', de = document.documentElement;
+    function read(k) { try { var v = JSON.parse(localStorage.getItem(k) || 'null'); return v && typeof v === 'object' ? v : null; } catch (e) { return null; } }
+    function write(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+    var prog = read(KEY) || {};
+    function slugOf(href) {
+      var p; try { p = new URL(href, location.href).pathname; } catch (e) { return ''; }
+      return p.replace(/^\/ko(?=\/|$)/, '').replace(/^\/+|\/+$/g, '');
+    }
+    function flag(el, target, done) {
+      var sr = target.querySelector('.atc-sr');
+      if (done) {
+        el.setAttribute('data-done', '');
+        if (!sr) { sr = document.createElement('span'); sr.className = 'atc-sr sr-only'; sr.textContent = ' (' + srDone + ')'; target.appendChild(sr); }
+      } else { el.removeAttribute('data-done'); if (sr) sr.remove(); }
+    }
+    function markAll() {
+      document.querySelectorAll('.sidebar-content a[href]').forEach(function (a) { flag(a, a, !!prog[slugOf(a.href)]); });
+      var any = false;
+      document.querySelectorAll('.card[data-slug]').forEach(function (c) {
+        var d = !!prog[c.getAttribute('data-slug')]; if (d) any = true;
+        flag(c, c.querySelector('h2, h3') || c, d);
+      });
+      document.querySelectorAll('[data-hide-done]').forEach(function (b) { if (any) b.hidden = false; });
+    }
+
+    // 튜토리얼 페이지: 마지막으로 본 글 기록 + 완료 버튼 + 휴대폰 하단 바
+    var box = document.querySelector('[data-atc-slug]');
+    if (box) {
+      var slug = box.getAttribute('data-atc-slug');
+      write(LAST, { slug: slug, title: box.getAttribute('data-atc-title'), lang: lang, at: Math.floor(Date.now() / 1000) });
+      box.hidden = false;
+      var btns = document.querySelectorAll('.atc-done-btn');
+      var sync = function () { btns.forEach(function (b) { b.setAttribute('aria-pressed', String(!!prog[slug])); }); markAll(); };
+      btns.forEach(function (b) {
+        b.addEventListener('click', function () {
+          prog = read(KEY) || prog;
+          if (prog[slug]) delete prog[slug]; else prog[slug] = { done: Math.floor(Date.now() / 1000) };
+          write(KEY, prog); sync();
+        });
+      });
+      sync();
+
+      var dock = document.querySelector('[data-atc-dock]'), content = document.querySelector('.sl-markdown-content');
+      if (dock && content && 'IntersectionObserver' in window) {
+        var mq = matchMedia('(max-width: 49.99rem)'), passed = false, seen = new Set();
+        var m = document.createElement('div');
+        m.setAttribute('aria-hidden', 'true');
+        m.style.cssText = 'position:absolute;top:60%;left:0;width:1px;height:1px;pointer-events:none';
+        if (getComputedStyle(content).position === 'static') content.style.position = 'relative';
+        content.appendChild(m);
+        var upd = function () {
+          var show = mq.matches && passed && seen.size === 0;
+          dock.toggleAttribute('data-show', show);
+          if (show) de.style.setProperty('--atc-dock-h', dock.offsetHeight + 'px');
+          de.classList.toggle('atc-dock-on', show);
+        };
+        new IntersectionObserver(function (es) {
+          es.forEach(function (e) { passed = e.isIntersecting || e.boundingClientRect.top < 0; }); upd();
+        }).observe(m);
+        var io = new IntersectionObserver(function (es) {
+          es.forEach(function (e) { if (e.isIntersecting) seen.add(e.target); else seen.delete(e.target); }); upd();
+        });
+        [box, document.querySelector('.pagination-links')].forEach(function (el) { if (el) io.observe(el); });
+        if (mq.addEventListener) mq.addEventListener('change', upd);
+      }
+    } else markAll();
+
+    // 홈: "이어 보기" 카드 (현재 언어에 있는 글일 때만)
+    var cont = document.querySelector('[data-atc-continue]');
+    if (cont) {
+      var last = read(LAST), map = null;
+      try { map = JSON.parse(document.getElementById('atc-tutorials').textContent); } catch (e) {}
+      if (last && typeof last.slug === 'string' && map && Object.prototype.hasOwnProperty.call(map, last.slug)) {
+        cont.href = cont.getAttribute('data-prefix') + '/' + last.slug + '/';
+        cont.querySelector('.ct').textContent = map[last.slug];
+        cont.hidden = false;
+      }
+    }
+  });
 </script>

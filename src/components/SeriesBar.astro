@@ -1,0 +1,85 @@
+---
+// 튜토리얼 맨 위 "지금 어디쯤인가" 띠: 섹션 이름(섹션 첫 페이지 링크), 사이드바 묶음 안 순서(예: 3 / 21), 가는 진행 막대, 이전·다음 링크.
+// 모두 서버에서 그린다(JS 없음). 순서는 사이드바에서 현재 글이 들어 있는 묶음을 찾아 "튜토리얼 링크"만 센다
+// (섹션 소개 페이지·Claude 최신 소식 같은 비튜토리얼 링크는 세지 않는다). 이전·다음은 Starlight 페이지 이동과 같다.
+import { url, getCategoryLabel, type Category } from '../lib/tutorials';
+import { getLang, t } from '../lib/i18n';
+
+type Entry = { type: 'link'; href: string; label: string; isCurrent: boolean } | { type: 'group'; entries: Entry[] };
+
+const lang = getLang(Astro);
+const { entry, sidebar, pagination } = Astro.locals.starlightRoute;
+const section = entry.id.replace(/^ko\//, '').split('/')[0] as Category;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const TUTORIAL_HREF = /^\/(?:ko\/)?(?:basics|claude|agents|dev|chat|coding|media|automation)\/[^/]+\/?$/;
+const isTutorialHref = (href: string) => TUTORIAL_HREF.test(href.slice(base.length));
+
+/** 현재 글이 직접 들어 있는 묶음의 링크 목록을 찾는다. */
+function findGroup(entries: Entry[]): Entry[] | undefined {
+  if (entries.some((e) => e.type === 'link' && e.isCurrent)) return entries;
+  for (const e of entries) {
+    if (e.type === 'group') {
+      const found = findGroup(e.entries);
+      if (found) return found;
+    }
+  }
+  return undefined;
+}
+const group = findGroup(sidebar as unknown as Entry[]) ?? [];
+const links = group.filter((e): e is Extract<Entry, { type: 'link' }> => e.type === 'link' && isTutorialHref(e.href));
+const index = links.findIndex((l) => l.isCurrent);
+const pos = index + 1;
+const total = links.length;
+const { prev, next } = pagination;
+const sectionLabel = getCategoryLabel(section, lang);
+---
+{index >= 0 && (
+  <nav class="series not-content" aria-label={t(lang, 'series.aria', { section: sectionLabel })}>
+    <div class="row">
+      <a class="sec" href={url(`/${section}/`, lang)}>{sectionLabel}</a>
+      <span class="pos">
+        <span aria-hidden="true"><b>{pos}</b> / {total}</span>
+        <span class="sr-only">{t(lang, 'series.pos', { i: pos, n: total })}</span>
+      </span>
+      <span class="pn">
+        {prev ? (
+          <a href={prev.href} rel="prev" aria-label={t(lang, 'series.prev', { title: prev.label })} title={prev.label}>
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+          </a>
+        ) : <span class="off" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></span>}
+        {next ? (
+          <a href={next.href} rel="next" aria-label={t(lang, 'series.next', { title: next.label })} title={next.label}>
+            <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        ) : <span class="off" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>}
+      </span>
+    </div>
+    <div class="track" aria-hidden="true"><span style={`width:${((pos / total) * 100).toFixed(2)}%`}></span></div>
+  </nav>
+)}
+
+<style>
+  .series { margin: 0.25rem 0 -0.25rem; }
+  .row { display: flex; align-items: center; gap: 0.75rem; min-height: 2rem; }
+  .sec {
+    min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: var(--sl-text-xs); font-weight: 650; letter-spacing: 0.01em; color: var(--ai-coral-ink); text-decoration: none;
+  }
+  .sec:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+  .pos { margin-inline-start: auto; flex: none; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); font-variant-numeric: tabular-nums; }
+  .pos b { color: var(--sl-color-white); font-weight: 650; }
+  .pn { flex: none; display: inline-flex; gap: 0.25rem; }
+  .pn > * {
+    display: inline-grid; place-items: center; width: 2rem; height: 2rem; border-radius: var(--ai-radius-sm);
+    border: 1px solid var(--ai-line); color: var(--sl-color-gray-2); background: var(--ai-surface);
+    transition: border-color 0.15s, color 0.15s, background-color 0.15s;
+  }
+  .pn a:hover { border-color: var(--ai-line-strong); color: var(--ai-coral-ink); background: var(--ai-surface-2); }
+  .pn .off { opacity: 0.4; }
+  .track { margin-top: 0.5rem; height: 3px; border-radius: 999px; background: var(--ai-line); overflow: hidden; }
+  .track span { display: block; height: 100%; border-radius: inherit; background: var(--ai-coral); }
+  @media (max-width: 30rem) {
+    .row { gap: 0.5rem; }
+    .pn > * { width: 2.25rem; height: 2.25rem; }
+  }
+</style>

@@ -311,3 +311,10 @@ mobile-starlight-toc .toggle { border-radius: var(--ai-radius-sm) !important; bo
 
 /* 검색 모달 */
 dialog[aria-label] .dialog-frame { border-radius: var(--ai-radius-lg); border-color: var(--ai-line); }
+
+/* ===== 학습 진행 표시(Footer.astro 스크립트가 완료한 글 링크에 data-done을 붙인다) ===== */
+.sidebar-content a[data-done]::after,
+.sidebar-content a[aria-current='page'][data-done]::after {
+  content: '✓' / ''; display: inline-block; padding-inline-start: 0.4rem;
+  color: var(--ai-coral-ink); font-size: 0.8em; font-weight: 700; line-height: inherit;
+}

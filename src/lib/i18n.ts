@@ -81,7 +81,7 @@ const dict = {
   'hero.art': { ko: '로봇과 말풍선, 반짝이 일러스트', en: 'Illustration of a robot, a speech bubble, and sparkles' },
   // LevelCards
   'lv.beginner.desc': {
-    ko: 'AI가 처음이에요. 가입부터 첫 질문, 안전하게 쓰는 법까지 "AI 첫걸음" 8편으로 시작해요.',
+    ko: 'AI가 처음이에요. 가입부터 첫 질문, 안전하게 쓰는 법까지 "AI 첫걸음" 시리즈로 시작해요.',
     en: 'I am new to AI. Start with the "AI First Steps" series: signing up, your first question, and using AI safely.',
   },
   'lv.practical.desc': {
@@ -160,6 +160,25 @@ const dict = {
   'grid.allBtn': { ko: '전체', en: 'All' },
   'grid.none': { ko: '조건에 맞는 튜토리얼이 없어요. 필터를 바꿔 보세요.', en: 'No tutorials match. Try changing the filters.' },
   'grid.count': { ko: '튜토리얼 {n}개', en: '{n} tutorials' },
+  'grid.hideDone': { ko: '완료한 글 숨기기', en: 'Hide completed' },
+  // 학습 진행(브라우저에만 저장)
+  'done.question': { ko: '이 튜토리얼을 다 따라 해 봤나요?', en: 'Finished this tutorial?' },
+  'done.mark': { ko: '완료로 표시', en: 'Mark as done' },
+  'done.done': { ko: '완료', en: 'Done' },
+  'done.note': {
+    ko: '진행 상황은 이 브라우저에만 저장되고 어디에도 보내지 않아요.',
+    en: 'Progress is saved only in this browser and never sent anywhere.',
+  },
+  'done.sr': { ko: '완료함', en: 'completed' },
+  'continue.label': { ko: '읽던 글 이어 보기', en: 'Continue where you left off' },
+  // 시리즈 위치 띠
+  'series.aria': { ko: '{section} 시리즈 안에서의 위치', en: 'Position in the {section} series' },
+  'series.pos': { ko: '{n}편 중 {i}번째', en: 'Tutorial {i} of {n}' },
+  'series.prev': { ko: '이전 글: {title}', en: 'Previous: {title}' },
+  'series.next': { ko: '다음 글: {title}', en: 'Next: {title}' },
+  // 모바일 하단 바
+  'dock.label': { ko: '튜토리얼 바로가기', en: 'Tutorial shortcuts' },
+  'dock.next': { ko: '다음', en: 'Next' },
   // 404
   'nf.title': { ko: '페이지를 찾을 수 없어요', en: 'Page not found' },
   // Illustration 등 일러스트 aria
