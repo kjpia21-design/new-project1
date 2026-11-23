@@ -12,7 +12,7 @@ prerequisites:
   - "C13(클라우드 세션과 루틴 기본)을 읽어 봤다면 더 수월해요"
   - "자동으로 돌리고 싶은 반복 업무 하나 (한 번은 손으로 해 본 것)"
 requires: ["claude/c13-cloud-sessions"]
-lastVerified: 2026-11-16
+lastVerified: 2026-11-24
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -24,6 +24,8 @@ sources:
     url: "https://code.claude.com/docs/en/desktop-scheduled-tasks"
   - title: "Schedule recurring tasks in Claude Cowork"
     url: "https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork"
+  - title: "Claude Code changelog"
+    url: "https://code.claude.com/docs/en/changelog"
 status: published
 ---
 
@@ -157,7 +159,7 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 | 루틴 사용량 | 대화형 세션처럼 구독 사용량을 써요. 사용량 한도에 닿으면 추가 사용량(usage credits)이 켜져 있을 때만 이어서 돌고, 아니면 한도가 리셋될 때까지 거부돼요. |
 | 루틴 GitHub 연결 | 연결이 끊기거나 만료되면 최대 72시간 동안 실행을 건너뛰어요. 그 안에 다시 연결하면 자동으로 재개되고, 72시간이 지나면 꺼져서 직접 켜야 해요. |
 | 루틴 정지 | 구독이 일시중지된 동안은 보류돼요. 다시 활성화된 뒤 직접 켜야 해요. Team/Enterprise Owner가 조직 전체에서 끌 수도 있어요. |
-| `/loop`(세션 예약) | 반복 작업은 만든 지 **7일 뒤 마지막으로 한 번 실행되고 삭제**돼요. 세션당 최대 50개. Claude Code가 실행 중이고 대기 상태일 때만 돌고, 놓친 실행은 따라잡지 않고 한 번만 실행돼요. 정각 설정은 몇 분 늦어질 수 있어요. |
+| `/loop`(세션 예약) | 반복 작업은 만든 지 **7일 뒤 마지막으로 한 번 실행되고 삭제**돼요. Claude Code 변경 이력에 따르면 v2.1.330(2026-11-20)부터는 세션이 계속 실행되는 동안 반복 작업과 `/loop`가 최대 30일까지 돌고, 그 전 버전에서 만든 작업은 그대로 7일에 끝나요. 예약 작업 공식 문서는 2026-11-24 기준 아직 7일로 적혀 있어요. 세션당 최대 50개. Claude Code가 실행 중이고 대기 상태일 때만 돌고, 놓친 실행은 따라잡지 않고 한 번만 실행돼요. 정각 설정은 몇 분 늦어질 수 있어요. |
 | 데스크톱 | 앱이 열려 있고 컴퓨터가 깨어 있을 때만 실행돼요. 잠자는 동안 놓치면 깨어난 뒤 가장 최근 놓친 시각에 대해 **한 번만** 따라잡아 실행하고(최근 7일 이내), 오래된 것은 버려요. |
 | 앱 예약 작업 | 로컬 파일·앱이 필요한 작업은 로컬에서만 실행돼요. |
 
@@ -222,7 +224,7 @@ import FlowSteps from '../../../../components/FlowSteps.astro';
 
 ### `/loop`가 일주일 뒤 사라졌어요
 
-- **원인**: 세션 예약 반복 작업은 7일 뒤 만료돼요.
+- **원인**: 세션 예약 반복 작업은 7일 뒤 만료돼요(변경 이력에 따르면 v2.1.330 이후에 만든 작업은 최대 30일).
 - **해결**: 오래 가야 하는 작업은 루틴이나 데스크톱 예약 작업으로 옮기세요.
 
 ## 실전 팁
