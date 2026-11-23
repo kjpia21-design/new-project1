@@ -1,0 +1,72 @@
+---
+title: This week in AI
+description: A short weekly issue, posted every Monday, on what changed in Claude, ChatGPT and Gemini that practical users should know, with what to do about it.
+seoTitle: "This week in AI: Claude, ChatGPT, Gemini updates"
+lastVerified: 2026-11-23
+---
+
+One short issue every Monday. Each item says what changed, what to do about it, and where to read more: the site's tutorials and the official source. The newest issue is on top, and older issues stay below as an archive.
+
+How this page differs from the others:
+
+- [Claude News](/claude-news/) lists every Claude update from the official channels. This page picks what matters for practical use across all the AI tools we cover, and every item ends with an action.
+- [Recent updates](/updates/) lists which tutorials on this site were re-checked or changed. This page covers changes in the tools themselves.
+
+You can also follow along with the [RSS feed](/rss.xml).
+
+## Week of 2026-11-16 – 2026-11-22
+
+All dates below are "as of" the time each official page was read. Check the linked source before you rely on a detail.
+
+### Claude Code 2.1.326–2.1.329: more permission prompts, check unattended scripts
+
+Four releases (2.1.326 on Nov 16, 2.1.327 on Nov 17, 2.1.328 and 2.1.329 on Nov 19) mostly tighten permission checks. Some tool calls now ask for approval even in bypass permissions mode, file tools refuse to write to sign-in files such as `.credentials.json`, and a hook's `"decision": "block"` now holds in more cases. Version 2.1.329 also notes that most scheduled tasks saved by earlier versions need scheduling again in new signed-in sessions, and that computer use on macOS follows newer safety rules, so some actions are refused. As of 2026-11-20, the official changelog does not list exactly which calls now ask in bypass mode.
+
+**What to do:** After updating, run any unattended script or scheduled task once and confirm it still works. Re-create old scheduled tasks if they stopped firing. See [Claude Code settings and permissions](/coding/40-settings-permissions/) and [Claude News](/claude-news/). Source: [Claude Code changelog](https://code.claude.com/docs/en/changelog).
+
+### Claude Code `/code-review` now reports bugs only
+
+In 2.1.328, `/code-review` on most models reports only bugs and `CLAUDE.md` violations, marks each finding Important, Pre-existing, or Nit, and ends with a suggested fix. Reuse, simplification, and efficiency cleanups moved to `/simplify`. The changelog does not say exactly which models count as "most models".
+
+**What to do:** Run `/code-review` before a merge for bugs, and `/simplify` separately if you also want cleanups. See [Review code with AI before you merge](/coding/42-code-review-ai/). Source: [Claude Code changelog](https://code.claude.com/docs/en/changelog).
+
+### Claude Desktop gets release channels
+
+As of 2026-11-17, Claude Desktop for Mac and Windows (version 4.29.0 or later, all plans) lets you choose Stable (the default, fewer and more tested updates) or Latest (a new version about once a day) in Settings > Desktop app > Release channel. It is not available on Linux, Microsoft Store installs, or computers where IT has set a Claude policy. Switching back to Stable does not roll your version back.
+
+**What to do:** Stay on Stable unless you want new features early. See [Using the desktop app well](/claude/c22-desktop-app/). Source: [Install Claude Desktop](https://support.claude.com/en/articles/10065433-install-claude-desktop).
+
+### Computer use for Team and Enterprise (beta)
+
+Computer use in Claude Desktop is a beta for Team and Enterprise organizations, off by default and rolled out to organizations gradually. An Owner turns it on under Organization settings > Capabilities > Claude Desktop > Computer use, and it can take an hour or more to take effect. Some organizations cannot turn it on, such as HIPAA-ready or CMEK organizations.
+
+**What to do:** If you administer a Team or Enterprise organization, read the setup and safety guide before enabling it, and decide which apps to block. See [Computer use for Team and Enterprise](/claude/c31-computer-use-team/). Source: [Set up computer use for Team and Enterprise plans](https://support.claude.com/en/articles/18483812-set-up-computer-use-for-team-and-enterprise-plans).
+
+### Recent: Claude Meetings beta (Nov 12)
+
+Claude Meetings is rolling out in beta on Team and Enterprise plans. You add Claude to a Google Meet call, and it takes notes and answers questions. As of 2026-11-12, the official pages mention only Google Meet and do not list individual plans, supported languages, or regional availability.
+
+**What to do:** Try it on a low-stakes call first, and tell participants Claude is in the meeting. See [Bring Claude into your meetings with Claude Meetings](/claude/c30-claude-meetings/). Source: [Use Claude Meetings](https://support.claude.com/en/articles/18325154-use-claude-meetings).
+
+### For developers: text watermark and linked billing (beta)
+
+- **Text watermark (Nov 16):** Text from Claude Opus 4.6, Opus 4.5, Sonnet 4.5, and Haiku 4.5 now carries Anthropic's text watermark on supported platforms. Setting `temperature`, `top_p`, or `top_k` to a non-default value may mean the text is not watermarked. **What to do:** If you rely on the watermark, leave those settings at their defaults. Source: [Text watermark docs](https://platform.claude.com/docs/en/build-with-claude/text-watermark).
+- **Linked billing beta (Nov 17):** Customers can pay for the Claude usage in your app through their own Claude organization, if that organization pays Anthropic directly for API usage. You set `billing_policy` on each request to choose who pays. **What to do:** If you build an app on the API, read the eligibility limits first. See [Claude API basics](/claude/c16-api/). Source: [Linked billing docs](https://platform.claude.com/docs/en/manage-claude/oauth-apps/organization-billing-connections).
+
+### New on the site this week
+
+- [Bring Claude into your meetings with Claude Meetings](/claude/c30-claude-meetings/): set up Claude Meetings and what it does and doesn't save.
+- [Computer use for Team and Enterprise: setup and safe use](/claude/c31-computer-use-team/): for admins, including app block lists and the MDM key.
+- [What to do when you hit Claude's usage limit](/claude/c32-usage-limit-reached/): your options when a limit stops you.
+- [Which plan do you need for Claude Code?](/claude/c33-claude-code-plans/): which plans include Claude Code.
+- [Run Claude Managed Agents on Your Own Infrastructure](/dev/23-self-hosted-managed-agents/): the self-hosted option, available on request.
+- [Claude's Agents at a Glance](/agents/13-claude-agent-lineup/): Cowork, computer use, Meetings, Tag and Managed Agents compared.
+- [Getting Started with Gemini Tasks](/agents/14-gemini-agent/): Google's AI agent.
+- [Claude, ChatGPT and Gemini Prices and Free Limits at a Glance](/basics/22-ai-pricing-free-limits/)
+- [Free AI Tools You Can Use Today, and Their Limits](/basics/23-free-ai-tools/)
+- [20 Ways to Automate Your Work with AI](/automation/53-automation-ideas/)
+- [Cancel, Refund, or Change an AI Subscription](/chat/52-cancel-refund-subscriptions/): ChatGPT, Claude, and Gemini.
+
+## Archive
+
+Older issues will appear here as new ones are added above.
