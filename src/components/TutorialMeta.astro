@@ -1,15 +1,25 @@
 ---
 import LevelBadge from './LevelBadge.astro';
-import { getCategoryLabel, formatDate, type Level, type Category } from '../lib/tutorials';
+import { getCategoryLabel, formatDate, url, type Level, type Category } from '../lib/tutorials';
+import { getPathsFor, getRequired } from '../lib/paths';
 import { getLang, t } from '../lib/i18n';
 interface Props {
-  level?: Level; category?: Category; duration?: string;
-  prerequisites?: string[]; tools?: string[]; lastVerified?: Date; status?: 'draft' | 'published';
+  slug?: string; level?: Level; category?: Category; duration?: string;
+  prerequisites?: string[]; requires?: string[]; tools?: string[]; lastVerified?: Date; status?: 'draft' | 'published';
 }
-const { level, category, duration, prerequisites = [], tools = [], lastVerified, status = 'draft' } = Astro.props;
+const { slug, level, category, duration, prerequisites = [], requires = [], tools = [], lastVerified, status = 'draft' } = Astro.props;
 const lang = getLang(Astro);
+// 학습 경로 안의 위치(서버에서 그림)와 먼저 볼 글(완료 체크는 Footer.astro 진행 스크립트가 data-slug로 붙인다)
+const inPaths = slug ? await getPathsFor(slug) : [];
+const required = await getRequired(requires, lang);
 ---
 <aside class="meta not-content" aria-label={t(lang, 'meta.label')}>
+  {inPaths.map(({ def, index }) => (
+    <p class="path">
+      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H16a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h7.5"/></svg>
+      <span>{t(lang, 'lp.partOf')}: <a href={url(def.startPage, lang)}>{def.title[lang]}</a> · {t(lang, 'lp.stepOf', { k: index + 1, n: def.steps.length })}</span>
+    </p>
+  ))}
   <div class="row">
     {level && <LevelBadge level={level} />}
     {category && <span class="chip">{getCategoryLabel(category, lang)}</span>}
@@ -19,6 +29,11 @@ const lang = getLang(Astro);
     <div><dt>{t(lang, 'meta.duration')}</dt><dd>{duration ?? t(lang, 'meta.tbd')}</dd></div>
     <div><dt>{t(lang, 'meta.verified')}</dt><dd>{lastVerified ? formatDate(lastVerified, lang) : t(lang, 'sources.notYet')}</dd></div>
     {tools.length > 0 && <div><dt>{t(lang, 'meta.tools')}</dt><dd>{tools.join(', ')}</dd></div>}
+    {required.length > 0 && (
+      <div class="wide"><dt>{t(lang, 'meta.requires')}</dt><dd><ul class="req">{required.map((r) => (
+        <li data-slug={r.slug}><a href={url(`/${r.slug}/`, lang)} data-done-target>{r.title}</a></li>
+      ))}</ul></dd></div>
+    )}
     {prerequisites.length > 0 && (
       <div class="wide"><dt>{t(lang, 'meta.prereq')}</dt><dd><ul>{prerequisites.map((p) => <li>{p}</li>)}</ul></dd></div>
     )}
@@ -44,4 +59,24 @@ const lang = getLang(Astro);
   ul { margin: 0; padding-left: 1.1rem; }
   li { margin: 0.1rem 0; }
   li::marker { color: var(--sl-color-gray-3); }
+  .path {
+    display: flex; align-items: flex-start; gap: 0.4rem; margin: 0 0 0.75rem;
+    font-size: var(--sl-text-xs); line-height: 1.5; color: var(--sl-color-gray-2);
+  }
+  .path svg { flex: none; margin-top: 0.2em; color: var(--ai-coral-ink); }
+  .path a { font-weight: 650; color: var(--ai-coral-ink); text-underline-offset: 0.2em; }
+  /* 먼저 볼 글: 빈 동그라미, 완료하면 코랄 체크 */
+  .req { list-style: none; padding: 0; }
+  .req li { position: relative; padding-inline-start: 1.35rem; }
+  .req li::before {
+    content: ''; position: absolute; left: 0.1rem; top: 0.42em; width: 0.8rem; height: 0.8rem; box-sizing: border-box;
+    border-radius: 999px; border: 1.5px solid var(--sl-color-gray-3);
+  }
+  .req li[data-done]::before {
+    content: '✓' / ''; display: grid; place-items: center; border-color: var(--ai-coral-line); background: var(--ai-coral-soft);
+    color: var(--ai-coral-ink); font-size: 0.6rem; font-weight: 800; line-height: 1;
+  }
+  .req a { color: var(--sl-color-white); font-weight: 600; text-underline-offset: 0.2em; }
+  .req a:hover { color: var(--ai-coral-ink); }
+  .req li[data-done] a { color: var(--sl-color-gray-2); }
 </style>

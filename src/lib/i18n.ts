@@ -68,6 +68,19 @@ const dict = {
   'meta.verified': { ko: '마지막 확인일', en: 'Last verified' },
   'meta.tools': { ko: '사용 도구', en: 'Tools' },
   'meta.prereq': { ko: '준비물', en: 'What you need' },
+  'meta.requires': { ko: '먼저 보면 좋은 글', en: 'Do these first' },
+  // 학습 경로(LearningPath, TutorialMeta)
+  'lp.eyebrow': { ko: '학습 경로', en: 'Learning path' },
+  'lp.summary': { ko: '{n}단계 · 모두 약 {time}', en: '{n} steps · about {time} total' },
+  'lp.unknown': { ko: '소요 시간이 정해지지 않은 단계 {n}개는 빼고 계산했어요', en: '{n} steps have no time estimate and are not counted' },
+  'lp.steps': { ko: '이 경로의 단계', en: 'Steps in this path' },
+  'lp.step': { ko: '{k}단계', en: 'Step {k}' },
+  'lp.done': { ko: '{m}단계 중 {n}단계 완료', en: '{n}/{m} done' },
+  'lp.start': { ko: '1단계 시작하기 →', en: 'Start step 1 →' },
+  'lp.continue': { ko: '이어 하기: {k}단계 →', en: 'Continue: step {k} →' },
+  'lp.complete': { ko: '모든 단계를 마쳤어요. 다시 보기 →', en: 'All steps done. Review step 1 →' },
+  'lp.partOf': { ko: '학습 경로', en: 'Part of' },
+  'lp.stepOf': { ko: '{n}단계 중 {k}단계', en: 'step {k} of {n}' },
   // Summary
   'summary.title': { ko: '한눈에 요약', en: 'At a glance' },
   // Hero

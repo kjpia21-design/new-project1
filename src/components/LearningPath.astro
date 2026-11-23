@@ -1,0 +1,134 @@
+---
+// 학습 경로: <LearningPath id="beginner" />. 순서가 있는 단계 목록 + 전체 소요 시간 + 진행 상황.
+// 단계 정의는 src/data/paths.ts, 검사·계산은 src/lib/paths.ts.
+// 완료 체크·"N/M 완료"·"이어 하기" 버튼은 Footer.astro의 진행 스크립트(atc:progress:v1)가 채운다.
+// JS가 없거나 저장소를 못 쓰면 "1단계 시작하기" 링크와 목록만 보인다.
+import { getPath, formatMinutes } from '../lib/paths';
+import type { PathId } from '../data/paths';
+import { url, getLevelLabel } from '../lib/tutorials';
+import { getLang, t } from '../lib/i18n';
+
+interface Props { id: PathId }
+const { id } = Astro.props;
+const lang = getLang(Astro);
+const { def, steps, minutes, unknown } = await getPath(id, lang);
+const hid = `lp-${id}-title`;
+const summary = t(lang, 'lp.summary', { n: steps.length, time: formatMinutes(minutes, lang) });
+const href = (slug: string) => url(`/${slug}/`, lang);
+---
+<section
+  class="lp not-content"
+  data-lp
+  aria-labelledby={hid}
+  data-t-done={t(lang, 'lp.done')}
+  data-t-continue={t(lang, 'lp.continue')}
+  data-t-complete={t(lang, 'lp.complete')}
+>
+  <div class="head">
+    <p class="eyebrow">
+      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H16a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h7.5"/></svg>
+      {t(lang, 'lp.eyebrow')}
+    </p>
+    <h2 id={hid}>{def.title[lang]}</h2>
+    <p class="desc">{def.description[lang]}</p>
+    <p class="sum">
+      {summary}
+      {unknown > 0 && <span class="unk"> ({t(lang, 'lp.unknown', { n: unknown })})</span>}
+    </p>
+    <div class="actions">
+      <a class="go" href={href(steps[0].slug)} data-lp-go>{t(lang, 'lp.start')}</a>
+      <p class="count" data-lp-count hidden></p>
+    </div>
+    <div class="track" data-lp-track aria-hidden="true" hidden><span></span></div>
+  </div>
+  <ol class="steps" aria-label={t(lang, 'lp.steps')}>
+    {steps.map((s, i) => (
+      <li class="lp-step" data-slug={s.slug}>
+        <span class="num" aria-hidden="true">
+          <span class="n">{i + 1}</span>
+          <svg class="tick" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        </span>
+        <span class="body">
+          <a href={href(s.slug)} data-done-target><span class="sr-only">{t(lang, 'lp.step', { k: i + 1 })}: </span>{s.title}</a>
+          <span class="info">
+            {s.level && <span class={`lv lv-${s.level}`}><span class="dot" aria-hidden="true"></span>{getLevelLabel(s.level, lang)}</span>}
+            <span class="dur">{s.duration ?? t(lang, 'meta.tbd')}</span>
+          </span>
+        </span>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style>
+  .lp {
+    margin: 1.5rem 0 2rem; border: 1px solid var(--ai-line); border-radius: var(--ai-radius-lg);
+    background: var(--ai-surface); box-shadow: var(--ai-shadow); overflow: hidden;
+  }
+  .head { padding: 1.15rem 1.25rem 1rem; border-bottom: 1px solid var(--ai-line); }
+  .eyebrow {
+    display: inline-flex; align-items: center; gap: 0.35rem; margin: 0;
+    font-size: var(--sl-text-2xs); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ai-coral-ink);
+  }
+  .eyebrow:lang(ko) { letter-spacing: 0.01em; }
+  h2 { margin: 0.3rem 0 0; font-size: var(--sl-text-h3); line-height: 1.3; font-weight: 700; letter-spacing: -0.015em; color: var(--sl-color-white); }
+  .desc { margin: 0.4rem 0 0; font-size: var(--sl-text-sm); line-height: 1.6; color: var(--sl-color-gray-2); }
+  .sum { margin: 0.6rem 0 0; font-size: var(--sl-text-xs); font-weight: 600; color: var(--sl-color-gray-1); font-variant-numeric: tabular-nums; }
+  .unk { font-weight: 500; color: var(--sl-color-gray-2); }
+  .actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem 1rem; margin-top: 0.9rem; }
+  .go {
+    display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0.5rem 1.1rem; border-radius: 10px;
+    font-size: var(--sl-text-sm); font-weight: 650; text-decoration: none; line-height: 1.3;
+    background: var(--sl-color-accent); color: var(--ai-on-accent);
+    transition: background-color 0.15s;
+  }
+  .go:hover { background: var(--ai-accent-hover); color: var(--ai-on-accent); }
+  .go:focus-visible { outline: 2px solid var(--sl-color-white); outline-offset: 2px; }
+  .count { margin: 0; font-size: var(--sl-text-xs); font-weight: 600; color: var(--sl-color-gray-2); font-variant-numeric: tabular-nums; }
+  .count[hidden], .track[hidden] { display: none; }
+  .track { margin-top: 0.9rem; height: 4px; border-radius: 999px; background: var(--ai-line); overflow: hidden; }
+  .track span { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--ai-coral); transition: width 0.3s var(--ai-ease); }
+
+  .steps { list-style: none; margin: 0; padding: 0.35rem 0; counter-reset: none; }
+  .lp-step { position: relative; display: flex; gap: 0.85rem; margin: 0; padding: 0.65rem 1.25rem; }
+  /* 단계 사이를 잇는 세로선 */
+  .lp-step:not(:last-child)::after {
+    content: ''; position: absolute; left: calc(1.25rem + 0.875rem - 1px); top: 2.55rem; bottom: -0.55rem; width: 2px; background: var(--ai-line);
+  }
+  .num {
+    position: relative; z-index: 1; flex: none; display: inline-grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 999px;
+    font-size: var(--sl-text-2xs); font-weight: 700; font-variant-numeric: tabular-nums;
+    border: 1.5px solid var(--ai-line-strong); background: var(--sl-color-black); color: var(--sl-color-gray-2);
+  }
+  .num .tick { display: none; }
+  .body { min-width: 0; display: flex; flex-direction: column; gap: 0.15rem; padding-top: 0.1rem; }
+  .body a {
+    font-size: var(--sl-text-sm); font-weight: 600; line-height: 1.45; color: var(--sl-color-white);
+    text-decoration: none; overflow-wrap: anywhere;
+  }
+  .body a:hover { color: var(--ai-coral-ink); text-decoration: underline; text-underline-offset: 0.2em; }
+  .info { display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem 0.75rem; font-size: var(--sl-text-2xs); color: var(--sl-color-gray-2); }
+  .lv { display: inline-flex; align-items: center; gap: 0.35rem; }
+  .dot { width: 0.5rem; height: 0.5rem; border-radius: 999px; background: currentColor; }
+  .lv-beginner .dot { background: var(--sl-color-green); }
+  .lv-practical .dot { background: var(--sl-color-blue); }
+  .lv-advanced .dot { background: var(--sl-color-purple); }
+  .dur { font-variant-numeric: tabular-nums; }
+
+  /* 완료한 단계(Footer.astro 스크립트가 data-done을 붙인다) */
+  .lp-step[data-done] .num { background: var(--ai-coral-soft); border-color: var(--ai-coral-line); color: var(--ai-coral-ink); }
+  .lp-step[data-done] .num .n { display: none; }
+  .lp-step[data-done] .num .tick { display: block; }
+  .lp-step[data-done] .body a { color: var(--sl-color-gray-2); }
+  .lp-step[data-done] .body a:hover { color: var(--ai-coral-ink); }
+  .lp-step[data-next] { background: var(--ai-surface-2); }
+  .lp-step[data-next] .num { border-color: var(--ai-coral); color: var(--ai-coral-ink); }
+
+  @media (max-width: 30rem) {
+    .head { padding: 1rem 1rem 0.9rem; }
+    .lp-step { padding-inline: 1rem; gap: 0.7rem; }
+    .lp-step:not(:last-child)::after { left: calc(1rem + 0.875rem - 1px); }
+    .go { flex: 1 1 100%; justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) { .track span { transition: none; } }
+</style>

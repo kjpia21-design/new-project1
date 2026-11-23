@@ -14,6 +14,8 @@ export const collections = {
         tools: z.array(z.string()).default([]),
         duration: z.string().optional(),
         prerequisites: z.array(z.string()).default([]),
+        // 먼저 보면 좋은 글(튜토리얼 slug, `ko/` 없이). 영어·한국어 짝은 같은 목록을 쓴다. 빌드 때 src/lib/paths.ts가 검사한다.
+        requires: z.array(z.string()).default([]),
         lastVerified: z.coerce.date().optional(),
         sources: z.array(z.object({ title: z.string(), url: z.string().url() })).default([]),
         status: z.enum(['draft', 'published']).default('draft'),

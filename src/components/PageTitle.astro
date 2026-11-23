@@ -2,11 +2,11 @@
 // Starlight 기본 PageTitle 오버라이드: 튜토리얼이면 제목 위에 시리즈 위치 띠(SeriesBar), 제목 아래에 튜토리얼 정보 상자를 붙인다.
 import TutorialMeta from './TutorialMeta.astro';
 import SeriesBar from './SeriesBar.astro';
-import { isTutorial } from '../lib/tutorials';
+import { isTutorial, tutorialSlug } from '../lib/tutorials';
 
 const PAGE_TITLE_ID = '_top'; // Starlight 목차가 가리키는 제목 id
 const entry = Astro.locals.starlightRoute.entry;
-const { title, level, category, duration, prerequisites, tools, lastVerified, status } = entry.data;
+const { title, level, category, duration, prerequisites, requires, tools, lastVerified, status } = entry.data;
 const isHome = ['index', '', 'ko', 'ko/index'].includes(entry.id);
 const showMeta = isTutorial(entry.id);
 ---
@@ -17,7 +17,7 @@ const showMeta = isTutorial(entry.id);
   <h1 id={PAGE_TITLE_ID}>{title}</h1>
 )}
 {showMeta && (
-  <TutorialMeta {level} {category} {duration} {prerequisites} {tools} {lastVerified} {status} />
+  <TutorialMeta slug={tutorialSlug(entry.id)} {level} {category} {duration} {prerequisites} {requires} {tools} {lastVerified} {status} />
 )}
 
 <style>
