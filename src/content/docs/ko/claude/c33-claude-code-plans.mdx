@@ -1,0 +1,144 @@
+---
+title: "Claude Code를 쓰려면 어떤 플랜이 필요할까"
+description: "Claude Code가 들어 있는 플랜(Free는 아님), API 과금과의 차이, Team·Enterprise, 사용량 한도, 비개발자도 쓸 수 있는지를 2026-11-23 기준 공식 페이지로 정리해요"
+seoTitle: "Claude Code 요금·필요한 플랜"
+seoDescription: "Claude Code는 무료(Free) 플랜에 없어요. Pro·Max·Ultra·Team·Enterprise 또는 API 과금 중 무엇이 필요한지 2026-11-23 기준 공식 요금과 한도, 팀 플랜, 비개발자 사용 여부까지 정리했어요."
+sidebar:
+  label: "C33. Claude Code 플랜"
+level: beginner
+category: claude
+tools: ["Claude Code"]
+duration: "15분"
+prerequisites:
+  - "준비물 없음: 플랜을 고르기 위한 읽을거리예요"
+requires: ["claude/c12-claude-code-overview"]
+lastVerified: 2026-11-23
+sources:
+  - title: "Plans & pricing (claude.com)"
+    url: "https://claude.com/pricing"
+  - title: "Use Claude Code with your Pro, Max, or Ultra plan (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan"
+  - title: "Use Claude Code with your Team or Enterprise plan (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan"
+  - title: "Authentication (Claude Code Docs)"
+    url: "https://code.claude.com/docs/en/authentication"
+  - title: "Claude Code overview (Claude Code Docs)"
+    url: "https://code.claude.com/docs/en/overview"
+  - title: "Manage costs effectively (Claude Code Docs)"
+    url: "https://code.claude.com/docs/en/costs"
+status: published
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+import PromptBox from '../../../../components/PromptBox.astro';
+
+<Summary>
+- **Claude Code는 Free 플랜에 들어 있지 않아요.** 공식 요금 페이지의 기능 비교표에서 Claude Code는 Free가 "No", Pro·Max·Ultra·Team·Enterprise가 "Yes"예요(2026-11-23 기준).
+- **개인**: Pro(연간 결제 시 월 $17, 월 결제 $20), Max($100), Ultra($200). 사용량은 Claude와 Claude Code가 함께 써요. **팀**: Team 좌석마다 Claude Code가 포함되고, 프리미엄 좌석은 사용량이 더 많아요.
+- **구독이 없다면** Claude Console 계정으로 로그인할 수 있고, 이 경우 Claude Code는 **API 토큰 사용량으로 과금**돼요.
+- **비개발자**: 공식 페이지는 "누구를 위한 도구"라고 말하지 않아요. 다만 Code 탭이 있는 데스크톱 앱과 브라우저 버전이 있어서 터미널만이 유일한 길은 아니에요.
+- 가격과 한도는 자주 바뀌어요. 이 글의 수치는 모두 **2026-11-23 기준**이고 공식 페이지 링크를 달았어요.
+</Summary>
+
+"Claude Code는 돈을 내야 쓰나요?"는 써 보기 전에 가장 많이 나오는 질문이에요. 이 글은 공식 페이지만으로 답해요. Claude Code가 무엇이고 어떻게 설치하는지는 [C12. Claude Code 개요](/ko/claude/c12-claude-code-overview/), 플랜 전반은 [C2. 플랜과 사용량 한도](/ko/claude/c02-plans-limits/)를 보세요.
+
+## 짧은 답
+
+| 내 상황 | 쓰는 방법 | 출처 |
+| --- | --- | --- |
+| Free 플랜만 있음 | Claude Code 미포함(Free는 "No") | [요금 페이지](https://claude.com/pricing) |
+| Pro·Max·Ultra | 포함. 같은 Claude 계정으로 로그인 | [도움말](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan) |
+| Team·Enterprise | 좌석에 포함(아래 좌석 설명 참고) | [도움말](https://support.claude.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan) |
+| 구독 없음 | Claude Console 계정, API 토큰 사용량 과금 | [인증 문서](https://code.claude.com/docs/en/authentication) |
+
+## 개인 플랜 (2026-11-23 기준)
+
+| 플랜 | 요금 페이지 가격 | Claude Code | 사용량 한도(요금 페이지) |
+| --- | --- | --- | --- |
+| Free | $0 | No | 5시간마다·주마다 제한된 사용량 |
+| Pro | 연간 할인 시 월 $17($200 선결제), 월 결제 $20 | Yes | Free보다 많은 사용량, 5시간마다·주마다 |
+| Max | 월 $100 | Yes | Pro의 5배 사용량, 5시간마다·주마다 |
+| Ultra | 월 $200 | Yes | 인증된 계정은 5시간 한도 없음, 주간 Pro의 10배 |
+
+모든 셀의 출처: [claude.com/pricing](https://claude.com/pricing). 그 페이지의 가격은 해당 세금을 포함하지 않고, 가격과 플랜이 바뀔 수 있다고 적혀 있어요.
+
+- **구독 하나로 두 도구.** 도움말은 Pro·Max·Ultra에서 웹·데스크톱·모바일의 Claude와 터미널의 Claude Code를 구독 하나로 쓴다고 해요.
+- **한도 공유.** Claude와 Claude Code의 사용량은 같은 한도에서 차감돼요. IDE(VS Code, Cursor 등 VS Code 포크, JetBrains)에서 쓴 것도 포함돼요.
+- **Fable 모델.** 요금 페이지 기준 Pro는 사용량 크레딧으로 결제하고, Max·Ultra는 주간 한도의 절반까지 포함돼요. 자세한 내용은 [C2](/ko/claude/c02-plans-limits/)에 있어요.
+- **Claude Code 정확한 허용량은 공개되지 않았어요.** 읽은 페이지에는 플랜별 Claude Code 메시지 수나 토큰 수가 없어요. 내 사용량 화면에서 확인하세요.
+
+## Team과 Enterprise
+
+- **Team**: 도움말은 모든 Team 좌석에 Claude Code가 포함되고, 프리미엄 좌석은 작업량이 많은 사람에게 더 많은 사용량을 준다고 해요. 요금 페이지의 2026-11-23 기준 가격은 표준 좌석이 연간 결제 시 좌석당 월 $20(월 결제 $25), 프리미엄 좌석이 $100(월 결제 $125)이에요.
+- **Enterprise**: 신규·셀프서브 플랜에서는 Enterprise 좌석 하나에 Claude Code가 포함되고, 사용량은 API 요금으로 과금되며 좌석별 사용량 한도가 없어요. 예전 Enterprise 플랜은 Chat + Claude Code 좌석이나 프리미엄 좌석을 쓸 수 있어요. 요금 페이지는 Enterprise를 연간 결제 시 좌석당 월 US$20(최소 20좌석)에 사용량은 API 요금으로 표시해요.
+- **건강 정보**: 도움말은 HIPAA-ready Enterprise 플랜에서 특정 구성을 적용한 뒤에만 Claude Code가 계약 적용 범위에 들어간다고 해요. 보호 대상 건강 정보를 쓰기 전에 관리자에게 물어보세요.
+- 관리자 쪽은 [C29. Team·Enterprise 관리자 기본](/ko/claude/c29-team-admin-basics/)을 보세요.
+
+## 토큰 단위로 내기: Console과 API
+
+구독이 없거나 조직이 사용량 기반 과금을 선호하면 Claude Console 계정으로 로그인할 수 있어요.
+
+- Claude Code 문서는 Claude Code가 API 토큰 소비량으로 과금되고, 구독자의 사용량은 플랜에 포함된다고 해요.
+- 같은 페이지는 기업 도입 사례 전체에서 평균 비용이 개발자 1인당 활성 일 기준 약 $13, 월 $150~250이며, 사용자의 90%는 활성 일 기준 $30 미만이라고 해요. 기업 평균이지 내 견적이 아니에요. 문서는 작은 시범 그룹으로 먼저 기준선을 잡으라고 권해요.
+- **설정 하나를 조심하세요.** 도움말은 `ANTHROPIC_API_KEY` 환경 변수가 있으면 Claude Code가 구독 대신 그 키를 써서, 플랜 사용량이 아니라 API 사용료가 청구된다고 경고해요.
+- **월 API 크레딧으로는 못 써요.** Max·Ultra·Team에 포함된 API 크레딧은 Claude Code나 Claude 앱에서 쓸 수 없어요.
+- 백만 토큰당 API 가격은 [요금 페이지](https://claude.com/pricing)에 있어요. 에이전트 작업이 사용량을 빨리 쓰는 이유는 [에이전트 비용과 사용량 한도](/ko/agents/09-agent-usage-limits/)를 보세요.
+
+## 한도에 걸렸을 때
+
+도움말이 개인 플랜에 안내하는 선택지예요. Pro는 Max로 올리기, 사용량 크레딧 켜기, API 크레딧을 산 Console 계정으로 바꾸기, 초기화까지 기다리기. Max는 같은 목록에서 올릴 곳이 Ultra예요. Ultra는 사용량 크레딧, Console 계정, 기다리기예요.
+
+- Pro·Max는 5시간 세션 한도와 주간 한도가 있어요. Ultra는 주간 한도가 있고, 인증된 계정은 5시간 한도가 없어요.
+- 진행 중인 단계를 마치려고 Claude Code가 잠깐 더 일할 수 있어요("Usage limit reached · wrapping up"). 도움말은 이 허용량이 작고 주간 한도에 포함되며 점진적으로 적용 중이라고 해요.
+- 도움말에 따르면 `/status` 명령으로 남은 할당량을 볼 수 있어요. 사용량 크레딧이나 API로 결제하면 쓸수록 비용이 늘어나니, 플랜 안에서만 쓰려면 선택지가 나올 때 거절하세요.
+
+## 비개발자도 Claude Code를 쓸 수 있나요?
+
+공식 페이지는 대상 독자를 설명하지 않아서, 적힌 사실만 옮겨요.
+
+- 문서는 Claude Code가 터미널, IDE 확장, 데스크톱 앱, 웹에서 돌아간다고 해요. 데스크톱 앱에는 **Code** 탭이 있고 명령줄 설치가 필요 없지만 유료 구독이 필요해요. 웹 버전은 설치 없이 브라우저에서 돌아가요.
+- 터미널을 써 본 적 없는 사람을 위해 터미널 여는 법을 안내하는 가이드도 있어요.
+- 내게 맞는지는 하려는 일에 달렸고, 이 페이지들로는 알 수 없어요. 첫 실습은 [Claude Code 시작하기](/ko/coding/06-claude-code-start/)를 보세요.
+
+## 무엇을 고를까
+
+<PromptBox label="Claude와 함께 플랜 고르기">
+Claude Code를 써 보려고 해요. 제가 얼마나 자주 어떤 일에 쓸지 알려드릴 테니, 아래에 붙여 넣는 공식 플랜 정보만 근거로 Pro, Max, Ultra, 토큰 과금 Console 계정 중 무엇이 맞는지 비교해 주세요. 사용량 숫자를 지어내지 말고, 붙여 넣은 글에 없는 것은 모른다고 말해 주세요. 제 용도: (할 일과 주당 사용일 수를 적기). 공식 정보: (이 글의 플랜 표를 붙여 넣기).
+</PromptBox>
+
+현실적인 방법은 Claude Code가 포함된 가장 저렴한 유료 플랜(Pro)으로 시작해서 한도에 얼마나 자주 걸리는지 보고, 계속 걸릴 때만 올리는 거예요. 이것은 제안이지 공식 권장이 아니에요.
+
+<Aside type="note" title="확인하지 못한 것">
+2026-11-23에 요금 페이지, 도움말 2개, Claude Code 문서 3개를 읽었어요. 읽은 페이지에는 플랜별 Claude Code 정확한 사용량, "대부분의 화면은 Claude 구독이나 Console 계정이 필요하다"는 문장 외에 웹 버전의 플랜 조건, 원화 가격, 무료 체험 여부가 나와 있지 않아요. 이 글을 위해 설치하거나 실행한 것은 없어요.
+</Aside>
+
+## 한눈에 보기
+
+| 질문 | 답 (2026-11-23 기준) |
+| --- | --- |
+| 무료인가요? | Free 플랜에는 없어요. 유료 플랜이나 Console 계정이 필요해요 |
+| 포함된 가장 저렴한 플랜 | Pro, 연간 결제 월 $17 또는 월 결제 $20 |
+| 채팅과 코드가 같은 계정인가요? | 네, 구독 하나에 한도도 공유해요 |
+| Team 좌석은요? | 모든 Team 좌석에 포함 |
+| 토큰 단위 결제는요? | Claude Console 계정, API 요금 |
+
+## 자주 막히는 곳
+
+### 로그인했는데 API 사용료가 청구돼요
+
+- **원인**: `ANTHROPIC_API_KEY` 환경 변수가 구독보다 우선해요.
+- **해결**: 변수를 지운 뒤 도움말대로 Claude 계정으로 다시 로그인하세요.
+
+### 구독 로그인 선택지가 안 보여요
+
+- **원인**: Claude Code 버전이 오래됐거나 기존 로그인이 남아 있어요.
+- **해결**: `/logout`, `claude update`, 터미널 재시작, `claude` 재실행 순서로 하세요.
+
+## 다음에 읽을 글
+
+- [C12. Claude Code 개요](/ko/claude/c12-claude-code-overview/) — 설치하고 첫 작업 실행하기
+- [C14. Claude Code 핵심 기능](/ko/claude/c14-claude-code-features/) — CLAUDE.md, 훅, 서브에이전트, MCP
+- [C2. 플랜과 사용량 한도](/ko/claude/c02-plans-limits/) — Claude 전체 플랜 비교
+- [Claude Code 시작하기](/ko/coding/06-claude-code-start/) — 코딩 경험 없이 첫 결과 만들기
+- [에이전트 비용과 사용량 한도](/ko/agents/09-agent-usage-limits/) — 에이전트가 사용량을 더 빨리 쓰는 이유

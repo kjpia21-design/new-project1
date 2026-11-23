@@ -1,0 +1,144 @@
+---
+title: "Which plan do you need for Claude Code?"
+description: "Which Claude plans include Claude Code (Free does not), how API billing differs, what Team and Enterprise get, how usage limits work, and whether non-developers can use it, from official pages as of 2026-11-23"
+seoTitle: "Claude Code price: which plan do you need?"
+seoDescription: "Claude Code is not on the Free plan. See which paid plans (Pro, Max, Ultra, Team, Enterprise) or API billing you need, with prices as of 2026-11-23."
+sidebar:
+  label: "C33. Claude Code plans"
+level: beginner
+category: claude
+tools: ["Claude Code"]
+duration: "15 min"
+prerequisites:
+  - "No setup needed: this is a reading guide to help you choose a plan"
+requires: ["claude/c12-claude-code-overview"]
+lastVerified: 2026-11-23
+sources:
+  - title: "Plans & pricing (claude.com)"
+    url: "https://claude.com/pricing"
+  - title: "Use Claude Code with your Pro, Max, or Ultra plan (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan"
+  - title: "Use Claude Code with your Team or Enterprise plan (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan"
+  - title: "Authentication (Claude Code Docs)"
+    url: "https://code.claude.com/docs/en/authentication"
+  - title: "Claude Code overview (Claude Code Docs)"
+    url: "https://code.claude.com/docs/en/overview"
+  - title: "Manage costs effectively (Claude Code Docs)"
+    url: "https://code.claude.com/docs/en/costs"
+status: published
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- **Claude Code is not on the Free plan.** The feature table on the official pricing page shows Claude Code as "No" for Free and "Yes" for Pro, Max, Ultra, Team and Enterprise (as of 2026-11-23).
+- **Individuals**: Pro ($17 a month billed annually, or $20 monthly), Max ($100) or Ultra ($200). Usage is shared between Claude and Claude Code. **Teams**: every Team seat includes Claude Code; premium seats have more usage.
+- **No subscription**: you can instead sign in with a Claude Console account, where Claude Code is **billed by API tokens**.
+- **Non-developers**: the official pages do not say who it is "for". The docs do offer a desktop app with a Code tab and a browser version, so a terminal is not the only way in.
+- Prices and limits change often. Every figure here is **as of 2026-11-23** and links to its official page.
+</Summary>
+
+"Do I have to pay to use Claude Code?" is one of the most common questions before people try it. This guide answers it from official pages only. For what Claude Code is and how to install it, see [C12. Claude Code overview](/claude/c12-claude-code-overview/). For the plans in general, see [C2. Plans and usage limits](/claude/c02-plans-limits/).
+
+## The short answer
+
+| Your situation | Way in | Source |
+| --- | --- | --- |
+| Free plan only | Claude Code is not included (shown as "No" for Free) | [Pricing](https://claude.com/pricing) |
+| Pro, Max or Ultra | Included. Sign in with the same Claude account | [Help Center](https://support.claude.com/en/articles/11145838-using-claude-code-with-your-pro-or-max-plan) |
+| Team or Enterprise | Included with the seat (see the seat notes below) | [Help Center](https://support.claude.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan) |
+| No subscription | Claude Console account, billed by API token use | [Authentication](https://code.claude.com/docs/en/authentication) |
+
+## Individual plans (as of 2026-11-23)
+
+| Plan | Price on the pricing page | Claude Code | Usage limits (pricing page) |
+| --- | --- | --- | --- |
+| Free | $0 | No | Limited usage every 5 hours and every week |
+| Pro | $17 a month with annual discount ($200 billed up front), $20 if billed monthly | Yes | More usage than Free, every 5 hours and every week |
+| Max | $100 a month | Yes | 5x Pro usage every 5 hours and every week |
+| Ultra | $200 a month | Yes | No 5-hour limit for verified accounts, 10x Pro usage every week |
+
+Source for every cell: [claude.com/pricing](https://claude.com/pricing). Prices shown there do not include applicable tax, and the page says prices and plans are subject to change.
+
+- **One subscription, two tools.** The Help Center says Pro, Max and Ultra give you Claude on web, desktop and mobile and Claude Code in your terminal with one subscription.
+- **Shared limits.** Usage in Claude and in Claude Code counts against the same limits. IDE use (VS Code, Cursor and other VS Code forks, JetBrains) counts toward them too.
+- **Fable models.** Per the pricing page, Fable is paid with usage credits on Pro, and included up to half of your weekly limit on Max and Ultra. See [C2](/claude/c02-plans-limits/) for the details.
+- **Exact Claude Code allowances are not published.** The pages we read give no number of messages or tokens for Claude Code per plan. Check your own usage screen.
+
+## Team and Enterprise
+
+- **Team**: the Help Center says Claude Code is included with every Team plan seat, and premium seats offer more usage for heavier workloads. The pricing page lists standard seats at $20 per seat a month billed annually ($25 monthly) and premium seats at $100 ($125 monthly) as of 2026-11-23.
+- **Enterprise**: Claude Code is included with the single Enterprise seat on new and self-serve plans, where usage is billed at API rates with no per-seat usage limits. Older Enterprise plans may use Chat + Claude Code or Premium seats. The pricing page lists Enterprise at US$20 per seat a month billed annually with a 20-seat minimum, plus usage at API rates.
+- **Health data**: the Help Center says Claude Code on a HIPAA-ready Enterprise plan is covered by the agreement only after a specific configuration is applied. Ask your admin before using it with protected health information.
+- For the admin side, see [C29. Team and Enterprise admin basics](/claude/c29-team-admin-basics/).
+
+## Paying by the token: Console and API
+
+If you do not have a subscription, or your organization prefers usage-based billing, Claude Code can sign in with a Claude Console account.
+
+- The Claude Code docs say Claude Code charges by API token consumption, and subscribers' usage is included in their plan.
+- The same page says that across enterprise deployments the average cost is around $13 per developer per active day and $150-250 per developer per month, with costs below $30 per active day for 90% of users. These are averages for enterprises, not a quote for you. The page advises starting with a small pilot to find your own baseline.
+- **Watch out for one setting.** The Help Center warns that if an `ANTHROPIC_API_KEY` environment variable is set, Claude Code uses that key instead of your subscription, so you are charged API usage instead of using your plan.
+- **Monthly API credits do not cover it.** The Max, Ultra and Team API credits cannot be used in Claude Code or the Claude apps.
+- Current API prices per million tokens are on the [pricing page](https://claude.com/pricing). For how agent work uses up allowances, see [Agent costs and usage limits](/agents/09-agent-usage-limits/).
+
+## When you hit the limit
+
+The Help Center lists these options for individual plans. For Pro, upgrade to Max, turn on usage credits, switch to a Console account with API credits, or wait for the reset. For Max, the same list with Ultra as the upgrade. For Ultra, usage credits, a Console account, or waiting.
+
+- Pro and Max have a five-hour session limit and a weekly limit. Ultra has a weekly limit, with no five-hour limit for verified accounts.
+- Claude Code may keep working briefly to finish a step in progress ("Usage limit reached · wrapping up"). The page says this is small, counts toward the weekly limit, and is rolling out gradually.
+- The `/status` command shows your remaining allocation, per the Help Center. If you are billed through usage credits or the API, the cost grows with use, so decline the option when it is offered if you want to stay within your plan.
+
+## Can non-developers use Claude Code?
+
+The official pages do not describe a target audience, so here is only what they state.
+
+- The docs say Claude Code runs on the terminal, IDE extensions, a desktop app and the web. The desktop app has a **Code** tab and does not need the command-line install, and it requires a paid subscription. The web version runs in your browser with no local setup.
+- The docs also include a guide on how to open a terminal for people who have not used one.
+- Whether it suits you depends on your task, which these pages cannot tell you. For a hands-on first project, see [Getting started with Claude Code](/coding/06-claude-code-start/).
+
+## Which one should I pick?
+
+<PromptBox label="Choose a plan with Claude">
+I want to try Claude Code. I will tell you how often I would use it and for what, and I want you to compare, using only the official plan facts I paste below, whether Pro, Max, Ultra or a Console account billed by tokens fits me. Do not invent usage numbers. If something is not in the text I paste, say it is unknown. My use: (describe your tasks and how many days a week). The official facts: (paste the plan table from this page).
+</PromptBox>
+
+A practical way to decide: start with the cheapest paid plan that includes it (Pro), watch how often you reach the limit, and move up only if you keep hitting it. That is a suggestion, not an official recommendation.
+
+<Aside type="note" title="What we could not confirm">
+We read the pricing page, two Help Center articles, and three Claude Code docs pages on 2026-11-23. The pages we read do not state: exact Claude Code usage amounts per plan, whether the web version of Claude Code has any plan condition beyond "most surfaces require a Claude subscription or Console account", any KRW prices, or whether a free trial exists. We did not install or run anything for this guide.
+</Aside>
+
+## Quick reference
+
+| Question | Answer (as of 2026-11-23) |
+| --- | --- |
+| Is it free? | Not on the Free plan. A paid plan or Console account is needed |
+| Cheapest included plan | Pro at $17 a month (annual) or $20 monthly |
+| Same account for chat and code? | Yes, one subscription, shared limits |
+| Team seat? | Included in every Team seat |
+| Pay per token? | Claude Console account, API rates |
+
+## Common sticking points
+
+### I signed in but I am being charged API usage
+
+- **Cause**: An `ANTHROPIC_API_KEY` environment variable takes priority over your subscription.
+- **Fix**: Remove the variable, then sign in again with your Claude account, as the Help Center describes.
+
+### I do not see the subscription login option
+
+- **Cause**: An older Claude Code version or an existing login.
+- **Fix**: Use `/logout`, run `claude update`, restart the terminal and run `claude` again.
+
+## What to read next
+
+- [C12. Claude Code overview](/claude/c12-claude-code-overview/) — Install it and run your first task
+- [C14. Claude Code core features](/claude/c14-claude-code-features/) — CLAUDE.md, hooks, subagents and MCP
+- [C2. Plans and usage limits](/claude/c02-plans-limits/) — All Claude plans compared
+- [Getting started with Claude Code](/coding/06-claude-code-start/) — A first result without coding experience
+- [Agent costs and usage limits](/agents/09-agent-usage-limits/) — Why agents use up your allowance faster

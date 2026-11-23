@@ -119,6 +119,8 @@
 | C29 | Team·Enterprise 관리자를 위한 Claude 보안·설정 기본 | 실무 |
 | C31 | Team·Enterprise용 컴퓨터 사용: 설정과 안전한 사용 | 실무 |
 | C30 | Claude Meetings로 회의에 Claude 참여시키기 | 실무 |
+| C32 | Claude 사용량 한도에 걸렸을 때 | 입문 |
+| C33 | Claude Code를 쓰려면 어떤 플랜이 필요할까 | 입문 |
 
 ## 5. 기술 구성 (제안)
 
