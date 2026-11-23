@@ -1,0 +1,250 @@
+---
+title: "Getting Started with Gemini Tasks: Google's AI Agent"
+description: "A reference on Tasks in Gemini, Google's agent inside the Gemini app: who can use it in Korea, plans, how to start, connected apps, confirmations, and limits"
+seoTitle: "Gemini Agent (Tasks): how to use Google's AI agent"
+seoDescription: "How to use Google's Gemini agent (Tasks in Gemini): availability in Korea, plans, setup, permissions and limits, from official Google pages."
+sidebar:
+  label: "14. Gemini Tasks"
+level: practical
+category: agents
+tools: ["Gemini", "Tasks in Gemini"]
+duration: "25 min"
+requires: ["agents/05-agent-safety"]
+prerequisites:
+  - "A personal Google Account (work and school accounts aren't supported yet), age 18 or older, with Gemini Apps activity (History) turned on"
+  - "The Gemini web app (gemini.google.com), the Gemini mobile app, or the Gemini app on Mac"
+  - "Read 5. Using Personal AI Agents Safely first"
+lastVerified: 2026-11-23
+sources:
+  - title: "Manage your tasks & workflows in Gemini Apps (Gemini Apps Help)"
+    url: "https://support.google.com/gemini/answer/16596215"
+  - title: "Manage your tasks & workflows in Gemini Apps (Korean version)"
+    url: "https://support.google.com/gemini/answer/17094507?hl=ko"
+  - title: "Create & manage schedules for tasks in Gemini"
+    url: "https://support.google.com/gemini/answer/17094710"
+  - title: "Assign tasks in the Gemini app on Mac"
+    url: "https://support.google.com/gemini/answer/17208717"
+  - title: "Monitor & manage the remote computer for tasks in Gemini"
+    url: "https://support.google.com/gemini/answer/18789153"
+  - title: "Tasks in Gemini (gemini.google, English)"
+    url: "https://gemini.google/overview/agent/"
+  - title: "Gemini의 태스크 (gemini.google, Korean)"
+    url: "https://gemini.google/kr/overview/productivity/?hl=ko"
+  - title: "Google AI plans (gemini.google/subscriptions)"
+    url: "https://gemini.google/subscriptions/"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- Google's agent for Gemini is officially called **Tasks in Gemini** (in the help pages, "tasks" or "task mode"). Google's own page says it makes Gemini "a true AI agent rather than just a conversational tool." We couldn't find the name "Gemini Agent" on the official pages we opened.
+- You hand Gemini a goal in a **task thread**. It can use connected apps (Gmail, Calendar, Drive and others), a Chrome browser or a cloud browser, and a remote computer for code, then produce files such as PDFs, spreadsheets, and slides. You can also attach **schedules**.
+- **South Korea is on the official list.** Google's help page says tasks are available **without a Google AI subscription** in Australia, Canada, India, Japan, South Korea, and the US. Elsewhere you need **Google AI Pro or Ultra**, except in the EEA, Nigeria, Switzerland, and the UK.
+- You need to be **18 or older** with a **personal Google Account** and **History turned on**. It works in the Gemini **web app, mobile app, and Mac app**. Google calls the feature **experimental**.
+- Sensitive actions (sending, deleting, purchases, form submission, sign-ins) always ask for your confirmation, but Google also says your supervision is the most important protection. At first, use read-and-draft tasks only.
+</Summary>
+
+## What you'll be able to do after this tutorial
+
+- Explain what Tasks in Gemini is and how it differs from a normal Gemini chat.
+- Check whether you can use it, and start your first task in Korea or elsewhere.
+- Choose which apps and browser access to give it, and know what it asks about first.
+- Pause, stop, and delete what it saved.
+
+This guide is based on Google's own pages (Gemini Apps Help and gemini.google), and we mark what we **could not confirm**. Sections headed "official" state what Google says. Sections headed "our advice" are this site's suggestions, not Google's.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Tasks in Gemini** | The official name of the feature. You switch from "Chat" to "Task" below the text box and describe a goal. |
+| **Task thread** | A conversation for one task. It has a work panel with steps, progress, and the files Gemini read or changed. |
+| **Skills** | Reusable instructions you can call with `@`. They're replacing Gems (Google says Gems are being phased out). |
+| **Schedules** | Automatic triggers that tell Gemini when to run a task, by time or by event. Different from schedules in normal chats. |
+| **Connected Apps** | Services Gemini can use for your tasks, such as Workspace, Photos, YouTube, and third-party apps. Off by default. |
+| **Local browser / remote browser** | Your own Chrome on desktop, or a separate cloud browser Gemini uses. |
+| **Remote computer** | A cloud computer where Gemini runs code for complex jobs. |
+| **Task mode** | The setting that lets you hand off work. Turning it off deletes remote browser and code data and stops schedules. |
+
+### What is it? (official)
+
+On gemini.google, Google describes it this way: standard chatbots wait for a prompt, while Tasks in Gemini "can take proactive action on your behalf, under your direction" and handle multi-step work across your apps. The help page gives examples such as decluttering your inbox, creating a to-do list after a vacation, watching flight and hotel prices, and researching a topic and packaging the results into PDFs, documents, spreadsheets, or presentations.
+
+### What it can do (official)
+
+- **Use your apps.** Contacts, Gemini Notebook, Google Pay and Wallet, Google Photos, Google Workspace (Calendar, Docs, Drive, Gmail, Keep, Sheets, Slides, Tasks), Search services (Search, Finance, Flights, Hotels, Maps), YouTube, and several third-party apps. Google's site mentions 50+ third-party apps such as OpenTable and Instacart, and custom apps can be connected.
+- **Work in a browser.** It can use your local Chrome ("auto browse," desktop only) or a remote cloud browser, for things like shopping or reservations.
+- **Run code on a remote computer.** For files, data, and coding jobs.
+- **Create files.** For example .pdf, .docx, .xlsx, .pptx, .csv, and code files, plus Google Docs, Slides, and Sheets.
+- **Work on a schedule.** Time-based schedules, Gmail monitors (run when a matching email arrives), and topic monitors (news, finance, sports, local events).
+- **Act on your Mac (Mac app only).** With folders you add, it can analyze, edit, rename, or reorganize files.
+
+## Can I use it in Korea? (official)
+
+<Aside type="note" title="Yes, according to Google's own pages">
+Google's English and Korean help pages both list **South Korea** among the countries where tasks are available **without a Google AI subscription** (Australia, Canada, India, Japan, South Korea, and the US). Google's Korean introduction page says the same in Korean ("대한민국 ... 만 18세 이상 사용자"). This is availability per Google's pages as of 2026-11-23; Google says "for now," so the list can change.
+</Aside>
+
+**What about Korean?** Google publishes **Korean versions** of the help page and the introduction page, and the Korean page calls the feature "Gemini의 태스크." But we couldn't confirm in an official source how well tasks themselves handle Korean instructions and Korean websites. The page that lists supported languages (support.google.com/gemini/answer/13575153) blocked automated access with a CAPTCHA and we did not try to get around it. Try a small Korean task and judge the result.
+
+### Who can use it, and on which plan? (official)
+
+| Condition | Details |
+| --- | --- |
+| Age | 18 or older |
+| Account | Personal Google Account. Work or school accounts aren't supported "for now" |
+| History | Must be turned on |
+| South Korea, US, Canada, Australia, India, Japan | Available without a Google AI subscription |
+| Other Gemini Apps countries | Needs **Google AI Pro or Ultra** |
+| Not available | European Economic Area, Nigeria, Switzerland, and the United Kingdom |
+| Surfaces | Gemini web app, Gemini mobile app, Gemini app on Mac |
+
+- **Plans change what schedules can do.** With Pro or Ultra you get time-based schedules, Gmail monitors, and topic monitors. Without a subscription or with Google AI Plus, a task can run **up to once a day** in a general window (overnight, daytime, or evening).
+- **Prices.** Google's US page lists Free $0, Google AI Plus $4.99/month, and Google AI Pro $19.99/month (USD, as of 2026-11-23). We didn't find Korean-won prices, so check them in the app.
+- **Limits are compute-based** and rise with higher subscriptions (see "Limits" below).
+
+## Step by step (our advice, following Google's flow)
+
+<Checklist items={[
+  'I confirmed I am 18 or older, using a personal Google Account, with History on',
+  'I opened the Gemini web app or app and found the Task option',
+  'I started with a read-only task and asked for a plan first',
+  'I turned on only the Connected Apps this task needs',
+  'I did not type passwords or card numbers into the task thread',
+  'I checked the work panel and files after the first run',
+  'I know where Stop, Pause, and Task settings are',
+]} />
+
+<Steps>
+
+1. **Check that you can use it**
+
+   Open gemini.google.com (or the Gemini mobile app, or the Mac app) and look below the text box for **Task**. If you don't see it, check your age, account type, History setting, and region against the table above. Google's help says to turn on task mode by clicking Task and following the on-screen instructions.
+
+2. **Let Gemini help you set up (optional)**
+
+   Google suggests entering "set up," "get started," or "interview me" in a task to be guided through your first skills and tasks.
+
+3. **Turn on only the apps you need**
+
+   Connected Apps are off by default. Open your settings or the customize page in Gemini and enable the one or two apps your first task needs. You can disconnect them at any time.
+
+4. **Describe your first task**
+
+   Click **Task**, then describe the goal. You can say when to run it. To attach files, use Upload & tools. To use a skill, type `@` and pick it.
+
+   <PromptBox>
+   Read my unread newsletters from the past week in Gmail and give me a short list of the ones worth reading, with one line each. Only read and summarize. Don't archive, delete, unsubscribe, or send anything. Show me your plan first.
+   </PromptBox>
+
+   Google says Gemini is designed to show its plan after you submit, its progress, and the skills, apps, and files it used.
+
+5. **Add a schedule (optional)**
+
+   Once a task works the way you want, ask for a schedule in the same thread, such as "Every Monday at 9 AM, do this." You can also create one on the Scheduled page in the web app. Pause or resume from the scheduled task chip or the Scheduled page.
+
+   <Aside type="caution" title="Offline schedules are riskier">
+   Google's help says: "If a schedule runs when you are offline, you may not be able to stop Gemini from completing an unintended action." Don't schedule tasks that use sensitive information or take sensitive actions. A schedule also won't run if your device is off or task mode is off, and it won't run if 15 tasks are already running.
+   </Aside>
+
+6. **Watch and take over when asked**
+
+   Open the task thread and the **work panel** to see steps and the files Gemini read or updated. When it needs you (for example, to sign in or enter payment details), it asks you to **take over**. For the remote browser, click **View live**, then **Take over task**, finish your steps, and click **Go back to Gemini**.
+
+7. **Review and use the files**
+
+   Files Gemini creates appear in the thread. Markdown and text open in Canvas, and other files have links you can open, download, or ask Gemini to edit.
+
+</Steps>
+
+## Permissions, confirmations, and safety
+
+### What Google says it does (official)
+
+- **Always confirms the most sensitive actions.** "Even if you update your permission preferences, very sensitive actions require your permission each time", including sending communications, deleting your data, sharing sensitive info, making purchases, completing financial transactions, filling out and submitting web forms, and signing in with Google or Google Password Manager.
+- **Pauses before sharing sensitive info.** Even with "Always allow," it asks before sharing things like health information, financial details, or government ID numbers with a website or connected app.
+- **Asks before browsing.** The first time, Chrome asks you to connect auto browse to Gemini. After that, Gemini asks for confirmation for every task that involves web browsing.
+- **Take control mode** for passwords and payment details, and **site and action restrictions** to keep it on the sites relevant to the task.
+- **Mac app.** It only sees folders you add. For file changes it makes temporary backups, which are deleted when you start a new query or task or after 24 hours. Google warns that you may not be able to recover files that Gemini deleted, and that Gemini is designed to ask permission before permanently deleting or sharing files.
+
+### What Google warns about (official)
+
+- Gemini's ability to handle tasks is **experimental** and can make mistakes.
+- **Prompt injection**: a website, email, or document can contain hidden instructions that mislead the agent into leaking private data or doing something unintended.
+- When using your **local Chrome**, Gemini has access to the same sites you do, including ones you're signed into. It can share your name, contact info, files, and preferences with third parties while acting for you.
+- "Do not enter sign-in info, payment details, or info you may find sensitive directly into the task thread."
+- "Your active supervision is the most important way to protect against risk." The safeguards "do not guarantee protection against all risks."
+
+### Our advice (not from Google)
+
+- **Start with read and draft.** Ask for summaries and drafts first, and add "don't send, delete, or buy anything." Widen the scope after a few good runs.
+- **Prefer the local browser for logged-in sites only when you're at the computer.** Google says the local browser needs your device and Chrome awake; if not, Gemini may switch to the remote browser.
+- **Keep payment out of tasks.** Even though Gemini asks before purchases, we'd do the checkout step ourselves via take over.
+- **Keep Connected Apps minimal.** Turn off apps you aren't using. See [5. Using Personal AI Agents Safely](/agents/05-agent-safety/) for the full checklist.
+- **Write clear instructions.** [10. How to write a brief for an AI agent](/agents/10-briefing-agents/) shows how to state the goal, the limits, and "ask me before..." rules.
+- **Check the results.** See [7. Reviewing an agent's work](/agents/07-reviewing-agent-work/). For personal information and privacy, see [Privacy and safety basics](/basics/05-privacy-safety/).
+
+## Data and deleting what it saved (official)
+
+- **Remote browser data.** Cookies with your sign-in info are saved for future sessions. Google says it deletes them automatically after a set period of inactivity, and you can delete them yourself in the web app under Settings > Browser > Delete remote browser data.
+- **Remote code execution data.** Saved for future sessions and deletable in Task settings.
+- **Turning off task mode** (web: Settings > Task settings > Use task mode to hand off work > Turn off; Mac app: Settings > Tasks) deletes remote browser and code data, and schedules stop running. Your tasks, threads, and files aren't deleted. Your local Chrome data isn't erased either.
+- **History must be on** to use tasks.
+
+We did not find a task-specific statement about model training or how long activity is kept on the pages we read. Check the Gemini Apps Privacy Hub and your Gemini activity settings.
+
+## Limits (official)
+
+- **Usage limits are compute-based** and increase with higher Google AI subscriptions. How much a task uses depends on how many you run per day and how complex they are. Gemini tells you when you're close to your limit.
+- **Up to 15 tasks can run at once.** You have to wait for tasks to finish before making another request, and a schedule won't run when 15 are already running.
+- Google says "for now" about both availability and device support, and the feature is experimental.
+
+## How it differs from the other agents
+
+- **It lives inside the Gemini app,** next to your normal chat, instead of being a separate app.
+- **It can use your own Chrome or a cloud browser.** The browser part is compared in [6. Browser agents compared](/agents/06-browser-agents/), and the side-by-side table is in [1. Personal AI Agents at a Glance](/agents/01-agents-compared/).
+- **Korea is on the official no-subscription list,** which isn't true of every agent in this section.
+- **Usage counts against your Gemini plan's limits.** See [9. Agent costs and usage limits](/agents/09-agent-usage-limits/) for how to think about that.
+
+## Common sticking points
+
+### I don't see Task
+
+- **Cause**: You may be under 18, signed in with a work or school account, have History off, be in an excluded region (EEA, Nigeria, Switzerland, UK) without Pro or Ultra, or be on an unsupported surface.
+- **Fix**: Use a personal account, turn on History, update the app, and use the web, mobile, or Mac app.
+
+### Gemini asks me to take over
+
+- **Cause**: It reached a sign-in, password, or payment step. That's by design.
+- **Fix**: Use Take over, complete the step yourself on the page, then go back to Gemini.
+
+### My scheduled task didn't run
+
+- **Cause**: Task mode may be off, your device may be off, 15 tasks may already be running, or your plan only allows a daily window.
+- **Fix**: Check the schedule on the Scheduled page, turn task mode back on, and check your plan's schedule type.
+
+### It stopped when I closed my laptop
+
+- **Cause**: With the local browser, your device and Chrome need to stay awake. Gemini may switch to the remote browser, or may abandon the task.
+- **Fix**: Keep the device awake for local-browser tasks, or choose tasks the remote browser can do.
+
+## What this guide couldn't confirm
+
+- How well tasks handle **Korean** instructions and Korean websites (the official supported-languages page was blocked by a CAPTCHA, and we did not bypass it)
+- Whether "Gemini Agent" or "Agent Mode" (an older name that may still appear elsewhere, including on Google's plans page) is the same feature or a predecessor
+- Korean-won prices for Google AI plans
+- Task-specific statements about training use and activity retention
+- Mac app and Windows availability beyond what the help page states (Windows isn't mentioned)
+- A Google blog announcement (we didn't find one at an official address)
+
+## What to read next
+
+- [1. Personal AI Agents at a Glance](/agents/01-agents-compared/)
+- [5. Using Personal AI Agents Safely](/agents/05-agent-safety/)
+- [6. Browser Agents Compared](/agents/06-browser-agents/)
+- [7. How to Check an AI Agent's Work Before You Trust It](/agents/07-reviewing-agent-work/)
+- [10. How to Write a Clear Brief for an AI Agent](/agents/10-briefing-agents/)
