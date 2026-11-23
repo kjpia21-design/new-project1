@@ -1,0 +1,188 @@
+---
+title: "Cancel, Refund, or Change an AI Subscription: ChatGPT, Claude, and Gemini"
+description: "How to stop an AI subscription from renewing, ask for a refund, or change plans, based on each service's official help pages: where you paid (web, App Store, Google Play) decides where you cancel, with what we could not confirm"
+seoTitle: "How to cancel ChatGPT Plus, Claude Pro or Gemini"
+seoDescription: "Cancel or refund ChatGPT Plus, Claude Pro or Google AI Pro (Gemini): find where you paid, cancel there, then ask for a refund. Official help, 2026-11-23."
+sidebar:
+  label: "23. Cancel and refunds"
+level: beginner
+category: chat
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "15 min"
+requires: ["basics/08-free-vs-paid"]
+prerequisites:
+  - "A paid AI subscription you want to cancel, refund, or change (ChatGPT, Claude, or Google AI/Gemini)"
+  - "The email on your receipt, or access to the Apple, Google Play, or card account that was charged"
+lastVerified: 2026-11-23
+sources:
+  - title: "Canceling your ChatGPT subscription (OpenAI Help Center)"
+    url: "https://help.openai.com/en/articles/7232927-canceling-your-chatgpt-subscription"
+  - title: "How do I request a refund for my ChatGPT subscription? (OpenAI Help Center)"
+    url: "https://help.openai.com/en/articles/7232895-how-do-i-request-a-refund-for-my-chatgpt-subscription"
+  - title: "Cancel your Pro, Max, or Ultra subscription (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/8325617-cancel-your-pro-max-or-ultra-subscription"
+  - title: "Request a refund for a paid Claude plan (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12386328-request-a-refund-for-a-paid-claude-plan"
+  - title: "Cancel your Google One membership (Google One Help)"
+    url: "https://support.google.com/googleone/answer/9056360?hl=en"
+  - title: "Update your Google One plan & fix upgrade issues (Google One Help)"
+    url: "https://support.google.com/googleone/answer/9003633?hl=en"
+  - title: "Cancel a subscription from Apple (Apple Support)"
+    url: "https://support.apple.com/en-us/118428"
+  - title: "Request a refund for apps or content that you bought from Apple (Apple Support)"
+    url: "https://support.apple.com/en-us/118223"
+  - title: "Cancel, pause, or change a subscription on Google Play (Google Play Help)"
+    url: "https://support.google.com/googleplay/answer/7018481?hl=en"
+  - title: "Learn about Google Play refund policies (Google Play Help)"
+    url: "https://support.google.com/googleplay/answer/2479637?hl=en"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- **Cancel where you paid.** All three services' help pages say the same thing in different words: a subscription bought on the website is cancelled on the website, one bought through the Apple App Store is cancelled in your Apple subscriptions, and one bought through Google Play is cancelled in your Google Play subscriptions. **Uninstalling the app does not cancel anything.** (as of 2026-11-23)
+- **Cancelling stops the next renewal; it does not refund past charges.** Per the official pages, paid features usually stay until the end of the period you already paid for. ChatGPT and Claude both say to cancel at least 24 hours before the next billing date.
+- **Refunds are mostly limited.** OpenAI says payments are generally non-refundable, with a possible discretionary refund within seven days of the charge for an unused individual subscription. Claude says all payments are non-refundable except as its Terms of Service provide, where required by law, or for fraud. Google says Google storage plan purchases are non-refundable in most countries or regions. Rules differ by country, so read your own page. (as of 2026-11-23)
+- **App Store purchases are refunded by Apple, not by the AI company.** Both OpenAI and Anthropic say so on their pages.
+- This page is not legal or financial advice. Menus and policies change; open the linked official page before you act. Items we could not confirm are listed below.
+</Summary>
+
+## What you'll be able to do
+
+- Find out where you actually paid, which decides where you cancel.
+- Cancel a ChatGPT, Claude, or Google AI (Gemini) subscription on the web, App Store, or Google Play.
+- Know what the official pages say about refunds, and how to ask for one.
+- Change or downgrade a plan where the official pages describe it, and know where they do not.
+
+For how the free and paid plans compare before you pay, see [How Far Does Free Go? Choosing a Plan](/basics/08-free-vs-paid/). For moving your work to another service, see [Switching Between AI Services](/basics/21-switching-ai-services/).
+
+## Concepts first
+
+| Term | Meaning |
+| --- | --- |
+| **Billing platform** | The company that charged you: the AI service itself (web), Apple (App Store), or Google (Play Store). |
+| **Cancel** | Stop future renewals. Usually you keep paid features until the period you paid for ends. |
+| **Refund** | Money returned for a past charge. Separate from cancelling, and decided by the billing platform's policy. |
+| **Downgrade / plan change** | Moving to a cheaper or different plan. Where this is done depends on the service. |
+| **Billing date** | The day the next charge happens. Cancel before it, with a safety margin. |
+| **Payment dispute** | Asking your bank or card issuer to reverse a charge. Both OpenAI and Anthropic say they cannot refund while a dispute is active. |
+
+## Step 1: Find where you paid
+
+The cancel button is only in one place. Check your receipt or card statement:
+
+| Receipt or statement says | You paid via | Cancel in |
+| --- | --- | --- |
+| Receipt emailed by the AI company (OpenAI, Anthropic, Google One) | The web | The service's own Settings, Billing page |
+| "Receipt from Apple" or "invoice from Apple" | Apple App Store | Your iPhone, iPad, or Mac subscriptions |
+| Google Play order (often a GPA number) | Google Play | Google Play subscriptions on Android or the web |
+
+Apple's page suggests searching your email for "receipt from Apple" or "invoice from Apple", and checking which Apple Account was used. ChatGPT's page says a subscription bought on chatgpt.com does not appear in your Apple or Google Play subscriptions, and that you may have more than one subscription under different accounts. (as of 2026-11-23)
+
+## Step 2: Cancel, service by service
+
+<Aside type="note" title="Menu names change">
+These are the steps the official pages list as of 2026-11-23. Buttons and menus move around, so if yours looks different, follow the linked official page.
+</Aside>
+
+### ChatGPT (OpenAI)
+
+Per [OpenAI's cancel page](https://help.openai.com/en/articles/7232927-canceling-your-chatgpt-subscription):
+
+- **Bought on chatgpt.com:** sign in, open your account menu, choose **Settings**, then **Billing**, and under **Cancel plan** choose **Cancel**. If billing controls are missing, the page suggests signing in to the same account in a different browser.
+- **Bought through the Apple App Store:** on an iPhone or iPad, **Settings**, your name, **Subscriptions**, **ChatGPT**, **Cancel Subscription**, then confirm.
+- **Bought through Google Play:** in the Google Play app open **Subscriptions**, choose **ChatGPT**, then **Cancel subscription**; or use the Google Play website, **Manage**, then **Cancel subscription**.
+- The page says uninstalling the app does not cancel, that you do not need to delete your ChatGPT account just to stop charges, and that deleting your account does not cancel an App Store subscription, so cancel with Apple first. It covers personal plans and self-service ChatGPT Business, not Enterprise or Edu.
+- It says cancel at least 24 hours before your next billing date, and that paid features remain until the end of the current billing period after an ordinary cancellation.
+
+### Claude (Anthropic): Pro, Max, Ultra
+
+Per [Claude's cancel page](https://support.claude.com/en/articles/8325617-cancel-your-pro-max-or-ultra-subscription):
+
+- **Bought on claude.ai or Claude Desktop:** click your initials or name in the lower left, choose **Settings**, then **Billing**, and click **Cancel**.
+- **Bought in Claude for iOS:** open the side menu, tap the gear or your initials, tap **Billing**, choose **Manage subscription**, and follow the prompts. If the app is removed, use Apple's page below.
+- **Bought in Claude for Android:** tap your initials at the top right, then **Billing**, **Manage subscription**, and follow the prompts. If the app is removed, use Google Play's page below.
+- Cancellation takes effect at the end of the current billing period and you keep the paid plan until then. The page says to cancel at least 24 hours before your next billing date. Cancelling does not refund purchased usage credits; the balance stays but can only be used with an active paid plan.
+- **Team plans** are cancelled by an Owner or Primary Owner under Organization settings, then Billing, per [the Team plan page](https://support.claude.com/en/articles/9267323-cancel-your-organization-s-team-plan-subscription). The team keeps access until the end of the current billing cycle.
+
+### Gemini (Google AI Pro, Plus, Ultra through Google One)
+
+Google's plans for Gemini are sold as Google One memberships, so the Google One help pages apply. Per [Cancel your Google One membership](https://support.google.com/googleone/answer/9056360?hl=en):
+
+- You can cancel at any time. On an Android phone or tablet: open the Google One app, then **Menu**, **Settings**, **Cancel membership**, and confirm.
+- If you signed up through the App Store, you cannot adjust the membership in the Android app; use the App Store on another device. If you signed up through a carrier or other third party, the help page says to cancel with that provider. The page lists these under [Update your Google One plan](https://support.google.com/googleone/answer/9003633?hl=en).
+- When you cancel, your benefits do not end immediately: you have until the end of the billing cycle. Afterward, extra storage and benefits go away and each person keeps the default storage (up to 15 GB at no charge). If you are using more than that, the page lists restrictions, such as Gmail not sending or receiving messages and Drive not uploading, until you free space. **Check your storage before you cancel.** (as of 2026-11-23)
+
+### If you paid through Apple or Google Play
+
+- **Apple:** on an iPhone or iPad, **Settings**, your name, **Subscriptions**, choose the subscription, **Cancel Subscription**. If there is no Cancel button or you see an expiration message in red text, the subscription is already cancelled. Per [Apple's page](https://support.apple.com/en-us/118428). It also gives steps for Mac and Windows.
+- **Google Play:** on Android, go to subscriptions in Google Play, select the subscription, tap **Cancel subscription**, and follow the instructions. The page says uninstalling the app does not cancel the subscription, and that after cancelling you can still use it for the time already paid. Per [Google Play's page](https://support.google.com/googleplay/answer/7018481?hl=en). It also has a resubscribe option.
+
+## Step 3: Ask for a refund (if you want one)
+
+Cancelling and refunding are two separate requests. A refund request to Apple does not cancel the subscription either, per Claude's refund page, so do both if you want the money back and no further charges.
+
+| Where you paid | What the official page says (as of 2026-11-23) |
+| --- | --- |
+| **ChatGPT, on chatgpt.com** | Payments are generally non-refundable. For an unused individual subscription, a discretionary refund may be available if you contact support within seven days of the charge, subject to conditions such as no substantial use. There is no automatic prorated refund after seven days. Request through the Help Center chat while signed in to the charged account. The page lists regional rules, including for the EU, UK, and Turkey (prorated refund if you cancel within 14 days), the Republic of Korea, and Brazil. [OpenAI refund page](https://help.openai.com/en/articles/7232895-how-do-i-request-a-refund-for-my-chatgpt-subscription) |
+| **Claude, on claude.ai** | Except as provided in the Consumer Terms of Service, where required by law, or for fraud, all payments are non-refundable. To request one: **Get help** from the menu, **Send us a message**, then **Claude Refund Request** and follow the prompts. In the EEA and UK, a refund within 14 days of purchase may be available, prorated to your use. [Claude refund page](https://support.claude.com/en/articles/12386328-request-a-refund-for-a-paid-claude-plan) |
+| **Google One / Google AI plans** | In most countries or regions, Google storage plan purchases are non-refundable; the storage is yours for the subscription period even after cancelling. For Play Store purchases, see Google Play's refund policies; for App Store purchases, request a refund from Apple. [Google One page](https://support.google.com/googleone/answer/9056360?hl=en) |
+| **Apple App Store** | Request at reportaproblem.apple.com: "I'd like to", "Request a refund", choose a reason, select the subscription, **Submit**. Apple says to wait 24 to 48 hours for an update, and that eligibility may vary by country or region. [Apple refund page](https://support.apple.com/en-us/118223) |
+| **Google Play** | Google may give refunds for some purchases made through Google Play billing, and policies differ by product, payment, and location. The app's developer can often help most quickly. [Google Play refund policies](https://support.google.com/googleplay/answer/2479637?hl=en). ChatGPT's and Claude's pages describe how to contact their support about Google Play purchases. |
+
+Both ChatGPT's and Claude's pages say their support cannot issue a refund while a payment dispute with your bank is pending. Claude's page says for App Store purchases only Apple can review and issue a refund.
+
+<Aside type="caution" title="Be careful with support chats">
+When you contact support, give only what the official page asks for, such as the account email and the charge date. OpenAI's page says never to send the complete card number. Do not paste a full card number, password, or ID into any AI chat.
+</Aside>
+
+## Step 4: Change or downgrade a plan
+
+- **Claude Pro, monthly to annual:** Settings, Billing, **Adjust plan**; unused monthly time is credited to the first annual invoice, per [the official page](https://support.claude.com/en/articles/10185996-how-to-change-your-pro-plan-from-monthly-to-annual-billing).
+- **Claude, other changes:** the Max plan page describes moving from an annual Pro plan to Max (a credit for the remaining balance if your billing address matches) and Max to Ultra (charged prorated), and that if you subscribed through Google Play, you are charged the full price of the new plan and the unused value becomes extra days. A step-by-step page for downgrading from Max or Ultra to a cheaper plan is **not confirmed**: we did not find one in the pages we read.
+- **Google One / Google AI plans:** on a computer go to one.google.com, **Manage membership**, **Change membership plan**, then pick a plan under "Upgrade options" or "Downgrade options". If you downgrade, your current plan stays active until the end of the billing cycle and the downgrade starts at the next cycle. If there is no downgrade option, you are on the lowest plan. Per [the official page](https://support.google.com/googleone/answer/9003633?hl=en).
+- **ChatGPT plan changes (for example from a higher plan to Plus):** **not confirmed.** OpenAI's cancel, refund, and Plus pages that we read do not give downgrade steps, and the refund page says a plan change does not by itself qualify for a refund. If your goal is simply to pay less, one safe path is to cancel at the end of the period and subscribe to the plan you want afterward, but check the official page for your account first, since that is our reading and not an official recommendation.
+
+## Common questions
+
+| Question | Official-page answer (as of 2026-11-23) |
+| --- | --- |
+| I cancelled but was charged again | OpenAI's page tells you to check the cancellation confirmation and the next billing date, check whether you have more than one subscription under different ChatGPT, Apple, or Google accounts, and to cancel the one you no longer want on the platform that billed you. |
+| I cannot sign in to cancel | OpenAI: contact its support with the account email plus two billing details, never the full card number. Claude: contact support from another email and cc the account's email. |
+| I want a different billing date | Claude's billing FAQ says there is no direct way; you can unsubscribe and resubscribe on the date you prefer. |
+| Do I lose my chats if I cancel? | Not confirmed for any of the three; the pages we read cover billing, not chat history. Export what you need first, and see [Switching Between AI Services](/basics/21-switching-ai-services/). |
+| Can I get a pro-rated refund? | It depends on the service, platform, and country. See the refund table above and read your own country's note. |
+
+## Try it: a cancel plan you can reuse
+
+<PromptBox label="Subscription audit prompt">
+I want to review my paid subscriptions. I will list them with a name, the app or site, the month I subscribed, and where I think I paid (website, Apple App Store, or Google Play). Make a table with columns: service, where I pay, where to cancel (as general steps I should verify on the official help page), what to check before cancelling (such as the billing date and any data to export), and a note on anything you cannot be sure about. Do not guess prices, refund rules, or menu names. Tell me to check the official help page for each.
+</PromptBox>
+
+The AI cannot see your account or your billing, and its menu steps may be out of date. Use it to organize your list, and take the actual steps from the official pages above.
+
+## Checklist
+
+<Checklist items={[
+  'I checked my receipt or card statement to see where I paid (web, Apple, or Google Play)',
+  'I exported or saved anything I need before cancelling',
+  'I cancelled on the platform that billed me, at least 24 hours before the billing date',
+  'I checked the service afterward to confirm it is no longer set to renew',
+  'If I wanted a refund, I requested it separately and read my country\'s refund note',
+  'I did not share a full card number or password with support or an AI chat',
+]} />
+
+## What we could not confirm
+
+- **Google AI (Gemini) on a computer:** the Google One cancel page text we read lists only the Android steps; the "Computer" and "iPhone & iPad" tabs did not show steps in what we fetched. We did not find a Gemini Apps Help page that covers cancelling. The Gemini subscriptions page (gemini.google/subscriptions) has the line "Cancel anytime. No refunds for partial billing periods, except as required by applicable law" in the page text we read, but we could not tell which plans it applies to, so we do not rely on it.
+- **ChatGPT plan downgrade steps** and **Claude Max or Ultra to a cheaper plan steps:** not found in the pages we read.
+- **Whether your chats or files are kept after you cancel**, for any service: not on the pages we read.
+- **Refund rules for your country:** the pages describe some regions, but we did not check each country's consumer law, and we do not know how a specific request will be decided.
+- **Korea-specific rules for Claude and Google:** not confirmed. OpenAI's page has a note for residents of the Republic of Korea; read it on the official page.
+- The sites that billed you may show different menus than the ones described here. We did not test any cancel or refund flow on a real account.
+
+This page is general information, not legal or financial advice. For a dispute about a charge, contact the billing platform and, if needed, your card issuer or your local consumer agency.
