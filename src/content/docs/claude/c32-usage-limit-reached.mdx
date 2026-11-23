@@ -1,0 +1,164 @@
+---
+title: "What to do when you hit Claude's usage limit"
+description: "A step-by-step guide for when Claude says you have reached your limit: tell session, weekly and length limits apart, find the reset time, then wait, use usage credits, change plan or use less, checked against official help pages on 2026-11-23"
+seoTitle: "Claude usage limit reached: what to do"
+seoDescription: "Hit Claude's usage limit? Tell session, weekly and length limits apart, check your reset time, and pick: wait, buy credits, upgrade or use less."
+sidebar:
+  label: "C32. When you hit the usage limit"
+level: beginner
+category: claude
+tools: ["Claude", "Claude Code"]
+duration: "10 min"
+prerequisites: ["A Claude account (free or paid)"]
+requires: ["claude/c02-plans-limits"]
+lastVerified: 2026-11-23
+sources:
+  - title: "How do usage and length limits work? (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/11647753-how-do-usage-and-length-limits-work"
+  - title: "Usage limit best practices (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/9797557-usage-limit-best-practices"
+  - title: "Manage usage credits for paid Claude plans (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12429409-manage-usage-credits-for-paid-claude-plans"
+  - title: "Manage usage credits for Team and seat-based Enterprise plans (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12005970-manage-usage-credits-for-team-and-seat-based-enterprise-plans"
+  - title: "Models, usage, and limits in Claude Code (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/14552983-models-usage-and-limits-in-claude-code"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- There are **two different limits**: a **usage limit** (how much you can use Claude over time) and a **length limit** (how long one conversation can get). They are fixed differently, so first work out which one you hit.
+- Paid plans have a **session limit that resets five hours after your first message** and a **weekly limit that resets at a fixed time assigned to your account**. Check both, and the reset time, in **Settings > Usage**. Verified Ultra accounts have no five-hour limit.
+- When you hit a usage limit you can **wait for the reset**, **turn on usage credits** (pay as you go at standard API rates, paid plans only) or **move to a plan with higher limits**. A new plan's limits apply right away.
+- To use less: **start a new conversation for a new topic**, turn off tools and connectors you do not need, lower the effort level, pick a lighter model, and keep project files tidy (as of 2026-11-23, per the official help pages).
+</Summary>
+
+Seeing "you have reached your limit" in the middle of work is annoying, but it is rarely a bug. This page is a short troubleshooting path. For a full comparison of plans, see [C2. Plans and usage limits](/claude/c02-plans-limits/); for how free tools compare, see [Getting the Most from Free AI Plans](/basics/16-free-ai-tips/). We read the official help pages listed in the sources on 2026-11-23 and say where they are silent.
+
+## What you'll be able to do
+
+- Tell a usage limit from a length limit.
+- Find your next reset time.
+- Pick one of the four ways out: wait, usage credits, a different plan, or using less.
+- Build habits that make the limit come later.
+
+## Concepts to know first
+
+| Term | Meaning (official help, as of 2026-11-23) |
+| --- | --- |
+| **Usage limit** | How much you can interact with Claude over a period. Paid plans have a session limit and weekly limits. |
+| **Session limit (five-hour limit)** | The period starts when you send your first message, and the limit resets in full five hours later. Verified Ultra accounts do not have it. |
+| **Weekly limit** | Applies across all models; some plans also have a separate weekly limit for Fable. It resets at a fixed time each week assigned to your account, no matter when you start using Claude. |
+| **Length limit** | Relates to the context window: how much Claude can work with in one chat. Hitting it is fixed by starting a new conversation, not by waiting. |
+| **Usage credits** | Pay-as-you-go use at standard API rates after you use up your included limits. Called "extra usage" in some places. |
+
+<Aside type="note" title="One shared limit">
+The help page says your usage across all Claude surfaces (claude.ai, Claude Code, Claude Desktop) counts toward the same usage limit. So a long Claude Code session can be why chat says you are out.
+</Aside>
+
+## Step-by-step
+
+<Checklist items={[
+  'I know whether it was a usage limit or a length limit',
+  'I opened Settings > Usage and read the session and weekly bars and the reset time',
+  'I chose one way out: wait, usage credits, change plan, or use less',
+  'If I turn on usage credits, I set a monthly spend limit first',
+  'I started a new conversation for a new topic',
+]} />
+
+<Steps>
+
+1. **Work out which limit it is**
+
+   If you can still start a **new** conversation, it is probably a **length limit** on that one chat. The official page says the fix is to start a new conversation or use projects. If new chats are blocked too, it is a **usage limit** (session or weekly). The exact wording of the message differs by screen and plan, and the pages we read do not give message texts for claude.ai, so go by the message on your screen (unconfirmed).
+
+2. **Open Settings > Usage**
+
+   On Pro, Max, Ultra, Team and seat-based Enterprise plans, **Settings > Usage** shows progress bars for the **current session** (with time remaining) and the **weekly limits**, including your next weekly reset time. The session period is counted from your first message, so the reset is five hours after that message, not on the clock. Your weekly reset day and time stay the same whenever you subscribed or start using Claude.
+
+   In Claude Code, the help page says an Enterprise-seat user sees a "limit reached, resets at time" message and that `/model` can switch to a lighter model meanwhile. A person using an API key has no hard stop and is billed per token instead.
+
+3. **Choose how to continue**
+
+   | Option | When it fits | Notes from the help pages |
+   | --- | --- | --- |
+   | **Wait** | You can pause | The session resets in full five hours after it began; weekly limits reset at your account's fixed time. |
+   | **Usage credits** | You want to keep going now | Pro, Max and Ultra turn this on under Settings > Usage; billed at standard API rates; separate charge on your bill. Set a monthly spend limit with "Adjust limit". |
+   | **Change plan** | You hit limits often | Paid plans offer higher limits. On upgrade, the new plan's limits apply right away. See [C2](/claude/c02-plans-limits/). |
+   | **Use less** | Always useful | See step 4. |
+
+   On **Team and seat-based Enterprise** plans, only an **Owner or Primary Owner** can turn usage credits on (Organization settings > Usage). If you are a member and cannot continue, ask your Owner. On **usage-based Enterprise** plans there is no included allowance to run out of; usage is billed at API rates from the first token.
+
+   If you do turn on usage credits, read the official page first. It says usage credits are **non-refundable** (with exceptions) and that credits are usable only with an active paid plan. For credits purchased on or after December 7, 2026, it says they generally expire 12 months after purchase; credits bought before that date do not expire. Expiration can differ by country. It also says you may still see the "approaching your limit" notice for a moment, and then it changes to "Now using credits"; you were not cut off.
+
+4. **Use less next time**
+
+   These are the habits the official pages name. They apply on every plan.
+
+   - **Start a new conversation for a new topic.** Long chats that trigger automatic context management use more of your limit, and the help page suggests a fresh conversation when you are near your limit in a long chat.
+   - **Combine related questions** into one message and give background up front, instead of many short back-and-forths.
+   - **Use projects** for documents you reuse. Project content is cached and counts less when reused, but caches expire after a period of inactivity. Remove project files you no longer use and keep project instructions short.
+   - **Turn off tools you do not need**: disconnect apps for a conversation that does not need them, and ask Claude not to search the web when you do not need current information. The page calls tools and connectors "token-intensive".
+   - **Lower the effort level** for routine tasks, and turn thinking off where the model has a toggle.
+   - **Pick a lighter model.** For usage credits, the help page recommends Haiku or the most recent Sonnet over Opus for most tasks. In Claude Code it says Opus uses meaningfully more quota than Sonnet.
+   - **In Claude Code**, `/clear` when you switch tasks, `/compact` to continue a long one, point at files by path instead of pasting, and keep CLAUDE.md lean.
+
+   <PromptBox label="Make one request instead of many">
+   I will give you three tasks in one message. Do them in order and keep each answer short. First, summarize the text below in five bullets. Second, list the open questions in it. Third, draft a two-line reply to the sender. If something is unclear, tell me at the end instead of asking one question at a time.
+   </PromptBox>
+
+</Steps>
+
+<Aside type="caution" title="Limits can change">
+The help page says Anthropic may adjust usage limits at its discretion to manage capacity and does not guarantee uninterrupted service. Treat today's numbers and behavior as a snapshot (2026-11-23) and check Settings > Usage for what applies to you.
+</Aside>
+
+## What we could not confirm
+
+<Aside type="note" title="Unconfirmed items (as of 2026-11-23)">
+We did not trigger a limit message ourselves. The pages we read do not give the exact claude.ai message text, the number of messages or tokens you get per session, or whether the same reset rules apply to the free plan (the usage page says paid plans have the two limits; see [C2](/claude/c02-plans-limits/) for what we noted about free). Menu names come from the help pages and may look different on your screen or app.
+</Aside>
+
+## Quick reference
+
+| I see... | Likely cause | First move |
+| --- | --- | --- |
+| A new chat works, this one is stuck | Length limit | Start a new conversation or move the material into a project |
+| No chat works, reset in a few hours | Session limit | Wait, or use credits or a bigger plan |
+| No chat works, reset days away | Weekly limit | Check Settings > Usage; credits or a bigger plan; use less |
+| Claude Code says limit reached | Shared limit across surfaces | `/model` to a lighter model, or wait for the reset time shown |
+| Team member, cannot buy credits | Owner controls credits | Ask your Owner |
+
+## Common sticking points
+
+### I turned on usage credits but it still looks stopped
+
+- **Cause**: The approaching-limit notice can still be showing at the moment you switch. It changes to "Now using credits" once the next request goes through, if you have funds.
+- **Fix**: Send the request again and check your balance and monthly spend limit in Settings > Usage.
+
+### My weekly limit resets at an odd time
+
+- **Cause**: The reset is a fixed time assigned to your account, not a day from your first message.
+- **Fix**: Read the reset time on Settings > Usage and plan around it.
+
+### I upgraded and want to know when it applies
+
+- **Fix**: The official page says the new plan's limits apply right away.
+
+## Practical tips
+
+- Check Settings > Usage before a big task, not after.
+- Set a low monthly spend limit when you first try usage credits, then adjust.
+- Treat any number you cannot find in the official docs as unconfirmed.
+
+## What to read next
+
+- [C2. Plans and usage limits](/claude/c02-plans-limits/) — Plans, session and weekly limits in depth
+- [Getting the Most from Free AI Plans](/basics/16-free-ai-tips/) — Stretching free allowances across services
+- [How Far Does Free Go? Choosing a Plan](/basics/08-free-vs-paid/) — When a paid plan pays off
+- [C12. Claude Code overview](/claude/c12-claude-code-overview/) — Where Claude Code usage comes from
