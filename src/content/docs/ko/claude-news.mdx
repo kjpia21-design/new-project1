@@ -7,7 +7,7 @@ import NewsItem from '../../../components/NewsItem.astro';
 
 Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 모았어요. 모델 출시, 가격, Claude Code와 앱의 새 기능처럼 실제로 쓰는 분에게 의미 있는 것만 골랐고, 사소한 버그 수정은 뺐어요. 공식 채널을 점검해 계속 갱신해요.
 
-**마지막 업데이트: 2026-11-16**
+**마지막 업데이트: 2026-11-20**
 
 ## 모니터링하는 공식 채널
 
@@ -18,6 +18,30 @@ Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 �
 - [Anthropic 뉴스](https://www.anthropic.com/news): 정책, 파트너십, 모델 발표
 
 ## 2026년 11월
+
+<NewsItem date="11월 19일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/ko/coding/42-code-review-ai/" tutorialLabel="병합 전에 AI로 코드 리뷰하기">
+같은 날 버전이 두 개 나왔어요. 2.1.328 버전에서는 대부분의 모델에서 `/code-review`가 버그와 `CLAUDE.md` 위반만 보고해요(재사용, 단순화, 효율 정리는 `/simplify`로 실행해요). 지적마다 Important, Pre-existing, Nit 표시가 붙고, 요약 끝에 수정 제안이 들어가요. 2.1.329 버전에서는 대상을 주지 않은 `/code-review`가 대부분의 모델에서 브랜치 전체를 기본 브랜치와 비교해 검토하고, `/code-review <PR 번호>`는 `gh pr diff`로 풀 리퀘스트를 읽거나 읽지 못하면 그렇다고 알려 줘요. 전에는 말없이 체크아웃된 브랜치를 검토하는 경우가 있었어요. auto 모드는 이제 Amazon Bedrock, Google Cloud의 Agent Platform, Microsoft Foundry, Claude apps gateway의 Claude Opus 4.6과 Sonnet 4.6에서도 쓸 수 있고, 거기서 권한 모드를 정하지 않은 대화형 세션은 auto 모드로 시작해요(`disableAutoMode`로 끌 수 있어요). `"onFailure": "block"`은 `mcp_tool` 훅에서도 동작해요. `/tasks`에는 이 세션의 예약 작업, `/loop` 깨우기, 목표(goal), 대화의 포크가 함께 나오고, 신뢰 확인 창은 폴더의 훅이 어디에 선언돼 있는지 경고해 줘요. 업데이트한 뒤 확인할 것이 두 가지 있어요. 이전 버전에서 저장한 예약 작업은 로그인한 새 세션에서 대부분 다시 예약해야 하고, macOS의 컴퓨터 사용(computer use)은 더 새로운 안전 규칙을 따라서 일부 동작이 거부되고 일부 앱은 접근 범위가 줄어요. 2.1.329는 `~/.claude.json`이 가끔 기본값으로 초기화되던 문제와 macOS에서 로그아웃이 반복되던 문제도 고쳤어요.
+</NewsItem>
+
+<NewsItem date="11월 17일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/ko/coding/40-settings-permissions/" tutorialLabel="Claude Code 설정과 권한">
+2.1.327 버전은 2.1.326에 이어 권한 확인을 더 엄격하게 해요. `/install-github-app`은 저장소를 바꾸기 전에 확인을 받고, `ExitWorktree`는 저장하지 않은 작업이 있을 수 있는 워크트리를 지우기 전에 물어보고, `/export`는 이미 있는 파일을 덮어쓰기 전에 물어봐요. 경로 확인에서 일부 심볼릭 링크를 거부하고, 작업 폴더 안으로 보는 범위가 바뀌어서 일부 경로는 이제 권한을 물어요. auto 모드는 `Bash(pnpm dlx *)`처럼 아무 패키지나 실행할 수 있는 허용 규칙을 더 많이 무시하고, 안내 문구에는 요금이 붙는 분류기 요청으로 대체하는 동작이 다음 릴리스에서 없어진다고 나와요(그 동작들은 대신 물어보거나 거부돼요). 설정 쪽에서는 `claude mcp add-json <이름> -`이 서버 JSON을 표준 입력으로 읽어서 토큰을 명령줄에 남기지 않을 수 있고, `/status`가 문제가 있는 에이전트, 스킬, 명령어, 키 바인딩 파일과 무시된 권한 설정을 목록으로 보여 주고, `/config`는 다른 설정이 해당 줄을 덮어쓸 때 알려 줘요. 전체 화면이 아닌 렌더러의 이름이 `/tui classic`으로 바뀌었어요(`/tui default`도 계속 동작해요). VS Code에서는 탐색기 오른쪽 클릭 메뉴의 "Claude Code: Add to Chat"으로 고른 파일과 폴더를 채팅에 @ 멘션할 수 있어요. 프로젝트 범위의 `claude mcp add`와 `claude mcp remove`가 `.mcp.json`의 다른 최상위 키를 지우던 문제도 고쳤어요.
+</NewsItem>
+
+<NewsItem date="11월 17일" channel="Claude 앱" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/ko/claude/c22-desktop-app/" tutorialLabel="C22 데스크톱 앱 제대로 쓰기">
+Claude Desktop에 릴리스 채널(release channel)이 생겼어요. 앱이 업데이트될 때 어떤 버전을 받을지 정하는 설정이에요. Stable이 기본값이고, 테스트를 더 거친 새 버전을 덜 자주 받아요. Latest는 하루에 한 번쯤 새 버전을 받아요. Mac과 Windows용 Claude에서 모든 요금제가 쓸 수 있고(4.29.0 버전 이상), 설정 > 데스크톱 앱(Settings > Desktop app)의 Release channel에서 바꿔요. Linux, Microsoft Store로 설치한 앱, IT 팀이 Claude 정책을 설정한 컴퓨터에서는 쓸 수 없어요. Stable로 되돌려도 버전이 내려가지 않아요. 더 새로운 Stable 버전이 나올 때까지 지금의 Latest 버전에 머물고, 그동안 Stable 업데이트를 받지 못해요. 자세한 내용은 [Install Claude Desktop](https://support.claude.com/en/articles/10065433-install-claude-desktop)의 "Choose a release channel" 항목에 있어요.
+</NewsItem>
+
+<NewsItem date="11월 17일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/ko/claude/c16-api/" tutorialLabel="C16 Claude API 기초">
+연결 결제(Linked billing)가 베타로 나왔어요(베타 헤더 `user-profiles-billing-2026-10-01`). Claude API로 앱을 만드는 분이라면, 고객이 내 앱에서 쓴 Claude 사용량을 고객 자신의 Claude 조직으로 결제하게 할 수 있어요. 고객이 조직을 연결한 뒤에는 `/v1/messages`나 `/v1/chat/completions` 요청마다 `billing_policy`로 누가 낼지 정하고, 고객은 Claude Console에서 내 앱의 지출 한도를 정하거나 연결을 끊을 수 있어요. 고객 조직이 API 사용료를 Anthropic에 직접 내는 경우에만 동작해요. 클라우드 마켓플레이스로 결제하는 조직과 Claude 구독 플랜만 있는 조직은 대상이 아니고, Max, Ultra, Team 플랜에 포함된 월 API 크레딧도 여기에 쓸 수 없어요. 자세한 내용은 [Linked billing 문서](https://platform.claude.com/docs/en/manage-claude/oauth-apps/organization-billing-connections)에 있어요.
+</NewsItem>
+
+<NewsItem date="11월 16일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/ko/coding/40-settings-permissions/" tutorialLabel="Claude Code 설정과 권한">
+2.1.326 버전은 규모가 큰 업데이트이고, 대부분 권한 확인을 더 엄격하게 하는 내용이에요. 권한 우회(bypass permissions) 모드에서도 일부 도구 호출은 승인을 묻고(물어볼 사람이 없으면 거부), Claude의 파일 도구는 `.credentials.json` 같은 Claude Code 로그인 파일에 쓰기를 거부해요. Bash, PowerShell, `cp`, `mv` 명령도 먼저 묻는 경우가 늘었어요. macOS, Linux, WSL의 샌드박스 명령은 기본으로 홈 폴더의 일부 민감한 폴더에 쓰지 않아요(일부는 `sandbox.filesystem.allowWrite`로 허용 가능). 훅의 `"decision": "block"`이 더 많은 경우에 적용돼서, 항상 이 값을 출력하는 훅은 호출을 막기 시작할 수 있어요. 모드를 정하지 않은 터미널과 VS Code 세션은 조직 정책을 아직 불러오지 못했을 때 auto 모드로 시작해요. 편의 기능으로는 Remote Control 답변이 작성되는 대로 휴대폰이나 브라우저에 실시간으로 표시되고, 에이전트 팀을 켠 상태에서도 Code Mode를 켤 수 있고, VS Code에 프롬프트 제안을 끄는 `claudeCode.promptSuggestions` 설정이 생겼어요. Claude Code를 자리를 비운 채 돌리는 분은 업데이트한 뒤 스크립트를 한 번 테스트해 보세요.
+</NewsItem>
+
+<NewsItem date="11월 16일" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/ko/claude/c16-api/" tutorialLabel="C16 Claude API 기초">
+Claude Opus 4.6, Claude Opus 4.5, Claude Sonnet 4.5, Claude Haiku 4.5가 만든 텍스트에도 지원 플랫폼에서 Anthropic의 텍스트 워터마크가 붙어요. 지원 플랫폼은 [How Claude marks AI-generated content](https://support.claude.com/en/articles/16266773-how-claude-marks-ai-generated-content)에 나와 있어요. 이 모델들에 보내는 요청에서 `temperature`, `top_p`, `top_k`를 기본값이 아닌 값으로 정하면 텍스트에 워터마크가 붙지 않을 수 있어요. 자세한 내용은 [Text watermark 문서](https://platform.claude.com/docs/en/build-with-claude/text-watermark)에 있어요.
+</NewsItem>
 
 <NewsItem date="11월 13일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/ko/coding/40-settings-permissions/" tutorialLabel="Claude Code 설정과 권한">
 2.1.325 버전에서 기본값 몇 가지가 더 엄격해졌어요. Claude Code를 자리를 비운 채 돌리는 분은 확인해 보세요. 샌드박스 안에서 실행하는 Bash 명령이 이제 기본으로 일반 권한 절차를 따라요(전처럼 묻지 않고 실행하려면 `sandbox.autoAllowBashIfSandboxed: true`로 설정). 예약 작업과 `/loop`는 `allowed-tools`나 훅을 선언한 스킬을 실행하기 전에 먼저 물어봐요(묻지 않고 실행하려면 `permissions.allow`에 `Skill(이름)` 추가). 읽기 전용 git 명령도 프로젝트 저장소나 신뢰한 저장소가 아니면 먼저 물어봐요. VS Code에서도 터미널처럼 다음 프롬프트 제안이 나오고, Tab으로 받아들일 수 있어요. zstd로 압축된 응답을 해석하는 과정의 보안 문제도 고쳤어요.

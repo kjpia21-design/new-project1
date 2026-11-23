@@ -11,7 +11,7 @@ prerequisites:
   - "Claude Code가 설치된 터미널 (설치는 C12 참고)"
   - "작업할 프로젝트 폴더 하나"
   - "(훅 예제를 따라 한다면) jq와 Node.js(npx)"
-lastVerified: 2026-11-16
+lastVerified: 2026-11-20
 sources:
   - title: "How Claude remembers your project (CLAUDE.md, auto memory)"
     url: "https://code.claude.com/docs/en/memory"
@@ -19,6 +19,8 @@ sources:
     url: "https://code.claude.com/docs/en/commands"
   - title: "Hooks guide"
     url: "https://code.claude.com/docs/en/hooks-guide"
+  - title: "Hooks reference"
+    url: "https://code.claude.com/docs/en/hooks"
   - title: "Custom subagents"
     url: "https://code.claude.com/docs/en/sub-agents"
   - title: "Connect Claude Code to tools via MCP"
@@ -286,7 +288,7 @@ import ScreenshotPlaceholder from '../../../../components/ScreenshotPlaceholder.
 | 이벤트 예 | `Notification`, `PreToolUse`, `PostToolUse`, `SessionStart` |
 | matcher | `Edit\|Write`처럼 도구 이름으로 범위를 좁혀요 |
 | 차단 | exit code 2 (사유는 stderr로 출력) |
-| 훅 자체가 실패할 때 | 기본값은 `"onFailure": "continue"`라서 훅이 시작 못 하거나 시간 초과여도 동작이 그냥 진행돼요. 정책 훅이라면 `command`·`http` 훅에 `"onFailure": "block"`을 넣어 실패 시 막으세요(v2.1.295 이상). |
+| 훅 자체가 실패할 때 | 기본값은 `"onFailure": "continue"`라서 훅이 시작 못 하거나 시간 초과여도 동작이 그냥 진행돼요. 정책 훅이라면 `command`·`http`·`mcp_tool` 훅에 `"onFailure": "block"`을 넣어 실패 시 막으세요(v2.1.295 이상, `mcp_tool` 훅은 v2.1.328 이상). |
 | 확인 | `/hooks` |
 
 ### 서브에이전트 요약
