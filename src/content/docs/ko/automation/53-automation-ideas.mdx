@@ -1,0 +1,114 @@
+---
+title: "AI 업무 자동화 아이디어 20가지"
+description: "메일·회의, 문서, 스프레드시트, 고객·기록, 도구 연결로 나눈 AI 업무 자동화 아이디어 20가지. 아이디어마다 한 줄 설명, 난이도, 이 사이트의 따라 하기 글 링크를 붙였어요"
+seoTitle: "AI 업무 자동화 아이디어 20가지"
+seoDescription: "메일·회의·문서·엑셀·고객 답변·도구 연결까지 일 종류별로 묶은 AI 업무 자동화 아이디어 20가지. 아이디어마다 난이도와 따라 하기 글을 함께 안내해요. 입문자도 바로 시작할 수 있어요."
+sidebar:
+  label: "23. AI 자동화 아이디어 20가지"
+level: beginner
+category: automation
+tools: ["Claude", "ChatGPT", "Gemini"]
+duration: "15분"
+prerequisites:
+  - "이 글을 읽는 데는 준비물이 없어요. 각 글에 필요한 준비물은 그 글에 적혀 있어요"
+requires: ["basics/05-privacy-safety"]
+lastVerified: 2026-11-23
+status: published
+---
+
+import { Aside } from '@astrojs/starlight/components';
+import Summary from '../../../../components/Summary.astro';
+
+<Summary>
+- 이 글은 **수업이 아니라 메뉴판**이에요. 반복되는 일을 AI에게 맡기는 아이디어 20개를, 각각 단계별로 알려 주는 이 사이트의 글과 연결했어요.
+- **일의 종류**별로 묶었어요: 메일·회의, 문서, 스프레드시트·데이터, 고객·기록, 도구를 이어서 저절로 돌리기.
+- 각 줄의 **난이도**는 연결한 글의 난이도를 따라요. **입문**(채팅만), **실무**(계정이나 도구 연결), **고급**(자동으로 돌도록 설정).
+- 새로운 정보는 없어요. 각 아이디어는 연결된 글에 있는 내용만 간단히 옮긴 것이니, 요금제·한도·주의점은 그 글에서 확인하세요.
+- **AI는 초안, 결정은 사람이.** 개인정보와 고객 정보는 프롬프트에 넣지 말고, 숫자와 사실은 쓰기 전에 확인하세요.
+</Summary>
+
+## 이 글을 쓰는 방법
+
+1. 가장 자주 반복하는 일이 어느 묶음에 있는지 찾아요.
+2. **입문**이나 **실무** 표시가 있는 아이디어 하나를 골라 글을 열어요.
+3. 먼저 AI와 손으로 한 번 해 보세요. 그다음에 자동으로 돌리는 것을 생각해요.
+
+어떤 AI를 쓸지 모르겠다면 [Claude·ChatGPT·Gemini 업무별 비교와 고르는 법](/ko/chat/05-compare-assistants/)을 보세요. 업무 자료를 어딘가에 붙여넣기 전에는 [개인정보·회사 정보 안전하게 지키며 쓰기](/ko/basics/05-privacy-safety/)를 읽어 두세요.
+
+<Aside type="caution" title="자동화하기 전에 확인하세요">
+기능·요금제·메뉴는 자주 바뀌고, 많은 글이 요금제나 계정 종류(개인, 회사, 학교)에 따라 달라져요. 각 글에 확인한 내용과 날짜가 적혀 있어요. AI가 만든 결과는 보내거나, 결제하거나, 공개하기 전에 직접 확인하세요.
+</Aside>
+
+## A. 메일·일정·회의
+
+| # | 아이디어 | 하는 일 | 글 | 난이도 |
+| --- | --- | --- | --- | --- |
+| 1 | **메일함 길들이기** | Gmail의 Gemini, Outlook의 Copilot, Claude 커넥터로 긴 메일 스레드를 요약하고 답장 초안을 쓰고 라벨을 정리해요. | [메일함 정리를 AI로](/ko/automation/38-email-ai/), 메일 한 통은 [AI로 이메일·메시지 잘 쓰기](/ko/chat/42-emails-and-messages/) | 실무 |
+| 2 | **아침 브리핑 받기** | Claude의 Gmail·캘린더 커넥터로 오늘 일정과 중요한 메일을 요약하는 프롬프트를 만들고, 평일 아침에 자동으로 돌릴 수 있어요. 휴대폰에서는 한 번 탭하거나 한마디로 AI를 부를 수도 있어요. | [Gmail·캘린더를 AI와 연결해 아침 브리핑 받기](/ko/automation/17-morning-briefing/), [휴대폰 단축어로 AI 바로 부르기](/ko/automation/43-phone-shortcuts/) | 실무 |
+| 3 | **회의 시간 잡기** | AI에게 캘린더를 확인하게 해 회의 시간을 찾고 초대장 초안을 써요. | [AI로 일정·회의 시간 잡기](/ko/automation/48-calendar-scheduling/) | 실무 |
+| 4 | **회의를 노트로** | Google Meet, Zoom, Teams에 들어 있는 회의록·요약 기능을 비교하고, 어떤 회의록에서든 할 일을 뽑아요. | [온라인 회의 AI 비교](/ko/automation/37-meeting-ai/), [회의록·긴 문서 요약하고 할 일 뽑기](/ko/chat/02-summarize-documents/) | 실무 |
+| 5 | **팀 채팅 따라잡기** | Slack의 대화 요약과 검색 답변을 쓰거나, 해당 플랜에서 채널에서 Claude를 불러요(Claude Tag). | [업무 메신저에 AI 붙이기](/ko/automation/41-slack-ai/) | 실무 |
+
+## B. 문서·글쓰기
+
+| # | 아이디어 | 하는 일 | 글 | 난이도 |
+| --- | --- | --- | --- | --- |
+| 6 | **긴 문서 요약하기** | 회의록이나 긴 문서를 올려 요약과 담당자·기한이 있는 할 일 표를 받고, 원문과 대조해요. | [회의록·긴 문서 요약하고 할 일 뽑기](/ko/chat/02-summarize-documents/) | 실무 |
+| 7 | **보고서·제안서 초안** | 개요를 먼저 잡고, 섹션별 초안, 출처 확인, 말투 다듬기를 거쳐 파일로 내보내요. | [보고서·제안서 초안 쓰고 다듬기](/ko/chat/04-write-reports/) | 실무 |
+| 8 | **재사용 템플릿 만들기** | 자꾸 쓰는 문서를 Claude 프로젝트, 스킬, Google Docs 템플릿으로 템플릿화해요. | [AI로 반복 문서 템플릿 만들기](/ko/automation/50-document-templates/), [스킬(Skills) 사용하고 직접 만들기](/ko/claude/c08-skills/) | 실무 |
+| 9 | **블로그 글 기획·작성** | 블로그 글을 기획, 초안, 검수 순서로 쓰고, 품질 저하와 대량 생성 위험을 살펴요. | [AI로 블로그 글 쓰기](/ko/automation/34-blog-writing/) | 입문 |
+
+## C. 스프레드시트·데이터
+
+| # | 아이디어 | 하는 일 | 글 | 난이도 |
+| --- | --- | --- | --- | --- |
+| 10 | **스프레드시트에 AI 붙이기** | Excel의 Copilot, 구글 시트의 Gemini, Excel용 Claude 추가 기능으로 표 정리, 수식 작성, 요약, 오류 추적을 해요. | [엑셀·구글 시트에 AI 붙이기](/ko/automation/23-spreadsheet-ai/) | 실무 |
+| 11 | **PDF·청구서에서 데이터 뽑기** | PDF 청구서와 명세서를 항목별 프롬프트로 깔끔한 표로 바꾸고, 모든 숫자를 확인하는 체크리스트를 써요. | [AI로 PDF·청구서에서 데이터 뽑아 정리하기](/ko/automation/51-pdf-data-extraction/) | 실무 |
+| 12 | **가계부·영수증 정리** | 영수증 사진과 카드 명세서를 분류된 가계부 시트로 만들어요. 카드 번호는 먼저 가려요. | [AI로 가계부·영수증 정리하기](/ko/automation/46-budget-sheet/) | 입문 |
+| 13 | **CSV·엑셀 분석** | 데이터 파일을 올려 AI에게 정리·요약·차트를 맡기고 결과를 확인해요. 큰 작업은 Claude Code가 분석 코드를 쓰고 실행하게 맡겨요. | [엑셀·CSV 데이터 분석을 AI에게 맡기기](/ko/chat/03-data-analysis/), [Claude Code로 CSV·엑셀 데이터 분석하고 보고서 만들기](/ko/coding/38-data-analysis-claude-code/) | 실무 |
+| 14 | **설문 만들고 읽기** | 설문 문항 초안을 쓰고 Google Forms나 Microsoft Forms로 만들어 결과를 요약해요. | [AI로 설문 만들고 결과 분석하기](/ko/automation/49-forms-surveys/) | 실무 |
+| 15 | **파일 합치고 이름 정리** | 엑셀 여러 개 합치기, 파일 이름 한꺼번에 바꾸기 같은 반복 파일 작업을 백업과 승인 확인을 거쳐 맡겨요. | [코딩 없이 반복 파일 작업 자동화](/ko/coding/35-file-automation/) | 입문 |
+
+## D. 고객·기록
+
+| # | 아이디어 | 하는 일 | 글 | 난이도 |
+| --- | --- | --- | --- | --- |
+| 16 | **고객 FAQ 만들기** | 반복되는 고객 문의를 FAQ와 답변 템플릿으로 묶고, 정책은 프로젝트나 Gem에 두고, 보내기 전에 모든 답변을 검토해요. | [AI로 고객 FAQ·답변 템플릿 만들기](/ko/automation/52-customer-faq/), [프로젝트(Projects)로 자료와 지침 관리하기](/ko/claude/c05-projects/) | 실무 |
+| 17 | **노트·기록 정리해 두기** | Notion AI로 회의 노트와 업무 데이터베이스를 정리하거나, Airtable AI로 표를 만들고 기록을 분류하고 문서에서 데이터를 뽑아요. | [Notion AI로 업무 문서와 데이터베이스 정리하기](/ko/automation/16-notion-ai/), [Airtable AI로 데이터 정리하기](/ko/automation/47-airtable-ai/) | 실무 |
+
+## E. 도구를 잇고 저절로 돌리기
+
+| # | 아이디어 | 하는 일 | 글 | 난이도 |
+| --- | --- | --- | --- | --- |
+| 18 | **앱끼리 이어 붙이기** | Zapier나 Make로 Gmail 메시지를 구글 시트에 기록하고 알림을 보내거나, n8n 워크플로로 라벨 붙은 Gmail에 Claude가 답장 초안을 쓰게 해요. | [Zapier/Make로 메일 → 시트 → 알림 자동화하기](/ko/automation/18-zapier-make/), [n8n으로 AI 자동화 워크플로 만들기](/ko/automation/42-n8n-ai/) | 실무 |
+| 19 | **Microsoft 365·Google Workspace 안에서 자동화** | 원하는 흐름을 말로 설명하면 Power Automate의 Copilot이 초안을 만들어 줘요. 또는 Apps Script로 구글 시트에 사용자 메뉴를 만들어 선택한 셀을 Claude API로 보내요. | [Power Automate와 Copilot으로 Microsoft 365 업무 자동화](/ko/automation/44-power-automate-copilot/), [Apps Script와 AI로 구글 시트 자동화](/ko/automation/45-apps-script-ai/) | 실무 |
+| 20 | **반복 업무 예약 실행** | 주간 보고서 초안 같은 반복 업무를 스킬로 만들고, 예약 작업이나 루틴으로 자동 실행하고, 서브에이전트로 검토를 나눠요. | [반복 업무 자동 실행하기](/ko/claude/c18-automate-recurring/), [반복 업무를 에이전트에게 맡기기](/ko/coding/10-delegate-agents/) | 고급 |
+
+기본 연동이 없는 도구를 쓰고 싶다면 [커넥터(MCP)로 AI와 업무 도구 연결하기](/ko/automation/20-connectors-mcp/)와 [커넥터로 Gmail·캘린더·Drive·Notion 연결하기](/ko/claude/c07-connectors/)에서 커넥터가 AI와 업무 도구를 잇는 방식을 볼 수 있어요.
+
+## 어디서 시작할까
+
+| 이럴 때 | 먼저 볼 것 |
+| --- | --- |
+| 준비 없이 첫 성공을 맛보고 싶어요 | 12번(가계부·영수증)이나 9번(블로그 글), 둘 다 입문 |
+| 매일 시간을 아끼고 싶어요 | 1번(메일함)과 2번(아침 브리핑) |
+| 스프레드시트 노가다를 줄이고 싶어요 | 10번(스프레드시트 AI)과 11번(PDF·청구서) |
+| 내가 없어도 돌아가게 하고 싶어요 | 먼저 18번, 손으로 해 본 뒤 20번 |
+
+## 자주 막히는 부분
+
+### 글에 나온 요금제나 계정이 없어요
+
+- **원인**: 여러 글이 유료 플랜, 회사·학교 계정, 관리자 설정에 따라 달라져요.
+- **해결**: 각 글 앞부분과 안내 상자에 필요한 조건이 적혀 있어요. 시작하기 전에 확인하고, 요금제를 고민 중이라면 [무료로 어디까지? 요금제 고르기 기초](/ko/basics/08-free-vs-paid/)를 보세요.
+
+### 자동화했는데 결과가 틀려요
+
+- **원인**: 결과를 아무도 확인하지 않았거나, 프롬프트를 손으로 먼저 시험하지 않았어요.
+- **해결**: 아이디어를 손으로 하던 방식으로 되돌려 프롬프트를 고치고, 보내거나 결제하기 전에 사람이 검토하는 단계를 두세요. [AI 답변 믿어도 될까: 사실 확인하는 법](/ko/basics/04-fact-checking/)을 보세요.
+
+## 다음에 읽을 글
+
+- [업무 자동화·생산성](/ko/automation/) — 이 분야의 전체 글 목록
+- [Claude·ChatGPT·Gemini 업무별 비교와 고르는 법](/ko/chat/05-compare-assistants/) — 일마다 맞는 AI 고르기
+- [개인정보·회사 정보 안전하게 지키며 쓰기](/ko/basics/05-privacy-safety/) — 붙여넣으면 안 되는 것
