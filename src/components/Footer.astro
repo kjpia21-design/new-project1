@@ -57,11 +57,26 @@ const showSources = tutorial && entry.data.status === 'published';
     function markAll() {
       document.querySelectorAll('.sidebar-content a[href]').forEach(function (a) { flag(a, a, !!prog[slugOf(a.href)]); });
       var any = false;
-      document.querySelectorAll('.card[data-slug]').forEach(function (c) {
-        var d = !!prog[c.getAttribute('data-slug')]; if (d) any = true;
-        flag(c, c.querySelector('h2, h3') || c, d);
+      // 카드(TutorialGrid), 학습 경로 단계(LearningPath), 먼저 볼 글(TutorialMeta)
+      document.querySelectorAll('[data-slug]').forEach(function (c) {
+        var d = !!prog[c.getAttribute('data-slug')]; if (d && c.classList.contains('card')) any = true;
+        flag(c, c.querySelector('[data-done-target], h2, h3') || c, d);
       });
       document.querySelectorAll('[data-hide-done]').forEach(function (b) { if (any) b.hidden = false; });
+      // 학습 경로: "N/M 완료", 진행 막대, 첫 미완료 단계로 "이어 하기"
+      document.querySelectorAll('[data-lp]').forEach(function (p) {
+        var st = p.querySelectorAll('.lp-step'), n = 0, k = -1;
+        st.forEach(function (s, i) { s.removeAttribute('data-next'); if (s.hasAttribute('data-done')) n++; else if (k < 0) k = i; });
+        var go = p.querySelector('[data-lp-go]'), cnt = p.querySelector('[data-lp-count]'), tr = p.querySelector('[data-lp-track]');
+        if (!st.length || !go) return;
+        if (cnt) { cnt.textContent = p.getAttribute('data-t-done').replace('{n}', n).replace('{m}', st.length); cnt.hidden = false; }
+        if (tr) { tr.hidden = false; tr.firstElementChild.style.width = (n / st.length * 100) + '%'; }
+        if (n === 0) return;
+        var to = st[k < 0 ? 0 : k];
+        if (k >= 0) to.setAttribute('data-next', '');
+        go.textContent = k < 0 ? p.getAttribute('data-t-complete') : p.getAttribute('data-t-continue').replace('{k}', k + 1);
+        go.href = to.querySelector('a').href;
+      });
     }
 
     // 튜토리얼 페이지: 마지막으로 본 글 기록 + 완료 버튼 + 휴대폰 하단 바
@@ -104,7 +119,11 @@ const showSources = tutorial && entry.data.status === 'published';
         [box, document.querySelector('.pagination-links')].forEach(function (el) { if (el) io.observe(el); });
         if (mq.addEventListener) mq.addEventListener('change', upd);
       }
-    } else markAll();
+    } else {
+      markAll();
+      // 튜토리얼에서 완료 표시 후 "뒤로"로 돌아오면(bfcache) 기록을 다시 읽는다.
+      window.addEventListener('pageshow', function (e) { if (e.persisted) { prog = read(KEY) || {}; markAll(); } });
+    }
 
     // 홈: "이어 보기" 카드 (현재 언어에 있는 글일 때만)
     var cont = document.querySelector('[data-atc-continue]');
