@@ -1,0 +1,185 @@
+---
+title: "Bring Claude into your meetings with Claude Meetings"
+description: "A detailed, official-pages-only guide to Claude Meetings (beta): who can turn it on, adding Claude to a Google Meet call, what it can do live, consent and notice, what is saved, limits and costs"
+sidebar:
+  label: "C30. Claude Meetings"
+level: practical
+category: claude
+tools: ["Claude Meetings", "Google Meet", "Google Calendar"]
+duration: "30 min"
+prerequisites:
+  - "A Claude Team or Enterprise account (Claude Meetings is a beta on those plans)"
+  - "Google Meet calls on a calendar you can connect to Claude"
+lastVerified: 2026-11-22
+sources:
+  - title: "Use Claude Meetings (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/18325154-use-claude-meetings"
+  - title: "Release notes (Claude Help Center)"
+    url: "https://support.claude.com/en/articles/12138966-release-notes"
+status: published
+---
+
+import { Steps, Aside } from '@astrojs/starlight/components';
+import Summary from '../../../components/Summary.astro';
+import Checklist from '../../../components/Checklist.astro';
+import PromptBox from '../../../components/PromptBox.astro';
+
+<Summary>
+- **Claude Meetings** (beta, announced 2026-11-12) adds Claude to a **Google Meet** call as a **visible participant** that takes notes, answers questions and builds docs, whiteboards and slides during the call. It is for **Team and Enterprise** plans, in Claude and Claude Desktop.
+- It is **on by default on Team** (an owner can turn it off) and **off by default on Enterprise** (an owner turns it on for everyone or for certain custom roles). Some organizations are excluded during the beta: zero data retention (ZDR), HIPAA-ready configuration and customer-managed encryption keys (CMEK).
+- **Tell everyone before Claude joins.** The official page asks you to make sure everyone is okay with being transcribed. Claude posts a notice in the call chat, but that does not replace asking. Recording and transcription rules differ by place; this is not legal advice.
+- It saves a **transcript, a summary and screen descriptions, not audio**. Claude can stay up to **eight hours**.
+- Notes, transcripts and answers are included in the plan. Docs and whiteboards made in a meeting are **free through 2027-02-10**. Using your connected tools counts toward your own usage and can lead to charges for your organization (as of 2026-11-22).
+</Summary>
+
+Meeting notes are one of the most common AI uses, and Claude Meetings brings that into Claude itself. This guide follows the official help page step by step and says clearly where the page is silent. For the other meeting note tools, see [Comparing meeting AI](/automation/37-meeting-ai/). For the admin side of Team and Enterprise, see [C29. Team and Enterprise admin basics](/claude/c29-team-admin-basics/). For calendar and mail connections, see [C23. Use Claude with Gmail, Calendar and Drive](/claude/c23-google-workspace/).
+
+## What you'll be able to do
+
+- Check whether your plan and organization can use Claude Meetings, and who can change that.
+- Connect Google Calendar and add Claude to a meeting, or set auto-join.
+- Ask Claude questions and have it make docs and whiteboards during a call.
+- Explain to colleagues and guests what Claude saves and where they can see it.
+- Decide how to handle outside guests, and what the costs are.
+
+## Concepts to know first
+
+| Term | Meaning |
+| --- | --- |
+| **Meeting page** | The page in Claude for each meeting. It holds the live transcript, the internal chat, everything Claude made and, afterward, the notes. |
+| **Visible participant** | Claude appears in the Google Meet participant list with its own tile that shows its current state, and posts a notice in the call chat. |
+| **Auto-join** | A personal setting that makes Claude join your meetings without being added one by one. |
+| **Meetings with external guests** | An organization setting, plus a personal one, that decides whether Claude may join calls that include people outside your organization. |
+| **Connected tools** | Connectors such as Slack that Claude can use during the call, with the permission of the person who asked. |
+
+## Step-by-step
+
+<Checklist items={[
+  'I confirmed my plan is Team or Enterprise and that Claude Meetings is on for my organization',
+  'An owner has enabled Google Calendar for the organization, and I connected mine',
+  'I told everyone on the call that Claude will transcribe, before adding it',
+  'I decided whether outside guests may be on calls with Claude',
+  'I know where the meeting page and recap email will go, and who in my organization can see them',
+]} />
+
+<Steps>
+
+1. **Check that it is on (owners)**
+
+   The help page says Claude Meetings is rolling out in beta on Team and Enterprise plans in Claude and Claude Desktop. On Team it is on by default and an owner can turn it off. On Enterprise an owner turns it on for all or part of the organization, and for part of it they use custom roles. Owners and Primary Owners manage it under Organization settings > Products > Claude Meetings (beta); on Enterprise a custom role with Owner access can also open the page. The settings are Claude Meetings (off, on for roles that include Meetings, or on for everyone), Meetings with external guests (internal meetings only, or allowed), and Members' connectors in meetings. If your organization uses zero data retention, a HIPAA-ready configuration or customer-managed encryption keys, the page says it may not be available during the beta.
+
+2. **Connect Google Calendar**
+
+   Open **Meetings** in Claude and connect your Google Calendar. An owner must enable Google Calendar for the organization first, so if you cannot connect, ask your admin. The page names only Google Meet and Google Calendar; support for other meeting tools is not stated (unconfirmed).
+
+3. **Tell the participants, then add Claude**
+
+   The official page puts this warning before the steps: make sure everyone on your call is okay with being transcribed, before you add Claude or turn on auto-join. Say it in the invite or at the start of the call. Then select the meeting on your calendar in Meetings and click **Add Claude**.
+
+   <PromptBox label="Draft a heads-up for attendees">
+   I am about to add an AI note-taker called Claude Meetings to our team meeting on Google Meet. Write a short invitation note, in a friendly tone, that says Claude will join as a visible participant, will save a transcript, a summary and screen descriptions but not audio, and that anyone who prefers not to be transcribed can tell me before the meeting. Do not promise anything about retention periods, because I have not checked them.
+   </PromptBox>
+
+4. **Decide about auto-join**
+
+   Claude joins a meeting when someone adds it or when you have auto-join on. Change it in Settings > Capabilities > Meetings > Auto-join. You can add Claude to all your meetings or to all except one-on-ones. Owners cannot set auto-join for you. Claude usually joins without asking; if it asks, the host can let it in. If the host declines, Claude does not try that call again unless someone adds it, and you can see it was declined.
+
+5. **Work with Claude during the call**
+
+   To ask something, say "Claude" and then your question, or type it in the Meet chat. By default Claude answers in writing in the Meet chat, so everyone on the call sees it. To build something, say "Claude, make a doc" or "Claude, make a whiteboard". Anyone on your team can ask, and Claude attaches each one to the meeting page. The page says you can add as many as you like and all artifact types are supported.
+
+   Claude can use your connected tools, such as sending a Slack message, with each person's own permission. It asks the first time and a yes applies going forward, except that when someone asks out loud, Claude currently asks each time to confirm who is speaking. Approval requests appear in the Meet chat when possible, and a request to confirm your Claude account appears on the meeting page. Owners can control this with the Members' connectors in meetings setting.
+
+   <PromptBox label="Questions to ask during the call">
+   Claude, summarize what we decided so far in three bullets. Claude, list the open questions nobody has answered yet. Claude, make a doc with the action items so far, with an owner and a due date column left blank for us to fill in.
+   </PromptBox>
+
+6. **Pause, stop or remove Claude**
+
+   To see what Claude is doing, look at its tile in the call. To pause it, ask it to stop listening or use the meeting page; to resume, use the meeting page. To have it leave, ask it to leave or select **Remove Claude** on the meeting page. If you add it again, it returns to the same meeting page. Claude can stay for up to eight hours and warns you before it leaves.
+
+7. **Use the results after the call**
+
+   The meeting page has the notes (a summary and any action items), the transcript and everything made in the meeting. People from your organization on the invite get a recap email with a link, can see the notes and can edit what Claude made. The meeting page can be shared with others in your organization. The calendar in Meetings lists past and upcoming meetings. In a regular chat you can ask Claude about past meetings you have access to.
+
+   <PromptBox label="Follow up after the meeting">
+   Using my meeting with the design team from last Tuesday, draft a short follow-up email with the decisions and each action item. Mark anything the notes do not state clearly as unclear instead of guessing.
+   </PromptBox>
+
+</Steps>
+
+<Aside type="caution" title="Chat visibility and outside guests">
+Anything Claude posts in the Meet chat is visible to everyone on the call, including guests. The chat on the Claude meeting page is internal to your organization. On calls where outside guests are allowed, Claude listens and takes notes and posts its notice in the call chat but does not reply there. What guests say is included in the notes and transcript. Guests do not get the meeting page or the recap email.
+</Aside>
+
+## Consent and notice
+
+- When Claude joins, it appears as a participant and posts a notice in the call chat. The help page also tells you to make sure everyone is okay with being transcribed. Treat the notice as a minimum, not as consent.
+- Rules about recording and transcribing calls differ by country, region and company policy, and may apply to guests as well. This guide is not legal advice; check your company policy or ask your legal or compliance team, especially for calls with customers or people in other regions. See also [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/).
+- By default on Team plans Claude can join calls with outside guests. On Enterprise plans an owner must allow it first. When guests are not allowed, Claude stays out of calls where someone from outside is invited and leaves if someone from outside, including another company's notetaker bot, joins partway through. Each person also has a Meetings with external guests setting under Settings > Capabilities > Meetings.
+
+## Data handling
+
+| Question | What the official page says |
+| --- | --- |
+| What is saved? | A transcript, a summary and screen descriptions. Not audio. |
+| Where does it live? | On the meeting page in Claude (notes, transcript, live docs, whiteboards, internal chat). |
+| Who gets it? | People from your organization on the invite get the recap email and can see the notes. The page can be shared with others in your organization. Outside guests do not get the page or email. |
+| Can I ask about it later? | Yes, in a regular chat, for past meetings you have access to. |
+| How long is it kept, and how do I delete it? | Not stated on the page we read (unconfirmed). |
+
+## Limits and costs
+
+- **Beta and availability**: beta on Team and Enterprise only. ZDR, HIPAA-ready and CMEK organizations may not have it during the beta.
+- **Length**: Claude can stay up to eight hours, with a warning before it leaves.
+- **Included**: notes, transcripts and answers that do not use your connected tools are included in Team and Enterprise plans.
+- **Free until a date**: docs and whiteboards made in a meeting are free through February 10, 2027. The page does not say what happens after that (unconfirmed).
+- **Charges**: using your connected tools counts toward your own usage and can lead to charges for your organization. The page gives no amounts (unconfirmed).
+
+<Aside type="note" title="What we could not confirm">
+We read the official Claude Meetings help page and the 2026-11-12 entry in the help center release notes on 2026-11-22. We did not run a meeting with Claude, so the menu names come from the page and your screen may differ. The pages we read do not state: support for Zoom, Teams or other tools, supported languages or Korean quality, a maximum number of participants, how long transcripts and summaries are kept or how to delete them, mobile support, the price of connected-tool usage, or any charge after the free period for docs and whiteboards. Local recording and consent laws were not researched.
+</Aside>
+
+## Quick reference
+
+| I want to... | Where / how |
+| --- | --- |
+| Add Claude to one meeting | Meetings > connect Google Calendar > select the meeting > Add Claude |
+| Join all my meetings automatically | Settings > Capabilities > Meetings > Auto-join |
+| Ask Claude something | Say "Claude" and the question, or type in the Meet chat |
+| Make a doc or whiteboard | Say "Claude, make a doc" or "Claude, make a whiteboard" |
+| Pause or resume | Ask it to stop listening, or use the meeting page |
+| Remove Claude | Ask it to leave, or Remove Claude on the meeting page |
+| Turn it on or off for the organization | Organization settings > Products > Claude Meetings (beta), owners only |
+
+## Common sticking points
+
+### I do not see Meetings or Add Claude
+
+- **Cause**: Your plan may not be Team or Enterprise, an owner may have it turned off (Enterprise is off by default), or your organization may be one of the excluded types.
+- **Fix**: Check your plan, then ask an owner to look at Organization settings > Products > Claude Meetings.
+
+### I cannot connect Google Calendar
+
+- **Cause**: An owner must enable Google Calendar for the organization first.
+- **Fix**: Ask an owner to enable it, then connect again.
+
+### Claude did not join, or left
+
+- **Cause**: The host may have declined, the call may include outside guests that are not allowed, or an outside participant joined partway through.
+- **Fix**: Check the guest setting and ask the host to let Claude in. After a decline, someone has to add Claude again.
+
+## Practical tips
+
+- Put one sentence about Claude in the meeting invite so no one is surprised.
+- Skip sensitive meetings (HR cases, legal, medical) unless your policy clearly allows AI note-taking.
+- Review the summary and action items before sending them on; AI notes can miss or misstate things.
+- If you only want your own notes, a short written recap from you is still the safest source of truth.
+
+## What to read next
+
+- [C29. Team and Enterprise admin basics](/claude/c29-team-admin-basics/) — Roles, data and security settings for owners
+- [C23. Use Claude with Gmail, Calendar and Drive](/claude/c23-google-workspace/) — Connect Google services to Claude
+- [C28. Claude Tag in Slack](/claude/c28-claude-tag/) — Another Team and Enterprise agent feature
+- [Comparing meeting AI](/automation/37-meeting-ai/) — Notes in Google Meet, Zoom and Teams
+- [Using AI while keeping personal and company information safe](/basics/05-privacy-safety/) — What not to paste into any AI
