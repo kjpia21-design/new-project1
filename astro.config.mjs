@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import starlightLinksValidator from 'starlight-links-validator';
+import sitemap from '@astrojs/sitemap';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -26,10 +27,50 @@ function legacyEnRedirects() {
   return out;
 }
 
+const SITE = 'https://ai-trend-catchup.com';
+
+// 사이트맵 <lastmod>: 문서 frontmatter의 lastVerified(두 언어)를 URL별로 모은다. 날짜가 없는 페이지는 lastmod를 넣지 않는다.
+function lastVerifiedByUrl() {
+  const root = 'src/content/docs';
+  /** @type {Map<string, string>} */
+  const out = new Map();
+  const walk = (dir) => {
+    for (const name of fs.readdirSync(dir)) {
+      const full = path.join(dir, name);
+      if (fs.statSync(full).isDirectory()) { walk(full); continue; }
+      if (!/\.mdx?$/.test(name)) continue;
+      const fm = fs.readFileSync(full, 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? '';
+      if (/^draft:\s*true\s*$/m.test(fm)) continue;
+      const m = fm.match(/^lastVerified:\s*['"]?(\d{4}-\d{2}-\d{2})['"]?\s*$/m);
+      if (!m) continue;
+      const slug = path.relative(root, full).replace(/\.mdx?$/, '').split(path.sep).join('/').replace(/(^|\/)index$/, '');
+      out.set(new URL(slug ? `/${slug}/` : '/', SITE).href, m[1]);
+    }
+  };
+  walk(root);
+  return out;
+}
+const LASTMOD = lastVerifiedByUrl();
+
 export default defineConfig({
-  site: 'https://ai-trend-catchup.com',
+  site: SITE,
   redirects: legacyEnRedirects(),
   integrations: [
+    // Starlight가 자동으로 넣는 사이트맵을 직접 설정한다(Starlight는 이미 있으면 다시 넣지 않는다). i18n 값은 Starlight 기본 설정과 같다.
+    sitemap({
+      i18n: { defaultLocale: 'root', locales: { root: 'en', ko: 'ko' } },
+      // HTML 페이지만(RSS 등 .xml 엔드포인트 제외)
+      filter: (page) => !/\.xml$/.test(page),
+      serialize(item) {
+        const lastmod = LASTMOD.get(item.url);
+        const en = item.links?.find((l) => l.lang === 'en');
+        return {
+          ...item,
+          ...(lastmod ? { lastmod } : {}),
+          ...(item.links && en ? { links: [...item.links, { lang: 'x-default', url: en.url }] } : {}),
+        };
+      },
+    }),
     starlight({
       title: { en: 'Catch Up on AI Trends', ko: '최신 AI 트렌드 따라 잡기' },
       description:

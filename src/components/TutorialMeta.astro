@@ -27,7 +27,7 @@ const required = await getRequired(requires, lang);
   </div>
   <dl>
     <div><dt>{t(lang, 'meta.duration')}</dt><dd>{duration ?? t(lang, 'meta.tbd')}</dd></div>
-    <div><dt>{t(lang, 'meta.verified')}</dt><dd>{lastVerified ? formatDate(lastVerified, lang) : t(lang, 'sources.notYet')}</dd></div>
+    <div><dt>{t(lang, 'meta.verified')}</dt><dd>{lastVerified ? <time datetime={lastVerified.toISOString().slice(0, 10)}>{formatDate(lastVerified, lang)}</time> : t(lang, 'sources.notYet')}</dd></div>
     {tools.length > 0 && <div><dt>{t(lang, 'meta.tools')}</dt><dd>{tools.join(', ')}</dd></div>}
     {required.length > 0 && (
       <div class="wide"><dt>{t(lang, 'meta.requires')}</dt><dd><ul class="req">{required.map((r) => (

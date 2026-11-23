@@ -35,3 +35,39 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # 배포가 끝난 뒤 바뀐 문서 주소를 IndexNow(Bing·Naver 등 참여 검색엔진)에 알린다. main push에서만, 실패해도 배포 결과에는 영향 없음.
+  # 키 파일: public/81a215c1fe6ef1ef9b83e5b6e9d53989.txt, 주소 변환: scripts/indexnow-urls.sh
+  indexnow:
+    needs: deploy
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout (full history for the diff)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Notify IndexNow of changed pages
+        continue-on-error: true
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+          HOST: ai-trend-catchup.com
+          KEY: 81a215c1fe6ef1ef9b83e5b6e9d53989
+        run: |
+          urls=$(bash scripts/indexnow-urls.sh "$BEFORE" "$AFTER" "https://$HOST")
+          if [ -z "$urls" ]; then
+            echo "No changed pages; skipping IndexNow."
+            exit 0
+          fi
+          echo "Submitting $(printf '%s\n' "$urls" | wc -l) URL(s):"
+          printf '%s\n' "$urls"
+          list=$(printf '%s\n' "$urls" | sed 's/.*/"&"/' | paste -sd, -)
+          body="{\"host\":\"$HOST\",\"key\":\"$KEY\",\"keyLocation\":\"https://$HOST/$KEY.txt\",\"urlList\":[$list]}"
+          code=$(curl -sS -o /tmp/indexnow.out -w '%{http_code}' --max-time 30 \
+            -X POST 'https://api.indexnow.org/indexnow' \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            --data "$body") || { echo "::warning::IndexNow request failed"; exit 0; }
+          echo "IndexNow HTTP $code"; cat /tmp/indexnow.out || true
+          case "$code" in 200|202) ;; *) echo "::warning::IndexNow returned HTTP $code" ;; esac

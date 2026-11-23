@@ -19,6 +19,27 @@ import HeroIllustration from '../../components/HeroIllustration.astro';
   <p class="hint">You can search from the <strong>Search</strong> box at the top of the page. The shortcut is <kbd>Ctrl</kbd> + <kbd>K</kbd>.</p>
 </div>
 
+{/* GitHub Pages는 루트의 404.html 하나만 쓴다. /ko/ 아래 주소에서 열리면 문구와 버튼을 한국어로 바꾼다. */}
+<script is:inline>{`
+(function () {
+  var p = location.pathname;
+  if (p !== '/ko' && p.indexOf('/ko/') !== 0) return;
+  var nf = document.querySelector('.nf');
+  if (!nf) return;
+  document.documentElement.lang = 'ko';
+  document.title = '페이지를 찾을 수 없어요 | 최신 AI 트렌드 따라 잡기';
+  var h1 = nf.querySelector('h1');
+  if (h1) h1.textContent = '길을 잘못 드신 것 같아요';
+  var lead = nf.querySelector('.lead');
+  if (lead) lead.textContent = '찾으시는 페이지가 없거나 주소가 바뀌었어요. 아래 버튼으로 돌아가거나, 페이지 위쪽 검색창에 찾는 내용을 입력해 보세요.';
+  var btns = nf.querySelectorAll('.actions a');
+  if (btns[0]) { btns[0].href = '/ko/'; btns[0].textContent = '홈으로 돌아가기'; }
+  if (btns[1]) { btns[1].href = '/ko/tutorials/'; btns[1].textContent = '전체 튜토리얼'; }
+  var hint = nf.querySelector('.hint');
+  if (hint) hint.innerHTML = '페이지 위쪽 <strong>검색</strong> 창에서 찾을 수 있어요. 단축키는 <kbd>Ctrl</kbd> + <kbd>K</kbd>예요.';
+})();
+`}</script>
+
 <style>{`
   .nf { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.6rem; padding: 1rem 0 2rem; }
   .nf .art svg { width: 100%; max-width: 260px; }

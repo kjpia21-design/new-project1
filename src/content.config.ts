@@ -19,6 +19,9 @@ export const collections = {
         lastVerified: z.coerce.date().optional(),
         sources: z.array(z.object({ title: z.string(), url: z.string().url() })).default([]),
         status: z.enum(['draft', 'published']).default('draft'),
+        // 검색 결과용 짧은 제목·설명(선택). 화면의 H1·본문은 그대로 두고 <title>·meta description·og:title·og:description에만 쓴다(src/routeMiddleware.ts).
+        seoTitle: z.string().optional(),
+        seoDescription: z.string().optional(),
       }),
     }),
   }),
