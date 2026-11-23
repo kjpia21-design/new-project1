@@ -1,7 +1,7 @@
 ---
 title: AI Guide for Marketers and Content Managers
 description: From copy drafts and social content to campaign planning and performance wrap-ups. Where AI saves marketers time, and the order of tutorials to follow.
-seoTitle: "AI Guide for Marketers and Content"
+seoTitle: "AI prompts for marketers: templates"
 ---
 
 import { Aside } from '@astrojs/starlight/components';
@@ -122,6 +122,85 @@ Don't make up numbers that aren't in the table, and if a calculation is needed, 
 - [Build Reusable Document Templates with AI](/automation/50-document-templates/): Turn a document you write again and again into a reusable template with Claude Projects, Skills and Google Docs templates.
 - [Shape how Claude responds: output styles and personalization](/claude/c27-styles/): Control Claude's tone, length and format with output styles, account Instructions, project instructions and skills.
 - [Compare Deep Research Agents: Claude, Gemini and ChatGPT](/agents/08-deep-research-agents/): Start a research report in Claude, Gemini or ChatGPT, and follow a routine for checking a long report before you rely on it.
+
+## Copy-ready prompts for marketers
+
+Replace the [square-bracket] parts with your own details, then paste the prompt into your AI chat. Don't paste personal or confidential information; the basics are in [Using AI while protecting personal and company information](/basics/05-privacy-safety/). Always check the results yourself before you use them.
+
+### Campaign briefs and plans
+
+<PromptBox label="One-page campaign brief">
+Act as a marketing strategist. Write a one-page campaign brief for [product or service].
+Goal: [goal, e.g., 200 sign-ups for a webinar]
+Audience: [who they are and what they care about]
+Budget range: [rough range]
+Timeline: [start and end dates]
+Include: objective, key message, 3 channels with a reason for each, deliverables list, and how we will measure success. Mark anything you had to assume as an assumption.
+</PromptBox>
+
+Tip: Give it real constraints, as in [Writing practical prompts](/chat/01-prompt-basics/).
+
+<PromptBox label="Audience persona draft">
+Based on the notes below, draft 3 customer personas for [product]. For each: name (fictional), situation, main problem, what makes them hesitate to buy, and where they spend time online. Label anything not supported by my notes as a guess so I can validate it.
+
+[Paste your customer notes, with no names or contact details]
+</PromptBox>
+
+Tip: Check guesses with real data using [Asking good questions](/basics/03-asking-well/).
+
+<PromptBox label="Launch checklist">
+Create a launch checklist for [campaign] going live on [date]. Group tasks by 2 weeks before, 1 week before, launch day, and the week after. For each task add an owner role (writer, designer, analyst, manager) and a done-when line. Keep it under 25 tasks.
+</PromptBox>
+
+Tip: Save a good checklist as a reusable file with [Build reusable document templates](/automation/50-document-templates/).
+
+### Copy variants and channels
+
+<PromptBox label="Email subject line test set">
+Write 10 subject lines for an email about [offer or news] to [audience]. Make 5 under 40 characters and 5 that use a question. For each, add a one-line note on what it is testing (curiosity, urgency, benefit). Avoid all caps and exaggerated claims.
+</PromptBox>
+
+Tip: Pick two to A/B test, then follow up in the same chat as in [Writing practical prompts](/chat/01-prompt-basics/).
+
+<PromptBox label="Rewrite in our brand voice">
+Rewrite the draft below in our brand voice. Voice notes: [e.g., warm, plain words, short sentences, no jargon, one emoji at most]. Keep every fact, number, and link unchanged. Then list the 3 biggest changes you made.
+
+[Paste the draft]
+</PromptBox>
+
+Tip: Store your voice notes once with [Manage materials and instructions with Projects](/claude/c05-projects/).
+
+<PromptBox label="Landing page section copy">
+Write copy for the [hero / benefits / FAQ] section of a landing page for [product]. Audience: [who]. One main action: [e.g., start a free trial]. Give 3 versions: straightforward, story-led, and benefit-first. Keep each under [number] words and do not invent customer quotes or statistics.
+</PromptBox>
+
+Tip: Always run claims through [Can you trust AI answers?](/basics/04-fact-checking/) before publishing.
+
+### Customer research and reporting
+
+<PromptBox label="Interview notes synthesis">
+Below are notes from [number] customer interviews. Find the patterns: repeated problems, the words customers use themselves, surprising comments, and open questions. Present them as a table with columns theme, how many people mentioned it, and a short quote. Do not infer anything that is not in the notes.
+
+[Paste anonymized notes]
+</PromptBox>
+
+Tip: Works the same way as [Summarize long documents](/chat/02-summarize-documents/).
+
+<PromptBox label="Competitor messaging comparison">
+Compare how [our brand] and [competitor A, competitor B] describe themselves, using only the page text I paste below. Make a table of target audience, main promise, tone, and proof points. End with 3 positioning gaps we could own.
+
+[Paste the public page text for each brand]
+</PromptBox>
+
+Tip: For sourcing, use the habits in [Using AI search well](/chat/22-ai-search/).
+
+<PromptBox label="Weekly results to leadership update">
+Turn the numbers below into a 5-sentence weekly update for leadership: what changed, the likely reason (mark as a guess), what we are doing next, and one risk. Use plain words, and show any calculation you make so I can check it.
+
+[Paste the weekly numbers]
+</PromptBox>
+
+Tip: Verify every number against your source, as in [Analyze Excel and CSV data](/chat/03-data-analysis/).
 
 ## What to watch out for
 
