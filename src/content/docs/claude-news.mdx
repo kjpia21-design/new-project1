@@ -7,7 +7,7 @@ import NewsItem from '../../components/NewsItem.astro';
 
 This collects Claude updates from Anthropic's official channels, newest first. We picked only what matters to people who actually use Claude, such as model releases, pricing, and new features in Claude Code and the app, and left out minor bug fixes. We keep checking the official channels and updating this page.
 
-**Last updated: 2026-11-24**
+**Last updated: 2026-11-25**
 
 See also: [This week in AI](/weekly/), a weekly summary across all tools with what to do about each change.
 
@@ -20,6 +20,14 @@ See also: [This week in AI](/weekly/), a weekly summary across all tools with wh
 - [Anthropic News](https://www.anthropic.com/news): policy, partnerships, model announcements
 
 ## November 2026
+
+<NewsItem date="Nov 24" channel="Claude app" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c06-artifacts/" tutorialLabel="C6 Artifacts">
+You can now install an artifact that Claude makes for you as an app on your Mac or Windows computer (beta). It gets its own window and icon and opens like any other app, and it's still the same artifact, so edits to the artifact show up in the app. Per the help article, it's rolling out on Free, Pro, Max, Ultra, Team, and Enterprise plans and needs Claude for Mac or Windows version 6.28899.0 or later. To install, open the artifact in Claude Desktop, open its title menu (or right-click it), and choose "Install as app." An app must ask before it shows notifications, uses keyboard shortcuts, floats over other windows, or adds a menu bar or system tray item. The highest permission, full access to the computer, lets an app run programs and read, change, or delete your files, and Anthropic doesn't review apps, so allow it only for apps whose authors you trust. On Team plans, full access is off until an admin enables it. On Enterprise plans, the whole feature is off until an owner turns it on in Organization settings > Artifacts. See [Install an artifact as an app](https://support.claude.com/en/articles/18516354-install-an-artifact-as-an-app).
+</NewsItem>
+
+<NewsItem date="Nov 24" channel="Claude app" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/claude/c07-connectors/" tutorialLabel="C7 Connectors">
+Claude can now send a file to an app you've connected, or save a file that the app offers (beta). For example, it can upload a presentation it just made to your cloud storage. File transfers are rolling out gradually on Pro, Max, and Ultra plans, and stay off on Team and Enterprise plans until an owner turns them on in Organization settings > Connectors. Per the help article, the Free plan will follow. They work in chats in the new Claude experience (web, Claude Desktop, iOS, Android) and in Claude Code, but not in incognito chats or scheduled tasks. The app must be in the connectors directory and its developer must have added file support, so custom connectors don't work. Claude asks before it sends the first file to each app. See [Send files to connected apps and save files from them](https://support.claude.com/en/articles/18534325). Also on Nov 24, the monthly recap (Reflect, in Settings) left beta for Free, Pro, Max, and Ultra plans on the web, Claude Desktop, iOS, and Android. It shows how you've been using Claude over the past month, and it only appears when memory is on. Recaps can now draw on your Claude Code sessions and Cowork tasks in the cloud, and you can delete your stored recaps from the page. See [See your monthly recap](https://support.claude.com/en/articles/15672559-see-your-monthly-recap).
+</NewsItem>
 
 <NewsItem date="Nov 23" channel="API" href="https://platform.claude.com/docs/en/release-notes/overview" tutorial="/claude/c01-overview/" tutorialLabel="C1 Claude at a glance">
 Claude Opus 4.5 (`claude-opus-4-5-20251101`, and the undated ID `claude-opus-4-5`) is now deprecated and retires on the Claude API on January 22, 2027. Anthropic recommends moving to Claude Opus 5.5 (`claude-opus-5-5`). Dates on other platforms can differ, so check the [Model deprecations](https://platform.claude.com/docs/en/about-claude/model-deprecations) page. Separately, Claude Sonnet 4.5 still retires on November 30, 2026. The same day, Enterprise Frontier Safeguards launched in beta for eligible organizations on Claude Platform, Claude Platform on AWS, and Claude Models on Google Cloud (Anthropic managed). It is Zero Data Retention for Claude's most capable models: Anthropic doesn't retain prompts and responses, and encrypted copies go to a bucket in the organization's own cloud account. See the [Enterprise Frontier Safeguards docs](https://platform.claude.com/docs/en/manage-claude/enterprise-frontier-safeguards/overview).
