@@ -149,6 +149,7 @@ export default defineConfig({
             { label: 'AI glossary', translations: { ko: 'AI 용어 사전' }, slug: 'start/glossary' },
             { label: 'All tutorials', translations: { ko: '전체 튜토리얼' }, slug: 'tutorials' },
             { label: 'Recent updates', translations: { ko: '최근 업데이트' }, slug: 'updates' },
+            { label: 'This week in AI', translations: { ko: '이번 주 AI 변경점' }, slug: 'weekly' },
             { label: 'About', translations: { ko: '소개' }, slug: 'about' },
           ],
         },

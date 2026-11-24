@@ -52,7 +52,7 @@ const abs = (p: string) => new URL(p, Astro.site).href;
 const homeUrl = abs(url('/', lang));
 const pageUrl = abs(Astro.url.pathname);
 const inLanguage = lang === 'ko' ? 'ko' : 'en';
-const organization = { '@type': 'Organization', name: SITE_NAME, url: homeUrl, logo: abs(`${base}/favicon.svg`) };
+const organization = { '@type': 'Organization', name: SITE_NAME, url: homeUrl, logo: abs(`${base}/logo.png`) };
 const path = Astro.url.pathname;
 const isHome = path === '/' || path === '/ko/' || path === '/ko';
 const jsonLd: object[] = [];
@@ -126,6 +126,7 @@ const jsonLdHtml = jsonLd.map((o) => JSON.stringify(o).replace(/</g, '\\u003c'))
     try { localStorage.setItem('lang-pref', /^\/ko(\/|$)/.test(el.value) ? 'ko' : 'en'); } catch (err) {}
   }, true);
 </script>
+<link rel="apple-touch-icon" href={`${base}/apple-touch-icon.png`} />
 <meta name="theme-color" content="#fcfbfa" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)" />
 {/* 검색 엔진 소유 확인. 구글은 Cloudflare DNS의 TXT 레코드로 확인했으므로 태그가 필요 없다. 자세한 방법은 docs/guides/search-registration.md 참고. */}

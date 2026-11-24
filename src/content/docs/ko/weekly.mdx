@@ -1,0 +1,72 @@
+---
+title: 이번 주 AI 변경점
+description: 매주 월요일에 올리는 짧은 소식지예요. Claude, ChatGPT, Gemini에서 실무자가 알아야 할 변화와 해야 할 일을 정리해요.
+seoTitle: "이번 주 AI 변경점: Claude·ChatGPT·Gemini 소식"
+lastVerified: 2026-11-23
+---
+
+매주 월요일에 한 호씩 올려요. 각 항목은 무엇이 바뀌었는지, 그래서 무엇을 하면 되는지, 더 읽을 곳(사이트 튜토리얼과 공식 출처)을 알려 줘요. 최신 호가 맨 위에 있고, 지난 호는 아래에 보관해요.
+
+다른 페이지와의 차이예요.
+
+- [Claude 최신 소식](/ko/claude-news/)은 Claude 공식 채널의 업데이트를 빠짐없이 모아요. 이 페이지는 이 사이트가 다루는 모든 AI 도구 중에서 실무에 의미 있는 것만 골라, 항목마다 할 일을 붙여요.
+- [최근 업데이트](/ko/updates/)는 이 사이트의 튜토리얼이 언제 다시 확인되고 바뀌었는지 보여 줘요. 이 페이지는 도구 자체의 변화를 다뤄요.
+
+[RSS 피드](/ko/rss.xml)로도 받아볼 수 있어요.
+
+## 2026년 11월 16일~22일
+
+아래 날짜는 각 공식 페이지를 읽은 시점 기준("as of")이에요. 세부 내용은 링크한 출처를 확인한 뒤 따라 주세요.
+
+### Claude Code 2.1.326~2.1.329: 권한 확인 증가, 무인 실행 스크립트 점검
+
+네 버전(2.1.326은 11월 16일, 2.1.327은 17일, 2.1.328과 2.1.329는 19일)이 주로 권한 확인을 더 엄격하게 해요. bypass permissions 모드에서도 일부 도구 호출이 승인을 묻고, 파일 도구는 `.credentials.json` 같은 로그인 파일에 쓰기를 거부하고, 훅의 `"decision": "block"`이 더 많은 경우에 적용돼요. 2.1.329는 이전 버전에서 저장한 예약 작업을 로그인한 새 세션에서 대부분 다시 예약해야 하고, macOS의 컴퓨터 사용에 새 안전 규칙이 적용돼 일부 동작이 거부된다고 알려요. 2026-11-20 기준 공식 변경 이력에는 bypass 모드에서 어떤 호출이 묻게 됐는지 구체적인 목록이 없어요.
+
+**할 일:** 업데이트한 뒤 무인으로 돌리는 스크립트나 예약 작업을 한 번 실행해서 여전히 동작하는지 확인해요. 멈춘 예약 작업은 다시 만들어요. [Claude Code 설정과 권한](/ko/coding/40-settings-permissions/)과 [Claude 최신 소식](/ko/claude-news/)을 참고해요. 출처: [Claude Code 변경 이력](https://code.claude.com/docs/en/changelog).
+
+### Claude Code `/code-review`가 버그만 보고해요
+
+2.1.328부터 대부분의 모델에서 `/code-review`는 버그와 `CLAUDE.md` 위반만 보고하고, 지적마다 Important, Pre-existing, Nit 표시를 붙이고, 끝에 수정 제안을 넣어요. 재사용, 단순화, 효율 정리는 `/simplify`로 옮겨 갔어요. "대부분의 모델"이 정확히 어떤 모델인지는 변경 이력에 없어요.
+
+**할 일:** 병합 전에는 `/code-review`로 버그를 보고, 정리까지 하고 싶다면 `/simplify`를 따로 실행해요. [병합 전에 AI로 코드 리뷰하기](/ko/coding/42-code-review-ai/)를 참고해요. 출처: [Claude Code 변경 이력](https://code.claude.com/docs/en/changelog).
+
+### Claude Desktop에 릴리스 채널이 생겼어요
+
+2026-11-17 기준, Mac과 Windows용 Claude Desktop(4.29.0 이상, 모든 요금제)에서 Settings > Desktop app > Release channel에서 Stable(기본, 업데이트가 덜 잦고 더 많이 시험)과 Latest(하루에 한 번쯤 새 버전)를 고를 수 있어요. Linux, Microsoft Store 설치, IT 팀이 Claude 정책을 설정한 컴퓨터에서는 쓸 수 없어요. Stable로 되돌려도 버전이 내려가지는 않아요.
+
+**할 일:** 새 기능을 빨리 써 보고 싶은 게 아니라면 Stable을 유지해요. [데스크톱 앱 제대로 쓰기](/ko/claude/c22-desktop-app/)를 참고해요. 출처: [Install Claude Desktop](https://support.claude.com/en/articles/10065433-install-claude-desktop).
+
+### Team·Enterprise용 컴퓨터 사용(베타)
+
+Claude Desktop의 컴퓨터 사용이 Team·Enterprise 조직에 베타로 제공돼요. 기본은 꺼져 있고 조직에 순차적으로 배포돼요. Owner가 Organization settings > Capabilities > Claude Desktop > Computer use에서 켜고, 반영에 1시간 이상 걸릴 수 있어요. HIPAA-ready나 CMEK 조직처럼 켤 수 없는 조직도 있어요.
+
+**할 일:** Team·Enterprise 관리자라면 켜기 전에 설정과 안전 안내를 읽고 막을 앱을 정해요. [Team·Enterprise용 컴퓨터 사용](/ko/claude/c31-computer-use-team/)을 참고해요. 출처: [Set up computer use for Team and Enterprise plans](https://support.claude.com/en/articles/18483812-set-up-computer-use-for-team-and-enterprise-plans).
+
+### 최근 소식: Claude Meetings 베타(11월 12일)
+
+Claude Meetings가 Team·Enterprise 플랜에 베타로 순차 제공돼요. Google Meet 통화에 Claude를 참여시키면 메모를 하고 질문에 답해 줘요. 2026-11-12 기준 공식 페이지는 Google Meet만 언급하고, 개별 플랜, 지원 언어, 지역별 제공 여부는 적혀 있지 않아요.
+
+**할 일:** 부담 없는 회의에서 먼저 써 보고, 참석자에게 Claude가 들어와 있다고 알려요. [Claude Meetings로 회의에 Claude 참여시키기](/ko/claude/c30-claude-meetings/)를 참고해요. 출처: [Use Claude Meetings](https://support.claude.com/en/articles/18325154-use-claude-meetings).
+
+### 개발자용: 텍스트 워터마크와 Linked billing(베타)
+
+- **텍스트 워터마크(11월 16일):** Claude Opus 4.6, Opus 4.5, Sonnet 4.5, Haiku 4.5가 만든 텍스트에 지원 플랫폼에서 Anthropic의 텍스트 워터마크가 붙어요. `temperature`, `top_p`, `top_k`를 기본값이 아닌 값으로 정하면 워터마크가 붙지 않을 수 있어요. **할 일:** 워터마크에 의존한다면 이 설정을 기본값으로 둬요. 출처: [텍스트 워터마크 문서](https://platform.claude.com/docs/en/build-with-claude/text-watermark).
+- **Linked billing 베타(11월 17일):** 고객이 자기 Claude 조직을 통해 내 앱의 Claude 사용량을 결제할 수 있어요. 단, 그 조직이 Anthropic에 API 사용료를 직접 결제하는 경우만 해당해요. 요청마다 `billing_policy`로 누가 낼지 정해요. **할 일:** API로 앱을 만든다면 먼저 대상 조건을 읽어 봐요. [Claude API 기초](/ko/claude/c16-api/)를 참고해요. 출처: [Linked billing 문서](https://platform.claude.com/docs/en/manage-claude/oauth-apps/organization-billing-connections).
+
+### 이번 주 사이트에 새로 올라온 글
+
+- [Claude Meetings로 회의에 Claude 참여시키기](/ko/claude/c30-claude-meetings/): 설정 방법과 저장되는 것, 저장되지 않는 것.
+- [Team·Enterprise용 컴퓨터 사용: 설정과 안전한 사용](/ko/claude/c31-computer-use-team/): 관리자용. 앱 차단 목록과 MDM 키를 다뤄요.
+- [Claude 사용량 한도에 걸렸을 때](/ko/claude/c32-usage-limit-reached/): 한도에 막혔을 때의 선택지.
+- [Claude Code를 쓰려면 어떤 플랜이 필요할까](/ko/claude/c33-claude-code-plans/): Claude Code가 들어 있는 플랜.
+- [Claude Managed Agents를 자체 인프라에서 운영하기](/ko/dev/23-self-hosted-managed-agents/): 요청 시 제공되는 자체 호스팅 옵션.
+- [Claude 에이전트 한눈에 보기](/ko/agents/13-claude-agent-lineup/): Cowork, 컴퓨터 사용, Meetings, Tag, Managed Agents 비교.
+- [Gemini 태스크 시작하기](/ko/agents/14-gemini-agent/): 구글의 AI 에이전트.
+- [Claude·ChatGPT·Gemini 요금과 무료 한도 한눈에](/ko/basics/22-ai-pricing-free-limits/)
+- [무료로 쓸 수 있는 AI 총정리와 한도](/ko/basics/23-free-ai-tools/)
+- [AI 업무 자동화 아이디어 20가지](/ko/automation/53-automation-ideas/)
+- [AI 구독 해지·환불·플랜 변경하기](/ko/chat/52-cancel-refund-subscriptions/): 챗GPT, Claude, Gemini.
+
+## 지난 호
+
+지난 호는 새 호가 위에 올라올 때마다 여기에 쌓여요.

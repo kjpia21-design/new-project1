@@ -1,6 +1,7 @@
 ---
 title: "AI Guide for Developers"
 description: "How to use AI tools in development work, from understanding code, debugging, testing, and review to automation, plus security and verification tips"
+seoTitle: "AI prompts for developers: templates"
 ---
 
 import { Aside } from '@astrojs/starlight/components';
@@ -112,6 +113,82 @@ To go deeper, the [Developer Deep Dives](/dev/) section has topics like the Agen
 - [Commit, Branch and Open PRs with Claude Code](/coding/44-git-with-claude-code/): Let Claude Code draft commit messages, work on a branch and write a pull request, while you check the diff and decide when anything is pushed.
 - [Cut Cost and Latency with Prompt Caching](/dev/19-prompt-caching/): Place cache breakpoints, compare automatic and explicit caching, and learn cache lifetimes, minimum lengths, invalidation and the usage fields.
 - [Shape how Claude responds: output styles and personalization](/claude/c27-styles/): Control Claude's tone, length and format with output styles, account Instructions, project instructions and skills.
+
+## Copy-ready prompts for developers
+
+Replace the [square-bracket] parts with your own details, then paste the prompt into your AI chat. Don't paste personal or confidential information; the basics are in [Using AI while protecting personal and company information](/basics/05-privacy-safety/). Always check the results yourself before you use them.
+
+### Understand and debug
+
+<PromptBox label="Explain unfamiliar code">
+Explain what the code below does, at the level of a developer new to this codebase. Give: purpose in 2 sentences, the main flow step by step, inputs and outputs, side effects, and anything that looks risky or surprising. Language and framework: [language, framework].
+
+[Paste the code, with secrets and customer data removed]
+</PromptBox>
+
+Tip: Put the relevant code in the prompt, as in [Debugging with AI](/coding/43-debugging-with-ai/).
+
+<PromptBox label="Narrow down a bug">
+I have a bug. Expected behavior: [expected]. Actual behavior: [actual]. Steps to reproduce: [steps]. Environment: [versions, OS]. Error message: [paste]. Relevant code: [paste]. List the 3 most likely causes ranked by probability, and for each give a quick check I can run to confirm or rule it out. Do not suggest a fix until I report back.
+</PromptBox>
+
+Tip: The full method is in [Debugging with AI](/coding/43-debugging-with-ai/).
+
+<PromptBox label="Explain a stack trace">
+Here is a stack trace from [language/framework]: [paste]. Explain in plain words where the failure starts, which frames are my code and which are libraries, and what to inspect first. If you are unsure, say what extra information would help.
+</PromptBox>
+
+Tip: Never paste keys or tokens, per [Protect personal and company information](/basics/05-privacy-safety/).
+
+### Tests, docs, and SQL
+
+<PromptBox label="Unit tests with edge cases">
+Write unit tests for the function below using [test framework]. Cover the normal case, boundaries, empty or null input, and invalid input. Name each test so it reads as a sentence. Before writing, list the edge cases you plan to cover so I can add or remove some.
+
+[Paste the function]
+</PromptBox>
+
+Tip: Review generated tests carefully; see [Reviewing agent work](/agents/07-reviewing-agent-work/).
+
+<PromptBox label="README for a module">
+Write a README for the module below. Sections: what it does, install, quick start with a minimal example, configuration options in a table, and common errors. Use only what the code shows; mark anything you had to guess with TODO.
+
+[Paste the code or file list]
+</PromptBox>
+
+Tip: More patterns are in [Write docs with AI](/coding/46-docs-with-ai/).
+
+<PromptBox label="SQL query with explanation">
+Write a [PostgreSQL / MySQL] query for this: [goal in plain words]. Tables: [table names with columns and types]. Explain each clause, mention performance concerns such as missing indexes, and give a small sample result so I can check the logic. Do not modify data.
+</PromptBox>
+
+Tip: See [SQL with AI](/coding/47-sql-with-ai/), and test on a copy first.
+
+### Review and refactoring
+
+<PromptBox label="Pull request review">
+Review this diff as a careful senior engineer. Check correctness, error handling, security issues, naming, and test coverage. Group comments as must fix, should fix, and nitpick. For each, point to the line and explain the risk briefly. Context for the change: [what the PR is for].
+
+[Paste the diff]
+</PromptBox>
+
+Tip: See [Code review with AI](/coding/42-code-review-ai/), and keep human review as the final gate.
+
+<PromptBox label="Refactor in small steps">
+I want to refactor the code below to [goal, e.g., remove duplication, separate I/O from logic]. Propose a plan of small steps where each step keeps all existing tests passing. Do not change behavior. Show the first step only, then wait.
+
+[Paste the code]
+</PromptBox>
+
+Tip: Work step by step as in [Refactoring with AI](/coding/45-refactoring-with-ai/).
+
+<PromptBox label="Commit message and PR description">
+Write a commit message and a pull request description for the diff below. Commit: imperative subject under 50 characters, body explaining why. PR: summary, what changed, how to test, and risks. Do not claim anything the diff does not show.
+
+[Paste the diff]
+</PromptBox>
+
+Tip: Git workflows with an AI agent are in [Git with Claude Code](/coding/44-git-with-claude-code/).
 
 ## What to watch out for
 

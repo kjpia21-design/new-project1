@@ -1,7 +1,7 @@
 ---
 title: AI Guide for Researchers and Graduate Students
 description: Reading papers and documents, searching and checking sources, data analysis, drafting reports, and translation. How researchers and graduate students can use AI, and the order to learn it.
-seoTitle: "AI Guide for Researchers and Grad Students"
+seoTitle: "AI prompts for researchers"
 seoDescription: "Reading papers, checking sources, data analysis, drafting reports and translation: how researchers and graduate students can use AI, step by step."
 ---
 
@@ -120,6 +120,92 @@ Translate the text below into [language]. Keep names and technical terms as they
 - [Compare Deep Research Agents: Claude, Gemini and ChatGPT](/agents/08-deep-research-agents/): Start a research report in Claude, Gemini or ChatGPT, and follow a routine for checking a long report before you rely on it.
 - [Get Useful Feedback on Your Writing from AI: Ask for Comments, Keep Your Own Voice, and Follow the Rules](/chat/49-writing-feedback/): Ask an AI assistant for feedback on an essay, application, or report without letting it rewrite your voice, and check your school's or contest's AI rules first.
 - [Shape how Claude responds: output styles and personalization](/claude/c27-styles/): Control Claude's tone, length and format with output styles, account Instructions, project instructions and skills.
+
+## Copy-ready prompts for researchers
+
+Copy a prompt, replace every [bracket] with your own details, and check the result before you use it. Don't paste personal or confidential data; see [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/).
+
+### Literature notes
+
+<PromptBox label="Structured paper notes">
+Summarize the paper text below as reading notes with these headings: research question, method, data or sample, main findings, limitations the authors state, and how it might relate to my topic: [my topic].
+Quote the sentence that supports each point. If something isn't in the text, write "not stated".
+
+[Paste text you may share]
+</PromptBox>
+
+Tip: Related technique in [Summarize Books and Long Reads into Study Notes](/chat/43-reading-notes/).
+
+<PromptBox label="Compare several papers">
+I will paste summaries of [number] papers. Make a comparison table with columns: author and year, question, method, sample, key finding, limitation.
+Then write 3 sentences on where they agree and where they conflict. Use only my summaries and don't add papers or citations.
+
+[Paste summaries]
+</PromptBox>
+
+Tip: Working from your own sources is covered in [Studying and Organizing with Gemini Notebook](/chat/21-notebooklm/).
+
+<PromptBox label="Find search keywords">
+My research topic is [topic]. Suggest search keywords in groups: core terms, synonyms, broader terms, narrower terms, and terms used in [field or language].
+Also suggest 3 ways to combine them in a database search. Don't list specific papers; I will find them myself.
+</PromptBox>
+
+Tip: AI search results still need source checks; see [Using AI Search Well](/chat/22-ai-search/).
+
+### Method critique
+
+<PromptBox label="Study design check">
+Act as a skeptical reviewer. Here is my study design: [question, sample, method, analysis plan].
+List the 5 weakest points (for example bias, confounders, sample size, measurement), and for each suggest one question I should answer or one fix.
+Don't rewrite my design.
+</PromptBox>
+
+Tip: Asking for opposing views is shown in [Think Through a Decision with AI](/chat/50-decision-making/).
+
+<PromptBox label="Stats method options">
+I have [data type, number of groups, sample size] and want to answer [question].
+List 3 possible analysis methods, the assumptions each one needs, and how I would check those assumptions.
+Explain in plain words and flag where I should ask a statistician.
+</PromptBox>
+
+Tip: Hands-on data work is in [Handing Excel and CSV Data Analysis to AI](/chat/03-data-analysis/).
+
+<PromptBox label="Check my argument">
+Below is my argument. Mark each claim as supported by evidence I gave, partly supported, or unsupported.
+Then point out any jump in logic and any claim a reader could challenge.
+
+[Paste your paragraph]
+</PromptBox>
+
+Tip: Always verify facts yourself using [Can You Trust AI Answers? How to Fact-Check](/basics/04-fact-checking/).
+
+### Abstract and paper drafts
+
+<PromptBox label="Abstract draft">
+Write an abstract of about [number] words from the notes below. Structure: background, aim, method, results, conclusion.
+Use only my notes and don't add numbers, results, or claims I didn't give. Mark gaps with [missing].
+
+[Paste your notes]
+</PromptBox>
+
+Tip: Full drafting flow in [Drafting and Polishing Reports and Proposals](/chat/04-write-reports/).
+
+<PromptBox label="Tighten a paragraph">
+Make the paragraph below shorter and clearer without changing its meaning. Keep my terms and citations as they are.
+Show the result, then a list of what you changed so I can reject any change.
+
+[Paste paragraph]
+</PromptBox>
+
+Tip: Keep your own voice; see [Get Useful Feedback on Your Writing from AI](/chat/49-writing-feedback/).
+
+<PromptBox label="Reviewer response outline">
+Reviewer comment: [Paste comment]
+What I did or plan to do: [my response in rough notes]
+Draft a polite point-by-point reply with: thanks, what we changed, where in the paper. If I haven't said we changed something, don't claim it.
+</PromptBox>
+
+Tip: Check wording against AI-use rules, see [Can You Use AI Output? Copyright and Ethics Basics](/basics/09-ai-copyright-ethics/).
 
 ## What to watch out for
 
