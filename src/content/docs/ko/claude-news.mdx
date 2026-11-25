@@ -7,7 +7,7 @@ import NewsItem from '../../../components/NewsItem.astro';
 
 Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 모았어요. 모델 출시, 가격, Claude Code와 앱의 새 기능처럼 실제로 쓰는 분에게 의미 있는 것만 골랐고, 사소한 버그 수정은 뺐어요. 공식 채널을 점검해 계속 갱신해요.
 
-**마지막 업데이트: 2026-11-25**
+**마지막 업데이트: 2026-11-26**
 
 함께 보기: [이번 주 AI 변경점](/ko/weekly/), 모든 도구의 변화를 매주 정리하고 할 일을 알려 줘요.
 
@@ -20,6 +20,10 @@ Anthropic의 공식 채널에서 나온 Claude 업데이트를 최신순으로 �
 - [Anthropic 뉴스](https://www.anthropic.com/news): 정책, 파트너십, 모델 발표
 
 ## 2026년 11월
+
+<NewsItem date="11월 25일" channel="Claude Code" href="https://code.claude.com/docs/en/changelog" tutorial="/ko/claude/c15-model-division/" tutorialLabel="C15 모델 분담 전략">
+2.1.332 버전에서 다른 클라우드의 짧은 모델 이름(별칭)이 가리키는 모델이 바뀌었어요. Google Cloud의 Agent Platform과 Microsoft Foundry에서 `sonnet` 별칭은 이제 Claude Sonnet 5.5이고, Foundry의 `opus` 별칭은 Opus 5.5예요. Foundry의 기본 모델도 Sonnet 5.5가 됐어요(`claude-sonnet-5-5`를 배포하거나, `ANTHROPIC_DEFAULT_SONNET_MODEL`에 배포해 둔 모델을 지정하세요). Amazon Bedrock의 `sonnet`은 Sonnet 4.5 그대로예요. 이 클라우드들에서 Sonnet 5나 5.5로 옮겨진 터미널·VS Code 세션은 모드를 정해 두지 않았으면 auto 모드로 시작해요(막으려면 `disableAutoMode`를 `"disable"`로 설정). `--model default`는 기본 모델을 쓸 수 없을 때 오류로 멈추지 않고 더 이전 모델로 넘어가요. MCP 서버가 제공하는 스킬이 베타로 추가돼 `/` 메뉴에 `server:skill` 형태로 보이고, 새 `PreSkillShellCommand` 훅으로 스킬이나 명령에 들어 있는 셸 명령을 불러오는 시점에 거부할 수 있어요. 탭 방식 음성 받아쓰기는 새 단어 없이 60초가 지나거나 전체 10분이 될 때까지 마이크를 켜 둬요(이전에는 15초와 2분). `/schedule`과 관련 안내 문구는 "routine" 대신 "cloud scheduled task"라고 표시해요(`/routines`는 그대로 동작해요). 업데이트 뒤 확인할 점은 세 가지예요. 컴퓨터 사용이 켜진 Mac에서는 직접 만든 스킬이나 명령의 이름이 `computer-use`이면 더는 불러오지 않으니 이름을 바꾸세요. macOS의 컴퓨터 사용에 새 안전 규칙이 적용돼 일부 동작이 거부되고 입력이 느려질 수 있어요. 데스크톱 Code 탭 세션의 OpenTelemetry `service.name`이 `claude-code-desktop`으로 바뀌었으니 `claude-code`로 걸어 둔 필터를 고치세요. 훅이나 로컬 MCP 서버가 출력을 끝없이 내보낼 때 멈추던 문제를 비롯해 멈춤 현상도 많이 고쳐졌어요.
+</NewsItem>
 
 <NewsItem date="11월 24일" channel="Claude 앱" href="https://support.claude.com/en/articles/12138966-release-notes" tutorial="/ko/claude/c06-artifacts/" tutorialLabel="C6 아티팩트">
 Claude가 만들어 준 아티팩트를 Mac이나 Windows 컴퓨터에 앱으로 설치할 수 있게 됐어요(베타). 자체 창과 아이콘이 생기고 다른 앱처럼 열려요. 설치해도 같은 아티팩트라서, 아티팩트를 고치면 앱도 바뀌어요. 도움말 문서 기준으로 Free, Pro, Max, Ultra, Team, Enterprise 플랜에 순차 배포 중이고, Mac용 또는 Windows용 Claude 6.28899.0 이상이 필요해요. 설치하려면 Claude Desktop에서 아티팩트를 열고, 제목 메뉴를 열거나 아티팩트를 오른쪽 클릭한 뒤 "Install as app"을 골라요. 앱은 알림 표시, 키보드 단축키, 다른 창 위에 띄우기, 메뉴 막대나 시스템 트레이 항목 추가를 쓰기 전에 먼저 허락을 받아야 해요. 가장 높은 권한인 컴퓨터 전체 접근(full access)을 허용하면 앱이 프로그램을 실행하고 파일을 읽고 바꾸고 지울 수 있어요. Anthropic이 앱을 미리 검토하지 않으니, 만든 사람을 모두 믿을 수 있는 앱에만 허용하세요. Team 플랜에서는 관리자가 켜기 전까지 컴퓨터 전체 접근이 꺼져 있고, Enterprise 플랜에서는 Owner가 Organization settings > Artifacts에서 켜기 전까지 기능 전체가 꺼져 있어요. 자세한 내용은 [Install an artifact as an app](https://support.claude.com/en/articles/18516354-install-an-artifact-as-an-app)에 있어요.
