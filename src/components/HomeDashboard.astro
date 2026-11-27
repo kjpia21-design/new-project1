@@ -1,5 +1,5 @@
 ---
-// 홈 맨 위: 첫 방문 화면과 다시 온 사람(대시보드) 화면을 둘 다 그려 두고, <html>의 atc-returning 클래스로 한쪽만 보여 준다.
+// 홈 맨 위(다시 온 사람 화면도 맨 위 제목은 사이트 이름: 처음 온 사람이 '이어서 볼까요?' 같은 문구에 당황하지 않게): 첫 방문 화면과 다시 온 사람(대시보드) 화면을 둘 다 그려 두고, <html>의 atc-returning 클래스로 한쪽만 보여 준다.
 // - 클래스는 아래 첫 인라인 스크립트가 화면이 그려지기 전에 붙인다(깜빡임 방지). JS가 꺼져 있으면 첫 방문 화면이 나온다.
 // - 다시 온 사람 화면의 숫자·링크(전체 N편 중 M편, 이어 보기, 학습 경로, 시리즈 진행)는 Footer.astro 스크립트가
 //   atc:progress:v1 / atc:last를 읽어 채운다. 새 저장 키는 없다.
@@ -22,8 +22,9 @@ const S = ko
       start: '입문 경로 시작하기',
       all: '전체 튜토리얼 보기',
       stepsTime: (n: number, t: string) => `${n}단계 · ${t}`,
-      status: '내 학습 현황 · 전체 {n}편 중 {m}편 완료',
-      question: '이어서 볼까요?',
+      status: '튜토리얼 {n}편 · 내가 완료한 글 {m}편',
+      question: '최신 AI 트렌드 따라 잡기',
+      retLead: '새로 나온 AI 도구를 단계별로 따라 해 보는 튜토리얼 모음이에요.',
       allN: (n: number) => `전체 튜토리얼 ${n}편 →`,
       search: '찾기 — 예: 회의록, 엑셀, MCP',
       searchLabel: '튜토리얼 검색 열기',
@@ -46,8 +47,9 @@ const S = ko
       start: 'Start the beginner path',
       all: 'Browse all tutorials',
       stepsTime: (n: number, t: string) => `${n} steps · ${t}`,
-      status: 'My progress · {m} of {n} tutorials done',
-      question: 'Pick up where you left off?',
+      status: '{n} tutorials · {m} done by you',
+      question: 'Catch up on AI trends',
+      retLead: 'Step-by-step tutorials for the newest AI tools.',
       allN: (n: number) => `All ${n} tutorials →`,
       search: 'Search, e.g. meeting notes, Excel, MCP',
       searchLabel: 'Open tutorial search',
@@ -164,6 +166,7 @@ const arrow = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24
       <div>
         <p class="eyebrow" data-hd-status data-t={S.status} data-n={total}>{S.status.replace('{n}', String(total)).replace('{m}', '0')}</p>
         <h1 id="hd-ret-h">{S.question}</h1>
+        <p class="ret-lead">{S.retLead}</p>
       </div>
       <a class="btn" href={url('/tutorials/', lang)}>{S.allN(total)}</a>
     </div>
@@ -258,6 +261,7 @@ const arrow = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24
 
   /* ── 다시 온 사람 ── */
   .top { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding-top: 0; }
+  .ret-lead { margin: 0.35rem 0 0; color: var(--sl-color-gray-2); font-size: 0.95rem; }
   .eyebrow { margin: 0; font-size: var(--sl-text-xs); font-weight: 700; color: var(--ai-coral-ink); }
   .hd-ret h1 { margin: 0.15rem 0 0; font-size: clamp(1.6rem, 3vw, 2rem); line-height: 1.25; }
   .big { display: flex; align-items: center; gap: 0.65rem; width: 100%; height: 3.4rem; margin-top: 1.1rem; padding: 0 1rem; border: 1.5px solid var(--ai-line-strong); border-radius: 14px; background: var(--ai-surface); color: var(--sl-color-gray-3); font: inherit; font-size: var(--sl-text-base); text-align: left; cursor: text; box-shadow: var(--ai-shadow); transition: border-color 0.15s, box-shadow 0.2s; }
