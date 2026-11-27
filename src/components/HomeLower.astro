@@ -1,0 +1,64 @@
+---
+// 홈 아래쪽 작은 상자 두 개: 직무별 가이드 칩 10개, 처음이라면 학습 경로 3개.
+// 학습 경로 상자는 첫 방문 화면(대시보드 위쪽)에 이미 같은 카드가 있으므로, 다시 온 사람 화면(html.atc-returning)에서만 보인다.
+import { url } from '../lib/tutorials';
+import { getPath, formatMinutes } from '../lib/paths';
+import { paths } from '../data/paths';
+import { getLang } from '../lib/i18n';
+const lang = getLang(Astro);
+const ko = lang === 'ko';
+const roles = [
+  ['office', '사무·기획', 'Office & admin'],
+  ['marketer', '마케터', 'Marketers'],
+  ['teacher', '교사·강사', 'Teachers'],
+  ['student', '학생·취준생', 'Students'],
+  ['developer', '개발자', 'Developers'],
+  ['solo-business', '1인 사업자', 'Solo business'],
+  ['researcher', '연구자', 'Researchers'],
+  ['sales-support', '영업·CS', 'Sales & support'],
+  ['designer', '디자이너', 'Designers'],
+  ['hr', '인사', 'HR'],
+] as const;
+const lv = { beginner: ko ? '입문' : 'Beginner', practical: ko ? '실무' : 'Practical', advanced: ko ? '고급' : 'Advanced' } as const;
+const pathData = await Promise.all(paths.map(async (p) => {
+  const g = await getPath(p.id, lang);
+  return { id: p.id, href: url(p.startPage, lang), title: p.title[lang], d: ko ? `${g.steps.length}단계 · ${formatMinutes(g.minutes, lang)}` : `${g.steps.length} steps · ${formatMinutes(g.minutes, lang)}` };
+}));
+---
+<div class="two not-content">
+  <div class="box">
+    <h3>{ko ? '내 일에 맞춰 — 직무별 가이드' : 'For your job: guides by role'}</h3>
+    <ul class="roles">
+      {roles.map(([slug, k, e]) => <li><a href={url(`/roles/${slug}/`, lang)}>{ko ? k : e}</a></li>)}
+    </ul>
+  </div>
+  <div class="box lpbox">
+    <h3>{ko ? '처음이라면 — 수준별 학습 경로' : 'New here: learning paths by level'}</h3>
+    <ul class="lvl">
+      {pathData.map((p) => <li><a href={p.href}><span class={`lv lv-${p.id}`}>{lv[p.id]}</span><b>{p.title}</b><span class="d">{p.d}</span></a></li>)}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: 1rem; }
+  :global(html:not(.atc-returning)) .lpbox { display: none; }
+  .box { padding: 1.25rem; border: 1px solid var(--ai-line); border-radius: var(--ai-radius-lg); background: var(--ai-surface); box-shadow: var(--ai-shadow); }
+  h3 { margin: 0 0 0.85rem; font-size: 1rem; font-weight: 750; color: var(--sl-color-white); }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { margin: 0; padding: 0; }
+  .roles { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .roles a { display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0.3rem 0.8rem; border: 1px solid var(--ai-line); border-radius: 10px; background: var(--ai-surface-2); font-size: var(--sl-text-sm); font-weight: 600; color: var(--sl-color-gray-1); text-decoration: none; transition: border-color 0.15s, color 0.15s; }
+  .roles a:hover { border-color: var(--ai-line-strong); color: var(--ai-coral-ink); }
+  .lvl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
+  .lvl a { display: flex; flex-direction: column; gap: 0.2rem; height: 100%; padding: 0.75rem 0.85rem; border: 1px solid var(--ai-line); border-radius: 10px; background: var(--ai-surface-2); text-decoration: none; transition: border-color 0.15s; }
+  .lvl a:hover { border-color: var(--ai-line-strong); }
+  .lvl b { font-size: var(--sl-text-sm); color: var(--sl-color-white); line-height: 1.35; }
+  .lv { font-size: 0.7rem; font-weight: 700; }
+  .lv-beginner { color: var(--sl-color-green); } .lv-practical { color: var(--sl-color-blue); } .lv-advanced { color: var(--sl-color-purple); }
+  .d { font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); }
+  @media (max-width: 40rem) {
+    .lvl { grid-template-columns: 1fr; }
+    .lvl a { flex-direction: row; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+  }
+</style>

@@ -1,0 +1,326 @@
+---
+// 홈 맨 위: 첫 방문 화면과 다시 온 사람(대시보드) 화면을 둘 다 그려 두고, <html>의 atc-returning 클래스로 한쪽만 보여 준다.
+// - 클래스는 아래 첫 인라인 스크립트가 화면이 그려지기 전에 붙인다(깜빡임 방지). JS가 꺼져 있으면 첫 방문 화면이 나온다.
+// - 다시 온 사람 화면의 숫자·링크(전체 N편 중 M편, 이어 보기, 학습 경로, 시리즈 진행)는 Footer.astro 스크립트가
+//   atc:progress:v1 / atc:last를 읽어 채운다. 새 저장 키는 없다.
+// - 편수 N은 빌드 때 게시된(status: published) 튜토리얼 수로 센다.
+import { getCollection } from 'astro:content';
+import GithubSlugger from 'github-slugger';
+import HeroIllustration from './HeroIllustration.astro';
+import { url, getTutorials, tutorialSlug, getRecentlyVerified, entryUrl, getCategoryLabel, getLevelLabel, type Category } from '../lib/tutorials';
+import { getPath, formatMinutes } from '../lib/paths';
+import { paths } from '../data/paths';
+import { getLang } from '../lib/i18n';
+
+const lang = getLang(Astro);
+const ko = lang === 'ko';
+const S = ko
+  ? {
+      kicker: '한국어로 쉽게, 단계별로 따라 하는',
+      lead: '새로 나온 AI 도구를 쉽게 설명해요. 내 수준에 맞는 경로에서 시작해 보세요.',
+      pathsTitle: '내 수준에 맞는 학습 경로',
+      start: '입문 경로 시작하기',
+      all: '전체 튜토리얼 보기',
+      stepsTime: (n: number, t: string) => `${n}단계 · ${t}`,
+      status: '내 학습 현황 · 전체 {n}편 중 {m}편 완료',
+      question: '이어서 볼까요?',
+      allN: (n: number) => `전체 튜토리얼 ${n}편 →`,
+      search: '찾기 — 예: 회의록, 엑셀, MCP',
+      searchLabel: '튜토리얼 검색 열기',
+      chipsLabel: '바로 가기',
+      contLabel: '읽던 글 이어 보기',
+      contGo: '이어서 읽기',
+      seriesDone: '시리즈 {d}/{n} 완료',
+      pathLabel: '내 학습 경로',
+      pathSub: '{n}단계 중 {d}단계 완료',
+      pathNone: '아직 시작한 경로가 없어요. 수준에 맞는 경로를 골라 보세요.',
+      pathNext: '다음 단계',
+      weekLabel: '이번 주 바뀐 것',
+      weekMore: '자세히 보기 →',
+      weekFallback: '최근 확인·수정한 글',
+    }
+  : {
+      kicker: 'Easy, step-by-step tutorials',
+      lead: 'We explain the newest AI tools in plain language. Pick the path that fits your level.',
+      pathsTitle: 'Learning paths by level',
+      start: 'Start the beginner path',
+      all: 'Browse all tutorials',
+      stepsTime: (n: number, t: string) => `${n} steps · ${t}`,
+      status: 'My progress · {m} of {n} tutorials done',
+      question: 'Pick up where you left off?',
+      allN: (n: number) => `All ${n} tutorials →`,
+      search: 'Search, e.g. meeting notes, Excel, MCP',
+      searchLabel: 'Open tutorial search',
+      chipsLabel: 'Quick links',
+      contLabel: 'Continue where you left off',
+      contGo: 'Keep reading',
+      seriesDone: '{d}/{n} done in this series',
+      pathLabel: 'My learning path',
+      pathSub: '{d} of {n} steps done',
+      pathNone: 'No path started yet. Pick one that fits your level.',
+      pathNext: 'Next step',
+      weekLabel: 'What changed this week',
+      weekMore: 'See details →',
+      weekFallback: 'Recently checked or updated',
+    };
+
+// 빌드 때 계산: 게시된 튜토리얼
+const all = (await getTutorials({ lang })).filter((e) => e.data.status === 'published');
+const total = all.length;
+const titles = Object.fromEntries(all.map((e) => [tutorialSlug(e.id), e.data.title]));
+const cats = ['basics', 'claude', 'chat', 'agents', 'media', 'automation', 'coding', 'dev'] as Category[];
+const series = Object.fromEntries(cats.map((c) => [c, { label: getCategoryLabel(c, lang), slugs: all.filter((e) => e.data.category === c).map((e) => tutorialSlug(e.id)) }]));
+const json = (v: unknown) => JSON.stringify(v).replace(/</g, '\\u003c');
+
+// 학습 경로 3개
+const pathData = await Promise.all(
+  paths.map(async (p) => {
+    const g = await getPath(p.id, lang);
+    return { id: p.id, href: url(p.startPage, lang), title: p.title[lang], level: g.def.id, n: g.steps.length, time: formatMinutes(g.minutes, lang), steps: g.steps.map((s) => ({ s: s.slug, t: s.title, m: s.minutes ?? null })) };
+  }),
+);
+const tone = { beginner: 'green', practical: 'blue', advanced: 'purple' } as const;
+
+// 이번 주 바뀐 것: weekly.mdx(언어별)의 가장 최근 주 "###" 제목 3개. 사이트 새 글 목록 같은 모음 항목은 뺀다.
+const weekly = (await getCollection('docs')).find((e) => e.id === (ko ? 'ko/weekly' : 'weekly'));
+let weekLabel = '';
+let weekItems: { title: string; href: string; tag?: string }[] = [];
+if (weekly?.body) {
+  const lines = weekly.body.split(/\r?\n/);
+  const start = lines.findIndex((l) => /^## /.test(l));
+  if (start >= 0) {
+    weekLabel = lines[start].replace(/^##\s+/, '').replace(/^Week of\s+/i, '').trim();
+    const slugger = new GithubSlugger();
+    // Starlight와 같은 규칙으로 앵커를 만든다. 순서가 같아야 중복 제목 번호(-1)도 맞는다.
+    const heads = lines.slice(start + 1).filter((l) => /^#{2,3} /.test(l));
+    for (const h of heads) {
+      const raw = h.replace(/^#{2,3}\s+/, '');
+      const id = slugger.slug(raw.replace(/`/g, ''));
+      if (h.startsWith('## ')) break;
+      if (/new on the site|사이트에 새로|이번 주 새 글|새로 올라온/i.test(raw)) continue;
+      if (weekItems.length >= 3) continue;
+      const title = raw.replace(/`/g, '').replace(/^(Recent|최근):\s*/, '');
+      const tag = /Claude/i.test(title) ? 'Claude' : /ChatGPT|Codex|OpenAI/i.test(title) ? 'ChatGPT' : /Gemini/i.test(title) ? 'Gemini' : undefined;
+      weekItems.push({ title, href: `${url('/weekly/', lang)}#${id}`, tag });
+    }
+  }
+}
+// 파싱이 모자라면(항목이 3개 미만) 최근 확인·수정한 글로 대신한다.
+let weekIsFallback = false;
+if (weekItems.length < 3) {
+  weekIsFallback = true;
+  weekLabel = '';
+  weekItems = (await getRecentlyVerified(3, lang)).map((e) => ({ title: e.data.title, href: entryUrl(e.id) }));
+}
+
+const chips = [
+  { label: 'Claude Code', href: '/coding/06-claude-code-start/' },
+  { label: ko ? '프롬프트 모음' : 'Prompt collection', href: '/start/prompts/' },
+  { label: ko ? '회의록 요약' : 'Meeting notes', href: '/automation/37-meeting-ai/' },
+  { label: ko ? 'AI 용어 사전' : 'AI glossary', href: '/start/glossary/' },
+  { label: ko ? '무료로 쓰기' : 'Free to use', href: '/basics/23-free-ai-tools/' },
+];
+const arrow = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+---
+<script is:inline>
+  // 다시 온 사람이면 첫 화면이 그려지기 전에 <html>에 클래스를 붙인다. 저장소를 못 읽으면 첫 방문 화면 그대로.
+  try {
+    var p = JSON.parse(localStorage.getItem('atc:progress:v1') || 'null');
+    if ((p && typeof p === 'object' && Object.keys(p).length) || localStorage.getItem('atc:last')) document.documentElement.classList.add('atc-returning');
+  } catch (e) {}
+</script>
+<div class="hd not-content" data-hd>
+  <!-- 첫 방문 -->
+  <section class="hd-first" aria-labelledby="hd-first-h">
+    <div class="hero">
+      <div class="text">
+        <p class="kicker"><span class="dot" aria-hidden="true"></span>{S.kicker}</p>
+        {ko ? <h1 id="hd-first-h">최신 AI 트렌드<br />따라 잡기</h1> : <h1 id="hd-first-h">Catch up on<br />AI trends</h1>}
+        <p class="lead">{S.lead}</p>
+        <div class="actions">
+          <a class="btn primary" href={pathData[0].href}>{S.start}<Fragment set:html={arrow} /></a>
+          <a class="btn" href={url('/tutorials/', lang)}>{S.all}</a>
+        </div>
+      </div>
+      <div class="art"><HeroIllustration /></div>
+    </div>
+    <h2 class="sub">{S.pathsTitle}</h2>
+    <ul class="lvls">
+      {pathData.map((p, i) => (
+        <li>
+          <a href={p.href} class={`lvl lvl-${p.level}`}>
+            <span class="lvl-top"><span class="lvl-badge"><span class="dot" aria-hidden="true"></span>{getLevelLabel(p.level, lang)}</span><span class="lvl-n" aria-hidden="true">0{i + 1}</span></span>
+            <b>{p.title}</b>
+            <span class="lvl-d">{S.stepsTime(p.n, p.time)}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- 다시 온 사람 -->
+  <section class="hd-ret" aria-labelledby="hd-ret-h">
+    <div class="top">
+      <div>
+        <p class="eyebrow" data-hd-status data-t={S.status} data-n={total}>{S.status.replace('{n}', String(total)).replace('{m}', '0')}</p>
+        <h1 id="hd-ret-h">{S.question}</h1>
+      </div>
+      <a class="btn" href={url('/tutorials/', lang)}>{S.allN(total)}</a>
+    </div>
+    <button type="button" class="big" data-hd-search aria-label={S.searchLabel}>
+      <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <span>{S.search}</span>
+    </button>
+    <ul class="chips" aria-label={S.chipsLabel}>
+      {chips.map((c) => <li><a href={url(c.href, lang)}>{c.label}</a></li>)}
+    </ul>
+    <div class="dash">
+      <!-- 1. 읽던 글 이어 보기 (채워진 버튼은 여기 하나) -->
+      <div class="card cont" data-atc-continue data-prefix={url('', lang).replace(/\/$/, '')} data-t-series={S.seriesDone} hidden>
+        <p class="k">{S.contLabel}</p>
+        <h3 class="ct"></h3>
+        <p class="cmeta"></p>
+        <a class="btn primary go" href={url('/tutorials/', lang)} data-atc-continue-go>{S.contGo}<Fragment set:html={arrow} /></a>
+        <div class="row"><span class="bar" aria-hidden="true"><i></i></span><span class="rt"></span></div>
+      </div>
+      <!-- 2. 내 학습 경로 -->
+      <div class="card path" data-hd-path data-t-sub={S.pathSub}>
+        <p class="k">{S.pathLabel}</p>
+        <div class="hp-active" hidden>
+          <h3 class="hp-title"></h3>
+          <p class="hp-sub"></p>
+          <div class="row"><span class="bar" aria-hidden="true"><i></i></span><span class="hp-pct"></span></div>
+          <a class="nextstep" href={url('/start/beginner/', lang)}><em></em><span class="hp-next"></span></a>
+        </div>
+        <div class="hp-none">
+          <p class="hp-sub">{S.pathNone}</p>
+          <ul class="mini">
+            {pathData.map((p) => <li><a href={p.href}>{p.title}<span>{S.stepsTime(p.n, p.time)}</span></a></li>)}
+          </ul>
+        </div>
+      </div>
+      <!-- 3. 이번 주 바뀐 것 -->
+      <div class="card week">
+        <p class="k">{weekIsFallback ? S.weekFallback : S.weekLabel}{weekLabel && <span class="wl">{weekLabel}</span>}</p>
+        <ul>
+          {weekItems.map((w) => <li>{w.tag && <b>{w.tag}</b>}<a href={w.href}>{w.title}</a></li>)}
+        </ul>
+        {!weekIsFallback && <a class="more" href={url('/weekly/', lang)}>{S.weekMore}</a>}
+      </div>
+    </div>
+  </section>
+  <script type="application/json" id="atc-tutorials" set:html={json(titles)} />
+  <script type="application/json" id="atc-series" set:html={json(series)} />
+  <script type="application/json" id="atc-paths" set:html={json(pathData.map((p) => ({ id: p.id, href: p.href, title: p.title, steps: p.steps })))} />
+</div>
+
+<style>
+  .hd { --gap: 1rem; }
+  /* 화면 전환: 기본은 첫 방문, 다시 온 사람(html.atc-returning)이면 대시보드 */
+  .hd-ret { display: none; }
+  :global(html.atc-returning) .hd-first { display: none; }
+  :global(html.atc-returning) .hd-ret { display: block; }
+
+  /* ── 첫 방문 ── */
+  .hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 2rem; align-items: center; padding: 2.5rem 0 0.5rem; }
+  .hero::before { content: ''; position: absolute; inset: -1.5rem -1rem 0 -1rem; z-index: -1; pointer-events: none; background: radial-gradient(closest-side at 78% 30%, color-mix(in srgb, var(--ai-coral) 13%, transparent), transparent); }
+  .kicker { margin: 0 0 1.1rem; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0.75rem 0.3rem 0.65rem; border: 1px solid var(--ai-coral-line); border-radius: 999px; background: var(--ai-coral-soft); font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--ai-coral-ink); line-height: 1.5; }
+  .kicker:lang(ko) { letter-spacing: 0; }
+  .dot { width: 6px; height: 6px; border-radius: 999px; background: currentColor; display: inline-block; }
+  .kicker .dot { background: var(--ai-coral); }
+  h1 { margin: 0 0 1rem; font-size: clamp(2.3rem, 4.4vw, 3.1rem); line-height: 1.08; font-weight: 750; letter-spacing: -0.035em; color: var(--sl-color-white); }
+  h1:lang(ko) { line-height: 1.18; letter-spacing: -0.03em; }
+  .lead { margin: 0 0 1.5rem; max-width: 30rem; font-size: var(--sl-text-lg); color: var(--sl-color-gray-2); line-height: 1.6; text-wrap: pretty; }
+  .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .art { display: flex; justify-content: flex-end; }
+  .sub { margin: 1.75rem 0 0.9rem !important; font-size: 1.1rem !important; }
+  .lvls { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.85rem; }
+  .lvls li { margin: 0; padding: 0; }
+  .lvl { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 0.3rem; height: 100%; padding: 1.1rem 1.2rem; border-radius: var(--ai-radius); text-decoration: none; background: var(--ai-surface); border: 1px solid var(--ai-line); box-shadow: var(--ai-shadow); transition: border-color 0.15s, box-shadow 0.2s var(--ai-ease), transform 0.2s var(--ai-ease); }
+  .lvl::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--tone); opacity: 0; transition: opacity 0.2s; }
+  .lvl-beginner { --tone: var(--sl-color-green); } .lvl-practical { --tone: var(--sl-color-blue); } .lvl-advanced { --tone: var(--sl-color-purple); }
+  .lvl:hover { border-color: var(--ai-line-strong); box-shadow: var(--ai-shadow-md); transform: translateY(-2px); }
+  .lvl:hover::before, .lvl:focus-visible::before { opacity: 1; }
+  .lvl-top { display: flex; align-items: center; justify-content: space-between; }
+  .lvl-badge { display: inline-flex; align-items: center; gap: 0.4rem; font-size: var(--sl-text-xs); font-weight: 700; color: var(--sl-color-gray-2); }
+  .lvl-badge .dot { background: var(--tone); }
+  .lvl-n { font-size: var(--sl-text-xs); font-weight: 600; color: var(--sl-color-gray-3); font-variant-numeric: tabular-nums; }
+  .lvl b { font-size: 1.1rem; font-weight: 700; color: var(--sl-color-white); letter-spacing: -0.015em; line-height: 1.35; }
+  .lvl-d { font-size: var(--sl-text-sm); color: var(--sl-color-gray-3); }
+
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; min-height: 2.75rem; padding: 0.6rem 1.2rem; border-radius: 10px; font-size: var(--sl-text-sm); font-weight: 600; text-decoration: none; line-height: 1.4; border: 1px solid var(--ai-line-strong); color: var(--sl-color-white); background: var(--ai-surface); box-shadow: var(--ai-shadow); transition: background-color 0.15s, border-color 0.15s, box-shadow 0.2s, transform 0.2s var(--ai-ease); }
+  .btn:hover { border-color: var(--sl-color-gray-3); background: var(--ai-surface-2); }
+  .btn svg { transition: transform 0.2s var(--ai-ease); }
+  .btn:hover svg { transform: translateX(2px); }
+  .btn.primary { background: var(--sl-color-accent); border-color: var(--sl-color-accent); color: var(--ai-on-accent); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12), 0 6px 16px -6px color-mix(in srgb, var(--sl-color-accent) 60%, transparent); }
+  .btn.primary:hover { background: var(--ai-accent-hover); border-color: var(--ai-accent-hover); }
+  .btn.primary:active { background: var(--ai-accent-active); border-color: var(--ai-accent-active); transform: translateY(1px); }
+
+  /* ── 다시 온 사람 ── */
+  .top { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding-top: 1.25rem; }
+  .eyebrow { margin: 0; font-size: var(--sl-text-xs); font-weight: 700; color: var(--ai-coral-ink); }
+  .hd-ret h1 { margin: 0.15rem 0 0; font-size: clamp(1.6rem, 3vw, 2rem); line-height: 1.25; }
+  .big { display: flex; align-items: center; gap: 0.65rem; width: 100%; height: 3.4rem; margin-top: 1.1rem; padding: 0 1rem; border: 1.5px solid var(--ai-line-strong); border-radius: 14px; background: var(--ai-surface); color: var(--sl-color-gray-3); font: inherit; font-size: var(--sl-text-base); text-align: left; cursor: text; box-shadow: var(--ai-shadow); transition: border-color 0.15s, box-shadow 0.2s; }
+  .big:hover { border-color: var(--sl-color-gray-3); }
+  .big:focus-visible { outline: 2px solid var(--ai-coral); outline-offset: 2px; }
+  .big svg { flex: none; }
+  .chips { list-style: none; margin: 0.7rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .chips li { margin: 0; padding: 0; }
+  .chips a { display: inline-flex; align-items: center; min-height: 2rem; padding: 0.25rem 0.8rem; border-radius: 99px; background: var(--ai-surface-2); border: 1px solid var(--ai-line); font-size: var(--sl-text-xs); font-weight: 600; color: var(--sl-color-gray-1); text-decoration: none; transition: border-color 0.15s, color 0.15s; }
+  .chips a:hover { border-color: var(--ai-line-strong); color: var(--ai-coral-ink); }
+  .dash { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: var(--gap); margin-top: 1.4rem; align-items: stretch; }
+  .card { min-width: 0; padding: 1.25rem; border-radius: var(--ai-radius-lg); background: var(--ai-surface); border: 1px solid var(--ai-line); box-shadow: var(--ai-shadow); display: flex; flex-direction: column; }
+  .card[hidden] { display: none; }
+  .k { margin: 0; display: flex; align-items: center; gap: 0.4rem; font-size: var(--sl-text-xs); font-weight: 700; color: var(--sl-color-gray-3); }
+  .wl { margin-left: auto; font-weight: 500; }
+  .cont { background: linear-gradient(135deg, var(--ai-surface) 55%, var(--ai-coral-soft)); border-color: var(--ai-coral-line); }
+  .cont h3 { margin: 0.55rem 0 0.35rem; font-size: 1.3rem; line-height: 1.35; font-weight: 750; letter-spacing: -0.02em; color: var(--sl-color-white); }
+  .cmeta { margin: 0 0 1rem; font-size: var(--sl-text-sm); color: var(--sl-color-gray-3); }
+  .go { align-self: flex-start; }
+  .row { display: flex; align-items: center; gap: 0.75rem; margin-top: auto; padding-top: 1rem; }
+  .row span:last-child { font-size: var(--sl-text-xs); font-weight: 700; color: var(--sl-color-gray-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .bar { flex: 1; height: 6px; border-radius: 99px; background: var(--ai-line); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--ai-coral); border-radius: 99px; }
+  .path .hp-active { display: flex; flex-direction: column; flex: 1; }
+  .path .hp-active[hidden], .path .hp-none[hidden] { display: none; }
+  .hp-title { margin: 0.55rem 0 0.15rem; font-size: 1.1rem; font-weight: 750; letter-spacing: -0.01em; color: var(--sl-color-white); }
+  .hp-sub { margin: 0; font-size: var(--sl-text-sm); color: var(--sl-color-gray-3); }
+  .hp-none { margin-top: 0.5rem; }
+  .path .row { margin-top: 0.6rem; padding-top: 0; }
+  .nextstep { margin-top: auto; display: flex; align-items: center; gap: 0.65rem; padding: 0.6rem 0.7rem; border-radius: 10px; background: var(--ai-surface-2); text-decoration: none; font-size: var(--sl-text-sm); font-weight: 600; color: var(--sl-color-white); line-height: 1.4; }
+  .path .hp-active .nextstep { margin-top: 0.85rem; }
+  .nextstep:hover { color: var(--ai-coral-ink); }
+  .nextstep em { flex: none; display: grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 99px; background: var(--ai-coral); color: var(--ai-on-accent); font-style: normal; font-size: 0.72rem; font-weight: 700; }
+  .mini { list-style: none; margin: 0.7rem 0 0; padding: 0; display: grid; gap: 0.4rem; }
+  .mini li { margin: 0; padding: 0; }
+  .mini a { display: flex; flex-direction: column; padding: 0.5rem 0.7rem; border-radius: 10px; background: var(--ai-surface-2); text-decoration: none; font-size: var(--sl-text-sm); font-weight: 650; color: var(--sl-color-white); line-height: 1.35; }
+  .mini a span { font-size: var(--sl-text-xs); font-weight: 500; color: var(--sl-color-gray-3); }
+  .mini a:hover { color: var(--ai-coral-ink); }
+  .week ul { list-style: none; margin: 0.4rem 0 0; padding: 0; }
+  .week li { margin: 0; padding: 0.55rem 0; border-top: 1px solid var(--ai-line); display: flex; gap: 0.5rem; align-items: baseline; font-size: var(--sl-text-sm); line-height: 1.45; }
+  .week li:first-child { border-top: 0; }
+  .week li b { flex: none; font-size: 0.68rem; font-weight: 700; padding: 0.05rem 0.4rem; border-radius: 5px; background: var(--ai-coral-soft); color: var(--ai-coral-ink); }
+  .week li a { color: var(--sl-color-white); text-decoration: none; min-width: 0; }
+  .week li a:hover { color: var(--ai-coral-ink); }
+  .more { margin-top: auto; padding-top: 0.6rem; font-size: var(--sl-text-xs); font-weight: 700; color: var(--ai-coral-ink); text-decoration: none; }
+
+  @media (max-width: 64rem) {
+    .dash { grid-template-columns: 1fr 1fr; }
+    .cont { grid-column: 1 / -1; }
+  }
+  @media (max-width: 720px) {
+    .hero { grid-template-columns: 1fr; gap: 0; padding: 1.25rem 0 0; }
+    .art { display: none; }
+    .btn { flex: 1 1 auto; }
+    h1 { font-size: clamp(2rem, 9.5vw, 2.6rem); }
+    .lead { font-size: var(--sl-text-base); }
+    .lvls { grid-template-columns: 1fr; gap: 0.6rem; }
+    .lvl { padding: 0.9rem 1rem; }
+    .top { flex-direction: column; align-items: stretch; padding-top: 0.5rem; }
+    .top .btn { display: none; }
+    .dash { grid-template-columns: 1fr; gap: 0.75rem; margin-top: 1rem; }
+    .big { height: 3.1rem; }
+    .cont h3 { font-size: 1.15rem; }
+    .go { align-self: stretch; }
+  }
+</style>
