@@ -6,11 +6,8 @@ template: splash
 
 import HomeHero from '../../../components/HomeHero.astro';
 import LevelCards from '../../../components/LevelCards.astro';
-import ClaudeBanner from '../../../components/ClaudeBanner.astro';
-import AgentsBanner from '../../../components/AgentsBanner.astro';
 import CategoryCards from '../../../components/CategoryCards.astro';
 import RecentUpdates from '../../../components/RecentUpdates.astro';
-import HomeToc from '../../../components/HomeToc.astro';
 
 <div class="home-wrap">
 
@@ -21,14 +18,6 @@ import HomeToc from '../../../components/HomeToc.astro';
 ## 나는 어떤 사용자일까요?
 
 <LevelCards />
-
-</section>
-
-<section>
-
-<ClaudeBanner />
-
-<AgentsBanner />
 
 </section>
 
@@ -50,12 +39,17 @@ import HomeToc from '../../../components/HomeToc.astro';
 
 </section>
 
-<section>
+<section class="home-all">
 
-## 전체 목차
-
-<HomeToc />
+[전체 튜토리얼 목록 보기 →](/ko/tutorials/)
 
 </section>
 
 </div>
+
+<style is:global>{`
+.home-wrap.home-wrap { gap: 3.25rem; }
+@media (max-width: 50rem) { .home-wrap.home-wrap { gap: 2.75rem; } }
+.home-wrap .home-all > p { margin: 0; font-size: var(--sl-text-base); font-weight: 600; }
+.home-wrap .home-all > p a { color: var(--ai-coral-ink); }
+`}</style>

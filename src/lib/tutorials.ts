@@ -14,10 +14,10 @@ export const levelLabels: Record<Level, string> = {
 export const categoryLabels: Record<Category, string> = {
   claude: 'Claude 완전 정복',
   chat: '대화형 AI 기본기',
-  coding: '코딩·에이전트',
+  coding: '코딩 도구',
   media: '이미지·영상·음성',
   automation: '업무 자동화·생산성',
-  agents: '화제의 AI 에이전트',
+  agents: '개인 AI 에이전트',
   dev: '개발자 심화',
   basics: 'AI 첫걸음',
 };
