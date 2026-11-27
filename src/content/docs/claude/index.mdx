@@ -9,7 +9,10 @@ tableOfContents: false
 ---
 
 import TutorialGrid from '../../../components/TutorialGrid.astro';
+import SectionProgress from '../../../components/SectionProgress.astro';
 import TutorialCount from '../../../components/TutorialCount.astro';
+
+<SectionProgress category="claude" />
 
 A special section that covers Claude in the most detail, from beginner to advanced. Everything is based on Anthropic's official documentation, with sources and the date we last checked.
 
@@ -19,4 +22,4 @@ New models and features arrive fast. Check [Latest Claude news](/claude-news/) f
 
 ## Tutorial list
 
-<TutorialGrid category="claude" />
+<TutorialGrid category="claude" compact groupBy="subgroup" />

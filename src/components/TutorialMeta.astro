@@ -182,5 +182,14 @@ const hasDetails = summaryParts.length > 0 || inPaths.length > 0 || !!category;
   .req a { color: var(--sl-color-white); font-weight: 600; text-underline-offset: 0.2em; }
   .req a:hover { color: var(--ai-coral-ink); }
   .req li[data-done] a { color: var(--sl-color-gray-2); }
-  @media (max-width: 40rem) { .facts { gap: 0.2rem 0.7rem; } }
+  @media (max-width: 50rem) {
+    .facts { gap: 0.2rem 0.7rem; }
+    /* 휴대폰: 완료 버튼을 아이콘만 남겨 같은 줄에 둔다. */
+    .line { flex-wrap: nowrap; align-items: flex-start; }
+    .facts { flex: 1; min-width: 0; }
+    .meta-done { flex: none; }
+    .meta-done .atc-done-btn { width: 2.25rem; height: 2.25rem; min-height: 0; padding: 0; gap: 0; border-radius: 999px; }
+    .meta-done .atc-done-btn .off, .meta-done .atc-done-btn .on { display: none !important; }
+    .meta-done .atc-done-btn svg { width: 1.2rem; height: 1.2rem; }
+  }
 </style>

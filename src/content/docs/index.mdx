@@ -4,22 +4,14 @@ description: A tutorial site that explains the latest AI tools in plain language
 template: splash
 ---
 
-import HomeHero from '../../components/HomeHero.astro';
-import LevelCards from '../../components/LevelCards.astro';
+import HomeDashboard from '../../components/HomeDashboard.astro';
+import HomeLower from '../../components/HomeLower.astro';
 import CategoryCards from '../../components/CategoryCards.astro';
 import RecentUpdates from '../../components/RecentUpdates.astro';
 
 <div class="home-wrap">
 
-<HomeHero />
-
-<section>
-
-## Which kind of user are you?
-
-<LevelCards />
-
-</section>
+<HomeDashboard />
 
 <section>
 
@@ -27,7 +19,11 @@ import RecentUpdates from '../../components/RecentUpdates.astro';
 
 <CategoryCards />
 
-If you'd like to find guides that fit your job, see [AI for your role](/roles/). If you need ready-to-copy prompts, see the [Ready-to-use prompt collection](/start/prompts/). And if you run into an unfamiliar term, check the [AI glossary](/start/glossary/).
+</section>
+
+<section>
+
+<HomeLower />
 
 </section>
 
@@ -35,15 +31,12 @@ If you'd like to find guides that fit your job, see [AI for your role](/roles/).
 
 ## Recently checked and updated
 
-<RecentUpdates limit={5} />
+<RecentUpdates limit={3} />
+
+[Browse all tutorials →](/tutorials/) · [See all updates →](/updates/)
 
 </section>
 
-<section class="home-all">
-
-[Browse the full tutorial list →](/tutorials/)
-
-</section>
 
 </div>
 

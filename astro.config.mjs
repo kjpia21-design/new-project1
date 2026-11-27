@@ -5,6 +5,7 @@ import starlightLinksValidator from 'starlight-links-validator';
 import sitemap from '@astrojs/sitemap';
 import fs from 'node:fs';
 import path from 'node:path';
+import { groupClaude } from './src/data/topic-groups.mjs';
 
 // 예전 영문 주소(/en/...)는 영어가 루트(/)로 옮겨 오면서 사라졌다. 옛 링크가 깨지지 않게 같은 페이지로 보낸다.
 function legacyEnRedirects() {
@@ -51,6 +52,20 @@ function lastVerifiedByUrl() {
   return out;
 }
 const LASTMOD = lastVerifiedByUrl();
+
+// Claude 섹션 사이드바: 하위 그룹(접힘 기본, 현재 글이 든 그룹은 Starlight가 펼친다). 목록에 없는 새 글은 "기타"로 자동 편입.
+function claudeSidebarGroups() {
+  const names = fs.readdirSync('src/content/docs/claude')
+    .filter((n) => /\.mdx?$/.test(n))
+    .map((n) => n.replace(/\.mdx?$/, ''))
+    .filter((n) => n !== 'index');
+  return groupClaude(names).map((g) => ({
+    label: g.en,
+    translations: { ko: g.ko },
+    collapsed: true,
+    items: g.slugs.map((s) => ({ slug: `claude/${s}` })),
+  }));
+}
 
 export default defineConfig({
   site: SITE,
@@ -113,7 +128,7 @@ export default defineConfig({
           ],
         },
         { label: 'AI First Steps', translations: { ko: 'AI 첫걸음' }, collapsed: true, items: [{ autogenerate: { directory: 'basics' } }] },
-        { label: 'Mastering Claude', translations: { ko: 'Claude 완전 정복' }, collapsed: true, items: [{ autogenerate: { directory: 'claude' } }] },
+        { label: 'Mastering Claude', translations: { ko: 'Claude 완전 정복' }, collapsed: true, items: [{ slug: 'claude' }, ...claudeSidebarGroups()] },
         { label: 'Chat AI Basics', translations: { ko: '대화형 AI 기본기' }, collapsed: true, items: [{ autogenerate: { directory: 'chat' } }] },
         { label: 'Personal AI Agents', translations: { ko: '개인 AI 에이전트' }, collapsed: true, items: [{ autogenerate: { directory: 'agents' } }] },
         { label: 'Image, Video & Voice', translations: { ko: '이미지·영상·음성' }, collapsed: true, items: [{ autogenerate: { directory: 'media' } }] },

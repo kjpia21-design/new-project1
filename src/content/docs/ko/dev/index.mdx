@@ -7,7 +7,10 @@ sidebar:
 ---
 
 import TutorialGrid from '../../../../components/TutorialGrid.astro';
+import SectionProgress from '../../../../components/SectionProgress.astro';
 import TutorialCount from '../../../../components/TutorialCount.astro';
+
+<SectionProgress category="dev" />
 
 Claude를 앱에서 쓰는 단계를 넘어, **코드와 API로 직접 다루고 싶은 분**을 위한 섹션이에요. 업무 봇 만들기, 에이전트 직접 만들기, MCP 서버 연결, CI 자동화, 결과 품질 관리까지 실행 가능한 코드를 중심으로 <TutorialCount section="dev" />편으로 정리해요.
 
@@ -39,4 +42,4 @@ Claude를 앱에서 쓰는 단계를 넘어, **코드와 API로 직접 다루고
 
 ## 이 섹션의 튜토리얼
 
-<TutorialGrid category="dev" />
+<TutorialGrid category="dev" compact />

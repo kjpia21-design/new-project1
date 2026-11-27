@@ -3,6 +3,7 @@ import LevelBadge from './LevelBadge.astro';
 import Illustration from './Illustration.astro';
 import { getTutorials, entryUrl, tutorialSlug, getCategoryLabel, categoryOrder, getLevelLabel, type Level, type Category } from '../lib/tutorials';
 import { getLang, t } from '../lib/i18n';
+import { groupClaude } from '../data/topic-groups.mjs';
 
 interface Props {
   level?: Level;
@@ -10,12 +11,36 @@ interface Props {
   /** true면 수준·분야 필터 버튼을 위에 보여준다 */
   filters?: boolean;
   emptyText?: string;
+  /** true면 한 줄짜리 목록 행으로 보여 준다(섹션 허브). 번호, 제목, 수준, 시간, 완료 ✓ */
+  compact?: boolean;
+  /** 'subgroup'이면 Claude 하위 그룹별 소제목으로 나눈다(category="claude"일 때만) */
+  groupBy?: 'subgroup';
+  /** true면 휴대폰(≤ 800px)에서 compact 행 모양으로 바꾼다(/tutorials/ 전체 목록) */
+  mobileCompact?: boolean;
 }
 const Heading = Astro.props.filters ? 'h2' : 'h3';
 const lang = getLang(Astro);
-const { level, category, filters = false, emptyText = t(lang, 'grid.empty') } = Astro.props;
+const { level, category, filters = false, emptyText = t(lang, 'grid.empty'), compact = false, groupBy, mobileCompact = false } = Astro.props;
 const items = await getTutorials({ level, category, lang });
 const levels: Level[] = ['beginner', 'practical', 'advanced'];
+
+// 섹션 나누기: 기본은 한 덩어리. groupBy="subgroup"이면 Claude 하위 그룹(목록에 없는 글은 "기타")으로 나눈다.
+type Sec = { id?: string; label?: string; items: typeof items };
+let sections: Sec[] = [{ items }];
+if (groupBy === 'subgroup' && category === 'claude' && items.length) {
+  const fileOf = (e: (typeof items)[number]) => tutorialSlug(e.id).replace(/^claude\//, '');
+  const byName = new Map(items.map((e) => [fileOf(e), e]));
+  sections = groupClaude([...byName.keys()]).map((g) => ({
+    id: g.id,
+    label: lang === 'ko' ? g.ko : g.en,
+    items: g.slugs.map((n) => byName.get(n)!).filter(Boolean),
+  }));
+}
+const numOf = (e: (typeof items)[number], i: number) => {
+  const m = tutorialSlug(e.id).split('/').pop()!.match(/^[a-z]?(\d+)/i);
+  return m ? String(Number(m[1])) : String(i + 1);
+};
+const doneLabel = lang === 'ko' ? '완료' : 'Done';
 ---
 <div class="tutorial-grid not-content" data-filterable={filters ? '' : undefined} data-result={t(lang, 'grid.count')}>
   {filters && (
@@ -47,24 +72,31 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
   {items.length === 0 ? (
     <p class="empty">{emptyText}</p>
   ) : (
-    <ul class="cards">
-      {items.map((e) => (
-        <li class:list={['card', { soon: e.data.status === 'draft' }]} data-slug={tutorialSlug(e.id)} data-level={e.data.level} data-category={e.data.category} data-search={[e.data.title, e.data.description, ...(e.data.tools ?? [])].filter(Boolean).join(' ').toLowerCase()}>
-          <a href={entryUrl(e.id)}>
-            <div class="top">
-              <span class="cat"><Illustration name={e.data.category!} size={26} tone="neutral" bare />{getCategoryLabel(e.data.category!, lang)}</span>
-              {e.data.status === 'draft' && <span class="soon-tag">{t(lang, 'meta.draft')}</span>}
-            </div>
-            <Heading>{e.data.title}</Heading>
-            {e.data.description && <p class="desc">{e.data.description}</p>}
-            <p class="foot">
-              {e.data.level && <LevelBadge level={e.data.level} />}
-              {e.data.duration && <span class="dur">{e.data.duration}</span>}
-            </p>
-          </a>
-        </li>
-      ))}
-    </ul>
+    sections.map((sec) => (
+      <section class="sec" data-group-id={sec.id}>
+        {sec.label && <h3 class="sec-title">{sec.label} <span class="sec-n">{sec.items.length}</span></h3>}
+        <ul class:list={['cards', { compact, 'm-compact': mobileCompact }]}>
+          {sec.items.map((e, i) => (
+            <li class:list={['card', { soon: e.data.status === 'draft' }]} data-slug={tutorialSlug(e.id)} data-level={e.data.level} data-category={e.data.category} data-search={[e.data.title, e.data.description, ...(e.data.tools ?? [])].filter(Boolean).join(' ').toLowerCase()}>
+              <a href={entryUrl(e.id)}>
+                <span class="num" aria-hidden="true">{numOf(e, i)}</span>
+                <div class="top">
+                  <span class="cat"><Illustration name={e.data.category!} size={26} tone="neutral" bare />{getCategoryLabel(e.data.category!, lang)}</span>
+                  {e.data.status === 'draft' && <span class="soon-tag">{t(lang, 'meta.draft')}</span>}
+                </div>
+                {(compact || mobileCompact) ? <Heading data-done-target>{e.data.title}</Heading> : <Heading>{e.data.title}</Heading>}
+                {e.data.description && <p class="desc">{e.data.description}</p>}
+                <p class="foot">
+                  {e.data.level && <LevelBadge level={e.data.level} />}
+                  {e.data.duration && <span class="dur">{e.data.duration}</span>}
+                </p>
+                <span class="chk" aria-hidden="true" title={doneLabel}>✓</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
   )}
   {filters && <p class="empty none" hidden>{t(lang, 'grid.none')}</p>}
 </div>
@@ -109,6 +141,51 @@ const levels: Level[] = ['beginner', 'practical', 'advanced'];
   .card[data-done] :is(h2, h3) { color: var(--sl-color-gray-2); }
   .card[data-done] :is(h2, h3)::before {
     content: '✓' / ''; margin-inline-end: 0.35rem; color: var(--ai-coral-ink); font-weight: 700;
+  }
+  .sec + .sec { margin-top: 1.6rem; }
+  .sec-title { margin: 0 0 0.6rem; font-size: var(--sl-text-sm); font-weight: 700; color: var(--sl-color-white); letter-spacing: -0.01em; display: flex; align-items: center; gap: 0.5rem; }
+  .sec-n { font-size: var(--sl-text-2xs); font-weight: 600; color: var(--sl-color-gray-3); border: 1px solid var(--ai-line); border-radius: 999px; padding: 0 0.5rem; line-height: 1.6; font-variant-numeric: tabular-nums; }
+  .num, .chk { display: none; }
+  /* 한 줄 목록 행(섹션 허브 compact, 휴대폰의 /tutorials/): 번호 · 제목 · 수준 · 시간 · 완료 ✓ */
+  .cards.compact { display: block; border: 1px solid var(--ai-line); border-radius: var(--ai-radius); background: var(--ai-surface); overflow: hidden; }
+  .cards.compact .card:not([hidden]) ~ .card:not([hidden]) { border-top: 1px solid var(--ai-line); }
+  .cards.compact .card a { border: 0; border-radius: 0; background: transparent; box-shadow: none; transform: none;
+    display: grid; grid-template-columns: 2.1rem minmax(0, 1fr) auto 1.1rem; align-items: center; gap: 0.5rem 0.6rem; height: auto; min-height: 2.75rem; padding: 0.5rem 0.9rem; }
+  .cards.compact .card a:hover { background: var(--ai-surface-2); }
+  .cards.compact .num { display: block; font-size: var(--sl-text-xs); font-weight: 600; color: var(--sl-color-gray-3); font-variant-numeric: tabular-nums; text-align: end; }
+  .cards.compact .top, .cards.compact .desc { display: none; }
+  .cards.compact :is(h2, h3, h4) { margin: 0; font-size: var(--sl-text-sm); font-weight: 600; line-height: 1.4; min-width: 0; }
+  .cards.compact .foot { margin: 0; padding: 0; flex-wrap: nowrap; white-space: nowrap; gap: 0.6rem; }
+  .cards.compact .chk { display: block; width: 1.1rem; text-align: center; font-weight: 700; color: var(--ai-coral-ink); visibility: hidden; }
+  .cards.compact .card[data-done] .chk { visibility: visible; }
+  .cards.compact .card[data-done] :is(h2, h3, h4)::before { content: none; }
+  .cards.compact .card.soon a { opacity: 0.7; }
+  @media (max-width: 39.99rem) {
+    .cards.compact .card a { grid-template-columns: 1.7rem minmax(0, 1fr) 1.1rem; grid-template-areas: 'n t c' '. f c'; padding: 0.55rem 0.8rem; row-gap: 0.1rem; }
+    .cards.compact .num { grid-area: n; }
+    .cards.compact :is(h2, h3, h4) { grid-area: t; }
+    .cards.compact .foot { grid-area: f; font-size: var(--sl-text-2xs); }
+    .cards.compact .chk { grid-area: c; }
+  }
+  @media (max-width: 50rem) {
+    .cards.m-compact { display: block; border: 1px solid var(--ai-line); border-radius: var(--ai-radius); background: var(--ai-surface); overflow: hidden; }
+    .cards.m-compact .card:not([hidden]) ~ .card:not([hidden]) { border-top: 1px solid var(--ai-line); }
+    .cards.m-compact .card a { border: 0; border-radius: 0; background: transparent; box-shadow: none; transform: none;
+      display: grid; grid-template-columns: minmax(0, 1fr) auto 1.1rem; align-items: center; gap: 0.5rem 0.6rem; height: auto; min-height: 2.75rem; padding: 0.5rem 0.9rem; }
+    .cards.m-compact .card a:hover { background: var(--ai-surface-2); }
+    .cards.m-compact .top, .cards.m-compact .desc { display: none; }
+    .cards.m-compact :is(h2, h3, h4) { margin: 0; font-size: var(--sl-text-sm); font-weight: 600; line-height: 1.4; min-width: 0; }
+    .cards.m-compact .foot { margin: 0; padding: 0; flex-wrap: nowrap; white-space: nowrap; gap: 0.6rem; }
+    .cards.m-compact .chk { display: block; width: 1.1rem; text-align: center; font-weight: 700; color: var(--ai-coral-ink); visibility: hidden; }
+    .cards.m-compact .card[data-done] .chk { visibility: visible; }
+    .cards.m-compact .card[data-done] :is(h2, h3, h4)::before { content: none; }
+    .cards.m-compact .card.soon a { opacity: 0.7; }
+  }
+  @media (max-width: 39.99rem) {
+    .cards.m-compact .card a { grid-template-columns: minmax(0, 1fr) 1.1rem; grid-template-areas: 't c' 'f c'; padding: 0.55rem 0.8rem; row-gap: 0.1rem; }
+    .cards.m-compact :is(h2, h3, h4) { grid-area: t; }
+    .cards.m-compact .foot { grid-area: f; font-size: var(--sl-text-2xs); }
+    .cards.m-compact .chk { grid-area: c; }
   }
   .cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr)); }
   .card { margin: 0; padding: 0; min-width: 0; }

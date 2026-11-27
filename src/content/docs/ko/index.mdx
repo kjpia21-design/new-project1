@@ -4,22 +4,14 @@ description: 최신 AI 도구를 쉽게 설명하고, 단계별로 따라 할 �
 template: splash
 ---
 
-import HomeHero from '../../../components/HomeHero.astro';
-import LevelCards from '../../../components/LevelCards.astro';
+import HomeDashboard from '../../../components/HomeDashboard.astro';
+import HomeLower from '../../../components/HomeLower.astro';
 import CategoryCards from '../../../components/CategoryCards.astro';
 import RecentUpdates from '../../../components/RecentUpdates.astro';
 
 <div class="home-wrap">
 
-<HomeHero />
-
-<section>
-
-## 나는 어떤 사용자일까요?
-
-<LevelCards />
-
-</section>
+<HomeDashboard />
 
 <section>
 
@@ -27,7 +19,11 @@ import RecentUpdates from '../../../components/RecentUpdates.astro';
 
 <CategoryCards />
 
-내 일에 맞춰 찾고 싶다면 [직무별 AI 활용](/ko/roles/)을, 바로 복사해 쓸 문장이 필요하면 [바로 쓰는 프롬프트 모음](/ko/start/prompts/)을, 모르는 말이 나오면 [AI 용어 사전](/ko/start/glossary/)을 보세요.
+</section>
+
+<section>
+
+<HomeLower />
 
 </section>
 
@@ -35,15 +31,12 @@ import RecentUpdates from '../../../components/RecentUpdates.astro';
 
 ## 최근 확인·업데이트한 글
 
-<RecentUpdates limit={5} />
+<RecentUpdates limit={3} />
+
+[전체 튜토리얼 보기 →](/ko/tutorials/) · [모두 보기 →](/ko/updates/)
 
 </section>
 
-<section class="home-all">
-
-[전체 튜토리얼 목록 보기 →](/ko/tutorials/)
-
-</section>
 
 </div>
 

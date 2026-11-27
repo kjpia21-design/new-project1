@@ -1,11 +1,14 @@
 ---
 import Illustration from './Illustration.astro';
-import { url, getTutorials } from '../lib/tutorials';
+import { url, getTutorials, tutorialSlug } from '../lib/tutorials';
 import { getLang, t } from '../lib/i18n';
 const lang = getLang(Astro);
-const counts = Object.fromEntries(
-  await Promise.all(['basics'].map(async (k) => [k, (await getTutorials({ category: k as 'basics', lang })).length])),
-) as Record<string, number>;
+// 주제별 게시된 글의 slug 목록(ko/ 없는 형태). 편수는 여기서 세고, 완료 수는 Footer.astro 스크립트가 data-atc-count 규약으로 채운다.
+const topicKeys = ['basics', 'claude', 'chat', 'agents', 'media', 'automation', 'coding', 'dev'] as const;
+const slugs = Object.fromEntries(
+  await Promise.all(topicKeys.map(async (k) => [k, (await getTutorials({ category: k, lang })).filter((e) => e.data.status === 'published').map((e) => tutorialSlug(e.id))])),
+) as Record<string, string[]>;
+const counts = Object.fromEntries(topicKeys.map((k) => [k, slugs[k].length])) as Record<string, number>;
 const cats = [
   { key: 'basics', title: t(lang, 'cat.basics'), desc: t(lang, 'cc.basics.desc', { n: counts.basics }), href: '/basics/' },
   { key: 'claude', title: t(lang, 'cat.claude'), desc: t(lang, 'cc.claude.desc'), href: '/claude/', accent: true },
@@ -15,7 +18,6 @@ const cats = [
   { key: 'automation', title: t(lang, 'cat.automation'), desc: t(lang, 'cc.automation.desc'), href: '/automation/' },
   { key: 'coding', title: t(lang, 'cat.coding'), desc: t(lang, 'cc.coding.desc'), href: '/coding/' },
   { key: 'dev', title: t(lang, 'cat.dev'), desc: t(lang, 'cc.dev.desc'), href: '/dev/' },
-  { key: 'robot', title: t(lang, 'cc.roles'), desc: t(lang, 'cc.roles.desc'), href: '/roles/' },
 ] as const;
 ---
 <ul class="cats not-content">
@@ -24,6 +26,12 @@ const cats = [
       <a href={url(c.href, lang)} class:list={[{ accent: (c as any).accent }]}>
         <Illustration name={c.key} size={36} tone="neutral" />
         <div><h3>{c.title}</h3><p>{c.desc}</p></div>
+        {slugs[c.key] && (
+          <div class="pr" data-atc-count={slugs[c.key].join(' ')} data-atc-total={slugs[c.key].length}>
+            <span class="bar" aria-hidden="true"><i></i></span>
+            <span class="n"><span class="atc-count-done">0</span> / {slugs[c.key].length}<span class="sr-only"> {lang === 'ko' ? '편 완료' : 'tutorials done'}</span></span>
+          </div>
+        )}
       </a>
     </li>
   ))}
@@ -32,11 +40,12 @@ const cats = [
 <style>
   .cats {
     list-style: none; margin: 0; padding: 0; display: grid; gap: 0.75rem;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15.5rem), 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
   li { margin: 0; padding: 0; }
+  @media (max-width: 64rem) { .cats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   a {
-    display: flex; align-items: flex-start; gap: 0.9rem; height: 100%; padding: 1.05rem 1.1rem; text-decoration: none;
+    display: grid; grid-template-columns: auto 1fr; align-items: start; gap: 0.2rem 0.9rem; height: 100%; padding: 1.05rem 1.1rem; text-decoration: none;
     background: var(--ai-surface); border: 1px solid var(--ai-line); border-radius: var(--ai-radius);
     transition: border-color 0.15s, box-shadow 0.2s var(--ai-ease), transform 0.2s var(--ai-ease);
   }
@@ -45,8 +54,24 @@ const cats = [
   a :global(.illu) { transition: background-color 0.15s, color 0.15s; }
   a.accent { border-color: var(--ai-coral-ink); background: color-mix(in srgb, var(--ai-coral-soft) 45%, var(--ai-surface)); }
   a.accent :global(.illu) { color: var(--ai-coral-ink); background: var(--ai-coral-soft); }
-  a > div { min-width: 0; }
+  a > div:not(.pr) { min-width: 0; }
+  /* 편수·진행: "n / m" + 가는 막대. 진행이 0이면 막대가 흐리게만 보인다. */
+  .pr { grid-column: 1 / -1; display: flex; align-items: center; gap: 0.6rem; margin-top: 0.55rem; font-size: var(--sl-text-xs); font-weight: 700; color: var(--sl-color-gray-3); font-variant-numeric: tabular-nums; }
+  .bar { flex: 1; height: 4px; border-radius: 99px; background: var(--ai-line); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: calc(var(--atc-pct, 0) * 1%); background: var(--ai-coral); border-radius: 99px; opacity: 0.35; }
+  .pr[data-atc-started] .bar i { opacity: 1; }
+  .pr[data-atc-started] { color: var(--sl-color-gray-2); }
+  .n { white-space: nowrap; }
   h3 { margin: 0.05rem 0 0; font-size: var(--sl-text-base); line-height: 1.4; font-weight: 650; color: var(--sl-color-white); letter-spacing: -0.01em; }
   p { margin: 0.25rem 0 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-2); line-height: 1.55; }
-  @media (max-width: 40rem) { .cats { gap: 0.5rem; } a { padding: 0.9rem 1rem; } }
+  @media (max-width: 40rem) {
+    .cats { gap: 0.5rem; grid-template-columns: 1fr 1fr; }
+    a { padding: 0.85rem 0.9rem; display: flex; flex-wrap: wrap; gap: 0.1rem 0.65rem; }
+    a > div:not(.pr) { flex: 1 1 0; }
+    a p { display: none; }
+    a h3 { font-size: var(--sl-text-sm); }
+    a :global(.illu) { display: none; }
+    .pr { flex: 1 0 100%; margin-top: 0.4rem; }
+  }
+  @media (max-width: 22rem) { .cats { grid-template-columns: 1fr; } }
 </style>

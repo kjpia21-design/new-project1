@@ -1,5 +1,5 @@
 ---
-// 튜토리얼 맨 위 "지금 어디쯤인가" 띠: 섹션 이름(섹션 첫 페이지 링크), 사이드바 묶음 안 순서(예: 3 / 21), 가는 진행 막대, 이전·다음 링크.
+// 튜토리얼 맨 위 "지금 어디쯤인가" 띠: 섹션 이름(섹션 첫 페이지 링크), 섹션 안 순서(예: 3 / 21), 가는 진행 막대, 이전·다음 링크.
 // 모두 서버에서 그린다(JS 없음). 순서는 사이드바에서 현재 글이 들어 있는 묶음을 찾아 "튜토리얼 링크"만 센다
 // (섹션 소개 페이지·Claude 최신 소식 같은 비튜토리얼 링크는 세지 않는다). 이전·다음은 Starlight 페이지 이동과 같다.
 import { url, getCategoryLabel, type Category } from '../lib/tutorials';
@@ -14,18 +14,11 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const TUTORIAL_HREF = /^\/(?:ko\/)?(?:basics|claude|agents|dev|chat|coding|media|automation)\/[^/]+\/?$/;
 const isTutorialHref = (href: string) => TUTORIAL_HREF.test(href.slice(base.length));
 
-/** 현재 글이 직접 들어 있는 묶음의 링크 목록을 찾는다. */
-function findGroup(entries: Entry[]): Entry[] | undefined {
-  if (entries.some((e) => e.type === 'link' && e.isCurrent)) return entries;
-  for (const e of entries) {
-    if (e.type === 'group') {
-      const found = findGroup(e.entries);
-      if (found) return found;
-    }
-  }
-  return undefined;
-}
-const group = findGroup(sidebar as unknown as Entry[]) ?? [];
+/** 현재 글이 들어 있는 최상위 묶음(섹션)을 찾는다. Claude처럼 하위 그룹이 있어도 섹션 전체를 센다. */
+const has = (e: Entry): boolean => (e.type === 'link' ? e.isCurrent : e.entries.some(has));
+const flat = (es: Entry[]): Entry[] => es.flatMap((e) => (e.type === 'group' ? flat(e.entries) : [e]));
+const top = (sidebar as unknown as Entry[]).find(has);
+const group = top ? (top.type === 'group' ? flat(top.entries) : [top]) : [];
 const links = group.filter((e): e is Extract<Entry, { type: 'link' }> => e.type === 'link' && isTutorialHref(e.href));
 const index = links.findIndex((l) => l.isCurrent);
 const pos = index + 1;

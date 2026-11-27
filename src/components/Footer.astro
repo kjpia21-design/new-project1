@@ -78,6 +78,32 @@ const showSources = tutorial && entry.data.status === 'published';
         flag(c, c.querySelector('[data-done-target], h2, h3') || c, d);
       });
       document.querySelectorAll('[data-hide-done]').forEach(function (b) { if (any) b.hidden = false; });
+      // 진행 상태 공통 규약: data-atc-count="slug ..." → .atc-count-done 텍스트, --atc-pct, data-atc-started
+      document.querySelectorAll('[data-atc-count]').forEach(function (el) {
+        var list = (el.getAttribute('data-atc-count') || '').split(/\s+/).filter(Boolean), n = 0;
+        list.forEach(function (sl) { if (prog[sl]) n++; });
+        el.querySelectorAll('.atc-count-done').forEach(function (x) { x.textContent = n; });
+        if (el.classList.contains('atc-count-done')) el.textContent = n;
+        el.style.setProperty('--atc-pct', list.length ? Math.round(n / list.length * 100) : 0);
+        if (n > 0) el.setAttribute('data-atc-started', ''); else el.removeAttribute('data-atc-started');
+      });
+      // data-atc-next: 목록(자기 자신, 안쪽, 가까운 바깥의 data-atc-count)에서 아직 안 본 첫 글로 a.atc-next를 바꾼다.
+      document.querySelectorAll('[data-atc-next]').forEach(function (el) {
+        var a = el.matches('a.atc-next') ? el : el.querySelector('a.atc-next');
+        if (!a) return;
+        var src = el.hasAttribute('data-atc-count') ? el : (el.closest('[data-atc-count]') || el.querySelector('[data-atc-count]'));
+        var raw = el.getAttribute('data-atc-next') || (src && src.getAttribute('data-atc-count')) || '';
+        var list = raw.split(/\s+/).filter(Boolean);
+        var next = null;
+        for (var i = 0; i < list.length; i++) if (!prog[list[i]]) { next = list[i]; break; }
+        if (!next) { el.setAttribute('data-atc-alldone', ''); return; }
+        el.removeAttribute('data-atc-alldone');
+        var titles = {}, tEl = el.hasAttribute('data-atc-titles') ? el : (el.closest('[data-atc-titles]') || el.querySelector('[data-atc-titles]') || (src && src.hasAttribute('data-atc-titles') ? src : null));
+        try { titles = JSON.parse((tEl && tEl.getAttribute('data-atc-titles')) || '{}') || {}; } catch (e) {}
+        a.setAttribute('href', (lang === 'ko' ? '/ko' : '') + '/' + next + '/');
+        var title = titles[next];
+        if (title) { var tt = a.querySelector('.atc-next-title'); if (tt) tt.textContent = title; else a.textContent = title; }
+      });
       // 학습 경로: "N/M 완료", 진행 막대, 첫 미완료 단계로 "이어 하기"
       document.querySelectorAll('[data-lp]').forEach(function (p) {
         var st = p.querySelectorAll('.lp-step'), n = 0, k = -1;
@@ -140,16 +166,64 @@ const showSources = tutorial && entry.data.status === 'published';
       window.addEventListener('pageshow', function (e) { if (e.persisted) { prog = read(KEY) || {}; markAll(); } });
     }
 
-    // 홈: "이어 보기" 카드 (현재 언어에 있는 글일 때만)
-    var cont = document.querySelector('[data-atc-continue]');
-    if (cont) {
-      var last = read(LAST), map = null;
-      try { map = JSON.parse(document.getElementById('atc-tutorials').textContent); } catch (e) {}
-      if (last && typeof last.slug === 'string' && map && Object.prototype.hasOwnProperty.call(map, last.slug)) {
-        cont.href = cont.getAttribute('data-prefix') + '/' + last.slug + '/';
-        cont.querySelector('.ct').textContent = map[last.slug];
-        cont.hidden = false;
+    // 홈 대시보드: 이어 보기 카드, 학습 현황, 시리즈 진행, 학습 경로 카드
+    function jsonOf(id) { try { return JSON.parse(document.getElementById(id).textContent); } catch (e) { return null; } }
+    function fill(tpl, o) { return tpl.replace(/\{(\w+)\}/g, function (m, k) { return k in o ? o[k] : m; }); }
+    function home() {
+      var map = jsonOf('atc-tutorials');
+      if (!map) return;
+      var valid = Object.keys(map), doneN = valid.filter(function (k) { return prog[k]; }).length;
+      var st = document.querySelector('[data-hd-status]');
+      if (st) st.textContent = fill(st.getAttribute('data-t'), { n: valid.length, m: doneN });
+      var cont = document.querySelector('[data-atc-continue]');
+      if (cont) {
+        var last = read(LAST), series = jsonOf('atc-series') || {};
+        if (last && typeof last.slug === 'string' && Object.prototype.hasOwnProperty.call(map, last.slug)) {
+          var href = cont.getAttribute('data-prefix') + '/' + last.slug + '/';
+          if (cont.tagName === 'A') cont.href = href;
+          var go = cont.querySelector('[data-atc-continue-go]'); if (go) go.href = href;
+          cont.querySelector('.ct').textContent = map[last.slug];
+          var cat = last.slug.split('/')[0], sr = series[cat];
+          if (sr) {
+            var d = sr.slugs.filter(function (k) { return prog[k]; }).length, i = sr.slugs.indexOf(last.slug) + 1;
+            var meta = cont.querySelector('.cmeta'); if (meta) meta.textContent = sr.label + ' · ' + i + '/' + sr.slugs.length;
+            var rt = cont.querySelector('.rt'); if (rt) rt.textContent = fill(cont.getAttribute('data-t-series'), { d: d, n: sr.slugs.length });
+            var bar = cont.querySelector('.bar i'); if (bar) bar.style.width = (d / sr.slugs.length * 100) + '%';
+          }
+          cont.hidden = false;
+        } else cont.hidden = true;
+      }
+      // 내 학습 경로: 진행 중(1단계 이상 완료, 전부는 아님)인 경로 중 비율이 가장 높은 것
+      var pc = document.querySelector('[data-hd-path]'), ps = jsonOf('atc-paths');
+      if (pc && ps) {
+        var best = null;
+        ps.forEach(function (p) {
+          var d = p.steps.filter(function (x) { return prog[x.s]; }).length;
+          if (d > 0 && d < p.steps.length && (!best || d / p.steps.length > best.d / best.p.steps.length)) best = { p: p, d: d };
+        });
+        var act = pc.querySelector('.hp-active'), none = pc.querySelector('.hp-none');
+        if (best) {
+          var nx = best.p.steps.filter(function (x) { return !prog[x.s]; })[0], k = best.p.steps.indexOf(nx) + 1, tot = best.p.steps.length;
+          pc.querySelector('.hp-title').textContent = best.p.title;
+          pc.querySelector('.hp-sub').textContent = fill(pc.getAttribute('data-t-sub'), { d: best.d, n: tot });
+          pc.querySelector('.bar i').style.width = (best.d / tot * 100) + '%';
+          pc.querySelector('.hp-pct').textContent = Math.round(best.d / tot * 100) + '%';
+          var a = pc.querySelector('.nextstep'); a.href = (lang === 'ko' ? '/ko' : '') + '/' + nx.s + '/';
+          a.querySelector('em').textContent = k;
+          pc.querySelector('.hp-next').textContent = nx.t + (nx.m ? ' · ' + nx.m + (lang === 'ko' ? '분' : ' min') : '');
+          act.hidden = false; none.hidden = true;
+        } else { act.hidden = true; none.hidden = false; }
       }
     }
+    home();
+    window.addEventListener('pageshow', function (e) { if (e.persisted) { prog = read(KEY) || {}; home(); } });
+    // 홈 큰 검색 상자: Starlight(Pagefind) 검색 창을 연다.
+    document.querySelectorAll('[data-hd-search]').forEach(function (b) {
+      b.addEventListener('click', function (ev) {
+        ev.stopPropagation(); // Starlight 검색 창은 창 밖 클릭에 닫히므로, 이 클릭이 바깥으로 올라가지 않게 한다.
+        var o = document.querySelector('site-search button[data-open-modal]') || document.querySelector('button[data-open-modal]');
+        if (o) o.click(); else document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true }));
+      });
+    });
   });
 </script>

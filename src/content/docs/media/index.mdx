@@ -8,7 +8,10 @@ tableOfContents: false
 ---
 
 import TutorialGrid from '../../../components/TutorialGrid.astro';
+import SectionProgress from '../../../components/SectionProgress.astro';
 import TutorialCount from '../../../components/TutorialCount.astro';
+
+<SectionProgress category="media" />
 
 Use AI tools that create and organize images, video, and audio for your work.
 
@@ -16,4 +19,4 @@ There are <TutorialCount section="media" /> tutorials, including image generatio
 
 ## Tutorial list
 
-<TutorialGrid category="media" />
+<TutorialGrid category="media" compact />
