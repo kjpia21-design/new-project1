@@ -8,7 +8,10 @@ tableOfContents: false
 ---
 
 import TutorialGrid from '../../../components/TutorialGrid.astro';
+import SectionProgress from '../../../components/SectionProgress.astro';
 import TutorialCount from '../../../components/TutorialCount.astro';
+
+<SectionProgress category="chat" />
 
 Learn the basics of using chat AI like Claude, ChatGPT, and Gemini for work.
 
@@ -16,4 +19,4 @@ There are <TutorialCount section="chat" /> tutorials, covering how to write prom
 
 ## Tutorials
 
-<TutorialGrid category="chat" />
+<TutorialGrid category="chat" compact />

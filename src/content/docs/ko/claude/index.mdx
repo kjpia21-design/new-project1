@@ -8,7 +8,10 @@ tableOfContents: false
 ---
 
 import TutorialGrid from '../../../../components/TutorialGrid.astro';
+import SectionProgress from '../../../../components/SectionProgress.astro';
 import TutorialCount from '../../../../components/TutorialCount.astro';
+
+<SectionProgress category="claude" />
 
 Claude를 입문부터 고급까지 가장 상세하게 다루는 특별 섹션이에요. 모든 내용은 Anthropic 공식 문서를 근거로 하고, 출처와 마지막 확인일을 함께 적어요.
 
@@ -18,4 +21,4 @@ Claude를 입문부터 고급까지 가장 상세하게 다루는 특별 섹션�
 
 ## 튜토리얼 목록
 
-<TutorialGrid category="claude" />
+<TutorialGrid category="claude" compact groupBy="subgroup" />

@@ -8,7 +8,10 @@ sidebar:
 ---
 
 import TutorialGrid from '../../../components/TutorialGrid.astro';
+import SectionProgress from '../../../components/SectionProgress.astro';
 import TutorialCount from '../../../components/TutorialCount.astro';
+
+<SectionProgress category="basics" />
 
 This section is for people who have barely used AI. If you can use a computer and a phone at a basic level, you're ready. We avoid hard jargon, and when we do use it, we explain it right away. If you run into a term you don't know, look it up in the [AI glossary](/start/glossary/).
 
@@ -36,7 +39,7 @@ We recommend reading in numbered order. If you've already signed up, it's fine t
 
 ## All <TutorialCount section="basics" /> tutorials
 
-<TutorialGrid level="beginner" category="basics" emptyText="There are no tutorials in this category yet." />
+<TutorialGrid level="beginner" category="basics" emptyText="There are no tutorials in this category yet." compact />
 
 ## When you've finished
 

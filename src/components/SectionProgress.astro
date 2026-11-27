@@ -1,0 +1,64 @@
+---
+// 섹션 허브 맨 위 진행 헤더: "N편 중 M편 완료" 막대 + "이어서: 〈다음 안 본 글〉" 버튼.
+// 진행 상태는 Footer.astro 스크립트가 채운다(data-atc-count / data-atc-next 규약). JS가 꺼져 있으면 0편 완료 + 첫 글로 가는 링크가 보인다.
+import { getTutorials, entryUrl, tutorialSlug, type Category } from '../lib/tutorials';
+import { getLang } from '../lib/i18n';
+import { groupClaude } from '../data/topic-groups.mjs';
+
+interface Props { category: Category }
+const { category } = Astro.props;
+const lang = getLang(Astro);
+const all = (await getTutorials({ category, lang })).filter((e) => e.data.status === 'published');
+// 허브 목록과 같은 순서: Claude는 하위 그룹 순서, 나머지는 번호순
+let list = all;
+if (category === 'claude') {
+  const fileOf = (e: (typeof all)[number]) => tutorialSlug(e.id).replace(/^claude\//, '');
+  const byName = new Map(all.map((e) => [fileOf(e), e]));
+  list = groupClaude([...byName.keys()]).flatMap((g) => g.slugs.map((n) => byName.get(n)!)).filter(Boolean);
+}
+const slugs = list.map((e) => tutorialSlug(e.id));
+const titles = Object.fromEntries(list.map((e) => [tutorialSlug(e.id), e.data.title]));
+const first = list[0];
+const ko = lang === 'ko';
+const total = list.length;
+---
+{first && (
+  <div class="hub-progress not-content" data-atc-count={slugs.join(' ')} data-atc-titles={JSON.stringify(titles)} style="--atc-pct:0">
+    <div class="hp-top">
+      <p class="hp-count">
+        {ko ? <><span class="num">{total}</span>편 중 <b class="atc-count-done">0</b>편 완료</> : <><b class="atc-count-done">0</b> of <span class="num">{total}</span> done</>}
+      </p>
+      <p class="hp-next" data-atc-next>
+        <span class="lbl lbl-start">{ko ? '시작하기' : 'Start'}</span><span class="lbl lbl-go">{ko ? '이어서' : 'Continue'}</span>
+        <a class="atc-next" href={entryUrl(first.id)}>{first.data.title}</a>
+      </p>
+    </div>
+    <div class="hp-track" aria-hidden="true"><span></span></div>
+  </div>
+)}
+
+<style>
+  .hub-progress { margin: 0 0 1.5rem; padding: 1rem 1.15rem 1.1rem; border: 1px solid var(--ai-line); border-radius: var(--ai-radius-lg); background: var(--ai-surface); box-shadow: var(--ai-shadow); }
+  .hp-top { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem 1.25rem; flex-wrap: wrap; }
+  .hp-count { margin: 0; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); font-variant-numeric: tabular-nums; }
+  .hp-count b, .hp-count .num { color: var(--sl-color-white); font-weight: 700; font-size: var(--sl-text-base); }
+  .hp-next { margin: 0; display: flex; align-items: center; gap: 0.5rem; min-width: 0; max-width: 100%; }
+  .lbl { font-size: var(--sl-text-xs); font-weight: 600; color: var(--sl-color-gray-3); flex: none; }
+  .lbl-go { display: none; }
+  .hub-progress[data-atc-started] .lbl-start { display: none; }
+  .hub-progress[data-atc-started] .lbl-go { display: inline; }
+  .atc-next {
+    display: inline-flex; align-items: center; min-height: 2.5rem; max-width: 100%; padding: 0.35rem 1rem; border-radius: 999px; box-sizing: border-box;
+    background: var(--sl-color-accent); color: var(--ai-on-accent); font-size: var(--sl-text-sm); font-weight: 650; line-height: 1.35; text-decoration: none;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: background-color 0.15s;
+  }
+  .atc-next:hover { background: var(--ai-accent-hover); color: var(--ai-on-accent); }
+  .atc-next:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 2px; }
+  .hp-track { margin-top: 0.8rem; height: 6px; border-radius: 999px; background: var(--ai-line); overflow: hidden; }
+  .hp-track span { display: block; height: 100%; width: calc(var(--atc-pct, 0) * 1%); background: var(--ai-coral); border-radius: 999px; transition: width 0.3s var(--ai-ease); }
+  @media (max-width: 39.99rem) {
+    .hub-progress { padding: 0.9rem 1rem 1rem; }
+    .hp-next { width: 100%; }
+    .atc-next { flex: 1 1 auto; min-width: 0; }
+  }
+</style>
