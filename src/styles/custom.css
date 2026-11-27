@@ -318,3 +318,23 @@ dialog[aria-label] .dialog-frame { border-radius: var(--ai-radius-lg); border-co
   content: '✓' / ''; display: inline-block; padding-inline-start: 0.4rem;
   color: var(--ai-coral-ink); font-size: 0.8em; font-weight: 700; line-height: inherit;
 }
+
+/* step36 tutorial top */
+/* 제목: 모바일에서 3줄이 되지 않게 줄이고, 메타·요약 위아래 여백을 줄인다. */
+@media (max-width: 40rem) {
+  h1#_top { font-size: 1.5rem; line-height: 1.25; margin-top: 0.6rem; }
+}
+@media (min-width: 40.01rem) { h1#_top { margin-top: 0.5rem; } }
+/* 단계 앞 큰 블록(이 글을 마치면·먼저 알아둘 개념)은 접어 두고, 제목만 한 줄로 보인다. */
+.sl-markdown-content details.atc-pre-fold { margin: 0.5rem 0; padding: 0.15rem 0.9rem; }
+.sl-markdown-content details.atc-pre-fold > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 0.5rem; padding: 0; }
+.sl-markdown-content details.atc-pre-fold > summary::-webkit-details-marker { display: none; }
+.sl-markdown-content details.atc-pre-fold > summary h2 { margin: 0; font-size: 1.05rem; border: 0; }
+.sl-markdown-content details.atc-pre-fold > summary .sl-heading-wrapper { margin: 0; flex: 1; }
+.sl-markdown-content details.atc-pre-fold > summary:hover h2 { color: var(--ai-coral-ink); }
+.sl-markdown-content details.atc-pre-fold > .atc-pre-body { padding-bottom: 0.75rem; }
+.sl-markdown-content details.atc-pre-fold + .sl-heading-wrapper, .sl-markdown-content details.atc-pre-fold + h2 { margin-top: 1.4rem; }
+/* 제목 패널과 본문 패널 사이 여백을 줄인다(요약 상자가 바로 이어지게). */
+.content-panel:has(.meta) { padding-bottom: 0.25rem; }
+.sl-markdown-content > .summary:first-child { margin-top: 0.5rem; }
+.sl-markdown-content .summary .body { font-size: 0.9375rem; line-height: 1.6; }

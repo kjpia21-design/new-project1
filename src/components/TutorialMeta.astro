@@ -12,43 +12,146 @@ const lang = getLang(Astro);
 // 학습 경로 안의 위치(서버에서 그림)와 먼저 볼 글(완료 체크는 Footer.astro 진행 스크립트가 data-slug로 붙인다)
 const inPaths = slug ? await getPathsFor(slug) : [];
 const required = await getRequired(requires, lang);
+// step36: 한 줄 메타 + 접이식 상세. (이 컴포넌트 안에서만 쓰는 문구라 i18n.ts는 건드리지 않는다.)
+const ko = lang === 'ko';
+const L = {
+  duration: ko ? '소요' : 'Time',
+  verified: ko ? '확인' : 'Verified',
+  need: ko ? '준비물' : 'Needs',
+  tools: ko ? '사용 도구' : 'Tools',
+  first: ko ? '먼저 볼 글' : 'Read first',
+  firstN: (n: number) => (ko ? `먼저 볼 글 ${n}편` : `${n} to read first`),
+  mark: t(lang, 'done.mark'),
+  done: t(lang, 'done.done'),
+};
+// 핵심 요구 플랜: 준비물 문장 중 "플랜/plan"이 있는 첫 줄에서 Claude 플랜 이름만 뽑는다. 없으면 표시하지 않는다.
+const planLine = prerequisites.find((p) => /플랜|\bplans?\b/i.test(p));
+const plans = planLine ? [...new Set(planLine.match(/\b(Free|Pro|Max|Team|Enterprise)\b/g) ?? [])] : [];
+const summaryParts = [
+  prerequisites.length > 0 && `${L.need} ${prerequisites.length}`,
+  tools.length > 0 && `${L.tools} ${tools.length}`,
+  required.length > 0 && L.firstN(required.length),
+].filter(Boolean) as string[];
+const hasDetails = summaryParts.length > 0 || inPaths.length > 0 || !!category;
+
 ---
 <aside class="meta not-content" aria-label={t(lang, 'meta.label')}>
-  {inPaths.map(({ def, index }) => (
-    <p class="path">
-      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H16a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h7.5"/></svg>
-      <span>{t(lang, 'lp.partOf')}: <a href={url(def.startPage, lang)}>{def.title[lang]}</a> · {t(lang, 'lp.stepOf', { k: index + 1, n: def.steps.length })}</span>
+  <div class="line">
+    <p class="facts">
+      {level && <LevelBadge level={level} />}
+      {status === 'draft' && <span class="chip draft">{t(lang, 'meta.draft')}</span>}
+      <span class="fact">{L.duration} <b>{duration ?? t(lang, 'meta.tbd')}</b></span>
+      {plans.length > 0 && <span class="fact plan">{plans.join(' · ')}</span>}
+      <span class="fact">{L.verified} <b>{lastVerified ? <time datetime={lastVerified.toISOString().slice(0, 10)}>{formatDate(lastVerified, lang)}</time> : t(lang, 'sources.notYet')}</b></span>
     </p>
-  ))}
-  <div class="row">
-    {level && <LevelBadge level={level} />}
-    {category && <span class="chip">{getCategoryLabel(category, lang)}</span>}
-    {status === 'draft' && <span class="chip draft">{t(lang, 'meta.draft')}</span>}
+    <div class="meta-done">
+      <button type="button" class="atc-done-btn" aria-pressed="false" aria-label={L.mark}>
+        <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle class="ring" cx="12" cy="12" r="9.5"/><path class="tick" d="M7.5 12.5l3 3 6-6.5"/></svg>
+        <span class="off">{L.mark}</span><span class="on">{L.done}</span>
+      </button>
+    </div>
   </div>
-  <dl>
-    <div><dt>{t(lang, 'meta.duration')}</dt><dd>{duration ?? t(lang, 'meta.tbd')}</dd></div>
-    <div><dt>{t(lang, 'meta.verified')}</dt><dd>{lastVerified ? <time datetime={lastVerified.toISOString().slice(0, 10)}>{formatDate(lastVerified, lang)}</time> : t(lang, 'sources.notYet')}</dd></div>
-    {tools.length > 0 && <div><dt>{t(lang, 'meta.tools')}</dt><dd>{tools.join(', ')}</dd></div>}
-    {required.length > 0 && (
-      <div class="wide"><dt>{t(lang, 'meta.requires')}</dt><dd><ul class="req">{required.map((r) => (
-        <li data-slug={r.slug}><a href={url(`/${r.slug}/`, lang)} data-done-target>{r.title}</a></li>
-      ))}</ul></dd></div>
-    )}
-    {prerequisites.length > 0 && (
-      <div class="wide"><dt>{t(lang, 'meta.prereq')}</dt><dd><ul>{prerequisites.map((p) => <li>{p}</li>)}</ul></dd></div>
-    )}
-  </dl>
+  {hasDetails && (
+    <details class="more">
+      <summary>{summaryParts.length > 0 ? summaryParts.join(' · ') : (ko ? '자세한 정보' : 'Details')}</summary>
+      <div class="detail">
+        {inPaths.map(({ def, index }) => (
+          <p class="path">
+            <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.5 19H16a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h7.5"/></svg>
+            <span>{t(lang, 'lp.partOf')}: <a href={url(def.startPage, lang)}>{def.title[lang]}</a> · {t(lang, 'lp.stepOf', { k: index + 1, n: def.steps.length })}</span>
+          </p>
+        ))}
+        <dl>
+          {category && <div><dt>{ko ? '분야' : 'Topic'}</dt><dd>{getCategoryLabel(category, lang)}</dd></div>}
+          {tools.length > 0 && <div><dt>{t(lang, 'meta.tools')}</dt><dd>{tools.join(', ')}</dd></div>}
+          {required.length > 0 && (
+            <div class="wide"><dt>{t(lang, 'meta.requires')}</dt><dd><ul class="req">{required.map((r) => (
+              <li data-slug={r.slug}><a href={url(`/${r.slug}/`, lang)} data-done-target>{r.title}</a></li>
+            ))}</ul></dd></div>
+          )}
+          {prerequisites.length > 0 && (
+            <div class="wide"><dt>{t(lang, 'meta.prereq')}</dt><dd><ul>{prerequisites.map((p) => <li>{p}</li>)}</ul></dd></div>
+          )}
+        </dl>
+      </div>
+    </details>
+  )}
 </aside>
 
+<script>
+  // step36: 단계 앞을 차지하는 큰 블록("이 글을 마치면…", "먼저 알아둘 개념")을 접는다. 본문 mdx는 건드리지 않고 로드 때 감싼다.
+  // JS가 꺼져 있으면 그대로 펼쳐 보인다. 목차·주소(#) 이동은 summary 안의 제목이 그대로 받는다.
+  (function () {
+    var PRE = /^(이 (튜토리얼로|글을 마치면|글을 읽고 나면)|먼저 알아둘 개념|what you.ll be able to do|concepts to know first)/i;
+    function fold() {
+      var root = document.querySelector('.sl-markdown-content');
+      if (!root || !document.querySelector('.meta')) return;
+      var kids = Array.prototype.slice.call(root.children);
+      var isH2 = function (el) { return el.matches('h2') || (el.matches('.sl-heading-wrapper') && el.querySelector('h2')); };
+      kids.forEach(function (el, i) {
+        if (!isH2(el) || el.closest('details')) return;
+        var h = el.matches('h2') ? el : el.querySelector('h2');
+        if (!PRE.test((h.textContent || '').trim())) return;
+        var body = [];
+        for (var j = i + 1; j < kids.length && !isH2(kids[j]); j++) body.push(kids[j]);
+        if (!body.length) return;
+        var d = document.createElement('details');
+        d.className = 'atc-pre-fold';
+        var sm = document.createElement('summary');
+        el.parentNode.insertBefore(d, el);
+        sm.appendChild(el);
+        d.appendChild(sm);
+        var inner = document.createElement('div');
+        inner.className = 'atc-pre-body';
+        body.forEach(function (b) { inner.appendChild(b); });
+        d.appendChild(inner);
+        if (location.hash && d.querySelector(location.hash.replace(/[^#\w\-%가-힣]/g, ''))) d.open = true;
+      });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', fold); else fold();
+  })();
+</script>
+
 <style>
-  /* 제목 아래 정보 띠: 상자 대신 위아래 가는 선으로 가볍게. */
-  .meta { margin: 1.1rem 0 1.5rem; padding: 0.9rem 0 1rem; border-block: 1px solid var(--ai-line); }
-  .row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.8rem; }
-  .chip {
-    display: inline-flex; align-items: center; padding: 0.1rem 0.55rem; border-radius: 999px; font-size: var(--sl-text-2xs); font-weight: 600; line-height: 1.6;
-    background: var(--ai-surface); color: var(--sl-color-gray-2); border: 1px solid var(--ai-line);
+  /* step36: 제목 아래 한 줄 메타 + 접이식 상세. */
+  .meta { margin: 0.5rem 0 0.4rem; padding: 0.5rem 0; border-block: 1px solid var(--ai-line); }
+  .line { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; flex-wrap: wrap; }
+  .facts { display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem 0.9rem; margin: 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-2); line-height: 1.5; }
+  .fact b { font-weight: 600; color: var(--sl-color-white); }
+  .fact.plan { padding: 0 0.5rem; border-radius: 999px; background: var(--ai-surface); border: 1px solid var(--ai-line); color: var(--sl-color-white); font-weight: 600; }
+  .chip.draft {
+    display: inline-flex; padding: 0.1rem 0.55rem; border-radius: 999px; font-size: var(--sl-text-2xs); font-weight: 600; line-height: 1.6;
+    background: var(--ai-yellow-bg); color: var(--ai-yellow-fg);
   }
-  .chip.draft { background: var(--ai-yellow-bg); color: var(--ai-yellow-fg); border-color: transparent; }
+  /* 완료 버튼은 Footer 스크립트가 하단 상자를 켠 뒤(JS 동작 시)에만 보인다. */
+  .meta-done { display: none; margin-inline-start: auto; }
+  :global(html:has(.atc-done:not([hidden]))) .meta-done { display: block; }
+  .atc-done-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem; cursor: pointer;
+    min-height: 2rem; padding: 0.2rem 0.75rem; border-radius: 999px;
+    font: inherit; font-size: var(--sl-text-xs); font-weight: 600; line-height: 1.3; white-space: nowrap;
+    border: 1px solid var(--ai-line-strong); background: transparent; color: var(--sl-color-white);
+  }
+  .atc-done-btn:hover { border-color: var(--sl-color-gray-3); background: var(--ai-surface-2); }
+  .atc-done-btn svg { color: var(--sl-color-gray-3); flex: none; }
+  .atc-done-btn .tick { opacity: 0; }
+  .atc-done-btn .on { display: none; }
+  .atc-done-btn[aria-pressed='true'] { background: var(--ai-coral-soft); border-color: var(--ai-coral-line); color: var(--ai-coral-ink); }
+  .atc-done-btn[aria-pressed='true'] svg { color: var(--ai-coral-ink); }
+  .atc-done-btn[aria-pressed='true'] .tick { opacity: 1; }
+  .atc-done-btn[aria-pressed='true'] .off { display: none; }
+  .atc-done-btn[aria-pressed='true'] .on { display: inline; }
+
+  .more { margin-top: 0.3rem; }
+  .more summary {
+    display: inline-flex; align-items: center; gap: 0.35rem; cursor: pointer; list-style: none; padding: 0.15rem 0;
+    font-size: var(--sl-text-xs); color: var(--sl-color-gray-2);
+  }
+  .more summary::-webkit-details-marker { display: none; }
+  .more summary::after { content: '▾'; font-size: 0.85em; transition: transform 0.15s; }
+  .more[open] summary::after { transform: rotate(180deg); }
+  .more summary:hover { color: var(--ai-coral-ink); }
+  .detail { padding: 0.6rem 0 0.2rem; }
   dl { display: flex; flex-wrap: wrap; gap: 0.7rem 2.25rem; margin: 0; }
   dl > div { min-width: 0; }
   .wide { flex-basis: 100%; }
@@ -79,4 +182,5 @@ const required = await getRequired(requires, lang);
   .req a { color: var(--sl-color-white); font-weight: 600; text-underline-offset: 0.2em; }
   .req a:hover { color: var(--ai-coral-ink); }
   .req li[data-done] a { color: var(--sl-color-gray-2); }
+  @media (max-width: 40rem) { .facts { gap: 0.2rem 0.7rem; } }
 </style>
