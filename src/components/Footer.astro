@@ -219,7 +219,8 @@ const showSources = tutorial && entry.data.status === 'published';
     window.addEventListener('pageshow', function (e) { if (e.persisted) { prog = read(KEY) || {}; home(); } });
     // 홈 큰 검색 상자: Starlight(Pagefind) 검색 창을 연다.
     document.querySelectorAll('[data-hd-search]').forEach(function (b) {
-      b.addEventListener('click', function () {
+      b.addEventListener('click', function (ev) {
+        ev.stopPropagation(); // Starlight 검색 창은 창 밖 클릭에 닫히므로, 이 클릭이 바깥으로 올라가지 않게 한다.
         var o = document.querySelector('site-search button[data-open-modal]') || document.querySelector('button[data-open-modal]');
         if (o) o.click(); else document.dispatchEvent(new KeyboardEvent('keydown', { key: 'k', ctrlKey: true, bubbles: true }));
       });

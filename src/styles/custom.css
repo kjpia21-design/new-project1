@@ -384,3 +384,6 @@ dialog[aria-label] .dialog-frame { border-radius: var(--ai-radius-lg); border-co
   html:has([data-atc-dock]) .atc-tabbar { display: none; }
   html:not(:has([data-atc-dock])) body { padding-bottom: calc(3.25rem + env(safe-area-inset-bottom)); }
 }
+
+/* step37: 홈에는 제목이 없어 빈 제목 패널(약 48px)이 남는다. 숨겨서 위 여백을 줄인다. */
+main > .content-panel:has(> .sl-container:empty) { display: none; }

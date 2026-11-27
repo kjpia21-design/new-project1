@@ -59,7 +59,7 @@ const S = ko
       pathSub: '{d} of {n} steps done',
       pathNone: 'No path started yet. Pick one that fits your level.',
       pathNext: 'Next step',
-      weekLabel: 'What changed this week',
+      weekLabel: 'New this week',
       weekMore: 'See details →',
       weekFallback: 'Recently checked or updated',
     };
@@ -222,7 +222,7 @@ const arrow = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24
   :global(html.atc-returning) .hd-ret { display: block; }
 
   /* ── 첫 방문 ── */
-  .hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 2rem; align-items: center; padding: 2.5rem 0 0.5rem; }
+  .hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 2rem; align-items: center; padding: 0.75rem 0 0.5rem; }
   .hero::before { content: ''; position: absolute; inset: -1.5rem -1rem 0 -1rem; z-index: -1; pointer-events: none; background: radial-gradient(closest-side at 78% 30%, color-mix(in srgb, var(--ai-coral) 13%, transparent), transparent); }
   .kicker { margin: 0 0 1.1rem; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0.75rem 0.3rem 0.65rem; border: 1px solid var(--ai-coral-line); border-radius: 999px; background: var(--ai-coral-soft); font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--ai-coral-ink); line-height: 1.5; }
   .kicker:lang(ko) { letter-spacing: 0; }
@@ -257,7 +257,7 @@ const arrow = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24
   .btn.primary:active { background: var(--ai-accent-active); border-color: var(--ai-accent-active); transform: translateY(1px); }
 
   /* ── 다시 온 사람 ── */
-  .top { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding-top: 1.25rem; }
+  .top { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding-top: 0; }
   .eyebrow { margin: 0; font-size: var(--sl-text-xs); font-weight: 700; color: var(--ai-coral-ink); }
   .hd-ret h1 { margin: 0.15rem 0 0; font-size: clamp(1.6rem, 3vw, 2rem); line-height: 1.25; }
   .big { display: flex; align-items: center; gap: 0.65rem; width: 100%; height: 3.4rem; margin-top: 1.1rem; padding: 0 1rem; border: 1.5px solid var(--ai-line-strong); border-radius: 14px; background: var(--ai-surface); color: var(--sl-color-gray-3); font: inherit; font-size: var(--sl-text-base); text-align: left; cursor: text; box-shadow: var(--ai-shadow); transition: border-color 0.15s, box-shadow 0.2s; }
@@ -272,7 +272,7 @@ const arrow = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24
   .card { min-width: 0; padding: 1.25rem; border-radius: var(--ai-radius-lg); background: var(--ai-surface); border: 1px solid var(--ai-line); box-shadow: var(--ai-shadow); display: flex; flex-direction: column; }
   .card[hidden] { display: none; }
   .k { margin: 0; display: flex; align-items: center; gap: 0.4rem; font-size: var(--sl-text-xs); font-weight: 700; color: var(--sl-color-gray-3); }
-  .wl { margin-left: auto; font-weight: 500; }
+  .wl { margin-left: auto; font-weight: 500; white-space: nowrap; font-size: 0.7rem; }
   .cont { background: linear-gradient(135deg, var(--ai-surface) 55%, var(--ai-coral-soft)); border-color: var(--ai-coral-line); }
   .cont h3 { margin: 0.55rem 0 0.35rem; font-size: 1.3rem; line-height: 1.35; font-weight: 750; letter-spacing: -0.02em; color: var(--sl-color-white); }
   .cmeta { margin: 0 0 1rem; font-size: var(--sl-text-sm); color: var(--sl-color-gray-3); }
