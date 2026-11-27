@@ -7,20 +7,21 @@ const counts = Object.fromEntries(
   await Promise.all(['basics'].map(async (k) => [k, (await getTutorials({ category: k as 'basics', lang })).length])),
 ) as Record<string, number>;
 const cats = [
-  { key: 'robot', title: t(lang, 'cc.roles'), desc: t(lang, 'cc.roles.desc'), href: '/roles/' },
   { key: 'basics', title: t(lang, 'cat.basics'), desc: t(lang, 'cc.basics.desc', { n: counts.basics }), href: '/basics/' },
-  { key: 'agents', title: t(lang, 'cat.agents'), desc: t(lang, 'cc.agents.desc'), href: '/agents/' },
-  { key: 'dev', title: t(lang, 'cat.dev'), desc: t(lang, 'cc.dev.desc'), href: '/dev/' },
+  { key: 'claude', title: t(lang, 'cat.claude'), desc: t(lang, 'cc.claude.desc'), href: '/claude/', accent: true },
   { key: 'chat', title: t(lang, 'cat.chat'), desc: t(lang, 'cc.chat.desc'), href: '/chat/' },
-  { key: 'coding', title: t(lang, 'cat.coding'), desc: t(lang, 'cc.coding.desc'), href: '/coding/' },
+  { key: 'agents', title: t(lang, 'cat.agents'), desc: t(lang, 'cc.agents.desc'), href: '/agents/' },
   { key: 'media', title: t(lang, 'cat.media'), desc: t(lang, 'cc.media.desc'), href: '/media/' },
   { key: 'automation', title: t(lang, 'cat.automation'), desc: t(lang, 'cc.automation.desc'), href: '/automation/' },
+  { key: 'coding', title: t(lang, 'cat.coding'), desc: t(lang, 'cc.coding.desc'), href: '/coding/' },
+  { key: 'dev', title: t(lang, 'cat.dev'), desc: t(lang, 'cc.dev.desc'), href: '/dev/' },
+  { key: 'robot', title: t(lang, 'cc.roles'), desc: t(lang, 'cc.roles.desc'), href: '/roles/' },
 ] as const;
 ---
 <ul class="cats not-content">
   {cats.map((c) => (
     <li>
-      <a href={url(c.href, lang)}>
+      <a href={url(c.href, lang)} class:list={[{ accent: (c as any).accent }]}>
         <Illustration name={c.key} size={36} tone="neutral" />
         <div><h3>{c.title}</h3><p>{c.desc}</p></div>
       </a>
@@ -42,6 +43,8 @@ const cats = [
   a:hover { border-color: var(--ai-line-strong); box-shadow: var(--ai-shadow-md); transform: translateY(-1px); }
   a:hover :global(.illu) { color: var(--ai-coral-ink); background: var(--ai-coral-soft); }
   a :global(.illu) { transition: background-color 0.15s, color 0.15s; }
+  a.accent { border-color: var(--ai-coral-ink); background: color-mix(in srgb, var(--ai-coral-soft) 45%, var(--ai-surface)); }
+  a.accent :global(.illu) { color: var(--ai-coral-ink); background: var(--ai-coral-soft); }
   a > div { min-width: 0; }
   h3 { margin: 0.05rem 0 0; font-size: var(--sl-text-base); line-height: 1.4; font-weight: 650; color: var(--sl-color-white); letter-spacing: -0.01em; }
   p { margin: 0.25rem 0 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-2); line-height: 1.55; }

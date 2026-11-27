@@ -3,9 +3,12 @@
 import { getLang, t } from '../lib/i18n';
 interface Props { title?: string }
 const lang = getLang(Astro);
-const { title = t(lang, 'summary.title') } = Astro.props;
+// step36: 제목은 "3줄 요약 / In short", 항목은 3개까지만 보이고 나머지는 "더 보기"로 편다. (문구는 이 컴포넌트 안에만 둔다.)
+const { title = lang === 'ko' ? '3줄 요약' : 'In short' } = Astro.props;
+const moreLabel = lang === 'ko' ? '더 보기 ({n}개)' : 'Show {n} more';
+const lessLabel = lang === 'ko' ? '접기' : 'Show less';
 ---
-<section class="summary not-content" aria-label={title}>
+<section class="summary not-content" aria-label={title} data-more={moreLabel} data-less={lessLabel}>
   <div class="head">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3.5l2.2 6.3L20.5 12l-6.3 2.2L12 20.5l-2.2-6.3L3.5 12l6.3-2.2z" /></svg>
     <strong>{title}</strong>
@@ -13,18 +16,51 @@ const { title = t(lang, 'summary.title') } = Astro.props;
   <div class="body"><slot /></div>
 </section>
 
+<script>
+  // JS가 꺼져 있으면 항목이 전부 보인다.
+  const LIMIT = 3;
+  document.querySelectorAll<HTMLElement>('.summary[data-more]').forEach((box) => {
+    const list = box.querySelector(':scope > .body > :is(ul, ol)');
+    if (!list) return;
+    const items = Array.from(list.children).filter((c) => c.tagName === 'LI');
+    const extra = items.slice(LIMIT);
+    if (extra.length < 1) return;
+    extra.forEach((li) => li.setAttribute('data-extra', ''));
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'more-btn';
+    btn.setAttribute('aria-expanded', 'false');
+    const more = (box.dataset.more ?? '').replace('{n}', String(extra.length));
+    btn.textContent = more;
+    btn.addEventListener('click', () => {
+      const open = box.toggleAttribute('data-open');
+      btn.setAttribute('aria-expanded', String(open));
+      btn.textContent = open ? (box.dataset.less ?? '') : more;
+    });
+    list.after(btn);
+  });
+</script>
+
 <style>
   .summary {
-    margin: 1.25rem 0 2rem; padding: 1.1rem 1.3rem 1.2rem;
-    border: 1px solid var(--ai-coral-line); border-radius: var(--ai-radius-lg);
-    background: var(--ai-coral-soft);
+    margin: 1rem 0 1.5rem; padding: 0.85rem 1.15rem 0.9rem;
+    border: 1px solid var(--ai-line); border-left: 4px solid var(--ai-coral); border-radius: var(--ai-radius);
+    background: var(--ai-surface);
   }
   .head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; font-size: var(--sl-text-sm); color: var(--ai-coral-ink); letter-spacing: 0.01em; }
   .head svg { width: 18px; height: 18px; flex: none; }
   .head strong { font-weight: 700; }
   .body { color: var(--sl-color-gray-1); line-height: 1.7; overflow-wrap: anywhere; font-size: var(--sl-text-base); }
   .body :global(ul), .body :global(ol) { margin: 0; padding-left: 1.2rem; }
-  .body :global(li) { margin: 0.3rem 0; }
+  .body :global(li) { margin: 0.25rem 0; }
+  .body :global(li[data-extra]) { display: none; }
+  .summary[data-open] .body :global(li[data-extra]) { display: list-item; }
+  .body :global(.more-btn) {
+    margin-top: 0.35rem; padding: 0.35rem 0.75rem; min-height: 2rem; border-radius: 999px; cursor: pointer;
+    font: inherit; font-size: var(--sl-text-xs); font-weight: 600; color: var(--ai-coral-ink);
+    background: transparent; border: 1px solid var(--ai-coral-line);
+  }
+  .body :global(.more-btn:hover) { background: var(--ai-coral-soft); }
   .body :global(li::marker) { color: var(--ai-coral-ink); }
   .body :global(p) { margin: 0.3rem 0; }
   .body :global(strong) { color: var(--sl-color-white); font-weight: 650; }

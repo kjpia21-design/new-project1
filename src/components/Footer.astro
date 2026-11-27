@@ -29,6 +29,21 @@ const showSources = tutorial && entry.data.status === 'published';
     }
     window.addEventListener('load', mark);
     window.addEventListener('resize', mark);
+
+    // 사이드바에서 현재 글이 스크롤 영역 밖이면 가운데로 보이게 한다. 이미 보이면 아무것도 하지 않는다.
+    function revealCurrent() {
+      var a = document.querySelector('.sidebar-content a[aria-current="page"]');
+      var box = document.querySelector('.sidebar-pane') || document.querySelector('.sidebar-content');
+      if (!a || !box) return;
+      var r = a.getBoundingClientRect(), b = box.getBoundingClientRect();
+      if (!r.width || !b.height) return; // 숨겨진 상태(닫힌 모바일 메뉴)
+      if (r.top >= b.top && r.bottom <= b.bottom) return;
+      a.scrollIntoView({ block: 'center' });
+    }
+    window.addEventListener('load', revealCurrent);
+    document.addEventListener('click', function (e) {
+      if (e.target && e.target.closest && e.target.closest('starlight-menu-button, [aria-controls="starlight__sidebar"]')) setTimeout(revealCurrent, 60);
+    });
   })();
 </script>
 {/*
