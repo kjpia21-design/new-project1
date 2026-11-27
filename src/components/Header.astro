@@ -12,7 +12,7 @@ const otherLang = lang === 'en' ? 'ko' : 'en';
 const label = lang === 'en' ? '한국어' : 'English';
 const aria = lang === 'en' ? '한국어 페이지로 보기' : 'View this page in English';
 
-// step37 M2: 데스크톱 상단 메뉴 6개 + 모바일 하단 탭. 현재 위치는 URL 접두사로 판단한다.
+// step37 M2: 데스크톱 상단 메뉴 6개(홈·주제별·직무별·수준별·새 소식·도구함) + 모바일 하단 탭. 현재 위치는 URL 접두사로 판단한다.
 const ko = lang === 'ko';
 const pre = ko ? '/ko' : '';
 const bare = path.replace(/^\/ko(?=\/|$)/, '').replace(/\/+$/, '') || '/';
@@ -21,23 +21,24 @@ const topicSegs = ['tutorials', 'claude', 'chat', 'coding', 'media', 'automation
 const startPage = bare.split('/')[2] ?? '';
 let current = '';
 if (bare === '/') current = 'home';
-else if (seg === 'start' && startPage === 'prompts') current = 'toolbox';
-else if (seg === 'start') current = 'learn';
+else if (seg === 'start' && (startPage === 'prompts' || startPage === 'glossary')) current = 'toolbox';
+else if (seg === 'start' || seg === 'levels') current = 'levels';
+else if (seg === 'about') current = 'toolbox';
 else if (topicSegs.includes(seg)) current = 'topics';
 else if (seg === 'roles') current = 'roles';
 else if (['weekly', 'claude-news', 'updates'].includes(seg)) current = 'news';
 const items = [
   { id: 'home', label: ko ? '홈' : 'Home', href: `${pre}/` },
-  { id: 'learn', label: ko ? '배우기' : 'Learn', href: `${pre}/start/beginner/` },
   { id: 'topics', label: ko ? '주제별' : 'Topics', href: `${pre}/tutorials/` },
   { id: 'roles', label: ko ? '직무별' : 'Roles', href: `${pre}/roles/` },
+  { id: 'levels', label: ko ? '수준별' : 'Levels', href: `${pre}/levels/` },
   { id: 'news', label: ko ? '새 소식' : "What's new", href: `${pre}/weekly/` },
   { id: 'toolbox', label: ko ? '도구함' : 'Toolbox', href: `${pre}/start/prompts/` },
 ];
 const tabs = [
   { id: 'home', label: ko ? '홈' : 'Home', href: `${pre}/`, d: 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
-  { id: 'learn', label: ko ? '배우기' : 'Learn', href: `${pre}/start/beginner/`, d: 'M4 5h16M4 12h16M4 19h10' },
   { id: 'topics', label: ko ? '주제' : 'Topics', href: `${pre}/tutorials/`, d: 'M4.5 3h5a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 9.5 11h-5A1.5 1.5 0 0 1 3 9.5v-5A1.5 1.5 0 0 1 4.5 3zM14.5 3h5A1.5 1.5 0 0 1 21 4.5v5a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 13 9.5v-5A1.5 1.5 0 0 1 14.5 3zM4.5 13h5A1.5 1.5 0 0 1 11 14.5v5A1.5 1.5 0 0 1 9.5 21h-5A1.5 1.5 0 0 1 3 19.5v-5A1.5 1.5 0 0 1 4.5 13zM14.5 13h5a1.5 1.5 0 0 1 1.5 1.5v5a1.5 1.5 0 0 1-1.5 1.5h-5a1.5 1.5 0 0 1-1.5-1.5v-5a1.5 1.5 0 0 1 1.5-1.5z' },
+  { id: 'roles', label: ko ? '직무' : 'Roles', href: `${pre}/roles/`, d: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0' },
   { id: 'news', label: ko ? '새 소식' : "What's new", href: `${pre}/weekly/`, d: 'M12 3v3M12 18v3M3 12h3M18 12h3M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z' },
 ];
 const searchLabel = ko ? '검색' : 'Search';

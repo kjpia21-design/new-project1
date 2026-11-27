@@ -118,13 +118,13 @@ export default defineConfig({
           ],
         },
         {
-          label: 'Learn', translations: { ko: '배우기' },
+          label: 'Learning paths by level', translations: { ko: '수준별 학습 경로' },
           collapsed: true,
           items: [
+            { label: 'Choose your level', translations: { ko: '수준 고르기' }, slug: 'levels' },
             { label: 'Learning path: Beginner', translations: { ko: '학습 경로: 입문' }, slug: 'start/beginner' },
             { label: 'Learning path: Practitioner', translations: { ko: '학습 경로: 실무' }, slug: 'start/practical' },
             { label: 'Learning path: Advanced', translations: { ko: '학습 경로: 고급' }, slug: 'start/advanced' },
-            { label: 'All tutorials', translations: { ko: '전체 튜토리얼' }, slug: 'tutorials' },
           ],
         },
         { label: 'AI First Steps', translations: { ko: 'AI 첫걸음' }, collapsed: true, items: [{ autogenerate: { directory: 'basics' } }] },
@@ -156,6 +156,7 @@ export default defineConfig({
           label: 'Toolbox', translations: { ko: '도구함' },
           collapsed: true,
           items: [
+            { label: 'All tutorials', translations: { ko: '전체 튜토리얼' }, slug: 'tutorials' },
             { label: 'Ready-to-use prompts', translations: { ko: '바로 쓰는 프롬프트 모음' }, slug: 'start/prompts' },
             { label: 'AI glossary', translations: { ko: 'AI 용어 사전' }, slug: 'start/glossary' },
             { label: 'About', translations: { ko: '소개' }, slug: 'about' },
