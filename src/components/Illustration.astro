@@ -1,14 +1,14 @@
 ---
 // 외부 이미지 없이 쓰는 인라인 SVG 아이콘 모음. 모두 같은 선 굵기(1.75)의 라인 아이콘으로 통일한다.
-// `tone`으로 아이콘 색을 고른다(기본: 코랄). 단독으로 쓰면 둥근 타일 위에 놓인다.
+// `tone`으로 아이콘 색을 고른다(기본: 강조색 청록). 단독으로 쓰면 둥근 타일 위에 놓인다.
 interface Props {
   name: 'claude' | 'chat' | 'coding' | 'media' | 'automation' | 'agents' | 'dev' | 'basics' | 'robot' | 'sparkle' | 'beginner' | 'practical' | 'advanced';
   size?: number;
-  tone?: 'coral' | 'green' | 'blue' | 'purple' | 'neutral';
+  tone?: 'accent' | 'green' | 'blue' | 'purple' | 'neutral';
   /** true면 타일 배경 없이 아이콘만 그린다 */
   bare?: boolean;
 }
-const { name, size = 40, tone = 'coral', bare = false } = Astro.props;
+const { name, size = 40, tone = 'accent', bare = false } = Astro.props;
 const icon = size * 0.55;
 ---
 <span class:list={['illu', `tone-${tone}`, { bare }]} style={`--s:${size}px; --i:${icon}px`} aria-hidden="true">
@@ -57,7 +57,7 @@ const icon = size * 0.55;
     display: inline-flex; align-items: center; justify-content: center; flex: none;
     width: var(--s); height: var(--s); border-radius: var(--ai-radius-sm);
     background: var(--tile-bg); color: var(--tile-fg);
-    --tile-bg: var(--ai-coral-soft); --tile-fg: var(--ai-coral-ink);
+    --tile-bg: var(--ai-accent-soft); --tile-fg: var(--ai-accent-ink);
   }
   .illu.bare { background: none; width: var(--i); height: var(--i); border-radius: 0; }
   .tone-green { --tile-bg: var(--ai-green-bg); --tile-fg: var(--ai-green-fg); }

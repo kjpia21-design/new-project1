@@ -78,9 +78,9 @@ const groups: { title: string; href?: string; chips?: { label: string; href: str
   h3 { margin: 0; font-size: var(--sl-text-base); font-weight: 650; color: var(--sl-color-white); letter-spacing: -0.005em; }
   h4 { margin: 0; font-size: var(--sl-text-sm); font-weight: 600; }
   h3 a, h4 a { color: var(--sl-color-white); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; }
-  h3 a:hover, h4 a:hover { color: var(--ai-coral-ink); }
+  h3 a:hover, h4 a:hover { color: var(--ai-accent-ink); }
   h3 a::after, h4 a::after { content: '\2192'; font-weight: 400; color: var(--sl-color-gray-3); transition: color 0.15s; }
-  h3 a:hover::after, h4 a:hover::after { color: var(--ai-coral-ink); }
+  h3 a:hover::after, h4 a:hover::after { color: var(--ai-accent-ink); }
   .subs { display: grid; gap: 1rem 1.5rem; margin-top: 0.75rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); align-items: start; }
   .sub { padding-top: 0.75rem; border-top: 1px solid var(--ai-line); }
   summary { cursor: pointer; margin-top: 0.4rem; padding: 0.1rem 0; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); list-style: none; display: inline-flex; align-items: center; gap: 0.3rem; }
@@ -95,7 +95,7 @@ const groups: { title: string; href?: string; chips?: { label: string; href: str
     text-decoration: none; color: var(--sl-color-gray-2); background: var(--ai-surface-2); border: 1px solid var(--ai-line);
     transition: border-color 0.15s, color 0.15s, background-color 0.15s;
   }
-  li a:hover { border-color: var(--ai-coral-line); color: var(--ai-coral-ink); background: var(--ai-coral-soft); }
+  li a:hover { border-color: var(--ai-accent-line); color: var(--ai-accent-ink); background: var(--ai-accent-soft); }
 </style>
 
 <script>

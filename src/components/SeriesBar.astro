@@ -56,7 +56,7 @@ const sectionLabel = getCategoryLabel(section, lang);
   .row { display: flex; align-items: center; gap: 0.75rem; min-height: 2rem; }
   .sec {
     min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    font-size: var(--sl-text-xs); font-weight: 650; letter-spacing: 0.01em; color: var(--ai-coral-ink); text-decoration: none;
+    font-size: var(--sl-text-xs); font-weight: 650; letter-spacing: 0.01em; color: var(--ai-accent-ink); text-decoration: none;
   }
   .sec:hover { text-decoration: underline; text-underline-offset: 0.2em; }
   .pos { margin-inline-start: auto; flex: none; font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); font-variant-numeric: tabular-nums; }
@@ -67,10 +67,10 @@ const sectionLabel = getCategoryLabel(section, lang);
     border: 1px solid var(--ai-line); color: var(--sl-color-gray-2); background: var(--ai-surface);
     transition: border-color 0.15s, color 0.15s, background-color 0.15s;
   }
-  .pn a:hover { border-color: var(--ai-line-strong); color: var(--ai-coral-ink); background: var(--ai-surface-2); }
+  .pn a:hover { border-color: var(--ai-line-strong); color: var(--ai-accent-ink); background: var(--ai-surface-2); }
   .pn .off { opacity: 0.4; }
   .track { margin-top: 0.5rem; height: 3px; border-radius: 999px; background: var(--ai-line); overflow: hidden; }
-  .track span { display: block; height: 100%; border-radius: inherit; background: var(--ai-coral); }
+  .track span { display: block; height: 100%; border-radius: inherit; background: var(--ai-accent); }
   @media (max-width: 30rem) {
     .row { gap: 0.5rem; }
     .pn > * { width: 2.25rem; height: 2.25rem; }

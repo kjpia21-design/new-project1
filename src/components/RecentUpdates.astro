@@ -33,12 +33,12 @@ const items = await getRecentlyVerified(limit, lang);
     padding: 0.85rem 1.15rem; text-decoration: none; transition: background-color 0.15s;
   }
   a:hover { background: var(--ai-surface-2); }
-  a:hover .title { color: var(--ai-coral-ink); }
+  a:hover .title { color: var(--ai-accent-ink); }
   .title { transition: color 0.15s; }
   time { font-size: var(--sl-text-xs); color: var(--sl-color-gray-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .title { font-size: var(--sl-text-sm); font-weight: 600; color: var(--sl-color-white); min-width: 0; }
   .arrow { color: var(--sl-color-gray-3); transition: color 0.15s, transform 0.15s; }
-  a:hover .arrow { color: var(--ai-coral-ink); transform: translateX(2px); }
+  a:hover .arrow { color: var(--ai-accent-ink); transform: translateX(2px); }
   .empty { margin: 0; padding: 1rem 1.25rem; border: 1px dashed var(--ai-line-strong); border-radius: var(--ai-radius); color: var(--sl-color-gray-2); font-size: var(--sl-text-sm); }
   @media (max-width: 40rem) {
     a { grid-template-columns: 1fr auto; gap: 0.3rem 0.75rem; }

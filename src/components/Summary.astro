@@ -44,10 +44,10 @@ const lessLabel = lang === 'ko' ? '접기' : 'Show less';
 <style>
   .summary {
     margin: 1rem 0 1.5rem; padding: 0.85rem 1.15rem 0.9rem;
-    border: 1px solid var(--ai-line); border-left: 4px solid var(--ai-coral); border-radius: var(--ai-radius);
+    border: 1px solid var(--ai-line); border-left: 4px solid var(--ai-accent); border-radius: var(--ai-radius);
     background: var(--ai-surface);
   }
-  .head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; font-size: var(--sl-text-sm); color: var(--ai-coral-ink); letter-spacing: 0.01em; }
+  .head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; font-size: var(--sl-text-sm); color: var(--ai-accent-ink); letter-spacing: 0.01em; }
   .head svg { width: 18px; height: 18px; flex: none; }
   .head strong { font-weight: 700; }
   .body { color: var(--sl-color-gray-1); line-height: 1.7; overflow-wrap: anywhere; font-size: var(--sl-text-base); }
@@ -57,13 +57,13 @@ const lessLabel = lang === 'ko' ? '접기' : 'Show less';
   .summary[data-open] .body :global(li[data-extra]) { display: list-item; }
   .body :global(.more-btn) {
     margin-top: 0.35rem; padding: 0.35rem 0.75rem; min-height: 2rem; border-radius: 999px; cursor: pointer;
-    font: inherit; font-size: var(--sl-text-xs); font-weight: 600; color: var(--ai-coral-ink);
-    background: transparent; border: 1px solid var(--ai-coral-line);
+    font: inherit; font-size: var(--sl-text-xs); font-weight: 600; color: var(--ai-accent-ink);
+    background: transparent; border: 1px solid var(--ai-accent-line);
   }
-  .body :global(.more-btn:hover) { background: var(--ai-coral-soft); }
-  .body :global(li::marker) { color: var(--ai-coral-ink); }
+  .body :global(.more-btn:hover) { background: var(--ai-accent-soft); }
+  .body :global(li::marker) { color: var(--ai-accent-ink); }
   .body :global(p) { margin: 0.3rem 0; }
   .body :global(strong) { color: var(--sl-color-white); font-weight: 650; }
-  .body :global(a) { color: var(--ai-coral-ink); text-underline-offset: 0.2em; }
+  .body :global(a) { color: var(--ai-accent-ink); text-underline-offset: 0.2em; }
   @media (max-width: 40rem) { .summary { padding: 1rem 1.05rem 1.05rem; } .body { font-size: 0.9375rem; } }
 </style>

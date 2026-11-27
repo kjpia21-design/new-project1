@@ -1,7 +1,7 @@
 // 사용법: node scripts/og-images.mjs
 //   → 영어판 public/og/<id>.png, 한국어판 public/og/ko/<id>.png (1200x630) 생성
 // HTML 템플릿을 Playwright(Chromium)로 캡처한다. 글꼴은 node_modules/pretendard 의 가변 woff2를 @font-face로 직접 싣는다(시스템 폰트 의존 없음).
-// 디자인: src/styles/custom.css 라이트 토큰(웜 뉴트럴 + 코랄 포인트), HeroIllustration.astro의 점 격자·노드 그래픽, Illustration.astro의 라인 아이콘.
+// 디자인: src/styles/custom.css 라이트 토큰(Calm green: 차가운 오프화이트 + 청록 포인트, 색 번짐 없음), HeroIllustration.astro의 점 격자·노드 그래픽, Illustration.astro의 라인 아이콘.
 // 섹션을 추가·변경하면 아래 SECTIONS와 src/components/Head.astro의 목록을 함께 고친다. Chromium은 /opt/pw-browsers 의 것을 쓴다(`playwright install` 금지).
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
@@ -18,18 +18,18 @@ const fontData = fs.readFileSync(FONT).toString('base64');
 
 // 라이트 모드 토큰 (src/styles/custom.css)
 const C = {
-  bg: '#fcfbfa', surface: '#ffffff', surface2: '#f8f6f3',
-  ink: '#1c1917', ink2: '#4b4540', ink3: '#6e6761', ink4: '#a39b94',
-  line: '#e6e1db', lineStrong: '#cfc8c0',
-  coral: '#ff7a59', coralInk: '#c2461f', coralSoft: '#fcf1ec',
+  bg: '#f7f9f8', surface: '#ffffff', surface2: '#f2f6f4',
+  ink: '#13201d', ink2: '#3f4d49', ink3: '#5d6b67', ink4: '#97a39f',
+  line: '#dfe6e3', lineStrong: '#c6d1cd',
+  accent: '#1a8a7c', accentInk: '#0d6a60', accentSoft: '#e6f2ef', accentLine: '#bfdcd5',
 };
 // Illustration.astro 의 tone 팔레트 (라이트)
 const TONES = {
-  coral: { bg: '#fcf1ec', fg: '#c2461f', dot: '#ff7a59' },
-  green: { bg: '#e6f2ea', fg: '#1f6b3a', dot: '#3f9a62' },
-  blue: { bg: '#e6eef9', fg: '#1f4f8a', dot: '#3f7ac4' },
-  purple: { bg: '#efebf9', fg: '#4a3690', dot: '#7a62c4' },
-  yellow: { bg: '#fbf1dc', fg: '#6f4a05', dot: '#cf9120' },
+  accent: { bg: '#e6f2ef', fg: '#0d6a60', dot: '#1a8a7c' },
+  green: { bg: '#eef4e2', fg: '#456016', dot: '#6a8f2c' },
+  blue: { bg: '#e9eff8', fg: '#2f4f80', dot: '#4a6fa8' },
+  purple: { bg: '#f4ecf6', fg: '#6a3a7e', dot: '#8c5aa3' },
+  yellow: { bg: '#f8f1dc', fg: '#69500b', dot: '#b08a1e' },
 };
 
 const SITE = { en: 'Catch Up on AI Trends', ko: '최신 AI 트렌드 따라 잡기' };
@@ -38,13 +38,13 @@ const DOMAIN = 'ai-trend-catchup.com';
 
 // 문구는 src/lib/i18n.ts(cat.*, cc.*.desc)와 astro.config.mjs 사이드바 라벨을 따른다.
 const SECTIONS = [
-  { id: 'default', icon: 'sparkle', tone: 'coral',
+  { id: 'default', icon: 'sparkle', tone: 'accent',
     en: { name: 'Catch Up on AI Trends', sub: 'The newest AI tools explained in plain language, with hands-on tutorials for every level.' },
     ko: { name: '최신 AI 트렌드 따라 잡기', sub: '새로 나온 AI 도구를 쉽게 설명하고, 입문부터 고급까지 직접 따라 하는 튜토리얼로 안내해요.' } },
   { id: 'basics', icon: 'basics', tone: 'green',
     en: { name: 'AI First Steps', sub: 'From signing up and your first question to safe use and AI on your phone.' },
     ko: { name: 'AI 첫걸음', sub: '가입부터 첫 질문, 안전하게 쓰는 법, 휴대폰 활용까지 처음 시작하는 분을 위한 기본기.' } },
-  { id: 'claude', icon: 'claude', tone: 'coral',
+  { id: 'claude', icon: 'claude', tone: 'accent',
     en: { name: 'Mastering Claude', sub: 'From choosing a model to projects, connectors, skills, Claude Code, and the API.' },
     ko: { name: 'Claude 완전 정복', sub: '모델 고르기부터 프로젝트, 커넥터, 스킬, Claude Code, API까지 차근차근.' } },
   { id: 'claude-news', icon: 'news', tone: 'yellow',
@@ -65,7 +65,7 @@ const SECTIONS = [
   { id: 'media', icon: 'media', tone: 'purple',
     en: { name: 'Image, Video & Voice', sub: 'Image and video generation, transcribing recordings, and speech synthesis.' },
     ko: { name: '이미지·영상·음성', sub: '이미지·영상 생성, 녹음 정리, 음성 합성까지 만들고 다듬는 생성형 AI 도구.' } },
-  { id: 'automation', icon: 'automation', tone: 'coral',
+  { id: 'automation', icon: 'automation', tone: 'accent',
     en: { name: 'Automation & Productivity', sub: 'Notion, email and calendar, Zapier/Make, and connectors that take over repetitive work.' },
     ko: { name: '업무 자동화·생산성', sub: 'Notion, 메일·캘린더, Zapier/Make, 커넥터로 반복 업무를 AI에게 맡기는 방법.' } },
 ];
@@ -94,12 +94,10 @@ const art = (s) => {
 <svg class="art" viewBox="0 0 560 630" width="560" height="630" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.6" fill="${C.ink}" opacity="0.16"/></pattern>
-    <radialGradient id="glow" cx="58%" cy="45%" r="52%"><stop offset="0" stop-color="${C.coral}" stop-opacity="0.2"/><stop offset="1" stop-color="${C.coral}" stop-opacity="0"/></radialGradient>
     <linearGradient id="fade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset="0.45" stop-color="#fff" stop-opacity="1"/></linearGradient>
     <mask id="m"><rect width="560" height="630" fill="url(#fade)"/></mask>
-    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#1c1917" flood-opacity="0.08"/></filter>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#13201d" flood-opacity="0.06"/></filter>
   </defs>
-  <rect width="560" height="630" fill="url(#glow)"/>
   <rect width="560" height="630" fill="url(#dots)" mask="url(#m)"/>
   <g fill="none" stroke="${C.ink}" stroke-opacity="0.28" stroke-width="2">
     <path d="M150 440L320 300M320 300L448 372M320 300L418 150M448 372L512 470M150 440L96 320M320 300L190 190"/>
@@ -108,9 +106,8 @@ const art = (s) => {
     <circle cx="150" cy="440" r="11"/><circle cx="448" cy="372" r="11"/><circle cx="418" cy="150" r="11"/>
     <circle cx="512" cy="470" r="8"/><circle cx="96" cy="320" r="8"/><circle cx="190" cy="190" r="8"/>
   </g>
-  <circle cx="320" cy="300" r="92" fill="${C.coral}" opacity="0.1"/>
-  <circle cx="320" cy="300" r="66" fill="${C.coral}" opacity="0.14"/>
-  <g filter="url(#sh)"><rect x="268" y="248" width="104" height="104" rx="22" fill="${C.coral}"/></g>
+  <circle cx="320" cy="300" r="78" fill="${C.accentSoft}" stroke="${C.accentLine}" stroke-width="1.5"/>
+  <rect x="268" y="248" width="104" height="104" rx="22" fill="${C.accent}"/>
   <g transform="translate(288 268)">${svgIcon(s.icon, 64, '#ffffff')}</g>
   <g fill="${C.surface}" stroke="${C.ink}" stroke-opacity="0.22" stroke-width="1.5" filter="url(#sh)">
     <rect x="392" y="412" width="140" height="80" rx="14"/>
@@ -121,7 +118,7 @@ const art = (s) => {
     <path d="M94 106h78M94 128h118M94 150h56"/>
   </g>
   <rect x="414" y="434" width="22" height="7" rx="3.5" fill="${t.dot}"/>
-  <rect x="94" y="102" width="22" height="7" rx="3.5" fill="${C.coral}"/>
+  <rect x="94" y="102" width="22" height="7" rx="3.5" fill="${C.accent}"/>
 </svg>`;
 };
 
@@ -137,11 +134,11 @@ const html = (s, lang) => {
 html,body{width:1200px;height:630px;overflow:hidden}
 body{font-family:'Pretendard Variable',sans-serif;background:${C.bg};color:${C.ink};position:relative;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision}
 .frame{position:absolute;inset:0;border:1px solid ${C.line}}
-.top{position:absolute;left:0;top:0;right:0;height:6px;background:${C.coral}}
+.top{position:absolute;left:0;top:0;right:0;height:6px;background:${C.accent}}
 .art{position:absolute;right:0;top:0}
 .col{position:absolute;left:84px;top:84px;width:640px;height:462px;display:flex;flex-direction:column}
-.kicker{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:${C.coralInk};margin-bottom:34px}
-.kicker .dot{width:10px;height:10px;border-radius:999px;background:${C.coral};flex:none}
+.kicker{display:flex;align-items:center;gap:12px;font-size:22px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:${C.accentInk};margin-bottom:34px}
+.kicker .dot{width:10px;height:10px;border-radius:999px;background:${C.accent};flex:none}
 .kicker.ko{letter-spacing:0;text-transform:none;font-size:24px}
 .tag{display:inline-flex;align-items:center;gap:12px;align-self:flex-start;padding:10px 18px 10px 12px;border-radius:12px;background:${t.bg};color:${t.fg};font-size:24px;font-weight:600;margin-bottom:28px;border:1px solid ${C.line}}
 .tag svg{flex:none}
