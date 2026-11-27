@@ -338,3 +338,49 @@ dialog[aria-label] .dialog-frame { border-radius: var(--ai-radius-lg); border-co
 .content-panel:has(.meta) { padding-bottom: 0.25rem; }
 .sl-markdown-content > .summary:first-child { margin-top: 0.5rem; }
 .sl-markdown-content .summary .body { font-size: 0.9375rem; line-height: 1.6; }
+
+/* ===== step37 M2: 상단 메뉴(≥1100px) / 모바일 하단 탭(≤800px) ===== */
+.atc-nav { display: none; }
+.atc-tabbar { display: none; }
+@media (min-width: 68.75rem) {
+  .hdr { gap: 0.75rem; }
+  .hdr > .header { display: contents; }
+  .hdr > .header > .title-wrapper { order: 0; flex: none; }
+  .hdr > .header > div:nth-child(2) { order: 2; flex: 1; justify-content: flex-end; min-width: 0; }
+  .hdr > .header > .right-group { order: 3; flex: none; }
+  .atc-nav { order: 1; display: flex; align-items: center; gap: 0.15rem; margin-inline-start: 1rem; flex: none; }
+  .atc-nav a {
+    display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0.25rem 0.7rem; border-radius: var(--ai-radius-sm);
+    font-size: var(--sl-text-sm); font-weight: 600; white-space: nowrap; text-decoration: none; color: var(--sl-color-gray-2);
+    transition: background-color 0.15s, color 0.15s;
+  }
+  .atc-nav a:hover { color: var(--sl-color-white); background: var(--ai-surface-2); }
+  .atc-nav a[aria-current='page'] { color: var(--ai-coral-ink); background: var(--ai-coral-soft); box-shadow: inset 0 0 0 1px var(--ai-coral-line); }
+  .atc-nav a:focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: 1px; }
+}
+@media (max-width: 50rem) {
+  /* backdrop-filter가 있으면 헤더 안의 fixed 요소가 헤더 기준이 되므로 모바일에서는 끈다. */
+  header.header { -webkit-backdrop-filter: none; backdrop-filter: none; background: var(--sl-color-bg-nav); }
+  .atc-tabbar {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    position: fixed; inset-inline: 0; bottom: 0; z-index: 4;
+    padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+    border-top: 1px solid var(--ai-line); background: var(--sl-color-bg-nav);
+    box-shadow: 0 -6px 20px -12px rgb(0 0 0 / 0.25);
+  }
+  .atc-tabbar a, .atc-tabbar button {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.15rem;
+    min-height: 3.25rem; min-width: 44px; padding: 0.35rem 0.1rem; margin: 0; border: 0; border-radius: 0; background: transparent; cursor: pointer;
+    font: inherit; font-size: 0.6875rem; font-weight: 600; line-height: 1.2; text-decoration: none; color: var(--sl-color-gray-3);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .atc-tabbar svg { width: 1.375rem; height: 1.375rem; flex: none; }
+  .atc-tabbar span { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .atc-tabbar a[aria-current='page'] { color: var(--ai-coral-ink); }
+  .atc-tabbar a:hover, .atc-tabbar button:hover { color: var(--sl-color-white); }
+  .atc-tabbar a[aria-current='page']:hover { color: var(--ai-coral-ink); }
+  .atc-tabbar :focus-visible { outline: 2px solid var(--sl-color-accent); outline-offset: -3px; }
+  /* 튜토리얼 페이지에는 이미 하단 독(완료/다음)이 있으므로 탭 바를 숨긴다. */
+  html:has([data-atc-dock]) .atc-tabbar { display: none; }
+  html:not(:has([data-atc-dock])) body { padding-bottom: calc(3.25rem + env(safe-area-inset-bottom)); }
+}

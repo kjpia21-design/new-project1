@@ -11,15 +11,80 @@ const otherPath = lang === 'ko' ? path.replace(/^\/ko(\/|$)/, '/') : `/ko${path}
 const otherLang = lang === 'en' ? 'ko' : 'en';
 const label = lang === 'en' ? '한국어' : 'English';
 const aria = lang === 'en' ? '한국어 페이지로 보기' : 'View this page in English';
+
+// step37 M2: 데스크톱 상단 메뉴 6개 + 모바일 하단 탭. 현재 위치는 URL 접두사로 판단한다.
+const ko = lang === 'ko';
+const pre = ko ? '/ko' : '';
+const bare = path.replace(/^\/ko(?=\/|$)/, '').replace(/\/+$/, '') || '/';
+const seg = bare.split('/')[1] ?? '';
+const topicSegs = ['tutorials', 'claude', 'chat', 'coding', 'media', 'automation', 'agents', 'basics', 'dev'];
+const startPage = bare.split('/')[2] ?? '';
+let current = '';
+if (bare === '/') current = 'home';
+else if (seg === 'start' && startPage === 'prompts') current = 'toolbox';
+else if (seg === 'start') current = 'learn';
+else if (topicSegs.includes(seg)) current = 'topics';
+else if (seg === 'roles') current = 'roles';
+else if (['weekly', 'claude-news', 'updates'].includes(seg)) current = 'news';
+const items = [
+  { id: 'home', label: ko ? '홈' : 'Home', href: `${pre}/` },
+  { id: 'learn', label: ko ? '배우기' : 'Learn', href: `${pre}/start/beginner/` },
+  { id: 'topics', label: ko ? '주제별' : 'Topics', href: `${pre}/tutorials/` },
+  { id: 'roles', label: ko ? '직무별' : 'Roles', href: `${pre}/roles/` },
+  { id: 'news', label: ko ? '새 소식' : "What's new", href: `${pre}/weekly/` },
+  { id: 'toolbox', label: ko ? '도구함' : 'Toolbox', href: `${pre}/start/prompts/` },
+];
+const tabs = [
+  { id: 'home', label: ko ? '홈' : 'Home', href: `${pre}/`, d: 'M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z' },
+  { id: 'learn', label: ko ? '배우기' : 'Learn', href: `${pre}/start/beginner/`, d: 'M4 5h16M4 12h16M4 19h10' },
+  { id: 'topics', label: ko ? '주제' : 'Topics', href: `${pre}/tutorials/`, d: 'M4.5 3h5a1.5 1.5 0 0 1 1.5 1.5v5A1.5 1.5 0 0 1 9.5 11h-5A1.5 1.5 0 0 1 3 9.5v-5A1.5 1.5 0 0 1 4.5 3zM14.5 3h5A1.5 1.5 0 0 1 21 4.5v5a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 13 9.5v-5A1.5 1.5 0 0 1 14.5 3zM4.5 13h5A1.5 1.5 0 0 1 11 14.5v5A1.5 1.5 0 0 1 9.5 21h-5A1.5 1.5 0 0 1 3 19.5v-5A1.5 1.5 0 0 1 4.5 13zM14.5 13h5a1.5 1.5 0 0 1 1.5 1.5v5a1.5 1.5 0 0 1-1.5 1.5h-5a1.5 1.5 0 0 1-1.5-1.5v-5a1.5 1.5 0 0 1 1.5-1.5z' },
+  { id: 'news', label: ko ? '새 소식' : "What's new", href: `${pre}/weekly/`, d: 'M12 3v3M12 18v3M3 12h3M18 12h3M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z' },
+];
+const searchLabel = ko ? '검색' : 'Search';
+const mainLabel = ko ? '주요 메뉴' : 'Main menu';
+const tabLabel = ko ? '하단 메뉴' : 'Bottom tabs';
 ---
 
 <div class="hdr">
   <Default />
+  <nav class="atc-nav" aria-label={mainLabel}>
+    {items.map((i) => <a href={i.href} aria-current={i.id === current ? 'page' : undefined}>{i.label}</a>)}
+  </nav>
   <a class="lang-toggle" href={otherPath} hreflang={otherLang} lang={otherLang} data-lang={otherLang} aria-label={aria}>
     <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
     <span>{label}</span>
   </a>
 </div>
+
+<nav class="atc-tabbar" aria-label={tabLabel}>
+  {tabs.slice(0, 3).map((i) => (
+    <a href={i.href} aria-current={i.id === current ? 'page' : undefined}>
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d={i.d}/></svg>
+      <span>{i.label}</span>
+    </a>
+  ))}
+  <button type="button" data-atc-tab-search>
+    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+    <span>{searchLabel}</span>
+  </button>
+  {tabs.slice(3).map((i) => (
+    <a href={i.href} aria-current={i.id === current ? 'page' : undefined}>
+      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d={i.d}/></svg>
+      <span>{i.label}</span>
+    </a>
+  ))}
+</nav>
+
+<script is:inline>
+  // 하단 탭의 검색: Starlight 검색 버튼을 대신 눌러 모달을 연다.
+  document.addEventListener('click', function (e) {
+    var b = e.target && e.target.closest ? e.target.closest('[data-atc-tab-search]') : null;
+    if (!b) return;
+    var open = document.querySelector('site-search button[data-open-modal]');
+    // 같은 클릭이 문서 바깥 클릭으로 처리되어 모달이 바로 닫히지 않도록 한 박자 늦춘다.
+    if (open) setTimeout(function () { open.click(); }, 0);
+  });
+</script>
 
 <script is:inline>
   // 이 버튼으로 고른 언어도 기억한다(홈 첫 방문 이동 판단에 사용).
