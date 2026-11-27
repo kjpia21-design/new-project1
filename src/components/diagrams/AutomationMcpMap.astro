@@ -27,7 +27,7 @@ const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
       <text x="180" y="70" class="t2">{tx('Claude · ChatGPT · Gemini CLI 등')}</text>
       <text x="180" y="92" class="t3">{tx('도구를 부르기 전에 내 승인을 물어요')}</text></g>
     <g class="arrow"><path d="M180 112 V158" /><path d="M171 150 L180 160 L189 150" /></g>
-    <g class="box coral"><rect x="30" y="162" width="300" height="110" rx="10" />
+    <g class="box accent"><rect x="30" y="162" width="300" height="110" rx="10" />
       <text x="180" y="196" class="t1">{tx('MCP 서버')}</text>
       <text x="180" y="222" class="t2">{tx('공통 규격(MCP)으로 말해요')}</text>
       <text x="180" y="244" class="t3">{tx('도구(tools) · 리소스 · 프롬프트')}</text>
@@ -46,10 +46,10 @@ const tx = (s: string) => (lang === 'en' ? (en[s] ?? s) : s);
   .box rect { stroke-width: 1.5; }
   .blue rect { fill: var(--ai-blue-bg); stroke: var(--ai-blue-fg); }
   .green rect { fill: var(--ai-green-bg); stroke: var(--ai-green-fg); }
-  .coral rect { fill: var(--ai-coral-soft); stroke: var(--ai-coral); }
+  .accent rect { fill: var(--ai-accent-soft); stroke: var(--ai-accent); }
   .blue text { fill: var(--ai-blue-fg); }
   .green text { fill: var(--ai-green-fg); }
-  .coral text { fill: var(--sl-color-white); }
+  .accent text { fill: var(--sl-color-white); }
   text { text-anchor: middle; font-family: var(--sl-font); }
   .t1 { font-size: 20px; font-weight: 650; }
   .t2 { font-size: 14px; font-weight: 600; }

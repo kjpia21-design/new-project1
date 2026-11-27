@@ -127,8 +127,8 @@ const jsonLdHtml = jsonLd.map((o) => JSON.stringify(o).replace(/</g, '\\u003c'))
   }, true);
 </script>
 <link rel="apple-touch-icon" href={`${base}/apple-touch-icon.png`} />
-<meta name="theme-color" content="#fcfbfa" media="(prefers-color-scheme: light)" />
-<meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)" />
+<meta name="theme-color" content="#f7f9f8" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0e1514" media="(prefers-color-scheme: dark)" />
 {/* 검색 엔진 소유 확인. 구글은 Cloudflare DNS의 TXT 레코드로 확인했으므로 태그가 필요 없다. 자세한 방법은 docs/guides/search-registration.md 참고. */}
 <meta name="naver-site-verification" content="9ee5b97dd724c7af3550e14d997fd821609fb721" />
 {/* 방문 통계: Cloudflare Web Analytics(쿠키 없음). DNS가 "DNS only"라 자동 삽입이 안 되므로 직접 넣는다. token은 공개 값. */}

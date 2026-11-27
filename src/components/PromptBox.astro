@@ -29,7 +29,7 @@ const { label = t(lang, 'prompt.label') } = Astro.props;
   }
   .label { display: inline-flex; align-items: center; gap: 0.5rem; min-width: 0; font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--sl-color-gray-2); overflow-wrap: anywhere; }
   .label:lang(ko) { letter-spacing: 0; }
-  .label::before { content: ''; flex: none; width: 6px; height: 6px; border-radius: 999px; background: var(--ai-coral); }
+  .label::before { content: ''; flex: none; width: 6px; height: 6px; border-radius: 999px; background: var(--ai-accent); }
   .copy {
     flex: none; display: inline-flex; align-items: center; gap: 0.35rem;
     border: 1px solid var(--ai-line-strong); border-radius: 7px; cursor: pointer;
@@ -38,8 +38,8 @@ const { label = t(lang, 'prompt.label') } = Astro.props;
     font: inherit; font-size: var(--sl-text-xs); font-weight: 600; line-height: 1.5;
     transition: border-color 0.15s, color 0.15s, background-color 0.15s;
   }
-  .copy:hover { border-color: var(--ai-coral-ink); color: var(--ai-coral-ink); }
-  .copy:active { background: var(--ai-coral-soft); }
+  .copy:hover { border-color: var(--ai-accent-ink); color: var(--ai-accent-ink); }
+  .copy:active { background: var(--ai-accent-soft); }
   .body { padding: 1rem 1.1rem; white-space: pre-wrap; overflow-wrap: anywhere; color: var(--sl-color-white); font-size: var(--sl-text-sm); line-height: 1.75; }
   .body :global(p) { margin: 0; }
 </style>

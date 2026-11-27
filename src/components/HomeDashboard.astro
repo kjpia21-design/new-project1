@@ -1,5 +1,5 @@
 ---
-// 홈 맨 위: 첫 방문 화면과 다시 온 사람(대시보드) 화면을 둘 다 그려 두고, <html>의 atc-returning 클래스로 한쪽만 보여 준다.
+// 홈 맨 위(다시 온 사람 화면도 맨 위 제목은 사이트 이름: 처음 온 사람이 '이어서 볼까요?' 같은 문구에 당황하지 않게): 첫 방문 화면과 다시 온 사람(대시보드) 화면을 둘 다 그려 두고, <html>의 atc-returning 클래스로 한쪽만 보여 준다.
 // - 클래스는 아래 첫 인라인 스크립트가 화면이 그려지기 전에 붙인다(깜빡임 방지). JS가 꺼져 있으면 첫 방문 화면이 나온다.
 // - 다시 온 사람 화면의 숫자·링크(전체 N편 중 M편, 이어 보기, 학습 경로, 시리즈 진행)는 Footer.astro 스크립트가
 //   atc:progress:v1 / atc:last를 읽어 채운다. 새 저장 키는 없다.
@@ -22,8 +22,9 @@ const S = ko
       start: '입문 경로 시작하기',
       all: '전체 튜토리얼 보기',
       stepsTime: (n: number, t: string) => `${n}단계 · ${t}`,
-      status: '내 학습 현황 · 전체 {n}편 중 {m}편 완료',
-      question: '이어서 볼까요?',
+      status: '튜토리얼 {n}편 · 내가 완료한 글 {m}편',
+      question: '최신 AI 트렌드 따라 잡기',
+      retLead: '새로 나온 AI 도구를 단계별로 따라 해 보는 튜토리얼 모음이에요.',
       allN: (n: number) => `전체 튜토리얼 ${n}편 →`,
       search: '찾기 — 예: 회의록, 엑셀, MCP',
       searchLabel: '튜토리얼 검색 열기',
@@ -46,8 +47,9 @@ const S = ko
       start: 'Start the beginner path',
       all: 'Browse all tutorials',
       stepsTime: (n: number, t: string) => `${n} steps · ${t}`,
-      status: 'My progress · {m} of {n} tutorials done',
-      question: 'Pick up where you left off?',
+      status: '{n} tutorials · {m} done by you',
+      question: 'Catch up on AI trends',
+      retLead: 'Step-by-step tutorials for the newest AI tools.',
       allN: (n: number) => `All ${n} tutorials →`,
       search: 'Search, e.g. meeting notes, Excel, MCP',
       searchLabel: 'Open tutorial search',
@@ -164,6 +166,7 @@ const arrow = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24
       <div>
         <p class="eyebrow" data-hd-status data-t={S.status} data-n={total}>{S.status.replace('{n}', String(total)).replace('{m}', '0')}</p>
         <h1 id="hd-ret-h">{S.question}</h1>
+        <p class="ret-lead">{S.retLead}</p>
       </div>
       <a class="btn" href={url('/tutorials/', lang)}>{S.allN(total)}</a>
     </div>
@@ -223,11 +226,10 @@ const arrow = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24
 
   /* ── 첫 방문 ── */
   .hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 2rem; align-items: center; padding: 0.75rem 0 0.5rem; }
-  .hero::before { content: ''; position: absolute; inset: -1.5rem -1rem 0 -1rem; z-index: -1; pointer-events: none; background: radial-gradient(closest-side at 78% 30%, color-mix(in srgb, var(--ai-coral) 13%, transparent), transparent); }
-  .kicker { margin: 0 0 1.1rem; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0.75rem 0.3rem 0.65rem; border: 1px solid var(--ai-coral-line); border-radius: 999px; background: var(--ai-coral-soft); font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--ai-coral-ink); line-height: 1.5; }
+  .kicker { margin: 0 0 1.1rem; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0.75rem 0.3rem 0.65rem; border: 1px solid var(--ai-accent-line); border-radius: 999px; background: var(--ai-accent-soft); font-size: var(--sl-text-xs); font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--ai-accent-ink); line-height: 1.5; }
   .kicker:lang(ko) { letter-spacing: 0; }
   .dot { width: 6px; height: 6px; border-radius: 999px; background: currentColor; display: inline-block; }
-  .kicker .dot { background: var(--ai-coral); }
+  .kicker .dot { background: var(--ai-accent); }
   h1 { margin: 0 0 1rem; font-size: clamp(2.3rem, 4.4vw, 3.1rem); line-height: 1.08; font-weight: 750; letter-spacing: -0.035em; color: var(--sl-color-white); }
   h1:lang(ko) { line-height: 1.18; letter-spacing: -0.03em; }
   .lead { margin: 0 0 1.5rem; max-width: 30rem; font-size: var(--sl-text-lg); color: var(--sl-color-gray-2); line-height: 1.6; text-wrap: pretty; }
@@ -252,35 +254,36 @@ const arrow = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24
   .btn:hover { border-color: var(--sl-color-gray-3); background: var(--ai-surface-2); }
   .btn svg { transition: transform 0.2s var(--ai-ease); }
   .btn:hover svg { transform: translateX(2px); }
-  .btn.primary { background: var(--sl-color-accent); border-color: var(--sl-color-accent); color: var(--ai-on-accent); box-shadow: 0 1px 2px rgb(0 0 0 / 0.12), 0 6px 16px -6px color-mix(in srgb, var(--sl-color-accent) 60%, transparent); }
+  .btn.primary { background: var(--sl-color-accent); border-color: var(--sl-color-accent); color: var(--ai-on-accent); box-shadow: none; }
   .btn.primary:hover { background: var(--ai-accent-hover); border-color: var(--ai-accent-hover); }
   .btn.primary:active { background: var(--ai-accent-active); border-color: var(--ai-accent-active); transform: translateY(1px); }
 
   /* ── 다시 온 사람 ── */
   .top { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; padding-top: 0; }
-  .eyebrow { margin: 0; font-size: var(--sl-text-xs); font-weight: 700; color: var(--ai-coral-ink); }
+  .ret-lead { margin: 0.35rem 0 0; color: var(--sl-color-gray-2); font-size: 0.95rem; }
+  .eyebrow { margin: 0; font-size: var(--sl-text-xs); font-weight: 700; color: var(--ai-accent-ink); }
   .hd-ret h1 { margin: 0.15rem 0 0; font-size: clamp(1.6rem, 3vw, 2rem); line-height: 1.25; }
-  .big { display: flex; align-items: center; gap: 0.65rem; width: 100%; height: 3.4rem; margin-top: 1.1rem; padding: 0 1rem; border: 1.5px solid var(--ai-line-strong); border-radius: 14px; background: var(--ai-surface); color: var(--sl-color-gray-3); font: inherit; font-size: var(--sl-text-base); text-align: left; cursor: text; box-shadow: var(--ai-shadow); transition: border-color 0.15s, box-shadow 0.2s; }
+  .big { display: flex; align-items: center; gap: 0.65rem; width: 100%; height: 3.4rem; margin-top: 1.1rem; padding: 0 1rem; border: 1.5px solid var(--ai-line-strong); border-radius: 10px; background: var(--ai-surface); color: var(--sl-color-gray-3); font: inherit; font-size: var(--sl-text-base); text-align: left; cursor: text; box-shadow: var(--ai-shadow); transition: border-color 0.15s, box-shadow 0.2s; }
   .big:hover { border-color: var(--sl-color-gray-3); }
-  .big:focus-visible { outline: 2px solid var(--ai-coral); outline-offset: 2px; }
+  .big:focus-visible { outline: 2px solid var(--ai-focus); outline-offset: 2px; }
   .big svg { flex: none; }
   .chips { list-style: none; margin: 0.7rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
   .chips li { margin: 0; padding: 0; }
   .chips a { display: inline-flex; align-items: center; min-height: 2rem; padding: 0.25rem 0.8rem; border-radius: 99px; background: var(--ai-surface-2); border: 1px solid var(--ai-line); font-size: var(--sl-text-xs); font-weight: 600; color: var(--sl-color-gray-1); text-decoration: none; transition: border-color 0.15s, color 0.15s; }
-  .chips a:hover { border-color: var(--ai-line-strong); color: var(--ai-coral-ink); }
+  .chips a:hover { border-color: var(--ai-line-strong); color: var(--ai-accent-ink); }
   .dash { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: var(--gap); margin-top: 1.4rem; align-items: stretch; }
   .card { min-width: 0; padding: 1.25rem; border-radius: var(--ai-radius-lg); background: var(--ai-surface); border: 1px solid var(--ai-line); box-shadow: var(--ai-shadow); display: flex; flex-direction: column; }
   .card[hidden] { display: none; }
   .k { margin: 0; display: flex; align-items: center; gap: 0.4rem; font-size: var(--sl-text-xs); font-weight: 700; color: var(--sl-color-gray-3); }
   .wl { margin-left: auto; font-weight: 500; white-space: nowrap; font-size: 0.7rem; }
-  .cont { background: linear-gradient(135deg, var(--ai-surface) 55%, var(--ai-coral-soft)); border-color: var(--ai-coral-line); }
+  .cont { background: var(--ai-accent-soft); border-color: var(--ai-accent-line); }
   .cont h3 { margin: 0.55rem 0 0.35rem; font-size: 1.3rem; line-height: 1.35; font-weight: 750; letter-spacing: -0.02em; color: var(--sl-color-white); }
   .cmeta { margin: 0 0 1rem; font-size: var(--sl-text-sm); color: var(--sl-color-gray-3); }
   .go { align-self: flex-start; }
   .row { display: flex; align-items: center; gap: 0.75rem; margin-top: auto; padding-top: 1rem; }
   .row span:last-child { font-size: var(--sl-text-xs); font-weight: 700; color: var(--sl-color-gray-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
   .bar { flex: 1; height: 6px; border-radius: 99px; background: var(--ai-line); overflow: hidden; }
-  .bar i { display: block; height: 100%; width: 0; background: var(--ai-coral); border-radius: 99px; }
+  .bar i { display: block; height: 100%; width: 0; background: var(--ai-accent); border-radius: 99px; }
   .path .hp-active { display: flex; flex-direction: column; flex: 1; }
   .path .hp-active[hidden], .path .hp-none[hidden] { display: none; }
   .hp-title { margin: 0.55rem 0 0.15rem; font-size: 1.1rem; font-weight: 750; letter-spacing: -0.01em; color: var(--sl-color-white); }
@@ -289,20 +292,20 @@ const arrow = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24
   .path .row { margin-top: 0.6rem; padding-top: 0; }
   .nextstep { margin-top: auto; display: flex; align-items: center; gap: 0.65rem; padding: 0.6rem 0.7rem; border-radius: 10px; background: var(--ai-surface-2); text-decoration: none; font-size: var(--sl-text-sm); font-weight: 600; color: var(--sl-color-white); line-height: 1.4; }
   .path .hp-active .nextstep { margin-top: 0.85rem; }
-  .nextstep:hover { color: var(--ai-coral-ink); }
-  .nextstep em { flex: none; display: grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 99px; background: var(--ai-coral); color: var(--ai-on-accent); font-style: normal; font-size: 0.72rem; font-weight: 700; }
+  .nextstep:hover { color: var(--ai-accent-ink); }
+  .nextstep em { flex: none; display: grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 99px; background: var(--ai-accent); color: var(--ai-on-accent); font-style: normal; font-size: 0.72rem; font-weight: 700; }
   .mini { list-style: none; margin: 0.7rem 0 0; padding: 0; display: grid; gap: 0.4rem; }
   .mini li { margin: 0; padding: 0; }
   .mini a { display: flex; flex-direction: column; padding: 0.5rem 0.7rem; border-radius: 10px; background: var(--ai-surface-2); text-decoration: none; font-size: var(--sl-text-sm); font-weight: 650; color: var(--sl-color-white); line-height: 1.35; }
   .mini a span { font-size: var(--sl-text-xs); font-weight: 500; color: var(--sl-color-gray-3); }
-  .mini a:hover { color: var(--ai-coral-ink); }
+  .mini a:hover { color: var(--ai-accent-ink); }
   .week ul { list-style: none; margin: 0.4rem 0 0; padding: 0; }
   .week li { margin: 0; padding: 0.55rem 0; border-top: 1px solid var(--ai-line); display: flex; gap: 0.5rem; align-items: baseline; font-size: var(--sl-text-sm); line-height: 1.45; }
   .week li:first-child { border-top: 0; }
-  .week li b { flex: none; font-size: 0.68rem; font-weight: 700; padding: 0.05rem 0.4rem; border-radius: 5px; background: var(--ai-coral-soft); color: var(--ai-coral-ink); }
+  .week li b { flex: none; font-size: 0.68rem; font-weight: 700; padding: 0.05rem 0.4rem; border-radius: 5px; background: var(--ai-accent-soft); color: var(--ai-accent-ink); }
   .week li a { color: var(--sl-color-white); text-decoration: none; min-width: 0; }
-  .week li a:hover { color: var(--ai-coral-ink); }
-  .more { margin-top: auto; padding-top: 0.6rem; font-size: var(--sl-text-xs); font-weight: 700; color: var(--ai-coral-ink); text-decoration: none; }
+  .week li a:hover { color: var(--ai-accent-ink); }
+  .more { margin-top: auto; padding-top: 0.6rem; font-size: var(--sl-text-xs); font-weight: 700; color: var(--ai-accent-ink); text-decoration: none; }
 
   @media (max-width: 64rem) {
     .dash { grid-template-columns: 1fr 1fr; }

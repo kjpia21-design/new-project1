@@ -68,7 +68,7 @@ const href = (slug: string) => url(`/${slug}/`, lang);
   .head { padding: 1.15rem 1.25rem 1rem; border-bottom: 1px solid var(--ai-line); }
   .eyebrow {
     display: inline-flex; align-items: center; gap: 0.35rem; margin: 0;
-    font-size: var(--sl-text-2xs); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ai-coral-ink);
+    font-size: var(--sl-text-2xs); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ai-accent-ink);
   }
   .eyebrow:lang(ko) { letter-spacing: 0.01em; }
   h2 { margin: 0.3rem 0 0; font-size: var(--sl-text-h3); line-height: 1.3; font-weight: 700; letter-spacing: -0.015em; color: var(--sl-color-white); }
@@ -87,7 +87,7 @@ const href = (slug: string) => url(`/${slug}/`, lang);
   .count { margin: 0; font-size: var(--sl-text-xs); font-weight: 600; color: var(--sl-color-gray-2); font-variant-numeric: tabular-nums; }
   .count[hidden], .track[hidden] { display: none; }
   .track { margin-top: 0.9rem; height: 4px; border-radius: 999px; background: var(--ai-line); overflow: hidden; }
-  .track span { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--ai-coral); transition: width 0.3s var(--ai-ease); }
+  .track span { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--ai-accent); transition: width 0.3s var(--ai-ease); }
 
   .steps { list-style: none; margin: 0; padding: 0.35rem 0; counter-reset: none; }
   .lp-step { position: relative; display: flex; gap: 0.85rem; margin: 0; padding: 0.65rem 1.25rem; }
@@ -106,7 +106,7 @@ const href = (slug: string) => url(`/${slug}/`, lang);
     font-size: var(--sl-text-sm); font-weight: 600; line-height: 1.45; color: var(--sl-color-white);
     text-decoration: none; overflow-wrap: anywhere;
   }
-  .body a:hover { color: var(--ai-coral-ink); text-decoration: underline; text-underline-offset: 0.2em; }
+  .body a:hover { color: var(--ai-accent-ink); text-decoration: underline; text-underline-offset: 0.2em; }
   .info { display: flex; align-items: center; flex-wrap: wrap; gap: 0.25rem 0.75rem; font-size: var(--sl-text-2xs); color: var(--sl-color-gray-2); }
   .lv { display: inline-flex; align-items: center; gap: 0.35rem; }
   .dot { width: 0.5rem; height: 0.5rem; border-radius: 999px; background: currentColor; }
@@ -116,13 +116,13 @@ const href = (slug: string) => url(`/${slug}/`, lang);
   .dur { font-variant-numeric: tabular-nums; }
 
   /* 완료한 단계(Footer.astro 스크립트가 data-done을 붙인다) */
-  .lp-step[data-done] .num { background: var(--ai-coral-soft); border-color: var(--ai-coral-line); color: var(--ai-coral-ink); }
+  .lp-step[data-done] .num { background: var(--ai-accent-soft); border-color: var(--ai-accent-line); color: var(--ai-accent-ink); }
   .lp-step[data-done] .num .n { display: none; }
   .lp-step[data-done] .num .tick { display: block; }
   .lp-step[data-done] .body a { color: var(--sl-color-gray-2); }
-  .lp-step[data-done] .body a:hover { color: var(--ai-coral-ink); }
+  .lp-step[data-done] .body a:hover { color: var(--ai-accent-ink); }
   .lp-step[data-next] { background: var(--ai-surface-2); }
-  .lp-step[data-next] .num { border-color: var(--ai-coral); color: var(--ai-coral-ink); }
+  .lp-step[data-next] .num { border-color: var(--ai-accent); color: var(--ai-accent-ink); }
 
   @media (max-width: 30rem) {
     .head { padding: 1rem 1rem 0.9rem; }
