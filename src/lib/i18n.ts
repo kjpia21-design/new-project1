@@ -63,9 +63,7 @@ const dict = {
   // TutorialMeta
   'meta.label': { ko: '튜토리얼 정보', en: 'Tutorial info' },
   'meta.draft': { ko: '준비 중', en: 'Coming soon' },
-  'meta.duration': { ko: '소요 시간', en: 'Time needed' },
   'meta.tbd': { ko: '미정', en: 'TBD' },
-  'meta.verified': { ko: '마지막 확인일', en: 'Last verified' },
   'meta.tools': { ko: '사용 도구', en: 'Tools' },
   'meta.prereq': { ko: '준비물', en: 'What you need' },
   'meta.requires': { ko: '먼저 보면 좋은 글', en: 'Do these first' },
@@ -81,8 +79,6 @@ const dict = {
   'lp.complete': { ko: '모든 단계를 마쳤어요. 다시 보기 →', en: 'All steps done. Review step 1 →' },
   'lp.partOf': { ko: '학습 경로', en: 'Part of' },
   'lp.stepOf': { ko: '{n}단계 중 {k}단계', en: 'step {k} of {n}' },
-  // Summary
-  'summary.title': { ko: '한눈에 요약', en: 'At a glance' },
   // LevelCards
   'lv.beginner.desc': {
     ko: 'AI가 처음이에요. 가입부터 첫 질문, 안전하게 쓰는 법까지 "AI 첫걸음" 시리즈로 시작해요.',
@@ -118,8 +114,6 @@ const dict = {
   // NewsItem
   'news.source': { ko: '공식 출처', en: 'Official source' },
   'news.tutorial': { ko: '관련 튜토리얼', en: 'Related tutorial' },
-  'news.channel.Claude 앱': { ko: 'Claude 앱', en: 'Claude app' },
-  'news.channel.뉴스': { ko: '뉴스', en: 'News' },
   // TutorialGrid
   'grid.empty': { ko: '아직 이 조건에 맞는 튜토리얼이 없어요.', en: 'No tutorials match these criteria yet.' },
   'grid.search': { ko: '제목·도구로 찾기', en: 'Search by title or tool' },
@@ -150,9 +144,7 @@ const dict = {
   'dock.label': { ko: '튜토리얼 바로가기', en: 'Tutorial shortcuts' },
   'dock.next': { ko: '다음', en: 'Next' },
   // 404
-  'nf.title': { ko: '페이지를 찾을 수 없어요', en: 'Page not found' },
   // Illustration 등 일러스트 aria
-  'illu.hero': { ko: '로봇과 말풍선, 반짝이 일러스트', en: 'Illustration of a robot, a speech bubble, and sparkles' },
 } as const;
 
 export type Key = keyof typeof dict;

@@ -1,8 +1,8 @@
 ---
 title: "Build a Customer FAQ and Reply Templates with AI"
-description: "Turn repeated customer questions into an FAQ and reusable reply templates with AI: what to gather, how to mask customer data, a Project or Gem that holds your policies, and a review step before anything is sent"
+description: "Turn repeated customer questions into an FAQ and reusable reply templates with AI: what to gather, how to mask customer data, a Project or Gemini skill that holds your policies, and a review step before anything is sent"
 seoTitle: "Customer FAQ and Reply Templates with AI"
-seoDescription: "Turn repeated customer questions into an FAQ and reply templates with AI: what to gather, masking customer data, a Project or Gem, and a review step."
+seoDescription: "Turn repeated customer questions into an FAQ and reply templates with AI: what to gather, masking customer data, a Project or Gemini skill, and a review step."
 sidebar:
   label: "22. Customer FAQ and reply templates"
 level: practical
@@ -12,7 +12,7 @@ duration: "60 min"
 prerequisites:
   - "An account with Claude, ChatGPT or Gemini"
   - "Ten to twenty past customer questions and your real policies (shipping, refunds, hours), with names and contact details removed"
-lastVerified: 2026-11-16
+lastVerified: 2026-11-28
 sources:
   - title: "What are projects? (Claude Help Center)"
     url: "https://support.claude.com/en/articles/9517075-what-are-projects"
@@ -20,8 +20,6 @@ sources:
     url: "https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects"
   - title: "Projects and chats (ChatGPT docs)"
     url: "https://learn.chatgpt.com/docs/projects"
-  - title: "Use Gems in Gemini Apps (Gemini Apps Help)"
-    url: "https://support.google.com/gemini/answer/15146780?hl=en"
   - title: "About the transition from Gems to skills (Gemini Apps Help)"
     url: "https://support.google.com/gemini/answer/18560919?hl=en"
 status: published
@@ -33,8 +31,8 @@ import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 
 <Summary>
-- The flow is **collect real questions (masked) → write your policies down → ask AI to group them into an FAQ → turn each answer type into a reply template → keep the policies in a Project or Gem → review every reply before it goes out**.
-- Claude Projects, ChatGPT projects and Gemini Gems each let you keep shared files and instructions in one place. Anthropic's help says project instructions apply to all chats in the project.
+- The flow is **collect real questions (masked) → write your policies down → ask AI to group them into an FAQ → turn each answer type into a reply template → keep the policies in a Project or skill → review every reply before it goes out**.
+- Claude Projects, ChatGPT projects and Gemini skills each let you keep shared instructions (and files) in one place. Anthropic's help says project instructions apply to all chats in the project.
 - **Your company decides the policies.** Refund terms, delivery dates and prices must come from you. AI should only phrase them.
 - **Mask customer names, emails, order numbers and phone numbers** before pasting anything.
 - **AI drafts, a person sends.** We did not run this exercise with a real customer inbox, so the prompts and sample FAQ are our own examples.
@@ -44,7 +42,7 @@ import PromptBox from '../../../components/PromptBox.astro';
 
 - Sort a pile of past customer questions into **groups** and write a short FAQ from them.
 - Turn each kind of answer into a **reply template** with blanks a person fills in.
-- Keep your policies, tone and templates in a Project (or Gem) so you do not paste them every time.
+- Keep your policies, tone and templates in a Project (or Gemini skill) so you do not paste them every time.
 - Put a **review step** between the AI draft and the customer.
 
 For reusable documents in general, see [Build Reusable Document Templates with AI](/automation/50-document-templates/). For the wider picture of sales and support work, see [AI Guide for Sales and Customer Support](/roles/sales-support/).
@@ -56,16 +54,16 @@ For reusable documents in general, see [Build Reusable Document Templates with A
 | **FAQ** | A list of frequent questions with short, approved answers that customers or staff can read. |
 | **Reply template** | A reply with fixed wording and blanks, such as [customer first name] or [order status], that a person fills in. |
 | **Policy sheet** | One page that states your real rules: shipping times, refund conditions, hours, what you do not do. The AI must not go beyond it. |
-| **Project / Gem** | A saved workspace with its own files and instructions, so every chat starts with the same context. |
+| **Project / Skill** | A saved workspace (Claude, ChatGPT) or a saved set of reusable instructions (Gemini skill) with its own files and instructions, so every chat starts with the same context. |
 | **Masking** | Replacing personal details with placeholders (for example CUSTOMER_A) before you share text with an AI service. |
 
 <Aside type="caution" title="Customer information">
 Past emails and chats contain names, addresses, order numbers and sometimes payment or health details. Replace them with placeholders before pasting, and check your company's rules first. See [Using AI While Protecting Personal and Company Information](/basics/05-privacy-safety/). If you are not sure you may share something, leave it out.
 </Aside>
 
-<Aside type="note" title="Things to keep in mind (as of 2026-11-09)">
-- This guide is based on the five official pages in the front matter. We did not run these steps in real accounts, so menu names come from the help text only.
-- **Gemini Gems are changing.** Google's help says that on personal Google accounts (18+) Gems become read-only on November 17, 2026 and are removed on December 17, 2026, and that existing Gems are converted to skills automatically (as of 2026-11-09). For Workspace business, enterprise and non-profit accounts the change is March 2027, and for Workspace education June 2027; under-18 personal accounts get a date later. Skills have a 100 MB file limit and some file types (such as audio, video and archives) do not carry over, so you can recreate a Gem as a skill manually before the automatic move (Customize > Skills > Create > Create manually; if you do not see Customize, click More first).
+<Aside type="note" title="Things to keep in mind (as of 2026-11-28)">
+- This guide is based on the official pages in the front matter. We did not run these steps in real accounts, so menu names come from the help text only.
+- **Gemini Gems are now skills.** Google's help says that on personal Google accounts (18+) Gems became read-only on November 17, 2026 (you can still see them but cannot use or edit them or create new ones) and are scheduled to be removed on December 17, 2026, and that existing Gems are converted to skills automatically (as of 2026-11-28). For Workspace business, enterprise and non-profit accounts the change is March 2027, and for Workspace education June 2027; under-18 personal accounts get a date later. Skills have a 100 MB file limit and some file types (such as audio, video and archives) do not carry over, so download the files from a Gem before December 17 if you need them. To create a skill: Customize > Skills > Create > Create manually (if you do not see Customize, click More first).
 - **Claude Projects are also changing.** Anthropic's help describes a new version of projects in beta, rolling out in stages, and says other existing projects in chat stay on the current version for now. The steps below follow the help page for the current version; yours may look different.
 - We did not find official figures for how accurate any service is at writing support replies, and we did not test them.
 - We did not read each service's file-size limits for project files in detail. Check the limit shown in the app.
@@ -78,7 +76,7 @@ Past emails and chats contain names, addresses, order numbers and sometimes paym
 | --- | --- | --- |
 | **Claude** | Projects are available to all users, including free accounts; free users can create up to five. Add documents, text or code to project knowledge and set project instructions, which Claude uses for all chats in the project. Context is not shared across chats unless it is in the project knowledge. On Team and Enterprise plans, projects can be private or shared, with "Can view" or "Can edit" permission. | Whether your account already has the new beta version of projects. |
 | **ChatGPT** | On the web, a project keeps related chats, files, instructions and sources together. Project instructions apply across its chats. A ChatGPT project does not give direct access to a folder on your computer, so you upload or connect sources. | Plan availability and file limits (not stated on the page we read). |
-| **Gemini** | Create a Gem with a name and instructions, and optionally add files under "Knowledge" (from your device, Google Drive or a NotebookLM notebook). Gems cannot be used with Gemini Live for now. | How well a converted Gem behaves as a skill (the dates and file limits are on Google's transition page). |
+| **Gemini** | Create a skill with a name, a description and instructions (Customize > Skills > Create > Create manually). To add files, download the skill and upload it again with its files (up to 100 MB). You can add a skill to any chat, up to 100 active at a time. Skills work with connected apps such as Workspace apps but not yet with Canvas or Deep Research. | Whether every file type you used in a Gem carries over to a skill (the dates and file limits are on Google's transition page). |
 
 ## Step-by-step guide
 
@@ -124,11 +122,11 @@ Practice with made-up customers or masked copies first.
 
    Make one template per common situation, for example a late delivery, a refund request, a question you cannot answer yet.
 
-6. **Save the setup in a Project or Gem**
+6. **Save the setup in a Project or skill**
 
    - **Claude**: create a project, add the policy sheet and templates as project knowledge, and put the tone rules in project instructions.
    - **ChatGPT**: create a project and upload the same files, with instructions in the project.
-   - **Gemini**: create a Gem with the instructions and add the files under Knowledge. Check Google's Gems-to-skills notice first.
+   - **Gemini**: create a skill (Customize > Skills > Create > Create manually) with the instructions, and add the files by downloading the skill and uploading it with its files. Skills replace Gems, so see Google's Gems-to-skills notice for what carries over.
 
    Suggested instructions, with no real customer data in them:
 
@@ -138,11 +136,11 @@ Practice with made-up customers or masked copies first.
 
 7. **Draft a reply, then review it**
 
-   Paste the masked customer message into a new chat in the Project or Gem and ask for a draft using the right template. Before sending, a person checks the points in the review table below, puts the real name and order details back in, and sends it from your own mail or support tool.
+   Paste the masked customer message into a new chat in the Project or skill and ask for a draft using the right template. Before sending, a person checks the points in the review table below, puts the real name and order details back in, and sends it from your own mail or support tool.
 
 8. **Update when policies change**
 
-   When a rule changes, edit the policy sheet first, then the FAQ and templates. Replace the old file in the Project or Gem, and note the date.
+   When a rule changes, edit the policy sheet first, then the FAQ and templates. Replace the old file in the Project or skill, and note the date.
 
 </Steps>
 
@@ -179,11 +177,11 @@ Practice with made-up customers or masked copies first.
 ### Replies sound different each time
 
 - **Cause**: Tone is not written down, or each chat starts without context.
-- **Fix**: Put tone rules and two or three approved sample replies in the Project or Gem. Anthropic's help notes that context is not shared across chats in a project unless it is in the project knowledge.
+- **Fix**: Put tone rules and two or three approved sample replies in the Project or skill. Anthropic's help notes that context is not shared across chats in a project unless it is in the project knowledge.
 
-### The Gem or project looks different from these steps
+### The skill or project looks different from these steps
 
-- **Cause**: The services are changing. Google plans to move Gems to skills, and Anthropic is rolling out a new version of projects in stages.
+- **Cause**: The services are changing. Google is moving Gems to skills (read-only since November 17, 2026, removal planned for December 17, 2026), and Anthropic is rolling out a new version of projects in stages.
 - **Fix**: Follow the menus you see, and check the linked help pages.
 
 ## Practical tips

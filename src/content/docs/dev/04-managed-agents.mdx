@@ -14,7 +14,7 @@ prerequisites:
   - "3. Build Your Own Agent with the Claude Agent SDK (concepts of agents, tools, and permissions)"
   - "Python 3.10 or later and a terminal (Node.js for the TypeScript examples)"
 requires: ["claude/c16-api", "dev/03-agent-sdk"]
-lastVerified: 2026-11-16
+lastVerified: 2026-11-28
 sources:
   - title: "Claude Managed Agents overview"
     url: "https://platform.claude.com/docs/en/managed-agents/overview"
@@ -32,6 +32,8 @@ sources:
     url: "https://platform.claude.com/docs/en/managed-agents/reference"
   - title: "Pricing (Claude Managed Agents pricing)"
     url: "https://platform.claude.com/docs/en/about-claude/pricing"
+  - title: "Migrating to API version 2026-10-21"
+    url: "https://platform.claude.com/docs/en/api/migration-2026-10-21"
   - title: "Agent SDK overview (comparison for choosing)"
     url: "https://code.claude.com/docs/en/agent-sdk/overview"
   - title: "Hosting the Agent SDK"
@@ -60,7 +62,7 @@ import PromptBox from '../../../components/PromptBox.astro';
 - **It isn't eligible for ZDR (zero data retention) or a HIPAA BAA.** Sessions and conversation history are stored on the server.
 </Summary>
 
-The examples follow the official documentation. We verified the syntax on 2026-10-11, and in the installed SDKs (Python `anthropic` 1.13.0, TypeScript `@anthropic-ai/sdk` 0.133.0) we confirmed that the methods and parameter names exist, and for TypeScript we also ran type checking. We made no real calls. It's a beta, so fields and figures may change; check the docs alongside this.
+The examples follow the official documentation. We verified the syntax on 2026-10-11, and in the SDKs installed at the time (Python `anthropic` 1.13.0, TypeScript `@anthropic-ai/sdk` 0.133.0) we confirmed that the methods and parameter names exist, and for TypeScript we also ran type checking. On 2026-11-28 we re-read the official migration guide for API version 2026-10-21: SDK releases from that version on are Python `anthropic` 2.0.0 and TypeScript `@anthropic-ai/sdk` 1.0.0, and the API version header is `2026-10-21`. The examples here use only `client.beta.*` calls for environments, agents, and sessions, and no `temperature`, `top_p`, `top_k`, or citations (those were removed or restricted in the new API version), and the guide's breaking-changes list does not mention those calls. We did not install or run the new SDK versions, so this is a documentation check only. We made no real calls. It's a beta, so fields and figures may change; check the docs alongside this.
 
 ## What you'll be able to do after this tutorial
 

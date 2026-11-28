@@ -1,8 +1,8 @@
 ---
 title: "Claude Code를 쓰려면 어떤 플랜이 필요할까"
-description: "Claude Code가 들어 있는 플랜(Free는 아님), API 과금과의 차이, Team·Enterprise, 사용량 한도, 비개발자도 쓸 수 있는지를 2026-11-23 기준 공식 페이지로 정리해요"
+description: "Claude Code가 들어 있는 플랜(Free는 아님), API 과금과의 차이, Team·Enterprise, 사용량 한도, 비개발자도 쓸 수 있는지를 2026-11-28 기준 공식 페이지로 정리해요"
 seoTitle: "Claude Code 요금·필요한 플랜"
-seoDescription: "Claude Code는 무료(Free) 플랜에 없어요. Pro·Max·Ultra·Team·Enterprise 또는 API 과금 중 무엇이 필요한지 2026-11-23 기준 공식 요금과 한도, 팀 플랜, 비개발자 사용 여부까지 정리했어요."
+seoDescription: "Claude Code는 무료(Free) 플랜에 없어요. Pro·Max·Ultra·Team·Enterprise 또는 API 과금 중 무엇이 필요한지 2026-11-28 기준 공식 요금과 한도, 팀 플랜, 비개발자 사용 여부까지 정리했어요."
 sidebar:
   label: "C33. Claude Code 플랜"
 level: beginner
@@ -12,7 +12,7 @@ duration: "15분"
 prerequisites:
   - "준비물 없음: 플랜을 고르기 위한 읽을거리예요"
 requires: ["claude/c12-claude-code-overview"]
-lastVerified: 2026-11-23
+lastVerified: 2026-11-28
 sources:
   - title: "Plans & pricing (claude.com)"
     url: "https://claude.com/pricing"
@@ -34,11 +34,11 @@ import Summary from '../../../../components/Summary.astro';
 import PromptBox from '../../../../components/PromptBox.astro';
 
 <Summary>
-- **Claude Code는 Free 플랜에 들어 있지 않아요.** 공식 요금 페이지의 기능 비교표에서 Claude Code는 Free가 "No", Pro·Max·Ultra·Team·Enterprise가 "Yes"예요(2026-11-23 기준).
+- **Claude Code는 Free 플랜에 들어 있지 않아요.** 공식 요금 페이지의 기능 비교표에서 Claude Code는 Free가 "No", Pro·Max·Ultra·Team·Enterprise가 "Yes"예요(2026-11-28 기준).
 - **개인**: Pro(연간 결제 시 월 $17, 월 결제 $20), Max($100), Ultra($200). 사용량은 Claude와 Claude Code가 함께 써요. **팀**: Team 좌석마다 Claude Code가 포함되고, 프리미엄 좌석은 사용량이 더 많아요.
 - **구독이 없다면** Claude Console 계정으로 로그인할 수 있고, 이 경우 Claude Code는 **API 토큰 사용량으로 과금**돼요.
 - **비개발자**: 공식 페이지는 "누구를 위한 도구"라고 말하지 않아요. 다만 Code 탭이 있는 데스크톱 앱과 브라우저 버전이 있어서 터미널만이 유일한 길은 아니에요.
-- 가격과 한도는 자주 바뀌어요. 이 글의 수치는 모두 **2026-11-23 기준**이고 공식 페이지 링크를 달았어요.
+- 가격과 한도는 자주 바뀌어요. 이 글의 수치는 모두 **2026-11-28 기준**이고 공식 페이지 링크를 달았어요.
 </Summary>
 
 "Claude Code는 돈을 내야 쓰나요?"는 써 보기 전에 가장 많이 나오는 질문이에요. 이 글은 공식 페이지만으로 답해요. Claude Code가 무엇이고 어떻게 설치하는지는 [C12. Claude Code 개요](/ko/claude/c12-claude-code-overview/), 플랜 전반은 [C2. 플랜과 사용량 한도](/ko/claude/c02-plans-limits/)를 보세요.
@@ -52,14 +52,15 @@ import PromptBox from '../../../../components/PromptBox.astro';
 | Team·Enterprise | 좌석에 포함(아래 좌석 설명 참고) | [도움말](https://support.claude.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan) |
 | 구독 없음 | Claude Console 계정, API 토큰 사용량 과금 | [인증 문서](https://code.claude.com/docs/en/authentication) |
 
-## 개인 플랜 (2026-11-23 기준)
+## 개인 플랜 (2026-11-28 기준)
 
-| 플랜 | 요금 페이지 가격 | Claude Code | 사용량 한도(요금 페이지) |
-| --- | --- | --- | --- |
-| Free | $0 | No | 5시간마다·주마다 제한된 사용량 |
-| Pro | 연간 할인 시 월 $17($200 선결제), 월 결제 $20 | Yes | Free보다 많은 사용량, 5시간마다·주마다 |
-| Max | 월 $100 | Yes | Pro의 5배 사용량, 5시간마다·주마다 |
-| Ultra | 월 $200 | Yes | 인증된 계정은 5시간 한도 없음, 주간 Pro의 10배 |
+Claude Code는 Pro·Max·Ultra에 포함되고 Free에는 없어요. 이 표는 Claude Code가 포함된 플랜만 남겼어요. Free 플랜, 전체 비교, 사용량 한도 자세히는 [C2](/ko/claude/c02-plans-limits/)를 보세요.
+
+| 플랜 | 요금 페이지 가격 | 사용량 한도(요금 페이지) |
+| --- | --- | --- |
+| Pro | 연간 할인 시 월 $17($200 선결제), 월 결제 $20 | Free보다 많은 사용량, 5시간마다·주마다 |
+| Max | 월 $100 | Pro의 5배 사용량, 5시간마다·주마다 |
+| Ultra | 월 $200 | 인증된 계정은 5시간 한도 없음, 주간 Pro의 10배 |
 
 모든 셀의 출처: [claude.com/pricing](https://claude.com/pricing). 그 페이지의 가격은 해당 세금을 포함하지 않고, 가격과 플랜이 바뀔 수 있다고 적혀 있어요.
 
@@ -70,7 +71,7 @@ import PromptBox from '../../../../components/PromptBox.astro';
 
 ## Team과 Enterprise
 
-- **Team**: 도움말은 모든 Team 좌석에 Claude Code가 포함되고, 프리미엄 좌석은 작업량이 많은 사람에게 더 많은 사용량을 준다고 해요. 요금 페이지의 2026-11-23 기준 가격은 표준 좌석이 연간 결제 시 좌석당 월 $20(월 결제 $25), 프리미엄 좌석이 $100(월 결제 $125)이에요.
+- **Team**: 도움말은 모든 Team 좌석에 Claude Code가 포함되고, 프리미엄 좌석은 작업량이 많은 사람에게 더 많은 사용량을 준다고 해요. 요금 페이지의 2026-11-28 기준 가격은 표준 좌석이 연간 결제 시 좌석당 월 $20(월 결제 $25), 프리미엄 좌석이 $100(월 결제 $125)이에요.
 - **Enterprise**: 신규·셀프서브 플랜에서는 Enterprise 좌석 하나에 Claude Code가 포함되고, 사용량은 API 요금으로 과금되며 좌석별 사용량 한도가 없어요. 예전 Enterprise 플랜은 Chat + Claude Code 좌석이나 프리미엄 좌석을 쓸 수 있어요. 요금 페이지는 Enterprise를 연간 결제 시 좌석당 월 US$20(최소 20좌석)에 사용량은 API 요금으로 표시해요.
 - **건강 정보**: 도움말은 HIPAA-ready Enterprise 플랜에서 특정 구성을 적용한 뒤에만 Claude Code가 계약 적용 범위에 들어간다고 해요. 보호 대상 건강 정보를 쓰기 전에 관리자에게 물어보세요.
 - 관리자 쪽은 [C29. Team·Enterprise 관리자 기본](/ko/claude/c29-team-admin-basics/)을 보세요.
@@ -110,12 +111,12 @@ Claude Code를 써 보려고 해요. 제가 얼마나 자주 어떤 일에 쓸�
 현실적인 방법은 Claude Code가 포함된 가장 저렴한 유료 플랜(Pro)으로 시작해서 한도에 얼마나 자주 걸리는지 보고, 계속 걸릴 때만 올리는 거예요. 이것은 제안이지 공식 권장이 아니에요.
 
 <Aside type="note" title="확인하지 못한 것">
-2026-11-23에 요금 페이지, 도움말 2개, Claude Code 문서 3개를 읽었어요. 읽은 페이지에는 플랜별 Claude Code 정확한 사용량, "대부분의 화면은 Claude 구독이나 Console 계정이 필요하다"는 문장 외에 웹 버전의 플랜 조건, 원화 가격, 무료 체험 여부가 나와 있지 않아요. 이 글을 위해 설치하거나 실행한 것은 없어요.
+2026-11-28에 요금 페이지, 도움말 2개, Claude Code 문서 3개를 읽었어요. 읽은 페이지에는 플랜별 Claude Code 정확한 사용량, "대부분의 화면은 Claude 구독이나 Console 계정이 필요하다"는 문장 외에 웹 버전의 플랜 조건, 원화 가격, 무료 체험 여부가 나와 있지 않아요. 이 글을 위해 설치하거나 실행한 것은 없어요.
 </Aside>
 
 ## 한눈에 보기
 
-| 질문 | 답 (2026-11-23 기준) |
+| 질문 | 답 (2026-11-28 기준) |
 | --- | --- |
 | 무료인가요? | Free 플랜에는 없어요. 유료 플랜이나 Console 계정이 필요해요 |
 | 포함된 가장 저렴한 플랜 | Pro, 연간 결제 월 $17 또는 월 결제 $20 |

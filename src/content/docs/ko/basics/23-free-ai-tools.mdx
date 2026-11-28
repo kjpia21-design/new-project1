@@ -2,7 +2,7 @@
 title: "무료로 쓸 수 있는 AI 총정리와 한도"
 description: "대화·코딩·번역 등 무료 AI를 공식 페이지 기준으로 날짜와 함께 정리하고, 무료 플랜의 한도와 확인하지 못한 점을 밝힙니다"
 seoTitle: "무료 AI 총정리: 2026 무료로 쓸 수 있는 AI"
-seoDescription: "2026년 무료 AI는 뭐가 있을까? Claude·Gemini·챗GPT, 코딩, 번역, 국산 서비스의 무료 한도를 공식 페이지 기준(2026-11-23)으로 정리했어요."
+seoDescription: "2026년 무료 AI는 뭐가 있을까? Claude·Gemini·챗GPT, 코딩, 번역, 국산 서비스의 무료 한도를 공식 페이지 기준(2026-11-28)으로 정리했어요."
 sidebar:
   label: "23. 무료 AI 총정리"
 level: beginner
@@ -13,8 +13,10 @@ tools: ["Claude", "Gemini", "ChatGPT", "GitHub Copilot", "DeepL", "파파고", "
 duration: "20분"
 prerequisites:
   - "읽는 데는 계정이 필요 없어요. 직접 써 보려면 계정이 있으면 좋아요"
-lastVerified: 2026-11-23
+lastVerified: 2026-11-28
 sources:
+  - title: "ChatGPT 요금 (OpenAI, 영문)"
+    url: "https://chatgpt.com/pricing"
   - title: "Claude 요금 (영문)"
     url: "https://claude.com/pricing"
   - title: "Google AI 요금제 (Gemini 구독, 영문)"
@@ -43,10 +45,10 @@ import Checklist from '../../../../components/Checklist.astro';
 import PromptBox from '../../../../components/PromptBox.astro';
 
 <Summary>
-- **잘 알려진 AI 여러 개가 무료 플랜을 제공해요.** 공식 페이지 기준(2026-11-23 현재) Claude Free, Gemini 앱 무료, GitHub Copilot Free, DeepL 무료 버전이 $0으로 표시돼요. ChatGPT Free는 OpenAI의 Work·Codex 요금 페이지에 $0으로 나와요.
+- **잘 알려진 AI 여러 개가 무료 플랜을 제공해요.** 공식 페이지 기준(2026-11-28 현재) Claude Free, Gemini 앱 무료, GitHub Copilot Free, DeepL 무료 버전이 $0으로 표시돼요. ChatGPT Free는 OpenAI 요금 페이지에 $0으로 나오고, 제한된 이미지 생성과 제한된 음성 대화가 포함돼요.
 - **무료는 제한이 있다는 뜻이에요.** Claude는 "5시간마다, 매주 제한된 사용량"이라고 밝히고, Gemini는 한도가 예고 없이 바뀔 수 있다고 안내해요. 제가 읽은 페이지 중에 고정된 메시지 횟수를 알려 주는 곳은 없었어요.
 - **용도별 선택:** 대화·글쓰기(Claude, Gemini, ChatGPT), 이미지(Gemini는 무료 목록에 이미지 생성·편집을 적어요), 코딩 도움(GitHub Copilot Free), 번역(DeepL 무료 버전, 파파고), 한국어 일상 도움(카카오톡 속 Kanana).
-- **확인하지 못한 것**은 아래에 따로 표시했어요. ChatGPT 무료 플랜의 대화·이미지·음성 한도, 무료 음성 받아쓰기 도구 같은 것들이에요.
+- **확인하지 못한 것**은 아래에 따로 표시했어요. 정확한 메시지 횟수, 무료 음성 받아쓰기 도구 같은 것들이에요.
 - **무료라고 안전한 것은 아니에요.** 민감한 내용을 붙여 넣기 전에 서비스별 데이터·학습 설정을 확인하세요. [개인정보 설정](/ko/basics/12-privacy-settings/)을 보세요.
 </Summary>
 
@@ -66,7 +68,7 @@ import PromptBox from '../../../../components/PromptBox.astro';
 | **사용 한도** | 일정 기간 쓸 수 있는 양. 한도에 닿으면 기다리거나 업그레이드해요 |
 | **대화 학습** | 제공사가 내 대화를 모델 개선에 쓸 수 있는지. 서비스와 플랜마다 달라요 |
 
-## 한눈에 보는 지도 (2026-11-23 기준)
+## 한눈에 보는 지도 (2026-11-28 기준)
 
 모든 행은 마지막 열의 공식 페이지에서 가져왔어요. 가격과 한도는 바뀌니 결정하기 전에 페이지를 열어 보세요.
 
@@ -74,14 +76,14 @@ import PromptBox from '../../../../components/PromptBox.astro';
 | --- | --- | --- | --- |
 | 대화·글쓰기·파일 | **Claude Free** | $0. 5시간마다, 매주 제한된 사용량. 웹·데스크톱·모바일 대화, 웹 검색·파일 만들기·코드 실행, 메모리, 커넥터, 아티팩트, Claude Design·Slides·Docs. Claude Code가 추가되는 플랜은 Pro로 표시돼요. | [claude.com/pricing](https://claude.com/pricing) |
 | 대화·이미지·리서치 | **Gemini 앱 (AI 플랜 없음)** | Google 계정으로 월 $0. 자동 모델 선택, 이미지 생성·편집, Deep Research, Gemini Live, Canvas, Skills, 제한된 Google Flow, Gemini Notebook, 저장공간 15GB. 기본 한도와 32k 토큰 컨텍스트이고, 플랜이 없으면 Deep Research 같은 기능이 붐비는 시간에 안 될 수 있어요. | [gemini.google/subscriptions](https://gemini.google/subscriptions/), [Gemini 앱 도움말](https://support.google.com/gemini/answer/16275805) |
-| 대화·음성·이미지 | **ChatGPT Free** | OpenAI 요금 페이지에 월 $0, 데스크톱 앱에서 GPT-6 Luna 표준 속도(출시 상황에 따라)로 표시돼요. 이 페이지는 Work·Codex 중심이라 일반 대화 한도는 없어요. | [learn.chatgpt.com 요금](https://learn.chatgpt.com/docs/pricing) |
+| 대화·음성·이미지 | **ChatGPT Free** | 월 $0. GPT-6 텍스트 대화 무제한(남용 방지 조건 있음), 업로드 메시지 제한, 이미지 생성 제한, 음성 대화 제한, 딥 리서치 제한, 메모리·컨텍스트 제한. Instant 모델 컨텍스트 창은 Free 27K, Go·Plus 54K, Pro 128K예요. Go에는 광고가 붙을 수 있어요. | [chatgpt.com/pricing](https://chatgpt.com/pricing), [learn.chatgpt.com 요금](https://learn.chatgpt.com/docs/pricing) |
 | 코딩 도움 | **GitHub Copilot Free** | 무료, "일부 Copilot 기능에 제한적 접근", GitHub AI 크레딧 일정량, 에이전트 제한, 자동 모델 선택만 가능. 조직을 통해 Copilot을 쓰지 않는 개인용이에요. | [GitHub 문서](https://docs.github.com/en/copilot/get-started/plans) |
 | 번역 | **DeepL 무료 버전** | 텍스트 번역 월 50,000자, 파일 번역 월 1개(최대 5MB), 용어집 1개(항목 5개). | [deepl.com/pro](https://www.deepl.com/en/pro) |
 | 번역(한국어) | **파파고** | 텍스트·이미지·문서·음성·웹사이트 번역 메뉴가 있고 일부는 "Plus 전용"으로 표시돼요. 가격이나 무료 한도는 페이지에서 읽지 못했어요. | [papago.naver.com](https://papago.naver.com/) |
 | 한국어 일상 도움 | **카카오톡 속 Kanana** | 지원 기기(iPhone 14 Pro 이상, Galaxy S22 이상, 일부 폴더블 등)의 카카오톡에서 회원 가입 후 이용해요. 가격은 안내되지 않아요. 친구와의 대화 원문은 기기 안에서만 처리된다고 밝혀요. | [kanana.kakao.com](https://kanana.kakao.com/) |
 
-<Aside type="caution" title="확인하지 못한 점 (2026-11-23 기준)">
-- **ChatGPT Free의 일반 대화·이미지·음성.** 읽을 수 있었던 OpenAI 페이지는 Work·Codex 중심이에요. Codex 부분은 Free 플랜에서 이미지 생성이 안 된다고 하고, ChatGPT 음성은 데스크톱 앱의 Plus 이상 플랜에 표시돼요. 둘 다 무료 대화 앱이 무엇을 허용하는지는 알려 주지 않아요. help.openai.com은 쓰지 않았어요.
+<Aside type="caution" title="확인하지 못한 점 (2026-11-28 기준)">
+- **ChatGPT Free의 정확한 메시지 횟수.** 요금 페이지는 업로드·이미지 생성·음성 대화를 "제한"이라고만 하고 숫자는 주지 않아요. Free에도 이미지 생성과 음성 대화는 있고, 둘 다 제한돼요.
 - **Gemini 기능별 무료 여부.** Gemini 제공 현황 표는 아이콘으로 표시돼 텍스트로 읽지 못했어요. 구독 페이지의 Free 목록만 썼어요.
 - **DeepL 무료 버전이 입력한 글을 학습에 쓰는지.** 비교표의 "No data training" 행이 아이콘이라 읽지 못했어요.
 - **파파고와 Kanana의 가격·한도.** 페이지에 나와 있지 않아요.

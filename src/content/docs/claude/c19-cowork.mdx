@@ -14,7 +14,7 @@ prerequisites:
   - "(To use your computer's files and browser) the Claude Desktop app on macOS or Windows"
   - "It helps if you've read C3 (Getting started with the Claude app)"
 requires: ["claude/c03-getting-started"]
-lastVerified: 2026-11-16
+lastVerified: 2026-11-28
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -24,6 +24,8 @@ sources:
     url: "https://support.claude.com/en/articles/13364135-use-claude-cowork-safely"
   - title: "Use Claude Cowork on web, desktop, and mobile"
     url: "https://support.claude.com/en/articles/15520349-use-claude-cowork-on-web-desktop-and-mobile"
+  - title: "Let Claude use your computer in Cowork"
+    url: "https://support.claude.com/en/articles/14128542-let-claude-use-your-computer-in-cowork"
   - title: "Claude Cowork and chat are one Claude"
     url: "https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude"
   - title: "Supported countries and regions"
@@ -78,12 +80,12 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 The official help says "Claude Cowork is now just Claude." When you ask a question, Claude decides on its own whether to give a quick answer or do a longer task. It's rolling out in stages to Pro, Max, and Ultra, on Team (beta) and Enterprise only where "Chat and Cowork unified" is turned on. If you still see a "Chat" / "Cowork" choice in the input box, that's the earlier screen, and once you move to the new experience, it's noted that you can't go back. This article is written to work for both screens. If your screen is different, check the [official help](https://support.claude.com/en/articles/16761823-claude-cowork-and-chat-are-one-claude).
 </Aside>
 
-### Where can you use it? (as of 2026-11-02)
+### Where can you use it? (as of 2026-11-28)
 
 | Device | Availability |
 | --- | --- |
 | Claude Desktop (macOS, Windows, Linux beta) | All paid plans. Linux is in beta. |
-| Web (claude.ai) and mobile (iOS, Android) | Pro, Max, Ultra, Team (beta on Team). Enterprise if an owner has turned it on |
+| Web (claude.ai) and mobile (iOS, Android) | Pro, Max, Ultra (rolling out in stages), Team (beta on Team). Enterprise where an owner has turned on "Chat and Cowork unified" |
 | Chrome side panel | All paid plans. On Enterprise, an owner has to turn on Claude in Chrome and Cowork in the cloud |
 
 As of 2026-11-02, the Cowork getting-started guide lists the desktop app as "Linux (beta)". The same guide says local file access, browser use, and computer use need the Claude Desktop app for macOS or Windows, so check the on-screen prompts and the official help for what works on Linux. [C11](/claude/c11-chrome-computer-use/) notes that computer use works only on macOS and Windows. As for Cowork availability in Korea (for users in Korea), we only confirmed that Claude itself is available in Korea (South Korea is on Anthropic's supported countries list, confirmed 2026-11-02), and Anthropic's supported-countries policy page treats Cowork as subject to the same rules and doesn't list any Cowork-specific regional restrictions (confirmed 2026-10-19).
@@ -162,7 +164,7 @@ As of 2026-11-02, the Cowork getting-started guide lists the desktop app as "Lin
 | Projects | Everywhere | Projects tied to local folders: desktop only |
 | Folders and files on your computer | Tasks started on desktop, and when following along from web or mobile | **Yes.** Only while the app is open |
 | Browser use (built-in browser, Claude in Chrome) | Mainly desktop | **Yes** |
-| Computer use | Beta on Pro, Max, and Ultra | **Yes** |
+| Computer use | Generally available on Pro, Max, and Ultra; beta on Team and Enterprise (new Claude experience only, an owner turns it on) | **Yes** |
 
 ### Limitations to know (as of 2026-11-02)
 

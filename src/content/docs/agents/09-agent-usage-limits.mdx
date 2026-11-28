@@ -13,8 +13,10 @@ prerequisites:
   - "Have tried at least one agent or research feature"
   - "It helps to have read the free vs. paid plans article (Basics 8)"
 requires: ["basics/08-free-vs-paid"]
-lastVerified: 2026-11-16
+lastVerified: 2026-11-28
 sources:
+  - title: "ChatGPT pricing (OpenAI)"
+    url: "https://chatgpt.com/pricing"
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
   - title: "How do usage and length limits work? (Claude)"
@@ -40,7 +42,7 @@ import PromptBox from '../../../components/PromptBox.astro';
 - **Limits are not fixed numbers.** Claude and Gemini say in plain words that limits can change, and ChatGPT's page calls its numbers estimates, not fixed limits. Check your own usage screen.
 - Claude: a session limit that resets every five hours plus a weekly limit. ChatGPT's pricing page gives estimated local messages per five hours. Gemini: a limit that refreshes every 5 hours until you reach a weekly limit.
 - When you hit a limit you can wait, upgrade, or (on some plans) pay for extra usage. Extra usage is billed separately from the subscription.
-- Prices below are **as of 2026-11-04**, from the official pages. Anything we could not confirm is marked as unconfirmed.
+- Plan prices live in one place, [AI pricing and free limits](/basics/22-ai-pricing-free-limits/). This article keeps only how each service describes agent usage (as of 2026-11-28). Anything we could not confirm is marked as unconfirmed.
 </Summary>
 
 ## What you'll be able to do after this tutorial
@@ -60,10 +62,10 @@ import PromptBox from '../../../components/PromptBox.astro';
 | **Credits / usage credits** | Paid extra usage after you reach your included limits. Claude bills it at standard API rates. |
 | **Token** | A small unit of text the model reads or writes. Prompts, files, history, tool results and replies all count. |
 
-For plan basics, see [Basics 8: Free vs. paid plans](/basics/08-free-vs-paid/) and [C2. Claude plans and limits](/claude/c02-plans-limits/). This article focuses on **why agents are heavier and how to manage that**.
+For plan basics and prices, see [Basics 22: AI pricing and free limits](/basics/22-ai-pricing-free-limits/), [Basics 8: Free vs. paid plans](/basics/08-free-vs-paid/) and [C2. Claude plans and limits](/claude/c02-plans-limits/). This article focuses on **why agents are heavier and how to manage that**.
 
 <Aside type="caution" title="Prices and limits change">
-Every number below is what the official page showed on 2026-11-04. Anthropic and Google say plans, prices or limits can change, and OpenAI describes its limits as estimates. Check the live page before you pay.
+Every number below is what the official page showed on 2026-11-28. Anthropic and Google say plans, prices or limits can change, and OpenAI describes its limits as estimates. Check the live page before you pay.
 </Aside>
 
 ## Why agent tasks use more
@@ -78,48 +80,30 @@ An agent combines these: many steps, tools, files, and a growing history. So the
 
 ## What the official pages say, service by service
 
-### Claude (claude.com/pricing, as of 2026-11-04)
+### Claude (claude.com/pricing, as of 2026-11-28)
 
-| Plan | Price shown | Usage as described |
-| --- | --- | --- |
-| Free | $0 | Limited usage every 5 hours and every week |
-| Pro | $17/month with annual discount ($200 billed up front), $20 if billed monthly | More usage than Free, every 5 hours and every week; Fable paid with usage credits |
-| Max | $100/month | 5x Pro usage every 5 hours and every week; Fable included up to half your weekly limit; $100 a month in API credits |
-| Ultra | $200/month | No 5-hour limit for verified accounts; 10x Pro usage every week; $200 a month in API credits |
+Plan prices and what each plan includes are in [AI pricing and free limits](/basics/22-ai-pricing-free-limits/). In short for agents: Free has limited usage every 5 hours and every week, Pro has more, Max is 5x Pro, and Ultra has no 5-hour limit for verified accounts and 10x Pro weekly usage.
 
-The pricing page also says prices exclude applicable tax and that how fast you reach a limit depends on the model, chat length and file size. The help center adds that all Claude surfaces (claude.ai, Claude Code, Claude Desktop) count toward the same usage limit, and that weekly limits apply across all models, with a separate Fable weekly limit on some plans.
+The pricing page also says that how fast you reach a limit depends on the model, chat length and file size. The help center adds that all Claude surfaces (claude.ai, Claude Code, Claude Desktop) count toward the same usage limit, and that weekly limits apply across all models, with a separate Fable weekly limit on some plans.
 
 **When you reach a limit:** wait for the reset or upgrade (the new plan's limits apply right away). With usage credits enabled on Pro, Max or Ultra, requests continue at standard API rates until your monthly spend limit or balance runs out. These are charged separately from the subscription. The monthly API credits that come with Max and Ultra are separate and do not apply to usage credits in Claude, Claude Code or Cowork. The help page says Research can use credits once you exceed included limits and may consume tokens quickly.
 
-### ChatGPT (learn.chatgpt.com/docs/pricing, as of 2026-11-04)
+### ChatGPT (learn.chatgpt.com/docs/pricing, as of 2026-11-28)
 
-The page we read is the pricing page for **ChatGPT Work and Codex**, which share usage and are included in Free, Go, Plus, Pro, Business, Edu and Enterprise plans.
+The page we read for agent usage is the pricing page for **ChatGPT Work and Codex**, which share usage and are included in Free, Go, Plus, Pro, Business, Edu and Enterprise plans. Plan prices are in [AI pricing and free limits](/basics/22-ai-pricing-free-limits/).
 
-| Plan | Price shown |
-| --- | --- |
-| Free | $0 |
-| Go | $8/month |
-| Plus | $20/month |
-| Pro | From $100/month (plans at $100, $200 or $500 per month) |
-| Business | $20 per user per month billed annually, $25 monthly (2 or more users) |
+It gives estimates of **local messages per five-hour period** for Plus and Standard Business that vary a lot by model. For the newest model, GPT-6.2 Astra, the page lists 6 to 50 local messages per five hours on both Plus and Standard Business, against 350 to 3,000 for the lightest model listed (GPT-6 Luna). It says these are not fixed message limits, that weekly limits may also apply, and that Pro plans currently have no five-hour limit. When you hit a limit mid-task the agent can keep working on that turn subject to fair use, and Plus and Pro users can buy extra credits. Your current limits and reset times are in the usage dashboard. API token prices are separate from subscription usage.
 
-It gives estimates of **local messages per five-hour period** for Plus and Standard Business that vary a lot by model, for example 5 to 45 for one model and 350 to 3,000 for the lightest listed. It says these are not fixed message limits, that weekly limits may also apply, and that Pro plans currently have no five-hour limit. When you hit a limit mid-task the agent can keep working on that turn subject to fair use, and Plus and Pro users can buy extra credits. Your current limits and reset times are in the usage dashboard. API token prices are separate from subscription usage.
+### Gemini (support.google.com/gemini and gemini.google/subscriptions, as of 2026-11-28)
 
-### Gemini (support.google.com/gemini and gemini.google/subscriptions, as of 2026-11-04)
-
-| Plan | Price shown | Usage as described |
-| --- | --- | --- |
-| Free (no AI plan) | $0 | Standard limits, 32k-token context window |
-| Google AI Plus | $4.99/month | 2x higher than standard limits, 128k context |
-| Google AI Pro | $19.99/month | 4x higher than standard limits, 1 million context |
-| Google AI Ultra | $99.99/month (5x AI Pro limits) or $199.99/month (20x) | 5x or 20x higher than AI Pro limits depending on subscription, 1 million context |
+Plan prices are in [AI pricing and free limits](/basics/22-ai-pricing-free-limits/). On the limits side, the help page lists standard limits with no AI plan, 2x higher on Google AI Plus, 4x on Google AI Pro, and 5x or 20x AI Pro's limits on Google AI Ultra, depending on the subscription.
 
 The help page says limits are compute-based, refresh every 5 hours until you reach a weekly limit, and may change without notice, including because of capacity. If you have an AI plan and hit your limit, you can continue with Flash-Lite. Without a plan, features that need more compute, such as Deep Research, may be unavailable during busy periods. To see your limits, go to gemini.google.com, then Settings, then Usage Limits.
 
 ### What we could not confirm
 
 - **Korean-won prices** for any of the three services. The pages we read showed US dollars, and we did not confirm which currency or region the Gemini subscriptions page was showing.
-- **ChatGPT limits for ordinary chat** (as opposed to Work and Codex). The pricing page we read is about Work and Codex, and we did not find a message-count table for plain chat.
+- **ChatGPT message counts for ordinary chat** (as opposed to Work and Codex). chatgpt.com/pricing says Free has unlimited text chats with GPT-6 subject to abuse guardrails, but we did not find a message-count table for plain chat.
 - **Gemini's exact daily numbers** for individual features. The help page gives multipliers, not counts.
 - Whether any plan or limit differs for your country or for work and school accounts.
 

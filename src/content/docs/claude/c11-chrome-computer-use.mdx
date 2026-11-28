@@ -8,10 +8,10 @@ category: claude
 tools: ["Claude in Chrome", "Claude Desktop", "Claude Code"]
 duration: "30 min"
 prerequisites:
-  - "A paid Claude plan (the Chrome extension: Pro, Max, Ultra, Team, Enterprise; computer use: Pro, Max, Ultra; Team and Enterprise in beta since 2026-11-20)"
+  - "A paid Claude plan (the Chrome extension: Pro, Max, Ultra, Team, Enterprise; computer use: Pro, Max, Ultra; Team and Enterprise in beta)"
   - "Google Chrome and an environment where you can install from the Chrome Web Store"
   - "(Computer use) The Claude Desktop app on macOS or Windows"
-lastVerified: 2026-11-22
+lastVerified: 2026-11-28
 sources:
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
@@ -41,7 +41,7 @@ import FlowSteps from '../../../components/FlowSteps.astro';
 
 <Summary>
 - **Claude in Chrome** is an extension that lets Claude read pages in Chrome and click, type, and navigate for you. It works on all paid plans. The new Cowork-based side panel is rolling out in stages (as of 2026-10-26; the help doesn't label Claude in Chrome itself as beta).
-- **Computer use** lets Claude operate apps on your computer screen directly when connectors or the browser won't do. It's in beta on Pro, Max, and Ultra, and since 2026-11-20 also in beta on Team and Enterprise, where an Owner must turn it on first. For organizations, see [C31](/claude/c31-computer-use-team/).
+- **Computer use** lets Claude operate apps on your computer screen directly when connectors or the browser won't do. It's generally available on Pro, Max, and Ultra. On Team and Enterprise it's in beta, off until an Owner turns it on, and rolling out to organizations gradually (as of 2026-11-28). For organizations, see [C31](/claude/c31-computer-use-team/).
 - Computer use runs inside the Claude Desktop app (Cowork, Claude Code) on macOS and Windows. It doesn't work on Linux desktops.
 - The tool priority is **connectors, then the browser, then screen control**. Screen control is the slowest and most error-prone.
 - **Don't use it with banking, medical, or government apps, financial accounts, or legal documents.** Computer use has no sandbox, so Claude can see everything on your screen.
@@ -76,7 +76,7 @@ Claude is set up to try the faster, more reliable method first whenever possible
 
 <Aside type="caution" title="Where the docs disagree (as of 2026-10-10)">
 - **Supported browsers**: The Help Center doc says it's Chrome only, with no support for other Chromium browsers or mobile. The Claude Code doc, on the other hand, says it works in Chrome and Edge, and that other Chromium browsers such as Brave and Arc can be set up to connect. Check each official doc for the latest on the environment you plan to use.
-- **Plans for computer use**: Pro, Max, and Ultra are in beta. Team and Enterprise got a beta on 2026-11-20 that an Owner turns on in Organization settings (see [C31](/claude/c31-computer-use-team/)). Availability by plan changes often, so check what actually shows in Claude Desktop's settings.
+- **Plans for computer use**: Pro, Max, and Ultra have it as a regular feature (no beta label). Team and Enterprise are in beta, off until an Owner turns it on, and it works only in the new Claude experience (see [C31](/claude/c31-computer-use-team/)). Availability by plan changes often, so check what actually shows in Claude Desktop's settings.
 </Aside>
 
 <Aside type="note" title="Chrome extension usage">
@@ -160,13 +160,13 @@ How much usage the Chrome extension consumes isn't given as a number in the offi
 
 ## Quick reference
 
-### Claude in Chrome vs. computer use (as of 2026-10-10)
+### Claude in Chrome vs. computer use (as of 2026-11-28)
 
 | Item | Claude in Chrome | Computer use |
 | --- | --- | --- |
 | Target | Tasks inside the web browser | App screens on your computer |
-| Plans | All paid plans (Pro, Max, Ultra, Team, Enterprise) | Pro, Max, Ultra; Team and Enterprise (beta from 2026-11-20, admin turns it on) |
-| Status | New side panel rolling out in stages | Beta |
+| Plans | All paid plans (Pro, Max, Ultra, Team, Enterprise) | Pro, Max, Ultra (generally available); Team and Enterprise (beta, an owner turns it on) |
+| Status | New side panel rolling out in stages | Generally available on Pro, Max, Ultra; beta on Team and Enterprise |
 | OS / browser | Chrome (see above for where the docs differ). Not on mobile | Claude Desktop on macOS and Windows. Not on Linux desktops. Works in the background on macOS 15 and later |
 | Where it's used | Cowork, Claude Code, the Chrome side panel | Cowork and Claude Code in Claude Desktop |
 | Where to turn on | Install the extension; in Desktop, Settings > Customize > Connectors | Settings > Capabilities (or Settings > System) > Enable computer use |
@@ -241,7 +241,7 @@ If you're a developer, you can also connect Chrome to Claude Code to test local 
 - **Use "always allow" sparingly.** Give it only to sites you completely trust, and review and clean up the approved list from time to time.
 - **Watch out for instructions in web content.** The extension is built not to follow instructions hidden in web pages or emails. Safeguards aren't perfect, though, so keep an eye on it on unfamiliar sites.
 - **Watch closely early on.** Small tasks, specific prompts, and early observation are the basics. You can stop it at any time.
-- **Remember it's beta.** Features and availability can change (as of 2026-10-10).
+- **Know what's still beta.** Computer use is beta only on Team and Enterprise, and availability can change (as of 2026-11-28).
 
 ## What to read next
 
