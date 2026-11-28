@@ -83,15 +83,6 @@ const dict = {
   'lp.stepOf': { ko: '{n}단계 중 {k}단계', en: 'step {k} of {n}' },
   // Summary
   'summary.title': { ko: '한눈에 요약', en: 'At a glance' },
-  // Hero
-  'hero.kicker': { ko: '한국어로 쉽게, 단계별로 따라 하는', en: 'Easy, step-by-step tutorials' },
-  'hero.lead': {
-    ko: '새로 나온 AI 도구를 쉽게 설명하고, 직접 따라 해 볼 수 있는 튜토리얼로 안내해요. 내 수준에 맞는 곳에서 시작해 보세요.',
-    en: 'We explain the newest AI tools in plain language and guide you through hands-on tutorials. Start at the level that fits you.',
-  },
-  'hero.start': { ko: '실무자로 시작하기', en: 'Start as a practitioner' },
-  'hero.all': { ko: '전체 튜토리얼 보기', en: 'Browse all tutorials' },
-  'hero.art': { ko: '로봇과 말풍선, 반짝이 일러스트', en: 'Illustration of a robot, a speech bubble, and sparkles' },
   // LevelCards
   'lv.beginner.desc': {
     ko: 'AI가 처음이에요. 가입부터 첫 질문, 안전하게 쓰는 법까지 "AI 첫걸음" 시리즈로 시작해요.',
@@ -106,26 +97,7 @@ const dict = {
     en: 'I want to go deeper: the API, Agent SDK, MCP, and CI automation.',
   },
   'lv.go': { ko: '여기서 시작하기 →', en: 'Start here →' },
-  // Banners
-  'claude.cover': { ko: 'Claude 완전 정복 보러 가기', en: 'Go to Mastering Claude' },
-  'claude.eyebrow': { ko: '특별 섹션', en: 'Special section' },
-  'claude.desc': {
-    ko: '모델 고르기부터 프로젝트, 아티팩트, 커넥터, 스킬, Claude Code, API까지 {n}편으로 깊이 있게 다뤄요.',
-    en: 'From choosing a model to projects, artifacts, connectors, skills, Claude Code, and the API, covered in depth across {n} tutorials.',
-  },
-  'banner.go': { ko: '보러 가기 →', en: 'Take a look →' },
-  'claude.news': { ko: '최신 소식 보기 →', en: 'Latest news →' },
-  'agents.eyebrow': { ko: '새로 나온 화제의 AI 에이전트', en: 'New and trending AI agents' },
-  'agents.desc': {
-    ko: '내 일을 알아서 챙겨 주는 개인 AI 에이전트가 무엇이고, 한국에서 쓸 수 있는지, 안전하게 쓰려면 어떻게 해야 하는지 정리했어요.',
-    en: 'What personal AI agents that handle tasks for you are, whether you can use them in Korea, and how to use them safely.',
-  },
   // CategoryCards
-  'cc.roles': { ko: '직무별 AI 활용', en: 'AI by Job Role' },
-  'cc.roles.desc': {
-    ko: '마케터, 사무직, 교사, 학생, 개발자, 1인 사업자별 활용법',
-    en: 'How-tos for marketers, office workers, teachers, students, developers, and solo business owners',
-  },
   'cc.basics.desc': {
     ko: '가입부터 첫 질문, 안전하게 쓰는 법, 휴대폰 활용까지 {n}편',
     en: '{n} tutorials, from signing up and your first question to safe use and using AI on your phone',
@@ -137,21 +109,6 @@ const dict = {
   'cc.coding.desc': { ko: 'Claude Code, Cursor, 웹 도구 만들기, 에이전트', en: 'Claude Code, Cursor, building web tools, agents' },
   'cc.media.desc': { ko: '이미지·영상 생성, 녹음 정리, 음성 합성', en: 'Image and video generation, transcribing recordings, speech synthesis' },
   'cc.automation.desc': { ko: 'Notion, 메일·캘린더, Zapier/Make, 커넥터', en: 'Notion, email and calendar, Zapier/Make, connectors' },
-  // HomeToc
-  'toc.start': { ko: '시작하기', en: 'Getting Started' },
-  'toc.beginner': { ko: '입문자 시작점', en: 'Beginner start' },
-  'toc.practical': { ko: '실무자 시작점', en: 'Practitioner start' },
-  'toc.advanced': { ko: '고급 사용자 시작점', en: 'Advanced start' },
-  'toc.rolesGuide': { ko: '직무별 가이드', en: 'Guides by job role' },
-  'toc.fields': { ko: '주제별 튜토리얼', en: 'Tutorials by Topic' },
-  'toc.ref': { ko: '참고 자료', en: 'Reference' },
-  'toc.prompts': { ko: '바로 쓰는 프롬프트 모음', en: 'Ready-to-use prompts' },
-  'toc.glossary': { ko: 'AI 용어 사전', en: 'AI glossary' },
-  'toc.all': { ko: '전체 튜토리얼', en: 'All tutorials' },
-  'toc.updates': { ko: '사이트 수정 기록', en: 'Site changelog' },
-  'toc.about': { ko: '소개', en: 'About' },
-  'toc.news': { ko: 'Claude 소식', en: 'Claude news' },
-  'toc.show': { ko: '{n}개 보기', en: 'Show {n}' },
   // RecentUpdates
   'recent.empty': {
     ko: '아직 확인을 마친 튜토리얼이 없어요. 내용을 공식 문서와 대조해 확인하면, 확인한 날짜 순서대로 여기에 나타나요.',
@@ -184,7 +141,6 @@ const dict = {
     en: 'Progress is saved only in this browser and never sent anywhere.',
   },
   'done.sr': { ko: '완료함', en: 'completed' },
-  'continue.label': { ko: '읽던 글 이어 보기', en: 'Continue where you left off' },
   // 시리즈 위치 띠
   'series.aria': { ko: '{section} 시리즈 안에서의 위치', en: 'Position in the {section} series' },
   'series.pos': { ko: '{n}편 중 {i}번째', en: 'Tutorial {i} of {n}' },

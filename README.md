@@ -77,7 +77,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 컴포넌트 모양은 개발 서버에서 `/components-preview/`로 확인할 수 있습니다 (`draft: true`라 배포에는 포함되지 않음).
 완성된 예시는 `src/content/docs/claude/c02-plans-limits.mdx`와 `c13-cloud-sessions.mdx`를 참고하세요.
 
-튜토리얼 목록, 시작점 페이지, 최근 업데이트는 frontmatter를 읽어 **자동으로** 만들어지므로 따로 등록할 필요가 없습니다.
+튜토리얼 목록, 학습 경로 페이지, 사이트 수정 기록은 frontmatter를 읽어 **자동으로** 만들어지므로 따로 등록할 필요가 없습니다.
 
 ## 스크린샷
 
