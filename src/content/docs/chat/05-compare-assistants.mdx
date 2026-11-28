@@ -10,8 +10,10 @@ category: chat
 tools: ["Claude", "ChatGPT", "Gemini"]
 duration: "25 min"
 prerequisites: ["Accounts for the services you want to compare (free accounts work)", "2 or 3 samples of your own work (with personal information masked)"]
-lastVerified: 2026-11-16
+lastVerified: 2026-11-28
 sources:
+  - title: "ChatGPT pricing (OpenAI)"
+    url: "https://chatgpt.com/pricing"
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
   - title: "Upload files to Claude"
@@ -51,7 +53,7 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 
 <Summary>
 - The most reliable comparison is to **put the same samples of your own work into all three services.** Ranking tables go stale fast.
-- This tutorial uses **only facts we confirmed directly on official pages.** For Claude and Gemini, that means the official pricing and help pages. **For ChatGPT, we confirmed pricing from OpenAI's docs site (learn.chatgpt.com) and its App Store listing.** We couldn't find ChatGPT's upload and context limits or its personal-account training policy in any official docs we could open, so we don't list numbers and only point to where to check.
+- This tutorial uses **only facts we confirmed directly on official pages.** For Claude and Gemini, that means the official pricing and help pages. **For ChatGPT, we confirmed pricing from OpenAI's docs site (learn.chatgpt.com) and its App Store listing.** We couldn't find ChatGPT's upload-size limits or its personal-account training policy in any official page we could open, so we don't list numbers for those and only point to where to check.
 - The criteria for choosing are **fit for your tasks, security and training policy, the work environment you already use, and price.**
 - Prices and limits change often. Always check the official pricing page before you pay.
 </Summary>
@@ -72,8 +74,8 @@ import ScreenshotPlaceholder from '../../../components/ScreenshotPlaceholder.ast
 | **Model training policy** | The rules on whether your conversations are used to improve the service, and whether you can turn that off. |
 | **Context window** | The amount of text the AI can see at once. |
 
-<Aside type="caution" title="Limits of this tutorial (as of 2026-10-10)">
-We checked Claude by reading the official pricing page and help pages. We filled in the table below for Gemini (Google) by reading its official plans page and Gemini app help pages too. For ChatGPT (OpenAI), the official sites (openai.com, help.openai.com, chatgpt.com) block automated access, so we only wrote what we could confirm from OpenAI's docs sites (learn.chatgpt.com, developers.openai.com) and the App Store page registered by OpenAI itself. As a result, we filled in plan prices and a feature overview, but left out upload and context limits, per-plan usage, and the personal-account training policy because we couldn't find them. We didn't use third-party blogs or comparison sites as sources.
+<Aside type="caution" title="Limits of this tutorial (as of 2026-11-28)">
+We checked Claude by reading the official pricing page and help pages. We filled in the table below for Gemini (Google) by reading its official plans page and Gemini app help pages too. For ChatGPT (OpenAI), we used chatgpt.com/pricing (opened with a plain request on 2026-11-28), OpenAI's docs sites (learn.chatgpt.com, developers.openai.com) and the App Store page registered by OpenAI itself. As a result, we filled in plan prices, the context window of the Instant model and a feature overview, but left out upload-size limits, exact per-plan usage numbers, and the personal-account training policy because we couldn't find them. We didn't use third-party blogs or comparison sites as sources.
 </Aside>
 
 ## Step-by-step
@@ -135,26 +137,18 @@ We checked Claude by reading the official pricing page and help pages. We filled
 
 ## Quick reference
 
-### Claude plans (US dollars, excluding tax, may vary by region, as of 2026-10-10)
+### Plan prices
 
-| Plan | Monthly billing | Annual billing | Key points (official pricing page) | Model training entry |
-| --- | --- | --- | --- | --- |
-| Free | $0 | - | Chat, web search, file creation and code execution, memory, artifacts, 5 projects | Opt-out |
-| Pro | $20 | $17/month equivalent ($200 prepaid) | More usage, Claude Code, Projects, Research, and more | Opt-out |
-| Max | $100 | Monthly billing only | 5x Pro usage (5-hour and weekly), Fable included up to half the weekly limit, $100/month API credits | Opt-out |
-| Ultra | $200 | Monthly billing only | 10x Pro weekly usage, no 5-hour limit for verified accounts, $200/month API credits (as of 2026-10-31) | Opt-out |
-| Team Standard | $25 | $20/month equivalent | Central billing, SSO, admin controls | None by default |
-| Team Premium | $125 | $100/month equivalent | 5x the usage of Standard | None by default |
-| Enterprise | Not shown on the pricing page | $20 per seat per month + usage at API rates | SCIM, audit logs, custom data retention, and more | None by default |
+Prices for Claude, ChatGPT and Gemini plans are kept in one place: [AI pricing and free limits](/basics/22-ai-pricing-free-limits/) (single reference table, as of 2026-11-28). Use it for monthly price, annual discount and what each free plan includes. The table below compares features only. One extra row for Claude: personal plans (Free, Pro, Max, Ultra) have a model-training opt-out setting, and Team and Enterprise have none by default.
 
 ### Comparing the three services
 
-| Item | Claude (confirmed) | ChatGPT (partly confirmed, 2026-10-10) | Gemini (confirmed, US pricing, 2026-10-10) |
+| Item | Claude (confirmed) | ChatGPT (partly confirmed, 2026-11-28) | Gemini (confirmed, US pricing, 2026-10-10) |
 | --- | --- | --- | --- |
-| Free use | Yes (Free plan) | Yes (Free plan, $0/month per OpenAI pricing info). On Free and Go, the model differs from Plus and above. Image generation isn't available on Free, per OpenAI pricing info | Yes ($0/month, Google account). Includes Deep Research, Canvas, and more |
-| Personal paid pricing | Pro $20/month | Go $8/month, Plus $20/month, Pro at $100, $200, or $500/month (OpenAI pricing info). App Store (US) shows Plus $19.99 and Go $8.00. App Store (Korea) shows Go KRW 13,000, Plus KRW 29,000, Pro 100 KRW 159,000, Pro 200 KRW 299,000, Pro 500 KRW 790,000. The Business plan is $20 per user per month (2 or more users, annual billing) or $25 (monthly billing) | Google AI Plus $4.99/month, Google AI Pro $19.99/month, Google AI Ultra from $99.99/month (check the official page for KRW pricing) |
+| Free use | Yes (Free plan) | Yes (Free plan, $0/month). Free includes limited image creation and limited voice chats; on Free and Go, the model differs from Plus and above (chatgpt.com/pricing) | Yes ($0/month, Google account). Includes Deep Research, Canvas, and more |
+| Personal paid pricing | See [the pricing reference](/basics/22-ai-pricing-free-limits/) | See [the pricing reference](/basics/22-ai-pricing-free-limits/). App Store (Korea) shows Go KRW 13,000, Plus KRW 29,000, Pro 100 KRW 159,000, Pro 200 KRW 299,000, Pro 500 KRW 790,000. The Business plan is $20 per user per month (2 or more users, annual billing) or $25 (monthly billing) | See [the pricing reference](/basics/22-ai-pricing-free-limits/) (check the official page for KRW pricing) |
 | Upload limits | 20 files per chat, 500MB per file, 1,000 PDF pages | We couldn't find the app limits in public docs. You can upload files to a project and share them across chats | 10 files per prompt, 100MB per non-video file, 2GB for video |
-| Context | 200K to 1M tokens, depending on the model | We couldn't find figures for the app | No plan 32K, AI Plus 128K, AI Pro and Ultra 1M tokens |
+| Context | 200K to 1M tokens, depending on the model | Instant model context window: Free 27K, Go and Plus 54K, Pro 128K (chatgpt.com/pricing) | No plan 32K, AI Plus 128K, AI Pro and Ultra 1M tokens |
 | File creation | .xlsx .docx .pptx PDF (code execution and file creation) | In Work mode, creates documents, presentations, spreadsheets, and PDFs (OpenAI docs). Image generation and editing are also available | Confirmed charts from uploaded spreadsheets. We couldn't confirm other file formats |
 | Training policy | Personal: opt-out; Team and Enterprise: none by default | Says Business doesn't train by default (OpenAI pricing info). Personal accounts follow the Settings > Data controls setting; we couldn't find the default | When Keep Activity is on, some conversations may be reviewed by people and used to improve the service. Temporary chats aren't used for AI training |
 | Korean UI and support | Follow the on-screen guidance | The Korean App Store listing includes Korean in its language list and shows in-app prices in KRW (iOS app) | Included in the list of supported languages for Korean; Google AI Plus, Pro, and Ultra are all available in Korea |

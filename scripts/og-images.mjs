@@ -48,7 +48,7 @@ const SECTIONS = [
     en: { name: 'Mastering Claude', sub: 'From choosing a model to projects, connectors, skills, Claude Code, and the API.' },
     ko: { name: 'Claude 완전 정복', sub: '모델 고르기부터 프로젝트, 커넥터, 스킬, Claude Code, API까지 차근차근.' } },
   { id: 'claude-news', icon: 'news', tone: 'yellow',
-    en: { name: 'Claude News', sub: 'Official updates that matter to working professionals, explained in plain language.' },
+    en: { name: 'Claude news', sub: 'Official updates that matter to working professionals, explained in plain language.' },
     ko: { name: 'Claude 소식', sub: '공식 업데이트 가운데 실무자에게 중요한 것만 골라 쉬운 말로 정리했어요.' } },
   { id: 'agents', icon: 'agents', tone: 'purple',
     en: { name: 'Personal AI Agents', sub: 'Meet Meta Muse, Grok Bot, and ChatGPT Dots, and learn how to use them safely.' },

@@ -12,7 +12,7 @@ prerequisites:
   - "3. Claude Agent SDK로 나만의 에이전트 만들기 (에이전트·도구·권한 개념)"
   - "Python 3.10 이상과 터미널 (TypeScript 예제는 Node.js)"
 requires: ["claude/c16-api", "dev/03-agent-sdk"]
-lastVerified: 2026-11-16
+lastVerified: 2026-11-28
 sources:
   - title: "Claude Managed Agents overview"
     url: "https://platform.claude.com/docs/en/managed-agents/overview"
@@ -30,6 +30,8 @@ sources:
     url: "https://platform.claude.com/docs/en/managed-agents/reference"
   - title: "Pricing (Claude Managed Agents pricing)"
     url: "https://platform.claude.com/docs/en/about-claude/pricing"
+  - title: "Migrating to API version 2026-10-21"
+    url: "https://platform.claude.com/docs/en/api/migration-2026-10-21"
   - title: "Agent SDK overview (선택 비교)"
     url: "https://code.claude.com/docs/en/agent-sdk/overview"
   - title: "Hosting the Agent SDK"
@@ -58,7 +60,7 @@ import PromptBox from '../../../../components/PromptBox.astro';
 - **ZDR(데이터 무보관)과 HIPAA BAA 대상이 아니에요.** 세션과 대화 기록이 서버에 저장되는 구조예요.
 </Summary>
 
-예제는 공식 문서 기준이에요. 2026-10-11에 문법을 검증했고, 설치한 SDK(Python `anthropic` 1.13.0, TypeScript `@anthropic-ai/sdk` 0.133.0)에서 메서드와 파라미터 이름이 있는지, TypeScript는 타입 검사까지 확인했어요. 실제 호출은 하지 않았어요. 베타라서 필드와 수치가 바뀔 수 있으니 문서를 함께 확인하세요.
+예제는 공식 문서 기준이에요. 2026-10-11에 문법을 검증했고, 그때 설치한 SDK(Python `anthropic` 1.13.0, TypeScript `@anthropic-ai/sdk` 0.133.0)에서 메서드와 파라미터 이름이 있는지, TypeScript는 타입 검사까지 확인했어요. 2026-11-28에는 API 버전 2026-10-21 마이그레이션 공식 안내를 다시 읽었어요. 이 버전부터의 SDK는 Python `anthropic` 2.0.0, TypeScript `@anthropic-ai/sdk` 1.0.0이고 API 버전 헤더는 `2026-10-21`이에요. 이 글의 예제는 환경·에이전트·세션용 `client.beta.*` 호출만 쓰고 `temperature`, `top_p`, `top_k`, citations는 쓰지 않아요(새 API 버전에서 제거되거나 제한된 항목이에요). 안내의 변경 목록에도 이 호출들은 없어요. 새 SDK 버전을 설치하거나 실행해 보지는 않았으니 문서로만 확인한 거예요. 실제 호출은 하지 않았어요. 베타라서 필드와 수치가 바뀔 수 있으니 문서를 함께 확인하세요.
 
 ## 이 튜토리얼로 할 수 있게 되는 것
 

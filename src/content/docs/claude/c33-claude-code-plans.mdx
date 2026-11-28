@@ -1,8 +1,8 @@
 ---
 title: "Which plan do you need for Claude Code?"
-description: "Which Claude plans include Claude Code (Free does not), how API billing differs, what Team and Enterprise get, how usage limits work, and whether non-developers can use it, from official pages as of 2026-11-23"
+description: "Which Claude plans include Claude Code (Free does not), how API billing differs, what Team and Enterprise get, how usage limits work, and whether non-developers can use it, from official pages as of 2026-11-28"
 seoTitle: "Claude Code price: which plan do you need?"
-seoDescription: "Claude Code is not on the Free plan. See which paid plans (Pro, Max, Ultra, Team, Enterprise) or API billing you need, with prices as of 2026-11-23."
+seoDescription: "Claude Code is not on the Free plan. See which paid plans (Pro, Max, Ultra, Team, Enterprise) or API billing you need, with prices as of 2026-11-28."
 sidebar:
   label: "C33. Claude Code plans"
 level: beginner
@@ -12,7 +12,7 @@ duration: "15 min"
 prerequisites:
   - "No setup needed: this is a reading guide to help you choose a plan"
 requires: ["claude/c12-claude-code-overview"]
-lastVerified: 2026-11-23
+lastVerified: 2026-11-28
 sources:
   - title: "Plans & pricing (claude.com)"
     url: "https://claude.com/pricing"
@@ -34,11 +34,11 @@ import Summary from '../../../components/Summary.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 
 <Summary>
-- **Claude Code is not on the Free plan.** The feature table on the official pricing page shows Claude Code as "No" for Free and "Yes" for Pro, Max, Ultra, Team and Enterprise (as of 2026-11-23).
+- **Claude Code is not on the Free plan.** The feature table on the official pricing page shows Claude Code as "No" for Free and "Yes" for Pro, Max, Ultra, Team and Enterprise (as of 2026-11-28).
 - **Individuals**: Pro ($17 a month billed annually, or $20 monthly), Max ($100) or Ultra ($200). Usage is shared between Claude and Claude Code. **Teams**: every Team seat includes Claude Code; premium seats have more usage.
 - **No subscription**: you can instead sign in with a Claude Console account, where Claude Code is **billed by API tokens**.
 - **Non-developers**: the official pages do not say who it is "for". The docs do offer a desktop app with a Code tab and a browser version, so a terminal is not the only way in.
-- Prices and limits change often. Every figure here is **as of 2026-11-23** and links to its official page.
+- Prices and limits change often. Every figure here is **as of 2026-11-28** and links to its official page.
 </Summary>
 
 "Do I have to pay to use Claude Code?" is one of the most common questions before people try it. This guide answers it from official pages only. For what Claude Code is and how to install it, see [C12. Claude Code overview](/claude/c12-claude-code-overview/). For the plans in general, see [C2. Plans and usage limits](/claude/c02-plans-limits/).
@@ -52,14 +52,15 @@ import PromptBox from '../../../components/PromptBox.astro';
 | Team or Enterprise | Included with the seat (see the seat notes below) | [Help Center](https://support.claude.com/en/articles/11845131-using-claude-code-with-your-team-or-enterprise-plan) |
 | No subscription | Claude Console account, billed by API token use | [Authentication](https://code.claude.com/docs/en/authentication) |
 
-## Individual plans (as of 2026-11-23)
+## Individual plans (as of 2026-11-28)
 
-| Plan | Price on the pricing page | Claude Code | Usage limits (pricing page) |
-| --- | --- | --- | --- |
-| Free | $0 | No | Limited usage every 5 hours and every week |
-| Pro | $17 a month with annual discount ($200 billed up front), $20 if billed monthly | Yes | More usage than Free, every 5 hours and every week |
-| Max | $100 a month | Yes | 5x Pro usage every 5 hours and every week |
-| Ultra | $200 a month | Yes | No 5-hour limit for verified accounts, 10x Pro usage every week |
+Claude Code is included in Pro, Max and Ultra, and not in Free. This table keeps only the plans that include it. For the Free plan, the full comparison and usage-limit details, see [C2](/claude/c02-plans-limits/).
+
+| Plan | Price on the pricing page | Usage limits (pricing page) |
+| --- | --- | --- |
+| Pro | $17 a month with annual discount ($200 billed up front), $20 if billed monthly | More usage than Free, every 5 hours and every week |
+| Max | $100 a month | 5x Pro usage every 5 hours and every week |
+| Ultra | $200 a month | No 5-hour limit for verified accounts, 10x Pro usage every week |
 
 Source for every cell: [claude.com/pricing](https://claude.com/pricing). Prices shown there do not include applicable tax, and the page says prices and plans are subject to change.
 
@@ -70,7 +71,7 @@ Source for every cell: [claude.com/pricing](https://claude.com/pricing). Prices 
 
 ## Team and Enterprise
 
-- **Team**: the Help Center says Claude Code is included with every Team plan seat, and premium seats offer more usage for heavier workloads. The pricing page lists standard seats at $20 per seat a month billed annually ($25 monthly) and premium seats at $100 ($125 monthly) as of 2026-11-23.
+- **Team**: the Help Center says Claude Code is included with every Team plan seat, and premium seats offer more usage for heavier workloads. The pricing page lists standard seats at $20 per seat a month billed annually ($25 monthly) and premium seats at $100 ($125 monthly) as of 2026-11-28.
 - **Enterprise**: Claude Code is included with the single Enterprise seat on new and self-serve plans, where usage is billed at API rates with no per-seat usage limits. Older Enterprise plans may use Chat + Claude Code or Premium seats. The pricing page lists Enterprise at US$20 per seat a month billed annually with a 20-seat minimum, plus usage at API rates.
 - **Health data**: the Help Center says Claude Code on a HIPAA-ready Enterprise plan is covered by the agreement only after a specific configuration is applied. Ask your admin before using it with protected health information.
 - For the admin side, see [C29. Team and Enterprise admin basics](/claude/c29-team-admin-basics/).
@@ -110,12 +111,12 @@ I want to try Claude Code. I will tell you how often I would use it and for what
 A practical way to decide: start with the cheapest paid plan that includes it (Pro), watch how often you reach the limit, and move up only if you keep hitting it. That is a suggestion, not an official recommendation.
 
 <Aside type="note" title="What we could not confirm">
-We read the pricing page, two Help Center articles, and three Claude Code docs pages on 2026-11-23. The pages we read do not state: exact Claude Code usage amounts per plan, whether the web version of Claude Code has any plan condition beyond "most surfaces require a Claude subscription or Console account", any KRW prices, or whether a free trial exists. We did not install or run anything for this guide.
+We read the pricing page, two Help Center articles, and three Claude Code docs pages on 2026-11-28. The pages we read do not state: exact Claude Code usage amounts per plan, whether the web version of Claude Code has any plan condition beyond "most surfaces require a Claude subscription or Console account", any KRW prices, or whether a free trial exists. We did not install or run anything for this guide.
 </Aside>
 
 ## Quick reference
 
-| Question | Answer (as of 2026-11-23) |
+| Question | Answer (as of 2026-11-28) |
 | --- | --- |
 | Is it free? | Not on the Free plan. A paid plan or Console account is needed |
 | Cheapest included plan | Pro at $17 a month (annual) or $20 monthly |

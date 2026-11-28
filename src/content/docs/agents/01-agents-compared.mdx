@@ -10,7 +10,7 @@ tools: ["Meta Muse", "Grok Bot", "ChatGPT Dots", "Gemini Tasks", "Claude"]
 duration: "20 min"
 prerequisites:
   - "Have used an AI chat tool (ChatGPT, Claude, etc.) at least once"
-lastVerified: 2026-11-23
+lastVerified: 2026-11-28
 sources:
   - title: "Introducing Muse (Meta Newsroom, 2026-09-08)"
     url: "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/"
@@ -20,6 +20,8 @@ sources:
     url: "https://www.meta.com/help/subscriptions/1021145227643680/"
   - title: "Muse launches in Japan (Meta Newsroom Japan, 2026-10-23)"
     url: "https://about.fb.com/ja/news/2026/10/muse-personal-ai-agent-launches-in-japan/"
+  - title: "Muse is now available in Australia (Meta Newsroom, 2026-11-17)"
+    url: "https://about.fb.com/news/2026/11/muse-is-now-available-in-australia/"
   - title: "Introducing Grok Bot (xAI, 2026-08-11)"
     url: "https://x.ai/news/introducing-grok-bot"
   - title: "Grok Bot docs: Overview (docs.x.ai)"
@@ -74,9 +76,9 @@ import Checklist from '../../../components/Checklist.astro';
 <Summary>
 - A **personal AI agent** doesn't stop at answering questions. Give it a goal and it **makes a plan, does the work directly in your services, and keeps working even after you close the app**.
 - For users in Korea, **Claude** and **Gemini Tasks** are the ones with clear official availability right now. Korea is on Anthropic's list of supported countries, and on Google's list of countries where tasks work without a Google AI subscription.
-- **Muse** is officially available only in the US, Canada, Japan, and Singapore (as of 2026-11-16). There's no official announcement about a Korea launch. We don't recommend signing up through workarounds.
+- **Muse** is officially available only in the US, Canada, Japan, Singapore, and Australia (from 2026-11-17; as of 2026-11-28). There's no official announcement about a Korea launch. We don't recommend signing up through workarounds.
 - **Grok Bot** is listed on the Korean App Store and Google Play. But pricing is tied to subscriptions like Cursor or SuperGrok, so you need to check for yourself whether you can sign up in Korea.
-- **Dots** is a feature of ChatGPT Pro and above (from $100/month). Korea isn't on the list of excluded regions, but we couldn't find an official statement confirming availability in Korea.
+- **Dots** is a feature of ChatGPT Pro and above (from $100/month); as of 2026-11-28 it's also rolling out to select Plus users (18+, outside the EEA, UK and Switzerland), and Business Standard members can create one personal dot (see [OpenAI Dots](/agents/04-openai-dots/)). Korea isn't on the list of excluded regions, but we couldn't find an official statement confirming availability in Korea.
 - **Gemini Tasks** is Google's agent inside the Gemini app. Google's help page lists South Korea among the countries where it works without a paid Google AI plan (personal account, 18+, as of 2026-11-23). Google calls it experimental.
 - Every cell in the tables is marked with a **confidence level**. We only state things flatly when we read the official page directly.
 </Summary>
@@ -141,7 +143,7 @@ This table is as of 2026-10-10 (the Grok Bot pricing cell was rechecked against 
 
 | Item | Meta Muse | Grok Bot | ChatGPT Dots | Gemini Tasks | Claude |
 | --- | --- | --- | --- | --- | --- |
-| **Available in Korea** | **No.** Officially available in the US, Canada, Japan, and Singapore (as of 2026-11-16). Korea isn't on any official page, and no launch date has been announced [Official] | **The app is.** It's listed on the Korean App Store and Google Play. In-app purchases for Cursor Pro, Pro+, and Ultra show in KRW on the Korean App Store. Whether SuperGrok and X Premium+ subscriptions work in Korea is [Unconfirmed]. The @bot tag is excluded in some regions, but Korea isn't on the exclusion list [Official] | **Not an excluded region.** For Pro, the exclusions are the EEA, the UK, and Switzerland, and Korea isn't on the list. But we couldn't find an official statement confirming availability in Korea, and since the rollout is gradual, it varies by account. Korean press reports a phased rollout [Partial] | **Yes.** South Korea is on Google's help page list of countries where tasks work without a Google AI subscription. Needs a personal account, age 18+, and History on [Official] | **Yes.** South Korea is on Anthropic's list of supported countries and regions. Regional limits on individual features such as Cowork are [Unconfirmed] [Official] |
+| **Available in Korea** | **No.** Officially available in the US, Canada, Japan, Singapore, and Australia (from 2026-11-17; as of 2026-11-28). Korea isn't on any official page, and no launch date has been announced [Official] | **The app is.** It's listed on the Korean App Store and Google Play. In-app purchases for Cursor Pro, Pro+, and Ultra show in KRW on the Korean App Store. Whether SuperGrok and X Premium+ subscriptions work in Korea is [Unconfirmed]. The @bot tag is excluded in some regions, but Korea isn't on the exclusion list [Official] | **Not an excluded region.** For Pro, the exclusions are the EEA, the UK, and Switzerland, and Korea isn't on the list. But we couldn't find an official statement confirming availability in Korea, and since the rollout is gradual, it varies by account. Korean press reports a phased rollout [Partial] | **Yes.** South Korea is on Google's help page list of countries where tasks work without a Google AI subscription. Needs a personal account, age 18+, and History on [Official] | **Yes.** South Korea is on Anthropic's list of supported countries and regions. Regional limits on individual features such as Cowork are [Unconfirmed] [Official] |
 | **Korean language** | We couldn't find a list of supported languages on official pages [Unconfirmed] | The app UI supports Korean (included in App Store languages). No official statement on the quality of the Bot working in Korean [Official] / quality [Unconfirmed] | The ChatGPT app supports Korean (Korean App Store). Dots' own Korean support (chat and voice) couldn't be confirmed officially [Unconfirmed] | Google publishes Korean help and intro pages that call it "Gemini의 태스크." How well tasks handle Korean instructions, and the supported-languages page, couldn't be confirmed (page blocked) [Partial] | Korean is included in the official multilingual performance table. We didn't separately check how much of the app's UI is available in Korean for this comparison [Partial] |
 
 <Aside type="caution" title="We don't explain how to sign up for Muse through workarounds">
@@ -167,7 +169,7 @@ Unlike Muse or Dots, Claude isn't heading toward letting you hand off purchases.
 - **Grok Bot**: "AI teammates" you hand work to by message, as several named Bots. All Bots share one cloud computer, and your account and billing are tied to Cursor. See [Getting Started with Grok Bot](/agents/03-grok-bot/).
 - **ChatGPT Dots**: An always-on agent inside ChatGPT. Give it a responsibility and it tracks progress on its own and contacts you first when needed. See [Getting Started with ChatGPT Dots](/agents/04-openai-dots/).
 - **Gemini Tasks**: Google's agent inside the Gemini app. You switch from chat to Task, hand over a goal, and it uses your connected Google apps, a Chrome or cloud browser, and a remote computer, and asks for confirmation before sensitive actions. South Korea is on Google's official no-subscription list. See [Getting Started with Gemini Tasks](/agents/14-gemini-agent/).
-- **Claude**: Less a single "agent product" like the ones above and more a **bundle of features**. You pick what you need: Cowork for multi-step tasks, the Chrome extension for browser control, computer use for screen control, and routines for automatic cloud runs. They're covered in [C3. Getting started](/claude/c03-getting-started/), [C7. Connectors](/claude/c07-connectors/), [C11. Chrome and computer use](/claude/c11-chrome-computer-use/), and [C13. Cloud sessions and routines](/claude/c13-cloud-sessions/).
+- **Claude**: Less a single "agent product" like the ones above and more a **bundle of features**. You pick what you need: Cowork for multi-step tasks, the Chrome extension for browser control, computer use for screen control, and routines for automatic cloud runs. They're covered in [C3. Getting started](/claude/c03-getting-started/), [C7. Connectors](/claude/c07-connectors/), [C11. Chrome and computer use](/claude/c11-chrome-computer-use/), and [C13. Cloud sessions and routines](/claude/c13-cloud-sessions/). For a side-by-side look at Claude's agent features, see [Claude's Agent Features at a Glance](/agents/13-claude-agent-lineup/).
 
 ## Which one is right for me
 
@@ -199,7 +201,7 @@ The amount of public information and the confidence level differ by product. A c
 
 ### Dots doesn't show up in my app
 
-- **Cause**: The official docs say it's a "gradual rollout," so it may not appear right away even if your plan qualifies. You need Pro or above (or Business Premium or Enterprise), and for Enterprise it's off by default, so an admin has to turn it on.
+- **Cause**: The official docs say it's a "gradual rollout," so it may not appear right away even if your plan qualifies. You need Pro or above (or Business Premium or Enterprise, or be one of the select Plus or Business Standard users in the rollout), and for Enterprise it's off by default, so an admin has to turn it on.
 - **Fix**: Update the ChatGPT app to the latest version, check your plan, and wait a bit. It isn't supported on mobile web.
 
 ### I want to sign up for Muse

@@ -10,8 +10,10 @@ tools: ["Claude", "ChatGPT", "Gemini"]
 duration: "15 min"
 prerequisites:
   - "At least one AI service account (a free account is enough)"
-lastVerified: 2026-11-16
+lastVerified: 2026-11-28
 sources:
+  - title: "ChatGPT pricing (OpenAI)"
+    url: "https://chatgpt.com/pricing"
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
   - title: "How do usage and length limits work? (Claude Help Center)"
@@ -37,7 +39,7 @@ import Checklist from '../../../components/Checklist.astro';
 import PromptBox from '../../../components/PromptBox.astro';
 
 <Summary>
-- **Free plans cover a lot.** Per the official pages (as of 2026-11-01), Claude Free and Gemini's free tier both include chat, web or file features, and tools such as Deep Research (Gemini) or file creation (Claude). The limits, not the features, are what you notice first.
+- **Free plans cover a lot.** Per the official pages (as of 2026-11-28), Claude Free and Gemini's free tier both include chat, web or file features, and tools such as Deep Research (Gemini) or file creation (Claude). The limits, not the features, are what you notice first.
 - **Limits are about how much you use, not how many messages.** Long chats, big files, and heavy features such as Deep Research use your allowance faster. Both Claude and Gemini describe a limit that refreshes every 5 hours, plus a weekly limit.
 - **You can stretch your allowance.** Combine related questions in one message, start a new chat for each new topic, trim what you attach, and turn off tools you do not need.
 - **Spread across services.** Keeping a free account at two or three services means a blocked one does not stop your work.
@@ -63,19 +65,19 @@ This tutorial builds on [Free vs. paid plans](/basics/08-free-vs-paid/), which c
 | **Context window** | How much the AI can keep in mind in one chat. A long chat is re-read each time, so it uses more of your allowance. |
 | **Temporary chat** | A chat that is not saved to your history in the usual way. Names differ: Claude calls it an incognito chat, ChatGPT a temporary chat, and Gemini a temporary chat. |
 
-## What the free plans include (as of 2026-11-01)
+## What the free plans include (as of 2026-11-28)
 
 | Service | What the official page says about the free plan |
 | --- | --- |
 | **Claude Free** | $0. Limited usage every 5 hours and every week. Chat on web, desktop, and mobile; web search, file creation, and code execution; memory; connectors; artifacts; Claude Design, Slides, and Docs. Projects: up to 5. Sonnet and Haiku models; Opus, Research, and Claude Code are listed as not included. Incognito chats are included. |
-| **Gemini free** | $0/month with a Google Account. Gemini app with access to the Flash-Lite model, image generation and editing, Deep Research, Gemini Live, Canvas, Skills (listed where Gems used to be, as of 2026-11-16), limited Google Flow (the page mentions limited access to Nano Banana Pro), and Gemini Notebook. 15 GB of storage across Gmail, Drive, and Photos. |
-| **ChatGPT Free** | $0/month. The official pricing page we could read is about ChatGPT Work and Codex, and lists Free at $0 with GPT-6 Luna in the desktop app, subject to rollout. It does not give limits for regular chat. |
+| **Gemini free** | $0/month with a Google Account. Gemini app with automatic model selection (Flash-Lite is the fallback model for paid-plan users who reach their limit, not the free tier's model), image generation and editing, Deep Research, Gemini Live, Canvas, Skills (listed where Gems used to be), limited Google Flow (the page mentions limited access to Nano Banana Pro), and Gemini Notebook. 15 GB of storage across Gmail, Drive, and Photos. |
+| **ChatGPT Free** | $0/month. Unlimited text chats with GPT-6 (subject to abuse guardrails), plus limited messages with uploads, limited image creation, limited voice chats, limited deep research, and limited memory and context. The Instant model's context window is 27K on Free (54K on Go and Plus, 128K on Pro). Go may include ads. For prices of all plans, see [AI pricing and free limits](/basics/22-ai-pricing-free-limits/). |
 
-Google says Gems are being replaced by skills in Gemini Apps: for personal Google Accounts (18+), Gems become read-only on November 17, 2026 and are removed on December 17, 2026; work accounts follow in March 2027 and education accounts in June 2027 (as of 2026-11-09; [official page](https://support.google.com/gemini/answer/18560919?hl=en)).
+Google says Gems are being replaced by skills in Gemini Apps: for personal Google Accounts (18+), Gems became read-only on November 17, 2026 and are scheduled to be removed on December 17, 2026; work accounts follow in March 2027 and education accounts in June 2027 (as of 2026-11-28; [official page](https://support.google.com/gemini/answer/18560919?hl=en)).
 
-<Aside type="note" title="What we could not confirm (as of 2026-11-01)">
+<Aside type="note" title="What we could not confirm (as of 2026-11-28)">
 - **Exact free limits.** None of the three services publishes how many messages the free plan allows. Claude's pricing page says only "limited usage." Gemini describes limits by relative usage cost, not message counts.
-- **ChatGPT's regular chat features on the free plan.** The pages we could read are written for ChatGPT Work and Codex. help.openai.com returned an access error from our tools, so we did not use it.
+- **Exact ChatGPT Free message counts.** The pricing page describes uploads, image creation and voice chats as "limited" without numbers.
 - Features and limits change, and free features can be unavailable at busy times, so check the in-app screens.
 </Aside>
 

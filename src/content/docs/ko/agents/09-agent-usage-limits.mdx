@@ -11,8 +11,10 @@ prerequisites:
   - "에이전트나 리서치 기능을 한 번이라도 써 보기"
   - "무료·유료 플랜 글(기초 8편)을 읽어 두면 좋아요"
 requires: ["basics/08-free-vs-paid"]
-lastVerified: 2026-11-16
+lastVerified: 2026-11-28
 sources:
+  - title: "ChatGPT 요금 (OpenAI, 영문)"
+    url: "https://chatgpt.com/pricing"
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
   - title: "How do usage and length limits work? (Claude)"
@@ -38,7 +40,7 @@ import PromptBox from '../../../../components/PromptBox.astro';
 - **한도는 고정된 숫자가 아니에요.** Claude와 Gemini는 한도가 바뀔 수 있다고 분명히 적었고, ChatGPT 페이지는 자기 숫자를 고정 한도가 아닌 추정치라고 해요. 본인 사용량 화면을 확인하세요.
 - Claude는 5시간마다 초기화되는 세션 한도와 주간 한도가 있어요. ChatGPT 가격 페이지는 5시간당 로컬 메시지 추정치를 보여 줘요. Gemini는 주간 한도에 닿을 때까지 5시간마다 한도가 새로 채워져요.
 - 한도에 닿으면 기다리거나, 업그레이드하거나, 일부 플랜에서는 추가 사용량을 결제할 수 있어요. 추가 사용량은 구독료와 따로 청구돼요.
-- 아래 가격은 공식 페이지 기준 **2026-11-04 시점**이에요. 확인하지 못한 것은 확인 못 함으로 표시했어요.
+- 플랜 가격은 한 곳에 모아 뒀어요: [AI 요금과 무료 한도](/ko/basics/22-ai-pricing-free-limits/). 이 글은 각 서비스가 에이전트 사용량을 어떻게 설명하는지만 다뤄요(2026-11-28 기준). 확인하지 못한 것은 확인 못 함으로 표시했어요.
 </Summary>
 
 ## 이 튜토리얼로 할 수 있게 되는 것
@@ -61,7 +63,7 @@ import PromptBox from '../../../../components/PromptBox.astro';
 플랜 기본은 [기초 8편: 무료·유료 플랜](/ko/basics/08-free-vs-paid/)과 [C2. Claude 플랜과 한도](/ko/claude/c02-plans-limits/)를 보세요. 이 글은 **에이전트가 왜 더 무거운지, 어떻게 관리하는지**에 집중해요.
 
 <Aside type="caution" title="가격과 한도는 바뀌어요">
-아래 숫자는 모두 2026-11-04에 공식 페이지에 보인 내용이에요. Anthropic과 Google은 플랜·가격·한도가 바뀔 수 있다고 적었고, OpenAI는 한도를 추정치로 설명해요. 결제하기 전에 최신 페이지를 확인하세요.
+아래 숫자는 모두 2026-11-28에 공식 페이지에 보인 내용이에요. Anthropic과 Google은 플랜·가격·한도가 바뀔 수 있다고 적었고, OpenAI는 한도를 추정치로 설명해요. 결제하기 전에 최신 페이지를 확인하세요.
 </Aside>
 
 ## 에이전트 작업이 더 쓰는 이유
@@ -76,48 +78,30 @@ import PromptBox from '../../../../components/PromptBox.astro';
 
 ## 공식 페이지 내용, 서비스별
 
-### Claude (claude.com/pricing, 2026-11-04 기준)
+### Claude (claude.com/pricing, 2026-11-28 기준)
 
-| 플랜 | 표시된 가격 | 사용량 설명 |
-| --- | --- | --- |
-| Free | $0 | 5시간마다, 매주 제한된 사용량 |
-| Pro | 연간 결제 시 월 $17(선결제 $200), 월 결제 시 $20 | Free보다 많은 사용량(5시간마다, 매주). Fable은 사용 크레딧으로 결제 |
-| Max | 월 $100 | Pro의 5배 사용량(5시간마다, 매주). Fable은 주간 한도의 절반까지 포함. 월 $100 API 크레딧 |
-| Ultra | 월 $200 | 인증된 계정은 5시간 한도 없음. 주간 Pro의 10배 사용량. 월 $200 API 크레딧 |
+플랜 가격과 구성은 [AI 요금과 무료 한도](/ko/basics/22-ai-pricing-free-limits/)에 있어요. 에이전트 관점으로 줄이면 이래요. Free는 5시간마다, 매주 제한된 사용량이고, Pro는 그보다 많고, Max는 Pro의 5배이며, Ultra는 인증된 계정에 5시간 한도가 없고 주간 사용량이 Pro의 10배예요.
 
-가격 페이지는 표시된 가격에 해당하는 세금이 빠져 있고, 한도에 닿는 속도는 모델, 채팅 길이, 파일 크기에 따라 달라진다고 해요. 도움말은 모든 Claude 화면(claude.ai, Claude Code, Claude Desktop)의 사용량이 같은 한도에 합산되고, 주간 한도는 모든 모델에 적용되며 일부 플랜에는 Fable 주간 한도가 따로 있다고 덧붙여요.
+가격 페이지는 한도에 닿는 속도가 모델, 채팅 길이, 파일 크기에 따라 달라진다고 해요. 도움말은 모든 Claude 화면(claude.ai, Claude Code, Claude Desktop)의 사용량이 같은 한도에 합산되고, 주간 한도는 모든 모델에 적용되며 일부 플랜에는 Fable 주간 한도가 따로 있다고 덧붙여요.
 
 **한도에 닿으면:** 초기화를 기다리거나 업그레이드해요(새 플랜의 한도가 바로 적용돼요). Pro, Max, Ultra에서 사용 크레딧을 켜 두면 월 지출 한도나 잔액이 바닥날 때까지 표준 API 요금으로 계속 쓸 수 있어요. 구독료와 따로 청구돼요. Max와 Ultra에 포함된 월 API 크레딧은 별개라서, Claude·Claude Code·Cowork의 사용 크레딧에는 적용되지 않아요. 도움말은 Research가 포함 한도를 넘으면 크레딧을 쓰고 토큰을 빨리 쓸 수 있다고 해요.
 
-### ChatGPT (learn.chatgpt.com/docs/pricing, 2026-11-04 기준)
+### ChatGPT (learn.chatgpt.com/docs/pricing, 2026-11-28 기준)
 
-읽은 페이지는 **ChatGPT Work와 Codex**의 가격 페이지예요. 둘은 사용량을 공유하고 Free, Go, Plus, Pro, Business, Edu, Enterprise 플랜에 포함돼요.
+에이전트 사용량에 대해 읽은 페이지는 **ChatGPT Work와 Codex**의 가격 페이지예요. 둘은 사용량을 공유하고 Free, Go, Plus, Pro, Business, Edu, Enterprise 플랜에 포함돼요. 플랜 가격은 [AI 요금과 무료 한도](/ko/basics/22-ai-pricing-free-limits/)에 있어요.
 
-| 플랜 | 표시된 가격 |
-| --- | --- |
-| Free | $0 |
-| Go | 월 $8 |
-| Plus | 월 $20 |
-| Pro | 월 $100부터(월 $100, $200, $500 플랜) |
-| Business | 사용자당 월 $20(연간 결제), 월 결제 시 $25(2명 이상) |
+Plus와 표준 Business에 대해 **5시간당 로컬 메시지 추정치**를 모델별로 보여 주는데 차이가 커요. 최신 모델인 GPT-6.2 Astra는 Plus와 표준 Business 모두 5시간당 6~50개이고, 나열된 가장 가벼운 모델(GPT-6 Luna)은 350~3,000개예요. 고정된 메시지 한도가 아니고 주간 한도도 적용될 수 있으며, Pro 플랜에는 현재 5시간 한도가 없다고 해요. 작업 도중 한도에 닿으면 공정 사용 범위에서 그 턴은 계속할 수 있고, Plus와 Pro 사용자는 추가 크레딧을 살 수 있어요. 현재 한도와 초기화 시각은 사용량 대시보드에서 볼 수 있어요. API 토큰 가격은 구독 사용량과 별개예요.
 
-Plus와 표준 Business에 대해 **5시간당 로컬 메시지 추정치**를 모델별로 보여 주는데 차이가 커요. 예를 들어 한 모델은 5~45개, 나열된 가장 가벼운 모델은 350~3,000개예요. 고정된 메시지 한도가 아니고 주간 한도도 적용될 수 있으며, Pro 플랜에는 현재 5시간 한도가 없다고 해요. 작업 도중 한도에 닿으면 공정 사용 범위에서 그 턴은 계속할 수 있고, Plus와 Pro 사용자는 추가 크레딧을 살 수 있어요. 현재 한도와 초기화 시각은 사용량 대시보드에서 볼 수 있어요. API 토큰 가격은 구독 사용량과 별개예요.
+### Gemini (support.google.com/gemini, gemini.google/subscriptions, 2026-11-28 기준)
 
-### Gemini (support.google.com/gemini, gemini.google/subscriptions, 2026-11-04 기준)
-
-| 플랜 | 표시된 가격 | 사용량 설명 |
-| --- | --- | --- |
-| 무료(AI 플랜 없음) | $0 | 표준 한도, 컨텍스트 창 32k 토큰 |
-| Google AI Plus | 월 $4.99 | 표준 한도의 2배, 128k |
-| Google AI Pro | 월 $19.99 | 표준 한도의 4배, 100만 토큰 |
-| Google AI Ultra | 월 $99.99(AI Pro 한도의 5배) 또는 월 $199.99(20배) | 구독에 따라 AI Pro 한도의 5배 또는 20배, 100만 토큰 |
+플랜 가격은 [AI 요금과 무료 한도](/ko/basics/22-ai-pricing-free-limits/)에 있어요. 한도 쪽은 도움말 기준으로, AI 플랜이 없으면 표준 한도, Google AI Plus는 2배, Google AI Pro는 4배, Google AI Ultra는 구독에 따라 AI Pro 한도의 5배 또는 20배예요.
 
 도움말은 한도가 연산량 기준이고, 주간 한도에 닿을 때까지 5시간마다 새로 채워지며, 수요 같은 사정으로 예고 없이 바뀔 수 있다고 해요. AI 플랜이 있는데 한도에 닿으면 Flash-Lite로 대화를 이어 갈 수 있어요. 플랜이 없으면 Deep Research처럼 연산이 많이 드는 기능은 수요가 몰릴 때 쓸 수 없을 수 있어요. 한도를 보려면 gemini.google.com에서 설정, Usage Limits로 가요.
 
 ### 확인하지 못한 것
 
 - **세 서비스의 원화 가격.** 읽은 페이지는 미국 달러로 표시됐고, Gemini 구독 페이지가 어느 통화·지역 기준이었는지 확인하지 못했어요.
-- **ChatGPT 일반 채팅의 한도.** 읽은 가격 페이지는 Work와 Codex에 대한 것이고, 일반 채팅의 메시지 수 표는 찾지 못했어요.
+- **ChatGPT 일반 채팅의 메시지 수.** chatgpt.com/pricing은 Free에서 GPT-6 텍스트 대화가 남용 방지 조건 아래 무제한이라고 하지만, 일반 채팅의 메시지 수 표는 찾지 못했어요.
 - **Gemini 기능별 정확한 일일 숫자.** 도움말은 횟수가 아니라 배수만 알려 줘요.
 - 나라나 회사·학교 계정에 따라 플랜이나 한도가 다른지.
 

@@ -15,7 +15,7 @@ prerequisites:
   - "Claude Code 2.1.269 or later (to use claude plugin eval), git, and one GitHub repository"
   - "(If you configure org settings) organization admin permissions"
 requires: ["claude/c08-skills", "claude/c14-claude-code-features"]
-lastVerified: 2026-11-02
+lastVerified: 2026-11-28
 sources:
   - title: "Extend Claude with skills (Claude Code)"
     url: "https://code.claude.com/docs/en/skills"
@@ -35,6 +35,8 @@ sources:
     url: "https://claude.com/docs/plugins/submit"
   - title: "Connect Claude Code to tools via MCP"
     url: "https://code.claude.com/docs/en/mcp"
+  - title: "Claude Code changelog"
+    url: "https://code.claude.com/docs/en/changelog"
 status: published
 ---
 
@@ -378,7 +380,7 @@ For every enabled plugin, the skill names and descriptions are loaded into conte
    - To install a private marketplace in CI, export a token with read access as `GH_TOKEN` and run `gh auth setup-git`. The default GitHub Actions token can only access the repository of that workflow. Keep the token in repository secrets.
    - Cloud sessions (claude.ai/code) don't load plugins from the settings on your own computer.
 
-   Auto-update is a per-marketplace, user-side setting. Third-party marketplaces (including your team's) default to off, so teammates turn it on in `/plugin`, or you set it with `autoUpdate` in managed settings.
+   Auto-update is a per-marketplace, user-side setting. Third-party marketplaces (including your team's) default to off, so teammates turn it on in `/plugin`, or you set it with `autoUpdate` in managed settings. One change is coming: in a Claude Code release on or after 2026-11-30, marketplaces registered through managed `extraKnownMarketplaces` will auto-update by default. To opt one out, set `"autoUpdate": false` on its entry (per the official changelog, as of 2026-11-28).
 
    **Marking releases.** If other plugins depend on yours with a version range, you need git tags. Running `claude plugin tag --push` in the plugin folder creates and pushes a `{name}--v{version}` tag (check first with `--dry-run`).
 

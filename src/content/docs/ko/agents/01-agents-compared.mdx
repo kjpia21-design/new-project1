@@ -10,7 +10,7 @@ tools: ["Meta Muse", "Grok Bot", "ChatGPT Dots", "Gemini 태스크", "Claude"]
 duration: "20분"
 prerequisites:
   - "AI 채팅(ChatGPT, Claude 등)을 한 번이라도 써 본 경험"
-lastVerified: 2026-11-23
+lastVerified: 2026-11-28
 sources:
   - title: "Introducing Muse (Meta Newsroom, 2026-09-08)"
     url: "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/"
@@ -20,6 +20,8 @@ sources:
     url: "https://www.meta.com/help/subscriptions/1021145227643680/"
   - title: "Muse 일본 출시 (Meta Newsroom 일본, 2026-10-23)"
     url: "https://about.fb.com/ja/news/2026/10/muse-personal-ai-agent-launches-in-japan/"
+  - title: "Muse는 이제 호주에서 이용할 수 있어요 (Meta Newsroom, 2026-11-17, 영문)"
+    url: "https://about.fb.com/news/2026/11/muse-is-now-available-in-australia/"
   - title: "Introducing Grok Bot (xAI, 2026-08-11)"
     url: "https://x.ai/news/introducing-grok-bot"
   - title: "Grok Bot 문서: Overview (docs.x.ai)"
@@ -74,9 +76,9 @@ import Checklist from '../../../../components/Checklist.astro';
 <Summary>
 - **개인 AI 에이전트**는 질문에 답하는 데서 끝나지 않고, 목표를 받으면 **계획을 세워 내 서비스에서 직접 일을 하고, 앱을 닫아도 이어서 일하는** AI예요.
 - 한국 사용자 기준으로 공식 제공이 분명한 건 **Claude**와 **Gemini 태스크**예요. Anthropic의 제공 국가 목록에 한국이 있고, 구글의 "Google AI 구독 없이 태스크를 쓸 수 있는 지역" 목록에도 대한민국이 있어요.
-- **Muse**는 공식적으로 미국, 캐나다, 일본, 싱가포르에서만 제공돼요(2026-11-16 기준). 한국 출시 일정은 공식 발표가 없어요. 우회 가입은 권하지 않아요.
+- **Muse**는 공식적으로 미국, 캐나다, 일본, 싱가포르, 호주에서만 제공돼요(호주는 2026-11-17부터, 2026-11-28 기준). 한국 출시 일정은 공식 발표가 없어요. 우회 가입은 권하지 않아요.
 - **Grok Bot**은 한국 App Store와 Google Play에 등록돼 있어요. 다만 요금은 Cursor 또는 SuperGrok 같은 구독에 묶여 있어서 한국에서 가입이 되는지는 직접 확인해야 해요.
-- **Dots**는 ChatGPT Pro 이상 요금제(월 $100부터)에서 쓰는 기능이에요. 한국이 제외 지역 목록에는 없지만 "한국 제공 확정"이라는 공식 문장은 못 찾았어요.
+- **Dots**는 ChatGPT Pro 이상 요금제(월 $100부터)에서 쓰는 기능이에요. 2026-11-28 기준으로 일부 Plus 사용자(18세 이상, EEA·영국·스위스 제외)에게도 순차 제공 중이고, Business Standard는 구성원마다 개인 dot 1개를 만들 수 있어요([OpenAI Dots](/ko/agents/04-openai-dots/) 참고). 한국이 제외 지역 목록에는 없지만 "한국 제공 확정"이라는 공식 문장은 못 찾았어요.
 - 표의 모든 칸에 **확인 수준**을 표시했어요. 공식 페이지를 직접 읽은 내용만 단정적으로 썼어요.
 </Summary>
 
@@ -140,7 +142,7 @@ import Checklist from '../../../../components/Checklist.astro';
 
 | 항목 | Meta Muse | Grok Bot | ChatGPT Dots | Gemini 태스크 | Claude |
 | --- | --- | --- | --- | --- | --- |
-| **한국 제공** | **아니요.** 공식 제공 지역은 미국, 캐나다, 일본, 싱가포르(2026-11-16 기준). 한국은 어느 공식 페이지에도 없고 출시 일정 발표도 없어요 [공식] | **앱은 가능.** 한국 App Store와 Google Play에 등록돼 있어요. 한국 App Store에서 Cursor Pro·Pro+·Ultra 앱 내 구입이 원화로 표시돼요. SuperGrok·X Premium+ 구독이 한국에서 되는지는 [미확인]. @bot 태그는 일부 지역 제외지만 한국은 제외 목록에 없어요 [공식] | **제외 지역이 아님.** Pro 기준 제외는 EEA·영국·스위스이고 한국은 목록에 없어요. 다만 "한국 제공 확정" 공식 문장은 못 찾았고, 롤아웃이 점진적이라 계정마다 달라요. 국내 보도는 순차 제공으로 전해요 [부분] | **예.** 구글 도움말의 "Google AI 구독 없이 쓸 수 있는 지역" 목록에 대한민국이 있어요. 개인 계정, 만 18세 이상, 기록 켜짐이 필요해요 [공식] | **예.** Anthropic 제공 국가·지역 목록에 South Korea가 있어요. Cowork 등 개별 기능의 지역 제한은 [미확인] [공식] |
+| **한국 제공** | **아니요.** 공식 제공 지역은 미국, 캐나다, 일본, 싱가포르, 호주(호주는 2026-11-17부터, 2026-11-28 기준). 한국은 어느 공식 페이지에도 없고 출시 일정 발표도 없어요 [공식] | **앱은 가능.** 한국 App Store와 Google Play에 등록돼 있어요. 한국 App Store에서 Cursor Pro·Pro+·Ultra 앱 내 구입이 원화로 표시돼요. SuperGrok·X Premium+ 구독이 한국에서 되는지는 [미확인]. @bot 태그는 일부 지역 제외지만 한국은 제외 목록에 없어요 [공식] | **제외 지역이 아님.** Pro 기준 제외는 EEA·영국·스위스이고 한국은 목록에 없어요. 다만 "한국 제공 확정" 공식 문장은 못 찾았고, 롤아웃이 점진적이라 계정마다 달라요. 국내 보도는 순차 제공으로 전해요 [부분] | **예.** 구글 도움말의 "Google AI 구독 없이 쓸 수 있는 지역" 목록에 대한민국이 있어요. 개인 계정, 만 18세 이상, 기록 켜짐이 필요해요 [공식] | **예.** Anthropic 제공 국가·지역 목록에 South Korea가 있어요. Cowork 등 개별 기능의 지역 제한은 [미확인] [공식] |
 | **한국어** | 지원 언어 목록을 공식 페이지에서 못 찾았어요 [미확인] | 앱 화면은 한국어 지원(App Store 지원 언어에 포함). Bot이 한국어로 일하는 품질은 공식 문구 없음 [공식] / 품질 [미확인] | ChatGPT 앱은 한국어 지원(한국 App Store). Dots 자체의 한국어 지원(대화·음성)은 공식 확인 못 함 [미확인] | 구글이 한국어 도움말과 소개 페이지("Gemini의 태스크")를 제공해요. 태스크의 한국어 지시 처리 수준과 지원 언어 목록 페이지는 확인하지 못했어요(페이지가 막혀 있었어요) [부분] | 공식 다국어 성능 표에 한국어가 포함돼 있어요. 앱의 한국어 화면 지원 범위는 이 비교에서 따로 확인하지 못했어요 [부분] |
 
 <Aside type="caution" title="Muse 우회 가입은 안내하지 않아요">
@@ -166,7 +168,7 @@ Claude는 Muse나 Dots처럼 구매까지 맡기는 방향이 아니라, 커넥�
 - **Grok Bot**: 이름 붙인 Bot 여러 개에게 메시지로 일을 맡기는 "AI 팀원"이에요. 모든 Bot이 클라우드 컴퓨터 하나를 공유하고, 계정과 청구가 Cursor에 묶여 있어요. [Grok Bot 시작하기](/ko/agents/03-grok-bot/)에서 봐요.
 - **ChatGPT Dots**: ChatGPT 안에서 책임을 맡기면 스스로 진행 상황을 추적하고 필요할 때 먼저 연락하는 상시 에이전트예요. [ChatGPT Dots 시작하기](/ko/agents/04-openai-dots/)에서 봐요.
 - **Gemini 태스크**: Gemini 앱 안의 구글 에이전트예요. 채팅에서 작업으로 전환해 목표를 맡기면 연결된 구글 앱, Chrome이나 클라우드 브라우저, 원격 컴퓨터를 쓰고, 민감한 동작 전에 확인을 받아요. 대한민국이 구글의 구독 없이 쓸 수 있는 공식 목록에 있어요. [Gemini 태스크 시작하기](/ko/agents/14-gemini-agent/)에서 봐요.
-- **Claude**: 위 제품들처럼 하나의 "에이전트 제품"이라기보다 **기능 묶음**이에요. 다단계 작업을 맡기는 Cowork, 브라우저를 조작하는 Chrome 확장, 화면을 조작하는 컴퓨터 사용, 클라우드에서 자동 실행하는 루틴을 필요에 따라 골라 써요. 각각 [C3. 시작하기](/ko/claude/c03-getting-started/), [C7. 커넥터](/ko/claude/c07-connectors/), [C11. Chrome과 컴퓨터 사용](/ko/claude/c11-chrome-computer-use/), [C13. 클라우드 세션과 루틴](/ko/claude/c13-cloud-sessions/)에서 다뤄요.
+- **Claude**: 위 제품들처럼 하나의 "에이전트 제품"이라기보다 **기능 묶음**이에요. 다단계 작업을 맡기는 Cowork, 브라우저를 조작하는 Chrome 확장, 화면을 조작하는 컴퓨터 사용, 클라우드에서 자동 실행하는 루틴을 필요에 따라 골라 써요. 각각 [C3. 시작하기](/ko/claude/c03-getting-started/), [C7. 커넥터](/ko/claude/c07-connectors/), [C11. Chrome과 컴퓨터 사용](/ko/claude/c11-chrome-computer-use/), [C13. 클라우드 세션과 루틴](/ko/claude/c13-cloud-sessions/)에서 다뤄요. Claude의 에이전트 기능을 나란히 비교한 표는 [Claude의 에이전트 기능 한눈에 보기](/ko/agents/13-claude-agent-lineup/)를 보세요.
 
 ## 나에게 맞는 선택
 
@@ -198,7 +200,7 @@ Claude는 Muse나 Dots처럼 구매까지 맡기는 방향이 아니라, 커넥�
 
 ### Dots가 앱에 안 보여요
 
-- **원인**: 공식 문서가 "점진적 롤아웃"이라고 밝히고 있어서, 요금제가 해당돼도 바로 안 보일 수 있어요. Pro 이상(또는 Business Premium, Enterprise)이어야 하고 Enterprise는 기본 꺼짐이라 관리자가 켜야 해요.
+- **원인**: 공식 문서가 "점진적 롤아웃"이라고 밝히고 있어서, 요금제가 해당돼도 바로 안 보일 수 있어요. Pro 이상(또는 Business Premium, Enterprise)이거나 순차 제공 대상인 일부 Plus·Business Standard여야 하고 Enterprise는 기본 꺼짐이라 관리자가 켜야 해요.
 - **해결**: ChatGPT 앱을 최신 버전으로 업데이트하고 요금제를 확인한 뒤 기다려 보세요. 모바일 웹에서는 지원되지 않아요.
 
 ### Muse에 가입하고 싶어요

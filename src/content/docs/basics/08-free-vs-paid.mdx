@@ -9,8 +9,10 @@ category: basics
 tools: ["Claude", "ChatGPT", "Gemini"]
 duration: "15 min"
 prerequisites: ["At least one AI service account (a free account is enough)"]
-lastVerified: 2026-11-16
+lastVerified: 2026-11-28
 sources:
+  - title: "ChatGPT pricing (OpenAI)"
+    url: "https://chatgpt.com/pricing"
   - title: "Claude pricing"
     url: "https://claude.com/pricing"
   - title: "How do usage and length limits work? (Claude)"
@@ -41,8 +43,7 @@ import PromptBox from '../../../components/PromptBox.astro';
 
 <Summary>
 - **Free is enough at first.** All three services have a free plan. Try it for about a month, and it's not too late to think about paying once you feel like "I keep hitting the limit."
-- Personal paid plans are generally **around $20 a month**: Claude Pro is $20/month, ChatGPT Plus is $20/month, and Google AI Pro is $19.99/month. (US prices, as of 2026-10-10)
-- There are cheaper tiers too: ChatGPT Go is $8/month and Google AI Plus is $4.99/month.
+- Personal paid plans at the standard tier (Claude Pro, ChatGPT Plus, Google AI Pro) are generally **around $20 a month**, and each service also has a cheaper entry tier. Exact prices live in one place: [AI pricing and free limits](/basics/22-ai-pricing-free-limits/).
 - The difference with paid plans is mainly **how much you can use (limits) and advanced features**. Be sure to check the official pricing page before paying.
 </Summary>
 
@@ -62,11 +63,11 @@ import PromptBox from '../../../components/PromptBox.astro';
 | **Subscription** | A way of paying that's charged automatically every month (or year). It keeps charging until you cancel. |
 | **Personal plan / team or enterprise plan** | A plan for using alone vs. a plan for several people in a company or organization. This tutorial focuses on personal plans. |
 
-### What you can do on the free plans (as of 2026-10-10)
+### What you can do on the free plans (as of 2026-11-28)
 
 - **Claude Free**: Chat on web, desktop, and mobile; web search; file creation and code execution; memory; artifacts; up to 5 projects. Claude Code is not included. ([C2](/claude/c02-plans-limits/))
-- **Gemini free**: $0/month with a Google account. Includes Deep Research, Canvas, and Skills (as described for the US; the plans page now lists Skills where it listed Gems before, as of 2026-11-16). Google says Gems are being replaced by skills in Gemini Apps: for personal Google Accounts (18+), Gems become read-only on November 17, 2026 and are removed on December 17, 2026; work accounts follow in March 2027 and education accounts in June 2027 (as of 2026-11-09; [official page](https://support.google.com/gemini/answer/18560919?hl=en)).
-- **ChatGPT Free**: $0/month. However, on Free and Go the models are described as different from those on Plus and above. ([chat tutorial 5](/chat/05-compare-assistants/))
+- **Gemini free**: $0/month with a Google account. Includes Deep Research, Canvas, and Skills (as described for the US; the plans page now lists Skills where it listed Gems before). Google says Gems are being replaced by skills in Gemini Apps: for personal Google Accounts (18+), Gems became read-only on November 17, 2026 and are scheduled to be removed on December 17, 2026; work accounts follow in March 2027 and education accounts in June 2027 (as of 2026-11-28; [official page](https://support.google.com/gemini/answer/18560919?hl=en)).
+- **ChatGPT Free**: $0/month. Unlimited text chats with GPT-6 (subject to abuse guardrails), plus limited image creation, limited voice chats and limited uploads. On Free and Go the models are described as different from those on Plus and above. ([chat tutorial 5](/chat/05-compare-assistants/))
 
 The **specific usage numbers** for free plans (such as how many messages) aren't published in the official documentation, including for Claude. The most accurate way is to use it yourself and see whether you hit the limit.
 
@@ -119,14 +120,14 @@ The **specific usage numbers** for free plans (such as how many messages) aren't
 
 ## Quick reference
 
-### Personal plans at a glance (US dollars, excluding tax, as of 2026-10-10)
+### Personal plans at a glance (plan names; prices are in [AI pricing and free limits](/basics/22-ai-pricing-free-limits/), as of 2026-11-28)
 
 | Tier | Claude | ChatGPT | Gemini (Google AI) |
 | --- | --- | --- | --- |
-| Free | Free $0 | Free $0 | Free $0 |
-| Entry paid | N/A | Go $8/month | Google AI Plus $4.99/month |
-| Standard paid | Pro $20/month (about $17/month with annual billing, $200 prepaid) | Plus $20/month | Google AI Pro $19.99/month |
-| Heavy users | Max $100/month, Ultra $200/month (as of 2026-10-31) | Pro: choose $100, $200, or $500/month | Google AI Ultra from $99.99/month |
+| Free | Free | Free | Free |
+| Entry paid | N/A | Go | Google AI Plus |
+| Standard paid | Pro | Plus | Google AI Pro |
+| Heavy users | Max, Ultra | Pro (three tiers) | Google AI Ultra |
 
 - Korean prices (KRW): In the Korean App Store, ChatGPT is shown as Go ₩13,000, Plus ₩29,000, and Pro ₩159,000, ₩299,000, or ₩790,000 (iOS app prices, which may differ from web prices). For Claude, the Korean App Store's in-app purchase list shows Pro ₩33,000 monthly or ₩349,000 annual, Max ₩199,000 monthly, and Ultra ₩449,000 monthly. For Gemini, the Korean App Store shows Google AI Plus ₩7,500, Google AI Pro ₩29,000, and Google AI Ultra ₩300,000 (all as of 2026-11-02; these are in-app purchase items, so check the period and discount terms on the store screen).
 - Prices can differ by region.
@@ -136,9 +137,9 @@ The **specific usage numbers** for free plans (such as how many messages) aren't
 | Service | Main differences on paid plans (per official info) |
 | --- | --- |
 | Claude Pro | More usage than Free (on 5-hour and weekly limits), Claude Code, projects (Free is up to 5; Pro lists no limit on the number), more models |
-| Claude Max / Ultra | Max is 5x Pro's usage; Ultra is 10x Pro's weekly usage (no 5-hour limit for verified accounts). Both include Fable, monthly API credits ($100/$200), and early access to new features (as of 2026-10-31) |
+| Claude Max / Ultra | Max is 5x Pro's usage; Ultra is 10x Pro's weekly usage (no 5-hour limit for verified accounts). Both include Fable, monthly API credits, and early access to new features (as of 2026-10-31) |
 | Gemini | A larger context window: no plan 32K, AI Plus 128K, AI Pro and Ultra 1M tokens. Limits refresh on a 5-hour basis plus a weekly limit |
-| ChatGPT | Models differ between Free/Go and Plus and above. We couldn't find usage limits in the official docs |
+| ChatGPT | Models differ between Free/Go and Plus and above. Instant model context window: Free 27K, Go and Plus 54K, Pro 128K. Go may include ads. Exact message counts are not published |
 
 ### When you use up your limit (Claude)
 
